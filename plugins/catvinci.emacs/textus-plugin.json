@@ -1,0 +1,47 @@
+{
+  "id": "catvinci.emacs",
+  "name": "%name%",
+  "version": "1.0.0",
+  "publisher": "catvinci",
+  "author": "CatVinci Studio",
+  "description": "%description%",
+  "license": "MIT",
+  "repository": "https://github.com/CatVinci-Studio/textus-plugins",
+  "engines": { "textus": "^1.3.0" },
+  "main": "host.js",
+  "activationEvents": ["onStartupFinished"],
+  "permissions": ["editor.input"],
+  "contributes": {
+    "commands": [
+      { "command": "catvinci.emacs.toggle", "title": "%toggle%" }
+    ],
+    "menus": {
+      "app/plugins": [{ "command": "catvinci.emacs.toggle" }]
+    },
+    "settings": [
+      {
+        "key": "ctrlKeys",
+        "type": "boolean",
+        "default": false,
+        "title": "%ctrlKeys%",
+        "description": "%ctrlKeysHelp%"
+      }
+    ]
+  },
+  "l10n": {
+    "en": {
+      "name": "Emacs",
+      "description": "Emacs keys in the editor: C-f C-b C-n C-p, C-a C-e, M-f M-b, M-< M->, the mark (C-SPC) and the region, C-k and C-w into a kill ring, C-y and M-y, C-/ undo and C-x prefixes.",
+      "toggle": "Turn Emacs Keys On or Off",
+      "ctrlKeys": "Take Ctrl keys the app uses",
+      "ctrlKeysHelp": "On Windows and Linux, Ctrl chords are Textus's and the system's (copy, paste, cut, select all, bold, find): until this is on, only the M- keys, C-SPC and C-g are Emacs's. On, every Ctrl key is Emacs's while this plugin is on, and C-x C-s saves. On a Mac, Textus's shortcuts are on ⌘, so Ctrl is always Emacs's."
+    },
+    "zh": {
+      "name": "Emacs",
+      "description": "在编辑器里用 Emacs 的按键：C-f C-b C-n C-p、C-a C-e、M-f M-b、M-< M->，标记（C-SPC）和选区，C-k、C-w 剪进剪切环，C-y 和 M-y 粘贴，C-/ 撤销，以及 C-x 前缀。",
+      "toggle": "打开或关闭 Emacs 按键",
+      "ctrlKeys": "接管 Textus 用到的 Ctrl 键",
+      "ctrlKeysHelp": "在 Windows 和 Linux 上，Ctrl 组合键是 Textus 和系统的（复制、粘贴、剪切、全选、加粗、查找）：没打开前，只有 M- 键、C-SPC 和 C-g 归 Emacs。打开后，插件开着时所有 Ctrl 键都按 Emacs 的用法，C-x C-s 保存。在 Mac 上 Textus 的快捷键用 ⌘，Ctrl 一直归 Emacs。"
+    }
+  }
+}
