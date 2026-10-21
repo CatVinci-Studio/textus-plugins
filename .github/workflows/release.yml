@@ -1,0 +1,60 @@
+name: release
+
+# Publishes what Textus downloads, on each push to main: every plugin
+# version not released yet as a release of its own (`<id>-v<version>`)
+# with its zip, then the catalog (index.json) on the `catalog` release.
+# A plugin already released must be the same package: one changed
+# without a new version fails here, so the catalog never lists a hash
+# its zip doesn't have.
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run check
+      - run: npm run build
+      - name: Release new plugin versions
+        run: |
+          set -euo pipefail
+          for entry in $(node -e 'for (const p of require("./dist/index.json").plugins) console.log(`${p.id}@${p.version}@${p.sha256}`)'); do
+            id=${entry%%@*}; rest=${entry#*@}; version=${rest%%@*}; sha=${rest#*@}
+            tag="$id-v$version"
+            zip="dist/$id-$version.zip"
+            if gh release view "$tag" >/dev/null 2>&1; then
+              mkdir -p released
+              gh release download "$tag" --pattern "$id-$version.zip" --dir released --clobber
+              have=$(sha256sum "released/$id-$version.zip" | cut -d' ' -f1)
+              if [ "$have" != "$sha" ]; then
+                echo "::error::$id $version changed since it was released - give it a new version."
+                exit 1
+              fi
+            else
+              gh release create "$tag" "$zip" --title "$id $version" --notes "$id $version, for Textus."
+            fi
+          done
+      - name: Publish the catalog
+        run: |
+          set -euo pipefail
+          if ! gh release view catalog >/dev/null 2>&1; then
+            gh release create catalog --title "Catalog" --notes "The list of plugins Textus offers (index.json), rebuilt on each push to main." --latest=false
+          fi
+          gh release upload catalog dist/index.json --clobber

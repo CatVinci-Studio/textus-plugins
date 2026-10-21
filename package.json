@@ -1,0 +1,18 @@
+{
+  "name": "textus-plugins",
+  "private": true,
+  "version": "0.0.0",
+  "description": "The plugins Textus offers to install: their sources, and the packages and catalog Textus downloads.",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "check": "node scripts/build.mjs --check && vitest run"
+  },
+  "devDependencies": {
+    "docx-preview": "0.4.1",
+    "jszip": "3.10.2",
+    "pdfjs-dist": "6.4.299",
+    "vitest": "4.1.12"
+  }
+}
