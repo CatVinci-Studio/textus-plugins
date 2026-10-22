@@ -50,10 +50,12 @@ exports.activate = function () {
         );
         if (!version) return;
         if (message.type === "restore") {
-          const current = await textus.document.getText();
+          // The whole document: its first block to its last.
+          const blocks = await textus.document.getBlocks();
           await textus.document.proposeEdit({
             action: "replace",
-            anchor: current,
+            block: blocks[0].id,
+            lastBlock: blocks[blocks.length - 1].id,
             text: version.text,
             reason: zh ? "恢复到这个版本" : "Restore this version",
           });
