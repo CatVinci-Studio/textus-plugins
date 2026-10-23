@@ -13,13 +13,14 @@ The plugins for [Textus](https://textus.catvinci.com), the Markdown editor. None
 | Image Viewer | Open pictures and SVG files in a tab: zoom, fit, and an SVG's source. |
 | Kanban | Boards of cards in lists, kept as a Markdown file (name.kanban.md) - a list per heading, a card per task. |
 | PDF Viewer | Open PDFs in a tab beside your notes: pages, zoom, and text to select and copy. |
+| Quick Preview | Rest the pointer on a link to another document - a Markdown link or a [[wikilink]] - to read its opening, or the section it names, in a card beside it. |
 | Quick Notes | Jot something down without leaving the document: notes in the sidebar, to insert later or open as a document. |
 | Split Panes | Two documents at once: side by side, or one above the other. Drag the line between them to share the space; a click in one brings it to the front. |
 | Tasks | Every task (- [ ]) in the open folder's documents, in one list: tick one off there, or go to it. |
 | Version History | Each save of a document kept as a version: see what changed since, and bring an old one back. |
 | Web View | Open web pages in a tab beside your notes. |
 | Word Reader | Read Word documents as they look in Word, in a tab. Edit as Markdown turns one into a document of yours. |
-| Zotero | Cite from your Zotero library while you write. Needs Zotero 7 running, with Settings › Advanced › Allow other applications on this computer to communicate with Zotero on. |
+| Zotero | Cite from your Zotero library while you write, and rest the pointer on a citation to see what it cites. Needs Zotero 7 running, with Settings › Advanced › Allow other applications on this computer to communicate with Zotero on. |
 
 Quick Notes can also start a note from the tray or menu bar with every window closed, once **Keep running in the background** is on - it offers to turn it on.
 

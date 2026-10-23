@@ -1,0 +1,25 @@
+{
+  "id": "catvinci.quick-preview",
+  "name": "%name%",
+  "version": "1.0.0",
+  "publisher": "catvinci",
+  "author": "CatVinci Studio",
+  "description": "%description%",
+  "license": "MIT",
+  "repository": "https://github.com/CatVinci-Studio/textus-plugins",
+  "engines": { "textus": "^1.3.0" },
+  "main": "host.js",
+  "activationEvents": ["onStartupFinished"],
+  "permissions": ["document.read", "workspace.read"],
+  "contributes": {},
+  "l10n": {
+    "en": {
+      "name": "Quick Preview",
+      "description": "Rest the pointer on a link to another document - a Markdown link or a [[wikilink]] - to read its opening, or the section the link names, in a card beside it. Pin keeps the card open while you write."
+    },
+    "zh": {
+      "name": "快速预览",
+      "description": "鼠标停在指向另一篇文档的链接（Markdown 链接或 [[双链]]）上，旁边浮出卡片显示它的开头，或链接指向的那一节；钉住后卡片一直留着，边看边写。"
+    }
+  }
+}
