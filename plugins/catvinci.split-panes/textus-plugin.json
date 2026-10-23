@@ -1,0 +1,47 @@
+{
+  "id": "catvinci.split-panes",
+  "name": "%name%",
+  "version": "1.0.0",
+  "publisher": "catvinci",
+  "author": "CatVinci Studio",
+  "description": "%description%",
+  "license": "MIT",
+  "repository": "https://github.com/CatVinci-Studio/textus-plugins",
+  "engines": { "textus": "^1.3.0" },
+  "main": "host.js",
+  "activationEvents": ["onStartupFinished"],
+  "permissions": [],
+  "contributes": {
+    "commands": [
+      { "command": "catvinci.split-panes.right", "title": "%right%" },
+      { "command": "catvinci.split-panes.down", "title": "%down%" },
+      { "command": "catvinci.split-panes.close", "title": "%close%" }
+    ],
+    "keybindings": [
+      { "command": "catvinci.split-panes.right", "key": "mod+alt+s" }
+    ],
+    "menus": {
+      "app/plugins": [
+        { "command": "catvinci.split-panes.right" },
+        { "command": "catvinci.split-panes.down" },
+        { "command": "catvinci.split-panes.close" }
+      ]
+    }
+  },
+  "l10n": {
+    "en": {
+      "name": "Split Panes",
+      "description": "Two documents at once: side by side, or one above the other. Drag the line between them to share the space; a click in one brings it to the front.",
+      "right": "Split Right",
+      "down": "Split Down",
+      "close": "Close Split"
+    },
+    "zh": {
+      "name": "分屏",
+      "description": "同时看两篇文档：左右并排，或上下排列。拖动中间的分隔线调整大小；点哪一边，哪一边就是当前文档。",
+      "right": "向右分屏",
+      "down": "向下分屏",
+      "close": "关闭分屏"
+    }
+  }
+}
