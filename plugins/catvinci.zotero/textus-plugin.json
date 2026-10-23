@@ -8,16 +8,40 @@
   "icon": "icon.svg",
   "license": "MIT",
   "repository": "https://github.com/CatVinci-Studio/textus-plugins",
-  "engines": { "textus": "^1.2.0" },
+  "engines": {
+    "textus": "^1.3.0"
+  },
   "main": "host.js",
   "activationEvents": ["onStartupFinished"],
-  "permissions": ["network:localhost:23119", "document.propose", "document.read"],
+  "permissions": [
+    "network:localhost:23119",
+    "document.propose",
+    "document.read"
+  ],
   "contributes": {
-    "commands": [{ "command": "catvinci.zotero.cite", "title": "%cite%" }],
-    "keybindings": [{ "command": "catvinci.zotero.cite", "key": "mod+alt+c" }],
+    "commands": [
+      {
+        "command": "catvinci.zotero.cite",
+        "title": "%cite%"
+      }
+    ],
+    "keybindings": [
+      {
+        "command": "catvinci.zotero.cite",
+        "key": "mod+alt+c"
+      }
+    ],
     "menus": {
-      "app/plugins": [{ "command": "catvinci.zotero.cite" }],
-      "editor/context": [{ "command": "catvinci.zotero.cite" }]
+      "app/plugins": [
+        {
+          "command": "catvinci.zotero.cite"
+        }
+      ],
+      "editor/context": [
+        {
+          "command": "catvinci.zotero.cite"
+        }
+      ]
     },
     "settings": [
       {
@@ -27,9 +51,18 @@
         "title": "%style%",
         "description": "%styleHelp%",
         "options": [
-          { "value": "pandoc", "label": "%pandoc%" },
-          { "value": "text", "label": "%text%" },
-          { "value": "link", "label": "%link%" }
+          {
+            "value": "pandoc",
+            "label": "%pandoc%"
+          },
+          {
+            "value": "text",
+            "label": "%text%"
+          },
+          {
+            "value": "link",
+            "label": "%link%"
+          }
         ]
       }
     ]
@@ -42,7 +75,13 @@
       "styleHelp": "Pandoc keys turn into references when the document is exported with Pandoc.",
       "pandoc": "A Pandoc key: [@key]",
       "text": "Author and year: (Author, 2024)",
-      "link": "A link that opens Zotero"
+      "link": "A link that opens Zotero",
+      "two": "{0} & {1}",
+      "unreachable": "Can't reach Zotero. Open Zotero 7, and turn on Settings › Advanced › Allow other applications on this computer to communicate with Zotero.",
+      "search": "Search Zotero (title, author or year)",
+      "nothing": "Nothing found.",
+      "choose": "Choose what to cite",
+      "citeReason": "Cite {0}"
     },
     "zh": {
       "description": "写作时直接从 Zotero 文献库插入引用。需要 Zotero 7 正在运行，并在设置 › 高级 中打开“允许此计算机上的其他应用程序与 Zotero 通信”。",
@@ -51,7 +90,133 @@
       "styleHelp": "用 Pandoc 导出文档时，Pandoc 键会变成参考文献。",
       "pandoc": "Pandoc 键：[@key]",
       "text": "作者和年份：(Author, 2024)",
-      "link": "能打开 Zotero 的链接"
+      "link": "能打开 Zotero 的链接",
+      "two": "{0} 和 {1}",
+      "unreachable": "连不上 Zotero。请打开 Zotero 7，并在 设置 › 高级 中打开“允许此计算机上的其他应用程序与 Zotero 通信”。",
+      "search": "在 Zotero 中搜索（标题、作者或年份）",
+      "nothing": "没有找到。",
+      "choose": "选择要引用的文献",
+      "citeReason": "引用 {0}"
+    },
+    "zh-Hant": {
+      "description": "寫作時從 Zotero 文獻庫引用。需要開著 Zotero 7，並在 設定 › 進階 中開啟「允許此電腦上的其他應用程式與 Zotero 通訊」。",
+      "cite": "從 Zotero 插入引用…",
+      "style": "引用的寫法",
+      "styleHelp": "用 Pandoc 匯出文件時，Pandoc 鍵會變成參考文獻。",
+      "pandoc": "Pandoc 鍵：[@key]",
+      "text": "作者和年份：(作者, 2024)",
+      "link": "能開啟 Zotero 的連結",
+      "two": "{0} 和 {1}",
+      "unreachable": "連不上 Zotero。請開啟 Zotero 7，並在 設定 › 進階 中開啟「允許此電腦上的其他應用程式與 Zotero 通訊」。",
+      "search": "在 Zotero 中搜尋（標題、作者或年份）",
+      "nothing": "沒有找到。",
+      "choose": "選擇要引用的文獻",
+      "citeReason": "引用 {0}"
+    },
+    "ja": {
+      "description": "書きながら Zotero のライブラリから引用します。Zotero 7 を起動し、設定 › 詳細 で「このコンピュータ上の他のアプリケーションが Zotero と通信することを許可する」をオンにしてください。",
+      "cite": "Zotero から引用を挿入…",
+      "style": "引用の書き方",
+      "styleHelp": "Pandoc で文書を書き出すと、Pandoc キーが参考文献になります。",
+      "pandoc": "Pandoc キー：[@key]",
+      "text": "著者と年：(著者, 2024)",
+      "link": "Zotero を開くリンク",
+      "two": "{0}・{1}",
+      "unreachable": "Zotero に接続できません。Zotero 7 を開き、設定 › 詳細 で「このコンピュータ上の他のアプリケーションが Zotero と通信することを許可する」をオンにしてください。",
+      "search": "Zotero を検索（タイトル、著者、年）",
+      "nothing": "見つかりませんでした。",
+      "choose": "引用する文献を選ぶ",
+      "citeReason": "{0} を引用"
+    },
+    "ko": {
+      "description": "글을 쓰면서 Zotero 라이브러리에서 인용합니다. Zotero 7을 켜 두고, 설정 › 고급에서 '이 컴퓨터의 다른 응용 프로그램이 Zotero와 통신하도록 허용'을 켜야 합니다.",
+      "cite": "Zotero에서 인용 넣기…",
+      "style": "인용 표기 방식",
+      "styleHelp": "Pandoc으로 문서를 내보내면 Pandoc 키가 참고 문헌으로 바뀝니다.",
+      "pandoc": "Pandoc 키: [@key]",
+      "text": "저자와 연도: (저자, 2024)",
+      "link": "Zotero를 여는 링크",
+      "two": "{0}·{1}",
+      "unreachable": "Zotero에 연결할 수 없습니다. Zotero 7을 열고 설정 › 고급에서 '이 컴퓨터의 다른 응용 프로그램이 Zotero와 통신하도록 허용'을 켜세요.",
+      "search": "Zotero에서 검색(제목, 저자, 연도)",
+      "nothing": "찾지 못했습니다.",
+      "choose": "인용할 문헌 고르기",
+      "citeReason": "{0} 인용"
+    },
+    "es": {
+      "description": "Cita desde tu biblioteca de Zotero mientras escribes. Necesita Zotero 7 abierto, con Ajustes › Avanzado › Permitir que otras aplicaciones de este equipo se comuniquen con Zotero activado.",
+      "cite": "Insertar una cita de Zotero…",
+      "style": "Una cita se escribe como",
+      "styleHelp": "Las claves de Pandoc se convierten en referencias al exportar el documento con Pandoc.",
+      "pandoc": "Una clave de Pandoc: [@key]",
+      "text": "Autor y año: (Autor, 2024)",
+      "link": "Un enlace que abre Zotero",
+      "two": "{0} y {1}",
+      "unreachable": "No se puede conectar con Zotero. Abre Zotero 7 y activa Ajustes › Avanzado › Permitir que otras aplicaciones de este equipo se comuniquen con Zotero.",
+      "search": "Buscar en Zotero (título, autor o año)",
+      "nothing": "No se encontró nada.",
+      "choose": "Elige qué citar",
+      "citeReason": "Citar {0}"
+    },
+    "fr": {
+      "description": "Citez depuis votre bibliothèque Zotero en écrivant. Zotero 7 doit être ouvert, avec Paramètres › Avancé › Autoriser les autres applications de cet ordinateur à communiquer avec Zotero activé.",
+      "cite": "Insérer une citation depuis Zotero…",
+      "style": "Une citation s’écrit",
+      "styleHelp": "Les clés Pandoc deviennent des références quand le document est exporté avec Pandoc.",
+      "pandoc": "Une clé Pandoc : [@key]",
+      "text": "Auteur et année : (Auteur, 2024)",
+      "link": "Un lien qui ouvre Zotero",
+      "two": "{0} et {1}",
+      "unreachable": "Impossible de joindre Zotero. Ouvrez Zotero 7 et activez Paramètres › Avancé › Autoriser les autres applications de cet ordinateur à communiquer avec Zotero.",
+      "search": "Rechercher dans Zotero (titre, auteur ou année)",
+      "nothing": "Aucun résultat.",
+      "choose": "Choisissez quoi citer",
+      "citeReason": "Citer {0}"
+    },
+    "de": {
+      "description": "Zitiere beim Schreiben aus deiner Zotero-Bibliothek. Zotero 7 muss laufen, mit Einstellungen › Erweitert › „Anderen Anwendungen auf diesem Computer erlauben, mit Zotero zu kommunizieren“ eingeschaltet.",
+      "cite": "Zitat aus Zotero einfügen…",
+      "style": "Ein Zitat wird geschrieben als",
+      "styleHelp": "Pandoc-Schlüssel werden zu Literaturangaben, wenn das Dokument mit Pandoc exportiert wird.",
+      "pandoc": "Ein Pandoc-Schlüssel: [@key]",
+      "text": "Autor und Jahr: (Autor, 2024)",
+      "link": "Ein Link, der Zotero öffnet",
+      "two": "{0} und {1}",
+      "unreachable": "Zotero ist nicht erreichbar. Öffne Zotero 7 und schalte Einstellungen › Erweitert › „Anderen Anwendungen auf diesem Computer erlauben, mit Zotero zu kommunizieren“ ein.",
+      "search": "In Zotero suchen (Titel, Autor oder Jahr)",
+      "nothing": "Nichts gefunden.",
+      "choose": "Wähle, was du zitierst",
+      "citeReason": "{0} zitieren"
+    },
+    "ru": {
+      "description": "Цитируйте из библиотеки Zotero прямо во время письма. Нужен запущенный Zotero 7, в котором включено «Настройки › Дополнительно › Разрешить другим приложениям на этом компьютере обмениваться данными с Zotero».",
+      "cite": "Вставить цитату из Zotero…",
+      "style": "Цитата записывается как",
+      "styleHelp": "Ключи Pandoc превращаются в ссылки на литературу при экспорте документа через Pandoc.",
+      "pandoc": "Ключ Pandoc: [@key]",
+      "text": "Автор и год: (Автор, 2024)",
+      "link": "Ссылка, открывающая Zotero",
+      "two": "{0} и {1}",
+      "unreachable": "Не удаётся связаться с Zotero. Откройте Zotero 7 и включите «Настройки › Дополнительно › Разрешить другим приложениям на этом компьютере обмениваться данными с Zotero».",
+      "search": "Поиск в Zotero (название, автор или год)",
+      "nothing": "Ничего не найдено.",
+      "choose": "Выберите, что цитировать",
+      "citeReason": "Цитировать «{0}»"
+    },
+    "pt": {
+      "description": "Cite da sua biblioteca do Zotero enquanto escreve. Precisa do Zotero 7 aberto, com Configurações › Avançado › Permitir que outros aplicativos deste computador se comuniquem com o Zotero ligado.",
+      "cite": "Inserir uma citação do Zotero…",
+      "style": "Uma citação é escrita como",
+      "styleHelp": "As chaves do Pandoc viram referências quando o documento é exportado com o Pandoc.",
+      "pandoc": "Uma chave do Pandoc: [@key]",
+      "text": "Autor e ano: (Autor, 2024)",
+      "link": "Um link que abre o Zotero",
+      "two": "{0} e {1}",
+      "unreachable": "Não foi possível falar com o Zotero. Abra o Zotero 7 e ligue Configurações › Avançado › Permitir que outros aplicativos deste computador se comuniquem com o Zotero.",
+      "search": "Buscar no Zotero (título, autor ou ano)",
+      "nothing": "Nada encontrado.",
+      "choose": "Escolha o que citar",
+      "citeReason": "Citar {0}"
     }
   }
 }

@@ -8,9 +8,6 @@
 
 // The interface language arrives once the plugin is running: read when
 // a label is made, not as this file loads.
-function zh() {
-  return String(textus.env.language || "").indexOf("zh") === 0;
-}
 
 var on = true;
 var mode = "normal"; // normal | insert | visual | vline
@@ -68,10 +65,7 @@ function exec(op) {
 }
 
 function label() {
-  var names = zh()
-    ? { normal: "普通", insert: "插入", visual: "可视", vline: "可视行" }
-    : { normal: "NORMAL", insert: "INSERT", visual: "VISUAL", vline: "V-LINE" };
-  var text = "-- " + names[mode] + " --";
+  var text = "-- " + textus.l10n.t(mode) + " --";
   var typed = count + pending + (flash ? "s" + flash.query : "");
   return typed ? text + " " + typed : text;
 }
@@ -84,7 +78,7 @@ function showStatus() {
   }
   status = textus.window.setStatusItem("mode", {
     text: label(),
-    tooltip: zh() ? "Vim：点击关闭" : "Vim: click to turn off",
+    tooltip: textus.l10n.t("statusTip"),
     command: "catvinci.vim.toggle",
   });
 }
@@ -187,13 +181,15 @@ async function operateLines(op, n) {
 
 async function operateMotion(op, unit, n, extra) {
   if (unit === "down" || unit === "up") {
-    if (unit === "up")
-      await exec({ op: "move", unit: "up", count: n });
+    if (unit === "up") await exec({ op: "move", unit: "up", count: n });
     return operateLines(op, n + 1);
   }
   // cw changes to the end of the word, as Vim's does.
   if (op === "c" && unit === "wordStart") unit = "wordEnd";
-  var move = Object.assign({ op: "move", unit: unit, count: n, select: true }, extra || {});
+  var move = Object.assign(
+    { op: "move", unit: unit, count: n, select: true },
+    extra || {},
+  );
   await exec(move);
   if (INCLUSIVE[unit])
     await exec({ op: "move", unit: "rightInsert", select: true });
@@ -273,7 +269,12 @@ async function normalKey(key) {
   }
 
   // A key waiting for its character: f t F T r.
-  if (pending && "ftFTr".indexOf(pending) >= 0 && pending.length === 1 && pending !== "g") {
+  if (
+    pending &&
+    "ftFTr".indexOf(pending) >= 0 &&
+    pending.length === 1 &&
+    pending !== "g"
+  ) {
     if (key.length !== 1) {
       pending = "";
       operator = null;
@@ -374,7 +375,10 @@ async function doMotion(unit, n, extra) {
     await exec({ op: "selectLines", count: vlineCount });
     return;
   }
-  var move = Object.assign({ op: "move", unit: unit, count: n, visual: mode === "visual" }, extra || {});
+  var move = Object.assign(
+    { op: "move", unit: unit, count: n, visual: mode === "visual" },
+    extra || {},
+  );
   await exec(move);
 }
 
@@ -420,7 +424,11 @@ async function normalCommand(key) {
       break;
     case "x":
     case "X": {
-      var cut = await exec({ op: "deleteChars", count: takeCount(), back: key === "X" });
+      var cut = await exec({
+        op: "deleteChars",
+        count: takeCount(),
+        back: key === "X",
+      });
       if (cut.text) await remember(cut.text, false);
       break;
     }
@@ -443,7 +451,11 @@ async function normalCommand(key) {
       n = takeCount();
       for (var i = 0; i < n; i++) {
         if (register.linewise) {
-          await exec({ op: "pasteLines", text: register.text, above: key === "P" });
+          await exec({
+            op: "pasteLines",
+            text: register.text,
+            above: key === "P",
+          });
         } else if (register.text) {
           if (key === "p") await exec({ op: "move", unit: "rightInsert" });
           await exec({ op: "insertText", text: register.text });
@@ -463,7 +475,8 @@ async function normalCommand(key) {
       if (lastChange) {
         replaying = true;
         try {
-          for (var k = 0; k < lastChange.length; k++) await normalKey(lastChange[k]);
+          for (var k = 0; k < lastChange.length; k++)
+            await normalKey(lastChange[k]);
         } finally {
           replaying = false;
         }

@@ -7,16 +7,25 @@
   "description": "%description%",
   "license": "MIT",
   "repository": "https://github.com/CatVinci-Studio/textus-plugins",
-  "engines": { "textus": "^1.2.0" },
+  "engines": {
+    "textus": "^1.3.0"
+  },
   "main": "host.js",
   "activationEvents": ["onStartupFinished"],
   "permissions": ["editor.input"],
   "contributes": {
     "commands": [
-      { "command": "catvinci.emacs.toggle", "title": "%toggle%" }
+      {
+        "command": "catvinci.emacs.toggle",
+        "title": "%toggle%"
+      }
     ],
     "menus": {
-      "app/plugins": [{ "command": "catvinci.emacs.toggle" }]
+      "app/plugins": [
+        {
+          "command": "catvinci.emacs.toggle"
+        }
+      ]
     },
     "settings": [
       {
@@ -34,14 +43,90 @@
       "description": "Emacs keys in the editor: C-f C-b C-n C-p, C-a C-e, M-f M-b, M-< M->, the mark (C-SPC) and the region, C-k and C-w into a kill ring, C-y and M-y, C-/ undo and C-x prefixes.",
       "toggle": "Turn Emacs Keys On or Off",
       "ctrlKeys": "Take Ctrl keys the app uses",
-      "ctrlKeysHelp": "On Windows and Linux, Ctrl chords are Textus's and the system's (copy, paste, cut, select all, bold, find): until this is on, only the M- keys, C-SPC and C-g are Emacs's. On, every Ctrl key is Emacs's while this plugin is on, and C-x C-s saves. On a Mac, Textus's shortcuts are on ⌘, so Ctrl is always Emacs's."
+      "ctrlKeysHelp": "On Windows and Linux, Ctrl chords are Textus's and the system's (copy, paste, cut, select all, bold, find): until this is on, only the M- keys, C-SPC and C-g are Emacs's. On, every Ctrl key is Emacs's while this plugin is on, and C-x C-s saves. On a Mac, Textus's shortcuts are on ⌘, so Ctrl is always Emacs's.",
+      "mark": "Mark",
+      "statusTip": "Emacs: click to turn off"
     },
     "zh": {
       "name": "Emacs",
       "description": "在编辑器里用 Emacs 的按键：C-f C-b C-n C-p、C-a C-e、M-f M-b、M-< M->，标记（C-SPC）和选区，C-k、C-w 剪进剪切环，C-y 和 M-y 粘贴，C-/ 撤销，以及 C-x 前缀。",
       "toggle": "打开或关闭 Emacs 按键",
       "ctrlKeys": "接管 Textus 用到的 Ctrl 键",
-      "ctrlKeysHelp": "在 Windows 和 Linux 上，Ctrl 组合键是 Textus 和系统的（复制、粘贴、剪切、全选、加粗、查找）：没打开前，只有 M- 键、C-SPC 和 C-g 归 Emacs。打开后，插件开着时所有 Ctrl 键都按 Emacs 的用法，C-x C-s 保存。在 Mac 上 Textus 的快捷键用 ⌘，Ctrl 一直归 Emacs。"
+      "ctrlKeysHelp": "在 Windows 和 Linux 上，Ctrl 组合键是 Textus 和系统的（复制、粘贴、剪切、全选、加粗、查找）：没打开前，只有 M- 键、C-SPC 和 C-g 归 Emacs。打开后，插件开着时所有 Ctrl 键都按 Emacs 的用法，C-x C-s 保存。在 Mac 上 Textus 的快捷键用 ⌘，Ctrl 一直归 Emacs。",
+      "mark": "标记",
+      "statusTip": "Emacs：点击关闭"
+    },
+    "zh-Hant": {
+      "name": "Emacs",
+      "description": "在編輯器裡用 Emacs 的按鍵：C-f C-b C-n C-p、C-a C-e、M-f M-b、M-< M->，標記（C-SPC）和選取範圍，C-k、C-w 剪進剪下環，C-y 和 M-y 貼上，C-/ 復原，以及 C-x 前綴。",
+      "toggle": "開啟或關閉 Emacs 按鍵",
+      "ctrlKeys": "接管 Textus 用到的 Ctrl 鍵",
+      "ctrlKeysHelp": "在 Windows 和 Linux 上，Ctrl 組合鍵是 Textus 和系統的（複製、貼上、剪下、全選、粗體、尋找）：開啟之前，只有 M- 鍵、C-SPC 和 C-g 歸 Emacs。開啟後，外掛開著時所有 Ctrl 鍵都按 Emacs 的用法，C-x C-s 儲存。在 Mac 上 Textus 的快速鍵用 ⌘，Ctrl 一直歸 Emacs。",
+      "mark": "標記",
+      "statusTip": "Emacs：點一下關閉"
+    },
+    "ja": {
+      "name": "Emacs",
+      "description": "エディタで Emacs のキーを。C-f C-b C-n C-p、C-a C-e、M-f M-b、M-< M->、マーク（C-SPC）とリージョン、C-k と C-w でキルリングへ、C-y と M-y、C-/ で取り消し、C-x プレフィックス。",
+      "toggle": "Emacs キーのオン・オフ",
+      "ctrlKeys": "Textus が使う Ctrl キーも使う",
+      "ctrlKeysHelp": "Windows と Linux では、Ctrl の組み合わせは Textus とシステムのもの（コピー、貼り付け、切り取り、すべて選択、太字、検索）です。オンにするまでは M- キー、C-SPC、C-g だけが Emacs のものです。オンにすると、このプラグインが有効な間はすべての Ctrl キーが Emacs のものになり、C-x C-s で保存します。Mac では Textus のショートカットは ⌘ なので、Ctrl は常に Emacs のものです。",
+      "mark": "マーク",
+      "statusTip": "Emacs：クリックでオフ"
+    },
+    "ko": {
+      "name": "Emacs",
+      "description": "편집기에서 Emacs 키를: C-f C-b C-n C-p, C-a C-e, M-f M-b, M-< M->, 마크(C-SPC)와 영역, C-k와 C-w로 킬 링에, C-y와 M-y, C-/ 실행 취소, C-x 접두 키.",
+      "toggle": "Emacs 키 켜기/끄기",
+      "ctrlKeys": "Textus가 쓰는 Ctrl 키도 가져오기",
+      "ctrlKeysHelp": "Windows와 Linux에서 Ctrl 조합은 Textus와 시스템의 것입니다(복사, 붙여넣기, 잘라내기, 모두 선택, 굵게, 찾기). 켜기 전에는 M- 키, C-SPC, C-g만 Emacs가 씁니다. 켜면 이 플러그인이 켜져 있는 동안 모든 Ctrl 키가 Emacs의 것이 되고, C-x C-s로 저장합니다. Mac에서는 Textus 단축키가 ⌘에 있어 Ctrl은 늘 Emacs의 것입니다.",
+      "mark": "마크",
+      "statusTip": "Emacs: 클릭하면 꺼집니다"
+    },
+    "es": {
+      "name": "Emacs",
+      "description": "Las teclas de Emacs en el editor: C-f C-b C-n C-p, C-a C-e, M-f M-b, M-< M->, la marca (C-SPC) y la región, C-k y C-w a un kill ring, C-y y M-y, C-/ para deshacer y prefijos C-x.",
+      "toggle": "Activar o desactivar las teclas de Emacs",
+      "ctrlKeys": "Usar también las teclas Ctrl de la app",
+      "ctrlKeysHelp": "En Windows y Linux, las combinaciones con Ctrl son de Textus y del sistema (copiar, pegar, cortar, seleccionar todo, negrita, buscar): hasta que actives esto, solo las teclas M-, C-SPC y C-g son de Emacs. Activado, todas las teclas Ctrl son de Emacs mientras el complemento esté activo, y C-x C-s guarda. En un Mac, los atajos de Textus van con ⌘, así que Ctrl siempre es de Emacs.",
+      "mark": "Marca",
+      "statusTip": "Emacs: haz clic para desactivarlo"
+    },
+    "fr": {
+      "name": "Emacs",
+      "description": "Les touches d’Emacs dans l’éditeur : C-f C-b C-n C-p, C-a C-e, M-f M-b, M-< M->, la marque (C-SPC) et la région, C-k et C-w dans un kill ring, C-y et M-y, C-/ pour annuler et les préfixes C-x.",
+      "toggle": "Activer ou désactiver les touches Emacs",
+      "ctrlKeys": "Prendre aussi les touches Ctrl de l’app",
+      "ctrlKeysHelp": "Sous Windows et Linux, les raccourcis Ctrl appartiennent à Textus et au système (copier, coller, couper, tout sélectionner, gras, rechercher) : tant que ceci n’est pas activé, seules les touches M-, C-SPC et C-g sont à Emacs. Activé, toutes les touches Ctrl sont à Emacs tant que l’extension est active, et C-x C-s enregistre. Sur Mac, les raccourcis de Textus sont sur ⌘ : Ctrl est toujours à Emacs.",
+      "mark": "Marque",
+      "statusTip": "Emacs : cliquez pour désactiver"
+    },
+    "de": {
+      "name": "Emacs",
+      "description": "Emacs-Tasten im Editor: C-f C-b C-n C-p, C-a C-e, M-f M-b, M-< M->, die Marke (C-SPC) und die Region, C-k und C-w in einen Kill-Ring, C-y und M-y, C-/ zum Rückgängigmachen und C-x-Präfixe.",
+      "toggle": "Emacs-Tasten ein- oder ausschalten",
+      "ctrlKeys": "Auch die Strg-Tasten der App übernehmen",
+      "ctrlKeysHelp": "Unter Windows und Linux gehören Strg-Kombinationen Textus und dem System (Kopieren, Einfügen, Ausschneiden, Alles auswählen, Fett, Suchen): Bis das hier an ist, sind nur die M-Tasten, C-SPC und C-g die von Emacs. Ist es an, gehört jede Strg-Taste Emacs, solange das Plugin läuft, und C-x C-s speichert. Auf dem Mac liegen die Kurzbefehle von Textus auf ⌘, Strg gehört also immer Emacs.",
+      "mark": "Marke",
+      "statusTip": "Emacs: zum Ausschalten klicken"
+    },
+    "ru": {
+      "name": "Emacs",
+      "description": "Клавиши Emacs в редакторе: C-f C-b C-n C-p, C-a C-e, M-f M-b, M-< M->, метка (C-SPC) и регион, C-k и C-w в кольцо удалений, C-y и M-y, C-/ для отмены и префиксы C-x.",
+      "toggle": "Включить или выключить клавиши Emacs",
+      "ctrlKeys": "Забрать клавиши Ctrl, которые использует приложение",
+      "ctrlKeysHelp": "В Windows и Linux сочетания с Ctrl принадлежат Textus и системе (копировать, вставить, вырезать, выделить всё, жирный, найти): пока это не включено, Emacs получает только клавиши M-, C-SPC и C-g. Если включить, все клавиши Ctrl работают как в Emacs, пока плагин включён, а C-x C-s сохраняет. На Mac сочетания Textus на ⌘, поэтому Ctrl всегда за Emacs.",
+      "mark": "Метка",
+      "statusTip": "Emacs: нажмите, чтобы выключить"
+    },
+    "pt": {
+      "name": "Emacs",
+      "description": "As teclas do Emacs no editor: C-f C-b C-n C-p, C-a C-e, M-f M-b, M-< M->, a marca (C-SPC) e a região, C-k e C-w para um kill ring, C-y e M-y, C-/ para desfazer e prefixos C-x.",
+      "toggle": "Ligar ou desligar as teclas do Emacs",
+      "ctrlKeys": "Usar também as teclas Ctrl do app",
+      "ctrlKeysHelp": "No Windows e no Linux, as combinações com Ctrl são do Textus e do sistema (copiar, colar, recortar, selecionar tudo, negrito, buscar): até ligar isto, só as teclas M-, C-SPC e C-g são do Emacs. Ligado, toda tecla Ctrl é do Emacs enquanto o plugin estiver ligado, e C-x C-s salva. No Mac, os atalhos do Textus ficam no ⌘, então o Ctrl é sempre do Emacs.",
+      "mark": "Marca",
+      "statusTip": "Emacs: clique para desligar"
     }
   }
 }

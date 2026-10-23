@@ -55,7 +55,10 @@ function opening(text) {
   const trimmed = text.trim();
   if (trimmed.length <= LIMIT) return trimmed;
   const cut = trimmed.lastIndexOf("\n\n", LIMIT);
-  return (cut > LIMIT / 2 ? trimmed.slice(0, cut) : trimmed.slice(0, LIMIT)) + "\n\n…";
+  return (
+    (cut > LIMIT / 2 ? trimmed.slice(0, cut) : trimmed.slice(0, LIMIT)) +
+    "\n\n…"
+  );
 }
 
 exports.activate = function () {

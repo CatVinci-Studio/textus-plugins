@@ -1,24 +1,16 @@
 (function () {
   "use strict";
   const api = acquireTextusApi();
-  const t =
-    api.language === "zh"
-      ? { fit: "适应窗口", actual: "原始大小", source: "源码", picture: "图片" }
-      : {
-          fit: "Fit",
-          actual: "Actual size",
-          source: "Source",
-          picture: "Picture",
-        };
+  const t = api.t;
   const $ = (id) => document.getElementById(id);
   const stage = $("stage");
   const image = $("image");
   let zoom = 1;
   let fit = true;
 
-  $("fit").textContent = t.fit;
-  $("actual").textContent = t.actual;
-  $("source").textContent = t.source;
+  $("fit").textContent = t("fit");
+  $("actual").textContent = t("actual");
+  $("source").textContent = t("source");
 
   const scaleNow = () =>
     image.naturalWidth ? image.width / image.naturalWidth : 1;
@@ -83,7 +75,7 @@
       const toSource = code.hidden;
       code.hidden = !toSource;
       stage.hidden = toSource;
-      button.textContent = toSource ? t.picture : t.source;
+      button.textContent = toSource ? t("picture") : t("source");
     };
   });
   api.postMessage({ type: "ready" });

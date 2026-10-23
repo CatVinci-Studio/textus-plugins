@@ -1,18 +1,11 @@
 (function () {
   "use strict";
   const api = acquireTextusApi();
-  const t =
-    api.language === "zh"
-      ? { fit: "适应宽度", loading: "正在打开…", failed: "无法打开这个 PDF：" }
-      : {
-          fit: "Fit width",
-          loading: "Opening…",
-          failed: "This PDF can't be opened: ",
-        };
+  const t = api.t;
   const $ = (id) => document.getElementById(id);
   const viewer = $("viewer");
   const status = $("status");
-  $("fit").textContent = t.fit;
+  $("fit").textContent = t("fit");
 
   const libReady = new Promise((resolve) => {
     if (window.pdfjsLib) resolve();
@@ -146,7 +139,7 @@
 
   api.onMessage(async (message) => {
     if (message.type !== "file") return;
-    status.textContent = t.loading;
+    status.textContent = t("loading");
     try {
       await libReady;
       const lib = window.pdfjsLib;
@@ -160,7 +153,7 @@
       status.textContent = "";
       await layout();
     } catch (err) {
-      status.textContent = t.failed + ((err && err.message) || err);
+      status.textContent = t("failed", (err && err.message) || err);
     }
   });
   api.postMessage({ type: "ready" });

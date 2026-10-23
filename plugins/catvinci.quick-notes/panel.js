@@ -1,30 +1,11 @@
 (function () {
   "use strict";
   const api = acquireTextusApi();
-  const zh = api.language === "zh";
-  const t = zh
-    ? {
-        title: "快速笔记",
-        new: "新建",
-        insert: "插入",
-        open: "打开",
-        delete: "删除",
-        empty: "还没有笔记。点“新建”，或在任何地方按 ⌘⌥N / Ctrl+Alt+N。",
-        placeholder: "写点什么…",
-      }
-    : {
-        title: "Quick Notes",
-        new: "New",
-        insert: "Insert",
-        open: "Open",
-        delete: "Delete",
-        empty: "No notes yet. Click New, or press ⌘⌥N / Ctrl+Alt+N anywhere.",
-        placeholder: "Write something…",
-      };
+  const t = api.t;
   const $ = (id) => document.getElementById(id);
-  $("title").textContent = t.title;
-  $("new").textContent = t.new;
-  $("empty").textContent = t.empty;
+  $("title").textContent = t("title");
+  $("new").textContent = t("new");
+  $("empty").textContent = t("empty");
   $("new").onclick = () => api.postMessage({ type: "new" });
 
   const timers = new Map();
@@ -58,7 +39,7 @@
         li.dataset.id = note.id;
         const area = document.createElement("textarea");
         area.dataset.id = note.id;
-        area.placeholder = t.placeholder;
+        area.placeholder = t("placeholder");
         area.addEventListener("input", () => {
           clearTimeout(timers.get(note.id));
           timers.set(
@@ -80,9 +61,9 @@
         stamp.className = "when muted";
         actions.append(
           stamp,
-          button(t.insert, "insert", note.id),
-          button(t.open, "open", note.id),
-          button(t.delete, "delete", note.id),
+          button(t("insert"), "insert", note.id),
+          button(t("open"), "open", note.id),
+          button(t("delete"), "delete", note.id),
         );
         li.append(area, actions);
       }

@@ -32,7 +32,6 @@ async function show() {
 }
 
 exports.activate = function () {
-  const zh = textus.env.language === "zh";
   textus.workspace.onDidSaveDocument(record);
   textus.document.onDidChangeActive(show);
   textus.window.registerWebviewViewProvider("catvinci.version-history.panel", {
@@ -57,7 +56,7 @@ exports.activate = function () {
             block: blocks[0].id,
             lastBlock: blocks[blocks.length - 1].id,
             text: version.text,
-            reason: zh ? "恢复到这个版本" : "Restore this version",
+            reason: textus.l10n.t("restoreReason"),
           });
         }
         if (message.type === "open")

@@ -24,12 +24,11 @@ async function add(text) {
 }
 
 exports.activate = function () {
-  const zh = textus.env.language === "zh";
   textus.commands.registerCommand(
     "catvinci.quick-notes.capture",
     async function () {
       const text = await textus.window.showInput({
-        prompt: zh ? "记下点什么" : "Note something down",
+        prompt: textus.l10n.t("prompt"),
         value: "",
       });
       if (text && text.trim()) await add(text.trim());
@@ -65,7 +64,7 @@ exports.activate = function () {
           await textus.document.proposeEdit({
             action: "insert_at_cursor",
             text: note.text,
-            reason: zh ? "插入快速笔记" : "Insert a quick note",
+            reason: textus.l10n.t("insertReason"),
           });
         if (message.type === "open" && note)
           await textus.window.openUntitled(note.text);

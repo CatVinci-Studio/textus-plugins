@@ -7,16 +7,25 @@
   "description": "%description%",
   "license": "MIT",
   "repository": "https://github.com/CatVinci-Studio/textus-plugins",
-  "engines": { "textus": "^1.2.0" },
+  "engines": {
+    "textus": "^1.3.0"
+  },
   "main": "host.js",
   "activationEvents": ["onStartupFinished"],
   "permissions": ["editor.input"],
   "contributes": {
     "commands": [
-      { "command": "catvinci.vim.toggle", "title": "%toggle%" }
+      {
+        "command": "catvinci.vim.toggle",
+        "title": "%toggle%"
+      }
     ],
     "menus": {
-      "app/plugins": [{ "command": "catvinci.vim.toggle" }]
+      "app/plugins": [
+        {
+          "command": "catvinci.vim.toggle"
+        }
+      ]
     },
     "settings": [
       {
@@ -43,7 +52,12 @@
       "flash": "Jump with s (flash)",
       "flashHelp": "In normal and visual mode, s and two characters label every place on screen they appear; a label's letter jumps there. Off, s is Vim's own (delete a character and insert).",
       "escape": "Leave insert mode with",
-      "escapeHelp": "Two letters typed quickly in insert mode that work as Escape, such as jk. Empty: Escape and Ctrl+[ only."
+      "escapeHelp": "Two letters typed quickly in insert mode that work as Escape, such as jk. Empty: Escape and Ctrl+[ only.",
+      "normal": "NORMAL",
+      "insert": "INSERT",
+      "visual": "VISUAL",
+      "vline": "V-LINE",
+      "statusTip": "Vim: click to turn off"
     },
     "zh": {
       "name": "Vim",
@@ -52,7 +66,124 @@
       "flash": "用 s 跳转（flash）",
       "flashHelp": "在普通和可视模式下，按 s 加两个字符，屏幕上每处出现的位置都会标上字母，按那个字母就跳过去。关掉后，s 是 Vim 原本的用法（删除一个字符并进入插入模式）。",
       "escape": "退出插入模式的按键",
-      "escapeHelp": "在插入模式下快速连按、当作 Esc 用的两个字母，比如 jk。留空：只用 Esc 和 Ctrl+[。"
+      "escapeHelp": "在插入模式下快速连按、当作 Esc 用的两个字母，比如 jk。留空：只用 Esc 和 Ctrl+[。",
+      "normal": "普通",
+      "insert": "插入",
+      "visual": "可视",
+      "vline": "可视行",
+      "statusTip": "Vim：点击关闭"
+    },
+    "zh-Hant": {
+      "name": "Vim",
+      "description": "在編輯器裡用 Vim 的模式和按鍵：一般、插入和可視模式，移動、運算子、計數、暫存器和 . 重複；還有 flash：按 s 加兩個字，再按標籤字母，跳到螢幕上任何位置。",
+      "toggle": "開啟或關閉 Vim 按鍵",
+      "flash": "用 s 跳轉（flash）",
+      "flashHelp": "在一般和可視模式下，按 s 加兩個字元，螢幕上每處出現的位置都會標上字母，按那個字母就跳過去。關掉後，s 是 Vim 原本的用法（刪除一個字元並進入插入模式）。",
+      "escape": "退出插入模式的按鍵",
+      "escapeHelp": "在插入模式下快速連按、當作 Esc 用的兩個字母，例如 jk。留空：只用 Esc 和 Ctrl+[。",
+      "normal": "一般",
+      "insert": "插入",
+      "visual": "可視",
+      "vline": "可視行",
+      "statusTip": "Vim：點一下關閉"
+    },
+    "ja": {
+      "name": "Vim",
+      "description": "エディタで Vim のモードとキーを。ノーマル・挿入・ビジュアル、モーション、オペレータ、カウント、レジスタ、ドットリピート。さらに flash：s と二文字、続けてラベルで画面のどこへでも移動。",
+      "toggle": "Vim キーのオン・オフ",
+      "flash": "s でジャンプ（flash）",
+      "flashHelp": "ノーマルとビジュアルモードで、s と二文字を打つと画面上のその位置すべてにラベルが付き、ラベルの文字でそこへ移ります。オフにすると s は Vim 本来の動作（一文字削除して挿入）です。",
+      "escape": "挿入モードを抜けるキー",
+      "escapeHelp": "挿入モードで素早く打つと Esc として働く二文字、たとえば jk。空欄なら Esc と Ctrl+[ だけです。",
+      "normal": "ノーマル",
+      "insert": "挿入",
+      "visual": "ビジュアル",
+      "vline": "ビジュアル行",
+      "statusTip": "Vim：クリックでオフ"
+    },
+    "ko": {
+      "name": "Vim",
+      "description": "편집기에서 Vim의 모드와 키를: 노멀·삽입·비주얼 모드, 이동, 연산자, 횟수, 레지스터와 점 반복. 그리고 flash: s와 두 글자, 이어서 라벨로 화면 어디로든 이동.",
+      "toggle": "Vim 키 켜기/끄기",
+      "flash": "s로 이동(flash)",
+      "flashHelp": "노멀과 비주얼 모드에서 s와 두 글자를 치면 화면에 그 글자가 있는 곳마다 라벨이 붙고, 라벨 글자를 누르면 그리로 갑니다. 끄면 s는 Vim 본래 동작(한 글자 지우고 삽입)입니다.",
+      "escape": "삽입 모드를 나가는 키",
+      "escapeHelp": "삽입 모드에서 빠르게 치면 Esc로 쓰이는 두 글자, 예를 들어 jk. 비워 두면 Esc와 Ctrl+[만 씁니다.",
+      "normal": "노멀",
+      "insert": "삽입",
+      "visual": "비주얼",
+      "vline": "비주얼 줄",
+      "statusTip": "Vim: 클릭하면 꺼집니다"
+    },
+    "es": {
+      "name": "Vim",
+      "description": "Los modos y teclas de Vim en el editor: normal, inserción y visual, movimientos, operadores, contadores, registros y repetición con punto; y flash: s y dos letras, luego una etiqueta, para saltar a cualquier punto de la pantalla.",
+      "toggle": "Activar o desactivar las teclas de Vim",
+      "flash": "Saltar con s (flash)",
+      "flashHelp": "En modo normal y visual, s y dos caracteres etiquetan cada lugar de la pantalla donde aparecen; la letra de una etiqueta salta allí. Desactivado, s es el de Vim (borrar un carácter e insertar).",
+      "escape": "Salir del modo de inserción con",
+      "escapeHelp": "Dos letras tecleadas rápido en modo de inserción que hacen de Escape, como jk. Vacío: solo Escape y Ctrl+[.",
+      "normal": "NORMAL",
+      "insert": "INSERTAR",
+      "visual": "VISUAL",
+      "vline": "VISUAL LÍNEA",
+      "statusTip": "Vim: haz clic para desactivarlo"
+    },
+    "fr": {
+      "name": "Vim",
+      "description": "Les modes et touches de Vim dans l’éditeur : normal, insertion et visuel, mouvements, opérateurs, compteurs, registres et répétition par point ; et flash : s et deux lettres, puis une étiquette, pour sauter n’importe où à l’écran.",
+      "toggle": "Activer ou désactiver les touches Vim",
+      "flash": "Sauter avec s (flash)",
+      "flashHelp": "En mode normal et visuel, s et deux caractères étiquettent chaque endroit de l’écran où ils apparaissent ; la lettre d’une étiquette y saute. Désactivé, s reste celui de Vim (supprimer un caractère et insérer).",
+      "escape": "Quitter le mode insertion avec",
+      "escapeHelp": "Deux lettres tapées vite en mode insertion qui servent d’Échap, comme jk. Vide : Échap et Ctrl+[ seulement.",
+      "normal": "NORMAL",
+      "insert": "INSERTION",
+      "visual": "VISUEL",
+      "vline": "VISUEL LIGNE",
+      "statusTip": "Vim : cliquez pour désactiver"
+    },
+    "de": {
+      "name": "Vim",
+      "description": "Vims Modi und Tasten im Editor: Normal, Einfügen und Visuell, Bewegungen, Operatoren, Zähler, Register und Punkt-Wiederholung – und Flash: s und zwei Buchstaben, dann ein Label, um überall auf dem Bildschirm hinzuspringen.",
+      "toggle": "Vim-Tasten ein- oder ausschalten",
+      "flash": "Mit s springen (Flash)",
+      "flashHelp": "Im Normal- und Visuell-Modus beschriften s und zwei Zeichen jede Stelle auf dem Bildschirm, an der sie stehen; der Buchstabe eines Labels springt dorthin. Aus, ist s das von Vim (ein Zeichen löschen und einfügen).",
+      "escape": "Einfügemodus verlassen mit",
+      "escapeHelp": "Zwei schnell getippte Buchstaben im Einfügemodus, die als Escape wirken, etwa jk. Leer: nur Escape und Strg+[.",
+      "normal": "NORMAL",
+      "insert": "EINFÜGEN",
+      "visual": "VISUELL",
+      "vline": "VISUELL ZEILE",
+      "statusTip": "Vim: zum Ausschalten klicken"
+    },
+    "ru": {
+      "name": "Vim",
+      "description": "Режимы и клавиши Vim в редакторе: обычный, вставка и визуальный, перемещения, операторы, счётчики, регистры и повтор точкой — и flash: s и две буквы, затем метка, чтобы прыгнуть в любое место экрана.",
+      "toggle": "Включить или выключить клавиши Vim",
+      "flash": "Прыжок по s (flash)",
+      "flashHelp": "В обычном и визуальном режимах s и два символа помечают каждое место на экране, где они встречаются; буква метки переносит туда. Если выключено, s работает как в Vim (удалить символ и перейти к вставке).",
+      "escape": "Выход из режима вставки",
+      "escapeHelp": "Две буквы, быстро набранные в режиме вставки, которые работают как Escape, например jk. Пусто — только Escape и Ctrl+[.",
+      "normal": "ОБЫЧНЫЙ",
+      "insert": "ВСТАВКА",
+      "visual": "ВИЗУАЛЬНЫЙ",
+      "vline": "ВИЗУАЛЬНЫЙ СТРОКА",
+      "statusTip": "Vim: нажмите, чтобы выключить"
+    },
+    "pt": {
+      "name": "Vim",
+      "description": "Os modos e teclas do Vim no editor: normal, inserção e visual, movimentos, operadores, contagens, registradores e repetição com ponto – e flash: s e duas letras, depois um rótulo, para pular para qualquer lugar da tela.",
+      "toggle": "Ligar ou desligar as teclas do Vim",
+      "flash": "Pular com s (flash)",
+      "flashHelp": "Nos modos normal e visual, s e dois caracteres marcam cada lugar da tela onde aparecem; a letra de um rótulo pula para lá. Desligado, o s é o do Vim (apagar um caractere e inserir).",
+      "escape": "Sair do modo de inserção com",
+      "escapeHelp": "Duas letras digitadas rápido no modo de inserção que funcionam como Escape, como jk. Vazio: só Escape e Ctrl+[.",
+      "normal": "NORMAL",
+      "insert": "INSERIR",
+      "visual": "VISUAL",
+      "vline": "VISUAL LINHA",
+      "statusTip": "Vim: clique para desligar"
     }
   }
 }

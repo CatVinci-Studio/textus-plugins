@@ -1,30 +1,11 @@
 (function () {
   "use strict";
   const api = acquireTextusApi();
-  const zh = api.language === "zh";
-  const t = zh
-    ? {
-        addList: "添加列表",
-        addCard: "+ 添加卡片",
-        markdown: "作为 Markdown 编辑",
-        newList: "新列表",
-        saved: "已保存",
-        saving: "正在保存…",
-        remove: "删除",
-      }
-    : {
-        addList: "Add list",
-        addCard: "+ Add a card",
-        markdown: "Edit as Markdown",
-        newList: "New list",
-        saved: "Saved",
-        saving: "Saving…",
-        remove: "Remove",
-      };
+  const t = api.t;
   const $ = (id) => document.getElementById(id);
   const md = window.kanbanMarkdown;
-  $("add-list").textContent = t.addList;
-  $("markdown").textContent = t.markdown;
+  $("add-list").textContent = t("addList");
+  $("markdown").textContent = t("markdown");
   $("markdown").onclick = () => api.postMessage({ type: "markdown" });
 
   let board = null;
@@ -32,7 +13,7 @@
   let dragged = null;
 
   function save() {
-    $("state").textContent = t.saving;
+    $("state").textContent = t("saving");
     clearTimeout(timer);
     timer = setTimeout(
       () => api.postMessage({ type: "save", text: md.serialize(board) }),
@@ -73,7 +54,7 @@
     const b = document.createElement("button");
     b.className = "icon remove";
     b.textContent = "✕";
-    b.setAttribute("aria-label", t.remove);
+    b.setAttribute("aria-label", t("remove"));
     b.onclick = onClick;
     return b;
   }
@@ -174,7 +155,7 @@
     });
     const add = document.createElement("button");
     add.className = "add-card";
-    add.textContent = t.addCard;
+    add.textContent = t("addCard");
     add.onclick = () => {
       const card = { text: "", done: false };
       list.cards.push(card);
@@ -207,7 +188,7 @@
   }
 
   $("add-list").onclick = () => {
-    board.lists.push({ title: t.newList, cards: [] });
+    board.lists.push({ title: t("newList"), cards: [] });
     changed();
   };
 
@@ -216,7 +197,7 @@
       board = md.parse(message.text);
       render();
     }
-    if (message.type === "saved") $("state").textContent = t.saved;
+    if (message.type === "saved") $("state").textContent = t("saved");
     if (message.type === "error") $("state").textContent = message.message;
   });
   api.postMessage({ type: "ready" });

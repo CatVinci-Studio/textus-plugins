@@ -1,12 +1,9 @@
 (function () {
   "use strict";
   const api = acquireTextusApi();
-  const zh = api.language === "zh";
   const $ = (id) => document.getElementById(id);
-  $("today").textContent = zh ? "今天" : "Today";
-  $("nofolder").textContent = zh
-    ? "打开一个文件夹后，每日笔记会放在里面。"
-    : "Open a folder, and your daily notes are kept in it.";
+  $("today").textContent = api.t("todayButton");
+  $("nofolder").textContent = api.t("nofolder");
 
   const pad = (n) => String(n).padStart(2, "0");
   const dateOf = (d) =>

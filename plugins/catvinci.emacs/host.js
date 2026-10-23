@@ -7,10 +7,6 @@
 // "line" here is a paragraph, a heading, a list item - or a code block's
 // line.
 
-function zh() {
-  return String(textus.env.language || "").indexOf("zh") === 0;
-}
-
 function mac() {
   return textus.env.platform === "macos";
 }
@@ -104,11 +100,11 @@ function showStatus() {
     return;
   }
   var text = "Emacs";
-  if (mark) text += zh() ? " · 标记" : " · Mark";
+  if (mark) text += " · " + textus.l10n.t("mark");
   if (prefix) text += " C-x-";
   status = textus.window.setStatusItem("mode", {
     text: text,
-    tooltip: zh() ? "Emacs：点击关闭" : "Emacs: click to turn off",
+    tooltip: textus.l10n.t("statusTip"),
     command: "catvinci.emacs.toggle",
   });
 }

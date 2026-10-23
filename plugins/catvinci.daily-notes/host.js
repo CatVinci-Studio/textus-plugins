@@ -56,11 +56,7 @@ async function refresh() {
 async function openDay(date) {
   const where = await folder();
   if (!where) {
-    await textus.window.showMessage(
-      textus.env.language === "zh"
-        ? "先打开一个文件夹，每日笔记会放在里面。"
-        : "Open a folder first: daily notes are kept in it.",
-    );
+    await textus.window.showMessage(textus.l10n.t("needsFolder"));
     return;
   }
   const path = join(where.dir, date + ".md");

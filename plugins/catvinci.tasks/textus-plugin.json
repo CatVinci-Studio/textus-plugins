@@ -1,19 +1,25 @@
 {
   "id": "catvinci.tasks",
   "name": "%name%",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "publisher": "catvinci",
   "author": "CatVinci Studio",
   "description": "%description%",
   "icon": "icon.svg",
   "license": "MIT",
   "repository": "https://github.com/CatVinci-Studio/textus-plugins",
-  "engines": { "textus": "^1.2.0" },
+  "engines": {
+    "textus": "^1.3.0"
+  },
   "main": "host.js",
   "permissions": ["workspace.read", "workspace.write"],
   "contributes": {
     "sidebarTabs": [
-      { "id": "catvinci.tasks.panel", "title": "%name%", "icon": "tab.svg" }
+      {
+        "id": "catvinci.tasks.panel",
+        "title": "%name%",
+        "icon": "tab.svg"
+      }
     ],
     "settings": [
       {
@@ -28,12 +34,100 @@
     "en": {
       "name": "Tasks",
       "description": "Every task (- [ ]) in the open folder's documents, in one list: tick one off there, or go to it.",
-      "showDone": "Show finished tasks"
+      "showDone": "Show finished tasks",
+      "done": "Done",
+      "open.one": "{0} open task",
+      "open.other": "{0} open tasks",
+      "none": "No open tasks in the folder.",
+      "nofolder": "Open a folder, and the tasks of all its documents are listed here."
     },
     "zh": {
       "name": "任务",
       "description": "把打开的文件夹里所有文档中的任务（- [ ]）汇总成一个列表：可以直接勾掉，也可以跳到它所在的地方。",
-      "showDone": "显示已完成的任务"
+      "showDone": "显示已完成的任务",
+      "done": "已完成",
+      "open.other": "{0} 项待办",
+      "none": "打开的文件夹里没有待办任务。",
+      "nofolder": "打开一个文件夹，这里会列出其中所有文档的任务。"
+    },
+    "zh-Hant": {
+      "name": "任務",
+      "description": "把開啟的資料夾裡所有文件中的任務（- [ ]）彙整成一個清單：可以直接勾掉，也可以跳到它所在的地方。",
+      "showDone": "顯示已完成的任務",
+      "done": "已完成",
+      "open.other": "{0} 項待辦",
+      "none": "開啟的資料夾裡沒有待辦任務。",
+      "nofolder": "開啟一個資料夾，這裡會列出其中所有文件的任務。"
+    },
+    "ja": {
+      "name": "タスク",
+      "description": "開いているフォルダの文書にあるタスク（- [ ]）をすべて一つのリストに。そこでチェックすることも、その場所へ移ることもできます。",
+      "showDone": "完了したタスクも表示",
+      "done": "完了",
+      "open.other": "未完了のタスク {0} 件",
+      "none": "フォルダに未完了のタスクはありません。",
+      "nofolder": "フォルダを開くと、その中のすべての文書のタスクがここに並びます。"
+    },
+    "ko": {
+      "name": "할 일",
+      "description": "연 폴더의 문서에 있는 할 일(- [ ])을 모두 한 목록에 모읍니다. 거기서 체크하거나, 그 자리로 갈 수 있습니다.",
+      "showDone": "끝난 할 일도 보기",
+      "done": "완료",
+      "open.other": "남은 할 일 {0}개",
+      "none": "폴더에 남은 할 일이 없습니다.",
+      "nofolder": "폴더를 열면 그 안 모든 문서의 할 일이 여기에 나옵니다."
+    },
+    "es": {
+      "name": "Tareas",
+      "description": "Todas las tareas (- [ ]) de los documentos de la carpeta abierta, en una lista: márcala ahí mismo o ve hasta ella.",
+      "showDone": "Mostrar las tareas terminadas",
+      "done": "Hechas",
+      "open.one": "{0} tarea pendiente",
+      "open.other": "{0} tareas pendientes",
+      "none": "No hay tareas pendientes en la carpeta.",
+      "nofolder": "Abre una carpeta y aquí aparecerán las tareas de todos sus documentos."
+    },
+    "fr": {
+      "name": "Tâches",
+      "description": "Toutes les tâches (- [ ]) des documents du dossier ouvert, en une liste : cochez-en une sur place, ou allez-y.",
+      "showDone": "Afficher les tâches terminées",
+      "done": "Terminées",
+      "open.one": "{0} tâche en cours",
+      "open.other": "{0} tâches en cours",
+      "none": "Aucune tâche en cours dans le dossier.",
+      "nofolder": "Ouvrez un dossier : les tâches de tous ses documents s’afficheront ici."
+    },
+    "de": {
+      "name": "Aufgaben",
+      "description": "Alle Aufgaben (- [ ]) in den Dokumenten des geöffneten Ordners in einer Liste: dort abhaken oder hinspringen.",
+      "showDone": "Erledigte Aufgaben zeigen",
+      "done": "Erledigt",
+      "open.one": "{0} offene Aufgabe",
+      "open.other": "{0} offene Aufgaben",
+      "none": "Keine offenen Aufgaben im Ordner.",
+      "nofolder": "Öffne einen Ordner, dann stehen hier die Aufgaben all seiner Dokumente."
+    },
+    "ru": {
+      "name": "Задачи",
+      "description": "Все задачи (- [ ]) из документов открытой папки в одном списке: отметьте задачу прямо там или перейдите к ней.",
+      "showDone": "Показывать выполненные задачи",
+      "done": "Выполненные",
+      "open.one": "{0} открытая задача",
+      "open.few": "{0} открытые задачи",
+      "open.many": "{0} открытых задач",
+      "open.other": "{0} открытой задачи",
+      "none": "В папке нет открытых задач.",
+      "nofolder": "Откройте папку — здесь появятся задачи из всех её документов."
+    },
+    "pt": {
+      "name": "Tarefas",
+      "description": "Todas as tarefas (- [ ]) dos documentos da pasta aberta, numa lista: marque uma ali mesmo ou vá até ela.",
+      "showDone": "Mostrar tarefas concluídas",
+      "done": "Concluídas",
+      "open.one": "{0} tarefa pendente",
+      "open.other": "{0} tarefas pendentes",
+      "none": "Não há tarefas pendentes na pasta.",
+      "nofolder": "Abra uma pasta e as tarefas de todos os documentos dela aparecerão aqui."
     }
   }
 }

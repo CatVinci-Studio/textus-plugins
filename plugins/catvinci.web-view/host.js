@@ -15,10 +15,9 @@ function openPage(url) {
 }
 
 exports.activate = function () {
-  const zh = textus.env.language === "zh";
   textus.commands.registerCommand("catvinci.web-view.open", async function () {
     const typed = await textus.window.showInput({
-      prompt: zh ? "网址" : "Web address",
+      prompt: textus.l10n.t("prompt"),
       value: "https://",
     });
     if (typed) await openPage(typed);

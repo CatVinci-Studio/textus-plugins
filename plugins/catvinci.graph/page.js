@@ -3,49 +3,30 @@
 (function () {
   "use strict";
   const api = acquireTextusApi();
-  const zh = api.language === "zh";
   const local = document.documentElement.dataset.local === "true";
-  const t = zh
-    ? {
-        search: "搜索笔记",
-        fit: "适应窗口",
-        full: "完整图谱",
-        stats: (n, e) => n + " 篇 · " + e + " 条链接",
-        nofolder: "打开一个文件夹，这里会画出其中文档之间的链接。",
-        nodoc: "打开文件夹中的一篇文档，这里会显示它周围的链接。",
-        alone: "这篇文档还没有链接。用 [[文档名]] 连到别的笔记。",
-      }
-    : {
-        search: "Search notes",
-        fit: "Fit",
-        full: "Full graph",
-        stats: (n, e) =>
-          n +
-          (n === 1 ? " note · " : " notes · ") +
-          e +
-          (e === 1 ? " link" : " links"),
-        nofolder:
-          "Open a folder, and the links between its documents are drawn here.",
-        nodoc: "Open a document of the folder to see the links around it.",
-        alone:
-          "This document has no links yet. Link to another note with [[its name]].",
-      };
+  const t = api.t;
+  // "3 notes", in the language's plural form ("notes.one", "notes.few"…).
+  const count = (key, n) => {
+    const form = key + "." + new Intl.PluralRules(api.language).select(n);
+    const text = t(form, n);
+    return text === form ? t(key + ".other", n) : text;
+  };
   const $ = (id) => document.getElementById(id);
   const view = window.createGraphView($("graph"), {
     onOpen: (path) => api.postMessage({ type: "open", path: path }),
   });
   if ($("search")) {
-    $("search").placeholder = t.search;
+    $("search").placeholder = t("search");
     $("search").addEventListener("input", () =>
       view.setQuery($("search").value),
     );
   }
   if ($("fit")) {
-    $("fit").textContent = t.fit;
+    $("fit").textContent = t("fit");
     $("fit").onclick = () => view.zoomToFit();
   }
   if ($("full")) {
-    $("full").textContent = t.full;
+    $("full").textContent = t("full");
     $("full").onclick = () => api.postMessage({ type: "full" });
   }
 
@@ -54,16 +35,18 @@
     if (message.type !== "graph") return;
     const graph = message.graph;
     $("status").textContent = !graph
-      ? t.nofolder
+      ? t("nofolder")
       : local && !graph.nodes.length
-        ? t.nodoc
+        ? t("nodoc")
         : local && graph.nodes.length === 1
-          ? t.alone
+          ? t("alone")
           : "";
     const data = graph || { nodes: [], edges: [] };
     view.setData(data, message.focus);
     $("stats").textContent = graph
-      ? t.stats(view.nodeCount(), view.edgeCount())
+      ? count("notes", view.nodeCount()) +
+        " · " +
+        count("links", view.edgeCount())
       : "";
     if (first && data.nodes.length) {
       first = false;

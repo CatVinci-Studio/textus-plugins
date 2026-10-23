@@ -1,14 +1,16 @@
 {
   "id": "catvinci.image-viewer",
   "name": "%name%",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "publisher": "catvinci",
   "author": "CatVinci Studio",
   "description": "%description%",
   "icon": "icon.svg",
   "license": "MIT",
   "repository": "https://github.com/CatVinci-Studio/textus-plugins",
-  "engines": { "textus": "^1.2.0" },
+  "engines": {
+    "textus": "^1.3.0"
+  },
   "main": "host.js",
   "permissions": [],
   "contributes": {
@@ -33,11 +35,83 @@
   "l10n": {
     "en": {
       "name": "Image Viewer",
-      "description": "Open pictures and SVG files in a tab: zoom, fit, and an SVG's source."
+      "description": "Open pictures and SVG files in a tab: zoom, fit, and an SVG's source.",
+      "fit": "Fit",
+      "actual": "Actual size",
+      "source": "Source",
+      "picture": "Picture"
     },
     "zh": {
       "name": "图片查看器",
-      "description": "在标签页里打开图片和 SVG 文件：缩放、适应窗口，还能查看 SVG 源码。"
+      "description": "在标签页里打开图片和 SVG 文件：缩放、适应窗口，还能查看 SVG 源码。",
+      "fit": "适应窗口",
+      "actual": "原始大小",
+      "source": "源码",
+      "picture": "图片"
+    },
+    "zh-Hant": {
+      "name": "圖片檢視器",
+      "description": "在分頁中開啟圖片和 SVG 檔案：縮放、符合視窗，還能查看 SVG 原始碼。",
+      "fit": "符合視窗",
+      "actual": "原始大小",
+      "source": "原始碼",
+      "picture": "圖片"
+    },
+    "ja": {
+      "name": "画像ビューア",
+      "description": "画像や SVG ファイルをタブで開きます。拡大縮小、ウインドウに合わせる表示、SVG のソースも。",
+      "fit": "ウインドウに合わせる",
+      "actual": "実際のサイズ",
+      "source": "ソース",
+      "picture": "画像"
+    },
+    "ko": {
+      "name": "이미지 뷰어",
+      "description": "그림과 SVG 파일을 탭에서 엽니다: 확대·축소, 창에 맞추기, SVG의 소스까지.",
+      "fit": "창에 맞추기",
+      "actual": "실제 크기",
+      "source": "소스",
+      "picture": "그림"
+    },
+    "es": {
+      "name": "Visor de imágenes",
+      "description": "Abre imágenes y archivos SVG en una pestaña: zoom, ajuste y el código de un SVG.",
+      "fit": "Ajustar",
+      "actual": "Tamaño real",
+      "source": "Código",
+      "picture": "Imagen"
+    },
+    "fr": {
+      "name": "Visionneuse d’images",
+      "description": "Ouvrez images et fichiers SVG dans un onglet : zoom, ajustement et source d’un SVG.",
+      "fit": "Ajuster",
+      "actual": "Taille réelle",
+      "source": "Source",
+      "picture": "Image"
+    },
+    "de": {
+      "name": "Bildbetrachter",
+      "description": "Öffne Bilder und SVG-Dateien in einem Tab: Zoom, Einpassen und der Quelltext eines SVG.",
+      "fit": "Einpassen",
+      "actual": "Originalgröße",
+      "source": "Quelltext",
+      "picture": "Bild"
+    },
+    "ru": {
+      "name": "Просмотр изображений",
+      "description": "Открывайте изображения и файлы SVG во вкладке: масштаб, вписывание и исходный код SVG.",
+      "fit": "Вписать",
+      "actual": "Исходный размер",
+      "source": "Исходный код",
+      "picture": "Изображение"
+    },
+    "pt": {
+      "name": "Visualizador de imagens",
+      "description": "Abra imagens e arquivos SVG numa aba: zoom, ajuste e o código de um SVG.",
+      "fit": "Ajustar",
+      "actual": "Tamanho real",
+      "source": "Código",
+      "picture": "Imagem"
     }
   }
 }

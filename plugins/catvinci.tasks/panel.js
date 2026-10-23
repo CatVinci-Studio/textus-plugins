@@ -1,23 +1,15 @@
 (function () {
   "use strict";
   const api = acquireTextusApi();
-  const zh = api.language === "zh";
-  const t = zh
-    ? {
-        done: "已完成",
-        open: (n) => n + " 项待办",
-        none: "打开的文件夹里没有待办任务。",
-        nofolder: "打开一个文件夹，这里会列出其中所有文档的任务。",
-      }
-    : {
-        done: "Done",
-        open: (n) => n + (n === 1 ? " open task" : " open tasks"),
-        none: "No open tasks in the folder.",
-        nofolder:
-          "Open a folder, and the tasks of all its documents are listed here.",
-      };
+  const t = api.t;
+  // "3 open tasks", in the language's plural form ("open.one", "open.few"…).
+  const count = (key, n) => {
+    const form = key + "." + new Intl.PluralRules(api.language).select(n);
+    const text = t(form, n);
+    return text === form ? t(key + ".other", n) : text;
+  };
   const $ = (id) => document.getElementById(id);
-  $("done-label").textContent = t.done;
+  $("done-label").textContent = t("done");
   $("refresh").onclick = () => api.postMessage({ type: "refresh" });
   let files = [];
   let showDone = !!(api.getState() || {}).showDone;
@@ -33,7 +25,7 @@
     box.textContent = "";
     if (files === null) {
       $("summary").textContent = "";
-      $("empty").textContent = t.nofolder;
+      $("empty").textContent = t("nofolder");
       $("empty").hidden = false;
       return;
     }
@@ -83,8 +75,8 @@
       }
       box.append(section);
     }
-    $("summary").textContent = t.open(open);
-    $("empty").textContent = t.none;
+    $("summary").textContent = count("open", open);
+    $("empty").textContent = t("none");
     $("empty").hidden = box.children.length > 0;
   }
 
