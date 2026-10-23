@@ -113,6 +113,7 @@
         grid.get(key).push(n);
       }
       const strength = 900;
+      const room = 56;
       for (const n of nodes) {
         const gx = Math.floor(n.x / cell);
         const gy = Math.floor(n.y / cell);
@@ -134,6 +135,14 @@
               const f = (strength / d2) * alpha;
               n.vx += x * f * 0.01;
               n.vy += y * f * 0.01;
+              // No closer than a label's room: the push above fades with
+              // distance, and left to it a few notes drew over each other.
+              if (d2 < room * room) {
+                const d = Math.sqrt(d2);
+                const push = ((room - d) / d) * 0.25 * alpha;
+                n.vx += x * push;
+                n.vy += y * push;
+              }
             }
           }
         // A gentle pull to the middle keeps islands in view.
