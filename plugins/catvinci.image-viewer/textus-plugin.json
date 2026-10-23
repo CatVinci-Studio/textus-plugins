@@ -1,7 +1,7 @@
 {
   "id": "catvinci.image-viewer",
   "name": "%name%",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "publisher": "catvinci",
   "author": "CatVinci Studio",
   "description": "%description%",
