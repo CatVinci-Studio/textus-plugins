@@ -28,13 +28,13 @@ Each one asks for the permissions it needs before it runs, and you can take any 
 
 ## How Textus gets them
 
-Each plugin's folder in [`plugins/`](plugins/) is packaged by `npm run build` into a zip, with the libraries [`libs.json`](libs.json) lists. The [release workflow](.github/workflows/release.yml) publishes each new version as a release of its own (`catvinci.graph-v1.0.0`) and the catalog, `index.json`, on the `catalog` release. Textus reads that catalog, and checks each package against the SHA-256 it lists before it installs it.
+Each plugin's folder in [`plugins/`](plugins/) is packaged by `npm run build` into a zip, with the libraries [`libs.json`](libs.json) lists. The [release workflow](.github/workflows/release.yml) publishes each new version as a release of its own (`catvinci.graph-v1.0.0`) and the catalog, `index.json`, on the `catalog` release, with the skill files in [`skills/`](skills/) beside it. Textus reads that catalog, and checks each package against the SHA-256 it lists before it installs it.
 
 ## Writing a plugin
 
 A plugin is a folder with a `textus-plugin.json` and its code, run in a sandbox. The guide is [Writing plugins](https://github.com/CatVinci-Studio/Textus/blob/main/docs/dev/writing-plugins.md) in the Textus repository; the plugins here are complete examples. To try yours, use **Settings › Plugins › Load a plugin folder…**; to give it to someone, zip the folder and they install it with **Install from file…**.
 
-A way to list your plugin here, beside the official ones, is coming with the plugin market.
+To list yours in the market beside the official ones - a plugin, or a skill in [`skills/`](skills/) - see [Listing in the Textus market](LISTING.md).
 
 ## Developing these plugins
 
@@ -58,4 +58,4 @@ MIT - see [LICENSE](LICENSE). The libraries copied into the packages keep their 
 
 每个插件运行前都会先请求它需要的权限，之后可以在设置 › 插件里它自己的页面里收回。
 
-写插件请看 Textus 仓库里的 [Writing plugins](https://github.com/CatVinci-Studio/Textus/blob/main/docs/dev/writing-plugins.md)，这里的插件都是完整的例子。自己的插件可以用**设置 › 插件 › 载入插件文件夹…**试用，打成 zip 后别人用**从文件安装…**安装。以后插件市场上线，就可以把你的插件也列到这里。
+写插件请看 Textus 仓库里的 [Writing plugins](https://github.com/CatVinci-Studio/Textus/blob/main/docs/dev/writing-plugins.md)，这里的插件都是完整的例子。自己的插件可以用**设置 › 插件 › 载入插件文件夹…**试用，打成 zip 后别人用**从文件安装…**安装。想把你的插件或技能上架到市场，请看 [上架说明](LISTING.md#中文说明)。
