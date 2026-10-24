@@ -58,10 +58,7 @@ exports.activate = function () {
           }
         }
         if (message.type === "markdown")
-          await textus.commands.executeCommand(
-            "textus.openAsDocument",
-            document.path,
-          );
+          await textus.window.openFile(document.path, { asDocument: true });
       });
       const html = await textus.plugin.readText("board.html");
       webview.html = html.replace("{{lang}}", textus.env.language);
