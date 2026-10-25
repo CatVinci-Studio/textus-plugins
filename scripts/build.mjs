@@ -138,8 +138,24 @@ function skillOf(file) {
     throw new Error(`${file}: textus-version "${version}" is not x.y.z`);
   if (!text.slice(front[0].length).trim())
     throw new Error(`${file}: no instructions`);
-  return { name, description, version, bytes: Buffer.from(text) };
+  // The modes it works in, and its name and line in each UI language.
+  const meta = (key) =>
+    (new RegExp(`^  textus-${key}:\\s*"([^"\\n]*)"`, "m").exec(front[1]) ??
+      [])[1];
+  const modes = (meta("modes") ?? "write")
+    .split(/[\s,]+/)
+    .filter(Boolean);
+  for (const mode of modes)
+    if (!MODES.includes(mode))
+      throw new Error(`${file}: textus-modes "${mode}" is not one of ${MODES}`);
+  const labels = {};
+  for (const m of front[1].matchAll(/^  textus-label-([\w-]+):\s*"([^"\n]*)"/gm))
+    labels[m[1]] = { label: m[2], hint: meta(`hint-${m[1]}`) ?? "" };
+  return { name, description, version, modes, labels, bytes: Buffer.from(text) };
 }
+
+/** The panel modes a skill can be in (`textus-modes`). */
+const MODES = ["write", "review", "create"];
 
 const skillFiles = readdirSync(SKILLS)
   .filter((f) => f.endsWith(".md"))
@@ -154,6 +170,8 @@ for (const file of skillFiles) {
     name: skill.name,
     version: skill.version,
     description: skill.description,
+    modes: skill.modes,
+    labels: skill.labels,
     author: "CatVinci Studio",
     official: true,
     url: `${REPOSITORY}/releases/download/catalog/${asset}`,

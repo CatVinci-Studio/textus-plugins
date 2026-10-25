@@ -24,7 +24,7 @@ A plugin is a folder in [`plugins/`](plugins/) with a `textus-plugin.json` manif
 
 ## Skills
 
-A skill is one Markdown file in [`skills/`](skills/), named after the skill (`press-release.md`), with front matter like the built-in skills' ([AGENTS.md › Skills](https://github.com/CatVinci-Studio/Textus/blob/main/AGENTS.md)): `name` (the file's name), `description` (what it does and when to use it - Textus AI reads it to decide), and `metadata` with `textus-version`, `textus-invocation` and `textus-category`, and `textus-aliases-zh` and the like for its names in other languages.
+A skill is one Markdown file in [`skills/`](skills/), named after the skill (`press-release.md`), with front matter like the built-in skills' ([AGENTS.md › Skills](https://github.com/CatVinci-Studio/Textus/blob/main/AGENTS.md)): `name` (the file's name), `description` (what it does and when to use it - Textus AI reads it to decide), and `metadata` with `textus-version`, `textus-invocation`, `textus-category` and `textus-modes` - the panel modes it works in, one or more of `write`, `review` and `create` - and, for each UI language, `textus-label-<code>` and `textus-hint-<code>` (its name and one line on what it does) and `textus-aliases-<code>` (other words typed after `/`).
 
 - **A procedure, not a one-off.** A kind of task people do again and again, with the steps that make it come out right.
 - **Never invents.** A skill that writes from the user's material says what to do when the material is missing a detail (leave a placeholder, ask) - never to make it up.
@@ -68,7 +68,7 @@ Textus 的 **设置 › 扩展 › 获取更多** 里有三类东西：插件和
 
 ### 技能
 
-技能是 [`skills/`](skills/) 下的一个 Markdown 文件，以技能名命名（`press-release.md`），前置信息和内置技能一样：`name`（与文件名相同）、`description`（做什么、什么时候用——Textus AI 据此决定何时使用），`metadata` 里有 `textus-version`、`textus-invocation`、`textus-category`，以及 `textus-aliases-zh` 等其他语言的名字。
+技能是 [`skills/`](skills/) 下的一个 Markdown 文件，以技能名命名（`press-release.md`），前置信息和内置技能一样：`name`（与文件名相同）、`description`（做什么、什么时候用——Textus AI 据此决定何时使用），`metadata` 里有 `textus-version`、`textus-invocation`、`textus-category` 和 `textus-modes`（适用的模式：`write`、`review`、`create` 中的一个或几个），以及每种界面语言的 `textus-label-<code>`、`textus-hint-<code>`（名字和一句说明）和 `textus-aliases-<code>`（`/` 后还能输入的别名）。
 
 - **是一套做法，不是一次性要求**：大家反复会做的一类事，以及把它做好的步骤。
 - **不编造**：根据用户材料写东西的技能，要说明材料缺细节时怎么办（留占位、去问），绝不让 AI 编。
