@@ -11,7 +11,7 @@
     "textus": "^1.3.0"
   },
   "main": "host.js",
-  "activationEvents": ["onStartupFinished"],
+  "activationEvents": ["onHover"],
   "permissions": ["document.read", "workspace.read"],
   "contributes": {},
   "l10n": {
