@@ -3,6 +3,9 @@
 // to the number set in Settings. The sidebar lists the versions of the document in front; one
 // comes back as a proposal replacing the document, accepted or rejected
 // like any edit, or opens as a new document.
+/** What activate was given: the plugin's storage and own files. */
+let ctx;
+
 let panel = null;
 const MAX_TEXT = 2 * 1024 * 1024;
 
@@ -24,7 +27,7 @@ function keyOf(path) {
 
 async function versionsOf(path) {
   if (!path) return [];
-  const kept = await textus.storage.get(keyOf(path));
+  const kept = await ctx.storage.global.get(keyOf(path));
   // Two paths with one hash: not this document's.
   return kept && kept.path === path ? kept.versions : [];
 }
@@ -47,7 +50,7 @@ async function record(saved) {
   // The storage full: the oldest half goes, until the newest fits.
   for (;;) {
     try {
-      await textus.storage.set(keyOf(saved.path), {
+      await ctx.storage.global.set(keyOf(saved.path), {
         path: saved.path,
         versions: versions,
       });
@@ -62,20 +65,21 @@ async function record(saved) {
 
 async function show() {
   if (!panel) return;
-  const path = await textus.document.getPath();
+  const path = await textus.editor.getPath();
   panel.postMessage({
     type: "versions",
     path: path,
-    current: path ? await textus.document.getText() : null,
+    current: path ? await textus.editor.getText() : null,
     versions: await versionsOf(path),
   });
 }
 
-exports.activate = function () {
-  textus.workspace.onDidSaveDocument(record);
-  textus.document.onDidChangeActive(show);
-  textus.window.registerWebviewViewProvider("catvinci.version-history.panel", {
-    resolveWebviewView: async function (webview) {
+exports.activate = function (context) {
+  ctx = context;
+  textus.files.onDidSave(record);
+  textus.editor.onDidChangeActive(show);
+  textus.views.registerWebview("catvinci.version-history.panel", {
+    resolve: async function (webview) {
       panel = webview;
       webview.onDidDispose(function () {
         if (panel === webview) panel = null;
@@ -83,7 +87,7 @@ exports.activate = function () {
       webview.onDidReceiveMessage(async function (message) {
         if (message.type === "ready" || message.type === "refresh")
           await show();
-        const path = await textus.document.getPath();
+        const path = await textus.editor.getPath();
         const version = (await versionsOf(path)).find(
           (v) => v.at === message.at,
         );
@@ -91,28 +95,24 @@ exports.activate = function () {
         if (message.type === "restore") {
           // The whole document: its first block to its last - or, empty,
           // the version written where the caret is.
-          const blocks = await textus.document.getBlocks();
+          const blocks = await textus.editor.getBlocks();
           const reason = textus.l10n.t("restoreReason");
-          await textus.document.proposeEdit(
+          await textus.editor.propose(
             blocks && blocks.length
               ? {
                   action: "replace",
                   block: blocks[0].id,
                   lastBlock: blocks[blocks.length - 1].id,
                   text: version.text,
-                  reason: reason,
                 }
-              : {
-                  action: "insert_at_cursor",
-                  text: version.text,
-                  reason: reason,
-                },
+              : { action: "insert_at_cursor", text: version.text },
+            { reason: reason },
           );
         }
         if (message.type === "open")
-          await textus.window.openUntitled(version.text);
+          await textus.layout.openUntitled(version.text);
       });
-      const html = await textus.plugin.readText("panel.html");
+      const html = await ctx.plugin.readText("panel.html");
       webview.html = html.replace("{{lang}}", textus.env.language);
     },
   });

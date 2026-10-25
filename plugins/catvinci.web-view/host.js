@@ -4,6 +4,9 @@
 // search for, a page opened before, the selected link, and a web link
 // Ctrl/Cmd+clicked in a document (contributes.links).
 
+/** What activate was given: the plugin's storage and own files. */
+let ctx;
+
 /** The pages opened lately, newest first, kept in the plugin's storage. */
 const RECENT = "recent";
 const RECENT_KEPT = 20;
@@ -33,9 +36,9 @@ async function searchFor(words) {
 }
 
 async function remember(url) {
-  const list = (await textus.storage.get(RECENT)) || [];
+  const list = (await ctx.storage.global.get(RECENT)) || [];
   const next = [url, ...list.filter((u) => u !== url)].slice(0, RECENT_KEPT);
-  await textus.storage.set(RECENT, next);
+  await ctx.storage.global.set(RECENT, next);
 }
 
 /** Opens what was typed: the address, or a search for the words. */
@@ -44,17 +47,18 @@ async function openTyped(text) {
   if (!trimmed) return;
   const url = asAddress(trimmed) || (await searchFor(trimmed));
   await remember(url);
-  return textus.window.openWebPage(url);
+  return textus.layout.openWebPage(url);
 }
 
-exports.activate = function () {
+exports.activate = function (context) {
+  ctx = context;
   const t = textus.l10n.t;
-  textus.commands.registerCommand("catvinci.web-view.open", async function () {
-    const recent = (await textus.storage.get(RECENT)) || [];
+  textus.commands.register("catvinci.web-view.open", async function () {
+    const recent = (await ctx.storage.global.get(RECENT)) || [];
     let typed;
     if (recent.length) {
       // A page opened before, or a new one.
-      const picked = await textus.window.showQuickPick(
+      const picked = await textus.ui.pick(
         [
           { label: t("newPage"), value: "" },
           ...recent.map((url) => ({ label: url.replace(/^https:\/\//, ""), value: url })),
@@ -63,16 +67,16 @@ exports.activate = function () {
         { placeholder: t("recentPlaceholder") },
       );
       if (picked === null || picked === undefined) return;
-      if (picked === "clear") return textus.storage.set(RECENT, []);
+      if (picked === "clear") return ctx.storage.global.set(RECENT, []);
       if (picked) return openTyped(picked);
     }
-    typed = await textus.window.showInput({ prompt: t("prompt"), value: "" });
+    typed = await textus.ui.input({ prompt: t("prompt"), value: "" });
     if (typed) await openTyped(typed);
   });
-  textus.commands.registerCommand(
+  textus.commands.register(
     "catvinci.web-view.openSelection",
     async function () {
-      const selection = await textus.document.getSelection();
+      const selection = await textus.editor.getSelection();
       // As Markdown, a link's target is there; its plain text is only the
       // link's words.
       const text = selection && (selection.markdown || selection.text);
@@ -82,7 +86,7 @@ exports.activate = function () {
       if (target) await openTyped(target);
     },
   );
-  textus.commands.registerCommand(
+  textus.commands.register(
     "catvinci.web-view.openLink",
     async function (url) {
       await openTyped(url);

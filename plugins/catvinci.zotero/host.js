@@ -3,6 +3,9 @@
 // API on this computer (http://localhost:23119/api/), which Zotero serves
 // once "Allow other applications on this computer to communicate with
 // Zotero" is on - nothing leaves the computer.
+/** What activate was given: the plugin's storage and own files. */
+let ctx;
+
 const API = "http://localhost:23119/api/users/0/items/top";
 
 const t = textus.l10n.t;
@@ -114,18 +117,15 @@ function card(item) {
 const RECENT = "recent";
 
 async function insert(item, style) {
-  await textus.document.proposeEdit({
-    action: "insert_at_cursor",
-    text: citation(item, style),
-    reason: t("citeReason", item.data.title || ""),
-  });
-  const recent = (await textus.storage.get(RECENT)) || [];
+  // Picked by the user: the citation goes in at the caret, one undo away.
+  await textus.editor.insertText(citation(item, style));
+  const recent = (await ctx.storage.global.get(RECENT)) || [];
   const entry = {
     key: item.key,
     title: item.data.title || item.key,
     byline: [authors(item), year(item)].filter(Boolean).join(" · "),
   };
-  await textus.storage.set(
+  await ctx.storage.global.set(
     RECENT,
     [entry, ...recent.filter((r) => r.key !== item.key)].slice(0, 10),
   );
@@ -175,10 +175,10 @@ function reference(item) {
   );
 }
 
-exports.activate = function () {
+exports.activate = function (context) {
+  ctx = context;
   // Resting on a citation shows what it cites (Textus 1.3 and later).
-  if (textus.editor && textus.editor.registerHoverProvider)
-    textus.editor.registerHoverProvider({
+  textus.editor.registerHover({
       provideHover: async function (target) {
         if (target.type !== "citation" && target.type !== "link") return null;
         try {
@@ -191,15 +191,15 @@ exports.activate = function () {
       },
     });
 
-  textus.commands.registerCommand("catvinci.zotero.cite", async function () {
+  textus.commands.register("catvinci.zotero.cite", async function () {
     const style = await textus.settings.get("style");
     // The selection is what to look for; else a recent item, or a search.
-    const selection = await textus.document.getSelection();
+    const selection = await textus.editor.getSelection();
     let query = selection && selection.text && selection.text.trim();
     if (!query) {
-      const recent = (await textus.storage.get(RECENT)) || [];
+      const recent = (await ctx.storage.global.get(RECENT)) || [];
       if (recent.length) {
-        const picked = await textus.window.showQuickPick(
+        const picked = await textus.ui.pick(
           [
             { label: t("searchMore"), value: "" },
             ...recent.map((r) => ({
@@ -216,21 +216,21 @@ exports.activate = function () {
           if (item) return insert(item, style);
         }
       }
-      query = await textus.window.showInput({ prompt: t("search"), value: "" });
+      query = await textus.ui.input({ prompt: t("search"), value: "" });
       if (!query || !query.trim()) return;
     }
     let items;
     try {
       items = await search(query.trim());
     } catch (err) {
-      await textus.window.showMessage(err.message, { tone: "warning" });
+      await textus.ui.message(err.message, { tone: "warning" });
       return;
     }
     if (!items.length) {
-      await textus.window.showMessage(t("nothing"));
+      await textus.ui.message(t("nothing"));
       return;
     }
-    const picked = await textus.window.showQuickPick(
+    const picked = await textus.ui.pick(
       items.map((item) => ({
         label: item.data.title || item.key,
         description: [authors(item), year(item)].filter(Boolean).join(" · "),
@@ -242,13 +242,13 @@ exports.activate = function () {
     if (item) await insert(item, style);
   });
 
-  textus.commands.registerCommand(
+  textus.commands.register(
     "catvinci.zotero.bibliography",
     async function () {
-      const text = (await textus.document.getText()) || "";
+      const text = (await textus.editor.getText()) || "";
       const found = citedIn(text);
       if (!found.length) {
-        await textus.window.showMessage(t("noCitations"));
+        await textus.ui.message(t("noCitations"));
         return;
       }
       let items;
@@ -256,11 +256,11 @@ exports.activate = function () {
         items = (await Promise.all(found.map((f) => itemFor(f).catch(() => null))))
           .filter(Boolean);
       } catch (err) {
-        await textus.window.showMessage(err.message, { tone: "warning" });
+        await textus.ui.message(err.message, { tone: "warning" });
         return;
       }
       if (!items.length) {
-        await textus.window.showMessage(t("unreachable"), { tone: "warning" });
+        await textus.ui.message(t("unreachable"), { tone: "warning" });
         return;
       }
       // One entry per item, by its first author, then its year.
@@ -271,10 +271,9 @@ exports.activate = function () {
           (authors(a) + year(a)).localeCompare(authors(b) + year(b)),
         )
         .map(reference);
-      await textus.document.proposeEdit({
+      await textus.editor.edit({
         action: "append",
         text: "## " + t("references") + "\n\n" + entries.join("\n"),
-        reason: t("bibliographyReason", entries.length),
       });
     },
   );

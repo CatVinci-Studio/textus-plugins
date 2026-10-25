@@ -88,12 +88,12 @@ function taken() {
 }
 
 function capture() {
-  if (!on) return textus.editor.captureKeys(null);
-  return textus.editor.captureKeys({ mode: "some", keys: taken() });
+  if (!on) return textus.editor.keys.capture(null);
+  return textus.editor.keys.capture({ mode: "some", keys: taken() });
 }
 
 function exec(op) {
-  return textus.editor.exec(op);
+  return textus.editor.keys.exec(op);
 }
 
 function showStatus() {
@@ -105,7 +105,7 @@ function showStatus() {
   var text = "Emacs";
   if (mark) text += " · " + textus.l10n.t("mark");
   if (prefix) text += " C-x-";
-  status = textus.window.setStatusItem("mode", {
+  status = textus.ui.statusItem("mode", {
     text: text,
     tooltip: textus.l10n.t("statusTip"),
     command: "catvinci.emacs.toggle",
@@ -166,7 +166,7 @@ async function key(name) {
       capture();
       showStatus();
     } else if (name === "ctrl+s")
-      await textus.commands.executeCommand("textus.save");
+      await textus.commands.execute("textus.save");
     lastWasKill = false;
     return;
   }
@@ -301,8 +301,8 @@ exports.activate = async function () {
   textus.settings.onDidChange(function () {
     readSettings().then(capture);
   });
-  textus.editor.onKey(handle);
-  textus.commands.registerCommand("catvinci.emacs.toggle", function () {
+  textus.editor.keys.onKey(handle);
+  textus.commands.register("catvinci.emacs.toggle", function () {
     on = !on;
     mark = false;
     prefix = "";
@@ -314,5 +314,5 @@ exports.activate = async function () {
 };
 
 exports.deactivate = function () {
-  textus.editor.captureKeys(null);
+  textus.editor.keys.capture(null);
 };

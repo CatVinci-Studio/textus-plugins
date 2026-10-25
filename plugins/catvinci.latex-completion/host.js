@@ -3,7 +3,7 @@
 // it draws; Enter or Tab writes it, with the caret inside its braces.
 /* global latexCommands */
 exports.activate = function () {
-  textus.editor.registerCompletionProvider(
+  textus.editor.registerCompletion(
     "catvinci.latex-completion.commands",
     {
       provideCompletions: function (context) {

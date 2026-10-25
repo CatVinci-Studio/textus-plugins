@@ -2,20 +2,24 @@
 // docx-preview in the page (view.html). "Edit as Markdown" hands the file
 // to Textus to convert into a document of the user's, as File > Open did
 // before this plugin.
-exports.activate = function () {
-  textus.window.registerCustomEditorProvider("catvinci.word-reader.docx", {
-    resolveCustomEditor: async function (document, webview) {
+/** What activate was given: the plugin's storage and own files. */
+let ctx;
+
+exports.activate = function (context) {
+  ctx = context;
+  textus.views.registerFileEditor("catvinci.word-reader.docx", {
+    resolve: async function (document, webview) {
       webview.onDidReceiveMessage(async function (message) {
         if (message.type === "ready")
           webview.postMessage({
             type: "file",
             name: document.fileName,
-            bytes: await document.readBytes(),
+            bytes: await document.readFile(),
           });
         if (message.type === "edit")
-          await textus.window.openFile(document.path, { asDocument: true });
+          await textus.layout.open(document.path, { asDocument: true });
       });
-      const html = await textus.plugin.readText("view.html");
+      const html = await ctx.plugin.readText("view.html");
       webview.html = html.replace("{{lang}}", textus.env.language);
     },
   });

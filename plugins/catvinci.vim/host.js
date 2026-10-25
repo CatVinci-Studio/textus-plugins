@@ -64,7 +64,7 @@ var MOTIONS = {
 var INCLUSIVE = { wordEnd: true, lineEnd: true, findChar: true };
 
 function exec(op) {
-  return textus.editor.exec(op);
+  return textus.editor.keys.exec(op);
 }
 
 function label() {
@@ -81,7 +81,7 @@ function showStatus() {
     status = null;
     return;
   }
-  status = textus.window.setStatusItem("mode", {
+  status = textus.ui.statusItem("mode", {
     text: label(),
     tooltip: textus.l10n.t("statusTip"),
     command: "catvinci.vim.toggle",
@@ -89,7 +89,7 @@ function showStatus() {
 }
 
 function captureFor(m) {
-  if (!on) return textus.editor.captureKeys(null);
+  if (!on) return textus.editor.keys.capture(null);
   if (m === "insert") {
     // Escape, and every key an insert-mode mapping starts with or goes on
     // with (jj, jk): the rest are typed by the editor itself.
@@ -99,10 +99,10 @@ function captureFor(m) {
         if (keys.indexOf(k) < 0) keys.push(k);
       });
     });
-    return textus.editor.captureKeys({ mode: "some", keys: keys });
+    return textus.editor.keys.capture({ mode: "some", keys: keys });
   }
   // Every key, and these Ctrl ones the app would otherwise keep.
-  return textus.editor.captureKeys({
+  return textus.editor.keys.capture({
     mode: "all",
     keys: ["ctrl+r", "ctrl+d", "ctrl+u", "ctrl+["],
   });
@@ -495,7 +495,7 @@ async function runCommand(text) {
     case "wall":
     case "up":
     case "update":
-      return textus.commands.executeCommand("textus.save");
+      return textus.commands.execute("textus.save");
     case "q":
     case "q!":
     case "quit":
@@ -504,14 +504,14 @@ async function runCommand(text) {
     case "close":
     case "bd":
     case "bdelete":
-      return textus.commands.executeCommand("textus.closeTab");
+      return textus.commands.execute("textus.closeTab");
     case "wq":
     case "wq!":
     case "x":
     case "xit":
     case "exi":
     case "exit":
-      return textus.commands.executeCommand("textus.closeTab", { save: true });
+      return textus.commands.execute("textus.closeTab", { save: true });
     case "u":
     case "undo":
       return exec({ op: "undo" });
@@ -953,18 +953,18 @@ exports.activate = async function () {
       captureFor(mode);
     });
   });
-  textus.editor.onKey(handle);
-  textus.commands.registerCommand("catvinci.vim.toggle", function () {
+  textus.editor.keys.onKey(handle);
+  textus.commands.register("catvinci.vim.toggle", function () {
     on = !on;
     if (on) return setMode("normal");
-    textus.editor.captureKeys(null);
+    textus.editor.keys.capture(null);
     showStatus();
   });
   await setMode("normal");
 };
 
 exports.deactivate = function () {
-  textus.editor.captureKeys(null);
+  textus.editor.keys.capture(null);
 };
 
 // For the tests: how a vimrc's lines are read.

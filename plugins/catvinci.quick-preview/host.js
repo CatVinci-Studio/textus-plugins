@@ -2,7 +2,7 @@
 // Markdown link or a [[wikilink]] - and its opening (or the section the
 // link names) shows in a card beside it, to read without leaving the
 // document; Pin keeps the card open, Open goes to it. The card is the app's
-// (textus.editor.registerHoverProvider); this plugin reads the document.
+// (textus.editor.registerHover); this plugin reads the document.
 
 /** How much of a document a card shows, by Settings › Quick Preview. */
 const LENGTHS = { short: 600, medium: 1500, long: 4000 };
@@ -63,12 +63,12 @@ function opening(text, limit) {
 }
 
 exports.activate = function () {
-  textus.editor.registerHoverProvider({
+  textus.editor.registerHover({
     provideHover: async function (target) {
       if (target.type !== "document") return null;
       let text;
       try {
-        text = body(await textus.workspace.readText(target.path));
+        text = body(await textus.files.readText(target.path));
       } catch {
         // Outside the open folder, or gone.
         return null;
