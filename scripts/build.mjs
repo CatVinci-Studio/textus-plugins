@@ -11,7 +11,13 @@
 // index.json lists them beside the plugins.
 
 import { createHash } from "node:crypto";
-import { mkdirSync, readFileSync, readdirSync, statSync, writeFileSync } from "node:fs";
+import {
+  mkdirSync,
+  readFileSync,
+  readdirSync,
+  statSync,
+  writeFileSync,
+} from "node:fs";
 import { join, relative } from "node:path";
 import JSZip from "jszip";
 
@@ -40,7 +46,8 @@ function files(dir) {
 function manifestOf(id) {
   const path = join(PLUGINS, id, "textus-plugin.json");
   const manifest = JSON.parse(readFileSync(path, "utf8"));
-  if (manifest.id !== id) throw new Error(`${id}: the manifest's id is ${manifest.id}`);
+  if (manifest.id !== id)
+    throw new Error(`${id}: the manifest's id is ${manifest.id}`);
   if (!ID.test(id)) throw new Error(`${id}: not a plugin id`);
   if (!VERSION.test(manifest.version ?? ""))
     throw new Error(`${id}: version "${manifest.version}" is not x.y.z`);
@@ -68,9 +75,13 @@ for (const id of ids) {
     zip.file(relative(join(PLUGINS, id), path), readFileSync(path), { date });
   for (const [target, lib] of Object.entries(libs)) {
     if (!target.startsWith(`${id}/`)) continue;
-    zip.file(target.slice(id.length + 1), readFileSync(join(ROOT, "node_modules", lib)), {
-      date,
-    });
+    const from = join(ROOT, "node_modules", lib);
+    // A folder (its name ends in "/"): every file in it.
+    const sources = lib.endsWith("/")
+      ? files(from).map((path) => [target + relative(from, path), path])
+      : [[target, from]];
+    for (const [name, path] of sources)
+      zip.file(name.slice(id.length + 1), readFileSync(path), { date });
   }
   const bytes = await zip.generateAsync({
     type: "nodebuffer",
@@ -100,7 +111,10 @@ function skillOf(file) {
   const front = /^---\n([\s\S]*?)\n---\n/.exec(text);
   if (!front) throw new Error(`${file}: no front matter`);
   const field = (key) => {
-    const m = new RegExp(`^${key}:\\s*(>-)?\\s*\n?((?:.*\\S.*\\n?)(?:  .*\\n?)*)`, "m").exec(front[1]);
+    const m = new RegExp(
+      `^${key}:\\s*(>-)?\\s*\n?((?:.*\\S.*\\n?)(?:  .*\\n?)*)`,
+      "m",
+    ).exec(front[1]);
     if (!m) return "";
     return m[2]
       .split("\n")
@@ -111,16 +125,21 @@ function skillOf(file) {
   };
   const name = field("name");
   const description = field("description");
-  const version = (/textus-version:\s*"?([^"\n]+)"?/.exec(front[1]) ?? [])[1] ?? "";
+  const version =
+    (/textus-version:\s*"?([^"\n]+)"?/.exec(front[1]) ?? [])[1] ?? "";
   if (!name || name !== file.replace(/\.md$/, ""))
     throw new Error(`${file}: its name must be its file's`);
   if (!description) throw new Error(`${file}: no description`);
-  if (!VERSION.test(version)) throw new Error(`${file}: textus-version "${version}" is not x.y.z`);
-  if (!text.slice(front[0].length).trim()) throw new Error(`${file}: no instructions`);
+  if (!VERSION.test(version))
+    throw new Error(`${file}: textus-version "${version}" is not x.y.z`);
+  if (!text.slice(front[0].length).trim())
+    throw new Error(`${file}: no instructions`);
   return { name, description, version, bytes: Buffer.from(text) };
 }
 
-const skillFiles = readdirSync(SKILLS).filter((f) => f.endsWith(".md")).sort();
+const skillFiles = readdirSync(SKILLS)
+  .filter((f) => f.endsWith(".md"))
+  .sort();
 const skills = [];
 for (const file of skillFiles) {
   const skill = skillOf(file);
@@ -140,7 +159,8 @@ for (const file of skillFiles) {
   console.log(`${asset}  ${skill.bytes.length} bytes`);
 }
 
-if (check) console.log(`${ids.length} manifests and ${skillFiles.length} skills read`);
+if (check)
+  console.log(`${ids.length} manifests and ${skillFiles.length} skills read`);
 else
   writeFileSync(
     join(DIST, "index.json"),

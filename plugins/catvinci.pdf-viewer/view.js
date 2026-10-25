@@ -12,6 +12,29 @@
     else window.addEventListener("pdfjs-ready", resolve, { once: true });
   });
 
+  // PDF.js's data files - a CJK font's character map (cMap), a standard
+  // font - asked of the host, which reads them from the plugin's lib
+  // folder: the page has no network. Answers come back by id.
+  const FOLDERS = {
+    cMapUrl: "lib/cmaps/",
+    standardFontDataUrl: "lib/standard_fonts/",
+  };
+  const waiting = new Map();
+  let asked = 0;
+  class PluginData {
+    async fetch({ kind, filename }) {
+      const folder = FOLDERS[kind];
+      if (!folder) throw new Error("No " + kind + " data in the plugin.");
+      const id = ++asked;
+      const bytes = await new Promise((resolve) => {
+        waiting.set(id, resolve);
+        api.postMessage({ type: "data", id: id, path: folder + filename });
+      });
+      if (!bytes) throw new Error(filename + " is not in the plugin.");
+      return new Uint8Array(bytes);
+    }
+  }
+
   let pdf = null;
   let scale = 1;
   let fitWidth = true;
@@ -138,6 +161,11 @@
   });
 
   api.onMessage(async (message) => {
+    if (message.type === "data") {
+      waiting.get(message.id)?.(message.bytes);
+      waiting.delete(message.id);
+      return;
+    }
     if (message.type !== "file") return;
     status.textContent = t("loading");
     try {
@@ -147,6 +175,8 @@
         data: message.bytes,
         isEvalSupported: false,
         useSystemFonts: true,
+        BinaryDataFactory: PluginData,
+        cMapPacked: true,
       }).promise;
       fitWidth = message.zoom !== "100";
       scale = 1;

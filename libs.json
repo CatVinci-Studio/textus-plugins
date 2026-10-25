@@ -2,5 +2,7 @@
   "catvinci.pdf-viewer/lib/pdf.min.mjs": "pdfjs-dist/legacy/build/pdf.min.mjs",
   "catvinci.pdf-viewer/lib/pdf.worker.min.mjs": "pdfjs-dist/legacy/build/pdf.worker.min.mjs",
   "catvinci.word-reader/lib/jszip.min.js": "jszip/dist/jszip.min.js",
-  "catvinci.word-reader/lib/docx-preview.min.js": "docx-preview/dist/docx-preview.min.js"
+  "catvinci.word-reader/lib/docx-preview.min.js": "docx-preview/dist/docx-preview.min.js",
+  "catvinci.pdf-viewer/lib/cmaps/": "pdfjs-dist/cmaps/",
+  "catvinci.pdf-viewer/lib/standard_fonts/": "pdfjs-dist/standard_fonts/"
 }

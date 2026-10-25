@@ -5,6 +5,21 @@ exports.activate = function () {
   textus.window.registerCustomEditorProvider("catvinci.pdf-viewer.pdf", {
     resolveCustomEditor: async function (document, webview) {
       webview.onDidReceiveMessage(async function (message) {
+        // PDF.js's own data - a CJK font's character map, a standard font
+        // - from the plugin's lib folder: the page can't fetch it.
+        if (message.type === "data") {
+          let bytes = null;
+          try {
+            bytes = await textus.plugin.readFile(message.path);
+          } catch {
+            // Not shipped: PDF.js draws without it.
+          }
+          return webview.postMessage({
+            type: "data",
+            id: message.id,
+            bytes: bytes,
+          });
+        }
         if (message.type !== "ready") return;
         const [bytes, zoom] = await Promise.all([
           document.readBytes(),
