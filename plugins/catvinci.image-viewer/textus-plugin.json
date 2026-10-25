@@ -39,7 +39,8 @@
       "fit": "Fit",
       "actual": "Actual size",
       "source": "Source",
-      "picture": "Picture"
+      "picture": "Picture",
+      "failed": "This picture can't be opened."
     },
     "zh": {
       "name": "图片查看器",
@@ -47,7 +48,8 @@
       "fit": "适应窗口",
       "actual": "原始大小",
       "source": "源码",
-      "picture": "图片"
+      "picture": "图片",
+      "failed": "这张图片打不开。"
     },
     "zh-Hant": {
       "name": "圖片檢視器",
@@ -55,7 +57,8 @@
       "fit": "符合視窗",
       "actual": "原始大小",
       "source": "原始碼",
-      "picture": "圖片"
+      "picture": "圖片",
+      "failed": "這張圖片打不開。"
     },
     "ja": {
       "name": "画像ビューア",
@@ -63,7 +66,8 @@
       "fit": "ウインドウに合わせる",
       "actual": "実際のサイズ",
       "source": "ソース",
-      "picture": "画像"
+      "picture": "画像",
+      "failed": "この画像は開けません。"
     },
     "ko": {
       "name": "이미지 뷰어",
@@ -71,7 +75,8 @@
       "fit": "창에 맞추기",
       "actual": "실제 크기",
       "source": "소스",
-      "picture": "그림"
+      "picture": "그림",
+      "failed": "이 그림을 열 수 없습니다."
     },
     "es": {
       "name": "Visor de imágenes",
@@ -79,7 +84,8 @@
       "fit": "Ajustar",
       "actual": "Tamaño real",
       "source": "Código",
-      "picture": "Imagen"
+      "picture": "Imagen",
+      "failed": "No se puede abrir esta imagen."
     },
     "fr": {
       "name": "Visionneuse d’images",
@@ -87,7 +93,8 @@
       "fit": "Ajuster",
       "actual": "Taille réelle",
       "source": "Source",
-      "picture": "Image"
+      "picture": "Image",
+      "failed": "Impossible d’ouvrir cette image."
     },
     "de": {
       "name": "Bildbetrachter",
@@ -95,7 +102,8 @@
       "fit": "Einpassen",
       "actual": "Originalgröße",
       "source": "Quelltext",
-      "picture": "Bild"
+      "picture": "Bild",
+      "failed": "Dieses Bild lässt sich nicht öffnen."
     },
     "ru": {
       "name": "Просмотр изображений",
@@ -103,7 +111,8 @@
       "fit": "Вписать",
       "actual": "Исходный размер",
       "source": "Исходный код",
-      "picture": "Изображение"
+      "picture": "Изображение",
+      "failed": "Не удаётся открыть это изображение."
     },
     "pt": {
       "name": "Visualizador de imagens",
@@ -111,7 +120,8 @@
       "fit": "Ajustar",
       "actual": "Tamanho real",
       "source": "Código",
-      "picture": "Imagem"
+      "picture": "Imagem",
+      "failed": "Não é possível abrir esta imagem."
     }
   }
 }

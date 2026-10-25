@@ -49,7 +49,13 @@
       ? Math.max(1, Math.round(bytes / 1024)) + " KB"
       : (bytes / 1024 / 1024).toFixed(1) + " MB";
 
+  const failed = () => {
+    stage.hidden = true;
+    $("info").textContent = t("failed");
+  };
+
   api.onMessage((message) => {
+    if (message.type === "failed") return failed();
     if (message.type !== "file") return;
     const svg = /\.svg$/i.test(message.name);
     // Shown as a picture, an SVG's scripts never run.
@@ -57,6 +63,8 @@
       new Blob([message.bytes], { type: svg ? "image/svg+xml" : "" }),
     );
     image.alt = message.name;
+    // Not a picture the system can draw, however it is named.
+    image.onerror = failed;
     image.onload = () => {
       $("info").textContent =
         image.naturalWidth +
