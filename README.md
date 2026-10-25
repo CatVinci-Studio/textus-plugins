@@ -9,6 +9,7 @@ The plugins for [Textus](https://textus.catvinci.com), the Markdown editor. None
 | Plugin | What it does |
 | --- | --- |
 | Calendar & Daily Notes | A calendar in the sidebar and a note for each day, kept in a folder of the open folder. |
+| Emacs | Emacs keys in the editor: moving by character, word and line, the mark and region, the kill ring with C-y and M-y, C-/ undo and C-x prefixes. |
 | Graph View | Your notes and the links between them as a graph - [[wiki links]] and links to other documents - for the whole folder, or around the document in front. |
 | Image Viewer | Open pictures and SVG files in a tab: zoom, fit, and an SVG's source. |
 | LaTeX Completion | In a formula, a backslash and the start of a command - \\fr, \\alp - lists the LaTeX commands that begin so, each with what it draws; Enter or Tab writes one, with the caret in its braces. |
@@ -19,6 +20,7 @@ The plugins for [Textus](https://textus.catvinci.com), the Markdown editor. None
 | Split Panes | Two documents at once: side by side, or one above the other. Drag the line between them to share the space; a click in one brings it to the front. |
 | Tasks | Every task (- [ ]) in the open folder's documents, in one list: tick one off there, or go to it. |
 | Version History | Each save of a document kept as a version: see what changed since, and bring an old one back. |
+| Vim | Vim's modes and keys in the editor: normal, insert and visual, motions, operators, counts, registers and dot repeat, and flash jumps with s. |
 | Web View | Open web pages in a tab beside your notes. |
 | Word Reader | Read Word documents as they look in Word, in a tab. Edit as Markdown turns one into a document of yours. |
 | Zotero | Cite from your Zotero library while you write, and rest the pointer on a citation to see what it cites. Needs Zotero 7 running, with Settings › Advanced › Allow other applications on this computer to communicate with Zotero on. |

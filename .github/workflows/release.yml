@@ -5,7 +5,8 @@ name: release
 # with its zip, then the catalog (index.json) on the `catalog` release.
 # A plugin already released must be the same package: one changed
 # without a new version fails here, so the catalog never lists a hash
-# its zip doesn't have.
+# its zip doesn't have (scripts/same-package.mjs: same files, the
+# released zip's hash).
 on:
   push:
     branches: [main]
@@ -43,7 +44,7 @@ jobs:
               mkdir -p released
               gh release download "$tag" --pattern "$id-$version.zip" --dir released --clobber
               have=$(sha256sum "released/$id-$version.zip" | cut -d' ' -f1)
-              if [ "$have" != "$sha" ]; then
+              if [ "$have" != "$sha" ] && ! node scripts/same-package.mjs "released/$id-$version.zip" "$zip" "$id"; then
                 echo "::error::$id $version changed since it was released - give it a new version."
                 exit 1
               fi
