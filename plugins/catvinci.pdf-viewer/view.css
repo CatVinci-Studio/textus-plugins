@@ -89,3 +89,24 @@ body {
   cursor: default;
   user-select: none;
 }
+
+/* Find in the PDF: a field in the toolbar, the words found tinted. */
+#find-box {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+#find-box[hidden] {
+  display: none;
+}
+#find {
+  width: 160px;
+}
+#find-count {
+  min-width: 3em;
+  font-size: var(--text-xs);
+}
+.textLayer span.hit {
+  background: color-mix(in srgb, var(--ui-primary) 28%, transparent);
+  border-radius: 2px;
+}

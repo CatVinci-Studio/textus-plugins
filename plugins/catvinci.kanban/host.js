@@ -59,6 +59,40 @@ exports.activate = function () {
             });
           }
         }
+        // A [[link]] on a card: the note of that name in the folder.
+        // A [[link]] on a card: the note of that name in the folder, or,
+        // with no folder open, beside the board.
+        if (message.type === "openNote") {
+          const want = message.name
+            .toLowerCase()
+            .replace(/\.(md|markdown)$/, "");
+          const stem = (rel) =>
+            rel.replace(/\.(md|markdown)$/i, "").toLowerCase();
+          let documents = null;
+          try {
+            documents = (await textus.workspace.readDocuments()).documents;
+          } catch {
+            // No folder open.
+          }
+          const note = documents
+            ? documents.find(
+                (d) =>
+                  stem(d.rel) === want || stem(d.rel).split("/").pop() === want,
+              )
+            : null;
+          const beside = join(
+            document.path.replace(/[\\/][^\\/]*$/, ""),
+            message.name.replace(/\.(md|markdown)$/i, "") + ".md",
+          );
+          try {
+            await textus.window.openFile(note ? note.path : beside);
+          } catch {
+            await textus.window.showMessage(
+              textus.l10n.t("noNote", message.name),
+            );
+          }
+          return;
+        }
         if (message.type === "markdown")
           await textus.window.openFile(document.path, { asDocument: true });
       });

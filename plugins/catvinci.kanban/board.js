@@ -50,6 +50,30 @@
     });
   }
 
+  // A card's words with its [[wiki links]] as links to the notes they
+  // name: a click on one opens the note, anywhere else edits the card.
+  const WIKI = /\[\[([^\]|#]+)(?:#[^\]|]*)?(?:\|([^\]]+))?\]\]/g;
+  function cardText(node, value) {
+    node.textContent = "";
+    let at = 0;
+    for (const m of value.matchAll(WIKI)) {
+      node.append(value.slice(at, m.index));
+      const link = document.createElement("a");
+      link.className = "note-link";
+      link.href = "#";
+      link.textContent = m[2] || m[1];
+      link.title = m[1];
+      link.onclick = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        api.postMessage({ type: "openNote", name: m[1].trim() });
+      };
+      node.append(link);
+      at = m.index + m[0].length;
+    }
+    node.append(value.slice(at));
+  }
+
   function removeButton(onClick) {
     const b = document.createElement("button");
     b.className = "icon remove";
@@ -73,7 +97,7 @@
     };
     const text = document.createElement("span");
     text.className = "card-text";
-    text.textContent = card.text;
+    cardText(text, card.text);
     text.onclick = () =>
       editInPlace(text, card.text, true, (value) => {
         card.text = value;
@@ -105,6 +129,35 @@
     section.className = "list";
     const head = document.createElement("div");
     head.className = "list-head";
+    // A list moves by its head: dropped on another list, it goes before it.
+    head.draggable = true;
+    head.addEventListener("dragstart", (e) => {
+      dragged = { list: list, card: null };
+      section.classList.add("dragging");
+      e.dataTransfer.effectAllowed = "move";
+      e.dataTransfer.setData("text/plain", list.title);
+    });
+    head.addEventListener("dragend", () => {
+      dragged = null;
+      section.classList.remove("dragging");
+    });
+    section.addEventListener("dragover", (e) => {
+      if (!dragged || dragged.card || dragged.list === list) return;
+      e.preventDefault();
+      section.classList.add("list-drop");
+    });
+    section.addEventListener("dragleave", () =>
+      section.classList.remove("list-drop"),
+    );
+    section.addEventListener("drop", (e) => {
+      section.classList.remove("list-drop");
+      if (!dragged || dragged.card || dragged.list === list) return;
+      e.preventDefault();
+      const moved = dragged.list;
+      board.lists.splice(board.lists.indexOf(moved), 1);
+      board.lists.splice(board.lists.indexOf(list), 0, moved);
+      changed();
+    });
     const title = document.createElement("span");
     title.className = "list-title";
     title.textContent = list.title;
@@ -129,7 +182,7 @@
     for (const card of list.cards) cards.append(cardNode(list, card));
     // Dropped where the pointer is: before the card under it, or last.
     cards.addEventListener("dragover", (e) => {
-      if (!dragged) return;
+      if (!dragged || !dragged.card) return;
       e.preventDefault();
       cards.classList.add("drop-target");
     });
@@ -139,7 +192,8 @@
     cards.addEventListener("drop", (e) => {
       e.preventDefault();
       cards.classList.remove("drop-target");
-      if (!dragged) return;
+      if (!dragged || !dragged.card) return;
+      e.stopPropagation();
       const from = dragged;
       const nodes = [...cards.children];
       const before = nodes.findIndex((n) => {

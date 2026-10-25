@@ -1,7 +1,7 @@
 {
   "id": "catvinci.pdf-viewer",
   "name": "%name%",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "publisher": "catvinci",
   "author": "CatVinci Studio",
   "description": "%description%",
@@ -52,7 +52,9 @@
       "prevPage": "Previous page",
       "zoomIn": "Zoom in",
       "zoomOut": "Zoom out",
-      "nextPage": "Next page"
+      "nextPage": "Next page",
+      "find": "Find in the PDF",
+      "notFound": "Not found"
     },
     "zh": {
       "name": "PDF 阅读器",
@@ -65,7 +67,9 @@
       "prevPage": "上一页",
       "zoomIn": "放大",
       "zoomOut": "缩小",
-      "nextPage": "下一页"
+      "nextPage": "下一页",
+      "find": "在 PDF 中查找",
+      "notFound": "没有找到"
     },
     "zh-Hant": {
       "name": "PDF 閱讀器",
@@ -78,7 +82,9 @@
       "prevPage": "上一頁",
       "zoomIn": "放大",
       "zoomOut": "縮小",
-      "nextPage": "下一頁"
+      "nextPage": "下一頁",
+      "find": "在 PDF 中尋找",
+      "notFound": "找不到"
     },
     "ja": {
       "name": "PDF ビューア",
@@ -91,7 +97,9 @@
       "prevPage": "前のページ",
       "zoomIn": "拡大",
       "zoomOut": "縮小",
-      "nextPage": "次のページ"
+      "nextPage": "次のページ",
+      "find": "PDF 内を検索",
+      "notFound": "見つかりません"
     },
     "ko": {
       "name": "PDF 뷰어",
@@ -104,7 +112,9 @@
       "prevPage": "이전 페이지",
       "zoomIn": "확대",
       "zoomOut": "축소",
-      "nextPage": "다음 페이지"
+      "nextPage": "다음 페이지",
+      "find": "PDF에서 찾기",
+      "notFound": "찾을 수 없음"
     },
     "es": {
       "name": "Visor de PDF",
@@ -117,7 +127,9 @@
       "prevPage": "Página anterior",
       "zoomIn": "Acercar",
       "zoomOut": "Alejar",
-      "nextPage": "Página siguiente"
+      "nextPage": "Página siguiente",
+      "find": "Buscar en el PDF",
+      "notFound": "Sin resultados"
     },
     "fr": {
       "name": "Lecteur PDF",
@@ -130,7 +142,9 @@
       "prevPage": "Page précédente",
       "zoomIn": "Zoom avant",
       "zoomOut": "Zoom arrière",
-      "nextPage": "Page suivante"
+      "nextPage": "Page suivante",
+      "find": "Rechercher dans le PDF",
+      "notFound": "Introuvable"
     },
     "de": {
       "name": "PDF-Betrachter",
@@ -143,7 +157,9 @@
       "prevPage": "Vorherige Seite",
       "zoomIn": "Vergrößern",
       "zoomOut": "Verkleinern",
-      "nextPage": "Nächste Seite"
+      "nextPage": "Nächste Seite",
+      "find": "Im PDF suchen",
+      "notFound": "Nicht gefunden"
     },
     "ru": {
       "name": "Просмотр PDF",
@@ -156,7 +172,9 @@
       "prevPage": "Предыдущая страница",
       "zoomIn": "Увеличить",
       "zoomOut": "Уменьшить",
-      "nextPage": "Следующая страница"
+      "nextPage": "Следующая страница",
+      "find": "Найти в PDF",
+      "notFound": "Не найдено"
     },
     "pt": {
       "name": "Visualizador de PDF",
@@ -169,7 +187,9 @@
       "prevPage": "Página anterior",
       "zoomIn": "Aumentar zoom",
       "zoomOut": "Diminuir zoom",
-      "nextPage": "Próxima página"
+      "nextPage": "Próxima página",
+      "find": "Procurar no PDF",
+      "notFound": "Não encontrado"
     }
   }
 }

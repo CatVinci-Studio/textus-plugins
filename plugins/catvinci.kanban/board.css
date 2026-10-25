@@ -102,3 +102,22 @@ body {
 .card:hover .icon.remove {
   visibility: visible;
 }
+
+/* A card's [[link]] to a note. */
+.note-link {
+  color: var(--ui-primary);
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, currentColor 40%, transparent);
+  text-underline-offset: 2px;
+}
+/* A list being moved, and where it will go. */
+.list.dragging {
+  opacity: 0.5;
+}
+.list.list-drop {
+  outline: 2px dashed color-mix(in srgb, var(--ui-primary) 50%, transparent);
+  outline-offset: 2px;
+}
+.list-head {
+  cursor: grab;
+}

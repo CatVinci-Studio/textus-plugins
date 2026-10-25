@@ -53,6 +53,39 @@ async function refresh() {
   });
 }
 
+/** `date` (YYYY-MM-DD) `days` later, or earlier when negative. */
+function shift(date, days) {
+  const [y, m, d] = date.split("-").map(Number);
+  return dateOf(new Date(y, m - 1, d + days));
+}
+
+/** A new day's note: the template with its {{…}} filled in for `date`. */
+function fill(template, date) {
+  const [y, m, d] = date.split("-").map(Number);
+  const now = new Date();
+  const values = {
+    date: date,
+    weekday: new Date(y, m - 1, d).toLocaleDateString(textus.env.language, {
+      weekday: "long",
+    }),
+    yesterday: shift(date, -1),
+    tomorrow: shift(date, 1),
+    time: pad(now.getHours()) + ":" + pad(now.getMinutes()),
+  };
+  return template
+    .replace(/\{\{(\w+)\}\}/g, (all, name) =>
+      name in values ? values[name] : all,
+    )
+    .replace(/\\n/g, "\n");
+}
+
+/** The day of the note in front - a daily note's name - else today. */
+async function dayInFront() {
+  const path = await textus.document.getPath().catch(() => null);
+  const m = path && /(\d{4}-\d{2}-\d{2})\.md$/.exec(path);
+  return m ? m[1] : dateOf(new Date());
+}
+
 async function openDay(date) {
   const where = await folder();
   if (!where) {
@@ -70,10 +103,7 @@ async function openDay(date) {
     const template = String(
       (await textus.settings.get("template")) || "# {{date}}\\n\\n",
     );
-    await textus.workspace.writeText(
-      path,
-      template.replace(/\{\{date\}\}/g, date).replace(/\\n/g, "\n"),
-    );
+    await textus.workspace.writeText(path, fill(template, date));
   }
   await textus.window.openFile(path);
   await refresh();
@@ -83,6 +113,19 @@ exports.activate = function () {
   textus.commands.registerCommand("catvinci.daily-notes.today", function () {
     return openDay(dateOf(new Date()));
   });
+  // From a day's note to the one before or after it.
+  textus.commands.registerCommand(
+    "catvinci.daily-notes.previous",
+    async function () {
+      return openDay(shift(await dayInFront(), -1));
+    },
+  );
+  textus.commands.registerCommand(
+    "catvinci.daily-notes.next",
+    async function () {
+      return openDay(shift(await dayInFront(), 1));
+    },
+  );
   textus.workspace.onDidChangeRoot(refresh);
   textus.workspace.onDidSaveDocument(refresh);
   textus.settings.onDidChange(refresh);
