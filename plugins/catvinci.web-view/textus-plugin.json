@@ -12,10 +12,7 @@
     "textus": "^1.3.0"
   },
   "main": "host.js",
-  "permissions": [
-    "network:*",
-    "document.read"
-  ],
+  "permissions": ["network:*", "document.read"],
   "contributes": {
     "commands": [
       {

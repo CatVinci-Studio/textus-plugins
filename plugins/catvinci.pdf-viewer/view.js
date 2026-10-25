@@ -3,6 +3,15 @@
   const api = acquireTextusApi();
   const t = api.t;
   const $ = (id) => document.getElementById(id);
+  // The icon buttons' names, in the UI's language.
+  for (const [id, key] of [
+    ["prev", "prevPage"],
+    ["next", "nextPage"],
+    ["zoom-out", "zoomOut"],
+    ["zoom-in", "zoomIn"],
+  ])
+    for (const attr of ["aria-label", "title"])
+      $(id).setAttribute(attr, api.t(key));
   const viewer = $("viewer");
   const status = $("status");
   $("fit").textContent = t("fit");

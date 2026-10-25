@@ -40,7 +40,9 @@
       "actual": "Actual size",
       "source": "Source",
       "picture": "Picture",
-      "failed": "This picture can't be opened."
+      "failed": "This picture can't be opened.",
+      "zoomIn": "Zoom in",
+      "zoomOut": "Zoom out"
     },
     "zh": {
       "name": "图片查看器",
@@ -49,7 +51,9 @@
       "actual": "原始大小",
       "source": "源码",
       "picture": "图片",
-      "failed": "这张图片打不开。"
+      "failed": "这张图片打不开。",
+      "zoomIn": "放大",
+      "zoomOut": "缩小"
     },
     "zh-Hant": {
       "name": "圖片檢視器",
@@ -58,7 +62,9 @@
       "actual": "原始大小",
       "source": "原始碼",
       "picture": "圖片",
-      "failed": "這張圖片打不開。"
+      "failed": "這張圖片打不開。",
+      "zoomIn": "放大",
+      "zoomOut": "縮小"
     },
     "ja": {
       "name": "画像ビューア",
@@ -67,7 +73,9 @@
       "actual": "実際のサイズ",
       "source": "ソース",
       "picture": "画像",
-      "failed": "この画像は開けません。"
+      "failed": "この画像は開けません。",
+      "zoomIn": "拡大",
+      "zoomOut": "縮小"
     },
     "ko": {
       "name": "이미지 뷰어",
@@ -76,7 +84,9 @@
       "actual": "실제 크기",
       "source": "소스",
       "picture": "그림",
-      "failed": "이 그림을 열 수 없습니다."
+      "failed": "이 그림을 열 수 없습니다.",
+      "zoomIn": "확대",
+      "zoomOut": "축소"
     },
     "es": {
       "name": "Visor de imágenes",
@@ -85,7 +95,9 @@
       "actual": "Tamaño real",
       "source": "Código",
       "picture": "Imagen",
-      "failed": "No se puede abrir esta imagen."
+      "failed": "No se puede abrir esta imagen.",
+      "zoomIn": "Acercar",
+      "zoomOut": "Alejar"
     },
     "fr": {
       "name": "Visionneuse d’images",
@@ -94,7 +106,9 @@
       "actual": "Taille réelle",
       "source": "Source",
       "picture": "Image",
-      "failed": "Impossible d’ouvrir cette image."
+      "failed": "Impossible d’ouvrir cette image.",
+      "zoomIn": "Zoom avant",
+      "zoomOut": "Zoom arrière"
     },
     "de": {
       "name": "Bildbetrachter",
@@ -103,7 +117,9 @@
       "actual": "Originalgröße",
       "source": "Quelltext",
       "picture": "Bild",
-      "failed": "Dieses Bild lässt sich nicht öffnen."
+      "failed": "Dieses Bild lässt sich nicht öffnen.",
+      "zoomIn": "Vergrößern",
+      "zoomOut": "Verkleinern"
     },
     "ru": {
       "name": "Просмотр изображений",
@@ -112,7 +128,9 @@
       "actual": "Исходный размер",
       "source": "Исходный код",
       "picture": "Изображение",
-      "failed": "Не удаётся открыть это изображение."
+      "failed": "Не удаётся открыть это изображение.",
+      "zoomIn": "Увеличить",
+      "zoomOut": "Уменьшить"
     },
     "pt": {
       "name": "Visualizador de imagens",
@@ -121,7 +139,9 @@
       "actual": "Tamanho real",
       "source": "Código",
       "picture": "Imagem",
-      "failed": "Não é possível abrir esta imagem."
+      "failed": "Não é possível abrir esta imagem.",
+      "zoomIn": "Aumentar zoom",
+      "zoomOut": "Diminuir zoom"
     }
   }
 }

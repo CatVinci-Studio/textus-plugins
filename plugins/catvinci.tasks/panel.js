@@ -9,6 +9,10 @@
     return text === form ? t(key + ".other", n) : text;
   };
   const $ = (id) => document.getElementById(id);
+  // The icon buttons' names, in the UI's language.
+  for (const [id, key] of [["refresh", "refresh"]])
+    for (const attr of ["aria-label", "title"])
+      $(id).setAttribute(attr, api.t(key));
   $("done-label").textContent = t("done");
   $("refresh").onclick = () => api.postMessage({ type: "refresh" });
   let files = [];

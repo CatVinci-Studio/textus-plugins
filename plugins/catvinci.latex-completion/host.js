@@ -3,10 +3,13 @@
 // it draws; Enter or Tab writes it, with the caret inside its braces.
 /* global latexCommands */
 exports.activate = function () {
-  textus.editor.registerCompletionProvider("catvinci.latex-completion.commands", {
-    provideCompletions: function (context) {
-      // The manifest's pattern: a backslash and the letters after it.
-      return latexCommands.complete(context.match.slice(1));
+  textus.editor.registerCompletionProvider(
+    "catvinci.latex-completion.commands",
+    {
+      provideCompletions: function (context) {
+        // The manifest's pattern: a backslash and the letters after it.
+        return latexCommands.complete(context.match.slice(1));
+      },
     },
-  });
+  );
 };

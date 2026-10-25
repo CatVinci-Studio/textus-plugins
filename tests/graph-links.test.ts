@@ -35,13 +35,8 @@ describe("the graph of a folder's links", () => {
     const pairs = g.edges
       .map((e) => `${e.source.slice(3)}→${e.target.slice(3)}`)
       .sort();
-    expect(pairs).toEqual([
-      "a.md→b.md",
-      "a.md→c.md",
-      "a.md→sub/d.md",
-      "b.md→a.md",
-      "sub/d.md→a.md",
-    ]);
+    // Notes that link to each other are one link (b and d link back).
+    expect(pairs).toEqual(["a.md→b.md", "a.md→c.md", "a.md→sub/d.md"]);
   });
 
   it("keeps a link to no document as a missing node, and ignores code", () => {

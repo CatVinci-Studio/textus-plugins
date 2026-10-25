@@ -45,7 +45,8 @@
       "open": "Open as a New Document",
       "same": "Same as now",
       "large": "Too many changes to compare line by line.",
-      "since": "Changed since:"
+      "since": "Changed since:",
+      "refresh": "Refresh"
     },
     "zh": {
       "name": "版本历史",
@@ -60,7 +61,8 @@
       "open": "作为新文档打开",
       "same": "和现在一样",
       "large": "改动太多，无法逐行比较。",
-      "since": "之后的改动："
+      "since": "之后的改动：",
+      "refresh": "刷新"
     },
     "zh-Hant": {
       "name": "版本紀錄",
@@ -75,7 +77,8 @@
       "open": "以新文件開啟",
       "same": "和現在一樣",
       "large": "改動太多，無法逐行比較。",
-      "since": "之後的改動："
+      "since": "之後的改動：",
+      "refresh": "重新整理"
     },
     "ja": {
       "name": "バージョン履歴",
@@ -90,7 +93,8 @@
       "open": "新しい文書として開く",
       "same": "現在と同じ",
       "large": "変更が多すぎて、行ごとに比べられません。",
-      "since": "その後の変更："
+      "since": "その後の変更：",
+      "refresh": "再読み込み"
     },
     "ko": {
       "name": "버전 기록",
@@ -105,7 +109,8 @@
       "open": "새 문서로 열기",
       "same": "지금과 같음",
       "large": "바뀐 곳이 너무 많아 줄별로 비교할 수 없습니다.",
-      "since": "그 뒤의 변경:"
+      "since": "그 뒤의 변경:",
+      "refresh": "새로 고침"
     },
     "es": {
       "name": "Historial de versiones",
@@ -120,7 +125,8 @@
       "open": "Abrir como documento nuevo",
       "same": "Igual que ahora",
       "large": "Demasiados cambios para compararlos línea a línea.",
-      "since": "Cambios desde entonces:"
+      "since": "Cambios desde entonces:",
+      "refresh": "Actualizar"
     },
     "fr": {
       "name": "Historique des versions",
@@ -135,7 +141,8 @@
       "open": "Ouvrir comme nouveau document",
       "same": "Identique à maintenant",
       "large": "Trop de changements pour comparer ligne par ligne.",
-      "since": "Modifié depuis :"
+      "since": "Modifié depuis :",
+      "refresh": "Actualiser"
     },
     "de": {
       "name": "Versionsverlauf",
@@ -150,7 +157,8 @@
       "open": "Als neues Dokument öffnen",
       "same": "Wie jetzt",
       "large": "Zu viele Änderungen, um Zeile für Zeile zu vergleichen.",
-      "since": "Seitdem geändert:"
+      "since": "Seitdem geändert:",
+      "refresh": "Aktualisieren"
     },
     "ru": {
       "name": "История версий",
@@ -165,7 +173,8 @@
       "open": "Открыть как новый документ",
       "same": "Как сейчас",
       "large": "Слишком много изменений для построчного сравнения.",
-      "since": "Изменено с тех пор:"
+      "since": "Изменено с тех пор:",
+      "refresh": "Обновить"
     },
     "pt": {
       "name": "Histórico de versões",
@@ -180,7 +189,8 @@
       "open": "Abrir como novo documento",
       "same": "Igual a agora",
       "large": "Mudanças demais para comparar linha a linha.",
-      "since": "Mudou desde então:"
+      "since": "Mudou desde então:",
+      "refresh": "Atualizar"
     }
   }
 }

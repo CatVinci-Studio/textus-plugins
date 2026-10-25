@@ -2,6 +2,13 @@
   "use strict";
   const api = acquireTextusApi();
   const $ = (id) => document.getElementById(id);
+  // The icon buttons' names, in the UI's language.
+  for (const [id, key] of [
+    ["prev", "prevMonth"],
+    ["next", "nextMonth"],
+  ])
+    for (const attr of ["aria-label", "title"])
+      $(id).setAttribute(attr, api.t(key));
   $("today").textContent = api.t("todayButton");
   $("nofolder").textContent = api.t("nofolder");
 

@@ -17,7 +17,9 @@ function keyOf(path) {
     a = Math.imul(a ^ c, 0x01000193) >>> 0;
     b = Math.imul(b ^ c, 0x811c9dc5) >>> 0;
   }
-  return "v:" + a.toString(16).padStart(8, "0") + b.toString(16).padStart(8, "0");
+  return (
+    "v:" + a.toString(16).padStart(8, "0") + b.toString(16).padStart(8, "0")
+  );
 }
 
 async function versionsOf(path) {
@@ -92,7 +94,11 @@ exports.activate = function () {
                   text: version.text,
                   reason: reason,
                 }
-              : { action: "insert_at_cursor", text: version.text, reason: reason },
+              : {
+                  action: "insert_at_cursor",
+                  text: version.text,
+                  reason: reason,
+                },
           );
         }
         if (message.type === "open")

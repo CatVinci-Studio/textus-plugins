@@ -37,7 +37,8 @@ async function scan() {
   const files = [];
   for (const doc of documents) {
     const tasks = tasksIn(doc.text);
-    if (tasks.length) files.push({ path: doc.path, rel: doc.rel, tasks: tasks });
+    if (tasks.length)
+      files.push({ path: doc.path, rel: doc.rel, tasks: tasks });
   }
   return files;
 }

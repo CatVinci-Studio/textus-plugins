@@ -39,7 +39,8 @@
       "open.one": "{0} open task",
       "open.other": "{0} open tasks",
       "none": "No open tasks in the folder.",
-      "nofolder": "Open a folder, and the tasks of all its documents are listed here."
+      "nofolder": "Open a folder, and the tasks of all its documents are listed here.",
+      "refresh": "Refresh"
     },
     "zh": {
       "name": "任务",
@@ -48,7 +49,8 @@
       "done": "已完成",
       "open.other": "{0} 项待办",
       "none": "打开的文件夹里没有待办任务。",
-      "nofolder": "打开一个文件夹，这里会列出其中所有文档的任务。"
+      "nofolder": "打开一个文件夹，这里会列出其中所有文档的任务。",
+      "refresh": "刷新"
     },
     "zh-Hant": {
       "name": "任務",
@@ -57,7 +59,8 @@
       "done": "已完成",
       "open.other": "{0} 項待辦",
       "none": "開啟的資料夾裡沒有待辦任務。",
-      "nofolder": "開啟一個資料夾，這裡會列出其中所有文件的任務。"
+      "nofolder": "開啟一個資料夾，這裡會列出其中所有文件的任務。",
+      "refresh": "重新整理"
     },
     "ja": {
       "name": "タスク",
@@ -66,7 +69,8 @@
       "done": "完了",
       "open.other": "未完了のタスク {0} 件",
       "none": "フォルダに未完了のタスクはありません。",
-      "nofolder": "フォルダを開くと、その中のすべての文書のタスクがここに並びます。"
+      "nofolder": "フォルダを開くと、その中のすべての文書のタスクがここに並びます。",
+      "refresh": "再読み込み"
     },
     "ko": {
       "name": "할 일",
@@ -75,7 +79,8 @@
       "done": "완료",
       "open.other": "남은 할 일 {0}개",
       "none": "폴더에 남은 할 일이 없습니다.",
-      "nofolder": "폴더를 열면 그 안 모든 문서의 할 일이 여기에 나옵니다."
+      "nofolder": "폴더를 열면 그 안 모든 문서의 할 일이 여기에 나옵니다.",
+      "refresh": "새로 고침"
     },
     "es": {
       "name": "Tareas",
@@ -85,7 +90,8 @@
       "open.one": "{0} tarea pendiente",
       "open.other": "{0} tareas pendientes",
       "none": "No hay tareas pendientes en la carpeta.",
-      "nofolder": "Abre una carpeta y aquí aparecerán las tareas de todos sus documentos."
+      "nofolder": "Abre una carpeta y aquí aparecerán las tareas de todos sus documentos.",
+      "refresh": "Actualizar"
     },
     "fr": {
       "name": "Tâches",
@@ -95,7 +101,8 @@
       "open.one": "{0} tâche en cours",
       "open.other": "{0} tâches en cours",
       "none": "Aucune tâche en cours dans le dossier.",
-      "nofolder": "Ouvrez un dossier : les tâches de tous ses documents s’afficheront ici."
+      "nofolder": "Ouvrez un dossier : les tâches de tous ses documents s’afficheront ici.",
+      "refresh": "Actualiser"
     },
     "de": {
       "name": "Aufgaben",
@@ -105,7 +112,8 @@
       "open.one": "{0} offene Aufgabe",
       "open.other": "{0} offene Aufgaben",
       "none": "Keine offenen Aufgaben im Ordner.",
-      "nofolder": "Öffne einen Ordner, dann stehen hier die Aufgaben all seiner Dokumente."
+      "nofolder": "Öffne einen Ordner, dann stehen hier die Aufgaben all seiner Dokumente.",
+      "refresh": "Aktualisieren"
     },
     "ru": {
       "name": "Задачи",
@@ -117,7 +125,8 @@
       "open.many": "{0} открытых задач",
       "open.other": "{0} открытой задачи",
       "none": "В папке нет открытых задач.",
-      "nofolder": "Откройте папку — здесь появятся задачи из всех её документов."
+      "nofolder": "Откройте папку — здесь появятся задачи из всех её документов.",
+      "refresh": "Обновить"
     },
     "pt": {
       "name": "Tarefas",
@@ -127,7 +136,8 @@
       "open.one": "{0} tarefa pendente",
       "open.other": "{0} tarefas pendentes",
       "none": "Não há tarefas pendentes na pasta.",
-      "nofolder": "Abra uma pasta e as tarefas de todos os documentos dela aparecerão aqui."
+      "nofolder": "Abra uma pasta e as tarefas de todos os documentos dela aparecerão aqui.",
+      "refresh": "Atualizar"
     }
   }
 }

@@ -48,7 +48,11 @@
       "zoomFit": "The window's width",
       "fit": "Fit width",
       "loading": "Opening…",
-      "failed": "This PDF can't be opened: {0}"
+      "failed": "This PDF can't be opened: {0}",
+      "prevPage": "Previous page",
+      "zoomIn": "Zoom in",
+      "zoomOut": "Zoom out",
+      "nextPage": "Next page"
     },
     "zh": {
       "name": "PDF 阅读器",
@@ -57,7 +61,11 @@
       "zoomFit": "适应窗口宽度",
       "fit": "适应宽度",
       "loading": "正在打开…",
-      "failed": "无法打开这个 PDF：{0}"
+      "failed": "无法打开这个 PDF：{0}",
+      "prevPage": "上一页",
+      "zoomIn": "放大",
+      "zoomOut": "缩小",
+      "nextPage": "下一页"
     },
     "zh-Hant": {
       "name": "PDF 閱讀器",
@@ -66,7 +74,11 @@
       "zoomFit": "符合視窗寬度",
       "fit": "符合寬度",
       "loading": "正在開啟…",
-      "failed": "無法開啟這個 PDF：{0}"
+      "failed": "無法開啟這個 PDF：{0}",
+      "prevPage": "上一頁",
+      "zoomIn": "放大",
+      "zoomOut": "縮小",
+      "nextPage": "下一頁"
     },
     "ja": {
       "name": "PDF ビューア",
@@ -75,7 +87,11 @@
       "zoomFit": "ウインドウの幅",
       "fit": "幅に合わせる",
       "loading": "開いています…",
-      "failed": "この PDF を開けません：{0}"
+      "failed": "この PDF を開けません：{0}",
+      "prevPage": "前のページ",
+      "zoomIn": "拡大",
+      "zoomOut": "縮小",
+      "nextPage": "次のページ"
     },
     "ko": {
       "name": "PDF 뷰어",
@@ -84,7 +100,11 @@
       "zoomFit": "창 너비",
       "fit": "너비에 맞추기",
       "loading": "여는 중…",
-      "failed": "이 PDF를 열 수 없습니다: {0}"
+      "failed": "이 PDF를 열 수 없습니다: {0}",
+      "prevPage": "이전 페이지",
+      "zoomIn": "확대",
+      "zoomOut": "축소",
+      "nextPage": "다음 페이지"
     },
     "es": {
       "name": "Visor de PDF",
@@ -93,7 +113,11 @@
       "zoomFit": "El ancho de la ventana",
       "fit": "Ajustar al ancho",
       "loading": "Abriendo…",
-      "failed": "No se puede abrir este PDF: {0}"
+      "failed": "No se puede abrir este PDF: {0}",
+      "prevPage": "Página anterior",
+      "zoomIn": "Acercar",
+      "zoomOut": "Alejar",
+      "nextPage": "Página siguiente"
     },
     "fr": {
       "name": "Lecteur PDF",
@@ -102,7 +126,11 @@
       "zoomFit": "La largeur de la fenêtre",
       "fit": "Ajuster à la largeur",
       "loading": "Ouverture…",
-      "failed": "Impossible d’ouvrir ce PDF : {0}"
+      "failed": "Impossible d’ouvrir ce PDF : {0}",
+      "prevPage": "Page précédente",
+      "zoomIn": "Zoom avant",
+      "zoomOut": "Zoom arrière",
+      "nextPage": "Page suivante"
     },
     "de": {
       "name": "PDF-Betrachter",
@@ -111,7 +139,11 @@
       "zoomFit": "Fensterbreite",
       "fit": "Breite einpassen",
       "loading": "Wird geöffnet…",
-      "failed": "Dieses PDF lässt sich nicht öffnen: {0}"
+      "failed": "Dieses PDF lässt sich nicht öffnen: {0}",
+      "prevPage": "Vorherige Seite",
+      "zoomIn": "Vergrößern",
+      "zoomOut": "Verkleinern",
+      "nextPage": "Nächste Seite"
     },
     "ru": {
       "name": "Просмотр PDF",
@@ -120,7 +152,11 @@
       "zoomFit": "По ширине окна",
       "fit": "По ширине",
       "loading": "Открытие…",
-      "failed": "Не удаётся открыть этот PDF: {0}"
+      "failed": "Не удаётся открыть этот PDF: {0}",
+      "prevPage": "Предыдущая страница",
+      "zoomIn": "Увеличить",
+      "zoomOut": "Уменьшить",
+      "nextPage": "Следующая страница"
     },
     "pt": {
       "name": "Visualizador de PDF",
@@ -129,7 +165,11 @@
       "zoomFit": "A largura da janela",
       "fit": "Ajustar à largura",
       "loading": "Abrindo…",
-      "failed": "Não foi possível abrir este PDF: {0}"
+      "failed": "Não foi possível abrir este PDF: {0}",
+      "prevPage": "Página anterior",
+      "zoomIn": "Aumentar zoom",
+      "zoomOut": "Diminuir zoom",
+      "nextPage": "Próxima página"
     }
   }
 }

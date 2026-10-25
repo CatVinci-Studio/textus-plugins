@@ -88,7 +88,9 @@
       "sunday": "Sunday",
       "needsFolder": "Open a folder first: daily notes are kept in it.",
       "todayButton": "Today",
-      "nofolder": "Open a folder, and your daily notes are kept in it."
+      "nofolder": "Open a folder, and your daily notes are kept in it.",
+      "nextMonth": "Next month",
+      "prevMonth": "Previous month"
     },
     "zh": {
       "name": "日历与每日笔记",
@@ -104,7 +106,9 @@
       "sunday": "星期日",
       "needsFolder": "先打开一个文件夹，每日笔记会放在里面。",
       "todayButton": "今天",
-      "nofolder": "打开一个文件夹后，每日笔记会放在里面。"
+      "nofolder": "打开一个文件夹后，每日笔记会放在里面。",
+      "nextMonth": "下个月",
+      "prevMonth": "上个月"
     },
     "zh-Hant": {
       "name": "日曆與每日筆記",
@@ -120,7 +124,9 @@
       "sunday": "星期日",
       "needsFolder": "請先開啟一個資料夾，每日筆記會放在裡面。",
       "todayButton": "今天",
-      "nofolder": "開啟一個資料夾後，每日筆記會放在裡面。"
+      "nofolder": "開啟一個資料夾後，每日筆記會放在裡面。",
+      "nextMonth": "下個月",
+      "prevMonth": "上個月"
     },
     "ja": {
       "name": "カレンダーとデイリーノート",
@@ -136,7 +142,9 @@
       "sunday": "日曜日",
       "needsFolder": "先にフォルダを開いてください。デイリーノートはその中に保存されます。",
       "todayButton": "今日",
-      "nofolder": "フォルダを開くと、デイリーノートはその中に保存されます。"
+      "nofolder": "フォルダを開くと、デイリーノートはその中に保存されます。",
+      "nextMonth": "次の月",
+      "prevMonth": "前の月"
     },
     "ko": {
       "name": "달력과 데일리 노트",
@@ -152,7 +160,9 @@
       "sunday": "일요일",
       "needsFolder": "먼저 폴더를 여세요. 데일리 노트는 그 안에 보관됩니다.",
       "todayButton": "오늘",
-      "nofolder": "폴더를 열면 데일리 노트가 그 안에 보관됩니다."
+      "nofolder": "폴더를 열면 데일리 노트가 그 안에 보관됩니다.",
+      "nextMonth": "다음 달",
+      "prevMonth": "이전 달"
     },
     "es": {
       "name": "Calendario y notas diarias",
@@ -168,7 +178,9 @@
       "sunday": "domingo",
       "needsFolder": "Abre primero una carpeta: las notas diarias se guardan en ella.",
       "todayButton": "Hoy",
-      "nofolder": "Abre una carpeta y tus notas diarias se guardarán en ella."
+      "nofolder": "Abre una carpeta y tus notas diarias se guardarán en ella.",
+      "nextMonth": "Mes siguiente",
+      "prevMonth": "Mes anterior"
     },
     "fr": {
       "name": "Calendrier et notes du jour",
@@ -184,7 +196,9 @@
       "sunday": "dimanche",
       "needsFolder": "Ouvrez d’abord un dossier : les notes du jour y sont rangées.",
       "todayButton": "Aujourd’hui",
-      "nofolder": "Ouvrez un dossier : vos notes du jour y seront rangées."
+      "nofolder": "Ouvrez un dossier : vos notes du jour y seront rangées.",
+      "nextMonth": "Mois suivant",
+      "prevMonth": "Mois précédent"
     },
     "de": {
       "name": "Kalender und Tagesnotizen",
@@ -200,7 +214,9 @@
       "sunday": "Sonntag",
       "needsFolder": "Öffne zuerst einen Ordner: Die Tagesnotizen werden darin abgelegt.",
       "todayButton": "Heute",
-      "nofolder": "Öffne einen Ordner, dann werden deine Tagesnotizen darin abgelegt."
+      "nofolder": "Öffne einen Ordner, dann werden deine Tagesnotizen darin abgelegt.",
+      "nextMonth": "Nächster Monat",
+      "prevMonth": "Vorheriger Monat"
     },
     "ru": {
       "name": "Календарь и ежедневные заметки",
@@ -216,7 +232,9 @@
       "sunday": "воскресенья",
       "needsFolder": "Сначала откройте папку: ежедневные заметки хранятся в ней.",
       "todayButton": "Сегодня",
-      "nofolder": "Откройте папку — ежедневные заметки будут храниться в ней."
+      "nofolder": "Откройте папку — ежедневные заметки будут храниться в ней.",
+      "nextMonth": "Следующий месяц",
+      "prevMonth": "Предыдущий месяц"
     },
     "pt": {
       "name": "Calendário e notas diárias",
@@ -232,7 +250,9 @@
       "sunday": "no domingo",
       "needsFolder": "Abra uma pasta primeiro: as notas diárias ficam guardadas nela.",
       "todayButton": "Hoje",
-      "nofolder": "Abra uma pasta e suas notas diárias ficarão guardadas nela."
+      "nofolder": "Abra uma pasta e suas notas diárias ficarão guardadas nela.",
+      "nextMonth": "Próximo mês",
+      "prevMonth": "Mês anterior"
     }
   }
 }
