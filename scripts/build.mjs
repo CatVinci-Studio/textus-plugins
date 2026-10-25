@@ -59,15 +59,18 @@ for (const id of ids) {
   const manifest = manifestOf(id);
   if (check) continue;
   const zip = new JSZip();
-  // Fixed dates: the same sources make the same zip, and the same hash.
-  const date = new Date("2026-01-01T00:00:00Z");
+  // Fixed dates and no folder entries (JSZip would date those now): the
+  // same sources make the same zip, and the same hash.
+  const options = { date: new Date("2026-01-01T00:00:00Z"), createFolders: false };
   for (const path of files(join(PLUGINS, id)))
-    zip.file(relative(join(PLUGINS, id), path), readFileSync(path), { date });
+    zip.file(relative(join(PLUGINS, id), path), readFileSync(path), options);
   for (const [target, lib] of Object.entries(libs)) {
     if (!target.startsWith(`${id}/`)) continue;
-    zip.file(target.slice(id.length + 1), readFileSync(join(ROOT, "node_modules", lib)), {
-      date,
-    });
+    zip.file(
+      target.slice(id.length + 1),
+      readFileSync(join(ROOT, "node_modules", lib)),
+      options,
+    );
   }
   const bytes = await zip.generateAsync({
     type: "nodebuffer",
