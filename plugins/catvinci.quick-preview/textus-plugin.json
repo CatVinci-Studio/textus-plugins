@@ -1,7 +1,7 @@
 {
   "id": "catvinci.quick-preview",
   "name": "%name%",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "publisher": "catvinci",
   "author": "CatVinci Studio",
   "description": "%description%",
@@ -11,49 +11,117 @@
     "textus": "^1.3.0"
   },
   "main": "host.js",
-  "activationEvents": ["onHover"],
-  "permissions": ["document.read", "workspace.read"],
-  "contributes": {},
+  "activationEvents": [
+    "onHover"
+  ],
+  "permissions": [
+    "document.read",
+    "workspace.read"
+  ],
+  "contributes": {
+    "settings": [
+      {
+        "key": "length",
+        "type": "enum",
+        "default": "medium",
+        "title": "%length%",
+        "options": [
+          {
+            "value": "short",
+            "label": "%short%"
+          },
+          {
+            "value": "medium",
+            "label": "%medium%"
+          },
+          {
+            "value": "long",
+            "label": "%long%"
+          }
+        ]
+      }
+    ]
+  },
   "l10n": {
     "en": {
       "name": "Quick Preview",
-      "description": "Rest the pointer on a link to another document - a Markdown link or a [[wikilink]] - to read its opening, or the section the link names, in a card beside it. Pin keeps the card open while you write."
+      "description": "Rest the pointer on a link to another document - a Markdown link or a [[wikilink]] - to read its opening, or the section the link names, in a card beside it. Pin keeps the card open while you write.",
+      "length": "How much a card shows",
+      "short": "Short",
+      "medium": "Medium",
+      "long": "Long"
     },
     "zh": {
       "name": "快速预览",
-      "description": "鼠标停在指向另一篇文档的链接（Markdown 链接或 [[双链]]）上，旁边浮出卡片显示它的开头，或链接指向的那一节；钉住后卡片一直留着，边看边写。"
+      "description": "鼠标停在指向另一篇文档的链接（Markdown 链接或 [[双链]]）上，旁边浮出卡片显示它的开头，或链接指向的那一节；钉住后卡片一直留着，边看边写。",
+      "length": "卡片显示多少内容",
+      "short": "短",
+      "medium": "中",
+      "long": "长"
     },
     "zh-Hant": {
       "name": "快速預覽",
-      "description": "滑鼠停在指向另一篇文件的連結（Markdown 連結或 [[雙向連結]]）上，旁邊會浮出卡片，顯示它的開頭或連結指向的那一節；釘住後卡片會一直留著，邊看邊寫。"
+      "description": "滑鼠停在指向另一篇文件的連結（Markdown 連結或 [[雙向連結]]）上，旁邊會浮出卡片，顯示它的開頭或連結指向的那一節；釘住後卡片會一直留著，邊看邊寫。",
+      "length": "卡片顯示多少內容",
+      "short": "短",
+      "medium": "中",
+      "long": "長"
     },
     "ja": {
       "name": "クイックプレビュー",
-      "description": "別の文書へのリンク（Markdown のリンクや [[ウィキリンク]]）にポインタを置くと、その書き出しやリンク先の節がカードで横に表示されます。ピン留めすれば、書きながら開いたままにできます。"
+      "description": "別の文書へのリンク（Markdown のリンクや [[ウィキリンク]]）にポインタを置くと、その書き出しやリンク先の節がカードで横に表示されます。ピン留めすれば、書きながら開いたままにできます。",
+      "length": "カードに表示する量",
+      "short": "短め",
+      "medium": "標準",
+      "long": "長め"
     },
     "ko": {
       "name": "빠른 미리보기",
-      "description": "다른 문서로 가는 링크(Markdown 링크나 [[위키 링크]]) 위에 포인터를 올리면, 그 문서의 첫 부분이나 링크가 가리키는 절이 옆에 카드로 뜹니다. 고정하면 글을 쓰는 동안에도 카드가 남아 있습니다."
+      "description": "다른 문서로 가는 링크(Markdown 링크나 [[위키 링크]]) 위에 포인터를 올리면, 그 문서의 첫 부분이나 링크가 가리키는 절이 옆에 카드로 뜹니다. 고정하면 글을 쓰는 동안에도 카드가 남아 있습니다.",
+      "length": "카드에 보여 줄 분량",
+      "short": "짧게",
+      "medium": "보통",
+      "long": "길게"
     },
     "es": {
       "name": "Vista rápida",
-      "description": "Deja el puntero sobre un enlace a otro documento – un enlace Markdown o un [[enlace wiki]] – para leer su comienzo, o la sección que el enlace nombra, en una tarjeta a su lado. Fíjala y seguirá abierta mientras escribes."
+      "description": "Deja el puntero sobre un enlace a otro documento – un enlace Markdown o un [[enlace wiki]] – para leer su comienzo, o la sección que el enlace nombra, en una tarjeta a su lado. Fíjala y seguirá abierta mientras escribes.",
+      "length": "Cuánto muestra la tarjeta",
+      "short": "Poco",
+      "medium": "Medio",
+      "long": "Mucho"
     },
     "fr": {
       "name": "Aperçu rapide",
-      "description": "Laissez le pointeur sur un lien vers un autre document – un lien Markdown ou un [[lien wiki]] – pour lire son début, ou la section qu’il désigne, dans une carte à côté. Épinglée, la carte reste ouverte pendant que vous écrivez."
+      "description": "Laissez le pointeur sur un lien vers un autre document – un lien Markdown ou un [[lien wiki]] – pour lire son début, ou la section qu’il désigne, dans une carte à côté. Épinglée, la carte reste ouverte pendant que vous écrivez.",
+      "length": "Ce que montre la carte",
+      "short": "Court",
+      "medium": "Moyen",
+      "long": "Long"
     },
     "de": {
       "name": "Schnellvorschau",
-      "description": "Lass den Zeiger auf einem Link zu einem anderen Dokument ruhen – einem Markdown-Link oder einem [[Wiki-Link]] –, und eine Karte daneben zeigt seinen Anfang oder den Abschnitt, auf den der Link zeigt. Angeheftet bleibt sie offen, während du schreibst."
+      "description": "Lass den Zeiger auf einem Link zu einem anderen Dokument ruhen – einem Markdown-Link oder einem [[Wiki-Link]] –, und eine Karte daneben zeigt seinen Anfang oder den Abschnitt, auf den der Link zeigt. Angeheftet bleibt sie offen, während du schreibst.",
+      "length": "Wie viel die Karte zeigt",
+      "short": "Kurz",
+      "medium": "Mittel",
+      "long": "Lang"
     },
     "ru": {
       "name": "Быстрый просмотр",
-      "description": "Задержите указатель на ссылке на другой документ — ссылке Markdown или [[вики-ссылке]], — и рядом появится карточка с его началом или с разделом, на который она ведёт. Закреплённая карточка остаётся открытой, пока вы пишете."
+      "description": "Задержите указатель на ссылке на другой документ — ссылке Markdown или [[вики-ссылке]], — и рядом появится карточка с его началом или с разделом, на который она ведёт. Закреплённая карточка остаётся открытой, пока вы пишете.",
+      "length": "Сколько показывает карточка",
+      "short": "Мало",
+      "medium": "Средне",
+      "long": "Много"
     },
     "pt": {
       "name": "Prévia rápida",
-      "description": "Deixe o ponteiro sobre um link para outro documento – um link Markdown ou um [[link wiki]] – para ler o começo dele, ou a seção que o link aponta, num cartão ao lado. Fixado, o cartão fica aberto enquanto você escreve."
+      "description": "Deixe o ponteiro sobre um link para outro documento – um link Markdown ou um [[link wiki]] – para ler o começo dele, ou a seção que o link aponta, num cartão ao lado. Fixado, o cartão fica aberto enquanto você escreve.",
+      "length": "Quanto o cartão mostra",
+      "short": "Curto",
+      "medium": "Médio",
+      "long": "Longo"
     }
   }
 }

@@ -65,6 +65,9 @@ var KEYS = Object.keys(MOTIONS)
     "ctrl+_",
     "ctrl+x",
     "ctrl+d",
+    "alt+u",
+    "alt+l",
+    "alt+c",
   ]);
 
 /** The keys taken. On Windows and Linux, Ctrl chords are the app's and
@@ -245,10 +248,37 @@ async function key(name) {
       case "ctrl+_":
         await exec({ op: "undo" });
         break;
+      // M-u, M-l, M-c: the word from the caret upper-cased, lower-cased
+      // or capitalized; the caret ends after it.
+      case "alt+u":
+      case "alt+l":
+      case "alt+c":
+        await recaseWord(name);
+        break;
     }
   }
   lastWasKill = killing;
   if (!yanking) yanked = -1;
+}
+
+async function recaseWord(name) {
+  await exec({ op: "move", unit: "wordEnd", select: true });
+  await exec({ op: "move", unit: "rightInsert", select: true });
+  var copied = await exec({ op: "copy" });
+  var text = (copied && copied.text) || "";
+  if (!text || text.indexOf("\n") >= 0) {
+    await exec({ op: "collapse", to: "head" });
+    return;
+  }
+  var next =
+    name === "alt+u"
+      ? text.toUpperCase()
+      : name === "alt+l"
+        ? text.toLowerCase()
+        : text.replace(/\p{L}[\p{L}\p{N}']*/u, function (word) {
+            return word[0].toUpperCase() + word.slice(1).toLowerCase();
+          });
+  await exec({ op: "insertText", text: next });
 }
 
 var queue = Promise.resolve();

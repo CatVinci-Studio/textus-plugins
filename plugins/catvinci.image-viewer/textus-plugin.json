@@ -1,7 +1,7 @@
 {
   "id": "catvinci.image-viewer",
   "name": "%name%",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "publisher": "catvinci",
   "author": "CatVinci Studio",
   "description": "%description%",
@@ -42,7 +42,8 @@
       "picture": "Picture",
       "failed": "This picture can't be opened.",
       "zoomIn": "Zoom in",
-      "zoomOut": "Zoom out"
+      "zoomOut": "Zoom out",
+      "rotate": "Rotate"
     },
     "zh": {
       "name": "图片查看器",
@@ -53,7 +54,8 @@
       "picture": "图片",
       "failed": "这张图片打不开。",
       "zoomIn": "放大",
-      "zoomOut": "缩小"
+      "zoomOut": "缩小",
+      "rotate": "旋转"
     },
     "zh-Hant": {
       "name": "圖片檢視器",
@@ -64,7 +66,8 @@
       "picture": "圖片",
       "failed": "這張圖片打不開。",
       "zoomIn": "放大",
-      "zoomOut": "縮小"
+      "zoomOut": "縮小",
+      "rotate": "旋轉"
     },
     "ja": {
       "name": "画像ビューア",
@@ -75,7 +78,8 @@
       "picture": "画像",
       "failed": "この画像は開けません。",
       "zoomIn": "拡大",
-      "zoomOut": "縮小"
+      "zoomOut": "縮小",
+      "rotate": "回転"
     },
     "ko": {
       "name": "이미지 뷰어",
@@ -86,7 +90,8 @@
       "picture": "그림",
       "failed": "이 그림을 열 수 없습니다.",
       "zoomIn": "확대",
-      "zoomOut": "축소"
+      "zoomOut": "축소",
+      "rotate": "회전"
     },
     "es": {
       "name": "Visor de imágenes",
@@ -97,7 +102,8 @@
       "picture": "Imagen",
       "failed": "No se puede abrir esta imagen.",
       "zoomIn": "Acercar",
-      "zoomOut": "Alejar"
+      "zoomOut": "Alejar",
+      "rotate": "Girar"
     },
     "fr": {
       "name": "Visionneuse d’images",
@@ -108,7 +114,8 @@
       "picture": "Image",
       "failed": "Impossible d’ouvrir cette image.",
       "zoomIn": "Zoom avant",
-      "zoomOut": "Zoom arrière"
+      "zoomOut": "Zoom arrière",
+      "rotate": "Faire pivoter"
     },
     "de": {
       "name": "Bildbetrachter",
@@ -119,7 +126,8 @@
       "picture": "Bild",
       "failed": "Dieses Bild lässt sich nicht öffnen.",
       "zoomIn": "Vergrößern",
-      "zoomOut": "Verkleinern"
+      "zoomOut": "Verkleinern",
+      "rotate": "Drehen"
     },
     "ru": {
       "name": "Просмотр изображений",
@@ -130,7 +138,8 @@
       "picture": "Изображение",
       "failed": "Не удаётся открыть это изображение.",
       "zoomIn": "Увеличить",
-      "zoomOut": "Уменьшить"
+      "zoomOut": "Уменьшить",
+      "rotate": "Повернуть"
     },
     "pt": {
       "name": "Visualizador de imagens",
@@ -141,7 +150,8 @@
       "picture": "Imagem",
       "failed": "Não é possível abrir esta imagem.",
       "zoomIn": "Aumentar zoom",
-      "zoomOut": "Diminuir zoom"
+      "zoomOut": "Diminuir zoom",
+      "rotate": "Girar"
     }
   }
 }

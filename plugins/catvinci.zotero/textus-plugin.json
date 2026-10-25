@@ -1,7 +1,7 @@
 {
   "id": "catvinci.zotero",
   "name": "Zotero",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "publisher": "catvinci",
   "author": "CatVinci Studio",
   "description": "%description%",
@@ -12,7 +12,9 @@
     "textus": "^1.3.0"
   },
   "main": "host.js",
-  "activationEvents": ["onHover"],
+  "activationEvents": [
+    "onHover"
+  ],
   "permissions": [
     "network:localhost:23119",
     "document.propose",
@@ -23,6 +25,10 @@
       {
         "command": "catvinci.zotero.cite",
         "title": "%cite%"
+      },
+      {
+        "command": "catvinci.zotero.bibliography",
+        "title": "%bibliography%"
       }
     ],
     "keybindings": [
@@ -35,6 +41,9 @@
       "app/plugins": [
         {
           "command": "catvinci.zotero.cite"
+        },
+        {
+          "command": "catvinci.zotero.bibliography"
         }
       ],
       "editor/context": [
@@ -81,7 +90,12 @@
       "search": "Search Zotero (title, author or year)",
       "nothing": "Nothing found.",
       "choose": "Choose what to cite",
-      "citeReason": "Cite {0}"
+      "citeReason": "Cite {0}",
+      "searchMore": "Search Zotero…",
+      "bibliography": "Insert References List",
+      "references": "References",
+      "noCitations": "This document cites nothing from Zotero yet.",
+      "bibliographyReason": "A list of the {0} works this document cites"
     },
     "zh": {
       "description": "写作时直接从 Zotero 文献库插入引用。需要 Zotero 7 正在运行，并在设置 › 高级 中打开“允许此计算机上的其他应用程序与 Zotero 通信”。",
@@ -96,7 +110,12 @@
       "search": "在 Zotero 中搜索（标题、作者或年份）",
       "nothing": "没有找到。",
       "choose": "选择要引用的文献",
-      "citeReason": "引用 {0}"
+      "citeReason": "引用 {0}",
+      "searchMore": "在 Zotero 中搜索…",
+      "bibliography": "插入参考文献列表",
+      "references": "参考文献",
+      "noCitations": "这篇文档还没有引用 Zotero 里的文献。",
+      "bibliographyReason": "本文引用的 {0} 篇文献列表"
     },
     "zh-Hant": {
       "description": "寫作時從 Zotero 文獻庫引用。需要開著 Zotero 7，並在 設定 › 進階 中開啟「允許此電腦上的其他應用程式與 Zotero 通訊」。",
@@ -111,7 +130,12 @@
       "search": "在 Zotero 中搜尋（標題、作者或年份）",
       "nothing": "沒有找到。",
       "choose": "選擇要引用的文獻",
-      "citeReason": "引用 {0}"
+      "citeReason": "引用 {0}",
+      "searchMore": "在 Zotero 中搜尋…",
+      "bibliography": "插入參考文獻列表",
+      "references": "參考文獻",
+      "noCitations": "這篇文件還沒有引用 Zotero 裡的文獻。",
+      "bibliographyReason": "本文引用的 {0} 篇文獻列表"
     },
     "ja": {
       "description": "書きながら Zotero のライブラリから引用します。Zotero 7 を起動し、設定 › 詳細 で「このコンピュータ上の他のアプリケーションが Zotero と通信することを許可する」をオンにしてください。",
@@ -126,7 +150,12 @@
       "search": "Zotero を検索（タイトル、著者、年）",
       "nothing": "見つかりませんでした。",
       "choose": "引用する文献を選ぶ",
-      "citeReason": "{0} を引用"
+      "citeReason": "{0} を引用",
+      "searchMore": "Zotero を検索…",
+      "bibliography": "参考文献リストを挿入",
+      "references": "参考文献",
+      "noCitations": "この文書はまだ Zotero の文献を引用していません。",
+      "bibliographyReason": "この文書が引用する {0} 件の文献の一覧"
     },
     "ko": {
       "description": "글을 쓰면서 Zotero 라이브러리에서 인용합니다. Zotero 7을 켜 두고, 설정 › 고급에서 '이 컴퓨터의 다른 응용 프로그램이 Zotero와 통신하도록 허용'을 켜야 합니다.",
@@ -141,7 +170,12 @@
       "search": "Zotero에서 검색(제목, 저자, 연도)",
       "nothing": "찾지 못했습니다.",
       "choose": "인용할 문헌 고르기",
-      "citeReason": "{0} 인용"
+      "citeReason": "{0} 인용",
+      "searchMore": "Zotero에서 검색…",
+      "bibliography": "참고문헌 목록 넣기",
+      "references": "참고문헌",
+      "noCitations": "이 문서는 아직 Zotero 문헌을 인용하지 않았습니다.",
+      "bibliographyReason": "이 문서가 인용한 문헌 {0}건 목록"
     },
     "es": {
       "description": "Cita desde tu biblioteca de Zotero mientras escribes. Necesita Zotero 7 abierto, con Ajustes › Avanzado › Permitir que otras aplicaciones de este equipo se comuniquen con Zotero activado.",
@@ -156,7 +190,12 @@
       "search": "Buscar en Zotero (título, autor o año)",
       "nothing": "No se encontró nada.",
       "choose": "Elige qué citar",
-      "citeReason": "Citar {0}"
+      "citeReason": "Citar {0}",
+      "searchMore": "Buscar en Zotero…",
+      "bibliography": "Insertar lista de referencias",
+      "references": "Referencias",
+      "noCitations": "Este documento aún no cita nada de Zotero.",
+      "bibliographyReason": "La lista de las {0} obras que cita este documento"
     },
     "fr": {
       "description": "Citez depuis votre bibliothèque Zotero en écrivant. Zotero 7 doit être ouvert, avec Paramètres › Avancé › Autoriser les autres applications de cet ordinateur à communiquer avec Zotero activé.",
@@ -171,7 +210,12 @@
       "search": "Rechercher dans Zotero (titre, auteur ou année)",
       "nothing": "Aucun résultat.",
       "choose": "Choisissez quoi citer",
-      "citeReason": "Citer {0}"
+      "citeReason": "Citer {0}",
+      "searchMore": "Rechercher dans Zotero…",
+      "bibliography": "Insérer la liste des références",
+      "references": "Références",
+      "noCitations": "Ce document ne cite encore rien de Zotero.",
+      "bibliographyReason": "La liste des {0} ouvrages cités dans ce document"
     },
     "de": {
       "description": "Zitiere beim Schreiben aus deiner Zotero-Bibliothek. Zotero 7 muss laufen, mit Einstellungen › Erweitert › „Anderen Anwendungen auf diesem Computer erlauben, mit Zotero zu kommunizieren“ eingeschaltet.",
@@ -186,7 +230,12 @@
       "search": "In Zotero suchen (Titel, Autor oder Jahr)",
       "nothing": "Nichts gefunden.",
       "choose": "Wähle, was du zitierst",
-      "citeReason": "{0} zitieren"
+      "citeReason": "{0} zitieren",
+      "searchMore": "In Zotero suchen…",
+      "bibliography": "Literaturverzeichnis einfügen",
+      "references": "Literatur",
+      "noCitations": "Dieses Dokument zitiert noch nichts aus Zotero.",
+      "bibliographyReason": "Die {0} Werke, die dieses Dokument zitiert"
     },
     "ru": {
       "description": "Цитируйте из библиотеки Zotero прямо во время письма. Нужен запущенный Zotero 7, в котором включено «Настройки › Дополнительно › Разрешить другим приложениям на этом компьютере обмениваться данными с Zotero».",
@@ -201,7 +250,12 @@
       "search": "Поиск в Zotero (название, автор или год)",
       "nothing": "Ничего не найдено.",
       "choose": "Выберите, что цитировать",
-      "citeReason": "Цитировать «{0}»"
+      "citeReason": "Цитировать «{0}»",
+      "searchMore": "Искать в Zotero…",
+      "bibliography": "Вставить список литературы",
+      "references": "Литература",
+      "noCitations": "Этот документ пока ничего не цитирует из Zotero.",
+      "bibliographyReason": "Список из {0} работ, на которые ссылается документ"
     },
     "pt": {
       "description": "Cite da sua biblioteca do Zotero enquanto escreve. Precisa do Zotero 7 aberto, com Configurações › Avançado › Permitir que outros aplicativos deste computador se comuniquem com o Zotero ligado.",
@@ -216,7 +270,12 @@
       "search": "Buscar no Zotero (título, autor ou ano)",
       "nothing": "Nada encontrado.",
       "choose": "Escolha o que citar",
-      "citeReason": "Citar {0}"
+      "citeReason": "Citar {0}",
+      "searchMore": "Pesquisar no Zotero…",
+      "bibliography": "Inserir lista de referências",
+      "references": "Referências",
+      "noCitations": "Este documento ainda não cita nada do Zotero.",
+      "bibliographyReason": "A lista das {0} obras citadas neste documento"
     }
   }
 }

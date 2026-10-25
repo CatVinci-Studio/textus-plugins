@@ -28,3 +28,21 @@ body {
   box-shadow: 0 1px 4px rgb(0 0 0 / 0.18);
   margin-bottom: var(--space-5);
 }
+#find-input {
+  flex: 1;
+  max-width: 320px;
+}
+#zoom {
+  min-width: 3.5em;
+}
+#page:empty {
+  display: none;
+}
+/* A match, and the one Enter is on. */
+#pages mark.hit {
+  background: color-mix(in srgb, var(--chrome-accent) 25%, transparent);
+  color: inherit;
+}
+#pages mark.hit.current {
+  background: color-mix(in srgb, var(--chrome-accent) 55%, transparent);
+}

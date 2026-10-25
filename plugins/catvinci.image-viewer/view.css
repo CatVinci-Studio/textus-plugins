@@ -34,6 +34,20 @@ body {
   max-height: 100%;
   object-fit: contain;
 }
+/* Turned a quarter, it fits the stage the other way round. */
+#stage.fit.sideways img {
+  max-width: 100vh;
+  max-height: 100vw;
+}
+#stage:not(.fit) {
+  cursor: grab;
+}
+#stage.dragging {
+  cursor: grabbing;
+}
+#image {
+  transition: transform var(--dur-short, 150ms) var(--ease-standard, ease);
+}
 #zoom {
   min-width: 3.5em;
   text-align: center;

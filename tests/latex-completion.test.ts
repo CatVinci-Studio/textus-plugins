@@ -40,4 +40,16 @@ describe("LaTeX completions", () => {
     const names = latex.COMMANDS.map((c) => c[0]);
     expect(new Set(names).size).toBe(names.length);
   });
+
+  it("find a command by its letters in order, after the ones holding them", () => {
+    expect(latex.complete("rarr")[0].label).toBe("\\rightarrow");
+    expect(latex.complete("lra").map((i) => i.label)).toContain(
+      "\\leftrightarrow",
+    );
+  });
+
+  it("pair brackets that grow with what they hold", () => {
+    const [paren] = latex.complete("left(");
+    expect(paren.insert).toBe("\\left( $0 \\right)");
+  });
 });

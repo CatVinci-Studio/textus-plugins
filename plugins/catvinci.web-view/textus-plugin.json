@@ -1,7 +1,7 @@
 {
   "id": "catvinci.web-view",
   "name": "%name%",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "publisher": "catvinci",
   "author": "CatVinci Studio",
   "description": "%description%",
@@ -12,7 +12,10 @@
     "textus": "^1.3.0"
   },
   "main": "host.js",
-  "permissions": ["network:*", "document.read"],
+  "permissions": [
+    "network:*",
+    "document.read"
+  ],
   "contributes": {
     "commands": [
       {
@@ -46,6 +49,33 @@
         "pattern": "^https?://",
         "command": "catvinci.web-view.openLink"
       }
+    ],
+    "settings": [
+      {
+        "key": "search",
+        "type": "enum",
+        "default": "duckduckgo",
+        "title": "%search%",
+        "description": "%searchHelp%",
+        "options": [
+          {
+            "value": "duckduckgo",
+            "label": "DuckDuckGo"
+          },
+          {
+            "value": "google",
+            "label": "Google"
+          },
+          {
+            "value": "bing",
+            "label": "Bing"
+          },
+          {
+            "value": "baidu",
+            "label": "百度 Baidu"
+          }
+        ]
+      }
     ]
   },
   "l10n": {
@@ -53,81 +83,131 @@
       "name": "Web View",
       "description": "Open web pages in a tab beside your notes.",
       "open": "Open a Web Page…",
-      "openSelection": "Open the Selected Link in a Tab",
-      "prompt": "Web address",
-      "openLink": "Open Link in Web View"
+      "openSelection": "Open or search the selection in a tab",
+      "prompt": "Address, or words to search for",
+      "openLink": "Open Link in Web View",
+      "newPage": "New page…",
+      "clearRecent": "Clear this list",
+      "recentPlaceholder": "A page opened before, or a new one",
+      "search": "Search with",
+      "searchHelp": "Where words that aren't an address are searched for"
     },
     "zh": {
       "name": "网页视图",
       "description": "在笔记旁边的标签页里打开网页。",
       "open": "打开网页…",
-      "openSelection": "在标签页中打开选中的链接",
-      "prompt": "网址",
-      "openLink": "在网页视图中打开链接"
+      "openSelection": "在标签页中打开或搜索选中内容",
+      "prompt": "网址，或要搜索的词",
+      "openLink": "在网页视图中打开链接",
+      "newPage": "新网页…",
+      "clearRecent": "清空这个列表",
+      "recentPlaceholder": "打开过的网页，或新网页",
+      "search": "搜索引擎",
+      "searchHelp": "输入的不是网址时，用它来搜索"
     },
     "zh-Hant": {
       "name": "網頁檢視",
       "description": "在筆記旁邊的分頁中開啟網頁。",
       "open": "開啟網頁…",
-      "openSelection": "在分頁中開啟選取的連結",
-      "prompt": "網址",
-      "openLink": "在網頁檢視中開啟連結"
+      "openSelection": "在分頁中開啟或搜尋選取內容",
+      "prompt": "網址，或要搜尋的詞",
+      "openLink": "在網頁檢視中開啟連結",
+      "newPage": "新網頁…",
+      "clearRecent": "清空這個列表",
+      "recentPlaceholder": "開過的網頁，或新網頁",
+      "search": "搜尋引擎",
+      "searchHelp": "輸入的不是網址時，用它來搜尋"
     },
     "ja": {
       "name": "ウェブビュー",
       "description": "ノートの隣のタブでウェブページを開きます。",
       "open": "ウェブページを開く…",
-      "openSelection": "選択したリンクをタブで開く",
-      "prompt": "ウェブアドレス",
-      "openLink": "リンクをウェブビューで開く"
+      "openSelection": "選択範囲をタブで開く・検索する",
+      "prompt": "アドレス、または検索する言葉",
+      "openLink": "リンクをウェブビューで開く",
+      "newPage": "新しいページ…",
+      "clearRecent": "このリストを消去",
+      "recentPlaceholder": "以前開いたページ、または新しいページ",
+      "search": "検索エンジン",
+      "searchHelp": "アドレスでない言葉はここで検索します"
     },
     "ko": {
       "name": "웹 보기",
       "description": "노트 옆 탭에서 웹 페이지를 엽니다.",
       "open": "웹 페이지 열기…",
-      "openSelection": "선택한 링크를 탭에서 열기",
-      "prompt": "웹 주소",
-      "openLink": "웹 보기에서 링크 열기"
+      "openSelection": "선택한 내용을 탭에서 열거나 검색",
+      "prompt": "주소 또는 검색어",
+      "openLink": "웹 보기에서 링크 열기",
+      "newPage": "새 페이지…",
+      "clearRecent": "목록 지우기",
+      "recentPlaceholder": "전에 연 페이지 또는 새 페이지",
+      "search": "검색 엔진",
+      "searchHelp": "주소가 아닌 단어는 여기서 검색합니다"
     },
     "es": {
       "name": "Vista web",
       "description": "Abre páginas web en una pestaña junto a tus notas.",
       "open": "Abrir una página web…",
-      "openSelection": "Abrir el enlace seleccionado en una pestaña",
-      "prompt": "Dirección web",
-      "openLink": "Abrir el enlace en Vista web"
+      "openSelection": "Abrir o buscar la selección en una pestaña",
+      "prompt": "Dirección, o palabras que buscar",
+      "openLink": "Abrir el enlace en Vista web",
+      "newPage": "Página nueva…",
+      "clearRecent": "Vaciar esta lista",
+      "recentPlaceholder": "Una página abierta antes, o una nueva",
+      "search": "Buscar con",
+      "searchHelp": "Dónde se buscan las palabras que no son una dirección"
     },
     "fr": {
       "name": "Vue web",
       "description": "Ouvrez des pages web dans un onglet à côté de vos notes.",
       "open": "Ouvrir une page web…",
-      "openSelection": "Ouvrir le lien sélectionné dans un onglet",
-      "prompt": "Adresse web",
-      "openLink": "Ouvrir le lien dans Vue web"
+      "openSelection": "Ouvrir ou rechercher la sélection dans un onglet",
+      "prompt": "Adresse, ou mots à rechercher",
+      "openLink": "Ouvrir le lien dans Vue web",
+      "newPage": "Nouvelle page…",
+      "clearRecent": "Vider cette liste",
+      "recentPlaceholder": "Une page déjà ouverte, ou une nouvelle",
+      "search": "Rechercher avec",
+      "searchHelp": "Où chercher les mots qui ne sont pas une adresse"
     },
     "de": {
       "name": "Webansicht",
       "description": "Öffne Webseiten in einem Tab neben deinen Notizen.",
       "open": "Webseite öffnen…",
-      "openSelection": "Markierten Link in einem Tab öffnen",
-      "prompt": "Webadresse",
-      "openLink": "Link in der Webansicht öffnen"
+      "openSelection": "Auswahl im Tab öffnen oder suchen",
+      "prompt": "Adresse oder Suchbegriffe",
+      "openLink": "Link in der Webansicht öffnen",
+      "newPage": "Neue Seite…",
+      "clearRecent": "Liste leeren",
+      "recentPlaceholder": "Eine schon geöffnete Seite oder eine neue",
+      "search": "Suchen mit",
+      "searchHelp": "Wo Wörter gesucht werden, die keine Adresse sind"
     },
     "ru": {
       "name": "Веб-страницы",
       "description": "Открывайте веб-страницы во вкладке рядом с заметками.",
       "open": "Открыть веб-страницу…",
-      "openSelection": "Открыть выделенную ссылку во вкладке",
-      "prompt": "Веб-адрес",
-      "openLink": "Открыть ссылку в веб-странице"
+      "openSelection": "Открыть или найти выделенное во вкладке",
+      "prompt": "Адрес или слова для поиска",
+      "openLink": "Открыть ссылку в веб-странице",
+      "newPage": "Новая страница…",
+      "clearRecent": "Очистить список",
+      "recentPlaceholder": "Открытая раньше страница или новая",
+      "search": "Поиск через",
+      "searchHelp": "Где искать слова, которые не являются адресом"
     },
     "pt": {
       "name": "Visão web",
       "description": "Abra páginas da web numa aba ao lado das suas notas.",
       "open": "Abrir uma página da web…",
-      "openSelection": "Abrir o link selecionado numa aba",
-      "prompt": "Endereço da web",
-      "openLink": "Abrir o link na Visão web"
+      "openSelection": "Abrir ou pesquisar a seleção numa aba",
+      "prompt": "Endereço, ou palavras a pesquisar",
+      "openLink": "Abrir o link na Visão web",
+      "newPage": "Nova página…",
+      "clearRecent": "Limpar esta lista",
+      "recentPlaceholder": "Uma página já aberta, ou uma nova",
+      "search": "Pesquisar com",
+      "searchHelp": "Onde pesquisar as palavras que não são um endereço"
     }
   }
 }

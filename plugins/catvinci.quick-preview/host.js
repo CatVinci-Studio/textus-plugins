@@ -1,11 +1,11 @@
 // Quick Preview: rest the pointer on a link to another document - a
 // Markdown link or a [[wikilink]] - and its opening (or the section the
 // link names) shows in a card beside it, to read without leaving the
-// document; Pin keeps the card open. The card is the app's
+// document; Pin keeps the card open, Open goes to it. The card is the app's
 // (textus.editor.registerHoverProvider); this plugin reads the document.
 
-/** How much of a document a card shows. */
-const LIMIT = 1500;
+/** How much of a document a card shows, by Settings › Quick Preview. */
+const LENGTHS = { short: 600, medium: 1500, long: 4000 };
 
 function baseName(path) {
   const name = String(path).split(/[\\/]/).pop() || String(path);
@@ -50,13 +50,14 @@ function section(text, name) {
   return null;
 }
 
-/** At most LIMIT characters, cut at a paragraph's end where one is near. */
-function opening(text) {
+/** At most `limit` characters, cut at a paragraph's end where one is
+ *  near. */
+function opening(text, limit) {
   const trimmed = text.trim();
-  if (trimmed.length <= LIMIT) return trimmed;
-  const cut = trimmed.lastIndexOf("\n\n", LIMIT);
+  if (trimmed.length <= limit) return trimmed;
+  const cut = trimmed.lastIndexOf("\n\n", limit);
   return (
-    (cut > LIMIT / 2 ? trimmed.slice(0, cut) : trimmed.slice(0, LIMIT)) +
+    (cut > limit / 2 ? trimmed.slice(0, cut) : trimmed.slice(0, limit)) +
     "\n\n…"
   );
 }
@@ -73,9 +74,11 @@ exports.activate = function () {
         return null;
       }
       const part = target.heading ? section(text, target.heading) : null;
+      const limit =
+        LENGTHS[await textus.settings.get("length")] || LENGTHS.medium;
       return {
         title: baseName(target.path) + (part ? " › " + part.heading : ""),
-        markdown: opening(part ? part.text : text) || "…",
+        markdown: opening(part ? part.text : text, limit) || "…",
       };
     },
   });

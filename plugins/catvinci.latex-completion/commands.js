@@ -36,6 +36,57 @@
     ["begin{pmatrix}", "begin{pmatrix}\n$0\n\\end{pmatrix}", "( matrix )"],
     ["begin{bmatrix}", "begin{bmatrix}\n$0\n\\end{bmatrix}", "[ matrix ]"],
     ["begin{matrix}", "begin{matrix}\n$0\n\\end{matrix}", "matrix"],
+    // Fonts, decorations and pairs
+    ["mathfrak", "mathfrak{$0}", "𝔄"],
+    ["mathsf", "mathsf{$0}", "sans"],
+    ["mathtt", "mathtt{$0}", "mono"],
+    ["boldsymbol", "boldsymbol{$0}", "𝜶 bold"],
+    ["operatorname", "operatorname{$0}", "op"],
+    ["widehat", "widehat{$0}", "^"],
+    ["widetilde", "widetilde{$0}", "~"],
+    ["overrightarrow", "overrightarrow{$0}", "→"],
+    ["overbrace", "overbrace{$0}^{}", "⏞"],
+    ["overset", "overset{$0}{}", "x over"],
+    ["underset", "underset{$0}{}", "x under"],
+    ["xrightarrow", "xrightarrow{$0}", "—→"],
+    ["xleftarrow", "xleftarrow{$0}", "←—"],
+    ["boxed", "boxed{$0}", "▭"],
+    ["cancel", "cancel{$0}", "╱"],
+    ["textcolor", "textcolor{$0}{}", "color"],
+    ["left|", "left| $0 \\right|", "| |"],
+    ["langle", null, "⟨"],
+    ["rangle", null, "⟩"],
+    ["lfloor", null, "⌊"],
+    ["rfloor", null, "⌋"],
+    ["lceil", null, "⌈"],
+    ["rceil", null, "⌉"],
+    ["lVert", null, "‖"],
+    ["rVert", null, "‖"],
+    ["iiint", null, "∭"],
+    ["oiint", null, "∯"],
+    ["therefore", null, "∴"],
+    ["because", null, "∵"],
+    ["land", null, "∧"],
+    ["lor", null, "∨"],
+    ["lnot", null, "¬"],
+    ["top", null, "⊤"],
+    ["bot", null, "⊥"],
+    ["vdash", null, "⊢"],
+    ["models", null, "⊨"],
+    ["star", null, "⋆"],
+    ["ast", null, "∗"],
+    ["dagger", null, "†"],
+    ["bullet", null, "•"],
+    ["triangle", null, "△"],
+    ["square", null, "□"],
+    ["checkmark", null, "✓"],
+    ["coloneqq", null, "≔"],
+    ["cong", null, "≅"],
+    ["nsubseteq", null, "⊈"],
+    ["begin{vmatrix}", "begin{vmatrix}\n$0\n\\end{vmatrix}", "| matrix |"],
+    ["begin{Bmatrix}", "begin{Bmatrix}\n$0\n\\end{Bmatrix}", "{ matrix }"],
+    ["begin{array}", "begin{array}{$0}\n\n\\end{array}", "array"],
+    ["begin{gathered}", "begin{gathered}\n$0\n\\end{gathered}", "gathered"],
     // Greek
     ["alpha", null, "α"],
     ["beta", null, "β"],
@@ -176,10 +227,19 @@
   /** The completions for what follows the backslash, `typed`: commands
    *  that start with it first, in the list's order, then ones that hold
    *  it, ignoring case. */
+  /** Whether `name` holds the letters of `typed` in order - "rarr" for
+   *  "rightarrow", "lra" for "leftrightarrow". */
+  function abbreviates(name, typed) {
+    let at = 0;
+    for (const c of name) if (c === typed[at]) at += 1;
+    return typed.length > 1 && at === typed.length;
+  }
+
   function complete(typed, limit) {
     const lower = typed.toLowerCase();
     const starts = [];
     const holds = [];
+    const short = [];
     for (const [name, insert, detail] of COMMANDS) {
       const item = {
         label: "\\" + name,
@@ -188,8 +248,12 @@
       };
       if (name.startsWith(typed)) starts.push(item);
       else if (lower && name.toLowerCase().includes(lower)) holds.push(item);
+      else if (abbreviates(name.toLowerCase(), lower)) short.push(item);
     }
-    return starts.concat(holds).slice(0, limit || 30);
+    // The shortest of the abbreviated first: "rarr" is \rightarrow
+    // before \overrightarrow.
+    short.sort((x, y) => x.label.length - y.label.length);
+    return starts.concat(holds, short).slice(0, limit || 30);
   }
 
   root.latexCommands = { COMMANDS: COMMANDS, complete: complete };

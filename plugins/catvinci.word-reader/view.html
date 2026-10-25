@@ -7,7 +7,18 @@
     <div class="toolbar">
       <span id="name" class="muted"></span>
       <span class="spacer"></span>
+      <span id="page" class="muted"></span>
+      <button class="icon" id="zoom-out">−</button>
+      <button id="zoom" class="muted">100%</button>
+      <button class="icon" id="zoom-in">+</button>
+      <button class="icon" id="find-open">⌕</button>
       <button id="edit" class="primary"></button>
+    </div>
+    <div id="find-bar" class="toolbar" hidden>
+      <input id="find-input" type="search" />
+      <span id="find-count" class="muted"></span>
+      <span class="spacer"></span>
+      <button class="icon" id="find-close">×</button>
     </div>
     <main id="pages"></main>
     <p id="status" class="empty"></p>

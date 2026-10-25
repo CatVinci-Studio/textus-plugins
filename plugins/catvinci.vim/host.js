@@ -26,7 +26,7 @@ var escapeFirstAt = 0;
 var recording = null;
 var lastChange = null;
 var replaying = false;
-var CHANGES = "dcxXrpPDCS";
+var CHANGES = "dcxXrpPDCS~";
 
 var status = null;
 
@@ -467,6 +467,17 @@ async function normalCommand(key) {
       n = takeCount();
       for (var u = 0; u < n; u++) await exec({ op: "undo" });
       break;
+    case "~":
+      // The case of the characters under the caret, flipped; the caret
+      // ends after them.
+      await exec({
+        op: "move",
+        unit: "right",
+        count: takeCount(),
+        select: true,
+      });
+      await recase("flip");
+      break;
     case "ctrl+r":
       n = takeCount();
       for (var r = 0; r < n; r++) await exec({ op: "redo" });
@@ -531,10 +542,41 @@ async function visualKey(key) {
     showStatus();
     return;
   }
+  // ~ flips the selection's case, U upper-cases it, u lower-cases it -
+  // within a paragraph (a visual-line selection keeps its blocks).
+  if ((key === "~" || key === "U" || key === "u") && mode === "visual") {
+    await recase(key === "~" ? "flip" : key === "U" ? "upper" : "lower");
+    await setMode("normal");
+    showStatus();
+    return;
+  }
   if (key === "v" || key === "V") {
     await exec({ op: "collapse", to: "head" });
     await setMode("normal");
   }
+}
+
+/** The selection's text again in another case. */
+async function recase(how) {
+  var copied = await exec({ op: "copy" });
+  var text = copied.text || "";
+  if (!text || text.indexOf("\n") >= 0) {
+    await exec({ op: "collapse", to: "head" });
+    return;
+  }
+  var next =
+    how === "upper"
+      ? text.toUpperCase()
+      : how === "lower"
+        ? text.toLowerCase()
+        : text
+            .split("")
+            .map(function (c) {
+              var up = c.toUpperCase();
+              return c === up ? c.toLowerCase() : up;
+            })
+            .join("");
+  await exec({ op: "insertText", text: next });
 }
 
 // --- Insert mode --------------------------------------------------------
