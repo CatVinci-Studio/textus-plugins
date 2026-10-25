@@ -14,6 +14,7 @@ The plugins for [Textus](https://textus.catvinci.com), the Markdown editor. None
 | Kanban | Boards of cards in lists, kept as a Markdown file (name.kanban.md) - a list per heading, a card per task. |
 | PDF Viewer | Open PDFs in a tab beside your notes: pages, zoom, and text to select and copy. |
 | Quick Notes | Jot something down without leaving the document: notes in the sidebar, to insert later or open as a document. |
+| Split Panes | Two documents at once: side by side, or one above the other. Drag the line between them to share the space; a click in one brings it to the front. Needs Textus 1.3. |
 | Tasks | Every task (- [ ]) in the open folder's documents, in one list: tick one off there, or go to it. |
 | Version History | Each save of a document kept as a version: see what changed since, and bring an old one back. |
 | Web View | Open web pages in a tab beside your notes. |
