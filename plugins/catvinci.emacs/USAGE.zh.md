@@ -1,0 +1,8 @@
+# Emacs 按键
+
+在编辑器里使用 Emacs 的按键。
+
+- **插件 › 打开或关闭 Emacs 按键**。
+- 移动：**C-f C-b C-n C-p**、**C-a C-e**、**M-f M-b**、**M-< M->**。
+- **C-SPC** 设标记；**C-w** 剪切选区，**C-k** 剪到行尾，都进 kill ring；**C-y** 粘贴，**M-y** 轮换；**C-/** 撤销。
+- Textus 自己用到的 Ctrl 组合键默认保留给 Textus；想让 Emacs 接管，在插件设置里打开。

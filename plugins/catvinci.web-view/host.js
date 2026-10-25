@@ -1,6 +1,8 @@
 // Web View: web pages in a tab beside the notes. The tab itself is
 // Textus's (window.openWebPage), so the page keeps its own cookies and
-// storage; this plugin adds the ways to open one.
+// storage; this plugin adds the ways to open one - an address, the
+// selected link, and a web link Ctrl/Cmd+clicked in a document
+// (contributes.links).
 function address(text) {
   const trimmed = String(text || "").trim();
   if (!trimmed) return null;
@@ -36,7 +38,10 @@ exports.activate = function () {
       if (target) await openPage(target);
     },
   );
-  textus.commands.registerCommand("catvinci.web-view.home", async function () {
-    await openPage(await textus.settings.get("home"));
-  });
+  textus.commands.registerCommand(
+    "catvinci.web-view.openLink",
+    async function (url) {
+      await openPage(url);
+    },
+  );
 };
