@@ -32,17 +32,11 @@ function tasksIn(text) {
 async function scan() {
   const root = await textus.workspace.rootPath();
   if (!root) return null;
-  const docs = await textus.workspace.findDocuments();
+  const { documents } = await textus.workspace.readDocuments();
   const files = [];
-  for (const doc of docs) {
-    if (!/\.(md|markdown)$/i.test(doc.path)) continue;
-    try {
-      const tasks = tasksIn(await textus.workspace.readText(doc.path));
-      if (tasks.length)
-        files.push({ path: doc.path, rel: doc.rel, tasks: tasks });
-    } catch {
-      // Unreadable: left out.
-    }
+  for (const doc of documents) {
+    const tasks = tasksIn(doc.text);
+    if (tasks.length) files.push({ path: doc.path, rel: doc.rel, tasks: tasks });
   }
   return files;
 }

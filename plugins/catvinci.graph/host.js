@@ -12,21 +12,8 @@ let local = null;
 async function build() {
   const root = await textus.workspace.rootPath();
   if (!root) return null;
-  const docs = await textus.workspace.findDocuments();
-  const read = [];
-  for (const doc of docs) {
-    if (!/\.(md|markdown)$/i.test(doc.path)) continue;
-    try {
-      read.push({
-        path: doc.path,
-        rel: doc.rel.replace(/\\/g, "/"),
-        text: await textus.workspace.readText(doc.path),
-      });
-    } catch {
-      // Unreadable: left out.
-    }
-  }
-  return graphLinks.buildGraph(read);
+  const { documents } = await textus.workspace.readDocuments();
+  return graphLinks.buildGraph(documents);
 }
 
 async function current() {
