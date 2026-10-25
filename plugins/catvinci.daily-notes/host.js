@@ -60,8 +60,13 @@ async function openDay(date) {
     return;
   }
   const path = join(where.dir, date + ".md");
-  const dates = (await noteDates()) || [];
-  if (!dates.includes(date)) {
+  // Written only where there is no note: read first, so a listing that
+  // failed for a moment never has a day's note written over.
+  const exists = await textus.workspace.readText(path).then(
+    () => true,
+    () => false,
+  );
+  if (!exists) {
     const template = String(
       (await textus.settings.get("template")) || "# {{date}}\\n\\n",
     );
