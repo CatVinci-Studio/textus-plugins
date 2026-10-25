@@ -1,25 +1,37 @@
 {
   "id": "catvinci.daily-notes",
   "name": "%name%",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "publisher": "catvinci",
   "author": "CatVinci Studio",
   "description": "%description%",
   "icon": "icon.svg",
   "license": "MIT",
   "repository": "https://github.com/CatVinci-Studio/textus-plugins",
-  "engines": { "textus": "^1.2.0" },
+  "engines": {
+    "textus": "^1.3.0"
+  },
   "main": "host.js",
   "permissions": ["workspace.read", "workspace.write"],
   "contributes": {
     "commands": [
-      { "command": "catvinci.daily-notes.today", "title": "%today%" }
+      {
+        "command": "catvinci.daily-notes.today",
+        "title": "%today%"
+      }
     ],
     "keybindings": [
-      { "command": "catvinci.daily-notes.today", "key": "mod+alt+d" }
+      {
+        "command": "catvinci.daily-notes.today",
+        "key": "mod+alt+d"
+      }
     ],
     "menus": {
-      "app/plugins": [{ "command": "catvinci.daily-notes.today" }]
+      "app/plugins": [
+        {
+          "command": "catvinci.daily-notes.today"
+        }
+      ]
     },
     "sidebarTabs": [
       {
@@ -49,8 +61,14 @@
         "default": "monday",
         "title": "%weekStart%",
         "options": [
-          { "value": "monday", "label": "%monday%" },
-          { "value": "sunday", "label": "%sunday%" }
+          {
+            "value": "monday",
+            "label": "%monday%"
+          },
+          {
+            "value": "sunday",
+            "label": "%sunday%"
+          }
         ]
       }
     ]
@@ -67,7 +85,12 @@
       "templateHelp": "{{date}} becomes the day's date; \\n starts a new line.",
       "weekStart": "Weeks start on",
       "monday": "Monday",
-      "sunday": "Sunday"
+      "sunday": "Sunday",
+      "needsFolder": "Open a folder first: daily notes are kept in it.",
+      "todayButton": "Today",
+      "nofolder": "Open a folder, and your daily notes are kept in it.",
+      "nextMonth": "Next month",
+      "prevMonth": "Previous month"
     },
     "zh": {
       "name": "日历与每日笔记",
@@ -80,7 +103,156 @@
       "templateHelp": "{{date}} 会换成当天日期；\\n 表示换行。",
       "weekStart": "每周从哪天开始",
       "monday": "星期一",
-      "sunday": "星期日"
+      "sunday": "星期日",
+      "needsFolder": "先打开一个文件夹，每日笔记会放在里面。",
+      "todayButton": "今天",
+      "nofolder": "打开一个文件夹后，每日笔记会放在里面。",
+      "nextMonth": "下个月",
+      "prevMonth": "上个月"
+    },
+    "zh-Hant": {
+      "name": "日曆與每日筆記",
+      "description": "側邊欄中的日曆，每天一篇筆記，存在開啟的資料夾中的一個資料夾裡。",
+      "today": "開啟今天的筆記",
+      "calendar": "日曆",
+      "folder": "每日筆記資料夾",
+      "folderHelp": "在開啟的資料夾裡面。",
+      "template": "新一天筆記的開頭",
+      "templateHelp": "{{date}} 會換成當天日期；\\n 表示換行。",
+      "weekStart": "每週從哪天開始",
+      "monday": "星期一",
+      "sunday": "星期日",
+      "needsFolder": "請先開啟一個資料夾，每日筆記會放在裡面。",
+      "todayButton": "今天",
+      "nofolder": "開啟一個資料夾後，每日筆記會放在裡面。",
+      "nextMonth": "下個月",
+      "prevMonth": "上個月"
+    },
+    "ja": {
+      "name": "カレンダーとデイリーノート",
+      "description": "サイドバーのカレンダーと、一日ごとのノート。開いているフォルダの中のフォルダに保存されます。",
+      "today": "今日のノートを開く",
+      "calendar": "カレンダー",
+      "folder": "デイリーノートのフォルダ",
+      "folderHelp": "開いているフォルダの中です。",
+      "template": "新しい日のノート",
+      "templateHelp": "{{date}} はその日の日付になります。\\n で改行します。",
+      "weekStart": "週の始まり",
+      "monday": "月曜日",
+      "sunday": "日曜日",
+      "needsFolder": "先にフォルダを開いてください。デイリーノートはその中に保存されます。",
+      "todayButton": "今日",
+      "nofolder": "フォルダを開くと、デイリーノートはその中に保存されます。",
+      "nextMonth": "次の月",
+      "prevMonth": "前の月"
+    },
+    "ko": {
+      "name": "달력과 데일리 노트",
+      "description": "사이드바의 달력과 하루에 한 편씩의 노트. 연 폴더 안의 폴더에 보관됩니다.",
+      "today": "오늘의 노트 열기",
+      "calendar": "달력",
+      "folder": "데일리 노트 폴더",
+      "folderHelp": "연 폴더 안에 있습니다.",
+      "template": "새 날의 노트",
+      "templateHelp": "{{date}}는 그날 날짜로 바뀌고, \\n은 줄을 바꿉니다.",
+      "weekStart": "한 주의 시작",
+      "monday": "월요일",
+      "sunday": "일요일",
+      "needsFolder": "먼저 폴더를 여세요. 데일리 노트는 그 안에 보관됩니다.",
+      "todayButton": "오늘",
+      "nofolder": "폴더를 열면 데일리 노트가 그 안에 보관됩니다.",
+      "nextMonth": "다음 달",
+      "prevMonth": "이전 달"
+    },
+    "es": {
+      "name": "Calendario y notas diarias",
+      "description": "Un calendario en la barra lateral y una nota para cada día, guardada en una carpeta de la carpeta abierta.",
+      "today": "Abrir la nota de hoy",
+      "calendar": "Calendario",
+      "folder": "Carpeta de notas diarias",
+      "folderHelp": "Dentro de la carpeta abierta.",
+      "template": "La nota de un día nuevo",
+      "templateHelp": "{{date}} se convierte en la fecha del día; \\n empieza una línea nueva.",
+      "weekStart": "Las semanas empiezan el",
+      "monday": "lunes",
+      "sunday": "domingo",
+      "needsFolder": "Abre primero una carpeta: las notas diarias se guardan en ella.",
+      "todayButton": "Hoy",
+      "nofolder": "Abre una carpeta y tus notas diarias se guardarán en ella.",
+      "nextMonth": "Mes siguiente",
+      "prevMonth": "Mes anterior"
+    },
+    "fr": {
+      "name": "Calendrier et notes du jour",
+      "description": "Un calendrier dans la barre latérale et une note pour chaque jour, rangée dans un dossier du dossier ouvert.",
+      "today": "Ouvrir la note du jour",
+      "calendar": "Calendrier",
+      "folder": "Dossier des notes du jour",
+      "folderHelp": "Dans le dossier ouvert.",
+      "template": "La note d’un nouveau jour",
+      "templateHelp": "{{date}} devient la date du jour ; \\n commence une nouvelle ligne.",
+      "weekStart": "Les semaines commencent le",
+      "monday": "lundi",
+      "sunday": "dimanche",
+      "needsFolder": "Ouvrez d’abord un dossier : les notes du jour y sont rangées.",
+      "todayButton": "Aujourd’hui",
+      "nofolder": "Ouvrez un dossier : vos notes du jour y seront rangées.",
+      "nextMonth": "Mois suivant",
+      "prevMonth": "Mois précédent"
+    },
+    "de": {
+      "name": "Kalender und Tagesnotizen",
+      "description": "Ein Kalender in der Seitenleiste und eine Notiz für jeden Tag, abgelegt in einem Ordner des geöffneten Ordners.",
+      "today": "Heutige Notiz öffnen",
+      "calendar": "Kalender",
+      "folder": "Ordner für Tagesnotizen",
+      "folderHelp": "Im geöffneten Ordner.",
+      "template": "Die Notiz eines neuen Tages",
+      "templateHelp": "{{date}} wird zum Datum des Tages; \\n beginnt eine neue Zeile.",
+      "weekStart": "Wochen beginnen am",
+      "monday": "Montag",
+      "sunday": "Sonntag",
+      "needsFolder": "Öffne zuerst einen Ordner: Die Tagesnotizen werden darin abgelegt.",
+      "todayButton": "Heute",
+      "nofolder": "Öffne einen Ordner, dann werden deine Tagesnotizen darin abgelegt.",
+      "nextMonth": "Nächster Monat",
+      "prevMonth": "Vorheriger Monat"
+    },
+    "ru": {
+      "name": "Календарь и ежедневные заметки",
+      "description": "Календарь на боковой панели и заметка на каждый день — в папке внутри открытой папки.",
+      "today": "Открыть заметку на сегодня",
+      "calendar": "Календарь",
+      "folder": "Папка ежедневных заметок",
+      "folderHelp": "Внутри открытой папки.",
+      "template": "Заметка нового дня",
+      "templateHelp": "{{date}} заменяется датой дня; \\n начинает новую строку.",
+      "weekStart": "Неделя начинается с",
+      "monday": "понедельника",
+      "sunday": "воскресенья",
+      "needsFolder": "Сначала откройте папку: ежедневные заметки хранятся в ней.",
+      "todayButton": "Сегодня",
+      "nofolder": "Откройте папку — ежедневные заметки будут храниться в ней.",
+      "nextMonth": "Следующий месяц",
+      "prevMonth": "Предыдущий месяц"
+    },
+    "pt": {
+      "name": "Calendário e notas diárias",
+      "description": "Um calendário na barra lateral e uma nota para cada dia, guardada numa pasta da pasta aberta.",
+      "today": "Abrir a nota de hoje",
+      "calendar": "Calendário",
+      "folder": "Pasta das notas diárias",
+      "folderHelp": "Dentro da pasta aberta.",
+      "template": "A nota de um novo dia",
+      "templateHelp": "{{date}} vira a data do dia; \\n começa uma nova linha.",
+      "weekStart": "A semana começa",
+      "monday": "na segunda-feira",
+      "sunday": "no domingo",
+      "needsFolder": "Abra uma pasta primeiro: as notas diárias ficam guardadas nela.",
+      "todayButton": "Hoje",
+      "nofolder": "Abra uma pasta e suas notas diárias ficarão guardadas nela.",
+      "nextMonth": "Próximo mês",
+      "prevMonth": "Mês anterior"
     }
   }
 }

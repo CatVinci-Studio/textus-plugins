@@ -1,24 +1,23 @@
 (function () {
   "use strict";
   const api = acquireTextusApi();
-  const t =
-    api.language === "zh"
-      ? { fit: "适应窗口", actual: "原始大小", source: "源码", picture: "图片" }
-      : {
-          fit: "Fit",
-          actual: "Actual size",
-          source: "Source",
-          picture: "Picture",
-        };
+  const t = api.t;
   const $ = (id) => document.getElementById(id);
+  // The icon buttons' names, in the UI's language.
+  for (const [id, key] of [
+    ["zoom-out", "zoomOut"],
+    ["zoom-in", "zoomIn"],
+  ])
+    for (const attr of ["aria-label", "title"])
+      $(id).setAttribute(attr, api.t(key));
   const stage = $("stage");
   const image = $("image");
   let zoom = 1;
   let fit = true;
 
-  $("fit").textContent = t.fit;
-  $("actual").textContent = t.actual;
-  $("source").textContent = t.source;
+  $("fit").textContent = t("fit");
+  $("actual").textContent = t("actual");
+  $("source").textContent = t("source");
 
   const scaleNow = () =>
     image.naturalWidth ? image.width / image.naturalWidth : 1;
@@ -57,7 +56,13 @@
       ? Math.max(1, Math.round(bytes / 1024)) + " KB"
       : (bytes / 1024 / 1024).toFixed(1) + " MB";
 
+  const failed = () => {
+    stage.hidden = true;
+    $("info").textContent = t("failed");
+  };
+
   api.onMessage((message) => {
+    if (message.type === "failed") return failed();
     if (message.type !== "file") return;
     const svg = /\.svg$/i.test(message.name);
     // Shown as a picture, an SVG's scripts never run.
@@ -65,6 +70,8 @@
       new Blob([message.bytes], { type: svg ? "image/svg+xml" : "" }),
     );
     image.alt = message.name;
+    // Not a picture the system can draw, however it is named.
+    image.onerror = failed;
     image.onload = () => {
       $("info").textContent =
         image.naturalWidth +
@@ -83,7 +90,7 @@
       const toSource = code.hidden;
       code.hidden = !toSource;
       stage.hidden = toSource;
-      button.textContent = toSource ? t.picture : t.source;
+      button.textContent = toSource ? t("picture") : t("source");
     };
   });
   api.postMessage({ type: "ready" });

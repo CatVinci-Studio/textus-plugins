@@ -1,14 +1,16 @@
 {
   "id": "catvinci.word-reader",
   "name": "%name%",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "publisher": "catvinci",
   "author": "CatVinci Studio",
   "description": "%description%",
   "icon": "icon.svg",
   "license": "MIT",
   "repository": "https://github.com/CatVinci-Studio/textus-plugins",
-  "engines": { "textus": "^1.2.0" },
+  "engines": {
+    "textus": "^1.3.0"
+  },
   "main": "host.js",
   "permissions": [],
   "contributes": {
@@ -23,11 +25,73 @@
   "l10n": {
     "en": {
       "name": "Word Reader",
-      "description": "Read Word documents as they look in Word, in a tab. Edit as Markdown turns one into a document of yours."
+      "description": "Read Word documents as they look in Word, in a tab. Edit as Markdown turns one into a document of yours.",
+      "edit": "Edit as Markdown",
+      "loading": "Opening…",
+      "failed": "This Word document can't be opened: {0}"
     },
     "zh": {
       "name": "Word 阅读器",
-      "description": "在标签页里按 Word 中的样子阅读 Word 文档。点“作为 Markdown 编辑”可以转成你自己的文档。"
+      "description": "在标签页里按 Word 中的样子阅读 Word 文档。点“作为 Markdown 编辑”可以转成你自己的文档。",
+      "edit": "作为 Markdown 编辑",
+      "loading": "正在打开…",
+      "failed": "无法打开这个 Word 文档：{0}"
+    },
+    "zh-Hant": {
+      "name": "Word 閱讀器",
+      "description": "在分頁中按 Word 裡的樣子閱讀 Word 文件。點「以 Markdown 編輯」可以轉成你自己的文件。",
+      "edit": "以 Markdown 編輯",
+      "loading": "正在開啟…",
+      "failed": "無法開啟這個 Word 文件：{0}"
+    },
+    "ja": {
+      "name": "Word リーダー",
+      "description": "Word 文書を Word で見るのと同じ姿でタブに表示します。「Markdown として編集」で自分の文書にできます。",
+      "edit": "Markdown として編集",
+      "loading": "開いています…",
+      "failed": "この Word 文書を開けません：{0}"
+    },
+    "ko": {
+      "name": "Word 리더",
+      "description": "Word 문서를 Word에서 보이는 모습 그대로 탭에서 읽습니다. 'Markdown으로 편집'을 누르면 내 문서로 바뀝니다.",
+      "edit": "Markdown으로 편집",
+      "loading": "여는 중…",
+      "failed": "이 Word 문서를 열 수 없습니다: {0}"
+    },
+    "es": {
+      "name": "Lector de Word",
+      "description": "Lee documentos de Word tal como se ven en Word, en una pestaña. Editar como Markdown lo convierte en un documento tuyo.",
+      "edit": "Editar como Markdown",
+      "loading": "Abriendo…",
+      "failed": "No se puede abrir este documento de Word: {0}"
+    },
+    "fr": {
+      "name": "Lecteur Word",
+      "description": "Lisez les documents Word tels qu’ils s’affichent dans Word, dans un onglet. Modifier en Markdown en fait un document à vous.",
+      "edit": "Modifier en Markdown",
+      "loading": "Ouverture…",
+      "failed": "Impossible d’ouvrir ce document Word : {0}"
+    },
+    "de": {
+      "name": "Word-Leser",
+      "description": "Lies Word-Dokumente so, wie sie in Word aussehen, in einem Tab. „Als Markdown bearbeiten“ macht eins zu deinem eigenen Dokument.",
+      "edit": "Als Markdown bearbeiten",
+      "loading": "Wird geöffnet…",
+      "failed": "Dieses Word-Dokument lässt sich nicht öffnen: {0}"
+    },
+    "ru": {
+      "name": "Просмотр Word",
+      "description": "Читайте документы Word так, как они выглядят в Word, во вкладке. «Редактировать как Markdown» превращает документ в ваш собственный.",
+      "edit": "Редактировать как Markdown",
+      "loading": "Открытие…",
+      "failed": "Не удаётся открыть этот документ Word: {0}"
+    },
+    "pt": {
+      "name": "Leitor de Word",
+      "description": "Leia documentos do Word como aparecem no Word, numa aba. Editar como Markdown transforma um deles em documento seu.",
+      "edit": "Editar como Markdown",
+      "loading": "Abrindo…",
+      "failed": "Não foi possível abrir este documento do Word: {0}"
     }
   }
 }

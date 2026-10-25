@@ -1,23 +1,50 @@
 {
   "id": "catvinci.graph",
   "name": "%name%",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "publisher": "catvinci",
   "author": "CatVinci Studio",
   "description": "%description%",
   "icon": "icon.svg",
   "license": "MIT",
   "repository": "https://github.com/CatVinci-Studio/textus-plugins",
-  "engines": { "textus": "^1.2.0" },
+  "engines": {
+    "textus": "^1.3.0"
+  },
   "main": ["links.js", "host.js"],
   "permissions": ["workspace.read", "document.read"],
   "contributes": {
-    "commands": [{ "command": "catvinci.graph.open", "title": "%open%" }],
-    "keybindings": [{ "command": "catvinci.graph.open", "key": "mod+alt+g" }],
-    "menus": { "app/plugins": [{ "command": "catvinci.graph.open" }] },
-    "views": [{ "id": "catvinci.graph.global", "title": "%name%" }],
+    "commands": [
+      {
+        "command": "catvinci.graph.open",
+        "title": "%open%"
+      }
+    ],
+    "keybindings": [
+      {
+        "command": "catvinci.graph.open",
+        "key": "mod+alt+g"
+      }
+    ],
+    "menus": {
+      "app/plugins": [
+        {
+          "command": "catvinci.graph.open"
+        }
+      ]
+    },
+    "views": [
+      {
+        "id": "catvinci.graph.global",
+        "title": "%name%"
+      }
+    ],
     "sidebarTabs": [
-      { "id": "catvinci.graph.local", "title": "%local%", "icon": "tab.svg" }
+      {
+        "id": "catvinci.graph.local",
+        "title": "%local%",
+        "icon": "tab.svg"
+      }
     ],
     "settings": [
       {
@@ -26,8 +53,14 @@
         "default": "1",
         "title": "%depth%",
         "options": [
-          { "value": "1", "label": "%depth1%" },
-          { "value": "2", "label": "%depth2%" }
+          {
+            "value": "1",
+            "label": "%depth1%"
+          },
+          {
+            "value": "2",
+            "label": "%depth2%"
+          }
         ]
       },
       {
@@ -47,7 +80,17 @@
       "depth": "The sidebar's graph shows",
       "depth1": "Documents linked to this one",
       "depth2": "Those, and the ones linked to them",
-      "orphans": "Show documents with no links in the full graph"
+      "orphans": "Show documents with no links in the full graph",
+      "search": "Search notes",
+      "fit": "Fit",
+      "full": "Full graph",
+      "notes.one": "{0} note",
+      "notes.other": "{0} notes",
+      "links.one": "{0} link",
+      "links.other": "{0} links",
+      "nofolder": "Open a folder, and the links between its documents are drawn here.",
+      "nodoc": "Open a document of the folder to see the links around it.",
+      "alone": "This document has no links yet. Link to another note with [[its name]]."
     },
     "zh": {
       "name": "知识图谱",
@@ -57,7 +100,173 @@
       "depth": "侧边栏图谱显示",
       "depth1": "和这篇文档直接相连的文档",
       "depth2": "再往外一层",
-      "orphans": "在完整图谱中显示没有链接的文档"
+      "orphans": "在完整图谱中显示没有链接的文档",
+      "search": "搜索笔记",
+      "fit": "适应窗口",
+      "full": "完整图谱",
+      "notes.other": "{0} 篇",
+      "links.other": "{0} 条链接",
+      "nofolder": "打开一个文件夹，这里会画出其中文档之间的链接。",
+      "nodoc": "打开文件夹中的一篇文档，这里会显示它周围的链接。",
+      "alone": "这篇文档还没有链接。用 [[文档名]] 连到别的笔记。"
+    },
+    "zh-Hant": {
+      "name": "知識圖譜",
+      "description": "把筆記和它們之間的連結畫成圖譜——[[雙向連結]] 和指向其他文件的連結——可以看整個資料夾，也可以只看目前文件的周圍。",
+      "open": "開啟知識圖譜",
+      "local": "圖譜",
+      "depth": "側邊欄圖譜顯示",
+      "depth1": "和這篇文件直接相連的文件",
+      "depth2": "再往外一層",
+      "orphans": "在完整圖譜中顯示沒有連結的文件",
+      "search": "搜尋筆記",
+      "fit": "符合視窗",
+      "full": "完整圖譜",
+      "notes.other": "{0} 篇",
+      "links.other": "{0} 個連結",
+      "nofolder": "開啟一個資料夾，這裡會畫出其中文件之間的連結。",
+      "nodoc": "開啟資料夾中的一篇文件，這裡會顯示它周圍的連結。",
+      "alone": "這篇文件還沒有連結。用 [[文件名稱]] 連到別的筆記。"
+    },
+    "ja": {
+      "name": "グラフビュー",
+      "description": "ノートとその間のリンク（[[ウィキリンク]] や他の文書へのリンク）をグラフで表示します。フォルダ全体でも、開いている文書の周りだけでも。",
+      "open": "グラフビューを開く",
+      "local": "グラフ",
+      "depth": "サイドバーのグラフに表示するもの",
+      "depth1": "この文書とつながっている文書",
+      "depth2": "さらにその先の文書まで",
+      "orphans": "全体のグラフにリンクのない文書も表示",
+      "search": "ノートを検索",
+      "fit": "全体を表示",
+      "full": "全体のグラフ",
+      "notes.other": "{0} 件のノート",
+      "links.other": "{0} 本のリンク",
+      "nofolder": "フォルダを開くと、その中の文書どうしのリンクがここに描かれます。",
+      "nodoc": "フォルダ内の文書を開くと、その周りのリンクがここに表示されます。",
+      "alone": "この文書にはまだリンクがありません。[[文書名]] で別のノートにつなげましょう。"
+    },
+    "ko": {
+      "name": "그래프 보기",
+      "description": "노트와 그 사이의 링크([[위키 링크]]와 다른 문서로 가는 링크)를 그래프로 보여 줍니다. 폴더 전체를, 또는 지금 문서 주변만 볼 수 있습니다.",
+      "open": "그래프 보기 열기",
+      "local": "그래프",
+      "depth": "사이드바 그래프에 보일 문서",
+      "depth1": "이 문서와 바로 연결된 문서",
+      "depth2": "그 문서와 연결된 문서까지",
+      "orphans": "전체 그래프에 링크 없는 문서도 표시",
+      "search": "노트 검색",
+      "fit": "화면에 맞추기",
+      "full": "전체 그래프",
+      "notes.other": "노트 {0}개",
+      "links.other": "링크 {0}개",
+      "nofolder": "폴더를 열면 그 안 문서들 사이의 링크가 여기에 그려집니다.",
+      "nodoc": "폴더 안의 문서를 열면 그 주변의 링크가 여기에 보입니다.",
+      "alone": "이 문서에는 아직 링크가 없습니다. [[문서 이름]]으로 다른 노트에 연결해 보세요."
+    },
+    "es": {
+      "name": "Vista de grafo",
+      "description": "Tus notas y los enlaces entre ellas como un grafo – [[enlaces wiki]] y enlaces a otros documentos –, de toda la carpeta o alrededor del documento abierto.",
+      "open": "Abrir la vista de grafo",
+      "local": "Grafo",
+      "depth": "El grafo de la barra lateral muestra",
+      "depth1": "Los documentos enlazados con este",
+      "depth2": "Esos, y los enlazados con ellos",
+      "orphans": "Mostrar en el grafo completo los documentos sin enlaces",
+      "search": "Buscar notas",
+      "fit": "Ajustar",
+      "full": "Grafo completo",
+      "notes.one": "{0} nota",
+      "notes.other": "{0} notas",
+      "links.one": "{0} enlace",
+      "links.other": "{0} enlaces",
+      "nofolder": "Abre una carpeta y aquí se dibujarán los enlaces entre sus documentos.",
+      "nodoc": "Abre un documento de la carpeta para ver los enlaces a su alrededor.",
+      "alone": "Este documento aún no tiene enlaces. Enlaza otra nota con [[su nombre]]."
+    },
+    "fr": {
+      "name": "Vue en graphe",
+      "description": "Vos notes et les liens entre elles sous forme de graphe – [[liens wiki]] et liens vers d’autres documents –, pour tout le dossier ou autour du document ouvert.",
+      "open": "Ouvrir la vue en graphe",
+      "local": "Graphe",
+      "depth": "Le graphe de la barre latérale montre",
+      "depth1": "Les documents liés à celui-ci",
+      "depth2": "Ceux-là, et ceux qui leur sont liés",
+      "orphans": "Montrer les documents sans lien dans le graphe complet",
+      "search": "Rechercher des notes",
+      "fit": "Ajuster",
+      "full": "Graphe complet",
+      "notes.one": "{0} note",
+      "notes.other": "{0} notes",
+      "links.one": "{0} lien",
+      "links.other": "{0} liens",
+      "nofolder": "Ouvrez un dossier : les liens entre ses documents seront dessinés ici.",
+      "nodoc": "Ouvrez un document du dossier pour voir les liens autour de lui.",
+      "alone": "Ce document n’a pas encore de lien. Reliez-le à une autre note avec [[son nom]]."
+    },
+    "de": {
+      "name": "Graphansicht",
+      "description": "Deine Notizen und die Links zwischen ihnen als Graph – [[Wiki-Links]] und Links auf andere Dokumente –, für den ganzen Ordner oder rund um das geöffnete Dokument.",
+      "open": "Graphansicht öffnen",
+      "local": "Graph",
+      "depth": "Der Graph in der Seitenleiste zeigt",
+      "depth1": "Dokumente, die mit diesem verlinkt sind",
+      "depth2": "Diese und die mit ihnen verlinkten",
+      "orphans": "Dokumente ohne Links im ganzen Graphen zeigen",
+      "search": "Notizen suchen",
+      "fit": "Einpassen",
+      "full": "Ganzer Graph",
+      "notes.one": "{0} Notiz",
+      "notes.other": "{0} Notizen",
+      "links.one": "{0} Link",
+      "links.other": "{0} Links",
+      "nofolder": "Öffne einen Ordner, dann werden hier die Links zwischen seinen Dokumenten gezeichnet.",
+      "nodoc": "Öffne ein Dokument des Ordners, um die Links um es herum zu sehen.",
+      "alone": "Dieses Dokument hat noch keine Links. Verlinke eine andere Notiz mit [[ihrem Namen]]."
+    },
+    "ru": {
+      "name": "Граф заметок",
+      "description": "Заметки и ссылки между ними в виде графа — [[вики-ссылки]] и ссылки на другие документы — для всей папки или вокруг открытого документа.",
+      "open": "Открыть граф заметок",
+      "local": "Граф",
+      "depth": "Граф на боковой панели показывает",
+      "depth1": "Документы, связанные с этим",
+      "depth2": "Их и связанные с ними",
+      "orphans": "Показывать на полном графе документы без ссылок",
+      "search": "Поиск заметок",
+      "fit": "Вписать",
+      "full": "Полный граф",
+      "notes.one": "{0} заметка",
+      "notes.few": "{0} заметки",
+      "notes.many": "{0} заметок",
+      "notes.other": "{0} заметки",
+      "links.one": "{0} ссылка",
+      "links.few": "{0} ссылки",
+      "links.many": "{0} ссылок",
+      "links.other": "{0} ссылки",
+      "nofolder": "Откройте папку — здесь появятся ссылки между её документами.",
+      "nodoc": "Откройте документ из папки, чтобы увидеть ссылки вокруг него.",
+      "alone": "У этого документа пока нет ссылок. Свяжите его с другой заметкой через [[её название]]."
+    },
+    "pt": {
+      "name": "Visão de grafo",
+      "description": "Suas notas e os links entre elas como um grafo – [[links wiki]] e links para outros documentos –, da pasta inteira ou ao redor do documento aberto.",
+      "open": "Abrir a visão de grafo",
+      "local": "Grafo",
+      "depth": "O grafo da barra lateral mostra",
+      "depth1": "Os documentos ligados a este",
+      "depth2": "Esses, e os ligados a eles",
+      "orphans": "Mostrar no grafo completo os documentos sem links",
+      "search": "Buscar notas",
+      "fit": "Ajustar",
+      "full": "Grafo completo",
+      "notes.one": "{0} nota",
+      "notes.other": "{0} notas",
+      "links.one": "{0} link",
+      "links.other": "{0} links",
+      "nofolder": "Abra uma pasta e os links entre os documentos dela serão desenhados aqui.",
+      "nodoc": "Abra um documento da pasta para ver os links ao redor dele.",
+      "alone": "Este documento ainda não tem links. Ligue-o a outra nota com [[o nome dela]]."
     }
   }
 }

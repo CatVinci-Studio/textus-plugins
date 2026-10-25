@@ -1,29 +1,38 @@
 {
   "id": "catvinci.web-view",
   "name": "%name%",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "publisher": "catvinci",
   "author": "CatVinci Studio",
   "description": "%description%",
   "icon": "icon.svg",
   "license": "MIT",
   "repository": "https://github.com/CatVinci-Studio/textus-plugins",
-  "engines": { "textus": "^1.2.0" },
+  "engines": {
+    "textus": "^1.3.0"
+  },
   "main": "host.js",
   "permissions": ["network:*", "document.read"],
   "contributes": {
     "commands": [
-      { "command": "catvinci.web-view.open", "title": "%open%" },
+      {
+        "command": "catvinci.web-view.open",
+        "title": "%open%"
+      },
       {
         "command": "catvinci.web-view.openSelection",
         "title": "%openSelection%"
       },
-      { "command": "catvinci.web-view.home", "title": "%home%" }
+      {
+        "command": "catvinci.web-view.openLink",
+        "title": "%openLink%"
+      }
     ],
     "menus": {
       "app/plugins": [
-        { "command": "catvinci.web-view.open" },
-        { "command": "catvinci.web-view.home" }
+        {
+          "command": "catvinci.web-view.open"
+        }
       ],
       "editor/context": [
         {
@@ -32,12 +41,10 @@
         }
       ]
     },
-    "settings": [
+    "links": [
       {
-        "key": "home",
-        "type": "string",
-        "default": "https://en.wikipedia.org",
-        "title": "%homeSetting%"
+        "pattern": "^https?://",
+        "command": "catvinci.web-view.openLink"
       }
     ]
   },
@@ -47,18 +54,80 @@
       "description": "Open web pages in a tab beside your notes.",
       "open": "Open a Web Page…",
       "openSelection": "Open the Selected Link in a Tab",
-      "home": "Open the Home Page",
-      "homeSetting": "Home page",
-      "prompt": "Web address"
+      "prompt": "Web address",
+      "openLink": "Open Link in Web View"
     },
     "zh": {
       "name": "网页视图",
       "description": "在笔记旁边的标签页里打开网页。",
       "open": "打开网页…",
       "openSelection": "在标签页中打开选中的链接",
-      "home": "打开主页",
-      "homeSetting": "主页",
-      "prompt": "网址"
+      "prompt": "网址",
+      "openLink": "在网页视图中打开链接"
+    },
+    "zh-Hant": {
+      "name": "網頁檢視",
+      "description": "在筆記旁邊的分頁中開啟網頁。",
+      "open": "開啟網頁…",
+      "openSelection": "在分頁中開啟選取的連結",
+      "prompt": "網址",
+      "openLink": "在網頁檢視中開啟連結"
+    },
+    "ja": {
+      "name": "ウェブビュー",
+      "description": "ノートの隣のタブでウェブページを開きます。",
+      "open": "ウェブページを開く…",
+      "openSelection": "選択したリンクをタブで開く",
+      "prompt": "ウェブアドレス",
+      "openLink": "リンクをウェブビューで開く"
+    },
+    "ko": {
+      "name": "웹 보기",
+      "description": "노트 옆 탭에서 웹 페이지를 엽니다.",
+      "open": "웹 페이지 열기…",
+      "openSelection": "선택한 링크를 탭에서 열기",
+      "prompt": "웹 주소",
+      "openLink": "웹 보기에서 링크 열기"
+    },
+    "es": {
+      "name": "Vista web",
+      "description": "Abre páginas web en una pestaña junto a tus notas.",
+      "open": "Abrir una página web…",
+      "openSelection": "Abrir el enlace seleccionado en una pestaña",
+      "prompt": "Dirección web",
+      "openLink": "Abrir el enlace en Vista web"
+    },
+    "fr": {
+      "name": "Vue web",
+      "description": "Ouvrez des pages web dans un onglet à côté de vos notes.",
+      "open": "Ouvrir une page web…",
+      "openSelection": "Ouvrir le lien sélectionné dans un onglet",
+      "prompt": "Adresse web",
+      "openLink": "Ouvrir le lien dans Vue web"
+    },
+    "de": {
+      "name": "Webansicht",
+      "description": "Öffne Webseiten in einem Tab neben deinen Notizen.",
+      "open": "Webseite öffnen…",
+      "openSelection": "Markierten Link in einem Tab öffnen",
+      "prompt": "Webadresse",
+      "openLink": "Link in der Webansicht öffnen"
+    },
+    "ru": {
+      "name": "Веб-страницы",
+      "description": "Открывайте веб-страницы во вкладке рядом с заметками.",
+      "open": "Открыть веб-страницу…",
+      "openSelection": "Открыть выделенную ссылку во вкладке",
+      "prompt": "Веб-адрес",
+      "openLink": "Открыть ссылку в веб-странице"
+    },
+    "pt": {
+      "name": "Visão web",
+      "description": "Abra páginas da web numa aba ao lado das suas notas.",
+      "open": "Abrir uma página da web…",
+      "openSelection": "Abrir o link selecionado numa aba",
+      "prompt": "Endereço da web",
+      "openLink": "Abrir o link na Visão web"
     }
   }
 }

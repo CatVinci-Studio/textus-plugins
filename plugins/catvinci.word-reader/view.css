@@ -10,12 +10,17 @@ body {
   flex: 1;
   min-height: 0;
   overflow: auto;
+  /* The grey the pages sit on reaches the bottom of the tab, however
+     short the document. */
+  background: var(--sidebar-bg);
 }
 #status:empty {
   display: none;
 }
 /* docx-preview's own wrapper: the pages on the sidebar's grey. */
 #pages .docx-wrapper {
+  min-height: 100%;
+  box-sizing: border-box;
   background: var(--sidebar-bg);
   padding: var(--space-5);
 }

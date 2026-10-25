@@ -56,16 +56,17 @@ async function refresh() {
 async function openDay(date) {
   const where = await folder();
   if (!where) {
-    await textus.window.showMessage(
-      textus.env.language === "zh"
-        ? "先打开一个文件夹，每日笔记会放在里面。"
-        : "Open a folder first: daily notes are kept in it.",
-    );
+    await textus.window.showMessage(textus.l10n.t("needsFolder"));
     return;
   }
   const path = join(where.dir, date + ".md");
-  const dates = (await noteDates()) || [];
-  if (!dates.includes(date)) {
+  // Written only where there is no note: read first, so a listing that
+  // failed for a moment never has a day's note written over.
+  const exists = await textus.workspace.readText(path).then(
+    () => true,
+    () => false,
+  );
+  if (!exists) {
     const template = String(
       (await textus.settings.get("template")) || "# {{date}}\\n\\n",
     );

@@ -1,33 +1,26 @@
 (function () {
   "use strict";
   const api = acquireTextusApi();
-  const zh = api.language === "zh";
-  const t = zh
-    ? {
-        title: "快速笔记",
-        new: "新建",
-        insert: "插入",
-        open: "打开",
-        delete: "删除",
-        empty: "还没有笔记。点“新建”，或在任何地方按 ⌘⌥N / Ctrl+Alt+N。",
-        placeholder: "写点什么…",
-      }
-    : {
-        title: "Quick Notes",
-        new: "New",
-        insert: "Insert",
-        open: "Open",
-        delete: "Delete",
-        empty: "No notes yet. Click New, or press ⌘⌥N / Ctrl+Alt+N anywhere.",
-        placeholder: "Write something…",
-      };
+  const t = api.t;
   const $ = (id) => document.getElementById(id);
-  $("title").textContent = t.title;
-  $("new").textContent = t.new;
-  $("empty").textContent = t.empty;
-  $("new").onclick = () => api.postMessage({ type: "new" });
-
+  $("title").textContent = t("title");
+  $("new").textContent = t("new");
+  $("empty").textContent = t("empty");
   const timers = new Map();
+  // An edit still waiting out its pause goes first, so a button pressed
+  // right after typing acts on every word typed.
+  function flush() {
+    for (const [id, timer] of timers) {
+      clearTimeout(timer);
+      const area = document.querySelector('textarea[data-id="' + id + '"]');
+      if (area) api.postMessage({ type: "edit", id: id, text: area.value });
+    }
+    timers.clear();
+  }
+  $("new").onclick = () => {
+    flush();
+    api.postMessage({ type: "new" });
+  };
   const when = (at) =>
     new Date(at).toLocaleString(api.language, {
       month: "short",
@@ -39,7 +32,10 @@
   function button(label, type, id) {
     const b = document.createElement("button");
     b.textContent = label;
-    b.onclick = () => api.postMessage({ type: type, id: id });
+    b.onclick = () => {
+      flush();
+      api.postMessage({ type: type, id: id });
+    };
     return b;
   }
 
@@ -58,20 +54,15 @@
         li.dataset.id = note.id;
         const area = document.createElement("textarea");
         area.dataset.id = note.id;
-        area.placeholder = t.placeholder;
+        area.placeholder = t("placeholder");
         area.addEventListener("input", () => {
           clearTimeout(timers.get(note.id));
           timers.set(
             note.id,
-            setTimeout(
-              () =>
-                api.postMessage({
-                  type: "edit",
-                  id: note.id,
-                  text: area.value,
-                }),
-              300,
-            ),
+            setTimeout(() => {
+              timers.delete(note.id);
+              api.postMessage({ type: "edit", id: note.id, text: area.value });
+            }, 300),
           );
         });
         const actions = document.createElement("div");
@@ -80,9 +71,9 @@
         stamp.className = "when muted";
         actions.append(
           stamp,
-          button(t.insert, "insert", note.id),
-          button(t.open, "open", note.id),
-          button(t.delete, "delete", note.id),
+          button(t("insert"), "insert", note.id),
+          button(t("open"), "open", note.id),
+          button(t("delete"), "delete", note.id),
         );
         li.append(area, actions);
       }

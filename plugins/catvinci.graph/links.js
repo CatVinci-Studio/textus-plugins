@@ -51,7 +51,9 @@
     const missing = new Map();
     const link = (from, to) => {
       if (from === to) return;
-      const key = from + "\n" + to;
+      // One line between two notes, whichever links to which: notes that
+      // link to each other are one link, as drawn.
+      const key = from < to ? from + "\n" + to : to + "\n" + from;
       if (seen.has(key)) return;
       seen.add(key);
       edges.push({ source: from, target: to });

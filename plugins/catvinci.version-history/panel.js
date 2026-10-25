@@ -1,30 +1,13 @@
 (function () {
   "use strict";
   const api = acquireTextusApi();
-  const zh = api.language === "zh";
-  const t = zh
-    ? {
-        title: "版本历史",
-        none: "这篇文档保存后，每个版本都会出现在这里。",
-        nodoc: "打开一篇保存过的文档，这里会显示它的版本。",
-        restore: "恢复这个版本",
-        open: "作为新文档打开",
-        same: "和现在一样",
-        large: "改动太多，无法逐行比较。",
-        since: "之后的改动：",
-      }
-    : {
-        title: "Version History",
-        none: "Each time this document is saved, the version shows here.",
-        nodoc: "Open a saved document to see its versions.",
-        restore: "Restore This Version",
-        open: "Open as a New Document",
-        same: "Same as now",
-        large: "Too many changes to compare line by line.",
-        since: "Changed since:",
-      };
+  const t = api.t;
   const $ = (id) => document.getElementById(id);
-  $("title").textContent = t.title;
+  // The icon buttons' names, in the UI's language.
+  for (const [id, key] of [["refresh", "refresh"]])
+    for (const attr of ["aria-label", "title"])
+      $(id).setAttribute(attr, api.t(key));
+  $("title").textContent = t("title");
   $("refresh").onclick = () => api.postMessage({ type: "refresh" });
   let opened = null;
   let data = { path: null, current: null, versions: [] };
@@ -42,11 +25,11 @@
     box.className = "diff";
     const lines = window.lineDiff(version.text, data.current || "");
     if (!lines) {
-      box.textContent = t.large;
+      box.textContent = t("large");
       return box;
     }
     if (!lines.some((l) => l.kind !== "same")) {
-      box.textContent = t.same;
+      box.textContent = t("same");
       return box;
     }
     // Changed lines with two of context around them.
@@ -81,7 +64,7 @@
     const list = $("versions");
     list.textContent = "";
     $("empty").hidden = !!(data.path && data.versions.length);
-    $("empty").textContent = data.path ? t.none : t.nodoc;
+    $("empty").textContent = data.path ? t("none") : t("nodoc");
     data.versions.forEach((version, index) => {
       const li = document.createElement("li");
       const head = document.createElement("div");
@@ -104,18 +87,18 @@
         li.classList.add("open");
         const label = document.createElement("div");
         label.className = "muted";
-        label.textContent = t.since;
+        label.textContent = t("since");
         const actions = document.createElement("div");
         actions.className = "actions";
         const restore = document.createElement("button");
         restore.className = "primary";
-        restore.textContent = t.restore;
+        restore.textContent = t("restore");
         restore.onclick = (e) => {
           e.stopPropagation();
           api.postMessage({ type: "restore", at: version.at });
         };
         const open = document.createElement("button");
-        open.textContent = t.open;
+        open.textContent = t("open");
         open.onclick = (e) => {
           e.stopPropagation();
           api.postMessage({ type: "open", at: version.at });

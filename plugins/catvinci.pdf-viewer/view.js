@@ -1,23 +1,48 @@
 (function () {
   "use strict";
   const api = acquireTextusApi();
-  const t =
-    api.language === "zh"
-      ? { fit: "适应宽度", loading: "正在打开…", failed: "无法打开这个 PDF：" }
-      : {
-          fit: "Fit width",
-          loading: "Opening…",
-          failed: "This PDF can't be opened: ",
-        };
+  const t = api.t;
   const $ = (id) => document.getElementById(id);
+  // The icon buttons' names, in the UI's language.
+  for (const [id, key] of [
+    ["prev", "prevPage"],
+    ["next", "nextPage"],
+    ["zoom-out", "zoomOut"],
+    ["zoom-in", "zoomIn"],
+  ])
+    for (const attr of ["aria-label", "title"])
+      $(id).setAttribute(attr, api.t(key));
   const viewer = $("viewer");
   const status = $("status");
-  $("fit").textContent = t.fit;
+  $("fit").textContent = t("fit");
 
   const libReady = new Promise((resolve) => {
     if (window.pdfjsLib) resolve();
     else window.addEventListener("pdfjs-ready", resolve, { once: true });
   });
+
+  // PDF.js's data files - a CJK font's character map (cMap), a standard
+  // font - asked of the host, which reads them from the plugin's lib
+  // folder: the page has no network. Answers come back by id.
+  const FOLDERS = {
+    cMapUrl: "lib/cmaps/",
+    standardFontDataUrl: "lib/standard_fonts/",
+  };
+  const waiting = new Map();
+  let asked = 0;
+  class PluginData {
+    async fetch({ kind, filename }) {
+      const folder = FOLDERS[kind];
+      if (!folder) throw new Error("No " + kind + " data in the plugin.");
+      const id = ++asked;
+      const bytes = await new Promise((resolve) => {
+        waiting.set(id, resolve);
+        api.postMessage({ type: "data", id: id, path: folder + filename });
+      });
+      if (!bytes) throw new Error(filename + " is not in the plugin.");
+      return new Uint8Array(bytes);
+    }
+  }
 
   let pdf = null;
   let scale = 1;
@@ -145,8 +170,13 @@
   });
 
   api.onMessage(async (message) => {
+    if (message.type === "data") {
+      waiting.get(message.id)?.(message.bytes);
+      waiting.delete(message.id);
+      return;
+    }
     if (message.type !== "file") return;
-    status.textContent = t.loading;
+    status.textContent = t("loading");
     try {
       await libReady;
       const lib = window.pdfjsLib;
@@ -154,13 +184,15 @@
         data: message.bytes,
         isEvalSupported: false,
         useSystemFonts: true,
+        BinaryDataFactory: PluginData,
+        cMapPacked: true,
       }).promise;
       fitWidth = message.zoom !== "100";
       scale = 1;
       status.textContent = "";
       await layout();
     } catch (err) {
-      status.textContent = t.failed + ((err && err.message) || err);
+      status.textContent = t("failed", (err && err.message) || err);
     }
   });
   api.postMessage({ type: "ready" });

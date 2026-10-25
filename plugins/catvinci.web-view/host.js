@@ -1,6 +1,8 @@
 // Web View: web pages in a tab beside the notes. The tab itself is
 // Textus's (window.openWebPage), so the page keeps its own cookies and
-// storage; this plugin adds the ways to open one.
+// storage; this plugin adds the ways to open one - an address, the
+// selected link, and a web link Ctrl/Cmd+clicked in a document
+// (contributes.links).
 function address(text) {
   const trimmed = String(text || "").trim();
   if (!trimmed) return null;
@@ -15,26 +17,31 @@ function openPage(url) {
 }
 
 exports.activate = function () {
-  const zh = textus.env.language === "zh";
   textus.commands.registerCommand("catvinci.web-view.open", async function () {
     const typed = await textus.window.showInput({
-      prompt: zh ? "网址" : "Web address",
+      prompt: textus.l10n.t("prompt"),
       value: "https://",
     });
-    if (typed) await openPage(typed);
+    // Left as it was offered, "https://" alone, is no page.
+    if (typed && !/^https?:\/\/$/i.test(typed.trim())) await openPage(typed);
   });
   textus.commands.registerCommand(
     "catvinci.web-view.openSelection",
     async function () {
       const selection = await textus.document.getSelection();
-      const text = selection && selection.text;
+      // As Markdown, a link's target is there; its plain text is only the
+      // link's words.
+      const text = selection && (selection.markdown || selection.text);
       // The link itself, or a Markdown link's target.
       const target =
         text && (/\((https?:\/\/[^)\s]+)\)/.exec(text) || [null, text])[1];
       if (target) await openPage(target);
     },
   );
-  textus.commands.registerCommand("catvinci.web-view.home", async function () {
-    await openPage(await textus.settings.get("home"));
-  });
+  textus.commands.registerCommand(
+    "catvinci.web-view.openLink",
+    async function (url) {
+      await openPage(url);
+    },
+  );
 };

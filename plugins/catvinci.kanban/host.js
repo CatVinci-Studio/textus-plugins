@@ -2,8 +2,8 @@
 // tasks under them, the front matter Obsidian's Kanban writes - opened as
 // a board in its own tab. The page (board.html) parses and writes the
 // Markdown; this reads and writes the file.
-const TEMPLATE = function (zh) {
-  const lists = zh ? ["待办", "进行中", "已完成"] : ["To do", "Doing", "Done"];
+const TEMPLATE = function () {
+  const lists = ["todo", "doing", "done"].map((key) => textus.l10n.t(key));
   return (
     "---\nkanban-plugin: basic\n---\n\n" +
     lists.map((l) => "## " + l + "\n").join("\n")
@@ -16,31 +16,28 @@ function join(root, name) {
 }
 
 exports.activate = function () {
-  const zh = textus.env.language === "zh";
   textus.commands.registerCommand("catvinci.kanban.new", async function () {
     const root = await textus.workspace.rootPath();
     if (!root) {
-      await textus.window.showMessage(
-        zh
-          ? "先打开一个文件夹，看板会存在里面。"
-          : "Open a folder first: the board is kept in it.",
-      );
+      await textus.window.showMessage(textus.l10n.t("needsFolder"));
       return;
     }
     const name = await textus.window.showInput({
-      prompt: zh ? "看板名称" : "Board name",
-      value: zh ? "看板" : "Board",
+      prompt: textus.l10n.t("boardName"),
+      value: textus.l10n.t("board"),
     });
     if (!name || !name.trim()) return;
     const path = join(
       root,
       name.trim().replace(/[\\/:*?"<>|]/g, "-") + ".kanban.md",
     );
-    const existing = (await textus.workspace.list(root)).some(
-      (e) => e.path === path,
+    // A board of that name opens as it is - matched without regard to
+    // case, as macOS and Windows name files - and is never written over.
+    const existing = (await textus.workspace.list(root)).find(
+      (e) => e.path.toLowerCase() === path.toLowerCase(),
     );
-    if (!existing) await textus.workspace.writeText(path, TEMPLATE(zh));
-    await textus.window.openFile(path);
+    if (!existing) await textus.workspace.writeText(path, TEMPLATE());
+    await textus.window.openFile(existing ? existing.path : path);
   });
 
   textus.window.registerCustomEditorProvider("catvinci.kanban.board", {
@@ -63,10 +60,7 @@ exports.activate = function () {
           }
         }
         if (message.type === "markdown")
-          await textus.commands.executeCommand(
-            "textus.openAsDocument",
-            document.path,
-          );
+          await textus.window.openFile(document.path, { asDocument: true });
       });
       const html = await textus.plugin.readText("board.html");
       webview.html = html.replace("{{lang}}", textus.env.language);
