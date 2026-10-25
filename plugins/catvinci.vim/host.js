@@ -1,10 +1,12 @@
 // Vim in the Textus editor: normal, insert, visual and visual-line mode,
-// counts, motions, operators, a register, dot repeat, and flash (s and two
-// characters, then a label, jumps anywhere on screen). Keys come from the
-// editor while this plugin holds the keyboard (textus.editor.captureKeys);
-// every change is an editor action (textus.editor.exec), done as typing
-// is and undone with u. A Markdown document is not a plain file: a "line"
-// here is a paragraph, a heading, a list item - or a code block's line.
+// counts, motions, operators, a register, dot repeat, flash (s and two
+// characters, then a label, jumps anywhere on screen), the command line
+// (:w, :q, :wq, :12) and key mappings written as in a vimrc (inoremap jj
+// <Esc>). Keys come from the editor while this plugin holds the keyboard
+// (textus.editor.captureKeys); every change is an editor action
+// (textus.editor.exec), done as typing is and undone with u. A Markdown
+// document is not a plain file: a "line" here is a paragraph, a heading,
+// a list item - or a code block's line.
 
 // The interface language arrives once the plugin is running: read when
 // a label is made, not as this file loads.
@@ -17,9 +19,10 @@ var operator = null;
 var register = { text: "", linewise: false };
 var lastFind = null; // { char, forward, till }
 var vlineCount = 1;
-var flash = null; // { query } while s is collecting
-var settings = { flash: true, escape: "" };
-var escapeFirstAt = 0;
+var flash = null; // { query, letters, op } while s is collecting
+var cmdline = null; // the command line's text while : is open
+var note = ""; // a line for the status until the next key (an unknown command)
+var settings = { flash: true, escape: "", mappings: "" };
 
 // Dot repeat: the keys of the last change made in normal mode, from its
 // count to the key that finished it.
@@ -65,8 +68,10 @@ function exec(op) {
 }
 
 function label() {
+  if (cmdline !== null) return ":" + cmdline;
   var text = "-- " + textus.l10n.t(mode) + " --";
   var typed = count + pending + (flash ? "s" + flash.query : "");
+  if (note) return text + " " + note;
   return typed ? text + " " + typed : text;
 }
 
@@ -86,9 +91,14 @@ function showStatus() {
 function captureFor(m) {
   if (!on) return textus.editor.captureKeys(null);
   if (m === "insert") {
+    // Escape, and every key an insert-mode mapping starts with or goes on
+    // with (jj, jk): the rest are typed by the editor itself.
     var keys = ["Escape", "ctrl+["];
-    if (settings.escape && settings.escape.length === 2)
-      keys.push(settings.escape[0], settings.escape[1]);
+    maps.i.forEach(function (m) {
+      m.lhs.forEach(function (k) {
+        if (keys.indexOf(k) < 0) keys.push(k);
+      });
+    });
     return textus.editor.captureKeys({ mode: "some", keys: keys });
   }
   // Every key, and these Ctrl ones the app would otherwise keep.
@@ -107,6 +117,8 @@ function setMode(m) {
   pending = "";
   operator = null;
   flash = null;
+  cmdline = null;
+  typedMap = [];
   captureFor(m);
   showStatus();
   return exec({ op: "cursor", style: m === "insert" ? "bar" : "block" }).catch(
@@ -144,6 +156,200 @@ function endChange() {
 
 async function remember(text, linewise) {
   register = { text: text || "", linewise: !!linewise };
+}
+
+// --- Key mappings (a vimrc's map lines) --------------------------------
+
+// lhs and rhs as keys the way the editor names them: "j", "Escape",
+// "ctrl+w", " ".
+var maps = { n: [], v: [], i: [] };
+var MAP_TIMEOUT = 1000; // Vim's timeoutlen
+
+var KEY_NAMES = {
+  esc: "Escape",
+  cr: "Enter",
+  enter: "Enter",
+  return: "Enter",
+  space: " ",
+  bs: "Backspace",
+  tab: "Tab",
+  del: "Delete",
+  left: "ArrowLeft",
+  right: "ArrowRight",
+  up: "ArrowUp",
+  down: "ArrowDown",
+  home: "Home",
+  end: "End",
+  lt: "<",
+  bar: "|",
+  bslash: "\\",
+};
+
+/** "jj", "<Esc>", "<C-w>v", "<leader>w" as keys. */
+function parseKeys(text, leader) {
+  var keys = [];
+  var i = 0;
+  while (i < text.length) {
+    var close = text[i] === "<" ? text.indexOf(">", i) : -1;
+    if (close > i) {
+      var name = text.slice(i + 1, close).toLowerCase();
+      var ctrl = /^c-(.)$/.exec(name);
+      if (name === "leader") keys = keys.concat(leader);
+      else if (ctrl) keys.push("ctrl+" + ctrl[1]);
+      else if (KEY_NAMES[name]) keys.push(KEY_NAMES[name]);
+      else keys = keys.concat(text.slice(i, close + 1).split(""));
+      i = close + 1;
+    } else {
+      keys.push(text[i]);
+      i++;
+    }
+  }
+  return keys;
+}
+
+var MAP_MODES = {
+  map: "nv",
+  noremap: "nv",
+  nmap: "n",
+  nnoremap: "n",
+  vmap: "v",
+  vnoremap: "v",
+  xmap: "v",
+  xnoremap: "v",
+  imap: "i",
+  inoremap: "i",
+  "map!": "i",
+  "noremap!": "i",
+};
+
+/** The mappings in `text`, a vimrc's lines: map, noremap, nnoremap,
+ *  inoremap, vnoremap… and let mapleader. Anything else is passed over. */
+function parseMappings(text) {
+  var found = { n: [], v: [], i: [] };
+  var leader = ["\\"];
+  String(text || "")
+    .split(/\r?\n/)
+    .forEach(function (raw) {
+      var line = raw.trim();
+      if (!line || line[0] === '"') return;
+      var lead = /^let\s+mapleader\s*=\s*(["'])(.*)\1\s*$/.exec(line);
+      if (lead) {
+        leader = parseKeys(lead[2].replace(/^\\</, "<"), []);
+        return;
+      }
+      var words = line.split(/\s+/);
+      var modes = MAP_MODES[words[0]];
+      if (!modes) return;
+      var rest = words.slice(1);
+      while (rest.length && /^<(silent|buffer|nowait|expr|unique)>$/i.test(rest[0]))
+        rest.shift();
+      if (rest.length < 2) return;
+      var lhs = parseKeys(rest[0], leader);
+      var rhs = parseKeys(rest.slice(1).join(" "), leader);
+      modes.split("").forEach(function (m) {
+        found[m].push({ lhs: lhs, rhs: rhs });
+      });
+    });
+  return found;
+}
+
+function readMappings() {
+  maps = parseMappings(settings.mappings);
+  // The older setting: two letters that leave insert mode.
+  var esc = settings.escape;
+  if (esc && esc.length === 2)
+    maps.i.push({ lhs: [esc[0], esc[1]], rhs: ["Escape"] });
+}
+
+function same(a, b) {
+  if (a.length !== b.length) return false;
+  for (var i = 0; i < a.length; i++) if (a[i] !== b[i]) return false;
+  return true;
+}
+function startsWith(keys, start) {
+  return keys.length > start.length && same(keys.slice(0, start.length), start);
+}
+
+// Normal and visual mode: the keys typed so far of a mapping not yet whole.
+var typedMap = [];
+var mapTimer = null;
+
+/** Whether normal or visual mode's mappings may take this key: not
+ *  inside something that waits for its own keys (an operator's motion,
+ *  f's character, flash, the command line). */
+function mappable() {
+  return (
+    !replaying && !flash && cmdline === null && !pending && !operator
+  );
+}
+
+/** Runs keys as typed, unmapped (a mapping's right-hand side). */
+async function feed(keys) {
+  for (var i = 0; i < keys.length; i++) await dispatch(keys[i]);
+}
+
+async function mapKey(key) {
+  var list = maps[mode === "normal" ? "n" : "v"];
+  var typed = typedMap.concat([key]);
+  var whole = list.filter(function (m) {
+    return same(m.lhs, typed);
+  })[0];
+  var longer = list.some(function (m) {
+    return startsWith(m.lhs, typed);
+  });
+  clearTimeout(mapTimer);
+  if (longer) {
+    // Wait for the next key; without one, what was typed as it is (or
+    // the shorter mapping it makes).
+    typedMap = typed;
+    mapTimer = setTimeout(function () {
+      enqueue(function () {
+        if (!same(typedMap, typed)) return;
+        typedMap = [];
+        return whole ? feed(whole.rhs) : feed(typed);
+      });
+    }, MAP_TIMEOUT);
+    return;
+  }
+  typedMap = [];
+  if (whole) return feed(whole.rhs);
+  // No mapping: the keys held back, then this one, as they are.
+  for (var i = 0; i < typed.length - 1; i++) await dispatch(typed[i]);
+  return dispatch(key);
+}
+
+// Insert mode: the mapping keys typed (and typed into the text) lately.
+var typedInsert = [];
+var typedInsertAt = 0;
+
+async function insertMapKey(key) {
+  var now = Date.now();
+  if (now - typedInsertAt > MAP_TIMEOUT) typedInsert = [];
+  var typed = typedInsert.concat([key]);
+  var whole = maps.i.filter(function (m) {
+    return same(m.lhs, typed);
+  })[0];
+  var longer = maps.i.some(function (m) {
+    return startsWith(m.lhs, typed);
+  });
+  if (whole && !longer) {
+    // The keys before this one went in as text: take them back, then
+    // do what the mapping says.
+    var back = typedInsert.filter(function (k) {
+      return k.length === 1;
+    }).length;
+    typedInsert = [];
+    if (back) await exec({ op: "deleteChars", count: back, back: true });
+    return feed(whole.rhs);
+  }
+  var begins = function (keys) {
+    return maps.i.some(function (m) {
+      return startsWith(m.lhs, keys) || same(m.lhs, keys);
+    });
+  };
+  typedInsert = longer ? typed : begins([key]) ? [key] : [];
+  typedInsertAt = now;
+  return insertKey(key);
 }
 
 // --- Operators ----------------------------------------------------------
@@ -184,8 +390,11 @@ async function operateMotion(op, unit, n, extra) {
     if (unit === "up") await exec({ op: "move", unit: "up", count: n });
     return operateLines(op, n + 1);
   }
-  // cw changes to the end of the word, as Vim's does.
+  // cw changes to the end of the word, as Vim's does; dw stops at the end
+  // of the line; d} at the end of the paragraph.
   if (op === "c" && unit === "wordStart") unit = "wordEnd";
+  else if (unit === "wordStart") unit = "wordStartInLine";
+  else if (unit === "paragraphNext") unit = "paragraphEnd";
   var move = Object.assign(
     { op: "move", unit: unit, count: n, select: true },
     extra || {},
@@ -199,34 +408,128 @@ async function operateMotion(op, unit, n, extra) {
 // --- Flash --------------------------------------------------------------
 
 async function flashKey(key) {
-  if (key === "Escape" || key === "ctrl+[") {
-    flash = null;
-    await exec({ op: "flashClear" });
-    showStatus();
-    return;
-  }
+  if (key === "Escape" || key === "ctrl+[") return endFlash();
   if (key.length !== 1) return;
-  if (flash.query.length < 2) {
-    flash.query += key;
-    var shown = await exec({ op: "flash", query: flash.query });
-    if (flash.query.length === 2 && shown.labels === 1) {
-      // One place only: there.
-      await exec({ op: "flashJump", label: "a", select: mode === "visual" });
-      flash = null;
-    } else if (shown.labels === 0 && flash.query.length === 2) {
-      flash = null;
-    }
+  // A label's letter jumps; any other character narrows the search.
+  if (flash.query.length >= 2 && flash.letters.indexOf(key) >= 0)
+    return flashJump(key);
+  flash.query += key;
+  var shown = await exec({ op: "flash", query: flash.query });
+  flash.letters = shown.letters || "";
+  if (!shown.labels) return endFlash();
+  // One place only: there.
+  if (flash.query.length >= 2 && shown.labels === 1)
+    return flashJump(flash.letters[0]);
+  showStatus();
+}
+
+async function flashJump(letter) {
+  var op = flash.op;
+  flash = null;
+  if (op) {
+    // d, c or y and s: from the caret to the place.
+    await exec({ op: "flashJump", label: letter, extend: true });
+    await applyToSelection(op);
+  } else {
+    await exec({ op: "flashJump", label: letter, select: mode === "visual" });
+  }
+  showStatus();
+}
+
+async function endFlash() {
+  flash = null;
+  await exec({ op: "flashClear" });
+  showStatus();
+}
+
+// --- The command line ---------------------------------------------------
+
+async function cmdlineKey(key) {
+  if (key === "Escape" || key === "ctrl+[" || key === "ctrl+c") {
+    cmdline = null;
+  } else if (key === "Enter") {
+    var text = cmdline;
+    cmdline = null;
     showStatus();
+    return runCommand(text);
+  } else if (key === "Backspace") {
+    cmdline = cmdline ? cmdline.slice(0, -1) : null;
+  } else if (key === "ctrl+u") {
+    cmdline = "";
+  } else if (key.length === 1) {
+    cmdline += key;
+  }
+  showStatus();
+}
+
+/** An Ex command: what Textus has of them - saving, closing the tab,
+ *  going to a line, undo. */
+async function runCommand(text) {
+  // A visual selection's range ('<,'>) and a whole file's (%) mean this
+  // document, as every command here does.
+  var line = text.trim().replace(/^('<,'>|%)\s*/, "");
+  if (!line) return;
+  if (/^\d+$/.test(line)) {
+    await exec({
+      op: "move",
+      unit: "docLine",
+      count: parseInt(line, 10),
+      visual: mode === "visual",
+    });
     return;
   }
-  await exec({ op: "flashJump", label: key, select: mode === "visual" });
-  flash = null;
+  if (line === "$") {
+    await exec({ op: "move", unit: "docEnd", visual: mode === "visual" });
+    return;
+  }
+  var name = line.split(/\s+/)[0];
+  if (mode === "visual" || mode === "vline") {
+    await exec({ op: "collapse", to: "head" });
+    await setMode("normal");
+  }
+  switch (name) {
+    case "w":
+    case "w!":
+    case "write":
+    case "wa":
+    case "wall":
+    case "up":
+    case "update":
+      return textus.commands.executeCommand("textus.save");
+    case "q":
+    case "q!":
+    case "quit":
+    case "quit!":
+    case "clo":
+    case "close":
+    case "bd":
+    case "bdelete":
+      return textus.commands.executeCommand("textus.closeTab");
+    case "wq":
+    case "wq!":
+    case "x":
+    case "xit":
+    case "exi":
+    case "exit":
+      return textus.commands.executeCommand("textus.closeTab", { save: true });
+    case "u":
+    case "undo":
+      return exec({ op: "undo" });
+    case "red":
+    case "redo":
+      return exec({ op: "redo" });
+    case "noh":
+    case "nohlsearch":
+      return;
+  }
+  note = textus.l10n.t("notCommand").replace("{command}", name);
   showStatus();
 }
 
 // --- Normal and visual mode --------------------------------------------
 
 async function normalKey(key) {
+  if (cmdline !== null) return cmdlineKey(key);
   if (flash) return flashKey(key);
   if (mode === "normal") record(key);
 
@@ -309,7 +612,11 @@ async function normalKey(key) {
 
   if (pending === "g") {
     pending = "";
-    if (key === "g") await doMotion("docStart", 1);
+    // gg, or 5gg: the fifth line.
+    if (key === "g") {
+      if (count) await doMotion("docLine", takeCount());
+      else await doMotion("docStart", 1);
+    }
     showStatus();
     return;
   }
@@ -342,16 +649,18 @@ async function normalKey(key) {
     return;
   }
 
+  if (key === ":" && !operator) {
+    count = "";
+    if (!replaying) recording = null;
+    cmdline = "";
+    showStatus();
+    return;
+  }
+
   if (MOTIONS[key]) {
-    var unit = MOTIONS[key];
-    var times = takeCount();
-    if (key === "G" && times > 1) {
-      // nG: the nth line from the top.
-      await exec({ op: "move", unit: "docStart", visual: mode === "visual" });
-      unit = "down";
-      times = times - 1;
-    }
-    await doMotion(unit, times);
+    // 12G: the twelfth line.
+    if (key === "G" && count) await doMotion("docLine", takeCount());
+    else await doMotion(MOTIONS[key], takeCount());
     showStatus();
     return;
   }
@@ -386,6 +695,14 @@ async function normalCommand(key) {
   var n;
   if (operator && (key === "i" || key === "a")) {
     pending = key;
+    showStatus();
+    return;
+  }
+  if (operator && key === "s" && settings.flash) {
+    // ds, cs, ys and a label: to the place flash finds.
+    if (!replaying) recording = null;
+    flash = { query: "", letters: "", op: operator };
+    operator = null;
     showStatus();
     return;
   }
@@ -439,7 +756,7 @@ async function normalCommand(key) {
     case "s":
       if (settings.flash) {
         recording = null;
-        flash = { query: "" };
+        flash = { query: "", letters: "", op: null };
         showStatus();
         return;
       }
@@ -538,7 +855,7 @@ async function visualKey(key) {
     return;
   }
   if (key === "s" && settings.flash) {
-    flash = { query: "" };
+    flash = { query: "", letters: "", op: null };
     showStatus();
     return;
   }
@@ -583,45 +900,50 @@ async function recase(how) {
 
 async function insertKey(key) {
   if (key === "Escape" || key === "ctrl+[") {
+    typedInsert = [];
     await setMode("normal");
     await exec({ op: "move", unit: "left" });
     return;
   }
-  var esc = settings.escape;
-  if (esc && esc.length === 2) {
-    var now = Date.now();
-    if (key === esc[1] && now - escapeFirstAt < 400) {
-      // The first of the two went in as text a moment ago: take it back.
-      escapeFirstAt = 0;
-      await exec({ op: "deleteChars", count: 1, back: true });
-      await setMode("normal");
-      await exec({ op: "move", unit: "left" });
-      return;
-    }
-    escapeFirstAt = key === esc[0] ? now : 0;
-  }
   // A key typed while the editor still sent every key here (just after
-  // i, cw, o...), or the first of the escape pair: typed as it is.
+  // i, cw, o...), or one a mapping starts with: typed as it is.
   if (key.length === 1) await exec({ op: "insertText", text: key });
   else if (key === "Enter") await exec({ op: "insertText", text: "\n" });
 }
 
 // --- Wiring -------------------------------------------------------------
 
+/** One key, as typed, no mapping looked up. */
+function dispatch(key) {
+  return mode === "insert" ? insertKey(key) : normalKey(key);
+}
+
 var queue = Promise.resolve();
+function enqueue(work) {
+  queue = queue.then(work).catch(function (err) {
+    console.error(err);
+  });
+}
+
 function handle(key) {
-  queue = queue
-    .then(function () {
-      return mode === "insert" ? insertKey(key) : normalKey(key);
-    })
-    .catch(function (err) {
-      console.error(err);
-    });
+  enqueue(function () {
+    if (note) {
+      note = "";
+      showStatus();
+    }
+    if (mode === "insert")
+      return maps.i.length ? insertMapKey(key) : insertKey(key);
+    var list = maps[mode === "normal" ? "n" : "v"];
+    if ((list.length && mappable()) || typedMap.length) return mapKey(key);
+    return normalKey(key);
+  });
 }
 
 async function readSettings() {
   settings.flash = (await textus.settings.get("flash")) !== false;
   settings.escape = String((await textus.settings.get("escape")) || "");
+  settings.mappings = String((await textus.settings.get("mappings")) || "");
+  readMappings();
 }
 
 exports.activate = async function () {
@@ -644,3 +966,6 @@ exports.activate = async function () {
 exports.deactivate = function () {
   textus.editor.captureKeys(null);
 };
+
+// For the tests: how a vimrc's lines are read.
+exports.parseMappings = parseMappings;

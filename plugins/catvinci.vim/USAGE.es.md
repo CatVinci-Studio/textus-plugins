@@ -4,6 +4,8 @@ Los modos y las teclas de Vim en el editor.
 
 - **Complementos › Activar o desactivar las teclas de Vim** las activa o desactiva.
 - Modos normal, de inserción y visual, con movimientos, operadores, contadores, registros y **.** para repetir.
+- Una línea es un párrafo, un título, un elemento de lista o una línea de un bloque de código: **j** y **k** pasan por todos, **}** y **{** van bloque a bloque.
 - **~** cambia mayúscula por minúscula bajo el cursor; en modo visual, **~**, **U** y **u** invierten, pasan a mayúsculas o pasan a minúsculas la selección.
-- **s** y dos letras, y luego una etiqueta, saltan a cualquier punto de la pantalla (flash).
-- El flash y las teclas que salen del modo de inserción (como jk) se cambian en los ajustes del complemento.
+- **s** y dos letras, y luego una etiqueta, saltan a cualquier punto de la pantalla (flash); los lugares más cercanos reciben las primeras etiquetas. **d**, **c** o **y** antes de **s** borran, cambian o copian hasta allí.
+- **:** abre la línea de órdenes: **:w** guarda, **:q** cierra la pestaña, **:wq** hace las dos cosas, **:12** va a la línea 12.
+- **Asignaciones de teclas**, en los ajustes del complemento, admite líneas como las de un vimrc, por ejemplo `inoremap jj <Esc>` o `nnoremap <leader>w :w<CR>`. Allí también se puede desactivar el flash.

@@ -4,6 +4,8 @@ Les modes et les touches de Vim dans l’éditeur.
 
 - **Extensions › Activer ou désactiver les touches Vim** les active ou les désactive.
 - Modes normal, insertion et visuel, avec déplacements, opérateurs, compteurs, registres et **.** pour répéter.
+- Une ligne est un paragraphe, un titre, un élément de liste ou une ligne d’un bloc de code : **j** et **k** les parcourent tous, **}** et **{** vont de bloc en bloc.
 - **~** inverse la casse sous le curseur ; en mode visuel, **~**, **U** et **u** inversent la casse de la sélection, la mettent en majuscules ou en minuscules.
-- **s** et deux lettres, puis une étiquette, saute n’importe où à l’écran (flash).
-- Le flash et les touches qui quittent le mode insertion (comme jk) se règlent dans les réglages de l’extension.
+- **s** et deux lettres, puis une étiquette, saute n’importe où à l’écran (flash) ; les endroits les plus proches reçoivent les premières étiquettes. **d**, **c** ou **y** avant **s** supprime, modifie ou copie jusque-là.
+- **:** ouvre la ligne de commande : **:w** enregistre, **:q** ferme l’onglet, **:wq** fait les deux, **:12** va à la ligne 12.
+- **Correspondances de touches**, dans les réglages de l’extension, prend des lignes comme dans un vimrc, par exemple `inoremap jj <Esc>` ou `nnoremap <leader>w :w<CR>`. Le flash peut aussi y être désactivé.
