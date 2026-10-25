@@ -34,7 +34,15 @@ async function record(saved) {
   const list = await versionsOf(saved.path);
   if (list[0] && list[0].text === saved.text) return;
   const keep = Math.max(1, Number(await textus.settings.get("keep")) || 50);
-  list.unshift({ at: Date.now(), text: saved.text });
+  // Saves close together - autosave's every few seconds - are one
+  // version: the newest is brought up to date until `every` minutes have
+  // passed since it was first kept.
+  const every = Number(await textus.settings.get("every"));
+  const now = Date.now();
+  const newest = list[0];
+  if (newest && every > 0 && now - (newest.since || newest.at) < every * 60000)
+    list[0] = { at: now, since: newest.since || newest.at, text: saved.text };
+  else list.unshift({ at: now, text: saved.text });
   let versions = list.slice(0, keep);
   // The storage full: the oldest half goes, until the newest fits.
   for (;;) {

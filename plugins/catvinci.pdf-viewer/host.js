@@ -1,6 +1,27 @@
 // PDF Viewer: a PDF opened in a tab of its own, drawn by PDF.js in the
-// page (view.html). Once the page is up it is handed the file and the
-// zoom to open at.
+// page (view.html). Once the page is up it is handed the file, the zoom
+// to open at and where it was left last time.
+
+/** Where each PDF was left - its page and zoom - by path, in one stored
+ *  record; the most recent POSITIONS_KEPT. */
+const POSITIONS = "positions";
+const POSITIONS_KEPT = 200;
+
+async function positionOf(path) {
+  const all = (await textus.storage.get(POSITIONS)) || {};
+  return all[path] || null;
+}
+
+async function keepPosition(path, position) {
+  const all = (await textus.storage.get(POSITIONS)) || {};
+  delete all[path];
+  all[path] = position;
+  const paths = Object.keys(all);
+  for (const old of paths.slice(0, Math.max(0, paths.length - POSITIONS_KEPT)))
+    delete all[old];
+  await textus.storage.set(POSITIONS, all);
+}
+
 exports.activate = function () {
   textus.window.registerCustomEditorProvider("catvinci.pdf-viewer.pdf", {
     resolveCustomEditor: async function (document, webview) {
@@ -20,16 +41,23 @@ exports.activate = function () {
             bytes: bytes,
           });
         }
+        if (message.type === "position")
+          return keepPosition(document.path, {
+            page: message.page,
+            scale: message.scale,
+          });
         if (message.type !== "ready") return;
-        const [bytes, zoom] = await Promise.all([
+        const [bytes, zoom, position] = await Promise.all([
           document.readBytes(),
           textus.settings.get("zoom"),
+          positionOf(document.path),
         ]);
         webview.postMessage({
           type: "file",
           name: document.fileName,
           bytes: bytes,
           zoom: zoom,
+          position: position,
         });
       });
       const html = await textus.plugin.readText("view.html");

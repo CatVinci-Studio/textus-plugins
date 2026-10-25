@@ -6,3 +6,5 @@ Les PDF s’ouvrent dans un onglet à côté de vos notes.
 - Faites défiler les pages ; zoomez avec les boutons ou **Ctrl+molette** (**⌘+molette** sur Mac).
 - Sélectionnez du texte pour le copier dans vos notes.
 - Le zoom à l’ouverture d’un PDF se règle dans les réglages de l’extension.
+- **Ctrl+F** (**⌘F** sur Mac), ou la loupe, cherche des mots dans le PDF : **Entrée** passe à la page suivante qui les contient, **Maj+Entrée** à la précédente.
+- Un PDF se rouvre à la page et au zoom où vous l’aviez laissé.

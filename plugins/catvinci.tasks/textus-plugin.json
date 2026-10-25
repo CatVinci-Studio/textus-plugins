@@ -1,7 +1,7 @@
 {
   "id": "catvinci.tasks",
   "name": "%name%",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "publisher": "catvinci",
   "author": "CatVinci Studio",
   "description": "%description%",
@@ -40,7 +40,9 @@
       "open.other": "{0} open tasks",
       "none": "No open tasks in the folder.",
       "nofolder": "Open a folder, and the tasks of all its documents are listed here.",
-      "refresh": "Refresh"
+      "refresh": "Refresh",
+      "filter": "Filter tasks",
+      "dueSoon": "Due soon"
     },
     "zh": {
       "name": "任务",
@@ -50,7 +52,9 @@
       "open.other": "{0} 项待办",
       "none": "打开的文件夹里没有待办任务。",
       "nofolder": "打开一个文件夹，这里会列出其中所有文档的任务。",
-      "refresh": "刷新"
+      "refresh": "刷新",
+      "filter": "筛选任务",
+      "dueSoon": "即将到期"
     },
     "zh-Hant": {
       "name": "任務",
@@ -60,7 +64,9 @@
       "open.other": "{0} 項待辦",
       "none": "開啟的資料夾裡沒有待辦任務。",
       "nofolder": "開啟一個資料夾，這裡會列出其中所有文件的任務。",
-      "refresh": "重新整理"
+      "refresh": "重新整理",
+      "filter": "篩選任務",
+      "dueSoon": "即將到期"
     },
     "ja": {
       "name": "タスク",
@@ -70,7 +76,9 @@
       "open.other": "未完了のタスク {0} 件",
       "none": "フォルダに未完了のタスクはありません。",
       "nofolder": "フォルダを開くと、その中のすべての文書のタスクがここに並びます。",
-      "refresh": "再読み込み"
+      "refresh": "再読み込み",
+      "filter": "タスクを絞り込む",
+      "dueSoon": "期限が近い"
     },
     "ko": {
       "name": "할 일",
@@ -80,7 +88,9 @@
       "open.other": "남은 할 일 {0}개",
       "none": "폴더에 남은 할 일이 없습니다.",
       "nofolder": "폴더를 열면 그 안 모든 문서의 할 일이 여기에 나옵니다.",
-      "refresh": "새로 고침"
+      "refresh": "새로 고침",
+      "filter": "할 일 필터",
+      "dueSoon": "곧 마감"
     },
     "es": {
       "name": "Tareas",
@@ -91,7 +101,9 @@
       "open.other": "{0} tareas pendientes",
       "none": "No hay tareas pendientes en la carpeta.",
       "nofolder": "Abre una carpeta y aquí aparecerán las tareas de todos sus documentos.",
-      "refresh": "Actualizar"
+      "refresh": "Actualizar",
+      "filter": "Filtrar tareas",
+      "dueSoon": "Vencen pronto"
     },
     "fr": {
       "name": "Tâches",
@@ -102,7 +114,9 @@
       "open.other": "{0} tâches en cours",
       "none": "Aucune tâche en cours dans le dossier.",
       "nofolder": "Ouvrez un dossier : les tâches de tous ses documents s’afficheront ici.",
-      "refresh": "Actualiser"
+      "refresh": "Actualiser",
+      "filter": "Filtrer les tâches",
+      "dueSoon": "Bientôt dues"
     },
     "de": {
       "name": "Aufgaben",
@@ -113,7 +127,9 @@
       "open.other": "{0} offene Aufgaben",
       "none": "Keine offenen Aufgaben im Ordner.",
       "nofolder": "Öffne einen Ordner, dann stehen hier die Aufgaben all seiner Dokumente.",
-      "refresh": "Aktualisieren"
+      "refresh": "Aktualisieren",
+      "filter": "Aufgaben filtern",
+      "dueSoon": "Bald fällig"
     },
     "ru": {
       "name": "Задачи",
@@ -126,7 +142,9 @@
       "open.other": "{0} открытой задачи",
       "none": "В папке нет открытых задач.",
       "nofolder": "Откройте папку — здесь появятся задачи из всех её документов.",
-      "refresh": "Обновить"
+      "refresh": "Обновить",
+      "filter": "Фильтр задач",
+      "dueSoon": "Скоро срок"
     },
     "pt": {
       "name": "Tarefas",
@@ -137,7 +155,9 @@
       "open.other": "{0} tarefas pendentes",
       "none": "Não há tarefas pendentes na pasta.",
       "nofolder": "Abra uma pasta e as tarefas de todos os documentos dela aparecerão aqui.",
-      "refresh": "Atualizar"
+      "refresh": "Atualizar",
+      "filter": "Filtrar tarefas",
+      "dueSoon": "Vencem em breve"
     }
   }
 }

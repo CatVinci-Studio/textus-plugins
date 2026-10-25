@@ -60,12 +60,46 @@
     return box;
   }
 
+  // Versions grouped by day: Today, Yesterday, then the date.
+  const dayOf = (at) => new Date(at).toDateString();
+  function dayLabel(at) {
+    const day = new Date(at);
+    const today = new Date();
+    const yesterday = new Date(
+      today.getFullYear(),
+      today.getMonth(),
+      today.getDate() - 1,
+    );
+    const words = new Intl.RelativeTimeFormat(api.language, {
+      numeric: "auto",
+    });
+    if (day.toDateString() === today.toDateString())
+      return words.format(0, "day");
+    if (day.toDateString() === yesterday.toDateString())
+      return words.format(-1, "day");
+    return day.toLocaleDateString(api.language, {
+      weekday: "short",
+      month: "short",
+      day: "numeric",
+    });
+  }
+
   function render() {
     const list = $("versions");
     list.textContent = "";
+    let lastDay = null;
     $("empty").hidden = !!(data.path && data.versions.length);
     $("empty").textContent = data.path ? t("none") : t("nodoc");
     data.versions.forEach((version, index) => {
+      if (dayOf(version.at) !== lastDay) {
+        lastDay = dayOf(version.at);
+        const day = document.createElement("li");
+        day.className = "day-head";
+        const label = dayLabel(version.at);
+        day.textContent =
+          label.charAt(0).toLocaleUpperCase(api.language) + label.slice(1);
+        list.append(day);
+      }
       const li = document.createElement("li");
       const head = document.createElement("div");
       head.className = "row-head";

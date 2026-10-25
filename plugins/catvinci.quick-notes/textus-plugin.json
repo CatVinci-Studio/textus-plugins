@@ -1,7 +1,7 @@
 {
   "id": "catvinci.quick-notes",
   "name": "%name%",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "publisher": "catvinci",
   "author": "CatVinci Studio",
   "description": "%description%",
@@ -66,7 +66,10 @@
       "open": "Open",
       "delete": "Delete",
       "empty": "No notes yet. Click New, or press ⌘⌥N / Ctrl+Alt+N anywhere.",
-      "placeholder": "Write something…"
+      "placeholder": "Write something…",
+      "search": "Search notes",
+      "deleted": "Note deleted",
+      "undo": "Undo"
     },
     "zh": {
       "name": "快速笔记",
@@ -81,7 +84,10 @@
       "open": "打开",
       "delete": "删除",
       "empty": "还没有笔记。点“新建”，或在任何地方按 ⌘⌥N / Ctrl+Alt+N。",
-      "placeholder": "写点什么…"
+      "placeholder": "写点什么…",
+      "search": "搜索笔记",
+      "deleted": "已删除笔记",
+      "undo": "撤销"
     },
     "zh-Hant": {
       "name": "快速筆記",
@@ -96,7 +102,10 @@
       "open": "開啟",
       "delete": "刪除",
       "empty": "還沒有筆記。點「新增」，或在任何地方按 ⌘⌥N / Ctrl+Alt+N。",
-      "placeholder": "寫點什麼…"
+      "placeholder": "寫點什麼…",
+      "search": "搜尋筆記",
+      "deleted": "已刪除筆記",
+      "undo": "復原"
     },
     "ja": {
       "name": "クイックノート",
@@ -111,7 +120,10 @@
       "open": "開く",
       "delete": "削除",
       "empty": "まだメモはありません。「新規」をクリックするか、どこでも ⌘⌥N / Ctrl+Alt+N を押してください。",
-      "placeholder": "何か書く…"
+      "placeholder": "何か書く…",
+      "search": "ノートを検索",
+      "deleted": "ノートを削除しました",
+      "undo": "元に戻す"
     },
     "ko": {
       "name": "빠른 메모",
@@ -126,7 +138,10 @@
       "open": "열기",
       "delete": "삭제",
       "empty": "아직 메모가 없습니다. 새로 만들기를 누르거나, 어디서든 ⌘⌥N / Ctrl+Alt+N을 누르세요.",
-      "placeholder": "무언가 적어 보세요…"
+      "placeholder": "무언가 적어 보세요…",
+      "search": "노트 검색",
+      "deleted": "노트를 삭제했습니다",
+      "undo": "실행 취소"
     },
     "es": {
       "name": "Notas rápidas",
@@ -141,7 +156,10 @@
       "open": "Abrir",
       "delete": "Eliminar",
       "empty": "Aún no hay notas. Haz clic en Nueva o pulsa ⌘⌥N / Ctrl+Alt+N en cualquier sitio.",
-      "placeholder": "Escribe algo…"
+      "placeholder": "Escribe algo…",
+      "search": "Buscar notas",
+      "deleted": "Nota eliminada",
+      "undo": "Deshacer"
     },
     "fr": {
       "name": "Notes rapides",
@@ -156,7 +174,10 @@
       "open": "Ouvrir",
       "delete": "Supprimer",
       "empty": "Pas encore de notes. Cliquez sur Nouvelle, ou appuyez sur ⌘⌥N / Ctrl+Alt+N n’importe où.",
-      "placeholder": "Écrivez quelque chose…"
+      "placeholder": "Écrivez quelque chose…",
+      "search": "Rechercher dans les notes",
+      "deleted": "Note supprimée",
+      "undo": "Annuler"
     },
     "de": {
       "name": "Schnellnotizen",
@@ -171,7 +192,10 @@
       "open": "Öffnen",
       "delete": "Löschen",
       "empty": "Noch keine Notizen. Klick auf Neu oder drück überall ⌘⌥N / Ctrl+Alt+N.",
-      "placeholder": "Schreib etwas…"
+      "placeholder": "Schreib etwas…",
+      "search": "Notizen durchsuchen",
+      "deleted": "Notiz gelöscht",
+      "undo": "Rückgängig"
     },
     "ru": {
       "name": "Быстрые заметки",
@@ -186,7 +210,10 @@
       "open": "Открыть",
       "delete": "Удалить",
       "empty": "Заметок пока нет. Нажмите «Новая» или ⌘⌥N / Ctrl+Alt+N в любом месте.",
-      "placeholder": "Напишите что-нибудь…"
+      "placeholder": "Напишите что-нибудь…",
+      "search": "Поиск по заметкам",
+      "deleted": "Заметка удалена",
+      "undo": "Отменить"
     },
     "pt": {
       "name": "Notas rápidas",
@@ -201,7 +228,10 @@
       "open": "Abrir",
       "delete": "Excluir",
       "empty": "Ainda não há notas. Clique em Nova, ou pressione ⌘⌥N / Ctrl+Alt+N em qualquer lugar.",
-      "placeholder": "Escreva algo…"
+      "placeholder": "Escreva algo…",
+      "search": "Pesquisar notas",
+      "deleted": "Nota excluída",
+      "undo": "Desfazer"
     }
   }
 }

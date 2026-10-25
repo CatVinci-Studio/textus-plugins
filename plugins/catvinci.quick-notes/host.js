@@ -54,6 +54,9 @@ exports.activate = function () {
   });
 };
 
+/** The note deleted last, and where it was, for Undo. */
+let lastDeleted = null;
+
 async function handle(webview, message) {
   const list = await notes();
   if (message.type === "ready")
@@ -68,8 +71,20 @@ async function handle(webview, message) {
         n.id === message.id ? Object.assign({}, n, { text: message.text }) : n,
       ),
     );
-  if (message.type === "delete")
+  if (message.type === "delete") {
+    const at = list.findIndex((n) => n.id === message.id);
+    if (at >= 0) lastDeleted = { note: list[at], at: at };
     await save(list.filter((n) => n.id !== message.id));
+  }
+  // A note left empty: gone, with nothing to undo.
+  if (message.type === "drop")
+    await save(list.filter((n) => n.id !== message.id || n.text.trim()));
+  if (message.type === "undo" && lastDeleted) {
+    const back = list.slice();
+    back.splice(Math.min(lastDeleted.at, back.length), 0, lastDeleted.note);
+    lastDeleted = null;
+    await save(back);
+  }
   const note = list.find((n) => n.id === message.id);
   if (message.type === "insert" && note)
     await textus.document.proposeEdit({

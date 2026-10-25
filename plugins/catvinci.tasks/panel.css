@@ -49,3 +49,28 @@ body {
   font-size: var(--text-xs);
   color: var(--chrome-muted);
 }
+
+/* The filter under the toolbar. */
+#filter {
+  display: block;
+  box-sizing: border-box;
+  width: calc(100% - 2 * var(--space-3));
+  margin: var(--space-2) var(--space-3) 0;
+}
+/* A task's due date: a small badge, red once it has passed. */
+.due {
+  display: inline-block;
+  margin-left: var(--space-1);
+  padding: 0 5px;
+  border-radius: var(--radius-small);
+  background: color-mix(in srgb, currentColor 10%, transparent);
+  font-size: var(--text-xs);
+  white-space: nowrap;
+}
+.due.overdue {
+  color: var(--danger, #c0392b);
+  background: color-mix(in srgb, var(--danger, #c0392b) 12%, transparent);
+}
+.file.soon h3 {
+  cursor: default;
+}

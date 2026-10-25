@@ -40,3 +40,47 @@ textarea:focus {
   padding: 2px var(--space-2);
   font-size: var(--text-xs);
 }
+
+/* The search over many notes. */
+#filter {
+  display: block;
+  box-sizing: border-box;
+  width: calc(100% - 2 * var(--space-3));
+  margin: var(--space-2) var(--space-3) 0;
+}
+#filter[hidden] {
+  display: none;
+}
+/* Deleted, with Undo, at the foot of the panel for a few seconds. */
+.undo-bar {
+  position: fixed;
+  left: var(--space-3);
+  right: var(--space-3);
+  bottom: var(--space-3);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-control);
+  background: var(--editor-text);
+  color: var(--bg);
+  font-size: var(--text-sm);
+  animation: undo-in var(--dur-base, 180ms) var(--ease-out, ease-out);
+}
+.undo-bar[hidden] {
+  display: none;
+}
+.undo-bar button {
+  border: 0;
+  background: none;
+  color: inherit;
+  font-weight: 600;
+  text-decoration: underline;
+}
+@keyframes undo-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}

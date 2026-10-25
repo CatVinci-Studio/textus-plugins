@@ -6,3 +6,5 @@ Cada guardado de un documento, conservado.
 - La pestaña **Historial** de la barra lateral lista las versiones del documento en primer plano, la más reciente primero.
 - Elige una para ver qué cambió desde entonces; **Restaurar esta versión** la recupera, y **Abrir como documento nuevo** la abre al lado.
 - Cuántas versiones se guardan por documento se cambia en los ajustes del complemento.
+- Los guardados muy seguidos (el autoguardado cada pocos segundos) se conservan como una sola versión; la separación entre versiones es **Guardar una versión** en los ajustes del complemento (al principio, cada 15 minutos).
+- Las versiones se agrupan por día: Hoy, Ayer y después la fecha.

@@ -9,12 +9,15 @@
     ["next", "nextPage"],
     ["zoom-out", "zoomOut"],
     ["zoom-in", "zoomIn"],
+    ["find-open", "find"],
   ])
     for (const attr of ["aria-label", "title"])
       $(id).setAttribute(attr, api.t(key));
   const viewer = $("viewer");
   const status = $("status");
   $("fit").textContent = t("fit");
+  $("find").placeholder = t("find");
+  $("find").setAttribute("aria-label", t("find"));
 
   const libReady = new Promise((resolve) => {
     if (window.pdfjsLib) resolve();
@@ -89,6 +92,7 @@
       container: text,
       viewport: viewport,
     }).render();
+    markHits(div);
   }
 
   async function layout() {
@@ -121,7 +125,9 @@
     }
     $("count").textContent = "/ " + pdf.numPages;
     $("page").max = String(pdf.numPages);
-    if (at > 1) goTo(at);
+    const start = restoring || at;
+    restoring = 0;
+    if (start > 1) goTo(start);
   }
 
   function currentPage() {
@@ -132,7 +138,97 @@
   function updatePage() {
     if (document.activeElement !== $("page"))
       $("page").value = String(currentPage());
+    keep();
   }
+
+  // Where the reader is - page and zoom - told to the host a moment after
+  // it settles, for the PDF to open there next time.
+  let restoring = 0;
+  let keeping = 0;
+  function keep() {
+    if (!pdf) return;
+    clearTimeout(keeping);
+    keeping = setTimeout(() => {
+      api.postMessage({
+        type: "position",
+        page: currentPage(),
+        scale: fitWidth ? null : scale,
+      });
+    }, 600);
+  }
+
+  // Find: each page's text, read once; the pages holding the words, in
+  // order; Enter goes to the next, Shift+Enter back.
+  let texts = [];
+  let query = "";
+  let hits = [];
+  let hit = -1;
+  async function pageText(n) {
+    if (texts[n] === undefined) {
+      const page = await pdf.getPage(n);
+      const content = await page.getTextContent();
+      texts[n] = content.items
+        .map((item) => item.str || "")
+        .join(" ")
+        .toLowerCase();
+    }
+    return texts[n];
+  }
+  function markHits(div) {
+    for (const span of div.querySelectorAll(".textLayer span"))
+      span.classList.toggle(
+        "hit",
+        !!query && span.textContent.toLowerCase().includes(query),
+      );
+  }
+  async function find(back) {
+    const q = $("find").value.trim().toLowerCase();
+    if (!pdf) return;
+    if (q !== query) {
+      query = q;
+      hits = [];
+      hit = -1;
+      if (q)
+        for (let n = 1; n <= pdf.numPages; n++)
+          if ((await pageText(n)).includes(q)) hits.push(n);
+      for (const div of pages) markHits(div);
+    }
+    if (!q) {
+      $("find-count").textContent = "";
+      return;
+    }
+    if (!hits.length) {
+      $("find-count").textContent = t("notFound");
+      return;
+    }
+    hit = (hit + (back ? -1 : 1) + hits.length) % hits.length;
+    $("find-count").textContent = hit + 1 + "/" + hits.length;
+    goTo(hits[hit]);
+  }
+  function openFind() {
+    $("find-box").hidden = false;
+    $("find").focus();
+    $("find").select();
+  }
+  function closeFind() {
+    $("find-box").hidden = true;
+    $("find").value = "";
+    void find(false);
+  }
+  $("find-open").onclick = () =>
+    $("find-box").hidden ? openFind() : closeFind();
+  $("find").addEventListener("keydown", (event) => {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      void find(event.shiftKey);
+    } else if (event.key === "Escape") closeFind();
+  });
+  window.addEventListener("keydown", (event) => {
+    if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === "f") {
+      event.preventDefault();
+      openFind();
+    }
+  });
   function goTo(n) {
     const page = pages[Math.min(pages.length, Math.max(1, n)) - 1];
     if (page) viewer.scrollTop = page.offsetTop - 16;
@@ -142,13 +238,13 @@
   function setScale(next) {
     fitWidth = false;
     scale = Math.min(5, Math.max(0.25, next));
-    void layout();
+    void layout().then(keep);
   }
   $("zoom-in").onclick = () => setScale(scale * 1.2);
   $("zoom-out").onclick = () => setScale(scale / 1.2);
   $("fit").onclick = () => {
     fitWidth = true;
-    void layout();
+    void layout().then(keep);
   };
   $("prev").onclick = () => goTo(currentPage() - 1);
   $("next").onclick = () => goTo(currentPage() + 1);
@@ -187,8 +283,12 @@
         BinaryDataFactory: PluginData,
         cMapPacked: true,
       }).promise;
-      fitWidth = message.zoom !== "100";
-      scale = 1;
+      // Where it was left, else the zoom it opens at.
+      const position = message.position;
+      fitWidth = position ? !position.scale : message.zoom !== "100";
+      scale = position?.scale || 1;
+      restoring = position?.page || 0;
+      texts = [];
       status.textContent = "";
       await layout();
     } catch (err) {

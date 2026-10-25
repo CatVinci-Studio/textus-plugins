@@ -6,3 +6,5 @@ PDFs abrem numa aba ao lado das suas notas.
 - Role pelas páginas; dê zoom com os botões ou com **Ctrl+rolagem** (**⌘+rolagem** no Mac).
 - Selecione texto para copiá-lo para as suas notas.
 - O zoom com que um PDF abre está nos ajustes do plugin.
+- **Ctrl+F** (**⌘F** no Mac), ou a lupa, procura palavras no PDF: **Enter** vai para a próxima página que as contém e **Shift+Enter** volta.
+- Um PDF abre de novo na página e com o zoom em que você o deixou.
