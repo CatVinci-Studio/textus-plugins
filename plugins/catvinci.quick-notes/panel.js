@@ -6,9 +6,21 @@
   $("title").textContent = t("title");
   $("new").textContent = t("new");
   $("empty").textContent = t("empty");
-  $("new").onclick = () => api.postMessage({ type: "new" });
-
   const timers = new Map();
+  // An edit still waiting out its pause goes first, so a button pressed
+  // right after typing acts on every word typed.
+  function flush() {
+    for (const [id, timer] of timers) {
+      clearTimeout(timer);
+      const area = document.querySelector('textarea[data-id="' + id + '"]');
+      if (area) api.postMessage({ type: "edit", id: id, text: area.value });
+    }
+    timers.clear();
+  }
+  $("new").onclick = () => {
+    flush();
+    api.postMessage({ type: "new" });
+  };
   const when = (at) =>
     new Date(at).toLocaleString(api.language, {
       month: "short",
@@ -20,7 +32,10 @@
   function button(label, type, id) {
     const b = document.createElement("button");
     b.textContent = label;
-    b.onclick = () => api.postMessage({ type: type, id: id });
+    b.onclick = () => {
+      flush();
+      api.postMessage({ type: type, id: id });
+    };
     return b;
   }
 
@@ -44,15 +59,10 @@
           clearTimeout(timers.get(note.id));
           timers.set(
             note.id,
-            setTimeout(
-              () =>
-                api.postMessage({
-                  type: "edit",
-                  id: note.id,
-                  text: area.value,
-                }),
-              300,
-            ),
+            setTimeout(() => {
+              timers.delete(note.id);
+              api.postMessage({ type: "edit", id: note.id, text: area.value });
+            }, 300),
           );
         });
         const actions = document.createElement("div");

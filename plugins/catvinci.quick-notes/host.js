@@ -41,36 +41,42 @@ exports.activate = function () {
       webview.onDidDispose(function () {
         if (panel === webview) panel = null;
       });
-      webview.onDidReceiveMessage(async function (message) {
-        const list = await notes();
-        if (message.type === "ready")
-          webview.postMessage({ type: "notes", notes: list });
-        if (message.type === "new") {
-          const note = await add("");
-          webview.postMessage({ type: "focus", id: note.id });
-        }
-        if (message.type === "edit")
-          await save(
-            list.map((n) =>
-              n.id === message.id
-                ? Object.assign({}, n, { text: message.text })
-                : n,
-            ),
-          );
-        if (message.type === "delete")
-          await save(list.filter((n) => n.id !== message.id));
-        const note = list.find((n) => n.id === message.id);
-        if (message.type === "insert" && note)
-          await textus.document.proposeEdit({
-            action: "insert_at_cursor",
-            text: note.text,
-            reason: textus.l10n.t("insertReason"),
-          });
-        if (message.type === "open" && note)
-          await textus.window.openUntitled(note.text);
+      // One message at a time, in order: each reads the notes the last
+      // one wrote.
+      let queue = Promise.resolve();
+      webview.onDidReceiveMessage(function (message) {
+        queue = queue.then(() => handle(webview, message)).catch(() => {});
+        return queue;
       });
       const html = await textus.plugin.readText("panel.html");
       webview.html = html.replace("{{lang}}", textus.env.language);
     },
   });
 };
+
+async function handle(webview, message) {
+  const list = await notes();
+  if (message.type === "ready")
+    webview.postMessage({ type: "notes", notes: list });
+  if (message.type === "new") {
+    const note = await add("");
+    webview.postMessage({ type: "focus", id: note.id });
+  }
+  if (message.type === "edit")
+    await save(
+      list.map((n) =>
+        n.id === message.id ? Object.assign({}, n, { text: message.text }) : n,
+      ),
+    );
+  if (message.type === "delete")
+    await save(list.filter((n) => n.id !== message.id));
+  const note = list.find((n) => n.id === message.id);
+  if (message.type === "insert" && note)
+    await textus.document.proposeEdit({
+      action: "insert_at_cursor",
+      text: note.text,
+      reason: textus.l10n.t("insertReason"),
+    });
+  if (message.type === "open" && note)
+    await textus.window.openUntitled(note.text);
+}
