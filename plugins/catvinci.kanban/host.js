@@ -31,11 +31,13 @@ exports.activate = function () {
       root,
       name.trim().replace(/[\\/:*?"<>|]/g, "-") + ".kanban.md",
     );
-    const existing = (await textus.workspace.list(root)).some(
-      (e) => e.path === path,
+    // A board of that name opens as it is - matched without regard to
+    // case, as macOS and Windows name files - and is never written over.
+    const existing = (await textus.workspace.list(root)).find(
+      (e) => e.path.toLowerCase() === path.toLowerCase(),
     );
     if (!existing) await textus.workspace.writeText(path, TEMPLATE());
-    await textus.window.openFile(path);
+    await textus.window.openFile(existing ? existing.path : path);
   });
 
   textus.window.registerCustomEditorProvider("catvinci.kanban.board", {
