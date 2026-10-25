@@ -20,13 +20,16 @@ exports.activate = function () {
       prompt: textus.l10n.t("prompt"),
       value: "https://",
     });
-    if (typed) await openPage(typed);
+    // Left as it was offered, "https://" alone, is no page.
+    if (typed && !/^https?:\/\/$/i.test(typed.trim())) await openPage(typed);
   });
   textus.commands.registerCommand(
     "catvinci.web-view.openSelection",
     async function () {
       const selection = await textus.document.getSelection();
-      const text = selection && selection.text;
+      // As Markdown, a link's target is there; its plain text is only the
+      // link's words.
+      const text = selection && (selection.markdown || selection.text);
       // The link itself, or a Markdown link's target.
       const target =
         text && (/\((https?:\/\/[^)\s]+)\)/.exec(text) || [null, text])[1];
