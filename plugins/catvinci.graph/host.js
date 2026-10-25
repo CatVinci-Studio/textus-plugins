@@ -17,10 +17,14 @@ async function build() {
 }
 
 async function current() {
-  if (stale || !graph) {
-    stale = false;
-    building = building || build().finally(() => (building = null));
+  // A save while a build ran makes it out of date: build again.
+  while (stale || !graph) {
+    if (!building) {
+      stale = false;
+      building = build().finally(() => (building = null));
+    }
     graph = await building;
+    if (!graph) break;
   }
   return graph;
 }
@@ -65,8 +69,8 @@ function changed() {
   stale = true;
   clearTimeout(timer);
   timer = setTimeout(function () {
-    for (const view of views) void sendGlobal(view);
-    void sendLocal();
+    for (const view of views) sendGlobal(view).catch(() => {});
+    sendLocal().catch(() => {});
   }, 400);
 }
 
@@ -93,8 +97,8 @@ exports.activate = function () {
   textus.workspace.onDidChangeRoot(changed);
   textus.settings.onDidChange(changed);
   textus.document.onDidChangeActive(function () {
-    void sendLocal();
-    for (const view of views) void sendGlobal(view);
+    sendLocal().catch(() => {});
+    for (const view of views) sendGlobal(view).catch(() => {});
   });
   textus.commands.registerCommand("catvinci.graph.open", function () {
     return textus.window.openView("catvinci.graph.global");
