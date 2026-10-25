@@ -105,7 +105,7 @@ body {
 
 /* A card's [[link]] to a note. */
 .note-link {
-  color: var(--ui-primary);
+  color: var(--chrome-accent);
   text-decoration: underline;
   text-decoration-color: color-mix(in srgb, currentColor 40%, transparent);
   text-underline-offset: 2px;
@@ -115,7 +115,7 @@ body {
   opacity: 0.5;
 }
 .list.list-drop {
-  outline: 2px dashed color-mix(in srgb, var(--ui-primary) 50%, transparent);
+  outline: 2px dashed color-mix(in srgb, var(--chrome-accent) 50%, transparent);
   outline-offset: 2px;
 }
 .list-head {

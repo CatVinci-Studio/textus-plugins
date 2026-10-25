@@ -107,6 +107,6 @@ body {
   font-size: var(--text-xs);
 }
 .textLayer span.hit {
-  background: color-mix(in srgb, var(--ui-primary) 28%, transparent);
+  background: color-mix(in srgb, var(--chrome-accent) 28%, transparent);
   border-radius: 2px;
 }
