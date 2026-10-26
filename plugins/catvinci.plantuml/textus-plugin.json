@@ -1,0 +1,124 @@
+{
+  "id": "catvinci.plantuml",
+  "name": "%name%",
+  "version": "0.1.0",
+  "publisher": "catvinci",
+  "author": "CatVinci Studio",
+  "description": "%description%",
+  "license": "MIT",
+  "repository": "https://github.com/CatVinci-Studio/textus-plugins",
+  "engines": {
+    "textus": ">=1.3.0-beta.2"
+  },
+  "main": ["lib/chart-host.js", "host.js"],
+  "permissions": ["network:www.plantuml.com"],
+  "contributes": {
+    "codeBlocks": [
+      {
+        "language": "plantuml",
+        "title": "%name%"
+      }
+    ],
+    "settings": [
+      {
+        "key": "renderer",
+        "type": "enum",
+        "default": "local",
+        "title": "%renderer%",
+        "description": "%rendererHelp%",
+        "options": [
+          {
+            "value": "local",
+            "label": "%local%"
+          },
+          {
+            "value": "server",
+            "label": "%server%"
+          }
+        ]
+      }
+    ]
+  },
+  "l10n": {
+    "en": {
+      "name": "PlantUML",
+      "description": "UML and other diagrams from PlantUML text, drawn on your computer - or by the PlantUML server, if you choose.",
+      "renderer": "Drawn by",
+      "rendererHelp": "On this computer, nothing leaves it. The PlantUML server (plantuml.com) gets each diagram's text.",
+      "local": "This computer",
+      "server": "PlantUML server"
+    },
+    "zh": {
+      "name": "PlantUML",
+      "description": "用 PlantUML 文本画 UML 等图，默认在本机渲染，也可以选择用 PlantUML 服务器。",
+      "renderer": "渲染方式",
+      "rendererHelp": "本机渲染时内容不会离开电脑；用 PlantUML 服务器（plantuml.com）时，每张图的文本会发给它。",
+      "local": "本机",
+      "server": "PlantUML 服务器"
+    },
+    "zh-Hant": {
+      "name": "PlantUML",
+      "description": "用 PlantUML 文字畫 UML 等圖，預設在本機算繪，也可以選擇用 PlantUML 伺服器。",
+      "renderer": "算繪方式",
+      "rendererHelp": "本機算繪時內容不會離開電腦；用 PlantUML 伺服器（plantuml.com）時，每張圖的文字會傳給它。",
+      "local": "本機",
+      "server": "PlantUML 伺服器"
+    },
+    "ja": {
+      "name": "PlantUML",
+      "description": "PlantUML のテキストから UML などの図を描きます。既定はこのコンピュータで描画し、PlantUML サーバーも選べます。",
+      "renderer": "描画する場所",
+      "rendererHelp": "このコンピュータなら内容は外に出ません。PlantUML サーバー（plantuml.com）では各図のテキストが送られます。",
+      "local": "このコンピュータ",
+      "server": "PlantUML サーバー"
+    },
+    "ko": {
+      "name": "PlantUML",
+      "description": "PlantUML 텍스트로 UML 등 다이어그램을 그립니다. 기본은 이 컴퓨터에서 그리고, PlantUML 서버도 고를 수 있습니다.",
+      "renderer": "그리는 곳",
+      "rendererHelp": "이 컴퓨터에서 그리면 내용이 밖으로 나가지 않습니다. PlantUML 서버(plantuml.com)는 각 다이어그램의 텍스트를 받습니다.",
+      "local": "이 컴퓨터",
+      "server": "PlantUML 서버"
+    },
+    "es": {
+      "name": "PlantUML",
+      "description": "Diagramas UML y otros a partir de texto PlantUML, dibujados en tu equipo o, si lo eliges, por el servidor de PlantUML.",
+      "renderer": "Dibujado por",
+      "rendererHelp": "En este equipo, nada sale de él. El servidor de PlantUML (plantuml.com) recibe el texto de cada diagrama.",
+      "local": "Este equipo",
+      "server": "Servidor de PlantUML"
+    },
+    "fr": {
+      "name": "PlantUML",
+      "description": "Diagrammes UML et autres à partir de texte PlantUML, dessinés sur votre ordinateur ou, au choix, par le serveur PlantUML.",
+      "renderer": "Dessiné par",
+      "rendererHelp": "Sur cet ordinateur, rien n’en sort. Le serveur PlantUML (plantuml.com) reçoit le texte de chaque diagramme.",
+      "local": "Cet ordinateur",
+      "server": "Serveur PlantUML"
+    },
+    "de": {
+      "name": "PlantUML",
+      "description": "UML- und andere Diagramme aus PlantUML-Text, auf Ihrem Rechner gezeichnet – oder auf Wunsch vom PlantUML-Server.",
+      "renderer": "Gezeichnet von",
+      "rendererHelp": "Auf diesem Rechner verlässt nichts den Computer. Der PlantUML-Server (plantuml.com) erhält den Text jedes Diagramms.",
+      "local": "Diesem Rechner",
+      "server": "PlantUML-Server"
+    },
+    "ru": {
+      "name": "PlantUML",
+      "description": "UML и другие диаграммы по тексту PlantUML — рисуются на вашем компьютере или, по выбору, сервером PlantUML.",
+      "renderer": "Чем рисовать",
+      "rendererHelp": "На этом компьютере ничего не уходит наружу. Сервер PlantUML (plantuml.com) получает текст каждой диаграммы.",
+      "local": "Этот компьютер",
+      "server": "Сервер PlantUML"
+    },
+    "pt": {
+      "name": "PlantUML",
+      "description": "Diagramas UML e outros a partir de texto PlantUML, desenhados no seu computador ou, se preferir, pelo servidor do PlantUML.",
+      "renderer": "Desenhado por",
+      "rendererHelp": "Neste computador, nada sai dele. O servidor do PlantUML (plantuml.com) recebe o texto de cada diagrama.",
+      "local": "Este computador",
+      "server": "Servidor do PlantUML"
+    }
+  }
+}

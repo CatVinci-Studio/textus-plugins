@@ -1,0 +1,36 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="textus-resource:lib/chart.css" />
+  </head>
+  <body>
+    <div id="chart"></div>
+    <div id="chart-problem" role="alert" hidden></div>
+    <script src="textus-resource:lib/chart-page.js"></script>
+    <script src="textus-resource:lib/viz-global.js"></script>
+    <!-- The engine is a module; its import is resolved in the page's own
+         text, so the drawing code is here rather than in a file. -->
+    <script type="module">
+      // The engine is a module: it is imported here, then the block is drawn.
+      import { renderToString } from "textus-resource:lib/plantuml.js";
+
+      function render(source, dark) {
+        return new Promise(function (resolve, reject) {
+          renderToString(String(source).split("\n"), resolve, reject, {
+            dark: dark,
+          });
+        });
+      }
+
+      drawChartBlock({
+        draw: async function (el, source, meta, dark, server) {
+          el.innerHTML = server ? server.svg : await render(source, dark);
+        },
+        picture: function (el, source, meta, dark, server) {
+          return server ? server.svg : render(source, dark);
+        },
+      });
+    </script>
+  </body>
+</html>

@@ -109,7 +109,10 @@ for (const id of ids) {
   }
   for (const [target, lib] of Object.entries(libs)) {
     if (!target.startsWith(`${id}/`)) continue;
-    const from = join(ROOT, "node_modules", lib);
+    // "./shared/x.js": a file of this repository's, shared by plugins.
+    const from = lib.startsWith("./")
+      ? join(ROOT, lib)
+      : join(ROOT, "node_modules", lib);
     // A folder (its name ends in "/"): every file in it.
     const sources = lib.endsWith("/")
       ? files(from).map((path) => [target + relative(from, path), path])

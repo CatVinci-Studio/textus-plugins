@@ -1,0 +1,65 @@
+{
+  "id": "catvinci.echarts",
+  "name": "%name%",
+  "version": "0.1.0",
+  "publisher": "catvinci",
+  "author": "CatVinci Studio",
+  "description": "%description%",
+  "license": "MIT",
+  "repository": "https://github.com/CatVinci-Studio/textus-plugins",
+  "engines": {
+    "textus": ">=1.3.0-beta.2"
+  },
+  "main": ["lib/chart-host.js", "host.js"],
+  "permissions": [],
+  "contributes": {
+    "codeBlocks": [
+      {
+        "language": "echarts",
+        "title": "%name%"
+      }
+    ]
+  },
+  "l10n": {
+    "en": {
+      "name": "ECharts",
+      "description": "Charts from an ECharts option - bars, lines, pies, maps and more."
+    },
+    "zh": {
+      "name": "ECharts",
+      "description": "用 ECharts 配置画图：柱状图、折线图、饼图等。"
+    },
+    "zh-Hant": {
+      "name": "ECharts",
+      "description": "用 ECharts 設定畫圖：長條圖、折線圖、圓餅圖等。"
+    },
+    "ja": {
+      "name": "ECharts",
+      "description": "ECharts のオプションからグラフを描きます：棒、折れ線、円など。"
+    },
+    "ko": {
+      "name": "ECharts",
+      "description": "ECharts 옵션으로 차트를 그립니다: 막대, 선, 원형 등."
+    },
+    "es": {
+      "name": "ECharts",
+      "description": "Gráficos a partir de una opción de ECharts: barras, líneas, sectores y más."
+    },
+    "fr": {
+      "name": "ECharts",
+      "description": "Des graphiques à partir d’une option ECharts : barres, courbes, camemberts…"
+    },
+    "de": {
+      "name": "ECharts",
+      "description": "Diagramme aus einer ECharts-Option: Balken, Linien, Torten und mehr."
+    },
+    "ru": {
+      "name": "ECharts",
+      "description": "Диаграммы по настройкам ECharts: столбцы, линии, круговые и другие."
+    },
+    "pt": {
+      "name": "ECharts",
+      "description": "Gráficos a partir de uma opção do ECharts: barras, linhas, pizza e mais."
+    }
+  }
+}

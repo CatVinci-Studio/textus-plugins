@@ -1,0 +1,65 @@
+{
+  "id": "catvinci.wavedrom",
+  "name": "%name%",
+  "version": "0.1.0",
+  "publisher": "catvinci",
+  "author": "CatVinci Studio",
+  "description": "%description%",
+  "license": "MIT",
+  "repository": "https://github.com/CatVinci-Studio/textus-plugins",
+  "engines": {
+    "textus": ">=1.3.0-beta.2"
+  },
+  "main": ["lib/chart-host.js", "host.js"],
+  "permissions": [],
+  "contributes": {
+    "codeBlocks": [
+      {
+        "language": "wavedrom",
+        "title": "%name%"
+      }
+    ]
+  },
+  "l10n": {
+    "en": {
+      "name": "WaveDrom",
+      "description": "Digital timing diagrams from WaveJSON."
+    },
+    "zh": {
+      "name": "WaveDrom",
+      "description": "用 WaveJSON 画数字时序图。"
+    },
+    "zh-Hant": {
+      "name": "WaveDrom",
+      "description": "用 WaveJSON 畫數位時序圖。"
+    },
+    "ja": {
+      "name": "WaveDrom",
+      "description": "WaveJSON からデジタルタイミング図を描きます。"
+    },
+    "ko": {
+      "name": "WaveDrom",
+      "description": "WaveJSON으로 디지털 타이밍 다이어그램을 그립니다."
+    },
+    "es": {
+      "name": "WaveDrom",
+      "description": "Diagramas de tiempos digitales a partir de WaveJSON."
+    },
+    "fr": {
+      "name": "WaveDrom",
+      "description": "Des chronogrammes numériques à partir de WaveJSON."
+    },
+    "de": {
+      "name": "WaveDrom",
+      "description": "Digitale Zeitdiagramme aus WaveJSON."
+    },
+    "ru": {
+      "name": "WaveDrom",
+      "description": "Цифровые временные диаграммы по WaveJSON."
+    },
+    "pt": {
+      "name": "WaveDrom",
+      "description": "Diagramas de tempo digitais a partir de WaveJSON."
+    }
+  }
+}

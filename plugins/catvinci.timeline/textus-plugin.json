@@ -1,0 +1,65 @@
+{
+  "id": "catvinci.timeline",
+  "name": "%name%",
+  "version": "0.1.0",
+  "publisher": "catvinci",
+  "author": "CatVinci Studio",
+  "description": "%description%",
+  "license": "MIT",
+  "repository": "https://github.com/CatVinci-Studio/textus-plugins",
+  "engines": {
+    "textus": ">=1.3.0-beta.2"
+  },
+  "main": ["lib/chart-host.js", "host.js"],
+  "permissions": [],
+  "contributes": {
+    "codeBlocks": [
+      {
+        "language": "timeline",
+        "title": "%name%"
+      }
+    ]
+  },
+  "l10n": {
+    "en": {
+      "name": "Timeline",
+      "description": "Events in order, a line each: when | what | more."
+    },
+    "zh": {
+      "name": "时间线",
+      "description": "按顺序排列的事件，每行一个：时间 | 事件 | 说明。"
+    },
+    "zh-Hant": {
+      "name": "時間軸",
+      "description": "依序排列的事件，每行一個：時間 | 事件 | 說明。"
+    },
+    "ja": {
+      "name": "タイムライン",
+      "description": "出来事を順に、1 行に 1 つ：いつ | 何が | 補足。"
+    },
+    "ko": {
+      "name": "타임라인",
+      "description": "순서대로 놓인 사건, 한 줄에 하나: 언제 | 무엇 | 설명."
+    },
+    "es": {
+      "name": "Cronología",
+      "description": "Hechos en orden, uno por línea: cuándo | qué | más."
+    },
+    "fr": {
+      "name": "Chronologie",
+      "description": "Des événements dans l’ordre, un par ligne : quand | quoi | détails."
+    },
+    "de": {
+      "name": "Zeitleiste",
+      "description": "Ereignisse der Reihe nach, eines pro Zeile: wann | was | mehr."
+    },
+    "ru": {
+      "name": "Хронология",
+      "description": "События по порядку, по одному в строке: когда | что | подробности."
+    },
+    "pt": {
+      "name": "Linha do tempo",
+      "description": "Eventos em ordem, um por linha: quando | o quê | mais."
+    }
+  }
+}
