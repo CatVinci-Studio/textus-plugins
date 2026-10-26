@@ -1,10 +1,11 @@
 {
   "id": "catvinci.markdown-lint",
   "name": "%name%",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "publisher": "catvinci",
   "author": "CatVinci Studio",
   "description": "%description%",
+  "icon": "icon.svg",
   "license": "MIT",
   "repository": "https://github.com/CatVinci-Studio/textus-plugins",
   "engines": {

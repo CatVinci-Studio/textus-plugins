@@ -6,10 +6,13 @@ name: release
 # A plugin already released must be the same package: one changed
 # without a new version fails here, so the catalog never lists a hash
 # its zip doesn't have (scripts/same-package.mjs: same files, the
-# released zip's hash).
+# released zip's hash). Once a day as well, for the installs the market
+# shows (scripts/stats.mjs); with nothing new, only the catalog changes.
 on:
   push:
     branches: [main]
+  schedule:
+    - cron: "17 6 * * *"
   workflow_dispatch:
 
 permissions:
@@ -32,6 +35,8 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run check
+      - name: Count installs
+        run: mkdir -p dist && node scripts/stats.mjs > dist/stats.json
       - run: npm run build
       - name: Release new plugin versions
         run: |
@@ -58,7 +63,7 @@ jobs:
           if ! gh release view catalog >/dev/null 2>&1; then
             gh release create catalog --title "Catalog" --notes "The list of plugins Textus offers (index.json), rebuilt on each push to main." --latest=false
           fi
-          gh release upload catalog dist/index.json dist/skill-*.md --clobber
+          gh release upload catalog dist/index.json dist/skill-*.md dist/readme-*.md dist/icon-* --clobber
           if ls dist/shot-*.png >/dev/null 2>&1; then
             gh release upload catalog dist/shot-*.png --clobber
           fi

@@ -153,8 +153,8 @@ export function review({ entry, pkg, source, previous = null, libs = {} }) {
   for (const lang of ["en", "zh"])
     if (!l10n[lang] && !(lang === "en" && Object.keys(l10n).length === 0))
       content.push(["warn", `no ${lang} strings in l10n`]);
-  for (const file of ["README.md", "USAGE.md"])
-    if (!pkg.has(file) && !source.has(file)) content.push(["fail", `no ${file}`]);
+  // The README is what the market shows of it, and its guide once installed.
+  if (!pkg.has("README.md")) content.push(["fail", "no README.md in the package"]);
   const license = source.get("LICENSE") ?? pkg.get("LICENSE");
   if (!license) content.push(["fail", "no LICENSE"]);
   else if (!LICENSES.some((name) => text(license).includes(name)))
@@ -163,7 +163,7 @@ export function review({ entry, pkg, source, previous = null, libs = {} }) {
   if (/\b(catvinci|official)\b/i.test(words))
     content.push(["fail", "its name or description says CatVinci or Official"]);
   for (const [level, detail] of content) add(level, "content", detail + ".");
-  if (!content.length) add("pass", "content", "README, USAGE, LICENSE and strings in place.");
+  if (!content.length) add("pass", "content", "README, LICENSE and strings in place.");
 
   return results;
 }
