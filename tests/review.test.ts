@@ -1,0 +1,92 @@
+import { describe, expect, it } from "vitest";
+import { report, review, verdict } from "../scripts/review-lib.mjs";
+
+const MIT = "MIT License\n\nCopyright (c) 2026 jane\n";
+
+function plugin(over: Record<string, unknown> = {}, files: Record<string, string> = {}) {
+  const manifest = {
+    id: "jane.word-count",
+    name: "Word Count",
+    publisher: "jane",
+    description: "Counts the words in the document.",
+    version: "0.2.0",
+    main: "host.js",
+    engines: { textus: ">=1.3.0-beta.2" },
+    permissions: ["editor.read"],
+    l10n: { en: { hello: "Hi" }, zh: { hello: "你好" } },
+    ...over,
+  };
+  const all: Record<string, string> = {
+    "textus-plugin.json": JSON.stringify(manifest),
+    "host.js": "exports.activate = function () {};",
+    "README.md": "# Word Count",
+    "USAGE.md": "Use it.",
+    ...files,
+  };
+  const pkg = new Map(Object.entries(all).map(([k, v]) => [k, Buffer.from(v)]));
+  const source = new Map([...pkg, ["LICENSE", Buffer.from(MIT)]]);
+  return { entry: { id: "jane.word-count", version: manifest.version }, pkg, source };
+}
+
+const levels = (results: { level: string; check: string }[], check: string) =>
+  results.filter((r) => r.check === check).map((r) => r.level);
+
+describe("review", () => {
+  it("passes a plugin that is its tagged source and says what it needs", () => {
+    const results = review(plugin());
+    expect(verdict(results)).toBe("pass");
+    expect(report({ id: "jane.word-count", version: "0.2.0" }, results)).toContain(
+      "### ✅ jane.word-count 0.2.0",
+    );
+  });
+
+  it("fails a zip that isn't the repository at the tag", () => {
+    const p = plugin();
+    p.pkg.set("host.js", Buffer.from("exports.activate = function () { steal(); };"));
+    const results = review(p);
+    expect(levels(results, "source")).toEqual(["fail"]);
+  });
+
+  it("fails an id or version that doesn't match the listing, or a version not newer", () => {
+    expect(levels(review({ ...plugin(), entry: { id: "jane.other", version: "0.2.0" } }), "package")).toContain("fail");
+    const results = review({ ...plugin(), previous: { version: "0.2.0", permissions: [] } });
+    expect(results.find((r) => r.check === "package" && r.level === "fail")?.detail).toContain(
+      "isn't newer",
+    );
+  });
+
+  it("fails programs, eval and code from the web", () => {
+    const results = review(
+      plugin({}, {
+        "tool.dll": "MZ",
+        "lib/a.js": "eval(x)",
+        "view.html": '<script src="https://evil.example/x.js"></script>',
+      }),
+    );
+    expect(results.filter((r) => r.level === "fail").map((r) => r.check)).toEqual(
+      expect.arrayContaining(["package", "code"]),
+    );
+  });
+
+  it("asks a person about new or broad permissions", () => {
+    const results = review({
+      ...plugin({ permissions: ["editor.read", "network:*"] }),
+      previous: { version: "0.1.0", permissions: ["editor.read"] },
+    });
+    expect(levels(results, "permissions")).toEqual(["warn", "warn"]);
+    expect(verdict(results)).toBe("warn");
+  });
+
+  it("wants a README, USAGE, an open license, and no borrowed name", () => {
+    const p = plugin({ name: "Official Word Count" });
+    p.pkg.delete("USAGE.md");
+    p.source.delete("USAGE.md");
+    p.source.set("LICENSE", Buffer.from("All rights reserved."));
+    const details = review(p)
+      .filter((r) => r.check === "content")
+      .map((r) => r.detail);
+    expect(details.join(" ")).toMatch(/no USAGE\.md/);
+    expect(details.join(" ")).toMatch(/doesn't recognise/);
+    expect(details.join(" ")).toMatch(/CatVinci or Official/);
+  });
+});

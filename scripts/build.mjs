@@ -8,7 +8,12 @@
 // (`<id>-v<version>`), and index.json on the `catalog` release
 // (.github/workflows/release.yml). The skills in skills/ - a skill file
 // each - go up on the `catalog` release too, as skill-<name>.md, and
-// index.json lists them beside the plugins.
+// index.json lists them beside the plugins. Plugins from other
+// repositories (community/<id>.json, LISTING.md) come from their own
+// releases: the zip that was reviewed is fetched and goes up here like an
+// official plugin's - Textus downloads packages from this repository only,
+// and an author changing a release later changes nothing listed.
+// removed.json names those taken down.
 
 import { createHash } from "node:crypto";
 import {
@@ -20,9 +25,11 @@ import {
 } from "node:fs";
 import { join, relative } from "node:path";
 import JSZip from "jszip";
+import { communityEntry, releaseZipUrl } from "./community.mjs";
 
 const ROOT = new URL("..", import.meta.url).pathname;
 const PLUGINS = join(ROOT, "plugins");
+const COMMUNITY = join(ROOT, "community");
 const SKILLS = join(ROOT, "skills");
 const DIST = join(ROOT, "dist");
 const REPOSITORY = "https://github.com/CatVinci-Studio/textus-plugins";
@@ -181,8 +188,53 @@ for (const file of skillFiles) {
   console.log(`${asset}  ${skill.bytes.length} bytes`);
 }
 
+// Plugins from other repositories, as their releases have them.
+const removed = new Set(
+  JSON.parse(readFileSync(join(ROOT, "removed.json"), "utf8")).plugins,
+);
+const communityFiles = readdirSync(COMMUNITY)
+  .filter((f) => f.endsWith(".json"))
+  .sort();
+for (const file of communityFiles) {
+  const entry = communityEntry(
+    JSON.parse(readFileSync(join(COMMUNITY, file), "utf8")),
+    `community/${file}`,
+  );
+  if (ids.includes(entry.id))
+    throw new Error(`community/${file}: ${entry.id} is an official plugin's id`);
+  if (check || removed.has(entry.id)) continue;
+  const url = releaseZipUrl(entry);
+  const response = await fetch(url, { redirect: "follow" });
+  if (!response.ok) throw new Error(`${url}: ${response.status}`);
+  const bytes = Buffer.from(await response.arrayBuffer());
+  const zip = await JSZip.loadAsync(bytes);
+  const manifest = JSON.parse(
+    await zip.file("textus-plugin.json").async("string"),
+  );
+  if (manifest.id !== entry.id || manifest.version !== entry.version)
+    throw new Error(`${url}: holds ${manifest.id} ${manifest.version}`);
+  const sha256 = createHash("sha256").update(bytes).digest("hex");
+  // The zip the review saw, when the listing pins it.
+  if (entry.sha256 && entry.sha256 !== sha256)
+    throw new Error(`${url}: not the zip that was reviewed (${entry.sha256})`);
+  const file = `${entry.id}-${entry.version}.zip`;
+  writeFileSync(join(DIST, file), bytes);
+  catalog.push({
+    id: entry.id,
+    version: entry.version,
+    official: false,
+    manifest,
+    url: `${REPOSITORY}/releases/download/${entry.id}-v${entry.version}/${file}`,
+    sha256,
+    size: bytes.length,
+  });
+  console.log(`${entry.id}-${entry.version}  from ${entry.repo}`);
+}
+
 if (check)
-  console.log(`${ids.length} manifests and ${skillFiles.length} skills read`);
+  console.log(
+    `${ids.length} manifests, ${communityFiles.length} community listings and ${skillFiles.length} skills read`,
+  );
 else
   writeFileSync(
     join(DIST, "index.json"),
