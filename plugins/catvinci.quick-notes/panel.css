@@ -27,12 +27,15 @@ textarea:focus {
 }
 .note-actions {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: var(--space-1);
   margin-top: var(--space-1);
 }
+/* A line of its own: beside the buttons a narrow sidebar broke it up. */
 .note-actions .when {
-  flex: 1;
+  flex: 1 0 100%;
+  white-space: nowrap;
   font-size: var(--text-xs);
 }
 .note-actions button {
