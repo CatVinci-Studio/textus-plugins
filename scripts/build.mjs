@@ -17,6 +17,8 @@
 
 import { createHash } from "node:crypto";
 import {
+  copyFileSync,
+  existsSync,
   mkdirSync,
   readFileSync,
   readdirSync,
@@ -66,6 +68,23 @@ function manifestOf(id) {
   return manifest;
 }
 
+/** A plugin's pictures for the market (`screenshots/*.png`, in name
+ *  order), copied to dist/ as shot-<id>-<n>.png for the catalog release;
+ *  their addresses there. */
+const SCREENSHOTS = "screenshots";
+function screenshotsOf(id) {
+  const dir = join(PLUGINS, id, SCREENSHOTS);
+  if (!existsSync(dir)) return [];
+  return readdirSync(dir)
+    .filter((name) => name.endsWith(".png"))
+    .sort()
+    .map((name, i) => {
+      const asset = `shot-${id}-${i + 1}.png`;
+      copyFileSync(join(dir, name), join(DIST, asset));
+      return `${REPOSITORY}/releases/download/catalog/${asset}`;
+    });
+}
+
 const ids = readdirSync(PLUGINS)
   .filter((name) => statSync(join(PLUGINS, name)).isDirectory())
   .sort();
@@ -82,8 +101,12 @@ for (const id of ids) {
     date: new Date("2026-01-01T00:00:00Z"),
     createFolders: false,
   };
-  for (const path of files(join(PLUGINS, id)))
-    zip.file(relative(join(PLUGINS, id), path), readFileSync(path), options);
+  for (const path of files(join(PLUGINS, id))) {
+    const name = relative(join(PLUGINS, id), path);
+    // Pictures for the market go up beside the catalog, not in the package.
+    if (name.startsWith(`${SCREENSHOTS}/`)) continue;
+    zip.file(name, readFileSync(path), options);
+  }
   for (const [target, lib] of Object.entries(libs)) {
     if (!target.startsWith(`${id}/`)) continue;
     const from = join(ROOT, "node_modules", lib);
@@ -111,6 +134,7 @@ for (const id of ids) {
     url: `${REPOSITORY}/releases/download/${id}-v${manifest.version}/${file}`,
     sha256: createHash("sha256").update(bytes).digest("hex"),
     size: bytes.length,
+    screenshots: screenshotsOf(id),
   });
   console.log(`${file}  ${(bytes.length / 1024).toFixed(0)} KB`);
 }
