@@ -1,0 +1,141 @@
+{
+  "id": "catvinci.bookmarks",
+  "name": "%name%",
+  "version": "0.1.0",
+  "publisher": "catvinci",
+  "author": "CatVinci Studio",
+  "description": "%description%",
+  "license": "MIT",
+  "repository": "https://github.com/CatVinci-Studio/textus-plugins",
+  "engines": {
+    "textus": ">=1.3.0-beta.2"
+  },
+  "main": "host.js",
+  "permissions": ["editor.read", "files.read"],
+  "activationEvents": ["onStartupFinished"],
+  "contributes": {
+    "commands": [
+      {
+        "command": "catvinci.bookmarks.add",
+        "title": "%add%"
+      },
+      {
+        "command": "catvinci.bookmarks.remove",
+        "title": "%remove%"
+      }
+    ],
+    "menus": {
+      "editor/context": [
+        {
+          "command": "catvinci.bookmarks.add",
+          "when": "editorHasSelection"
+        }
+      ],
+      "app/plugins": [
+        {
+          "command": "catvinci.bookmarks.add"
+        }
+      ]
+    },
+    "sidebarTabs": [
+      {
+        "id": "catvinci.bookmarks.panel",
+        "title": "%name%",
+        "icon": "tab.svg",
+        "type": "list"
+      }
+    ]
+  },
+  "l10n": {
+    "en": {
+      "name": "Bookmarks",
+      "description": "Bookmark a passage and come back to it from the sidebar - across documents.",
+      "add": "Bookmark Selection",
+      "remove": "Remove Bookmark",
+      "select": "Select some words to bookmark first.",
+      "saveFirst": "Save the document first: a bookmark needs its file.",
+      "empty": "No bookmarks yet. Select words, then Bookmark Selection."
+    },
+    "zh": {
+      "name": "书签",
+      "description": "给一段文字加书签，从侧栏随时跳回去，跨文档也可以。",
+      "add": "给选中文字加书签",
+      "remove": "删除书签",
+      "select": "请先选中要加书签的文字。",
+      "saveFirst": "请先保存文档，书签需要知道文件位置。",
+      "empty": "还没有书签。选中文字后，用「给选中文字加书签」。"
+    },
+    "zh-Hant": {
+      "name": "書籤",
+      "description": "為一段文字加書籤，從側欄隨時跳回去，跨文件也可以。",
+      "add": "為選取文字加書籤",
+      "remove": "刪除書籤",
+      "select": "請先選取要加書籤的文字。",
+      "saveFirst": "請先儲存文件，書籤需要知道檔案位置。",
+      "empty": "還沒有書籤。選取文字後，用「為選取文字加書籤」。"
+    },
+    "ja": {
+      "name": "ブックマーク",
+      "description": "文章の一部をブックマークし、サイドバーからいつでも戻れます。文書をまたいでも使えます。",
+      "add": "選択範囲をブックマーク",
+      "remove": "ブックマークを削除",
+      "select": "先にブックマークする語句を選択してください。",
+      "saveFirst": "先に文書を保存してください。ブックマークにはファイルが必要です。",
+      "empty": "まだブックマークはありません。語句を選択して「選択範囲をブックマーク」を。"
+    },
+    "ko": {
+      "name": "북마크",
+      "description": "글의 한 부분에 북마크를 걸고 사이드바에서 언제든 돌아갑니다. 문서를 넘나들어도 됩니다.",
+      "add": "선택 영역 북마크",
+      "remove": "북마크 삭제",
+      "select": "먼저 북마크할 글자를 선택하세요.",
+      "saveFirst": "먼저 문서를 저장하세요. 북마크에는 파일이 필요합니다.",
+      "empty": "아직 북마크가 없습니다. 글자를 선택한 뒤 「선택 영역 북마크」를 쓰세요."
+    },
+    "es": {
+      "name": "Marcadores",
+      "description": "Marca un pasaje y vuelve a él desde la barra lateral, entre documentos.",
+      "add": "Marcar la selección",
+      "remove": "Quitar marcador",
+      "select": "Selecciona primero unas palabras.",
+      "saveFirst": "Guarda primero el documento: el marcador necesita su archivo.",
+      "empty": "Aún no hay marcadores. Selecciona palabras y usa Marcar la selección."
+    },
+    "fr": {
+      "name": "Signets",
+      "description": "Mettez un signet sur un passage et revenez-y depuis la barre latérale, d’un document à l’autre.",
+      "add": "Signet sur la sélection",
+      "remove": "Supprimer le signet",
+      "select": "Sélectionnez d’abord quelques mots.",
+      "saveFirst": "Enregistrez d’abord le document : le signet a besoin de son fichier.",
+      "empty": "Pas encore de signets. Sélectionnez des mots, puis Signet sur la sélection."
+    },
+    "de": {
+      "name": "Lesezeichen",
+      "description": "Setzen Sie ein Lesezeichen auf eine Stelle und kehren Sie über die Seitenleiste dorthin zurück – dokumentübergreifend.",
+      "add": "Auswahl als Lesezeichen",
+      "remove": "Lesezeichen entfernen",
+      "select": "Markieren Sie zuerst ein paar Wörter.",
+      "saveFirst": "Speichern Sie zuerst das Dokument: Ein Lesezeichen braucht seine Datei.",
+      "empty": "Noch keine Lesezeichen. Wörter markieren, dann Auswahl als Lesezeichen."
+    },
+    "ru": {
+      "name": "Закладки",
+      "description": "Отметьте фрагмент и возвращайтесь к нему из боковой панели — в любом документе.",
+      "add": "Добавить выделение в закладки",
+      "remove": "Удалить закладку",
+      "select": "Сначала выделите слова.",
+      "saveFirst": "Сначала сохраните документ: закладке нужен файл.",
+      "empty": "Закладок пока нет. Выделите слова и выберите «Добавить выделение в закладки»."
+    },
+    "pt": {
+      "name": "Favoritos",
+      "description": "Marque um trecho e volte a ele pela barra lateral, entre documentos.",
+      "add": "Marcar a seleção",
+      "remove": "Remover favorito",
+      "select": "Selecione algumas palavras primeiro.",
+      "saveFirst": "Salve o documento primeiro: o favorito precisa do arquivo.",
+      "empty": "Ainda não há favoritos. Selecione palavras e use Marcar a seleção."
+    }
+  }
+}

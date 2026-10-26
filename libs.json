@@ -40,5 +40,6 @@
   "catvinci.wavedrom/lib/wavedrom.min.js": "wavedrom/wavedrom.min.js",
   "catvinci.function-plot/lib/chart-host.js": "./shared/chart-host.js",
   "catvinci.function-plot/lib/chart-page.js": "./shared/chart-page.js",
-  "catvinci.function-plot/lib/chart.css": "./shared/chart.css"
+  "catvinci.function-plot/lib/chart.css": "./shared/chart.css",
+  "catvinci.markdown-lint/lib/markdownlint.js": "./vendor/markdownlint.js"
 }
