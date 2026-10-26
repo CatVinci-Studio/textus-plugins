@@ -35,9 +35,9 @@ Each plugin's folder in [`plugins/`](plugins/) is packaged by `npm run build` in
 
 ## Writing a plugin
 
-A plugin is a folder with a `textus-plugin.json` and its code, run in a sandbox. The guide is [Writing plugins](https://github.com/CatVinci-Studio/Textus/blob/main/docs/dev/writing-plugins.md) in the Textus repository; the plugins here are complete examples. To try yours, use **Settings › Plugins › Load a plugin folder…**; to give it to someone, zip the folder and they install it with **Install from file…**.
+A plugin is a folder with a `textus-plugin.json` and its code, run in a sandbox. Start from [`template/`](template/), a small plugin that works; the guide is [Writing plugins](https://github.com/CatVinci-Studio/Textus/blob/main/docs/dev/writing-plugins.md) in the Textus repository, and the plugins here are complete examples. To try yours, use **Settings › Extensions › Plugins › Load a plugin folder…**; to publish it, **Export for Publishing…** on its page lays it out as a repository of its own with a release workflow.
 
-To list yours in the market beside the official ones - a plugin, or a skill in [`skills/`](skills/) - see [Listing in the Textus market](LISTING.md).
+Plugins from other repositories are listed through [`community/`](community/): one file naming the repository and version, reviewed on its pull request. See [Listing in the Textus market](LISTING.md) - for a skill in [`skills/`](skills/) too.
 
 ## Developing these plugins
 
@@ -61,4 +61,4 @@ MIT - see [LICENSE](LICENSE). The libraries copied into the packages keep their 
 
 每个插件运行前都会先请求它需要的权限，之后可以在设置 › 插件里它自己的页面里收回。
 
-写插件请看 Textus 仓库里的 [Writing plugins](https://github.com/CatVinci-Studio/Textus/blob/main/docs/dev/writing-plugins.md)，这里的插件都是完整的例子。自己的插件可以用**设置 › 插件 › 载入插件文件夹…**试用，打成 zip 后别人用**从文件安装…**安装。想把你的插件或技能上架到市场，请看 [上架说明](LISTING.md#中文说明)。
+写插件可以从 [`template/`](template/) 这个能直接运行的小插件开始，说明见 Textus 仓库里的 [Writing plugins](https://github.com/CatVinci-Studio/Textus/blob/main/docs/dev/writing-plugins.md)，这里的插件都是完整的例子。自己的插件用**设置 › 扩展 › 插件 › 载入插件文件夹…**试用；要发布，在它的页面点**导出以发布…**，会得到一个带自动发布流程的独立仓库。别人的插件通过 [`community/`](community/) 上架：一个写明仓库和版本的文件，PR 上自动审查。详见 [上架说明](LISTING.md#中文说明)。

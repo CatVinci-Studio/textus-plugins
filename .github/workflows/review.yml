@@ -1,0 +1,49 @@
+name: review
+
+# A pull request that lists a plugin from another repository, or a new
+# version of one (community/<id>.json): each listing it changes is
+# reviewed (scripts/review.mjs) and the result posted on the pull request.
+# A failed check fails the run; warnings wait for a maintainer.
+on:
+  pull_request_target:
+    paths: ["community/**"]
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      # The base branch's scripts, never the pull request's: a listing
+      # can't change how it is reviewed.
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: The listings it changes
+        run: |
+          set -euo pipefail
+          git fetch origin "pull/${{ github.event.pull_request.number }}/head:pr"
+          mkdir -p listed
+          for path in $(git diff --name-only --diff-filter=AM origin/main...pr -- 'community/*.json'); do
+            git show "pr:$path" > "listed/$(basename "$path")"
+          done
+          ls listed
+      - name: Review
+        id: review
+        run: node scripts/review.mjs listed/*.json
+        continue-on-error: true
+      - name: Post the result
+        if: always()
+        run: gh pr comment "${{ github.event.pull_request.number }}" --body-file review.md
+      - name: Fail on a failed check
+        if: steps.review.outcome == 'failure'
+        run: exit 1

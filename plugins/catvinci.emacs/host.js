@@ -65,6 +65,9 @@ var KEYS = Object.keys(MOTIONS)
     "ctrl+_",
     "ctrl+x",
     "ctrl+d",
+    "alt+u",
+    "alt+l",
+    "alt+c",
   ]);
 
 /** The keys taken. On Windows and Linux, Ctrl chords are the app's and
@@ -85,12 +88,12 @@ function taken() {
 }
 
 function capture() {
-  if (!on) return textus.editor.captureKeys(null);
-  return textus.editor.captureKeys({ mode: "some", keys: taken() });
+  if (!on) return textus.editor.keys.capture(null);
+  return textus.editor.keys.capture({ mode: "some", keys: taken() });
 }
 
 function exec(op) {
-  return textus.editor.exec(op);
+  return textus.editor.keys.exec(op);
 }
 
 function showStatus() {
@@ -102,7 +105,7 @@ function showStatus() {
   var text = "Emacs";
   if (mark) text += " · " + textus.l10n.t("mark");
   if (prefix) text += " C-x-";
-  status = textus.window.setStatusItem("mode", {
+  status = textus.ui.statusItem("mode", {
     text: text,
     tooltip: textus.l10n.t("statusTip"),
     command: "catvinci.emacs.toggle",
@@ -163,7 +166,7 @@ async function key(name) {
       capture();
       showStatus();
     } else if (name === "ctrl+s")
-      await textus.commands.executeCommand("textus.save");
+      await textus.commands.execute("textus.save");
     lastWasKill = false;
     return;
   }
@@ -245,10 +248,37 @@ async function key(name) {
       case "ctrl+_":
         await exec({ op: "undo" });
         break;
+      // M-u, M-l, M-c: the word from the caret upper-cased, lower-cased
+      // or capitalized; the caret ends after it.
+      case "alt+u":
+      case "alt+l":
+      case "alt+c":
+        await recaseWord(name);
+        break;
     }
   }
   lastWasKill = killing;
   if (!yanking) yanked = -1;
+}
+
+async function recaseWord(name) {
+  await exec({ op: "move", unit: "wordEnd", select: true });
+  await exec({ op: "move", unit: "rightInsert", select: true });
+  var copied = await exec({ op: "copy" });
+  var text = (copied && copied.text) || "";
+  if (!text || text.indexOf("\n") >= 0) {
+    await exec({ op: "collapse", to: "head" });
+    return;
+  }
+  var next =
+    name === "alt+u"
+      ? text.toUpperCase()
+      : name === "alt+l"
+        ? text.toLowerCase()
+        : text.replace(/\p{L}[\p{L}\p{N}']*/u, function (word) {
+            return word[0].toUpperCase() + word.slice(1).toLowerCase();
+          });
+  await exec({ op: "insertText", text: next });
 }
 
 var queue = Promise.resolve();
@@ -271,8 +301,8 @@ exports.activate = async function () {
   textus.settings.onDidChange(function () {
     readSettings().then(capture);
   });
-  textus.editor.onKey(handle);
-  textus.commands.registerCommand("catvinci.emacs.toggle", function () {
+  textus.editor.keys.onKey(handle);
+  textus.commands.register("catvinci.emacs.toggle", function () {
     on = !on;
     mark = false;
     prefix = "";
@@ -284,5 +314,5 @@ exports.activate = async function () {
 };
 
 exports.deactivate = function () {
-  textus.editor.captureKeys(null);
+  textus.editor.keys.capture(null);
 };

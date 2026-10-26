@@ -1,0 +1,108 @@
+{
+  "id": "catvinci.markdown-lint",
+  "name": "%name%",
+  "version": "0.1.0",
+  "publisher": "catvinci",
+  "author": "CatVinci Studio",
+  "description": "%description%",
+  "license": "MIT",
+  "repository": "https://github.com/CatVinci-Studio/textus-plugins",
+  "engines": {
+    "textus": ">=1.3.0-beta.2"
+  },
+  "main": ["lib/markdownlint.js", "host.js"],
+  "permissions": ["editor.read", "editor.write"],
+  "activationEvents": ["onEditor"],
+  "contributes": {
+    "commands": [
+      {
+        "command": "catvinci.markdown-lint.fix",
+        "title": "%fix%"
+      }
+    ],
+    "menus": {
+      "editor/context": [
+        {
+          "command": "catvinci.markdown-lint.fix"
+        }
+      ],
+      "app/plugins": [
+        {
+          "command": "catvinci.markdown-lint.fix"
+        }
+      ]
+    }
+  },
+  "l10n": {
+    "en": {
+      "name": "Markdown Lint",
+      "description": "Underlines Markdown that breaks common style rules, and fixes what it can in one go.",
+      "fix": "Fix Markdown",
+      "fixed": "Fixed {0} blocks.",
+      "clean": "Nothing to fix."
+    },
+    "zh": {
+      "name": "Markdown 检查",
+      "description": "给不合常见规范的 Markdown 画上波浪线，能修的一键修好。",
+      "fix": "修正 Markdown",
+      "fixed": "已修正 {0} 处。",
+      "clean": "没有需要修正的地方。"
+    },
+    "zh-Hant": {
+      "name": "Markdown 檢查",
+      "description": "為不合常見規範的 Markdown 畫上波浪線，能修的一鍵修好。",
+      "fix": "修正 Markdown",
+      "fixed": "已修正 {0} 處。",
+      "clean": "沒有需要修正的地方。"
+    },
+    "ja": {
+      "name": "Markdown チェック",
+      "description": "よくあるスタイル規則に合わない Markdown に波線を引き、直せるものは一度に直します。",
+      "fix": "Markdown を修正",
+      "fixed": "{0} か所を修正しました。",
+      "clean": "直すところはありません。"
+    },
+    "ko": {
+      "name": "Markdown 검사",
+      "description": "흔한 스타일 규칙에 어긋나는 Markdown에 물결선을 긋고, 고칠 수 있는 것은 한 번에 고칩니다.",
+      "fix": "Markdown 고치기",
+      "fixed": "{0}곳을 고쳤습니다.",
+      "clean": "고칠 것이 없습니다."
+    },
+    "es": {
+      "name": "Revisión de Markdown",
+      "description": "Subraya el Markdown que rompe reglas de estilo comunes y corrige de una vez lo que puede.",
+      "fix": "Corregir Markdown",
+      "fixed": "{0} bloques corregidos.",
+      "clean": "Nada que corregir."
+    },
+    "fr": {
+      "name": "Vérification Markdown",
+      "description": "Souligne le Markdown qui enfreint les règles de style courantes et corrige d’un coup ce qu’il peut.",
+      "fix": "Corriger le Markdown",
+      "fixed": "{0} blocs corrigés.",
+      "clean": "Rien à corriger."
+    },
+    "de": {
+      "name": "Markdown-Prüfung",
+      "description": "Unterstreicht Markdown, das gängige Stilregeln verletzt, und behebt, was es kann, in einem Schritt.",
+      "fix": "Markdown korrigieren",
+      "fixed": "{0} Blöcke korrigiert.",
+      "clean": "Nichts zu korrigieren."
+    },
+    "ru": {
+      "name": "Проверка Markdown",
+      "description": "Подчёркивает Markdown, нарушающий общие правила оформления, и исправляет всё, что может, за раз.",
+      "fix": "Исправить Markdown",
+      "fixed": "Исправлено блоков: {0}.",
+      "clean": "Исправлять нечего."
+    },
+    "pt": {
+      "name": "Verificação de Markdown",
+      "description": "Sublinha o Markdown que quebra regras de estilo comuns e corrige de uma vez o que puder.",
+      "fix": "Corrigir Markdown",
+      "fixed": "{0} blocos corrigidos.",
+      "clean": "Nada a corrigir."
+    }
+  }
+}

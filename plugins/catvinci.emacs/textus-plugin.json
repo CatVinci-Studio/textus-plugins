@@ -1,18 +1,22 @@
 {
   "id": "catvinci.emacs",
   "name": "%name%",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "publisher": "catvinci",
   "author": "CatVinci Studio",
   "description": "%description%",
   "license": "MIT",
   "repository": "https://github.com/CatVinci-Studio/textus-plugins",
   "engines": {
-    "textus": "^1.3.0"
+    "textus": ">=1.3.0-beta.2"
   },
   "main": "host.js",
-  "activationEvents": ["onStartupFinished"],
-  "permissions": ["editor.input"],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "permissions": [
+    "editor.input"
+  ],
   "contributes": {
     "commands": [
       {

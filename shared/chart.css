@@ -1,0 +1,25 @@
+/* A chart code block's page (chart-page.js): the chart the width of the
+   document, its mistakes under it in the theme's own colours. */
+html,
+body {
+  margin: 0;
+  background: transparent;
+  color: var(--editor-text);
+  font-family: var(--font-sans);
+}
+#chart {
+  width: 100%;
+  overflow: auto;
+}
+#chart > svg,
+#chart > canvas {
+  display: block;
+  max-width: 100%;
+}
+#chart-problem {
+  margin: var(--space-2) 0;
+  color: var(--danger);
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  white-space: pre-wrap;
+}

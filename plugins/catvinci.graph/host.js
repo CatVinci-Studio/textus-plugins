@@ -1,7 +1,11 @@
-// Graph View: the open folder's documents and the links between them
-// (links.js builds the graph), drawn as a graph in a tab of its own, and
-// around the document in front in the sidebar. Read again, a moment
-// after, whenever a document is saved or the folder changes.
+// Graph View: the open folder's documents and the links between them,
+// from what Textus knows of the folder (textus.metadata - links.js makes
+// the graph), drawn in a tab of its own and around the document in front
+// in the sidebar. Drawn again, a moment after, whenever the folder's
+// documents change.
+/** What activate was given: the plugin's storage and own files. */
+let ctx;
+
 /* global graphLinks */
 let graph = null;
 let building = null;
@@ -10,10 +14,9 @@ const views = new Set();
 let local = null;
 
 async function build() {
-  const root = await textus.workspace.rootPath();
+  const root = await textus.files.root();
   if (!root) return null;
-  const { documents } = await textus.workspace.readDocuments();
-  return graphLinks.buildGraph(documents);
+  return graphLinks.graphFromMetadata(await textus.metadata.all());
 }
 
 async function current() {
@@ -42,14 +45,14 @@ async function sendGlobal(view) {
   view.postMessage({
     type: "graph",
     graph: shown,
-    focus: await textus.document.getPath(),
+    focus: await textus.editor.getPath(),
   });
 }
 
 async function sendLocal() {
   if (!local) return;
   const g = await current();
-  const focus = await textus.document.getPath();
+  const focus = await textus.editor.getPath();
   if (!g || !focus || !g.nodes.some((n) => n.id === focus))
     return local.postMessage({
       type: "graph",
@@ -81,38 +84,39 @@ function wire(webview, isLocal) {
       else await sendGlobal(webview);
     }
     if (message.type === "open" && message.path)
-      await textus.window.openFile(message.path);
+      await textus.layout.open(message.path);
     if (message.type === "full")
-      await textus.window.openView("catvinci.graph.global");
+      await textus.layout.openView("catvinci.graph.global");
   });
 }
 
 async function page(webview, file) {
-  const html = await textus.plugin.readText(file);
+  const html = await ctx.plugin.readText(file);
   webview.html = html.replace("{{lang}}", textus.env.language);
 }
 
-exports.activate = function () {
-  textus.workspace.onDidSaveDocument(changed);
-  textus.workspace.onDidChangeRoot(changed);
+exports.activate = function (context) {
+  ctx = context;
+  textus.metadata.onDidChange(changed);
+  textus.files.onDidChangeRoot(changed);
   textus.settings.onDidChange(changed);
-  textus.document.onDidChangeActive(function () {
+  textus.editor.onDidChangeActive(function () {
     sendLocal().catch(() => {});
     for (const view of views) sendGlobal(view).catch(() => {});
   });
-  textus.commands.registerCommand("catvinci.graph.open", function () {
-    return textus.window.openView("catvinci.graph.global");
+  textus.commands.register("catvinci.graph.open", function () {
+    return textus.layout.openView("catvinci.graph.global");
   });
-  textus.window.registerWebviewViewProvider("catvinci.graph.global", {
-    resolveWebviewView: async function (webview) {
+  textus.views.registerWebview("catvinci.graph.global", {
+    resolve: async function (webview) {
       views.add(webview);
       webview.onDidDispose(() => views.delete(webview));
       wire(webview, false);
       await page(webview, "global.html");
     },
   });
-  textus.window.registerWebviewViewProvider("catvinci.graph.local", {
-    resolveWebviewView: async function (webview) {
+  textus.views.registerWebview("catvinci.graph.local", {
+    resolve: async function (webview) {
       local = webview;
       webview.onDidDispose(function () {
         if (local === webview) local = null;

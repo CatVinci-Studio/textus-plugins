@@ -14,17 +14,18 @@
 
 ## Plugins
 
-A plugin is a folder in [`plugins/`](plugins/) with a `textus-plugin.json` manifest ([Writing plugins](https://github.com/CatVinci-Studio/Textus/blob/main/docs/dev/writing-plugins.md)).
+A plugin is a folder with a `textus-plugin.json` manifest ([Writing plugins](https://github.com/CatVinci-Studio/Textus/blob/main/docs/dev/writing-plugins.md)). CatVinci Studio's own are in [`plugins/`](plugins/) here; yours lives in a repository of your own, and a one-file listing in [`community/`](community/) points to it.
 
 - **Permissions it needs, and no more.** Each permission in the manifest is asked for before the plugin runs; one that the plugin's purpose doesn't explain is a reason not to list it. `network:` names the hosts it talks to - `network:*` only for a plugin whose purpose is the open web (a web view).
 - **Works offline,** apart from what plainly needs the network (Zotero's local API, a web page), and says so when it can't reach something.
 - **English and Chinese.** Its `l10n` has at least `en` and `zh`; Textus falls back to English for the other languages.
 - **Tested.** Its flows run in Textus's e2e tests or yours, and `npm run check` passes.
 - **Versioned.** A change ships as a new `version`; a published version never changes.
+- **Its own source.** No build step between the repository and the zip: the zip holds exactly the files of the tag it was released from, so anyone can read what they install. Bundled libraries are named with their source and version.
 
 ## Skills
 
-A skill is one Markdown file in [`skills/`](skills/), named after the skill (`press-release.md`), with front matter like the built-in skills' ([AGENTS.md › Skills](https://github.com/CatVinci-Studio/Textus/blob/main/AGENTS.md)): `name` (the file's name), `description` (what it does and when to use it - Textus AI reads it to decide), and `metadata` with `textus-version`, `textus-invocation` and `textus-category`, and `textus-aliases-zh` and the like for its names in other languages.
+A skill is one Markdown file in [`skills/`](skills/), named after the skill (`press-release.md`), with front matter like the built-in skills' ([AGENTS.md › Skills](https://github.com/CatVinci-Studio/Textus/blob/main/AGENTS.md)): `name` (the file's name), `description` (what it does and when to use it - Textus AI reads it to decide), and `metadata` with `textus-version`, `textus-invocation`, `textus-category` and `textus-modes` - the panel modes it works in, one or more of `write`, `review` and `create` - and, for each UI language, `textus-label-<code>` and `textus-hint-<code>` (its name and one line on what it does) and `textus-aliases-<code>` (other words typed after `/`).
 
 - **A procedure, not a one-off.** A kind of task people do again and again, with the steps that make it come out right.
 - **Never invents.** A skill that writes from the user's material says what to do when the material is missing a detail (leave a placeholder, ask) - never to make it up.
@@ -36,7 +37,24 @@ Themes are shared in [textus-themes](https://github.com/CatVinci-Studio/textus-t
 
 ## How to list yours
 
-1. Open a pull request here that adds your plugin's folder or your skill's file - with a line in the README's table for a plugin.
+### A plugin
+
+1. In Textus, open your plugin's page in **Settings › Extensions › Plugins** (or the card under the chat that made it) and choose **Export for Publishing…**. You get a folder ready to be a repository: your plugin under your name, a README, a LICENSE and a release workflow.
+2. Make it a GitHub repository, then push a version tag (`git tag v0.1.0 && git push origin v0.1.0`). The workflow publishes `<id>-<version>.zip` as a release.
+3. Open a pull request here adding `community/<id>.json` - your repository and the version ([format](community/README.md)).
+4. The review runs on the pull request and posts what it found:
+   - **the package** - its manifest, id and version, size, no programs or native libraries;
+   - **its source** - every file in the zip is the tagged repository's, byte for byte;
+   - **permissions** - each one listed; new ones since the last version, and broad ones (`network:*`, `files.write`, `editor.write`), wait for a person;
+   - **the code** - no `eval`, no code loaded from the web, no keys written in, nothing minified that isn't a named library;
+   - **what comes with it** - README, USAGE, an open-source LICENSE, English and Chinese strings, no name that borrows "CatVinci" or "Official".
+5. A maintainer tries it in Textus, adds the reviewed zip's `sha256` to the file and merges. The release workflow copies that zip here and **Get more** lists it.
+
+Each new version is a pull request changing `version` in the same file, reviewed the same way. Passing the review doesn't make a plugin safe on its own: Textus runs every plugin in a sandbox and asks before each permission. A plugin taken down goes in [`removed.json`](removed.json).
+
+### A skill
+
+1. Open a pull request here that adds your skill's file.
 2. CI checks it (`npm run check`); a maintainer reviews it, usually within a week, trying it in Textus.
 3. Once merged, the release workflow publishes it, and it is in **Get more** for everyone. Only what CatVinci Studio makes is marked **Official**.
 
@@ -58,17 +76,18 @@ Textus 的 **设置 › 扩展 › 获取更多** 里有三类东西：插件和
 
 ### 插件
 
-插件是 [`plugins/`](plugins/) 下的一个文件夹，带 `textus-plugin.json` 清单（见 [Writing plugins](https://github.com/CatVinci-Studio/Textus/blob/main/docs/dev/writing-plugins.md)）。
+插件是一个带 `textus-plugin.json` 清单的文件夹（见 [Writing plugins](https://github.com/CatVinci-Studio/Textus/blob/main/docs/dev/writing-plugins.md)）。CatVinci Studio 自己的插件在本仓库的 [`plugins/`](plugins/) 里；你的插件放在你自己的仓库，在 [`community/`](community/) 里加一个文件指向它。
 
 - **只要需要的权限**：清单里的每个权限都会在运行前问用户；用途解释不了的权限就是不上架的理由。`network:` 写明要访问的主机，只有以开放网页为用途的插件（网页视图）才能用 `network:*`。
 - **能离线用**：除了明显要联网的功能（Zotero 本地接口、网页），连不上时要告诉用户。
 - **中英文**：`l10n` 至少有 `en` 和 `zh`，其他语言 Textus 会用英文。
 - **有测试**：流程在 Textus 的 e2e 测试或你自己的测试里跑过，`npm run check` 通过。
 - **有版本**：改动发新的 `version`，已发布的版本不再改。
+- **就是源码**：仓库到 zip 之间没有构建步骤，zip 里的文件和发布它的那个标签一模一样，谁都能看到自己装的是什么。打包进来的库要写明来源和版本。
 
 ### 技能
 
-技能是 [`skills/`](skills/) 下的一个 Markdown 文件，以技能名命名（`press-release.md`），前置信息和内置技能一样：`name`（与文件名相同）、`description`（做什么、什么时候用——Textus AI 据此决定何时使用），`metadata` 里有 `textus-version`、`textus-invocation`、`textus-category`，以及 `textus-aliases-zh` 等其他语言的名字。
+技能是 [`skills/`](skills/) 下的一个 Markdown 文件，以技能名命名（`press-release.md`），前置信息和内置技能一样：`name`（与文件名相同）、`description`（做什么、什么时候用——Textus AI 据此决定何时使用），`metadata` 里有 `textus-version`、`textus-invocation`、`textus-category` 和 `textus-modes`（适用的模式：`write`、`review`、`create` 中的一个或几个），以及每种界面语言的 `textus-label-<code>`、`textus-hint-<code>`（名字和一句说明）和 `textus-aliases-<code>`（`/` 后还能输入的别名）。
 
 - **是一套做法，不是一次性要求**：大家反复会做的一类事，以及把它做好的步骤。
 - **不编造**：根据用户材料写东西的技能，要说明材料缺细节时怎么办（留占位、去问），绝不让 AI 编。
@@ -78,10 +97,23 @@ Textus 的 **设置 › 扩展 › 获取更多** 里有三类东西：插件和
 
 主题在 [textus-themes](https://github.com/CatVinci-Studio/textus-themes#中文说明) 分享：在画廊 issue 下发一条评论即可，不用 PR。那里的规则（一个独立样式表、不加载远程资源、不用脚本钩子）照常适用。
 
+不再符合这些规则的内容——Textus 更新后坏了没修，或被发现做了说明以外的事——会被下架，并告诉作者原因。
+
 ### 怎么上架
 
-1. 在本仓库开一个 PR，加入你的插件文件夹或技能文件；插件还要在 README 的表格里加一行。
-2. CI 会检查（`npm run check`），维护者会在 Textus 里试用并审核，通常一周内。
-3. 合并后发布流程会自动发布，所有人都能在 **获取更多** 里看到。只有 CatVinci Studio 自己做的才会标 **官方**。
+**插件**
 
-不再符合这些规则的内容——Textus 更新后坏了没修，或被发现做了说明以外的事——会被下架，并告诉作者原因。
+1. 在 Textus 的 **设置 › 扩展 › 插件** 打开你的插件页（或生成它的那段对话下的卡片），点 **导出以发布…**，会得到一个可以直接做成仓库的文件夹：改成你名字的插件、README、LICENSE 和发布流程。
+2. 把它建成 GitHub 仓库，推送一个版本标签（`git tag v0.1.0 && git push origin v0.1.0`），发布流程会把 `<id>-<version>.zip` 发成一个 release。
+3. 在本仓库提一个 PR，加上 `community/<id>.json`，写明你的仓库和版本（[格式](community/README.md)）。
+4. PR 上会自动审查并贴出结果：
+   - **包**：清单、id 和版本、大小，不能有可执行文件和原生库；
+   - **源码一致**：zip 里每个文件都和仓库那个标签的文件逐字节相同；
+   - **权限**：列出全部权限；比上一版多出的、范围大的（`network:*`、`files.write`、`editor.write`）要等人看；
+   - **代码**：不能用 `eval`、不能从网上加载代码、不能写死密钥，压缩过的代码只能是写明来源的库；
+   - **附带内容**：README、USAGE、开源许可证、中英文文字，名字不能借用「CatVinci」或「Official」。
+5. 维护者在 Textus 里试用，把审查过的 zip 的 `sha256` 填进文件后合并。发布流程把这个 zip 复制到本仓库，**获取更多** 里就能看到。
+
+之后每个新版本都是改同一个文件里 `version` 的 PR，同样审查。审查通过不等于绝对安全：Textus 让每个插件在沙箱里运行，每个权限都要用户同意。被下架的插件写进 [`removed.json`](removed.json)。
+
+**技能**：在本仓库提 PR 加上技能文件；CI 检查（`npm run check`），维护者一般一周内在 Textus 里试用后合并，之后所有人都能在 **获取更多** 里看到。只有 CatVinci Studio 做的会标「官方」。

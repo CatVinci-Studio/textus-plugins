@@ -82,6 +82,46 @@
     return { nodes: nodes.concat([...missing.values()]), edges: edges };
   }
 
+  /**
+   * The graph from what Textus knows of the folder (textus.metadata.all):
+   * its links already resolved. A link that leads nowhere, written as a
+   * name - a [[wiki link]] - is a node marked missing, as above.
+   */
+  function graphFromMetadata(docs) {
+    const nodes = docs.map((doc) => ({
+      id: doc.path,
+      name: stem(doc.path),
+      rel: doc.rel,
+      missing: false,
+    }));
+    const edges = [];
+    const seen = new Set();
+    const missing = new Map();
+    const link = (from, to) => {
+      if (from === to) return;
+      const key = from < to ? from + "\n" + to : to + "\n" + from;
+      if (seen.has(key)) return;
+      seen.add(key);
+      edges.push({ source: from, target: to });
+    };
+    docs.forEach((doc) => {
+      for (const l of doc.links) {
+        if (l.resolved) {
+          link(doc.path, l.resolved);
+          continue;
+        }
+        const name = l.target.split("#")[0].trim();
+        if (!name || /^[a-z][a-z0-9+.-]*:/i.test(name) || /[\\/.]/.test(name))
+          continue;
+        const id = "missing:" + name.toLowerCase();
+        if (!missing.has(id))
+          missing.set(id, { id: id, name: name, rel: null, missing: true });
+        link(doc.path, id);
+      }
+    });
+    return { nodes: nodes.concat([...missing.values()]), edges: edges };
+  }
+
   /** The part of `graph` within `depth` links of `focus`, either way. */
   function neighbourhood(graph, focus, depth) {
     const near = new Set([focus]);
@@ -108,5 +148,9 @@
     };
   }
 
-  root.graphLinks = { buildGraph: buildGraph, neighbourhood: neighbourhood };
+  root.graphLinks = {
+    buildGraph: buildGraph,
+    graphFromMetadata: graphFromMetadata,
+    neighbourhood: neighbourhood,
+  };
 })(typeof window !== "undefined" ? window : globalThis);

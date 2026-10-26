@@ -6,6 +6,26 @@
   $("title").textContent = t("title");
   $("new").textContent = t("new");
   $("empty").textContent = t("empty");
+  $("filter").placeholder = t("search");
+  $("filter").setAttribute("aria-label", t("search"));
+  $("undo-text").textContent = t("deleted");
+  $("undo").textContent = t("undo");
+  // The search shows once there are enough notes to look through.
+  const SEARCH_FROM = 6;
+  let all = [];
+  $("filter").addEventListener("input", () => render(all));
+  // A deleted note can be had back for a few seconds.
+  let undoTimer = 0;
+  function offerUndo() {
+    $("undo-bar").hidden = false;
+    clearTimeout(undoTimer);
+    undoTimer = setTimeout(() => ($("undo-bar").hidden = true), 6000);
+  }
+  $("undo").onclick = () => {
+    clearTimeout(undoTimer);
+    $("undo-bar").hidden = true;
+    api.postMessage({ type: "undo" });
+  };
   const timers = new Map();
   // An edit still waiting out its pause goes first, so a button pressed
   // right after typing acts on every word typed.
@@ -35,15 +55,25 @@
     b.onclick = () => {
       flush();
       api.postMessage({ type: type, id: id });
+      if (type === "delete") offerUndo();
     };
     return b;
   }
 
   function render(notes) {
+    all = notes;
+    $("filter").hidden = notes.length < SEARCH_FROM;
+    const words = $("filter").hidden
+      ? []
+      : $("filter").value.toLowerCase().split(/\s+/).filter(Boolean);
+    if (words.length)
+      notes = notes.filter((n) =>
+        words.every((w) => n.text.toLowerCase().includes(w)),
+      );
     const list = $("notes");
     // A note being typed in keeps its box, caret and all.
     const typing = document.activeElement && document.activeElement.dataset.id;
-    $("empty").hidden = notes.length > 0;
+    $("empty").hidden = all.length > 0;
     const keep = new Set(notes.map((n) => n.id));
     for (const li of [...list.children])
       if (!keep.has(li.dataset.id)) li.remove();
@@ -55,6 +85,14 @@
         const area = document.createElement("textarea");
         area.dataset.id = note.id;
         area.placeholder = t("placeholder");
+        // Left empty, a new note goes: nothing was noted.
+        area.addEventListener("blur", () => {
+          if (!area.value.trim())
+            setTimeout(() => {
+              if (document.activeElement !== area && !area.value.trim())
+                api.postMessage({ type: "drop", id: note.id });
+            }, 150);
+        });
         area.addEventListener("input", () => {
           clearTimeout(timers.get(note.id));
           timers.set(

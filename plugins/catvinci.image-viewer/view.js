@@ -7,6 +7,7 @@
   for (const [id, key] of [
     ["zoom-out", "zoomOut"],
     ["zoom-in", "zoomIn"],
+    ["rotate", "rotate"],
   ])
     for (const attr of ["aria-label", "title"])
       $(id).setAttribute(attr, api.t(key));
@@ -14,6 +15,9 @@
   const image = $("image");
   let zoom = 1;
   let fit = true;
+  // A quarter turn at a time, for a photo taken on its side - the view
+  // only, the file stays as it is.
+  let turns = 0;
 
   $("fit").textContent = t("fit");
   $("actual").textContent = t("actual");
@@ -25,6 +29,9 @@
   function show() {
     stage.classList.toggle("fit", fit);
     image.style.width = fit ? "" : image.naturalWidth * zoom + "px";
+    image.style.transform = turns ? "rotate(" + turns * 90 + "deg)" : "";
+    // On its side, fitting means fitting the other way round.
+    stage.classList.toggle("sideways", turns % 2 === 1);
     $("zoom").textContent = Math.round((fit ? scaleNow() : zoom) * 100) + "%";
   }
   function setZoom(next) {
@@ -36,10 +43,61 @@
   $("zoom-in").onclick = () => setZoom(current() * 1.25);
   $("zoom-out").onclick = () => setZoom(current() / 1.25);
   $("actual").onclick = () => setZoom(1);
-  $("fit").onclick = () => {
+  const toFit = () => {
     fit = true;
     show();
   };
+  $("fit").onclick = toFit;
+  $("rotate").onclick = () => {
+    turns = (turns + 1) % 4;
+    show();
+  };
+  // Double-click: fit, or the picture's own size where it was clicked.
+  stage.addEventListener("dblclick", (event) => {
+    if (!fit) return toFit();
+    const box = image.getBoundingClientRect();
+    const x = (event.clientX - box.left) / box.width;
+    const y = (event.clientY - box.top) / box.height;
+    setZoom(1);
+    stage.scrollLeft = x * stage.scrollWidth - stage.clientWidth / 2;
+    stage.scrollTop = y * stage.scrollHeight - stage.clientHeight / 2;
+  });
+  // Bigger than the tab: drag it around.
+  let drag = null;
+  stage.addEventListener("pointerdown", (event) => {
+    if (fit || event.button !== 0) return;
+    drag = {
+      x: event.clientX,
+      y: event.clientY,
+      left: stage.scrollLeft,
+      top: stage.scrollTop,
+    };
+    stage.setPointerCapture(event.pointerId);
+    stage.classList.add("dragging");
+  });
+  stage.addEventListener("pointermove", (event) => {
+    if (!drag) return;
+    stage.scrollLeft = drag.left - (event.clientX - drag.x);
+    stage.scrollTop = drag.top - (event.clientY - drag.y);
+  });
+  const endDrag = () => {
+    drag = null;
+    stage.classList.remove("dragging");
+  };
+  stage.addEventListener("pointerup", endDrag);
+  stage.addEventListener("pointercancel", endDrag);
+  // + and - zoom, 0 is the picture's own size, F fits it, R turns it.
+  document.addEventListener("keydown", (event) => {
+    if (event.metaKey || event.ctrlKey || event.altKey) return;
+    const key = event.key.toLowerCase();
+    if (key === "+" || key === "=") setZoom(current() * 1.25);
+    else if (key === "-") setZoom(current() / 1.25);
+    else if (key === "0") setZoom(1);
+    else if (key === "f") toFit();
+    else if (key === "r") $("rotate").click();
+    else return;
+    event.preventDefault();
+  });
   stage.addEventListener(
     "wheel",
     (event) => {

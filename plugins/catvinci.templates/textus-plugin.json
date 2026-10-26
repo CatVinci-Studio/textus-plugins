@@ -1,0 +1,216 @@
+{
+  "id": "catvinci.templates",
+  "name": "%name%",
+  "version": "0.1.0",
+  "publisher": "catvinci",
+  "author": "CatVinci Studio",
+  "description": "%description%",
+  "license": "MIT",
+  "repository": "https://github.com/CatVinci-Studio/textus-plugins",
+  "engines": {
+    "textus": ">=1.3.0-beta.2"
+  },
+  "main": "host.js",
+  "permissions": ["files.read", "files.write", "editor.read", "editor.write"],
+  "contributes": {
+    "commands": [
+      {
+        "command": "catvinci.templates.new",
+        "title": "%new%"
+      },
+      {
+        "command": "catvinci.templates.insert",
+        "title": "%insert%"
+      },
+      {
+        "command": "catvinci.templates.save",
+        "title": "%save%"
+      }
+    ],
+    "menus": {
+      "app/plugins": [
+        {
+          "command": "catvinci.templates.new"
+        },
+        {
+          "command": "catvinci.templates.insert"
+        },
+        {
+          "command": "catvinci.templates.save"
+        }
+      ],
+      "editor/slash": [
+        {
+          "command": "catvinci.templates.insert"
+        }
+      ],
+      "file/context": [
+        {
+          "command": "catvinci.templates.new"
+        }
+      ]
+    }
+  },
+  "l10n": {
+    "en": {
+      "name": "Templates",
+      "description": "New documents and snippets from templates of your own, with the date, time and title filled in.",
+      "new": "New from Template…",
+      "insert": "Insert Template…",
+      "save": "Save as Template…",
+      "pick": "Choose a template",
+      "docName": "Document name",
+      "templateName": "Template name",
+      "needsFolder": "Open a folder first: the new document goes in it.",
+      "saved": "Saved as template “{0}”.",
+      "meeting": "Meeting Notes",
+      "attendees": "Attendees",
+      "agenda": "Agenda",
+      "actions": "Actions"
+    },
+    "zh": {
+      "name": "模板",
+      "description": "用自己的模板新建文档或插入片段，自动填好日期、时间和标题。",
+      "new": "从模板新建…",
+      "insert": "插入模板…",
+      "save": "存为模板…",
+      "pick": "选择模板",
+      "docName": "文档名称",
+      "templateName": "模板名称",
+      "needsFolder": "请先打开一个文件夹，新文档会放在里面。",
+      "saved": "已存为模板「{0}」。",
+      "meeting": "会议记录",
+      "attendees": "参加者",
+      "agenda": "议程",
+      "actions": "待办"
+    },
+    "zh-Hant": {
+      "name": "範本",
+      "description": "用自己的範本新增文件或插入片段，自動填好日期、時間和標題。",
+      "new": "從範本新增…",
+      "insert": "插入範本…",
+      "save": "存為範本…",
+      "pick": "選擇範本",
+      "docName": "文件名稱",
+      "templateName": "範本名稱",
+      "needsFolder": "請先打開一個資料夾，新文件會放在裡面。",
+      "saved": "已存為範本「{0}」。",
+      "meeting": "會議記錄",
+      "attendees": "參加者",
+      "agenda": "議程",
+      "actions": "待辦"
+    },
+    "ja": {
+      "name": "テンプレート",
+      "description": "自分のテンプレートから文書や断片を作ります。日付・時刻・表題は自動で入ります。",
+      "new": "テンプレートから新規作成…",
+      "insert": "テンプレートを挿入…",
+      "save": "テンプレートとして保存…",
+      "pick": "テンプレートを選択",
+      "docName": "文書名",
+      "templateName": "テンプレート名",
+      "needsFolder": "先にフォルダを開いてください。新しい文書はそこに作られます。",
+      "saved": "テンプレート「{0}」として保存しました。",
+      "meeting": "議事録",
+      "attendees": "出席者",
+      "agenda": "議題",
+      "actions": "アクション"
+    },
+    "ko": {
+      "name": "템플릿",
+      "description": "내 템플릿으로 새 문서나 조각을 만들고, 날짜·시간·제목을 채워 넣습니다.",
+      "new": "템플릿으로 새로 만들기…",
+      "insert": "템플릿 넣기…",
+      "save": "템플릿으로 저장…",
+      "pick": "템플릿 고르기",
+      "docName": "문서 이름",
+      "templateName": "템플릿 이름",
+      "needsFolder": "먼저 폴더를 여세요. 새 문서는 그 안에 만들어집니다.",
+      "saved": "템플릿 “{0}”(으)로 저장했습니다.",
+      "meeting": "회의록",
+      "attendees": "참석자",
+      "agenda": "안건",
+      "actions": "할 일"
+    },
+    "es": {
+      "name": "Plantillas",
+      "description": "Documentos y fragmentos nuevos a partir de tus plantillas, con fecha, hora y título rellenados.",
+      "new": "Nuevo desde plantilla…",
+      "insert": "Insertar plantilla…",
+      "save": "Guardar como plantilla…",
+      "pick": "Elige una plantilla",
+      "docName": "Nombre del documento",
+      "templateName": "Nombre de la plantilla",
+      "needsFolder": "Abre primero una carpeta: el documento nuevo va en ella.",
+      "saved": "Guardada como plantilla «{0}».",
+      "meeting": "Notas de reunión",
+      "attendees": "Asistentes",
+      "agenda": "Orden del día",
+      "actions": "Acciones"
+    },
+    "fr": {
+      "name": "Modèles",
+      "description": "De nouveaux documents et extraits à partir de vos modèles, avec la date, l’heure et le titre remplis.",
+      "new": "Nouveau depuis un modèle…",
+      "insert": "Insérer un modèle…",
+      "save": "Enregistrer comme modèle…",
+      "pick": "Choisissez un modèle",
+      "docName": "Nom du document",
+      "templateName": "Nom du modèle",
+      "needsFolder": "Ouvrez d’abord un dossier : le nouveau document y sera créé.",
+      "saved": "Enregistré comme modèle « {0} ».",
+      "meeting": "Compte rendu de réunion",
+      "attendees": "Participants",
+      "agenda": "Ordre du jour",
+      "actions": "Actions"
+    },
+    "de": {
+      "name": "Vorlagen",
+      "description": "Neue Dokumente und Bausteine aus eigenen Vorlagen, mit Datum, Uhrzeit und Titel ausgefüllt.",
+      "new": "Neu aus Vorlage …",
+      "insert": "Vorlage einfügen …",
+      "save": "Als Vorlage speichern …",
+      "pick": "Vorlage wählen",
+      "docName": "Dokumentname",
+      "templateName": "Vorlagenname",
+      "needsFolder": "Öffnen Sie zuerst einen Ordner: Das neue Dokument kommt hinein.",
+      "saved": "Als Vorlage „{0}“ gespeichert.",
+      "meeting": "Besprechungsnotizen",
+      "attendees": "Teilnehmende",
+      "agenda": "Tagesordnung",
+      "actions": "Aufgaben"
+    },
+    "ru": {
+      "name": "Шаблоны",
+      "description": "Новые документы и фрагменты из ваших шаблонов — с датой, временем и названием.",
+      "new": "Создать из шаблона…",
+      "insert": "Вставить шаблон…",
+      "save": "Сохранить как шаблон…",
+      "pick": "Выберите шаблон",
+      "docName": "Имя документа",
+      "templateName": "Имя шаблона",
+      "needsFolder": "Сначала откройте папку: новый документ будет в ней.",
+      "saved": "Сохранено как шаблон «{0}».",
+      "meeting": "Заметки встречи",
+      "attendees": "Участники",
+      "agenda": "Повестка",
+      "actions": "Действия"
+    },
+    "pt": {
+      "name": "Modelos",
+      "description": "Novos documentos e trechos a partir dos seus modelos, com data, hora e título preenchidos.",
+      "new": "Novo a partir de modelo…",
+      "insert": "Inserir modelo…",
+      "save": "Salvar como modelo…",
+      "pick": "Escolha um modelo",
+      "docName": "Nome do documento",
+      "templateName": "Nome do modelo",
+      "needsFolder": "Abra uma pasta primeiro: o novo documento fica nela.",
+      "saved": "Salvo como modelo “{0}”.",
+      "meeting": "Notas de reunião",
+      "attendees": "Participantes",
+      "agenda": "Pauta",
+      "actions": "Ações"
+    }
+  }
+}

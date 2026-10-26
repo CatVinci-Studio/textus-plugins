@@ -1,0 +1,49 @@
+{
+  "id": "your-name.hello",
+  "name": "%name%",
+  "version": "0.1.0",
+  "publisher": "your-name",
+  "description": "%description%",
+  "license": "MIT",
+  "engines": {
+    "textus": ">=1.3.0-beta.2"
+  },
+  "main": "host.js",
+  "permissions": ["editor.read"],
+  "contributes": {
+    "commands": [
+      {
+        "command": "your-name.hello.count",
+        "title": "%count%"
+      }
+    ],
+    "menus": {
+      "app/plugins": [{ "command": "your-name.hello.count" }]
+    },
+    "sidebarTabs": [
+      {
+        "id": "your-name.hello.headings",
+        "title": "%headings%",
+        "type": "list"
+      }
+    ]
+  },
+  "l10n": {
+    "en": {
+      "name": "Hello",
+      "description": "A first plugin: counts the words of the document in front, and lists its headings in the sidebar.",
+      "count": "Count Words",
+      "words": "{0} words",
+      "headings": "Headings",
+      "none": "This document has no headings yet."
+    },
+    "zh": {
+      "name": "你好",
+      "description": "第一个插件：数一数当前文档的字数，并在侧栏列出它的标题。",
+      "count": "统计字数",
+      "words": "{0} 个字",
+      "headings": "标题",
+      "none": "这篇文档还没有标题。"
+    }
+  }
+}

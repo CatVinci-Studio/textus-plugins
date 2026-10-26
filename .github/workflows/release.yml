@@ -59,3 +59,6 @@ jobs:
             gh release create catalog --title "Catalog" --notes "The list of plugins Textus offers (index.json), rebuilt on each push to main." --latest=false
           fi
           gh release upload catalog dist/index.json dist/skill-*.md --clobber
+          if ls dist/shot-*.png >/dev/null 2>&1; then
+            gh release upload catalog dist/shot-*.png --clobber
+          fi

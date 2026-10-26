@@ -1,7 +1,7 @@
 {
   "id": "catvinci.version-history",
   "name": "%name%",
-  "version": "1.0.2",
+  "version": "0.1.0",
   "publisher": "catvinci",
   "author": "CatVinci Studio",
   "description": "%description%",
@@ -9,11 +9,17 @@
   "license": "MIT",
   "repository": "https://github.com/CatVinci-Studio/textus-plugins",
   "engines": {
-    "textus": "^1.3.0"
+    "textus": ">=1.3.0-beta.2"
   },
   "main": "host.js",
-  "activationEvents": ["onStartupFinished"],
-  "permissions": ["workspace.read", "document.read", "document.propose"],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "permissions": [
+    "files.read",
+    "editor.read",
+    "editor.propose"
+  ],
   "contributes": {
     "sidebarTabs": [
       {
@@ -28,6 +34,31 @@
         "type": "number",
         "default": 50,
         "title": "%keep%"
+      },
+      {
+        "key": "every",
+        "type": "enum",
+        "default": "15",
+        "title": "%every%",
+        "description": "%everyHelp%",
+        "options": [
+          {
+            "value": "0",
+            "label": "%everySave%"
+          },
+          {
+            "value": "5",
+            "label": "%every5%"
+          },
+          {
+            "value": "15",
+            "label": "%every15%"
+          },
+          {
+            "value": "60",
+            "label": "%every60%"
+          }
+        ]
       }
     ]
   },
@@ -46,7 +77,13 @@
       "same": "Same as now",
       "large": "Too many changes to compare line by line.",
       "since": "Changed since:",
-      "refresh": "Refresh"
+      "refresh": "Refresh",
+      "every": "Keep a version",
+      "everyHelp": "Saves closer together than this - autosave's every few seconds - are kept as one version.",
+      "everySave": "At every save",
+      "every5": "Every 5 minutes",
+      "every15": "Every 15 minutes",
+      "every60": "Every hour"
     },
     "zh": {
       "name": "版本历史",
@@ -62,7 +99,13 @@
       "same": "和现在一样",
       "large": "改动太多，无法逐行比较。",
       "since": "之后的改动：",
-      "refresh": "刷新"
+      "refresh": "刷新",
+      "every": "多久保留一个版本",
+      "everyHelp": "间隔比这短的多次保存（比如自动保存每隔几秒一次）只算一个版本。",
+      "everySave": "每次保存",
+      "every5": "每 5 分钟",
+      "every15": "每 15 分钟",
+      "every60": "每小时"
     },
     "zh-Hant": {
       "name": "版本紀錄",
@@ -78,7 +121,13 @@
       "same": "和現在一樣",
       "large": "改動太多，無法逐行比較。",
       "since": "之後的改動：",
-      "refresh": "重新整理"
+      "refresh": "重新整理",
+      "every": "多久保留一個版本",
+      "everyHelp": "間隔比這短的多次儲存（例如自動儲存每隔幾秒一次）只算一個版本。",
+      "everySave": "每次儲存",
+      "every5": "每 5 分鐘",
+      "every15": "每 15 分鐘",
+      "every60": "每小時"
     },
     "ja": {
       "name": "バージョン履歴",
@@ -94,7 +143,13 @@
       "same": "現在と同じ",
       "large": "変更が多すぎて、行ごとに比べられません。",
       "since": "その後の変更：",
-      "refresh": "再読み込み"
+      "refresh": "再読み込み",
+      "every": "版を残す間隔",
+      "everyHelp": "これより短い間隔の保存（数秒ごとの自動保存など）は、ひとつの版にまとめます。",
+      "everySave": "保存のたび",
+      "every5": "5 分ごと",
+      "every15": "15 分ごと",
+      "every60": "1 時間ごと"
     },
     "ko": {
       "name": "버전 기록",
@@ -110,7 +165,13 @@
       "same": "지금과 같음",
       "large": "바뀐 곳이 너무 많아 줄별로 비교할 수 없습니다.",
       "since": "그 뒤의 변경:",
-      "refresh": "새로 고침"
+      "refresh": "새로 고침",
+      "every": "버전을 남기는 간격",
+      "everyHelp": "이보다 짧은 간격의 저장(몇 초마다 하는 자동 저장 등)은 하나의 버전으로 남깁니다.",
+      "everySave": "저장할 때마다",
+      "every5": "5분마다",
+      "every15": "15분마다",
+      "every60": "1시간마다"
     },
     "es": {
       "name": "Historial de versiones",
@@ -126,7 +187,13 @@
       "same": "Igual que ahora",
       "large": "Demasiados cambios para compararlos línea a línea.",
       "since": "Cambios desde entonces:",
-      "refresh": "Actualizar"
+      "refresh": "Actualizar",
+      "every": "Guardar una versión",
+      "everyHelp": "Los guardados más seguidos que esto (el autoguardado cada pocos segundos) cuentan como una sola versión.",
+      "everySave": "En cada guardado",
+      "every5": "Cada 5 minutos",
+      "every15": "Cada 15 minutos",
+      "every60": "Cada hora"
     },
     "fr": {
       "name": "Historique des versions",
@@ -142,7 +209,13 @@
       "same": "Identique à maintenant",
       "large": "Trop de changements pour comparer ligne par ligne.",
       "since": "Modifié depuis :",
-      "refresh": "Actualiser"
+      "refresh": "Actualiser",
+      "every": "Garder une version",
+      "everyHelp": "Les enregistrements plus rapprochés que cela (l’enregistrement automatique toutes les quelques secondes) comptent pour une seule version.",
+      "everySave": "À chaque enregistrement",
+      "every5": "Toutes les 5 minutes",
+      "every15": "Toutes les 15 minutes",
+      "every60": "Toutes les heures"
     },
     "de": {
       "name": "Versionsverlauf",
@@ -158,7 +231,13 @@
       "same": "Wie jetzt",
       "large": "Zu viele Änderungen, um Zeile für Zeile zu vergleichen.",
       "since": "Seitdem geändert:",
-      "refresh": "Aktualisieren"
+      "refresh": "Aktualisieren",
+      "every": "Eine Version behalten",
+      "everyHelp": "Speichervorgänge, die dichter aufeinander folgen (automatisches Speichern alle paar Sekunden), gelten als eine Version.",
+      "everySave": "Bei jedem Speichern",
+      "every5": "Alle 5 Minuten",
+      "every15": "Alle 15 Minuten",
+      "every60": "Jede Stunde"
     },
     "ru": {
       "name": "История версий",
@@ -174,7 +253,13 @@
       "same": "Как сейчас",
       "large": "Слишком много изменений для построчного сравнения.",
       "since": "Изменено с тех пор:",
-      "refresh": "Обновить"
+      "refresh": "Обновить",
+      "every": "Сохранять версию",
+      "everyHelp": "Сохранения чаще этого (автосохранение каждые несколько секунд) считаются одной версией.",
+      "everySave": "При каждом сохранении",
+      "every5": "Каждые 5 минут",
+      "every15": "Каждые 15 минут",
+      "every60": "Каждый час"
     },
     "pt": {
       "name": "Histórico de versões",
@@ -190,7 +275,13 @@
       "same": "Igual a agora",
       "large": "Mudanças demais para comparar linha a linha.",
       "since": "Mudou desde então:",
-      "refresh": "Atualizar"
+      "refresh": "Atualizar",
+      "every": "Guardar uma versão",
+      "everyHelp": "Salvamentos mais próximos que isso (o salvamento automático a cada poucos segundos) contam como uma só versão.",
+      "everySave": "A cada salvamento",
+      "every5": "A cada 5 minutos",
+      "every15": "A cada 15 minutos",
+      "every60": "A cada hora"
     }
   }
 }

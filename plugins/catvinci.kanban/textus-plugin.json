@@ -1,7 +1,7 @@
 {
   "id": "catvinci.kanban",
   "name": "%name%",
-  "version": "1.0.2",
+  "version": "0.1.0",
   "publisher": "catvinci",
   "author": "CatVinci Studio",
   "description": "%description%",
@@ -9,10 +9,13 @@
   "license": "MIT",
   "repository": "https://github.com/CatVinci-Studio/textus-plugins",
   "engines": {
-    "textus": "^1.3.0"
+    "textus": ">=1.3.0-beta.2"
   },
   "main": "host.js",
-  "permissions": ["workspace.read", "workspace.write"],
+  "permissions": [
+    "files.read",
+    "files.write"
+  ],
   "contributes": {
     "commands": [
       {
@@ -31,7 +34,9 @@
       {
         "viewType": "catvinci.kanban.board",
         "displayName": "%name%",
-        "filenamePatterns": ["*.kanban.md"]
+        "filenamePatterns": [
+          "*.kanban.md"
+        ]
       }
     ]
   },
@@ -52,7 +57,8 @@
       "newList": "New list",
       "saved": "Saved",
       "saving": "Saving…",
-      "remove": "Remove"
+      "remove": "Remove",
+      "noNote": "No note is named “{0}”."
     },
     "zh": {
       "name": "看板",
@@ -70,7 +76,8 @@
       "newList": "新列表",
       "saved": "已保存",
       "saving": "正在保存…",
-      "remove": "删除"
+      "remove": "删除",
+      "noNote": "没有名为“{0}”的笔记。"
     },
     "zh-Hant": {
       "name": "看板",
@@ -88,7 +95,8 @@
       "newList": "新清單",
       "saved": "已儲存",
       "saving": "正在儲存…",
-      "remove": "刪除"
+      "remove": "刪除",
+      "noNote": "沒有名為「{0}」的筆記。"
     },
     "ja": {
       "name": "カンバン",
@@ -106,7 +114,8 @@
       "newList": "新しいリスト",
       "saved": "保存しました",
       "saving": "保存しています…",
-      "remove": "削除"
+      "remove": "削除",
+      "noNote": "「{0}」という名前のノートはありません。"
     },
     "ko": {
       "name": "칸반",
@@ -124,7 +133,8 @@
       "newList": "새 목록",
       "saved": "저장됨",
       "saving": "저장 중…",
-      "remove": "삭제"
+      "remove": "삭제",
+      "noNote": "‘{0}’라는 노트가 없습니다."
     },
     "es": {
       "name": "Kanban",
@@ -142,7 +152,8 @@
       "newList": "Lista nueva",
       "saved": "Guardado",
       "saving": "Guardando…",
-      "remove": "Eliminar"
+      "remove": "Eliminar",
+      "noNote": "No hay ninguna nota llamada «{0}»."
     },
     "fr": {
       "name": "Kanban",
@@ -160,7 +171,8 @@
       "newList": "Nouvelle liste",
       "saved": "Enregistré",
       "saving": "Enregistrement…",
-      "remove": "Supprimer"
+      "remove": "Supprimer",
+      "noNote": "Aucune note ne s’appelle « {0} »."
     },
     "de": {
       "name": "Kanban",
@@ -178,7 +190,8 @@
       "newList": "Neue Liste",
       "saved": "Gespeichert",
       "saving": "Wird gespeichert…",
-      "remove": "Entfernen"
+      "remove": "Entfernen",
+      "noNote": "Keine Notiz heißt „{0}“."
     },
     "ru": {
       "name": "Канбан",
@@ -196,7 +209,8 @@
       "newList": "Новый список",
       "saved": "Сохранено",
       "saving": "Сохранение…",
-      "remove": "Удалить"
+      "remove": "Удалить",
+      "noNote": "Нет заметки с именем «{0}»."
     },
     "pt": {
       "name": "Kanban",
@@ -214,7 +228,8 @@
       "newList": "Nova lista",
       "saved": "Salvo",
       "saving": "Salvando…",
-      "remove": "Remover"
+      "remove": "Remover",
+      "noNote": "Nenhuma nota se chama “{0}”."
     }
   }
 }

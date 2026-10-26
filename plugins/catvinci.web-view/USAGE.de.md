@@ -4,9 +4,10 @@ Lies Webseiten in einem Tab neben deinen Notizen, ohne Textus zu verlassen.
 
 ## Eine Seite öffnen
 
-- **Strg+Klick** auf einen Weblink im Dokument (**⌘+Klick** auf dem Mac).
-- **Plugins › Webseite öffnen…** und eine Adresse eingeben.
-- Einen Link markieren, Rechtsklick, **Markierten Link in einem Tab öffnen**.
+- **Ctrl+Klick** auf einen Weblink im Dokument (**⌘+Klick** auf dem Mac).
+- **Plugins › Webseite öffnen…**: eine schon geöffnete Seite wählen oder eine Adresse eingeben – Wörter werden gesucht.
+- Einen Link oder ein paar Wörter markieren, Rechtsklick, **Auswahl im Tab öffnen oder suchen**.
+- Die Suchmaschine stellst du in den Einstellungen des Plugins ein: DuckDuckGo, Google, Bing oder Baidu.
 
 ## Auf der Seite
 

@@ -1,14 +1,17 @@
 // Quick Notes: short notes kept by the plugin (textus.storage), listed in
 // a sidebar tab. A note goes into the document as a proposal the writer
 // accepts, or opens as a new document of its own.
+/** What activate was given: the plugin's storage and own files. */
+let ctx;
+
 let panel = null;
 
 async function notes() {
-  return (await textus.storage.get("notes")) || [];
+  return (await ctx.storage.global.get("notes")) || [];
 }
 
 async function save(list) {
-  await textus.storage.set("notes", list);
+  await ctx.storage.global.set("notes", list);
   if (panel) panel.postMessage({ type: "notes", notes: list });
 }
 
@@ -23,11 +26,12 @@ async function add(text) {
   return note;
 }
 
-exports.activate = function () {
-  textus.commands.registerCommand(
+exports.activate = function (context) {
+  ctx = context;
+  textus.commands.register(
     "catvinci.quick-notes.capture",
     async function () {
-      const text = await textus.window.showInput({
+      const text = await textus.ui.input({
         prompt: textus.l10n.t("prompt"),
         value: "",
       });
@@ -35,8 +39,8 @@ exports.activate = function () {
     },
   );
 
-  textus.window.registerWebviewViewProvider("catvinci.quick-notes.panel", {
-    resolveWebviewView: async function (webview) {
+  textus.views.registerWebview("catvinci.quick-notes.panel", {
+    resolve: async function (webview) {
       panel = webview;
       webview.onDidDispose(function () {
         if (panel === webview) panel = null;
@@ -48,11 +52,14 @@ exports.activate = function () {
         queue = queue.then(() => handle(webview, message)).catch(() => {});
         return queue;
       });
-      const html = await textus.plugin.readText("panel.html");
+      const html = await ctx.plugin.readText("panel.html");
       webview.html = html.replace("{{lang}}", textus.env.language);
     },
   });
 };
+
+/** The note deleted last, and where it was, for Undo. */
+let lastDeleted = null;
 
 async function handle(webview, message) {
   const list = await notes();
@@ -68,15 +75,24 @@ async function handle(webview, message) {
         n.id === message.id ? Object.assign({}, n, { text: message.text }) : n,
       ),
     );
-  if (message.type === "delete")
+  if (message.type === "delete") {
+    const at = list.findIndex((n) => n.id === message.id);
+    if (at >= 0) lastDeleted = { note: list[at], at: at };
     await save(list.filter((n) => n.id !== message.id));
+  }
+  // A note left empty: gone, with nothing to undo.
+  if (message.type === "drop")
+    await save(list.filter((n) => n.id !== message.id || n.text.trim()));
+  if (message.type === "undo" && lastDeleted) {
+    const back = list.slice();
+    back.splice(Math.min(lastDeleted.at, back.length), 0, lastDeleted.note);
+    lastDeleted = null;
+    await save(back);
+  }
   const note = list.find((n) => n.id === message.id);
+  // Asked for by a click: written at the caret at once, one undo away.
   if (message.type === "insert" && note)
-    await textus.document.proposeEdit({
-      action: "insert_at_cursor",
-      text: note.text,
-      reason: textus.l10n.t("insertReason"),
-    });
+    await textus.editor.insertText(note.text);
   if (message.type === "open" && note)
-    await textus.window.openUntitled(note.text);
+    await textus.layout.openUntitled(note.text);
 }

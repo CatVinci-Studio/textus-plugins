@@ -7,12 +7,23 @@
   "type": "module",
   "scripts": {
     "build": "node scripts/build.mjs",
-    "check": "node scripts/build.mjs --check && vitest run"
+    "check": "node scripts/build.mjs --check && vitest run",
+    "vendor": "node scripts/vendor.mjs"
   },
   "devDependencies": {
+    "@plantuml/core": "1.2026.9",
+    "abcjs": "6.7.2",
+    "chart.js": "4.5.1",
+    "d3": "7.9.0",
     "docx-preview": "0.4.1",
+    "echarts": "6.1.0",
+    "esbuild": "0.25.11",
     "jszip": "3.10.2",
+    "markdownlint": "0.42.0",
+    "markmap-lib": "0.18.12",
+    "markmap-view": "0.18.12",
     "pdfjs-dist": "6.4.299",
-    "vitest": "4.1.12"
+    "vitest": "4.1.12",
+    "wavedrom": "3.8.0"
   }
 }

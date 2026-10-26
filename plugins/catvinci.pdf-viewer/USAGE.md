@@ -6,3 +6,5 @@ PDFs open in a tab beside your notes.
 - Scroll through the pages; zoom with the buttons or **Ctrl+scroll** (**⌘+scroll** on a Mac).
 - Select text to copy it into your notes.
 - The zoom a PDF opens at is in the plugin's settings.
+- **Ctrl+F** (**⌘F** on a Mac), or the magnifier, finds words in the PDF: **Enter** goes to the next page with them, **Shift+Enter** back.
+- A PDF opens again at the page and zoom you left it at.

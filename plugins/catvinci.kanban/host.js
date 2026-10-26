@@ -2,6 +2,9 @@
 // tasks under them, the front matter Obsidian's Kanban writes - opened as
 // a board in its own tab. The page (board.html) parses and writes the
 // Markdown; this reads and writes the file.
+/** What activate was given: the plugin's storage and own files. */
+let ctx;
+
 const TEMPLATE = function () {
   const lists = ["todo", "doing", "done"].map((key) => textus.l10n.t(key));
   return (
@@ -15,14 +18,15 @@ function join(root, name) {
   return root.replace(/[\\/]+$/, "") + sep + name;
 }
 
-exports.activate = function () {
-  textus.commands.registerCommand("catvinci.kanban.new", async function () {
-    const root = await textus.workspace.rootPath();
+exports.activate = function (context) {
+  ctx = context;
+  textus.commands.register("catvinci.kanban.new", async function () {
+    const root = await textus.files.root();
     if (!root) {
-      await textus.window.showMessage(textus.l10n.t("needsFolder"));
+      await textus.ui.message(textus.l10n.t("needsFolder"));
       return;
     }
-    const name = await textus.window.showInput({
+    const name = await textus.ui.input({
       prompt: textus.l10n.t("boardName"),
       value: textus.l10n.t("board"),
     });
@@ -33,15 +37,15 @@ exports.activate = function () {
     );
     // A board of that name opens as it is - matched without regard to
     // case, as macOS and Windows name files - and is never written over.
-    const existing = (await textus.workspace.list(root)).find(
+    const existing = (await textus.files.list(root)).find(
       (e) => e.path.toLowerCase() === path.toLowerCase(),
     );
-    if (!existing) await textus.workspace.writeText(path, TEMPLATE());
-    await textus.window.openFile(existing ? existing.path : path);
+    if (!existing) await textus.files.create(path, TEMPLATE());
+    await textus.layout.open(existing ? existing.path : path);
   });
 
-  textus.window.registerCustomEditorProvider("catvinci.kanban.board", {
-    resolveCustomEditor: async function (document, webview) {
+  textus.views.registerFileEditor("catvinci.kanban.board", {
+    resolve: async function (document, webview) {
       webview.onDidReceiveMessage(async function (message) {
         if (message.type === "ready")
           webview.postMessage({
@@ -59,10 +63,33 @@ exports.activate = function () {
             });
           }
         }
+        // A [[link]] on a card: the note of that name in the folder, as
+        // Textus resolves a wiki link - or, with none, beside the board.
+        if (message.type === "openNote") {
+          let note = null;
+          try {
+            note = await textus.metadata.resolveLink(
+              "[[" + message.name + "]]",
+              document.path,
+            );
+          } catch {
+            // No folder open.
+          }
+          const beside = join(
+            document.path.replace(/[\\/][^\\/]*$/, ""),
+            message.name.replace(/\.(md|markdown)$/i, "") + ".md",
+          );
+          try {
+            await textus.layout.open(note || beside);
+          } catch {
+            await textus.ui.message(textus.l10n.t("noNote", message.name));
+          }
+          return;
+        }
         if (message.type === "markdown")
-          await textus.window.openFile(document.path, { asDocument: true });
+          await textus.layout.open(document.path, { asDocument: true });
       });
-      const html = await textus.plugin.readText("board.html");
+      const html = await ctx.plugin.readText("board.html");
       webview.html = html.replace("{{lang}}", textus.env.language);
     },
   });

@@ -232,7 +232,7 @@
             ? colors.accent
             : n.missing
               ? colors.bg
-              : colors.node;
+              : folderColor(n) || colors.node;
         ctx.fill();
         if (n.missing) {
           ctx.strokeStyle = colors.muted;
@@ -244,6 +244,20 @@
         }
       }
       ctx.globalAlpha = 1;
+    }
+
+    // A note in a folder takes that folder's colour - its first folder
+    // under the open one - so notes on one subject read as a cluster;
+    // notes at the top keep the plain colour.
+    const HUES = [210, 155, 28, 280, 345, 95, 190, 52];
+    const folderHue = new Map();
+    function folderColor(n) {
+      const slash = n.rel ? n.rel.indexOf("/") : -1;
+      if (slash < 0) return null;
+      const folder = n.rel.slice(0, slash);
+      if (!folderHue.has(folder))
+        folderHue.set(folder, HUES[folderHue.size % HUES.length]);
+      return "hsl(" + folderHue.get(folder) + " 48% 56%)";
     }
 
     function nodeAt(px, py) {

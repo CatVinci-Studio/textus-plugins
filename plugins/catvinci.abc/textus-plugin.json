@@ -1,0 +1,65 @@
+{
+  "id": "catvinci.abc",
+  "name": "%name%",
+  "version": "0.1.0",
+  "publisher": "catvinci",
+  "author": "CatVinci Studio",
+  "description": "%description%",
+  "license": "MIT",
+  "repository": "https://github.com/CatVinci-Studio/textus-plugins",
+  "engines": {
+    "textus": ">=1.3.0-beta.2"
+  },
+  "main": ["lib/chart-host.js", "host.js"],
+  "permissions": [],
+  "contributes": {
+    "codeBlocks": [
+      {
+        "language": "abc",
+        "title": "%name%"
+      }
+    ]
+  },
+  "l10n": {
+    "en": {
+      "name": "Sheet Music (ABC)",
+      "description": "Sheet music from ABC notation."
+    },
+    "zh": {
+      "name": "乐谱（ABC）",
+      "description": "用 ABC 记谱法写乐谱。"
+    },
+    "zh-Hant": {
+      "name": "樂譜（ABC）",
+      "description": "用 ABC 記譜法寫樂譜。"
+    },
+    "ja": {
+      "name": "楽譜（ABC）",
+      "description": "ABC 記譜法から楽譜を描きます。"
+    },
+    "ko": {
+      "name": "악보(ABC)",
+      "description": "ABC 표기법으로 악보를 그립니다."
+    },
+    "es": {
+      "name": "Partituras (ABC)",
+      "description": "Partituras a partir de notación ABC."
+    },
+    "fr": {
+      "name": "Partitions (ABC)",
+      "description": "Des partitions à partir de la notation ABC."
+    },
+    "de": {
+      "name": "Noten (ABC)",
+      "description": "Noten aus ABC-Notation."
+    },
+    "ru": {
+      "name": "Ноты (ABC)",
+      "description": "Ноты по записи ABC."
+    },
+    "pt": {
+      "name": "Partituras (ABC)",
+      "description": "Partituras a partir da notação ABC."
+    }
+  }
+}

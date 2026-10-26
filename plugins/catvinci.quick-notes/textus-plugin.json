@@ -1,7 +1,7 @@
 {
   "id": "catvinci.quick-notes",
   "name": "%name%",
-  "version": "1.0.2",
+  "version": "0.1.0",
   "publisher": "catvinci",
   "author": "CatVinci Studio",
   "description": "%description%",
@@ -9,10 +9,12 @@
   "license": "MIT",
   "repository": "https://github.com/CatVinci-Studio/textus-plugins",
   "engines": {
-    "textus": "^1.3.0"
+    "textus": ">=1.3.0-beta.2"
   },
   "main": "host.js",
-  "permissions": ["document.propose"],
+  "permissions": [
+    "editor.write"
+  ],
   "requires": [
     {
       "setting": "runInBackground",
@@ -59,14 +61,16 @@
       "capture": "New Quick Note…",
       "needsBackground": "With it on, New Quick Note… is in the tray or menu bar even with every window closed.",
       "prompt": "Note something down",
-      "insertReason": "Insert a quick note",
       "title": "Quick Notes",
       "new": "New",
       "insert": "Insert",
       "open": "Open",
       "delete": "Delete",
       "empty": "No notes yet. Click New, or press ⌘⌥N / Ctrl+Alt+N anywhere.",
-      "placeholder": "Write something…"
+      "placeholder": "Write something…",
+      "search": "Search notes",
+      "deleted": "Note deleted",
+      "undo": "Undo"
     },
     "zh": {
       "name": "快速笔记",
@@ -74,14 +78,16 @@
       "capture": "新建快速笔记…",
       "needsBackground": "打开后，关掉所有窗口也能从托盘或菜单栏新建快速笔记。",
       "prompt": "记下点什么",
-      "insertReason": "插入快速笔记",
       "title": "快速笔记",
       "new": "新建",
       "insert": "插入",
       "open": "打开",
       "delete": "删除",
       "empty": "还没有笔记。点“新建”，或在任何地方按 ⌘⌥N / Ctrl+Alt+N。",
-      "placeholder": "写点什么…"
+      "placeholder": "写点什么…",
+      "search": "搜索笔记",
+      "deleted": "已删除笔记",
+      "undo": "撤销"
     },
     "zh-Hant": {
       "name": "快速筆記",
@@ -89,14 +95,16 @@
       "capture": "新增快速筆記…",
       "needsBackground": "開啟後，即使關掉所有視窗，也能從系統匣或選單列新增快速筆記。",
       "prompt": "記下點什麼",
-      "insertReason": "插入快速筆記",
       "title": "快速筆記",
       "new": "新增",
       "insert": "插入",
       "open": "開啟",
       "delete": "刪除",
       "empty": "還沒有筆記。點「新增」，或在任何地方按 ⌘⌥N / Ctrl+Alt+N。",
-      "placeholder": "寫點什麼…"
+      "placeholder": "寫點什麼…",
+      "search": "搜尋筆記",
+      "deleted": "已刪除筆記",
+      "undo": "復原"
     },
     "ja": {
       "name": "クイックノート",
@@ -104,14 +112,16 @@
       "capture": "新しいクイックノート…",
       "needsBackground": "オンにすると、ウインドウをすべて閉じていても、トレイやメニューバーから「新しいクイックノート…」を使えます。",
       "prompt": "書き留める",
-      "insertReason": "クイックノートを挿入",
       "title": "クイックノート",
       "new": "新規",
       "insert": "挿入",
       "open": "開く",
       "delete": "削除",
       "empty": "まだメモはありません。「新規」をクリックするか、どこでも ⌘⌥N / Ctrl+Alt+N を押してください。",
-      "placeholder": "何か書く…"
+      "placeholder": "何か書く…",
+      "search": "ノートを検索",
+      "deleted": "ノートを削除しました",
+      "undo": "元に戻す"
     },
     "ko": {
       "name": "빠른 메모",
@@ -119,14 +129,16 @@
       "capture": "새 빠른 메모…",
       "needsBackground": "켜 두면 창을 모두 닫아도 트레이나 메뉴 막대에서 새 빠른 메모를 만들 수 있습니다.",
       "prompt": "적어 둘 내용",
-      "insertReason": "빠른 메모 넣기",
       "title": "빠른 메모",
       "new": "새로 만들기",
       "insert": "넣기",
       "open": "열기",
       "delete": "삭제",
       "empty": "아직 메모가 없습니다. 새로 만들기를 누르거나, 어디서든 ⌘⌥N / Ctrl+Alt+N을 누르세요.",
-      "placeholder": "무언가 적어 보세요…"
+      "placeholder": "무언가 적어 보세요…",
+      "search": "노트 검색",
+      "deleted": "노트를 삭제했습니다",
+      "undo": "실행 취소"
     },
     "es": {
       "name": "Notas rápidas",
@@ -134,14 +146,16 @@
       "capture": "Nueva nota rápida…",
       "needsBackground": "Con esto activado, Nueva nota rápida… está en la bandeja o la barra de menús aunque cierres todas las ventanas.",
       "prompt": "Apunta algo",
-      "insertReason": "Insertar una nota rápida",
       "title": "Notas rápidas",
       "new": "Nueva",
       "insert": "Insertar",
       "open": "Abrir",
       "delete": "Eliminar",
       "empty": "Aún no hay notas. Haz clic en Nueva o pulsa ⌘⌥N / Ctrl+Alt+N en cualquier sitio.",
-      "placeholder": "Escribe algo…"
+      "placeholder": "Escribe algo…",
+      "search": "Buscar notas",
+      "deleted": "Nota eliminada",
+      "undo": "Deshacer"
     },
     "fr": {
       "name": "Notes rapides",
@@ -149,14 +163,16 @@
       "capture": "Nouvelle note rapide…",
       "needsBackground": "Activé, Nouvelle note rapide… reste dans la zone de notification ou la barre des menus, même toutes fenêtres fermées.",
       "prompt": "Notez quelque chose",
-      "insertReason": "Insérer une note rapide",
       "title": "Notes rapides",
       "new": "Nouvelle",
       "insert": "Insérer",
       "open": "Ouvrir",
       "delete": "Supprimer",
       "empty": "Pas encore de notes. Cliquez sur Nouvelle, ou appuyez sur ⌘⌥N / Ctrl+Alt+N n’importe où.",
-      "placeholder": "Écrivez quelque chose…"
+      "placeholder": "Écrivez quelque chose…",
+      "search": "Rechercher dans les notes",
+      "deleted": "Note supprimée",
+      "undo": "Annuler"
     },
     "de": {
       "name": "Schnellnotizen",
@@ -164,14 +180,16 @@
       "capture": "Neue Schnellnotiz…",
       "needsBackground": "Ist es an, steht „Neue Schnellnotiz…“ im Infobereich oder in der Menüleiste, auch wenn alle Fenster geschlossen sind.",
       "prompt": "Schreib etwas auf",
-      "insertReason": "Schnellnotiz einfügen",
       "title": "Schnellnotizen",
       "new": "Neu",
       "insert": "Einfügen",
       "open": "Öffnen",
       "delete": "Löschen",
       "empty": "Noch keine Notizen. Klick auf Neu oder drück überall ⌘⌥N / Ctrl+Alt+N.",
-      "placeholder": "Schreib etwas…"
+      "placeholder": "Schreib etwas…",
+      "search": "Notizen durchsuchen",
+      "deleted": "Notiz gelöscht",
+      "undo": "Rückgängig"
     },
     "ru": {
       "name": "Быстрые заметки",
@@ -179,14 +197,16 @@
       "capture": "Новая быстрая заметка…",
       "needsBackground": "Когда это включено, «Новая быстрая заметка…» доступна в трее или строке меню, даже если все окна закрыты.",
       "prompt": "Запишите что-нибудь",
-      "insertReason": "Вставить быструю заметку",
       "title": "Быстрые заметки",
       "new": "Новая",
       "insert": "Вставить",
       "open": "Открыть",
       "delete": "Удалить",
       "empty": "Заметок пока нет. Нажмите «Новая» или ⌘⌥N / Ctrl+Alt+N в любом месте.",
-      "placeholder": "Напишите что-нибудь…"
+      "placeholder": "Напишите что-нибудь…",
+      "search": "Поиск по заметкам",
+      "deleted": "Заметка удалена",
+      "undo": "Отменить"
     },
     "pt": {
       "name": "Notas rápidas",
@@ -194,14 +214,16 @@
       "capture": "Nova nota rápida…",
       "needsBackground": "Com isto ligado, Nova nota rápida… fica na bandeja ou na barra de menus mesmo com todas as janelas fechadas.",
       "prompt": "Anote algo",
-      "insertReason": "Inserir uma nota rápida",
       "title": "Notas rápidas",
       "new": "Nova",
       "insert": "Inserir",
       "open": "Abrir",
       "delete": "Excluir",
       "empty": "Ainda não há notas. Clique em Nova, ou pressione ⌘⌥N / Ctrl+Alt+N em qualquer lugar.",
-      "placeholder": "Escreva algo…"
+      "placeholder": "Escreva algo…",
+      "search": "Pesquisar notas",
+      "deleted": "Nota excluída",
+      "undo": "Desfazer"
     }
   }
 }

@@ -1,16 +1,41 @@
 // PDF Viewer: a PDF opened in a tab of its own, drawn by PDF.js in the
-// page (view.html). Once the page is up it is handed the file and the
-// zoom to open at.
-exports.activate = function () {
-  textus.window.registerCustomEditorProvider("catvinci.pdf-viewer.pdf", {
-    resolveCustomEditor: async function (document, webview) {
+// page (view.html). Once the page is up it is handed the file, the zoom
+// to open at and where it was left last time.
+
+/** What activate was given: the plugin's storage and own files. */
+let ctx;
+
+/** Where each PDF was left - its page and zoom - by path, in one stored
+ *  record; the most recent POSITIONS_KEPT. */
+const POSITIONS = "positions";
+const POSITIONS_KEPT = 200;
+
+async function positionOf(path) {
+  const all = (await ctx.storage.global.get(POSITIONS)) || {};
+  return all[path] || null;
+}
+
+async function keepPosition(path, position) {
+  const all = (await ctx.storage.global.get(POSITIONS)) || {};
+  delete all[path];
+  all[path] = position;
+  const paths = Object.keys(all);
+  for (const old of paths.slice(0, Math.max(0, paths.length - POSITIONS_KEPT)))
+    delete all[old];
+  await ctx.storage.global.set(POSITIONS, all);
+}
+
+exports.activate = function (context) {
+  ctx = context;
+  textus.views.registerFileEditor("catvinci.pdf-viewer.pdf", {
+    resolve: async function (document, webview) {
       webview.onDidReceiveMessage(async function (message) {
         // PDF.js's own data - a CJK font's character map, a standard font
         // - from the plugin's lib folder: the page can't fetch it.
         if (message.type === "data") {
           let bytes = null;
           try {
-            bytes = await textus.plugin.readFile(message.path);
+            bytes = await ctx.plugin.readFile(message.path);
           } catch {
             // Not shipped: PDF.js draws without it.
           }
@@ -20,19 +45,26 @@ exports.activate = function () {
             bytes: bytes,
           });
         }
+        if (message.type === "position")
+          return keepPosition(document.path, {
+            page: message.page,
+            scale: message.scale,
+          });
         if (message.type !== "ready") return;
-        const [bytes, zoom] = await Promise.all([
-          document.readBytes(),
+        const [bytes, zoom, position] = await Promise.all([
+          document.readFile(),
           textus.settings.get("zoom"),
+          positionOf(document.path),
         ]);
         webview.postMessage({
           type: "file",
           name: document.fileName,
           bytes: bytes,
           zoom: zoom,
+          position: position,
         });
       });
-      const html = await textus.plugin.readText("view.html");
+      const html = await ctx.plugin.readText("view.html");
       webview.html = html.replace("{{lang}}", textus.env.language);
     },
   });

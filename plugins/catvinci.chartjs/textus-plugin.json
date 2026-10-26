@@ -1,0 +1,65 @@
+{
+  "id": "catvinci.chartjs",
+  "name": "%name%",
+  "version": "0.1.0",
+  "publisher": "catvinci",
+  "author": "CatVinci Studio",
+  "description": "%description%",
+  "license": "MIT",
+  "repository": "https://github.com/CatVinci-Studio/textus-plugins",
+  "engines": {
+    "textus": ">=1.3.0-beta.2"
+  },
+  "main": ["lib/chart-host.js", "host.js"],
+  "permissions": [],
+  "contributes": {
+    "codeBlocks": [
+      {
+        "language": "chartjs",
+        "title": "%name%"
+      }
+    ]
+  },
+  "l10n": {
+    "en": {
+      "name": "Chart.js",
+      "description": "Simple charts from a Chart.js configuration."
+    },
+    "zh": {
+      "name": "Chart.js",
+      "description": "用 Chart.js 配置画简单的图表。"
+    },
+    "zh-Hant": {
+      "name": "Chart.js",
+      "description": "用 Chart.js 設定畫簡單的圖表。"
+    },
+    "ja": {
+      "name": "Chart.js",
+      "description": "Chart.js の設定からシンプルなグラフを描きます。"
+    },
+    "ko": {
+      "name": "Chart.js",
+      "description": "Chart.js 설정으로 간단한 차트를 그립니다."
+    },
+    "es": {
+      "name": "Chart.js",
+      "description": "Gráficos sencillos a partir de una configuración de Chart.js."
+    },
+    "fr": {
+      "name": "Chart.js",
+      "description": "Des graphiques simples à partir d’une configuration Chart.js."
+    },
+    "de": {
+      "name": "Chart.js",
+      "description": "Einfache Diagramme aus einer Chart.js-Konfiguration."
+    },
+    "ru": {
+      "name": "Chart.js",
+      "description": "Простые диаграммы по настройкам Chart.js."
+    },
+    "pt": {
+      "name": "Chart.js",
+      "description": "Gráficos simples a partir de uma configuração do Chart.js."
+    }
+  }
+}

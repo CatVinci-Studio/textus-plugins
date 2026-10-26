@@ -1,0 +1,65 @@
+{
+  "id": "catvinci.function-plot",
+  "name": "%name%",
+  "version": "0.1.0",
+  "publisher": "catvinci",
+  "author": "CatVinci Studio",
+  "description": "%description%",
+  "license": "MIT",
+  "repository": "https://github.com/CatVinci-Studio/textus-plugins",
+  "engines": {
+    "textus": ">=1.3.0-beta.2"
+  },
+  "main": ["lib/chart-host.js", "host.js"],
+  "permissions": [],
+  "contributes": {
+    "codeBlocks": [
+      {
+        "language": "function-plot",
+        "title": "%name%"
+      }
+    ]
+  },
+  "l10n": {
+    "en": {
+      "name": "Function Plot",
+      "description": "Graphs of functions, one per line: sin(x), x^2 - 1."
+    },
+    "zh": {
+      "name": "函数图像",
+      "description": "画函数图像，每行一个：sin(x)、x^2 - 1。"
+    },
+    "zh-Hant": {
+      "name": "函數圖形",
+      "description": "畫函數圖形，每行一個：sin(x)、x^2 - 1。"
+    },
+    "ja": {
+      "name": "関数グラフ",
+      "description": "関数のグラフを 1 行に 1 つ：sin(x)、x^2 - 1。"
+    },
+    "ko": {
+      "name": "함수 그래프",
+      "description": "함수 그래프를 한 줄에 하나씩: sin(x), x^2 - 1."
+    },
+    "es": {
+      "name": "Gráfica de funciones",
+      "description": "Gráficas de funciones, una por línea: sin(x), x^2 - 1."
+    },
+    "fr": {
+      "name": "Tracé de fonctions",
+      "description": "Des courbes de fonctions, une par ligne : sin(x), x^2 - 1."
+    },
+    "de": {
+      "name": "Funktionsgraph",
+      "description": "Funktionsgraphen, einer pro Zeile: sin(x), x^2 - 1."
+    },
+    "ru": {
+      "name": "Графики функций",
+      "description": "Графики функций, по одной в строке: sin(x), x^2 - 1."
+    },
+    "pt": {
+      "name": "Gráfico de funções",
+      "description": "Gráficos de funções, uma por linha: sin(x), x^2 - 1."
+    }
+  }
+}
