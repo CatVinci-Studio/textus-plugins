@@ -1,11 +1,10 @@
 # The plugin template
 
 A small plugin that works, to start yours from: a command, a sidebar list
-and its strings in English and Chinese. The
-[textus-plugin-template](https://github.com/CatVinci-Studio/textus-plugin-template)
-repository is this folder laid out by Textus's **Export for Publishing**
-(with its README, LICENSE and release workflow) - use it with GitHub's
-**Use this template**.
+and its strings in English and Chinese. Copy this folder, load it in
+Textus (Settings › Extensions › Plugins › Load a plugin folder…), and when
+it is ready, **Export for Publishing** on its page lays it out as a
+repository of its own - README, LICENSE and a release workflow.
 
 To try it as it is: in Textus, **Settings › Extensions › Plugins › Load a
 plugin folder…**, and pick this folder.
