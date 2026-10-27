@@ -28,6 +28,9 @@
         "icon": "tab.svg",
         "type": "list"
       }
+    ],
+    "suggestFor": [
+      "wikilinks"
     ]
   },
   "l10n": {
