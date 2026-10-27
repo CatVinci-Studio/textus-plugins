@@ -1,7 +1,9 @@
 // A force-directed graph on a canvas: nodes pushed apart, links pulling
 // together, settling over a few seconds. Drag the background to move, the
 // wheel (or a pinch) to zoom, a node to place it; hover lights its links,
-// a click opens it. Repulsion is computed on a grid of nearby nodes, so a
+// a click opens it (with Ctrl or Cmd, in a new tab). How it looks and
+// moves - arrows, label fade, node size, line width, the four forces - is
+// the settings panel's (setOptions). Repulsion is computed on a grid of nearby nodes, so a
 // folder of thousands of documents still moves smoothly.
 (function (root) {
   "use strict";
@@ -20,7 +22,6 @@
     let byId = new Map();
     let neighbours = new Map();
     let focus = null;
-    let query = "";
     let hover = null;
     let dragging = null;
     let panning = null;
@@ -29,6 +30,17 @@
     let view = { x: 0, y: 0, k: 1 };
     let size = { w: 0, h: 0, ratio: 1 };
     let colors = {};
+    let opts = {
+      arrows: false,
+      textFade: 0,
+      nodeSize: 1,
+      linkThickness: 1,
+      center: 0.5,
+      repel: 10,
+      linkForce: 0.5,
+      linkDistance: 70,
+      groups: false,
+    };
 
     function readColors() {
       colors = {
@@ -37,6 +49,7 @@
         muted: cssVar("--chrome-muted", "#646b77"),
         line: cssVar("--border-color", "#e1e4ea"),
         accent: cssVar("--chrome-accent", "#315ed1"),
+        tag: cssVar("--editor-link", "#3f8f6a"),
         node: cssVar("--sidebar-text", "#505866"),
         font: cssVar("--font-sans", "sans-serif"),
       };
@@ -52,7 +65,9 @@
     }
 
     function radius(node) {
-      return 3.5 + Math.min(9, Math.sqrt(node.degree || 0) * 1.8);
+      return (
+        (3.5 + Math.min(9, Math.sqrt(node.degree || 0) * 1.8)) * opts.nodeSize
+      );
     }
 
     function setData(data, focusId) {
@@ -79,7 +94,7 @@
         const a = byId.get(e.source);
         const b = byId.get(e.target);
         if (!a || !b) continue;
-        edges.push({ a: a, b: b });
+        edges.push({ a: a, b: b, both: !!e.both });
         a.degree++;
         b.degree++;
         neighbours.get(a.id).add(b.id);
@@ -94,9 +109,13 @@
       draw();
     }
 
-    function setQuery(text) {
-      query = String(text || "").toLowerCase();
-      draw();
+    function setOptions(next) {
+      const moved = ["center", "repel", "linkForce", "linkDistance"].some(
+        (k) => k in next && next[k] !== opts[k],
+      );
+      Object.assign(opts, next);
+      if (moved) heat(0.5);
+      else draw();
     }
 
     function heat(value) {
@@ -112,7 +131,7 @@
         if (!grid.has(key)) grid.set(key, []);
         grid.get(key).push(n);
       }
-      const strength = 900;
+      const strength = 90 * opts.repel;
       const room = 56;
       for (const n of nodes) {
         const gx = Math.floor(n.x / cell);
@@ -146,14 +165,14 @@
             }
           }
         // A gentle pull to the middle keeps islands in view.
-        n.vx -= n.x * 0.002 * alpha;
-        n.vy -= n.y * 0.002 * alpha;
+        n.vx -= n.x * 0.004 * opts.center * alpha;
+        n.vy -= n.y * 0.004 * opts.center * alpha;
       }
       for (const e of edges) {
         const x = e.b.x - e.a.x;
         const y = e.b.y - e.a.y;
         const d = Math.sqrt(x * x + y * y) || 1;
-        const f = ((d - 70) / d) * 0.06 * alpha;
+        const f = ((d - opts.linkDistance) / d) * 0.12 * opts.linkForce * alpha;
         e.a.vx += x * f;
         e.a.vy += y * f;
         e.b.vx -= x * f;
@@ -197,11 +216,12 @@
       ctx.fillStyle = colors.bg;
       ctx.fillRect(0, 0, size.w, size.h);
       const lit = hover ? neighbours.get(hover.id) : null;
-      const matches = (n) => !query || n.name.toLowerCase().includes(query);
-      ctx.lineWidth = 1;
+      const scale = Math.min(1.6, Math.max(0.6, view.k));
+      ctx.lineWidth = opts.linkThickness;
       for (const e of edges) {
         const on = hover && (e.a === hover || e.b === hover);
         ctx.strokeStyle = on ? colors.accent : colors.line;
+        ctx.fillStyle = ctx.strokeStyle;
         ctx.globalAlpha = hover && !on ? 0.35 : 1;
         const a = toScreen(e.a);
         const b = toScreen(e.b);
@@ -209,8 +229,15 @@
         ctx.moveTo(a.x, a.y);
         ctx.lineTo(b.x, b.y);
         ctx.stroke();
+        if (opts.arrows) {
+          arrow(a, b, radius(e.b) * scale);
+          if (e.both) arrow(b, a, radius(e.a) * scale);
+        }
       }
-      const showLabels = view.k > 0.6 || nodes.length < 60;
+      // Labels fade in past a zoom the panel's slider sets.
+      const showLabels =
+        view.k > 0.6 * Math.pow(1.6, opts.textFade) ||
+        (nodes.length < 60 && opts.textFade <= 0);
       ctx.font =
         Math.round(11 * Math.min(1.4, Math.max(0.9, view.k))) +
         "px " +
@@ -219,34 +246,57 @@
       ctx.textBaseline = "top";
       for (const n of nodes) {
         const p = toScreen(n);
-        const r = radius(n) * Math.min(1.6, Math.max(0.6, view.k));
+        const r = radius(n) * scale;
         if (p.x < -50 || p.y < -50 || p.x > size.w + 50 || p.y > size.h + 50)
           continue;
-        const dim =
-          (hover && n !== hover && !(lit && lit.has(n.id))) || !matches(n);
+        const dim = hover && n !== hover && !(lit && lit.has(n.id));
         ctx.globalAlpha = dim ? 0.25 : 1;
         ctx.beginPath();
         ctx.arc(p.x, p.y, r, 0, Math.PI * 2);
         ctx.fillStyle =
           n.id === focus || n === hover
             ? colors.accent
-            : n.missing
+            : n.kind === "missing"
               ? colors.bg
-              : folderColor(n) || colors.node;
+              : n.kind === "tag"
+                ? colors.tag
+                : n.color ||
+                  (!opts.groups && folderColor(n)) ||
+                  colors.node;
         ctx.fill();
-        if (n.missing) {
+        if (n.kind === "missing") {
           ctx.strokeStyle = colors.muted;
           ctx.stroke();
         }
         if (showLabels || n === hover || n.id === focus) {
-          ctx.fillStyle = n.missing ? colors.muted : colors.text;
+          ctx.fillStyle = n.kind === "note" ? colors.text : colors.muted;
           ctx.fillText(n.name, p.x, p.y + r + 3);
         }
       }
       ctx.globalAlpha = 1;
     }
 
-    // A note in a folder takes that folder's colour - its first folder
+    /** An arrowhead at `to`'s edge, on the line from `from`. */
+    function arrow(from, to, r) {
+      const angle = Math.atan2(to.y - from.y, to.x - from.x);
+      const size = 4 + 2 * opts.linkThickness;
+      const tipX = to.x - Math.cos(angle) * (r + 1);
+      const tipY = to.y - Math.sin(angle) * (r + 1);
+      ctx.beginPath();
+      ctx.moveTo(tipX, tipY);
+      ctx.lineTo(
+        tipX - Math.cos(angle - 0.45) * size,
+        tipY - Math.sin(angle - 0.45) * size,
+      );
+      ctx.lineTo(
+        tipX - Math.cos(angle + 0.45) * size,
+        tipY - Math.sin(angle + 0.45) * size,
+      );
+      ctx.closePath();
+      ctx.fill();
+    }
+
+    // Without groups, a note in a folder takes that folder's colour - its first folder
     // under the open one - so notes on one subject read as a cluster;
     // notes at the top keep the plain colour.
     const HUES = [210, 155, 28, 280, 345, 95, 190, 52];
@@ -316,7 +366,8 @@
     canvas.addEventListener("pointerup", function (e) {
       const p = point(e);
       const moved = downAt && Math.hypot(p.x - downAt.x, p.y - downAt.y) > 4;
-      if (dragging && !moved && !dragging.missing) options.onOpen(dragging.id);
+      if (dragging && !moved && dragging.kind === "note")
+        options.onOpen(dragging.id, e.metaKey || e.ctrlKey);
       dragging = null;
       panning = null;
     });
@@ -367,7 +418,7 @@
     return {
       setData: setData,
       setFocus: setFocus,
-      setQuery: setQuery,
+      setOptions: setOptions,
       zoomToFit: function () {
         if (!nodes.length) return;
         const xs = nodes.map((n) => n.x);

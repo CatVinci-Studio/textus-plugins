@@ -1,14 +1,12 @@
-// The links of the folder's documents, as a graph: a node per document,
-// an edge per link from one to another - [[wiki links]] (by file name,
-// with or without .md, |alias and #heading allowed) and Markdown links to
-// a relative .md path. A wiki link to no document is a node too, marked
-// missing, as Obsidian shows one. Plain JavaScript, shared by the host
-// (host.js) and the unit test (graph-links.test.ts).
+// The folder's documents as a graph, from what Textus knows of them
+// (textus.metadata.all): a node per document, an edge per link between
+// two. A [[wiki link]] to no document is a node marked missing, and with
+// tags shown, each #tag is a node too - as Obsidian draws them. The
+// filters, search and groups of the graph's settings panel work here, on
+// that graph. Plain JavaScript, shared by the host (host.js) and the unit
+// test (graph-links.test.ts).
 (function (root) {
   "use strict";
-  const WIKI = /\[\[([^\]|#\n]+)(?:#[^\]|\n]*)?(?:\|[^\]\n]*)?\]\]/g;
-  const MD =
-    /\]\(\s*<?([^)\s>]+?\.(?:md|markdown))(?:#[^)\s]*)?>?(?:\s+"[^"]*")?\s*\)/gi;
 
   const stem = (path) =>
     path
@@ -16,141 +14,181 @@
       .pop()
       .replace(/\.(md|markdown)$/i, "");
 
-  /** "a/b/../c.md" from `from`'s folder, "/"-separated. */
-  function resolveRelative(fromRel, target) {
-    const parts = fromRel.split("/").slice(0, -1);
-    for (const part of decodeURIComponent(target).split("/")) {
-      if (part === "..") parts.pop();
-      else if (part && part !== ".") parts.push(part);
-    }
-    return parts.join("/");
-  }
-
-  /** Code spans and fenced blocks out of the way: a link in code isn't one. */
-  function prose(text) {
-    return text.replace(/(```|~~~)[\s\S]*?\1/g, "").replace(/`[^`\n]*`/g, "");
-  }
-
-  /** `docs`: [{ path, rel, text }]. Returns { nodes, edges }. */
-  function buildGraph(docs) {
-    const byStem = new Map();
-    const byRel = new Map();
-    const nodes = docs.map((doc) => ({
-      id: doc.path,
-      name: stem(doc.path),
-      rel: doc.rel,
-      missing: false,
-    }));
-    nodes.forEach((node, i) => {
-      const key = node.name.toLowerCase();
-      if (!byStem.has(key)) byStem.set(key, node);
-      byRel.set(docs[i].rel.toLowerCase(), node);
-    });
-    const edges = [];
-    const seen = new Set();
-    const missing = new Map();
-    const link = (from, to) => {
-      if (from === to) return;
-      // One line between two notes, whichever links to which: notes that
-      // link to each other are one link, as drawn.
-      const key = from < to ? from + "\n" + to : to + "\n" + from;
-      if (seen.has(key)) return;
-      seen.add(key);
-      edges.push({ source: from, target: to });
-    };
-    docs.forEach((doc) => {
-      const text = prose(doc.text);
-      for (const m of text.matchAll(WIKI)) {
-        const name = m[1].trim().replace(/\.(md|markdown)$/i, "");
-        const target =
-          byStem.get(name.toLowerCase()) ||
-          byRel.get((name + ".md").toLowerCase());
-        if (target) link(doc.path, target.id);
-        else {
-          const id = "missing:" + name.toLowerCase();
-          if (!missing.has(id))
-            missing.set(id, { id: id, name: name, rel: null, missing: true });
-          link(doc.path, id);
-        }
-      }
-      for (const m of text.matchAll(MD)) {
-        if (/^[a-z]+:/i.test(m[1])) continue;
-        const target = byRel.get(resolveRelative(doc.rel, m[1]).toLowerCase());
-        if (target) link(doc.path, target.id);
-      }
-    });
-    return { nodes: nodes.concat([...missing.values()]), edges: edges };
-  }
-
   /**
-   * The graph from what Textus knows of the folder (textus.metadata.all):
-   * its links already resolved. A link that leads nowhere, written as a
-   * name - a [[wiki link]] - is a node marked missing, as above.
+   * `docs`: what textus.metadata.all gives. Edges keep their direction:
+   * `source` links to `target`, and `both` when it links back - one line
+   * between two notes, whichever links to which.
    */
-  function graphFromMetadata(docs) {
+  function graphFromMetadata(docs, options) {
+    const withTags = !!(options && options.tags);
     const nodes = docs.map((doc) => ({
       id: doc.path,
       name: stem(doc.path),
       rel: doc.rel,
-      missing: false,
+      tags: doc.tags || [],
+      kind: "note",
     }));
+    const extra = new Map();
     const edges = [];
-    const seen = new Set();
-    const missing = new Map();
+    const pairs = new Map();
     const link = (from, to) => {
       if (from === to) return;
       const key = from < to ? from + "\n" + to : to + "\n" + from;
-      if (seen.has(key)) return;
-      seen.add(key);
-      edges.push({ source: from, target: to });
+      const edge = pairs.get(key);
+      if (!edge) {
+        const made = { source: from, target: to, both: false };
+        pairs.set(key, made);
+        edges.push(made);
+      } else if (edge.source !== from) edge.both = true;
     };
-    docs.forEach((doc) => {
+    const node = (id, name, kind) => {
+      if (!extra.has(id))
+        extra.set(id, { id: id, name: name, rel: null, tags: [], kind: kind });
+    };
+    for (const doc of docs) {
       for (const l of doc.links) {
         if (l.resolved) {
           link(doc.path, l.resolved);
           continue;
         }
+        // A link that leads nowhere is a node when written as a name - a
+        // [[wiki link]] - not a web address or a path.
         const name = l.target.split("#")[0].trim();
         if (!name || /^[a-z][a-z0-9+.-]*:/i.test(name) || /[\\/.]/.test(name))
           continue;
         const id = "missing:" + name.toLowerCase();
-        if (!missing.has(id))
-          missing.set(id, { id: id, name: name, rel: null, missing: true });
+        node(id, name, "missing");
         link(doc.path, id);
       }
-    });
-    return { nodes: nodes.concat([...missing.values()]), edges: edges };
+      if (withTags)
+        for (const tag of doc.tags || []) {
+          const name = "#" + tag.replace(/^#/, "");
+          const id = "tag:" + name.toLowerCase();
+          node(id, name, "tag");
+          link(doc.path, id);
+        }
+    }
+    return { nodes: nodes.concat([...extra.values()]), edges: edges };
   }
 
-  /** The part of `graph` within `depth` links of `focus`, either way. */
-  function neighbourhood(graph, focus, depth) {
-    const near = new Set([focus]);
+  /**
+   * Does `node` answer the search? Words all must match, each in the
+   * name or path; `path:`, `file:` and `tag:` narrow a word to one of
+   * them, a leading `-` turns it around - Obsidian's search, in short.
+   */
+  function compile(query) {
+    const words = String(query || "")
+      .toLowerCase()
+      .match(/-?(?:\w+:)?(?:"[^"]*"|\S+)/gu);
+    if (!words) return () => true;
+    const tests = words.map((word) => {
+      const not = word.startsWith("-") && word.length > 1;
+      if (not) word = word.slice(1);
+      const m = /^(path|file|tag):(.*)$/.exec(word);
+      const field = m ? m[1] : "";
+      const text = (m ? m[2] : word).replace(/^"|"$/g, "");
+      const test = (n) => {
+        if (!text) return true;
+        if (field === "tag") {
+          const tag = text.replace(/^#/, "");
+          return (
+            n.tags.some((t) => t.toLowerCase().replace(/^#/, "") === tag) ||
+            (n.kind === "tag" && n.name.toLowerCase() === "#" + tag)
+          );
+        }
+        const name = n.name.toLowerCase();
+        const rel = (n.rel || "").toLowerCase();
+        if (field === "file") return name.includes(text);
+        if (field === "path") return rel.includes(text);
+        return name.includes(text) || rel.includes(text);
+      };
+      return not ? (n) => !test(n) : test;
+    });
+    return (n) => tests.every((test) => test(n));
+  }
+
+  /** The graph as the panel's filters leave it; groups give colours. */
+  function filterGraph(graph, settings) {
+    const match = compile(settings.search);
+    let nodes = graph.nodes.filter(
+      (n) =>
+        (n.kind !== "missing" || !settings.existingOnly) &&
+        (n.kind !== "tag" || settings.tags) &&
+        (n.kind === "tag" || match(n)),
+    );
+    let ids = new Set(nodes.map((n) => n.id));
+    const edges = graph.edges.filter(
+      (e) => ids.has(e.source) && ids.has(e.target),
+    );
+    // A tag no note left links to goes too; so do notes without links,
+    // if they are not wanted.
+    const linked = new Set();
+    for (const e of edges) linked.add(e.source).add(e.target);
+    nodes = nodes.filter(
+      (n) =>
+        linked.has(n.id) ||
+        (n.kind === "note" && settings.orphans !== false) ||
+        n.id === settings.keep,
+    );
+    const groups = (settings.groups || [])
+      .filter((g) => g.query && g.query.trim())
+      .map((g) => ({ match: compile(g.query), color: g.color }));
+    nodes = nodes.map((n) => {
+      const group = n.kind === "note" && groups.find((g) => g.match(n));
+      return group ? Object.assign({}, n, { color: group.color }) : n;
+    });
+    ids = new Set(nodes.map((n) => n.id));
+    return {
+      nodes: nodes,
+      edges: edges.filter((e) => ids.has(e.source) && ids.has(e.target)),
+    };
+  }
+
+  /**
+   * The part of `graph` within `depth` links of `focus`. `incoming` and
+   * `outgoing` say which way a link may be followed; `neighbours`, whether
+   * links among the notes reached show too, or only the ones that reached
+   * them - the local graph's three switches in Obsidian.
+   */
+  function neighbourhood(graph, focus, depth, options) {
+    const opts = Object.assign(
+      { incoming: true, outgoing: true, neighbours: true },
+      options,
+    );
+    const level = new Map([[focus, 0]]);
     let frontier = [focus];
-    for (let d = 0; d < depth; d++) {
+    const follows = (e, from) =>
+      (e.source === from && (opts.outgoing || (e.both && opts.incoming))) ||
+      (e.target === from && (opts.incoming || (e.both && opts.outgoing)));
+    for (let d = 1; d <= depth && frontier.length; d++) {
       const next = [];
-      for (const e of graph.edges) {
-        for (const [a, b] of [
-          [e.source, e.target],
-          [e.target, e.source],
-        ])
-          if (frontier.includes(a) && !near.has(b)) {
-            near.add(b);
-            next.push(b);
-          }
-      }
+      for (const from of frontier)
+        for (const e of graph.edges) {
+          if (e.source !== from && e.target !== from) continue;
+          const to = e.source === from ? e.target : e.source;
+          if (level.has(to) || !follows(e, from)) continue;
+          level.set(to, d);
+          next.push(to);
+        }
       frontier = next;
     }
     return {
-      nodes: graph.nodes.filter((n) => near.has(n.id)),
-      edges: graph.edges.filter(
-        (e) => near.has(e.source) && near.has(e.target),
-      ),
+      nodes: graph.nodes.filter((n) => level.has(n.id)),
+      edges: graph.edges.filter((e) => {
+        if (!level.has(e.source) || !level.has(e.target)) return false;
+        const a = level.get(e.source);
+        const b = level.get(e.target);
+        if (a === b) return opts.neighbours;
+        // The link that reached a note, or one alongside it.
+        return follows(e, a < b ? e.source : e.target);
+      }),
     };
   }
 
   root.graphLinks = {
-    buildGraph: buildGraph,
     graphFromMetadata: graphFromMetadata,
+    compile: compile,
+    filterGraph: filterGraph,
     neighbourhood: neighbourhood,
   };
 })(typeof window !== "undefined" ? window : globalThis);

@@ -1,8 +1,9 @@
 // Graph View: the open folder's documents and the links between them,
 // from what Textus knows of the folder (textus.metadata - links.js makes
 // the graph), drawn in a tab of its own and around the document in front
-// in the sidebar. Drawn again, a moment after, whenever the folder's
-// documents change.
+// in the sidebar. Each has a settings panel, as Obsidian's graphs do -
+// filters, groups, display and forces - kept in the plugin's storage.
+// Drawn again, a moment after, whenever the folder's documents change.
 /** What activate was given: the plugin's storage and own files. */
 let ctx;
 
@@ -12,11 +13,53 @@ let building = null;
 let stale = true;
 const views = new Set();
 let local = null;
+let last = null;
+
+/** The document in front; with a view in front (this graph, say), the
+ *  last one that was, while it is still open. */
+async function focusPath() {
+  const path = await textus.editor.getPath();
+  if (path) return (last = path);
+  const open = (await textus.layout.tabs())
+    .filter((tab) => tab.kind === "document" && tab.path)
+    .map((tab) => tab.path);
+  if (!open.includes(last)) last = open[0] || null;
+  return last;
+}
+
+const DEFAULTS = {
+  search: "",
+  tags: false,
+  existingOnly: false,
+  orphans: true,
+  groups: [],
+  arrows: false,
+  textFade: 0,
+  nodeSize: 1,
+  linkThickness: 1,
+  center: 0.5,
+  repel: 10,
+  linkForce: 0.5,
+  linkDistance: 70,
+};
+const LOCAL_DEFAULTS = Object.assign({}, DEFAULTS, {
+  depth: 1,
+  incoming: true,
+  outgoing: true,
+  neighbours: true,
+});
+
+async function settingsOf(isLocal) {
+  const saved = await ctx.storage.global.get(isLocal ? "local" : "global");
+  return Object.assign({}, isLocal ? LOCAL_DEFAULTS : DEFAULTS, saved);
+}
 
 async function build() {
   const root = await textus.files.root();
   if (!root) return null;
-  return graphLinks.graphFromMetadata(await textus.metadata.all());
+  return graphLinks.graphFromMetadata(await textus.metadata.all(), {
+    tags: true,
+  });
 }
 
 async function current() {
@@ -34,47 +77,52 @@ async function current() {
 
 async function sendGlobal(view) {
   const g = await current();
-  const orphans = await textus.settings.get("orphans");
-  if (!g) return view.postMessage({ type: "graph", graph: null });
-  let shown = g;
-  if (!orphans) {
-    const linked = new Set();
-    for (const e of g.edges) linked.add(e.source).add(e.target);
-    shown = { nodes: g.nodes.filter((n) => linked.has(n.id)), edges: g.edges };
-  }
+  const settings = await settingsOf(false);
+  const focus = await focusPath();
   view.postMessage({
     type: "graph",
-    graph: shown,
-    focus: await textus.editor.getPath(),
+    graph: g && graphLinks.filterGraph(g, settings),
+    focus: focus,
+    settings: settings,
   });
 }
 
 async function sendLocal() {
   if (!local) return;
   const g = await current();
-  const focus = await textus.editor.getPath();
-  if (!g || !focus || !g.nodes.some((n) => n.id === focus))
-    return local.postMessage({
-      type: "graph",
-      graph: g ? { nodes: [], edges: [] } : null,
-      focus: focus,
-    });
-  const depth = Number(await textus.settings.get("depth")) || 1;
+  const settings = await settingsOf(true);
+  const focus = await focusPath();
+  const known = g && focus && g.nodes.some((n) => n.id === focus);
   local.postMessage({
     type: "graph",
-    graph: graphLinks.neighbourhood(g, focus, depth),
+    graph: !g
+      ? null
+      : !known
+        ? { nodes: [], edges: [] }
+        : graphLinks.neighbourhood(
+            graphLinks.filterGraph(
+              g,
+              Object.assign({}, settings, { keep: focus }),
+            ),
+            focus,
+            Math.min(5, Math.max(1, Number(settings.depth) || 1)),
+            settings,
+          ),
     focus: focus,
+    settings: settings,
   });
+}
+
+function sendAll() {
+  for (const view of views) sendGlobal(view).catch(() => {});
+  sendLocal().catch(() => {});
 }
 
 let timer = 0;
 function changed() {
   stale = true;
   clearTimeout(timer);
-  timer = setTimeout(function () {
-    for (const view of views) sendGlobal(view).catch(() => {});
-    sendLocal().catch(() => {});
-  }, 400);
+  timer = setTimeout(sendAll, 400);
 }
 
 function wire(webview, isLocal) {
@@ -84,9 +132,27 @@ function wire(webview, isLocal) {
       else await sendGlobal(webview);
     }
     if (message.type === "open" && message.path)
-      await textus.layout.open(message.path);
+      await textus.layout.open(
+        message.path,
+        message.newTab ? { where: "tab" } : undefined,
+      );
     if (message.type === "full")
       await textus.layout.openView("catvinci.graph.global");
+    if (message.type === "settings") {
+      const key = isLocal ? "local" : "global";
+      // Only what differs from the defaults is kept: "Reset" is null.
+      const defaults = isLocal ? LOCAL_DEFAULTS : DEFAULTS;
+      const next = {};
+      for (const [k, v] of Object.entries(message.settings || {}))
+        if (k in defaults && JSON.stringify(v) !== JSON.stringify(defaults[k]))
+          next[k] = v;
+      await ctx.storage.global.set(
+        key,
+        Object.keys(next).length ? next : null,
+      );
+      if (isLocal) await sendLocal();
+      else for (const view of views) await sendGlobal(view);
+    }
   });
 }
 
@@ -99,11 +165,7 @@ exports.activate = function (context) {
   ctx = context;
   textus.metadata.onDidChange(changed);
   textus.files.onDidChangeRoot(changed);
-  textus.settings.onDidChange(changed);
-  textus.editor.onDidChangeActive(function () {
-    sendLocal().catch(() => {});
-    for (const view of views) sendGlobal(view).catch(() => {});
-  });
+  textus.editor.onDidChangeActive(sendAll);
   textus.commands.register("catvinci.graph.open", function () {
     return textus.layout.openView("catvinci.graph.global");
   });
