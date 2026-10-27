@@ -1,8 +1,8 @@
 // Vim in the Textus editor: normal, insert, visual and visual-line mode,
-// counts, motions, operators, a register, dot repeat, flash (s and two
-// characters, then a label, jumps anywhere on screen), the command line
-// (:w, :q, :wq, :12) and key mappings written as in a vimrc (inoremap jj
-// <Esc>). Keys come from the editor while this plugin holds the keyboard
+// counts, motions, operators, a register, dot repeat, flash (s and a
+// character, then a label, jumps anywhere on screen), the command line in
+// the command palette (:w, :q, :wq, :12) and key mappings written as in a
+// vimrc (inoremap jj <Esc>). Keys come from the editor while this plugin holds the keyboard
 // (textus.editor.captureKeys); every change is an editor action
 // (textus.editor.exec), done as typing is and undone with u. A Markdown
 // document is not a plain file: a "line" here is a paragraph, a heading,
@@ -20,7 +20,8 @@ var register = { text: "", linewise: false };
 var lastFind = null; // { char, forward, till }
 var vlineCount = 1;
 var flash = null; // { query, letters, op } while s is collecting
-var cmdline = null; // the command line's text while : is open
+var cmdline = null; // the command line's text while a mapping's : runs
+var feeding = 0; // above 0 while a mapping's keys are fed
 var note = ""; // a line for the status until the next key (an unknown command)
 var settings = { flash: true, escape: "", mappings: "" };
 
@@ -285,7 +286,12 @@ function mappable() {
 
 /** Runs keys as typed, unmapped (a mapping's right-hand side). */
 async function feed(keys) {
-  for (var i = 0; i < keys.length; i++) await dispatch(keys[i]);
+  feeding++;
+  try {
+    for (var i = 0; i < keys.length; i++) await dispatch(keys[i]);
+  } finally {
+    feeding--;
+  }
 }
 
 async function mapKey(key) {
@@ -412,8 +418,7 @@ async function flashKey(key) {
   if (key === "Escape" || key === "ctrl+[") return endFlash();
   if (key.length !== 1) return;
   // A label's letter jumps; any other character narrows the search.
-  if (flash.query.length >= 2 && flash.letters.indexOf(key) >= 0)
-    return flashJump(key);
+  if (flash.query && flash.letters.indexOf(key) >= 0) return flashJump(key);
   flash.query += key;
   var shown = await exec({ op: "flash", query: flash.query });
   flash.letters = shown.letters || "";
@@ -461,6 +466,32 @@ async function cmdlineKey(key) {
     cmdline += key;
   }
   showStatus();
+}
+
+var EX = [
+  [":w", "exWrite"],
+  [":q", "exQuit"],
+  [":wq", "exWriteQuit"],
+  [":u", "exUndo"],
+  [":red", "exRedo"],
+];
+
+/** ":" typed: the palette with Vim's commands first. One of Textus's runs
+ *  there; Vim's, or what was typed (":12"), runs here. */
+async function commandPalette() {
+  var range = mode === "visual" || mode === "vline" ? "'<,'>" : "";
+  var got = await textus.ui.pick(
+    EX.map(function (ex) {
+      return { label: ex[0], description: textus.l10n.t(ex[1]), value: ex[0] };
+    }),
+    {
+      commands: true,
+      value: ":" + range,
+      placeholder: textus.l10n.t("commandLine"),
+    },
+  );
+  var text = typeof got === "string" ? got : got && got.typed;
+  if (typeof text === "string") await runCommand(text.replace(/^:/, ""));
 }
 
 /** An Ex command: what Textus has of them - saving, closing the tab,
@@ -653,7 +684,10 @@ async function normalKey(key) {
   if (key === ":" && !operator) {
     count = "";
     if (!replaying) recording = null;
-    cmdline = "";
+    // A mapping's ":w<CR>" types on in the status line; typed, ":" opens
+    // the command palette.
+    if (replaying || feeding) cmdline = "";
+    else await commandPalette();
     showStatus();
     return;
   }
