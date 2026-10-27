@@ -248,6 +248,8 @@
 
   api.onMessage((message) => {
     if (message.type === "file") {
+      // Changed elsewhere: what is there now wins over an unsaved move.
+      clearTimeout(timer);
       board = md.parse(message.text);
       render();
     }
