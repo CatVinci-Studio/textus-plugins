@@ -18,9 +18,7 @@
       {
         "viewType": "catvinci.pdf-viewer.pdf",
         "displayName": "%name%",
-        "filenamePatterns": [
-          "*.pdf"
-        ]
+        "filenamePatterns": ["*.pdf"]
       }
     ],
     "settings": [

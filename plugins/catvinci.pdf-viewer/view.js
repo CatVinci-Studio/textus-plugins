@@ -25,11 +25,13 @@
   });
 
   // PDF.js's data files - a CJK font's character map (cMap), a standard
-  // font - asked of the host, which reads them from the plugin's lib
+  // font, an image decoder - asked of the host, which reads them from the plugin's lib
   // folder: the page has no network. Answers come back by id.
   const FOLDERS = {
     cMapUrl: "lib/cmaps/",
     standardFontDataUrl: "lib/standard_fonts/",
+    // Decoders for scanned pages' JBIG2 and JPEG 2000 images.
+    wasmUrl: "lib/wasm/",
   };
   const waiting = new Map();
   let asked = 0;
@@ -53,6 +55,7 @@
   let baseWidth = 612;
   let pages = [];
   let observer = null;
+  let freer = null;
 
   function fitScale() {
     return Math.max(0.25, (viewer.clientWidth - 48) / baseWidth);
@@ -95,8 +98,17 @@
     markHits(div);
   }
 
+  // A drawn page far out of sight is a placeholder again: a long PDF
+  // scrolled through keeps only the canvases near the view.
+  function free(div) {
+    if (!div.dataset.drawn) return;
+    delete div.dataset.drawn;
+    div.replaceChildren();
+  }
+
   async function layout() {
     observer?.disconnect();
+    freer?.disconnect();
     const first = await pdf.getPage(1);
     const base = first.getViewport({ scale: 1 });
     baseWidth = base.width;
@@ -113,6 +125,13 @@
       },
       { root: viewer, rootMargin: "300px 0px" },
     );
+    freer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries)
+          if (!entry.isIntersecting) free(entry.target);
+      },
+      { root: viewer, rootMargin: "3000px 0px" },
+    );
     for (let n = 1; n <= pdf.numPages; n++) {
       const div = document.createElement("div");
       div.className = "page";
@@ -122,6 +141,7 @@
       viewer.append(div);
       pages.push(div);
       observer.observe(div);
+      freer.observe(div);
     }
     $("count").textContent = "/ " + pdf.numPages;
     $("page").max = String(pdf.numPages);
@@ -271,6 +291,15 @@
       waiting.delete(message.id);
       return;
     }
+    if (message.type === "goto") {
+      if (pdf) goTo(message.page);
+      else restoring = message.page;
+      return;
+    }
+    if (message.type === "failed") {
+      status.textContent = t("failed", message.message);
+      return;
+    }
     if (message.type !== "file") return;
     status.textContent = t("loading");
     try {
@@ -287,7 +316,7 @@
       const position = message.position;
       fitWidth = position ? !position.scale : message.zoom !== "100";
       scale = position?.scale || 1;
-      restoring = position?.page || 0;
+      restoring = message.page || position?.page || 0;
       texts = [];
       status.textContent = "";
       await layout();

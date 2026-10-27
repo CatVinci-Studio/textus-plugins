@@ -56,7 +56,13 @@
     clearHits();
     const q = query.trim().toLowerCase();
     if (q) {
-      const walker = document.createTreeWalker(pages, NodeFilter.SHOW_TEXT);
+      // Not the stylesheets docx-preview puts among the pages.
+      const walker = document.createTreeWalker(pages, NodeFilter.SHOW_TEXT, {
+        acceptNode: (node) =>
+          node.parentNode.nodeName === "STYLE"
+            ? NodeFilter.FILTER_REJECT
+            : NodeFilter.FILTER_ACCEPT,
+      });
       const nodes = [];
       while (walker.nextNode()) nodes.push(walker.currentNode);
       for (const node of nodes) {
@@ -130,6 +136,10 @@
   });
 
   api.onMessage(async (message) => {
+    if (message.type === "failed") {
+      $("status").textContent = t("failed", message.message);
+      return;
+    }
     if (message.type !== "file") return;
     $("name").textContent = message.name;
     $("status").textContent = t("loading");
