@@ -6,6 +6,7 @@ UML and other diagrams from PlantUML text, drawn on your computer - or by the Pl
 - `height=400` after the language sets the drawing's height.
 - An export - HTML, PDF, Word - carries the drawing as a picture.
 - Settings › Extensions › Plugins › PlantUML › Drawn by: this computer (the default - nothing leaves it) or the PlantUML server.
+- Drawing on your computer takes about 100 MB more memory; the PlantUML server takes none.
 
 ## Example
 

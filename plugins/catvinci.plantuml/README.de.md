@@ -6,6 +6,7 @@ UML- und andere Diagramme aus PlantUML-Text, auf Ihrem Rechner gezeichnet – od
 - `height=400` nach der Sprache legt die Höhe der Zeichnung fest.
 - Beim Export nach HTML, PDF oder Word kommt die Zeichnung als Bild mit.
 - Einstellungen › Erweiterungen › Plugins › PlantUML › Gezeichnet von: diesem Rechner (Standard, nichts verlässt ihn) oder dem PlantUML-Server.
+- Auf deinem Computer zu zeichnen braucht etwa 100 MB mehr Arbeitsspeicher; der PlantUML-Server braucht keinen.
 
 ## Beispiel
 
