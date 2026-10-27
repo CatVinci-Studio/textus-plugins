@@ -18,7 +18,6 @@ let links: {
     graph: Graph,
     focus: string,
     depth: number,
-    options?: Record<string, boolean>,
   ) => Graph;
 };
 
@@ -122,7 +121,7 @@ describe("the settings panel's filters", () => {
 });
 
 describe("the local graph", () => {
-  // a → b → c, d → b, and b ↔ e; c and e link to each other too.
+  // a → b → c, d → b, b ↔ e, c → e.
   const g = () =>
     links.graphFromMetadata([
       doc("a.md", ["b.md"]),
@@ -135,19 +134,5 @@ describe("the local graph", () => {
   it("reaches as far as the depth, either way", () => {
     expect(ids(links.neighbourhood(g(), "/n/a.md", 1))).toEqual(["/n/a.md", "/n/b.md"]);
     expect(ids(links.neighbourhood(g(), "/n/a.md", 2))).toHaveLength(5);
-  });
-
-  it("follows only incoming or only outgoing links when asked", () => {
-    const out = links.neighbourhood(g(), "/n/b.md", 1, { incoming: false });
-    expect(ids(out)).toEqual(["/n/b.md", "/n/c.md", "/n/e.md"]);
-    const into = links.neighbourhood(g(), "/n/b.md", 1, { outgoing: false });
-    expect(ids(into)).toEqual(["/n/a.md", "/n/b.md", "/n/d.md", "/n/e.md"]);
-  });
-
-  it("hides links among the neighbours when they're turned off", () => {
-    const around = links.neighbourhood(g(), "/n/b.md", 1, { neighbours: false });
-    expect(around.edges.some((e) => e.source === "/n/c.md")).toBe(false);
-    const all = links.neighbourhood(g(), "/n/b.md", 1);
-    expect(all.edges.some((e) => e.source === "/n/c.md")).toBe(true);
   });
 });

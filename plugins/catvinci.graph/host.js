@@ -1,8 +1,8 @@
 // Graph View: the open folder's documents and the links between them,
 // from what Textus knows of the folder (textus.metadata - links.js makes
 // the graph), drawn in a tab of its own and around the document in front
-// in the sidebar. Each has a settings panel, as Obsidian's graphs do -
-// filters, groups, display and forces - kept in the plugin's storage.
+// in the sidebar. Each has a small settings panel - filters and colour
+// groups - kept in the plugin's storage; how it looks adapts by itself.
 // Drawn again, a moment after, whenever the folder's documents change.
 /** What activate was given: the plugin's storage and own files. */
 let ctx;
@@ -33,21 +33,8 @@ const DEFAULTS = {
   existingOnly: false,
   orphans: true,
   groups: [],
-  arrows: false,
-  textFade: 0,
-  nodeSize: 1,
-  linkThickness: 1,
-  center: 0.5,
-  repel: 10,
-  linkForce: 0.5,
-  linkDistance: 70,
 };
-const LOCAL_DEFAULTS = Object.assign({}, DEFAULTS, {
-  depth: 1,
-  incoming: true,
-  outgoing: true,
-  neighbours: true,
-});
+const LOCAL_DEFAULTS = Object.assign({}, DEFAULTS, { depth: 1 });
 
 async function settingsOf(isLocal) {
   const saved = await ctx.storage.global.get(isLocal ? "local" : "global");
@@ -106,7 +93,6 @@ async function sendLocal() {
             ),
             focus,
             Math.min(5, Math.max(1, Number(settings.depth) || 1)),
-            settings,
           ),
     focus: focus,
     settings: settings,

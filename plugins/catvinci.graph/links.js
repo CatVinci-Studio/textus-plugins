@@ -144,44 +144,28 @@
     };
   }
 
-  /**
-   * The part of `graph` within `depth` links of `focus`. `incoming` and
-   * `outgoing` say which way a link may be followed; `neighbours`, whether
-   * links among the notes reached show too, or only the ones that reached
-   * them - the local graph's three switches in Obsidian.
-   */
-  function neighbourhood(graph, focus, depth, options) {
-    const opts = Object.assign(
-      { incoming: true, outgoing: true, neighbours: true },
-      options,
-    );
-    const level = new Map([[focus, 0]]);
+  /** The part of `graph` within `depth` links of `focus`, either way. */
+  function neighbourhood(graph, focus, depth) {
+    const near = new Set([focus]);
     let frontier = [focus];
-    const follows = (e, from) =>
-      (e.source === from && (opts.outgoing || (e.both && opts.incoming))) ||
-      (e.target === from && (opts.incoming || (e.both && opts.outgoing)));
-    for (let d = 1; d <= depth && frontier.length; d++) {
+    for (let d = 0; d < depth && frontier.length; d++) {
       const next = [];
-      for (const from of frontier)
-        for (const e of graph.edges) {
-          if (e.source !== from && e.target !== from) continue;
-          const to = e.source === from ? e.target : e.source;
-          if (level.has(to) || !follows(e, from)) continue;
-          level.set(to, d);
-          next.push(to);
-        }
+      for (const e of graph.edges)
+        for (const [a, b] of [
+          [e.source, e.target],
+          [e.target, e.source],
+        ])
+          if (frontier.includes(a) && !near.has(b)) {
+            near.add(b);
+            next.push(b);
+          }
       frontier = next;
     }
     return {
-      nodes: graph.nodes.filter((n) => level.has(n.id)),
-      edges: graph.edges.filter((e) => {
-        if (!level.has(e.source) || !level.has(e.target)) return false;
-        const a = level.get(e.source);
-        const b = level.get(e.target);
-        if (a === b) return opts.neighbours;
-        // The link that reached a note, or one alongside it.
-        return follows(e, a < b ? e.source : e.target);
-      }),
+      nodes: graph.nodes.filter((n) => near.has(n.id)),
+      edges: graph.edges.filter(
+        (e) => near.has(e.source) && near.has(e.target),
+      ),
     };
   }
 

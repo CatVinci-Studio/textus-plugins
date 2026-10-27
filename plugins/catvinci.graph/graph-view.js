@@ -1,9 +1,9 @@
 // A force-directed graph on a canvas: nodes pushed apart, links pulling
 // together, settling over a few seconds. Drag the background to move, the
 // wheel (or a pinch) to zoom, a node to place it; hover lights its links,
-// a click opens it (with Ctrl or Cmd, in a new tab). How it looks and
-// moves - arrows, label fade, node size, line width, the four forces - is
-// the settings panel's (setOptions). Repulsion is computed on a grid of nearby nodes, so a
+// a click opens it (with Ctrl or Cmd, in a new tab). It adapts by itself:
+// labels as it is zoomed in, arrows when there are few enough links to
+// read them, a node's size by its links. Repulsion is computed on a grid of nearby nodes, so a
 // folder of thousands of documents still moves smoothly.
 (function (root) {
   "use strict";
@@ -30,17 +30,8 @@
     let view = { x: 0, y: 0, k: 1 };
     let size = { w: 0, h: 0, ratio: 1 };
     let colors = {};
-    let opts = {
-      arrows: false,
-      textFade: 0,
-      nodeSize: 1,
-      linkThickness: 1,
-      center: 0.5,
-      repel: 10,
-      linkForce: 0.5,
-      linkDistance: 70,
-      groups: false,
-    };
+    // With colour groups, notes outside them keep the plain colour.
+    let grouped = false;
 
     function readColors() {
       colors = {
@@ -65,9 +56,7 @@
     }
 
     function radius(node) {
-      return (
-        (3.5 + Math.min(9, Math.sqrt(node.degree || 0) * 1.8)) * opts.nodeSize
-      );
+      return 3.5 + Math.min(9, Math.sqrt(node.degree || 0) * 1.8);
     }
 
     function setData(data, focusId) {
@@ -109,13 +98,9 @@
       draw();
     }
 
-    function setOptions(next) {
-      const moved = ["center", "repel", "linkForce", "linkDistance"].some(
-        (k) => k in next && next[k] !== opts[k],
-      );
-      Object.assign(opts, next);
-      if (moved) heat(0.5);
-      else draw();
+    function setGroups(on) {
+      grouped = on;
+      draw();
     }
 
     function heat(value) {
@@ -131,7 +116,7 @@
         if (!grid.has(key)) grid.set(key, []);
         grid.get(key).push(n);
       }
-      const strength = 90 * opts.repel;
+      const strength = 900;
       const room = 56;
       for (const n of nodes) {
         const gx = Math.floor(n.x / cell);
@@ -165,14 +150,14 @@
             }
           }
         // A gentle pull to the middle keeps islands in view.
-        n.vx -= n.x * 0.004 * opts.center * alpha;
-        n.vy -= n.y * 0.004 * opts.center * alpha;
+        n.vx -= n.x * 0.002 * alpha;
+        n.vy -= n.y * 0.002 * alpha;
       }
       for (const e of edges) {
         const x = e.b.x - e.a.x;
         const y = e.b.y - e.a.y;
         const d = Math.sqrt(x * x + y * y) || 1;
-        const f = ((d - opts.linkDistance) / d) * 0.12 * opts.linkForce * alpha;
+        const f = ((d - 70) / d) * 0.06 * alpha;
         e.a.vx += x * f;
         e.a.vy += y * f;
         e.b.vx -= x * f;
@@ -217,7 +202,8 @@
       ctx.fillRect(0, 0, size.w, size.h);
       const lit = hover ? neighbours.get(hover.id) : null;
       const scale = Math.min(1.6, Math.max(0.6, view.k));
-      ctx.lineWidth = opts.linkThickness;
+      ctx.lineWidth = 1;
+      const arrows = edges.length <= 200 && view.k >= 0.7;
       for (const e of edges) {
         const on = hover && (e.a === hover || e.b === hover);
         ctx.strokeStyle = on ? colors.accent : colors.line;
@@ -229,15 +215,12 @@
         ctx.moveTo(a.x, a.y);
         ctx.lineTo(b.x, b.y);
         ctx.stroke();
-        if (opts.arrows) {
+        if (arrows) {
           arrow(a, b, radius(e.b) * scale);
           if (e.both) arrow(b, a, radius(e.a) * scale);
         }
       }
-      // Labels fade in past a zoom the panel's slider sets.
-      const showLabels =
-        view.k > 0.6 * Math.pow(1.6, opts.textFade) ||
-        (nodes.length < 60 && opts.textFade <= 0);
+      const showLabels = view.k > 0.6 || nodes.length < 60;
       ctx.font =
         Math.round(11 * Math.min(1.4, Math.max(0.9, view.k))) +
         "px " +
@@ -261,7 +244,7 @@
               : n.kind === "tag"
                 ? colors.tag
                 : n.color ||
-                  (!opts.groups && folderColor(n)) ||
+                  (!grouped && folderColor(n)) ||
                   colors.node;
         ctx.fill();
         if (n.kind === "missing") {
@@ -279,7 +262,7 @@
     /** An arrowhead at `to`'s edge, on the line from `from`. */
     function arrow(from, to, r) {
       const angle = Math.atan2(to.y - from.y, to.x - from.x);
-      const size = 4 + 2 * opts.linkThickness;
+      const size = 6;
       const tipX = to.x - Math.cos(angle) * (r + 1);
       const tipY = to.y - Math.sin(angle) * (r + 1);
       ctx.beginPath();
@@ -418,7 +401,7 @@
     return {
       setData: setData,
       setFocus: setFocus,
-      setOptions: setOptions,
+      setGroups: setGroups,
       zoomToFit: function () {
         if (!nodes.length) return;
         const xs = nodes.map((n) => n.x);

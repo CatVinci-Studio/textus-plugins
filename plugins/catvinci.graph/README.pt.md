@@ -6,7 +6,5 @@ Suas notas e os links entre elas, como um grafo.
 - A aba **Grafo** da barra lateral mostra as notas ao redor do documento aberto.
 - Contam os [[links wiki]] e os links para outros documentos. Clique em uma nota para abri-la (com Ctrl ou ⌘, em uma nova aba); arraste para se mover e use a roda para dar zoom.
 - O botão de controles deslizantes no topo abre os ajustes do grafo:
-  - **Filtros**: busca (`path:ideias`, `file:rascunho`, `tag:#afazer`, um `-` para excluir), tags como nós, notas ainda não criadas, notas sem links. O grafo lateral também define sua profundidade e quais links segue.
+  - **Filtros**: busca (`path:ideias`, `file:rascunho`, `tag:#afazer`, um `-` para excluir), tags como nós, notas ainda não criadas, notas sem links. O grafo lateral também define até onde vai.
   - **Grupos**: dê cor às notas que uma busca encontra.
-  - **Exibição**: setas, quando os rótulos aparecem, tamanho dos nós, espessura dos links.
-  - **Forças**: o quanto as notas se juntam, se repelem e se atraem pelos links, e o comprimento dos links.
