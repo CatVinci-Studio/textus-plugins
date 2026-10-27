@@ -77,8 +77,6 @@
     const canvas = document.createElement("canvas");
     canvas.width = Math.floor(viewport.width * ratio);
     canvas.height = Math.floor(viewport.height * ratio);
-    canvas.style.width = viewport.width + "px";
-    canvas.style.height = viewport.height + "px";
     div.style.width = viewport.width + "px";
     div.style.height = viewport.height + "px";
     await page.render({
@@ -256,17 +254,58 @@
   }
   viewer.addEventListener("scroll", updatePage, { passive: true });
 
-  function setScale(next) {
+  // A zoom stretches the pages drawn at once, keeping the spot at (x, y)
+  // still, and draws them sharp again once it stops.
+  let sharpening = 0;
+  function zoomTo(next, x, y) {
+    if (!pdf || !pages.length) return;
+    next = Math.min(5, Math.max(0.25, next));
+    if (next === scale) return;
+    const box = viewer.getBoundingClientRect();
+    x = x ?? box.left + box.width / 2;
+    y = y ?? box.top + box.height / 2;
+    const under =
+      pages.find((div) => {
+        const r = div.getBoundingClientRect();
+        return r.bottom >= y;
+      }) || pages[pages.length - 1];
+    const before = under.getBoundingClientRect();
+    const fx = (x - before.left) / before.width;
+    const fy = (y - before.top) / before.height;
+    const ratio = next / scale;
+    scale = next;
+    for (const div of pages) {
+      div.style.width = parseFloat(div.style.width) * ratio + "px";
+      div.style.height = parseFloat(div.style.height) * ratio + "px";
+      div.style.setProperty("--total-scale-factor", String(scale));
+    }
+    const after = under.getBoundingClientRect();
+    viewer.scrollLeft += after.left + fx * after.width - x;
+    viewer.scrollTop += after.top + fy * after.height - y;
+    showZoom();
+    clearTimeout(sharpening);
+    sharpening = setTimeout(() => {
+      const view = viewer.getBoundingClientRect();
+      for (const div of pages) {
+        const r = div.getBoundingClientRect();
+        if (r.bottom > view.top - 300 && r.top < view.bottom + 300)
+          void draw(div);
+        else free(div);
+      }
+      keep();
+    }, 180);
+  }
+  function setScale(next, x, y) {
     fitWidth = false;
-    scale = Math.min(5, Math.max(0.25, next));
-    void layout().then(keep);
+    zoomTo(next, x, y);
   }
   $("zoom-in").onclick = () => setScale(scale * 1.2);
   $("zoom-out").onclick = () => setScale(scale / 1.2);
   $("zoom").onclick = () => {
     if (fitWidth) return setScale(1);
     fitWidth = true;
-    void layout().then(keep);
+    zoomTo(fitScale());
+    showZoom();
   };
   $("prev").onclick = () => goTo(currentPage() - 1);
   $("next").onclick = () => goTo(currentPage() + 1);
@@ -276,7 +315,9 @@
     (event) => {
       if (!event.ctrlKey && !event.metaKey) return;
       event.preventDefault();
-      setScale(scale * (event.deltaY < 0 ? 1.1 : 1 / 1.1));
+      // A pinch sends many small steps, a mouse wheel few large ones.
+      const step = Math.max(-25, Math.min(25, event.deltaY));
+      setScale(scale * Math.exp(-step * 0.01), event.clientX, event.clientY);
     },
     { passive: false },
   );
@@ -284,7 +325,7 @@
   window.addEventListener("resize", () => {
     if (!pdf || !fitWidth) return;
     clearTimeout(resizing);
-    resizing = setTimeout(() => void layout(), 150);
+    resizing = setTimeout(() => zoomTo(fitScale()), 150);
   });
 
   api.onMessage(async (message) => {

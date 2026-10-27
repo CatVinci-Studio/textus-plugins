@@ -33,6 +33,8 @@ body {
 }
 .page canvas {
   display: block;
+  width: 100%;
+  height: 100%;
 }
 
 /* PDF.js's text layer (its pdf_viewer.css, flattened): the page's words
