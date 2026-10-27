@@ -1,6 +1,6 @@
 // Quick Notes: short notes kept by the plugin (textus.storage), listed in
-// a sidebar tab. A note goes into the document as a proposal the writer
-// accepts, or opens as a new document of its own.
+// a sidebar tab. A note goes into the document at the caret, or opens as
+// a new document of its own.
 /** What activate was given: the plugin's storage and own files. */
 let ctx;
 
