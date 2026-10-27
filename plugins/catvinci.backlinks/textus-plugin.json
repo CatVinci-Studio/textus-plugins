@@ -1,0 +1,185 @@
+{
+  "id": "catvinci.backlinks",
+  "name": "%name%",
+  "version": "0.1.0",
+  "publisher": "catvinci",
+  "author": "CatVinci Studio",
+  "description": "%description%",
+  "icon": "icon.svg",
+  "license": "MIT",
+  "repository": "https://github.com/CatVinci-Studio/textus-plugins",
+  "engines": {
+    "textus": ">=1.3.0-beta.2"
+  },
+  "main": [
+    "mentions.js",
+    "host.js"
+  ],
+  "permissions": [
+    "editor.read",
+    "files.read",
+    "files.write"
+  ],
+  "contributes": {
+    "sidebarTabs": [
+      {
+        "id": "catvinci.backlinks.panel",
+        "title": "%name%",
+        "icon": "tab.svg",
+        "type": "list"
+      }
+    ]
+  },
+  "l10n": {
+    "en": {
+      "name": "Backlinks",
+      "description": "For the document in front: the notes that link to it, the ones that name it without a link - linked in one click - and the notes it links to.",
+      "of": "Links of “{0}”",
+      "linked": "Linked mentions",
+      "unlinked": "Unlinked mentions",
+      "outgoing": "Outgoing links",
+      "link": "Link",
+      "missing": "not created yet",
+      "filter": "Filter",
+      "none": "No links to or from this document yet.",
+      "nofolder": "Open a folder to see the links between its documents.",
+      "nodoc": "Open a document to see what links to it.",
+      "notInFolder": "This document isn't in the open folder."
+    },
+    "zh": {
+      "name": "反向链接",
+      "description": "针对当前文档：列出链接到它的笔记、提到它却没加链接的地方（一键补上链接），以及它链接出去的笔记。",
+      "of": "“{0}”的链接",
+      "linked": "已链接提及",
+      "unlinked": "未链接提及",
+      "outgoing": "出链",
+      "link": "添加链接",
+      "missing": "尚未创建",
+      "filter": "筛选",
+      "none": "还没有链接到这篇文档或从它链出的笔记。",
+      "nofolder": "打开一个文件夹，查看其中文档之间的链接。",
+      "nodoc": "打开一篇文档，查看哪些笔记链接到它。",
+      "notInFolder": "这篇文档不在打开的文件夹中。"
+    },
+    "zh-Hant": {
+      "name": "反向連結",
+      "description": "針對目前文件：列出連結到它的筆記、提到它卻沒加連結的地方（一鍵補上連結），以及它連結出去的筆記。",
+      "of": "「{0}」的連結",
+      "linked": "已連結提及",
+      "unlinked": "未連結提及",
+      "outgoing": "傳出連結",
+      "link": "加上連結",
+      "missing": "尚未建立",
+      "filter": "篩選",
+      "none": "還沒有連結到這篇文件或從它連出的筆記。",
+      "nofolder": "開啟一個資料夾，查看其中文件之間的連結。",
+      "nodoc": "開啟一篇文件，查看哪些筆記連結到它。",
+      "notInFolder": "這篇文件不在開啟的資料夾中。"
+    },
+    "ja": {
+      "name": "バックリンク",
+      "description": "開いている文書について、リンクしているノート、リンクせずに名前を出しているノート（ワンクリックでリンク化）、この文書からのリンク先を表示します。",
+      "of": "「{0}」のリンク",
+      "linked": "リンクされた言及",
+      "unlinked": "リンクされていない言及",
+      "outgoing": "発リンク",
+      "link": "リンクにする",
+      "missing": "未作成",
+      "filter": "絞り込み",
+      "none": "この文書へのリンクも、この文書からのリンクもまだありません。",
+      "nofolder": "フォルダを開くと、文書どうしのリンクが表示されます。",
+      "nodoc": "文書を開くと、そこへのリンクが表示されます。",
+      "notInFolder": "この文書は開いているフォルダにありません。"
+    },
+    "ko": {
+      "name": "백링크",
+      "description": "지금 문서를 링크하는 노트, 링크 없이 이름만 언급한 곳(한 번에 링크로 변환), 이 문서가 링크하는 노트를 보여 줍니다.",
+      "of": "“{0}”의 링크",
+      "linked": "링크된 언급",
+      "unlinked": "링크되지 않은 언급",
+      "outgoing": "나가는 링크",
+      "link": "링크로 만들기",
+      "missing": "아직 없음",
+      "filter": "필터",
+      "none": "이 문서로 오가는 링크가 아직 없습니다.",
+      "nofolder": "폴더를 열면 문서 사이의 링크를 볼 수 있습니다.",
+      "nodoc": "문서를 열면 그 문서를 링크하는 노트가 보입니다.",
+      "notInFolder": "이 문서는 열린 폴더에 없습니다."
+    },
+    "es": {
+      "name": "Enlaces entrantes",
+      "description": "Para el documento abierto: las notas que lo enlazan, las que lo nombran sin enlace – enlazables con un clic – y las notas a las que enlaza.",
+      "of": "Enlaces de «{0}»",
+      "linked": "Menciones enlazadas",
+      "unlinked": "Menciones sin enlace",
+      "outgoing": "Enlaces salientes",
+      "link": "Enlazar",
+      "missing": "aún no existe",
+      "filter": "Filtrar",
+      "none": "Todavía no hay enlaces hacia o desde este documento.",
+      "nofolder": "Abre una carpeta para ver los enlaces entre sus documentos.",
+      "nodoc": "Abre un documento para ver qué lo enlaza.",
+      "notInFolder": "Este documento no está en la carpeta abierta."
+    },
+    "fr": {
+      "name": "Rétroliens",
+      "description": "Pour le document ouvert : les notes qui le lient, celles qui le nomment sans lien – à lier en un clic – et les notes vers lesquelles il pointe.",
+      "of": "Liens de « {0} »",
+      "linked": "Mentions liées",
+      "unlinked": "Mentions non liées",
+      "outgoing": "Liens sortants",
+      "link": "Lier",
+      "missing": "pas encore créée",
+      "filter": "Filtrer",
+      "none": "Aucun lien vers ou depuis ce document pour l’instant.",
+      "nofolder": "Ouvrez un dossier pour voir les liens entre ses documents.",
+      "nodoc": "Ouvrez un document pour voir ce qui le lie.",
+      "notInFolder": "Ce document n’est pas dans le dossier ouvert."
+    },
+    "de": {
+      "name": "Rückverweise",
+      "description": "Für das geöffnete Dokument: die Notizen, die darauf verlinken, die es ohne Link erwähnen – mit einem Klick verlinkt – und die Notizen, auf die es verlinkt.",
+      "of": "Links von „{0}“",
+      "linked": "Verlinkte Erwähnungen",
+      "unlinked": "Unverlinkte Erwähnungen",
+      "outgoing": "Ausgehende Links",
+      "link": "Verlinken",
+      "missing": "noch nicht angelegt",
+      "filter": "Filtern",
+      "none": "Noch keine Links zu oder von diesem Dokument.",
+      "nofolder": "Öffne einen Ordner, um die Links zwischen seinen Dokumenten zu sehen.",
+      "nodoc": "Öffne ein Dokument, um zu sehen, was darauf verlinkt.",
+      "notInFolder": "Dieses Dokument liegt nicht im geöffneten Ordner."
+    },
+    "ru": {
+      "name": "Обратные ссылки",
+      "description": "Для открытого документа: заметки, которые на него ссылаются, упоминают его без ссылки (ссылка — в один клик), и заметки, на которые он ссылается.",
+      "of": "Ссылки «{0}»",
+      "linked": "Упоминания со ссылкой",
+      "unlinked": "Упоминания без ссылки",
+      "outgoing": "Исходящие ссылки",
+      "link": "Сделать ссылкой",
+      "missing": "ещё не создана",
+      "filter": "Фильтр",
+      "none": "Ссылок на этот документ и из него пока нет.",
+      "nofolder": "Откройте папку, чтобы увидеть ссылки между документами.",
+      "nodoc": "Откройте документ, чтобы увидеть, что на него ссылается.",
+      "notInFolder": "Этот документ не в открытой папке."
+    },
+    "pt": {
+      "name": "Backlinks",
+      "description": "Para o documento aberto: as notas que apontam para ele, as que o citam sem link – com link em um clique – e as notas para as quais ele aponta.",
+      "of": "Links de “{0}”",
+      "linked": "Menções com link",
+      "unlinked": "Menções sem link",
+      "outgoing": "Links de saída",
+      "link": "Criar link",
+      "missing": "ainda não criada",
+      "filter": "Filtrar",
+      "none": "Ainda não há links para ou deste documento.",
+      "nofolder": "Abra uma pasta para ver os links entre seus documentos.",
+      "nodoc": "Abra um documento para ver o que aponta para ele.",
+      "notInFolder": "Este documento não está na pasta aberta."
+    }
+  }
+}

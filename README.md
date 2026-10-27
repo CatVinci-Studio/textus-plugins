@@ -8,9 +8,10 @@ The plugins for [Textus](https://textus.catvinci.com), the Markdown editor. None
 
 | Plugin | What it does |
 | --- | --- |
+| Backlinks | For the document in front: the notes that link to it, the ones that name it without a link - linked in one click - and the notes it links to. |
 | Calendar & Daily Notes | A calendar in the sidebar and a note for each day, kept in a folder of the open folder. |
 | Emacs | Emacs keys in the editor: moving by character, word and line, the mark and region, the kill ring with C-y and M-y, C-/ undo and C-x prefixes. |
-| Graph View | Your notes and the links between them as a graph - [[wiki links]] and links to other documents - for the whole folder, or around the document in front. |
+| Graph View | Your notes and the links between them as a graph - for the whole folder, or around the document in front - with filters, colour groups and forces to shape it. |
 | Image Viewer | Open pictures and SVG files in a tab: zoom, fit, and an SVG's source. |
 | LaTeX Completion | In a formula, a backslash and the start of a command - \\fr, \\alp - lists the LaTeX commands that begin so, each with what it draws; Enter or Tab writes one, with the caret in its braces. |
 | Kanban | Boards of cards in lists, kept as a Markdown file (name.kanban.md) - a list per heading, a card per task. |
