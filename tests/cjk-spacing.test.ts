@@ -37,8 +37,26 @@ describe("CJK spacing", () => {
     );
   });
 
+  it("keeps image paths with a title, wiki links, footnotes, references and tags", () => {
+    for (const kept of [
+      '![图](./图a.png "标题a")',
+      "[[笔记A]]",
+      "见[^注1]",
+      "[ref]: ./文件a.md",
+      "标记 #标签a",
+    ])
+      expect(spacing.spaceOut(kept)).toBe(kept);
+    expect(spacing.spaceOut("# 标题A")).toBe("# 标题 A");
+  });
+
+  it("leaves $$ math over several lines alone", () => {
+    const doc = "$$\n\\text{中a}\n$$\n用Textus";
+    expect(spacing.spaceDocument(doc)).toBe("$$\n\\text{中a}\n$$\n用 Textus");
+  });
+
   it("leaves a document's front matter and fenced code alone", () => {
-    const doc = "---\ntitle: 中文Title\n---\n\n用Textus\n\n```js\nconst a中 = 1\n```\n";
+    const doc =
+      "---\ntitle: 中文Title\n---\n\n用Textus\n\n```js\nconst a中 = 1\n```\n";
     expect(spacing.spaceDocument(doc)).toBe(
       "---\ntitle: 中文Title\n---\n\n用 Textus\n\n```js\nconst a中 = 1\n```\n",
     );

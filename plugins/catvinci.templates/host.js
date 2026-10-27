@@ -17,7 +17,7 @@ function fill(text, title) {
         pad(now.getDate()),
     )
     .replace(/\{\{time\}\}/g, pad(now.getHours()) + ":" + pad(now.getMinutes()))
-    .replace(/\{\{title\}\}/g, title);
+    .replace(/\{\{title\}\}/g, () => title);
 }
 
 /** The templates there are; a first one is written if there are none. */
@@ -75,6 +75,8 @@ exports.activate = function (context) {
     });
     if (!title || !title.trim()) return;
     const path = join(root, title.trim().replace(/[\\/:*?"<>|]/g, "-") + ".md");
+    if (await textus.files.stat(path))
+      return textus.ui.message(t("exists", title.trim()));
     await textus.files.create(path, fill(template.text, title.trim()));
     await textus.layout.open(path);
   });

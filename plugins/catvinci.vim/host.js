@@ -339,7 +339,8 @@ async function insertMapKey(key) {
       return k.length === 1;
     }).length;
     typedInsert = [];
-    if (back) await exec({ op: "deleteChars", count: back, back: true });
+    if (back)
+      await exec({ op: "deleteChars", count: back, back: true, copy: false });
     return feed(whole.rhs);
   }
   var begins = function (keys) {
