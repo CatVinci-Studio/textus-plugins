@@ -6,4 +6,14 @@ Des tableaux de cartes en listes, enregistrés dans un simple fichier Markdown.
 - Chaque liste est un titre du fichier et chaque carte une tâche en dessous, si bien que le tableau reste lisible partout.
 - Ajoutez une carte en bas d’une liste ; faites glisser les cartes d’une liste à l’autre, et les listes pour les réordonner. Une carte cochée est terminée.
 - Écrivez un [[lien]] dans une carte et cliquez dessus pour ouvrir cette note.
-- Faites glisser une liste par son titre pour la déplacer.
+- **Modifier en Markdown** ouvre le fichier en texte ; le tableau suit vos modifications.
+
+```markdown
+## À faire
+
+- [ ] Écrire le plan
+
+## Terminé
+
+- [x] Choisir un titre
+```
