@@ -1,6 +1,6 @@
 // Zotero: a citation from the user's Zotero library, inserted where the
-// caret is. The library is searched through Zotero 7's local
-// API on this computer (http://localhost:23119/api/), which Zotero serves
+// caret is. The library is searched through the local API of Zotero 7 and
+// later on this computer (http://localhost:23119/api/), which Zotero serves
 // once "Allow other applications on this computer to communicate with
 // Zotero" is on - nothing leaves the computer.
 /** What activate was given: the plugin's storage and own files. */
@@ -63,7 +63,9 @@ async function get(url) {
   let response;
   try {
     response = await textus.net.fetch(url, {
-      headers: { "Zotero-API-Version": "3" },
+      // Zotero 10 drops a request that might be a web page's unless it
+      // says it is allowed.
+      headers: { "Zotero-API-Version": "3", "Zotero-Allowed-Request": "1" },
     });
   } catch (cause) {
     throw new Error(t("unreachable"), { cause: cause });
