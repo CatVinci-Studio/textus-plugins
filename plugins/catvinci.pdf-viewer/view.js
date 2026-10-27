@@ -15,7 +15,6 @@
       $(id).setAttribute(attr, api.t(key));
   const viewer = $("viewer");
   const status = $("status");
-  $("fit").textContent = t("fit");
   $("find").placeholder = t("find");
   $("find").setAttribute("aria-label", t("find"));
 
@@ -63,6 +62,8 @@
 
   function showZoom() {
     $("zoom").textContent = Math.round(scale * 100) + "%";
+    // The figure itself switches: fitted, it shows the page's own size.
+    $("zoom").title = t(fitWidth ? "actual" : "fit");
   }
 
   // Each page is a placeholder of its size until it comes into view, then
@@ -262,7 +263,8 @@
   }
   $("zoom-in").onclick = () => setScale(scale * 1.2);
   $("zoom-out").onclick = () => setScale(scale / 1.2);
-  $("fit").onclick = () => {
+  $("zoom").onclick = () => {
+    if (fitWidth) return setScale(1);
     fitWidth = true;
     void layout().then(keep);
   };
@@ -314,7 +316,7 @@
       }).promise;
       // Where it was left, else the zoom it opens at.
       const position = message.position;
-      fitWidth = position ? !position.scale : message.zoom !== "100";
+      fitWidth = position ? !position.scale : true;
       scale = position?.scale || 1;
       restoring = message.page || position?.page || 0;
       texts = [];

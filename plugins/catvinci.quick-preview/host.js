@@ -4,8 +4,8 @@
 // document; Pin keeps the card open, Open goes to it. The card is the app's
 // (textus.editor.registerHover); this plugin reads the document.
 
-/** How much of a document a card shows, by Settings › Quick Preview. */
-const LENGTHS = { short: 600, medium: 1500, long: 4000 };
+/** How much of a document a card shows; Pin and Open give the rest. */
+const LIMIT = 1500;
 
 function baseName(path) {
   const name = String(path).split(/[\\/]/).pop() || String(path);
@@ -74,11 +74,9 @@ exports.activate = function () {
         return null;
       }
       const part = target.heading ? section(text, target.heading) : null;
-      const limit =
-        LENGTHS[await textus.settings.get("length")] || LENGTHS.medium;
       return {
         title: baseName(target.path) + (part ? " › " + part.heading : ""),
-        markdown: opening(part ? part.text : text, limit) || "…",
+        markdown: opening(part ? part.text : text, LIMIT) || "…",
       };
     },
   });

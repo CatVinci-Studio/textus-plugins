@@ -1,6 +1,6 @@
 // Version History: each save of a document kept as a version, in the
-// plugin's own storage (under a key made from its path, newest first), up
-// to the number set in Settings. The sidebar lists the versions of the document in front; one
+// plugin's own storage (under a key made from its path, newest first), the
+// last KEEP of them. The sidebar lists the versions of the document in front; one
 // comes back as a proposal replacing the document, accepted or rejected
 // like any edit, or opens as a new document.
 /** What activate was given: the plugin's storage and own files. */
@@ -8,6 +8,9 @@ let ctx;
 
 let panel = null;
 const MAX_TEXT = 2 * 1024 * 1024;
+/** Versions kept per document, and the time saves count as one. */
+const KEEP = 50;
+const EVERY = 15 * 60000;
 
 /** The storage key of a document's versions: its path hashed (FNV-1a,
  *  twice, 64 bits), since a key is at most 200 bytes and a deep or CJK
@@ -36,17 +39,15 @@ async function record(saved) {
   if (!saved.path || saved.text.length > MAX_TEXT) return;
   const list = await versionsOf(saved.path);
   if (list[0] && list[0].text === saved.text) return;
-  const keep = Math.max(1, Number(await textus.settings.get("keep")) || 50);
   // Saves close together - autosave's every few seconds - are one
-  // version: the newest is brought up to date until `every` minutes have
-  // passed since it was first kept.
-  const every = Number(await textus.settings.get("every"));
+  // version: the newest is brought up to date until EVERY has passed
+  // since it was first kept.
   const now = Date.now();
   const newest = list[0];
-  if (newest && every > 0 && now - (newest.since || newest.at) < every * 60000)
+  if (newest && now - (newest.since || newest.at) < EVERY)
     list[0] = { at: now, since: newest.since || newest.at, text: saved.text };
   else list.unshift({ at: now, text: saved.text });
-  let versions = list.slice(0, keep);
+  let versions = list.slice(0, KEEP);
   // The storage full: the oldest half goes, until the newest fits.
   for (;;) {
     try {

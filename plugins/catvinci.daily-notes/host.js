@@ -47,12 +47,24 @@ async function noteDates() {
   }
 }
 
+/** Where the system's region starts its weeks: Sunday in the US, Monday
+ *  in most of the world. */
+function weekStart() {
+  try {
+    const locale = new Intl.Locale(Intl.DateTimeFormat().resolvedOptions().locale);
+    const info = locale.getWeekInfo ? locale.getWeekInfo() : locale.weekInfo;
+    return info && info.firstDay === 7 ? "sunday" : "monday";
+  } catch {
+    return "monday";
+  }
+}
+
 async function refresh() {
   if (!panel) return;
   panel.postMessage({
     type: "dates",
     dates: await noteDates(),
-    weekStart: await textus.settings.get("weekStart"),
+    weekStart: weekStart(),
   });
 }
 

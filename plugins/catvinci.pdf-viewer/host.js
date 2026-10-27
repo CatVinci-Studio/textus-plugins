@@ -65,15 +65,11 @@ exports.activate = function (context) {
             message: String((err && err.message) || err),
           });
         }
-        const [zoom, position] = await Promise.all([
-          textus.settings.get("zoom"),
-          positionOf(document.path),
-        ]);
+        const position = await positionOf(document.path);
         webview.postMessage({
           type: "file",
           name: document.fileName,
           bytes: bytes,
-          zoom: zoom,
           position: position,
           page: context.target?.page || 0,
         });

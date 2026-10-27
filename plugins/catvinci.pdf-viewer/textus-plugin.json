@@ -22,32 +22,12 @@
           "*.pdf"
         ]
       }
-    ],
-    "settings": [
-      {
-        "key": "zoom",
-        "type": "enum",
-        "default": "fit",
-        "title": "%zoom%",
-        "options": [
-          {
-            "value": "fit",
-            "label": "%zoomFit%"
-          },
-          {
-            "value": "100",
-            "label": "100%"
-          }
-        ]
-      }
     ]
   },
   "l10n": {
     "en": {
       "name": "PDF Viewer",
       "description": "Open PDFs in a tab beside your notes: pages, zoom, and text to select and copy.",
-      "zoom": "A PDF opens at",
-      "zoomFit": "The window's width",
       "fit": "Fit width",
       "loading": "Opening…",
       "failed": "This PDF can't be opened: {0}",
@@ -56,13 +36,12 @@
       "zoomOut": "Zoom out",
       "nextPage": "Next page",
       "find": "Find in the PDF",
-      "notFound": "Not found"
+      "notFound": "Not found",
+      "actual": "Actual size"
     },
     "zh": {
       "name": "PDF 阅读器",
       "description": "在笔记旁边的标签页里打开 PDF：翻页、缩放，文字可以选中和复制。",
-      "zoom": "PDF 打开时的大小",
-      "zoomFit": "适应窗口宽度",
       "fit": "适应宽度",
       "loading": "正在打开…",
       "failed": "无法打开这个 PDF：{0}",
@@ -71,13 +50,12 @@
       "zoomOut": "缩小",
       "nextPage": "下一页",
       "find": "在 PDF 中查找",
-      "notFound": "没有找到"
+      "notFound": "没有找到",
+      "actual": "原始大小"
     },
     "zh-Hant": {
       "name": "PDF 閱讀器",
       "description": "在筆記旁邊的分頁中開啟 PDF：翻頁、縮放，文字可以選取和複製。",
-      "zoom": "PDF 開啟時的大小",
-      "zoomFit": "符合視窗寬度",
       "fit": "符合寬度",
       "loading": "正在開啟…",
       "failed": "無法開啟這個 PDF：{0}",
@@ -86,13 +64,12 @@
       "zoomOut": "縮小",
       "nextPage": "下一頁",
       "find": "在 PDF 中尋找",
-      "notFound": "找不到"
+      "notFound": "找不到",
+      "actual": "原始大小"
     },
     "ja": {
       "name": "PDF ビューア",
       "description": "ノートの隣のタブで PDF を開きます。ページ送り、拡大縮小、文字の選択とコピーも。",
-      "zoom": "PDF を開いたときの大きさ",
-      "zoomFit": "ウインドウの幅",
       "fit": "幅に合わせる",
       "loading": "開いています…",
       "failed": "この PDF を開けません：{0}",
@@ -101,13 +78,12 @@
       "zoomOut": "縮小",
       "nextPage": "次のページ",
       "find": "PDF 内を検索",
-      "notFound": "見つかりません"
+      "notFound": "見つかりません",
+      "actual": "実際のサイズ"
     },
     "ko": {
       "name": "PDF 뷰어",
       "description": "노트 옆 탭에서 PDF를 엽니다: 페이지 넘기기, 확대·축소, 글자 선택과 복사.",
-      "zoom": "PDF를 열 때의 크기",
-      "zoomFit": "창 너비",
       "fit": "너비에 맞추기",
       "loading": "여는 중…",
       "failed": "이 PDF를 열 수 없습니다: {0}",
@@ -116,13 +92,12 @@
       "zoomOut": "축소",
       "nextPage": "다음 페이지",
       "find": "PDF에서 찾기",
-      "notFound": "찾을 수 없음"
+      "notFound": "찾을 수 없음",
+      "actual": "실제 크기"
     },
     "es": {
       "name": "Visor de PDF",
       "description": "Abre PDF en una pestaña junto a tus notas: páginas, zoom y texto que seleccionar y copiar.",
-      "zoom": "Un PDF se abre a",
-      "zoomFit": "El ancho de la ventana",
       "fit": "Ajustar al ancho",
       "loading": "Abriendo…",
       "failed": "No se puede abrir este PDF: {0}",
@@ -131,13 +106,12 @@
       "zoomOut": "Alejar",
       "nextPage": "Página siguiente",
       "find": "Buscar en el PDF",
-      "notFound": "Sin resultados"
+      "notFound": "Sin resultados",
+      "actual": "Tamaño real"
     },
     "fr": {
       "name": "Lecteur PDF",
       "description": "Ouvrez des PDF dans un onglet à côté de vos notes : pages, zoom, et texte à sélectionner et copier.",
-      "zoom": "Un PDF s’ouvre à",
-      "zoomFit": "La largeur de la fenêtre",
       "fit": "Ajuster à la largeur",
       "loading": "Ouverture…",
       "failed": "Impossible d’ouvrir ce PDF : {0}",
@@ -146,13 +120,12 @@
       "zoomOut": "Zoom arrière",
       "nextPage": "Page suivante",
       "find": "Rechercher dans le PDF",
-      "notFound": "Introuvable"
+      "notFound": "Introuvable",
+      "actual": "Taille réelle"
     },
     "de": {
       "name": "PDF-Betrachter",
       "description": "Öffne PDFs in einem Tab neben deinen Notizen: Seiten, Zoom und Text zum Markieren und Kopieren.",
-      "zoom": "Ein PDF öffnet in",
-      "zoomFit": "Fensterbreite",
       "fit": "Breite einpassen",
       "loading": "Wird geöffnet…",
       "failed": "Dieses PDF lässt sich nicht öffnen: {0}",
@@ -161,13 +134,12 @@
       "zoomOut": "Verkleinern",
       "nextPage": "Nächste Seite",
       "find": "Im PDF suchen",
-      "notFound": "Nicht gefunden"
+      "notFound": "Nicht gefunden",
+      "actual": "Originalgröße"
     },
     "ru": {
       "name": "Просмотр PDF",
       "description": "Открывайте PDF во вкладке рядом с заметками: страницы, масштаб, текст можно выделять и копировать.",
-      "zoom": "PDF открывается",
-      "zoomFit": "По ширине окна",
       "fit": "По ширине",
       "loading": "Открытие…",
       "failed": "Не удаётся открыть этот PDF: {0}",
@@ -176,13 +148,12 @@
       "zoomOut": "Уменьшить",
       "nextPage": "Следующая страница",
       "find": "Найти в PDF",
-      "notFound": "Не найдено"
+      "notFound": "Не найдено",
+      "actual": "Исходный размер"
     },
     "pt": {
       "name": "Visualizador de PDF",
       "description": "Abra PDFs numa aba ao lado das suas notas: páginas, zoom e texto para selecionar e copiar.",
-      "zoom": "Um PDF abre em",
-      "zoomFit": "A largura da janela",
       "fit": "Ajustar à largura",
       "loading": "Abrindo…",
       "failed": "Não foi possível abrir este PDF: {0}",
@@ -191,7 +162,8 @@
       "zoomOut": "Diminuir zoom",
       "nextPage": "Próxima página",
       "find": "Procurar no PDF",
-      "notFound": "Não encontrado"
+      "notFound": "Não encontrado",
+      "actual": "Tamanho real"
     }
   }
 }

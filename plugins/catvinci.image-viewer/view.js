@@ -19,8 +19,6 @@
   // only, the file stays as it is.
   let turns = 0;
 
-  $("fit").textContent = t("fit");
-  $("actual").textContent = t("actual");
   $("source").textContent = t("source");
 
   const scaleNow = () =>
@@ -33,6 +31,8 @@
     // On its side, fitting means fitting the other way round.
     stage.classList.toggle("sideways", turns % 2 === 1);
     $("zoom").textContent = Math.round((fit ? scaleNow() : zoom) * 100) + "%";
+    // The figure itself switches: fitted, it shows the picture's own size.
+    $("zoom").title = t(fit ? "actual" : "fit");
   }
   function setZoom(next) {
     fit = false;
@@ -42,12 +42,11 @@
   const current = () => (fit ? scaleNow() : zoom);
   $("zoom-in").onclick = () => setZoom(current() * 1.25);
   $("zoom-out").onclick = () => setZoom(current() / 1.25);
-  $("actual").onclick = () => setZoom(1);
   const toFit = () => {
     fit = true;
     show();
   };
-  $("fit").onclick = toFit;
+  $("zoom").onclick = () => (fit ? setZoom(1) : toFit());
   $("rotate").onclick = () => {
     turns = (turns + 1) % 4;
     show();
