@@ -18,7 +18,9 @@
       {
         "viewType": "catvinci.word-reader.docx",
         "displayName": "%name%",
-        "filenamePatterns": ["*.docx"]
+        "filenamePatterns": [
+          "*.docx"
+        ]
       }
     ]
   },
