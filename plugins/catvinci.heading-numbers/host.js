@@ -7,6 +7,20 @@ function headingLevel(block) {
     : 0;
 }
 
+/**
+ * The level numbering starts at: the document's highest heading level, or
+ * the next one down when that level holds a single heading - its title.
+ */
+function startOf(blocks) {
+  const levels = blocks.map(headingLevel).filter((l) => l > 0);
+  if (!levels.length) return 1;
+  const top = Math.min(...levels);
+  const below = levels.filter((l) => l > top);
+  return levels.filter((l) => l === top).length === 1 && below.length
+    ? Math.min(...below)
+    : top;
+}
+
 /** Every heading's number, by block id, counting from level `start`. */
 function numbers(blocks, start) {
   const counts = [];
@@ -50,8 +64,8 @@ function exportCss(start) {
 exports.activate = function () {
   textus.editor.registerDecorations({
     decorate: async function (inSight) {
-      const start = Number(await textus.settings.get("start")) || 2;
-      const all = numbers((await textus.editor.getBlocks()) || [], start);
+      const blocks = (await textus.editor.getBlocks()) || [];
+      const all = numbers(blocks, startOf(blocks));
       return inSight
         .filter((block) => all[block.id])
         .map((block) => ({
@@ -64,6 +78,8 @@ exports.activate = function () {
   });
   textus.export.onWillExport(async function () {
     if (!(await textus.settings.get("inExports"))) return;
-    return { css: exportCss(Number(await textus.settings.get("start")) || 2) };
+    return {
+      css: exportCss(startOf((await textus.editor.getBlocks()) || [])),
+    };
   });
 };

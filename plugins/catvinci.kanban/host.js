@@ -46,14 +46,27 @@ exports.activate = function (context) {
 
   textus.views.registerFileEditor("catvinci.kanban.board", {
     resolve: async function (document, webview) {
+      // The text the board last showed or wrote: a change from elsewhere
+      // (the file edited as Markdown) is sent to it, its own saves aren't.
+      let known = null;
+      const send = async function () {
+        const text = await document.readText();
+        if (text === known) return;
+        known = text;
+        webview.postMessage({ type: "file", text: text });
+      };
+      const watching = textus.files.onDidChange(function (e) {
+        if (e.path === document.path) send().catch(() => {});
+      });
+      webview.onDidDispose(() => watching.dispose());
       webview.onDidReceiveMessage(async function (message) {
-        if (message.type === "ready")
-          webview.postMessage({
-            type: "file",
-            text: await document.readText(),
-          });
+        if (message.type === "ready") {
+          known = null;
+          await send();
+        }
         if (message.type === "save") {
           try {
+            known = message.text;
             await document.writeText(message.text);
             webview.postMessage({ type: "saved" });
           } catch (err) {

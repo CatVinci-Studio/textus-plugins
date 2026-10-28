@@ -61,14 +61,14 @@ function compile(text) {
       return a(x) - b(x);
     };
   }
-  // product := power (("*" | "/" | implicit) power)*
+  // product := unary (("*" | "/") unary | implicit power)*
   function product() {
-    var left = power();
+    var left = unary();
     for (;;) {
       var next = peek();
       if (next === "*" || next === "/") {
         take();
-        var right = power();
+        var right = unary();
         left = next === "*" ? mul(left, right) : div(left, right);
       } else if (next && (next === "(" || /^[a-z0-9.]/i.test(next))) {
         left = mul(left, power()); // 2x, 3sin(x)
@@ -85,12 +85,12 @@ function compile(text) {
       return a(x) / b(x);
     };
   }
-  // power := unary ("^" power)?
+  // power := atom ("^" unary)?  -x^2 is -(x^2), 2^-1 is a half
   function power() {
-    var base = unary();
+    var base = atom();
     if (peek() !== "^") return base;
     take();
-    var exponent = power();
+    var exponent = unary();
     return function (x) {
       return Math.pow(base(x), exponent(x));
     };
@@ -104,7 +104,7 @@ function compile(text) {
       };
     }
     if (peek() === "+") take();
-    return atom();
+    return power();
   }
   function atom() {
     var token = take();
@@ -157,6 +157,12 @@ function el(name, attrs) {
   return node;
 }
 
+/** A range's end from the fence, 0 included; `fallback` if it isn't a number. */
+function bound(value, fallback) {
+  var number = value === undefined || value === "" ? NaN : Number(value);
+  return isFinite(number) ? number : fallback;
+}
+
 /** The graph of `source`'s functions over x from xmin to xmax (meta). */
 function graph(source, meta, width, height, dark) {
   var fns = String(source)
@@ -166,8 +172,8 @@ function graph(source, meta, width, height, dark) {
     })
     .filter(Boolean)
     .map(compile);
-  var x0 = Number(meta.xmin) || -10;
-  var x1 = Number(meta.xmax) || 10;
+  var x0 = bound(meta.xmin, -10);
+  var x1 = bound(meta.xmax, 10);
   var steps = Math.max(200, width);
   var samples = fns.map(function (fn) {
     var points = [];
@@ -183,14 +189,8 @@ function graph(source, meta, width, height, dark) {
       return p[1];
     })
     .filter(isFinite);
-  var y0 =
-    meta.ymin !== undefined
-      ? Number(meta.ymin)
-      : Math.min.apply(null, ys.concat([-1]));
-  var y1 =
-    meta.ymax !== undefined
-      ? Number(meta.ymax)
-      : Math.max.apply(null, ys.concat([1]));
+  var y0 = bound(meta.ymin, Math.min.apply(null, ys.concat([-1])));
+  var y1 = bound(meta.ymax, Math.max.apply(null, ys.concat([1])));
   var pad = (y1 - y0) * 0.05 || 1;
   y0 -= pad;
   y1 += pad;

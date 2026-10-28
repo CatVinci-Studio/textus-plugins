@@ -9,12 +9,12 @@ description: >-
   стиль ИИ).
 license: MIT
 metadata:
-  textus-version: "1.0.0"
+  textus-version: "1.1.0"
   textus-invocation: "both"
   textus-category: "revise"
   textus-modes: "write"
   textus-packs: "contract standards#ai-tells"
-  textus-sources: "Our own text. Patterns summarised from Wikipedia 'Signs of AI writing' (CC BY-SA, summarised only), Kobak et al. 2025 (CC BY 4.0, word frequencies), blader/humanizer, avoid-ai-writing, Humanizer-zh, yomiyasu, k-skill, im-not-ai and Kiterlin (MIT, ideas), 科普中国 2025 (summarised). rnskill ra-人话 (CC BY-NC) ideas only, no text."
+  textus-sources: "Our own text. Patterns summarised from Clark, Martin & Mahowald 2026 (readability), Wikipedia 'Signs of AI writing' (CC BY-SA, summarised only), Kobak et al. 2025 (CC BY 4.0, word frequencies), blader/humanizer, avoid-ai-writing, Humanizer-zh, yomiyasu, k-skill, im-not-ai and Kiterlin (MIT, ideas), 科普中国 2025 (summarised). rnskill ra-人话 (CC BY-NC) ideas only, no text."
   textus-label-en: "Remove AI tone"
   textus-hint-en: "Take out stock AI phrasing, or just point it out"
   textus-aliases-en: "ai-tone"
@@ -57,6 +57,7 @@ metadata:
 - Strong tells justify an edit on one sighting; weak tells only when several cluster in one paragraph.
 - Never enough on their own: perfect grammar, formal register, transition words, curly quotes, em dashes, "In summary". Wordiness is a clarity edit, not evidence.
 - Use the attached AI-tells list for the document's language. Where no list is attached, look for the generic categories: chatbot residue and placeholders; "not X but Y" shells; inflated significance and legacy claims; promotional adjectives; vague attribution ("experts say"); reflexive groups of three; participle tails that editorialise; formulaic openers and "challenges and prospects" closers; mechanical first/second/finally scaffolding.
+- Read the syntax as well as the words: what makes a sentence hard to take in on first reading - strings of three or more nouns, a dropped "that" before a relative clause, a noun made a verb for the occasion, a thing doing what people do, a subject far from its verb, long modifiers before a noun (长定语) - is a tell too, fixed by writing the plain sentence it stands for.
 - Technical senses are fine (robust statistics, financial leverage). A "not X but Y" that corrects a real belief stays.
 
 ## Do

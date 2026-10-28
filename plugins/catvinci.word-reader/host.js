@@ -10,12 +10,20 @@ exports.activate = function (context) {
   textus.views.registerFileEditor("catvinci.word-reader.docx", {
     resolve: async function (document, webview) {
       webview.onDidReceiveMessage(async function (message) {
-        if (message.type === "ready")
-          webview.postMessage({
-            type: "file",
-            name: document.fileName,
-            bytes: await document.readFile(),
-          });
+        if (message.type === "ready") {
+          try {
+            webview.postMessage({
+              type: "file",
+              name: document.fileName,
+              bytes: await document.readFile(),
+            });
+          } catch (err) {
+            webview.postMessage({
+              type: "failed",
+              message: String((err && err.message) || err),
+            });
+          }
+        }
         if (message.type === "edit")
           await textus.layout.open(document.path, { asDocument: true });
       });

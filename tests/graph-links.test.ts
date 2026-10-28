@@ -1,15 +1,24 @@
 import { beforeAll, describe, expect, it } from "vitest";
 
-/** Graph View's link parser (plugins/
- *  catvinci.graph/links.js), a plain script that puts itself on the
- *  global object. */
-type Graph = {
-  nodes: { id: string; name: string; missing: boolean }[];
-  edges: { source: string; target: string }[];
+/** Graph View's graph (plugins/catvinci.graph/links.js), a plain script
+ *  that puts itself on the global object. */
+type Node = { id: string; name: string; kind: string; color?: string };
+type Edge = { source: string; target: string; both: boolean };
+type Graph = { nodes: Node[]; edges: Edge[] };
+type Doc = {
+  path: string;
+  rel: string;
+  tags: string[];
+  links: { target: string; resolved: string | null; line: number; text: string }[];
 };
 let links: {
-  buildGraph: (docs: { path: string; rel: string; text: string }[]) => Graph;
-  neighbourhood: (graph: Graph, focus: string, depth: number) => Graph;
+  graphFromMetadata: (docs: Doc[], options?: { tags?: boolean }) => Graph;
+  filterGraph: (graph: Graph, settings: Record<string, unknown>) => Graph;
+  neighbourhood: (
+    graph: Graph,
+    focus: string,
+    depth: number,
+  ) => Graph;
 };
 
 beforeAll(async () => {
@@ -19,49 +28,111 @@ beforeAll(async () => {
   links = (globalThis as unknown as { graphLinks: typeof links }).graphLinks;
 });
 
-const doc = (rel: string, text: string) => ({ path: `/n/${rel}`, rel, text });
+/** A document of /n linking to the others named, by their rel. */
+const doc = (rel: string, to: string[] = [], tags: string[] = []): Doc => ({
+  path: `/n/${rel}`,
+  rel,
+  tags,
+  links: to.map((t, line) => ({
+    target: t,
+    resolved: t.endsWith(".md") ? `/n/${t}` : null,
+    line,
+    text: `[[${t}]]`,
+  })),
+});
+const ids = (g: Graph) => g.nodes.map((n) => n.id).sort();
 
 describe("the graph of a folder's links", () => {
-  it("links wiki links by name and Markdown links by path", () => {
-    const g = links.buildGraph([
-      doc(
-        "a.md",
-        "See [[B]], [[c.md|the C note]] and [[B#Part]]. Also [d](sub/d.md#x).",
-      ),
-      doc("b.md", "Back to [a](./a.md)."),
-      doc("c.md", "Nothing."),
-      doc("sub/d.md", "Up: [a](../a.md), and [web](https://example.com/x.md)."),
+  it("keeps a link's direction, and two notes linking each other as one line", () => {
+    const g = links.graphFromMetadata([
+      doc("a.md", ["b.md", "c.md"]),
+      doc("b.md", ["a.md"]),
+      doc("c.md"),
     ]);
-    const pairs = g.edges
-      .map((e) => `${e.source.slice(3)}→${e.target.slice(3)}`)
-      .sort();
-    // Notes that link to each other are one link (b and d link back).
-    expect(pairs).toEqual(["a.md→b.md", "a.md→c.md", "a.md→sub/d.md"]);
+    expect(g.edges).toEqual([
+      { source: "/n/a.md", target: "/n/b.md", both: true },
+      { source: "/n/a.md", target: "/n/c.md", both: false },
+    ]);
   });
 
-  it("keeps a link to no document as a missing node, and ignores code", () => {
-    const g = links.buildGraph([
-      doc(
-        "a.md",
-        "An [[Unwritten idea]].\n\n```\n[[not a link]]\n```\nAnd `[[nor this]]`.",
-      ),
+  it("makes a missing note of a wiki link to nothing, but not of a web link", () => {
+    const g = links.graphFromMetadata([doc("a.md", ["Someday", "https://x.org"])]);
+    expect(g.nodes.map((n) => [n.name, n.kind])).toEqual([
+      ["a", "note"],
+      ["Someday", "missing"],
     ]);
-    expect(g.nodes.filter((n) => n.missing).map((n) => n.name)).toEqual([
-      "Unwritten idea",
-    ]);
-    expect(g.edges).toHaveLength(1);
   });
 
-  it("gives the part of the graph around one document", () => {
-    const g = links.buildGraph([
-      doc("a.md", "[[b]]"),
-      doc("b.md", "[[c]]"),
-      doc("c.md", "[[d]]"),
-      doc("d.md", ""),
+  it("makes each tag a node when tags are asked for", () => {
+    const docs = [doc("a.md", [], ["draft"]), doc("b.md", [], ["#Draft"])];
+    expect(links.graphFromMetadata(docs).nodes).toHaveLength(2);
+    const g = links.graphFromMetadata(docs, { tags: true });
+    expect(g.nodes.filter((n) => n.kind === "tag").map((n) => n.name)).toEqual(["#draft"]);
+    expect(g.edges).toHaveLength(2);
+  });
+});
+
+describe("the settings panel's filters", () => {
+  const folder = () =>
+    links.graphFromMetadata(
+      [
+        doc("ideas/one.md", ["two.md", "Later"], ["draft"]),
+        doc("two.md"),
+        doc("alone.md"),
+      ],
+      { tags: true },
+    );
+  const base = { tags: false, existingOnly: false, orphans: true, search: "" };
+
+  it("leaves tags, missing notes and orphans out as asked", () => {
+    expect(ids(links.filterGraph(folder(), base))).toEqual([
+      "/n/alone.md",
+      "/n/ideas/one.md",
+      "/n/two.md",
+      "missing:later",
     ]);
-    const one = links.neighbourhood(g, "/n/b.md", 1);
-    expect(one.nodes.map((n) => n.name).sort()).toEqual(["a", "b", "c"]);
-    const two = links.neighbourhood(g, "/n/b.md", 2);
-    expect(two.nodes).toHaveLength(4);
+    expect(ids(links.filterGraph(folder(), { ...base, tags: true }))).toContain("tag:#draft");
+    const strict = links.filterGraph(folder(), { ...base, existingOnly: true, orphans: false });
+    expect(ids(strict)).toEqual(["/n/ideas/one.md", "/n/two.md"]);
+  });
+
+  it("searches names and paths, with path:, file:, tag: and a minus", () => {
+    const shown = (search: string) =>
+      ids(links.filterGraph(folder(), { ...base, existingOnly: true, search }));
+    expect(shown("path:ideas")).toEqual(["/n/ideas/one.md"]);
+    expect(shown("file:two")).toEqual(["/n/two.md"]);
+    expect(shown("tag:#draft")).toEqual(["/n/ideas/one.md"]);
+    expect(shown("-alone")).toEqual(["/n/ideas/one.md", "/n/two.md"]);
+  });
+
+  it("colours a note by the first group it answers", () => {
+    const g = links.filterGraph(folder(), {
+      ...base,
+      groups: [
+        { query: "path:ideas", color: "#f00" },
+        { query: "one", color: "#0f0" },
+        { query: "", color: "#00f" },
+      ],
+    });
+    const color = (id: string) => g.nodes.find((n) => n.id === id)?.color;
+    expect(color("/n/ideas/one.md")).toBe("#f00");
+    expect(color("/n/two.md")).toBeUndefined();
+  });
+});
+
+describe("the local graph", () => {
+  // a → b → c, d → b, b ↔ e, c → e.
+  const g = () =>
+    links.graphFromMetadata([
+      doc("a.md", ["b.md"]),
+      doc("b.md", ["c.md", "e.md"]),
+      doc("c.md", ["e.md"]),
+      doc("d.md", ["b.md"]),
+      doc("e.md", ["b.md"]),
+    ]);
+
+  it("reaches as far as the depth, either way", () => {
+    expect(ids(links.neighbourhood(g(), "/n/a.md", 1))).toEqual(["/n/a.md", "/n/b.md"]);
+    expect(ids(links.neighbourhood(g(), "/n/a.md", 2))).toHaveLength(5);
   });
 });

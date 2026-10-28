@@ -96,6 +96,7 @@
         problem.hidden = true;
         el.style.height = now.meta.height ? now.meta.height + "px" : "";
         try {
+          if (now.error) throw new Error(now.error);
           await chart.draw(el, now.source, now.meta, dark(), now.extra);
         } catch (err) {
           el.replaceChildren();
@@ -112,6 +113,7 @@
         source: message.source,
         meta: message.meta || {},
         extra: message.extra,
+        error: message.error,
       };
       draw();
     });

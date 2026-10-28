@@ -19,7 +19,7 @@ function mindMap(el, source, meta, dark) {
 
 drawChartBlock({
   draw: mindMap,
-  // On paper, dark text whatever the window's theme.
+  // Drawn again in the export's colours, at a fixed size.
   picture: async function (el, source, meta, dark) {
     var box = document.createElement("div");
     box.style.cssText =

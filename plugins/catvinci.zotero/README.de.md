@@ -2,7 +2,7 @@
 
 Zitiere beim Schreiben aus deiner Zotero-Bibliothek.
 
-- Benötigt Zotero 7, das läuft, mit eingeschaltetem **Settings › Advanced › Allow other applications on this computer to communicate with Zotero**.
+- Benötigt Zotero 7 oder neuer (auch Zotero 10), das läuft, mit eingeschaltetem **Settings › Advanced › Allow other applications on this computer to communicate with Zotero**.
 - **Ctrl+Alt+C** (**⌘⌥C** auf dem Mac), Rechtsklick › **Zitat aus Zotero einfügen…** oder das Plugins-Menü: Zuerst kommen die Werke, die du zuletzt zitiert hast, dann eine Suche in deiner Bibliothek.
 - Sind Wörter markiert, wird nach ihnen gesucht.
 - Wähle einen Eintrag, und das Zitat wird an der Einfügemarke eingefügt.

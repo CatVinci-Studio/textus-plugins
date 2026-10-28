@@ -15,7 +15,6 @@
       $(id).setAttribute(attr, api.t(key));
   const viewer = $("viewer");
   const status = $("status");
-  $("fit").textContent = t("fit");
   $("find").placeholder = t("find");
   $("find").setAttribute("aria-label", t("find"));
 
@@ -25,11 +24,13 @@
   });
 
   // PDF.js's data files - a CJK font's character map (cMap), a standard
-  // font - asked of the host, which reads them from the plugin's lib
+  // font, an image decoder - asked of the host, which reads them from the plugin's lib
   // folder: the page has no network. Answers come back by id.
   const FOLDERS = {
     cMapUrl: "lib/cmaps/",
     standardFontDataUrl: "lib/standard_fonts/",
+    // Decoders for scanned pages' JBIG2 and JPEG 2000 images.
+    wasmUrl: "lib/wasm/",
   };
   const waiting = new Map();
   let asked = 0;
@@ -53,6 +54,7 @@
   let baseWidth = 612;
   let pages = [];
   let observer = null;
+  let freer = null;
 
   function fitScale() {
     return Math.max(0.25, (viewer.clientWidth - 48) / baseWidth);
@@ -60,6 +62,8 @@
 
   function showZoom() {
     $("zoom").textContent = Math.round(scale * 100) + "%";
+    // The figure itself switches: fitted, it shows the page's own size.
+    $("zoom").title = t(fitWidth ? "actual" : "fit");
   }
 
   // Each page is a placeholder of its size until it comes into view, then
@@ -73,8 +77,6 @@
     const canvas = document.createElement("canvas");
     canvas.width = Math.floor(viewport.width * ratio);
     canvas.height = Math.floor(viewport.height * ratio);
-    canvas.style.width = viewport.width + "px";
-    canvas.style.height = viewport.height + "px";
     div.style.width = viewport.width + "px";
     div.style.height = viewport.height + "px";
     await page.render({
@@ -95,8 +97,17 @@
     markHits(div);
   }
 
+  // A drawn page far out of sight is a placeholder again: a long PDF
+  // scrolled through keeps only the canvases near the view.
+  function free(div) {
+    if (!div.dataset.drawn) return;
+    delete div.dataset.drawn;
+    div.replaceChildren();
+  }
+
   async function layout() {
     observer?.disconnect();
+    freer?.disconnect();
     const first = await pdf.getPage(1);
     const base = first.getViewport({ scale: 1 });
     baseWidth = base.width;
@@ -113,6 +124,13 @@
       },
       { root: viewer, rootMargin: "300px 0px" },
     );
+    freer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries)
+          if (!entry.isIntersecting) free(entry.target);
+      },
+      { root: viewer, rootMargin: "3000px 0px" },
+    );
     for (let n = 1; n <= pdf.numPages; n++) {
       const div = document.createElement("div");
       div.className = "page";
@@ -122,6 +140,7 @@
       viewer.append(div);
       pages.push(div);
       observer.observe(div);
+      freer.observe(div);
     }
     $("count").textContent = "/ " + pdf.numPages;
     $("page").max = String(pdf.numPages);
@@ -235,16 +254,58 @@
   }
   viewer.addEventListener("scroll", updatePage, { passive: true });
 
-  function setScale(next) {
+  // A zoom stretches the pages drawn at once, keeping the spot at (x, y)
+  // still, and draws them sharp again once it stops.
+  let sharpening = 0;
+  function zoomTo(next, x, y) {
+    if (!pdf || !pages.length) return;
+    next = Math.min(5, Math.max(0.25, next));
+    if (next === scale) return;
+    const box = viewer.getBoundingClientRect();
+    x = x ?? box.left + box.width / 2;
+    y = y ?? box.top + box.height / 2;
+    const under =
+      pages.find((div) => {
+        const r = div.getBoundingClientRect();
+        return r.bottom >= y;
+      }) || pages[pages.length - 1];
+    const before = under.getBoundingClientRect();
+    const fx = (x - before.left) / before.width;
+    const fy = (y - before.top) / before.height;
+    const ratio = next / scale;
+    scale = next;
+    for (const div of pages) {
+      div.style.width = parseFloat(div.style.width) * ratio + "px";
+      div.style.height = parseFloat(div.style.height) * ratio + "px";
+      div.style.setProperty("--total-scale-factor", String(scale));
+    }
+    const after = under.getBoundingClientRect();
+    viewer.scrollLeft += after.left + fx * after.width - x;
+    viewer.scrollTop += after.top + fy * after.height - y;
+    showZoom();
+    clearTimeout(sharpening);
+    sharpening = setTimeout(() => {
+      const view = viewer.getBoundingClientRect();
+      for (const div of pages) {
+        const r = div.getBoundingClientRect();
+        if (r.bottom > view.top - 300 && r.top < view.bottom + 300)
+          void draw(div);
+        else free(div);
+      }
+      keep();
+    }, 180);
+  }
+  function setScale(next, x, y) {
     fitWidth = false;
-    scale = Math.min(5, Math.max(0.25, next));
-    void layout().then(keep);
+    zoomTo(next, x, y);
   }
   $("zoom-in").onclick = () => setScale(scale * 1.2);
   $("zoom-out").onclick = () => setScale(scale / 1.2);
-  $("fit").onclick = () => {
+  $("zoom").onclick = () => {
+    if (fitWidth) return setScale(1);
     fitWidth = true;
-    void layout().then(keep);
+    zoomTo(fitScale());
+    showZoom();
   };
   $("prev").onclick = () => goTo(currentPage() - 1);
   $("next").onclick = () => goTo(currentPage() + 1);
@@ -254,7 +315,9 @@
     (event) => {
       if (!event.ctrlKey && !event.metaKey) return;
       event.preventDefault();
-      setScale(scale * (event.deltaY < 0 ? 1.1 : 1 / 1.1));
+      // A pinch sends many small steps, a mouse wheel few large ones.
+      const step = Math.max(-25, Math.min(25, event.deltaY));
+      setScale(scale * Math.exp(-step * 0.01), event.clientX, event.clientY);
     },
     { passive: false },
   );
@@ -262,13 +325,22 @@
   window.addEventListener("resize", () => {
     if (!pdf || !fitWidth) return;
     clearTimeout(resizing);
-    resizing = setTimeout(() => void layout(), 150);
+    resizing = setTimeout(() => zoomTo(fitScale()), 150);
   });
 
   api.onMessage(async (message) => {
     if (message.type === "data") {
       waiting.get(message.id)?.(message.bytes);
       waiting.delete(message.id);
+      return;
+    }
+    if (message.type === "goto") {
+      if (pdf) goTo(message.page);
+      else restoring = message.page;
+      return;
+    }
+    if (message.type === "failed") {
+      status.textContent = t("failed", message.message);
       return;
     }
     if (message.type !== "file") return;
@@ -285,9 +357,9 @@
       }).promise;
       // Where it was left, else the zoom it opens at.
       const position = message.position;
-      fitWidth = position ? !position.scale : message.zoom !== "100";
+      fitWidth = position ? !position.scale : true;
       scale = position?.scale || 1;
-      restoring = position?.page || 0;
+      restoring = message.page || position?.page || 0;
       texts = [];
       status.textContent = "";
       await layout();

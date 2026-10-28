@@ -79,8 +79,6 @@ function taken() {
     if (mac() || settings.ctrlKeys) return true;
     return k.indexOf("ctrl+") !== 0 || k === "ctrl+ " || k === "ctrl+g";
   });
-  // While C-x waits: the keys that may follow it.
-  if (prefix === "ctrl+x") keys = keys.concat(["u", "h", "ctrl+s"]);
   // While the mark is set, plain arrows extend the region too.
   if (mark)
     keys = keys.concat(["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"]);
@@ -89,6 +87,9 @@ function taken() {
 
 function capture() {
   if (!on) return textus.editor.keys.capture(null);
+  // After C-x every key is Emacs's: the one that finishes the command, or
+  // any other, which cancels it.
+  if (prefix) return textus.editor.keys.capture({ mode: "all", keys: [] });
   return textus.editor.keys.capture({ mode: "some", keys: taken() });
 }
 
@@ -229,11 +230,20 @@ async function key(name) {
         });
         break;
       case "ctrl+d":
-        await exec({ op: "deleteChars", count: 1 });
+        // Not a kill: the clipboard keeps what it had.
+        if (mark) {
+          await exec({ op: "collapse", to: "head" });
+          setMark(false);
+        }
+        await exec({ op: "move", unit: "charForward", select: true });
+        await exec({ op: "delete", copy: false });
         break;
       case "ctrl+y":
         yanking = true;
-        if (mark) setMark(false);
+        if (mark) {
+          await exec({ op: "collapse", to: "head" });
+          setMark(false);
+        }
         await yank(kills.length - 1);
         break;
       case "alt+y":

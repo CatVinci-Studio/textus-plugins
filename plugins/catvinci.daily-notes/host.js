@@ -47,12 +47,24 @@ async function noteDates() {
   }
 }
 
+/** Where the system's region starts its weeks: Sunday in the US, Monday
+ *  in most of the world. */
+function weekStart() {
+  try {
+    const locale = new Intl.Locale(Intl.DateTimeFormat().resolvedOptions().locale);
+    const info = locale.getWeekInfo ? locale.getWeekInfo() : locale.weekInfo;
+    return info && info.firstDay === 7 ? "sunday" : "monday";
+  } catch {
+    return "monday";
+  }
+}
+
 async function refresh() {
   if (!panel) return;
   panel.postMessage({
     type: "dates",
     dates: await noteDates(),
-    weekStart: await textus.settings.get("weekStart"),
+    weekStart: weekStart(),
   });
 }
 
@@ -96,18 +108,12 @@ async function openDay(date) {
     return;
   }
   const path = join(where.dir, date + ".md");
-  // Written only where there is no note: read first, so a listing that
-  // failed for a moment never has a day's note written over.
-  const exists = await textus.files.readText(path).then(
-    () => true,
-    () => false,
+  // Created only where there is no note: one already there, even one that
+  // can't be read just now, is never written over.
+  const template = String(
+    (await textus.settings.get("template")) || "# {{date}}\\n\\n",
   );
-  if (!exists) {
-    const template = String(
-      (await textus.settings.get("template")) || "# {{date}}\\n\\n",
-    );
-    await textus.files.writeText(path, fill(template, date));
-  }
+  await textus.files.create(path, fill(template, date)).catch(() => {});
   await textus.layout.open(path);
   await refresh();
 }
@@ -118,20 +124,17 @@ exports.activate = function (context) {
     return openDay(dateOf(new Date()));
   });
   // From a day's note to the one before or after it.
-  textus.commands.register(
-    "catvinci.daily-notes.previous",
-    async function () {
-      return openDay(shift(await dayInFront(), -1));
-    },
-  );
-  textus.commands.register(
-    "catvinci.daily-notes.next",
-    async function () {
-      return openDay(shift(await dayInFront(), 1));
-    },
-  );
+  textus.commands.register("catvinci.daily-notes.previous", async function () {
+    return openDay(shift(await dayInFront(), -1));
+  });
+  textus.commands.register("catvinci.daily-notes.next", async function () {
+    return openDay(shift(await dayInFront(), 1));
+  });
   textus.files.onDidChangeRoot(refresh);
   textus.files.onDidSave(refresh);
+  textus.files.onDidCreate(refresh);
+  textus.files.onDidDelete(refresh);
+  textus.files.onDidRename(refresh);
   textus.settings.onDidChange(refresh);
   textus.views.registerWebview("catvinci.daily-notes.calendar", {
     resolve: async function (webview) {

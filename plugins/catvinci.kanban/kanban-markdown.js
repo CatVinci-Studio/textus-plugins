@@ -1,7 +1,10 @@
 // A board's Markdown, both ways: front matter (kept as written), then a
 // list per "## " heading and a card per list item under it - "- [ ] text"
 // or "- [x] text" (done), its indented lines part of it. Anything else
-// before the first list (a paragraph) is kept as the board's preamble.
+// before the first list (a paragraph) is kept as the board's preamble, and
+// what Obsidian's Kanban keeps after the lists - from a "***" rule or its
+// "%% kanban:settings" block on - as the postamble, both written back as
+// they were.
 (function (root) {
   "use strict";
   const ITEM = /^[-*+]\s+(?:\[( |x|X)\]\s+)?(.*)$/;
@@ -18,6 +21,7 @@
       }
     }
     const preamble = [];
+    let postamble = "";
     const lists = [];
     let list = null;
     let card = null;
@@ -34,6 +38,10 @@
         preamble.push(line);
         continue;
       }
+      if (line.trim() === "***" || /^%%\s*kanban:settings/.test(line)) {
+        postamble = lines.slice(i).join("\n").trim();
+        break;
+      }
       const item = ITEM.exec(line);
       if (item) {
         card = { text: item[2], done: !!item[1] && item[1] !== " " };
@@ -48,7 +56,12 @@
         card = null;
       }
     }
-    return { front: front, preamble: preamble.join("\n").trim(), lists: lists };
+    return {
+      front: front,
+      preamble: preamble.join("\n").trim(),
+      lists: lists,
+      postamble: postamble,
+    };
   }
 
   function serialize(board) {
@@ -70,6 +83,7 @@
         "## " + list.title + (cards.length ? "\n\n" + cards.join("\n") : ""),
       );
     }
+    if (board.postamble) parts.push(board.postamble);
     return parts.join("\n\n") + "\n";
   }
 

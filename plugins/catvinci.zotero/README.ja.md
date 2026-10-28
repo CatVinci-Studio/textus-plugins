@@ -2,7 +2,7 @@
 
 書きながら Zotero ライブラリから引用できます。
 
-- Zotero 7 が起動していて、**Settings › Advanced › Allow other applications on this computer to communicate with Zotero** がオンである必要があります。
+- Zotero 7 以降（Zotero 10 も含む）が起動していて、**Settings › Advanced › Allow other applications on this computer to communicate with Zotero** がオンである必要があります。
 - **Ctrl+Alt+C**（Mac では **⌘⌥C**）、右クリック › **Zotero から引用を挿入…**、またはプラグインメニューを使います。最近引用した文献が先に並び、その後にライブラリの検索が続きます。
 - 文字を選択していると、その文字で検索します。
 - 項目を選ぶと、カーソルの位置に引用が入ります。

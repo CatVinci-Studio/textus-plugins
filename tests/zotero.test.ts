@@ -32,6 +32,12 @@ describe("the citations in a document", () => {
     ]);
   });
 
+  it("are not read from code", () => {
+    const text =
+      "See [@smith2020].\n\n```css\n@media print {}\n```\n\nAnd `@param x`.";
+    expect(citedIn(text)).toEqual([{ type: "citation", key: "smith2020" }]);
+  });
+
   it("are none in a document without any", () => {
     expect(citedIn("Plain text, an e-mail: a@b.com.")).toEqual([]);
   });

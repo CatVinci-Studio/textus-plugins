@@ -2,7 +2,7 @@
 
 Цитируйте из своей библиотеки Zotero прямо во время письма.
 
-- Нужен запущенный Zotero 7 с включённым пунктом **Settings › Advanced › Allow other applications on this computer to communicate with Zotero**.
+- Нужен запущенный Zotero 7 или новее (включая Zotero 10) с включённым пунктом **Settings › Advanced › Allow other applications on this computer to communicate with Zotero**.
 - **Ctrl+Alt+C** (**⌘⌥C** на Mac), правый клик › **Вставить цитату из Zotero…** или меню «Плагины»: сначала идут работы, которые вы недавно цитировали, затем поиск по вашей библиотеке.
 - Если выделены слова, ищутся именно они.
 - Выберите запись, и цитата вставится на место курсора.

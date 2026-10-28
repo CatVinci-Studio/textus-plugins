@@ -14,10 +14,19 @@ const SOON_DAYS = 7;
 
 const t = (key, ...args) => textus.l10n.t(key, ...args);
 
+/** The local date `offset` days from today, as YYYY-MM-DD. */
 function day(offset) {
   const d = new Date();
   d.setDate(d.getDate() + offset);
-  return d.toISOString().slice(0, 10);
+  const two = (n) => String(n).padStart(2, "0");
+  return d.getFullYear() + "-" + two(d.getMonth() + 1) + "-" + two(d.getDate());
+}
+
+/** "3 open tasks", in the language's plural form ("open.few"…). */
+function count(key, n) {
+  const form = key + "." + new Intl.PluralRules(textus.env.language).select(n);
+  const text = t(form, n);
+  return text === form ? t(key + ".other", n) : text;
 }
 
 /** The heading a line sits beneath, from the document's headings. */
@@ -78,7 +87,7 @@ async function items() {
       rest.push(itemOf(doc, task, "doc"));
     }
   soon.sort((a, b) => (a.badge.text < b.badge.text ? -1 : 1));
-  list.setMessage(t(open === 1 ? "open.one" : "open.other", open));
+  list.setMessage(count("open", open));
   return soon.concat(rest);
 }
 
@@ -90,7 +99,7 @@ async function setDone(task, done) {
     const m = TASK.exec(lines[task.line] || "");
     // The file changed since it was listed: nothing is written; the list
     // is drawn again from what is there now.
-    if (!m || m[4].trim() !== task.text) return text;
+    if (!m || m[4].trim() !== task.text.trim()) return text;
     lines[task.line] = m[1] + (done ? "x" : " ") + m[3] + m[4];
     return lines.join(eol);
   });

@@ -1,6 +1,6 @@
 // Zotero: a citation from the user's Zotero library, inserted where the
-// caret is as a proposal. The library is searched through Zotero 7's local
-// API on this computer (http://localhost:23119/api/), which Zotero serves
+// caret is. The library is searched through the local API of Zotero 7 and
+// later on this computer (http://localhost:23119/api/), which Zotero serves
 // once "Allow other applications on this computer to communicate with
 // Zotero" is on - nothing leaves the computer.
 /** What activate was given: the plugin's storage and own files. */
@@ -63,7 +63,9 @@ async function get(url) {
   let response;
   try {
     response = await textus.net.fetch(url, {
-      headers: { "Zotero-API-Version": "3" },
+      // Zotero 10 drops a request that might be a web page's unless it
+      // says it is allowed.
+      headers: { "Zotero-API-Version": "3", "Zotero-Allowed-Request": "1" },
     });
   } catch (cause) {
     throw new Error(t("unreachable"), { cause: cause });
@@ -135,10 +137,14 @@ async function itemByKey(key) {
   return get(API.replace(/\/top$/, "/") + key + "?format=json");
 }
 
-/** The citations and zotero:// links in `text`, each once. */
+/** The citations and zotero:// links in `text`, each once; not in code,
+ *  where @media and @param are no one's. */
 function citedIn(text) {
   const out = [];
   const seen = new Set();
+  text = text
+    .replace(/^ {0,3}(`{3,}|~{3,})[^]*?^ {0,3}\1[^\n]*$/gm, "")
+    .replace(/`[^`\n]*`/g, "");
   // Pandoc's [@key], [see @key, p. 3; @other] and bare @key - not an
   // e-mail address's @.
   for (const m of text.matchAll(/(?:^|[\s[;-])@([\w:.#$%&\-+?<>~/]+)/g)) {
@@ -271,9 +277,23 @@ exports.activate = function (context) {
           (authors(a) + year(a)).localeCompare(authors(b) + year(b)),
         )
         .map(reference);
+      const list = "## " + t("references") + "\n\n" + entries.join("\n");
+      // Run again, the list there is replaced, not added a second time.
+      const blocks = (await textus.editor.getBlocks()) || [];
+      const at = blocks.findIndex(
+        (b) => b.kind === "heading" && b.markdown.trim() === "## " + t("references"),
+      );
+      if (at < 0) {
+        await textus.editor.edit({ action: "append", text: list });
+        return;
+      }
+      let end = at + 1;
+      while (end < blocks.length && !/^#{1,2}\s/.test(blocks[end].markdown)) end++;
       await textus.editor.edit({
-        action: "append",
-        text: "## " + t("references") + "\n\n" + entries.join("\n"),
+        action: "replace",
+        block: blocks[at].id,
+        lastBlock: blocks[end - 1].id,
+        text: list,
       });
     },
   );

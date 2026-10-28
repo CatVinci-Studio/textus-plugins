@@ -28,9 +28,12 @@ async function fromServer(block) {
   const response = await textus.net.fetch(
     SERVER + (await encode(block.source)),
   );
-  return { svg: new TextDecoder().decode(response.body) };
+  if (!response.ok) throw new Error("PlantUML server: " + response.status);
+  return { svg: await response.text() };
 }
 
 exports.activate = function (context) {
-  registerChartBlock(context, "plantuml", "chart.html", fromServer);
+  registerChartBlock(context, "plantuml", "chart.html", fromServer, (redraw) =>
+    textus.settings.onDidChange(({ key }) => key === "renderer" && redraw()),
+  );
 };

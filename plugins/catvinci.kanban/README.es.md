@@ -6,4 +6,14 @@ Tableros de tarjetas en listas, guardados como un archivo Markdown normal.
 - Cada lista es un encabezado del archivo y cada tarjeta una tarea debajo de él, así que el tablero se puede leer en cualquier parte.
 - Añade una tarjeta al final de una lista; arrastra las tarjetas entre listas, y las listas para reordenarlas. Una tarjeta marcada está hecha.
 - Escribe un [[enlace]] en una tarjeta y haz clic en él para abrir esa nota.
-- Arrastra una lista por su título para moverla.
+- **Editar como Markdown** abre el archivo como texto; el tablero refleja tus cambios.
+
+```markdown
+## Por hacer
+
+- [ ] Escribir el esquema
+
+## Hecho
+
+- [x] Elegir un título
+```

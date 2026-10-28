@@ -12,27 +12,14 @@
     "textus": ">=1.3.0-beta.2"
   },
   "main": "host.js",
-  "permissions": ["editor.read"],
-  "activationEvents": ["onEditor"],
+  "permissions": [
+    "editor.read"
+  ],
+  "activationEvents": [
+    "onEditor"
+  ],
   "contributes": {
     "settings": [
-      {
-        "key": "start",
-        "type": "enum",
-        "default": "2",
-        "title": "%start%",
-        "description": "%startHelp%",
-        "options": [
-          {
-            "value": "1",
-            "label": "%h1%"
-          },
-          {
-            "value": "2",
-            "label": "%h2%"
-          }
-        ]
-      },
       {
         "key": "inExports",
         "type": "boolean",
@@ -45,91 +32,51 @@
     "en": {
       "name": "Heading Numbers",
       "description": "Numbers headings as you write - 1, 1.1, 1.2 - without changing the text; exports can carry the numbers too.",
-      "start": "Number from",
-      "startHelp": "Most documents use # for their title, and number from ##.",
-      "h1": "# headings",
-      "h2": "## headings",
       "inExports": "Numbers in exports"
     },
     "zh": {
       "name": "标题编号",
       "description": "写作时给标题自动编号（1、1.1、1.2），不改动原文；导出时也可以带上编号。",
-      "start": "从哪级标题开始",
-      "startHelp": "多数文档把 # 当作标题，从 ## 开始编号。",
-      "h1": "# 一级标题",
-      "h2": "## 二级标题",
       "inExports": "导出时带编号"
     },
     "zh-Hant": {
       "name": "標題編號",
       "description": "寫作時為標題自動編號（1、1.1、1.2），不改動原文；匯出時也可以帶上編號。",
-      "start": "從哪級標題開始",
-      "startHelp": "多數文件把 # 當作標題，從 ## 開始編號。",
-      "h1": "# 一級標題",
-      "h2": "## 二級標題",
       "inExports": "匯出時帶編號"
     },
     "ja": {
       "name": "見出し番号",
       "description": "書きながら見出しに番号（1、1.1、1.2）を振ります。本文は変えません。書き出しにも番号を付けられます。",
-      "start": "番号を振り始める見出し",
-      "startHelp": "多くの文書は # を表題にし、## から番号を振ります。",
-      "h1": "# 見出し",
-      "h2": "## 見出し",
       "inExports": "書き出しにも番号を付ける"
     },
     "ko": {
       "name": "제목 번호",
       "description": "쓰는 동안 제목에 번호(1, 1.1, 1.2)를 붙입니다. 원문은 바꾸지 않으며 내보낼 때도 번호를 넣을 수 있습니다.",
-      "start": "번호를 시작할 제목",
-      "startHelp": "대부분의 문서는 #을 제목으로 쓰고 ##부터 번호를 붙입니다.",
-      "h1": "# 제목",
-      "h2": "## 제목",
       "inExports": "내보낼 때 번호 넣기"
     },
     "es": {
       "name": "Numeración de títulos",
       "description": "Numera los títulos mientras escribes (1, 1.1, 1.2) sin cambiar el texto; las exportaciones pueden llevar los números.",
-      "start": "Numerar desde",
-      "startHelp": "La mayoría usa # para el título y numera desde ##.",
-      "h1": "Títulos #",
-      "h2": "Títulos ##",
       "inExports": "Números en las exportaciones"
     },
     "fr": {
       "name": "Numérotation des titres",
       "description": "Numérote les titres pendant l’écriture (1, 1.1, 1.2) sans changer le texte ; les exports peuvent garder les numéros.",
-      "start": "Numéroter à partir de",
-      "startHelp": "La plupart utilisent # pour le titre et numérotent à partir de ##.",
-      "h1": "Titres #",
-      "h2": "Titres ##",
       "inExports": "Numéros dans les exports"
     },
     "de": {
       "name": "Überschriften-Nummern",
       "description": "Nummeriert Überschriften beim Schreiben (1, 1.1, 1.2), ohne den Text zu ändern; Exporte können die Nummern mitnehmen.",
-      "start": "Nummerieren ab",
-      "startHelp": "Die meisten nutzen # für den Titel und nummerieren ab ##.",
-      "h1": "#-Überschriften",
-      "h2": "##-Überschriften",
       "inExports": "Nummern in Exporten"
     },
     "ru": {
       "name": "Нумерация заголовков",
       "description": "Нумерует заголовки по ходу письма (1, 1.1, 1.2), не меняя текст; при экспорте номера тоже можно сохранить.",
-      "start": "Нумеровать начиная с",
-      "startHelp": "Обычно # — это название, а нумерация идёт с ##.",
-      "h1": "Заголовки #",
-      "h2": "Заголовки ##",
       "inExports": "Номера при экспорте"
     },
     "pt": {
       "name": "Numeração de títulos",
       "description": "Numera os títulos enquanto você escreve (1, 1.1, 1.2) sem mudar o texto; as exportações podem levar os números.",
-      "start": "Numerar a partir de",
-      "startHelp": "A maioria usa # para o título e numera a partir de ##.",
-      "h1": "Títulos #",
-      "h2": "Títulos ##",
       "inExports": "Números nas exportações"
     }
   }

@@ -28,7 +28,12 @@ async function keepPosition(path, position) {
 exports.activate = function (context) {
   ctx = context;
   textus.views.registerFileEditor("catvinci.pdf-viewer.pdf", {
-    resolve: async function (document, webview) {
+    resolve: async function (document, webview, context) {
+      // A link to a page (#page=12): there at once, and again when asked.
+      document.onDidRequestReveal(function (target) {
+        if (target.page)
+          webview.postMessage({ type: "goto", page: target.page });
+      });
       webview.onDidReceiveMessage(async function (message) {
         // PDF.js's own data - a CJK font's character map, a standard font
         // - from the plugin's lib folder: the page can't fetch it.
@@ -51,17 +56,22 @@ exports.activate = function (context) {
             scale: message.scale,
           });
         if (message.type !== "ready") return;
-        const [bytes, zoom, position] = await Promise.all([
-          document.readFile(),
-          textus.settings.get("zoom"),
-          positionOf(document.path),
-        ]);
+        let bytes;
+        try {
+          bytes = await document.readFile();
+        } catch (err) {
+          return webview.postMessage({
+            type: "failed",
+            message: String((err && err.message) || err),
+          });
+        }
+        const position = await positionOf(document.path);
         webview.postMessage({
           type: "file",
           name: document.fileName,
           bytes: bytes,
-          zoom: zoom,
           position: position,
+          page: context.target?.page || 0,
         });
       });
       const html = await ctx.plugin.readText("view.html");
