@@ -14,6 +14,11 @@
 // official plugin's - Textus downloads packages from this repository only,
 // and an author changing a release later changes nothing listed.
 // removed.json names those taken down.
+//
+// For the market, before a plugin is installed: its README (README.md,
+// README.<lang>.md) and icon go up on the `catalog` release too, and
+// index.json lists where. dist/stats.json, when the release workflow
+// wrote it (scripts/stats.mjs), adds each plugin's installs and dates.
 
 import { createHash } from "node:crypto";
 import {
@@ -68,6 +73,43 @@ function manifestOf(id) {
   return manifest;
 }
 
+/** Each plugin's installs and first and latest release dates, when
+ *  counted (scripts/stats.mjs). */
+const STATS = join(DIST, "stats.json");
+const stats = existsSync(STATS) ? JSON.parse(readFileSync(STATS, "utf8")) : {};
+
+/** A README's language from its name: README.md is English. */
+const README = /^README(?:\.([A-Za-z]{2,3}(?:-[A-Za-z]+)?))?\.md$/;
+
+/**
+ * What the market shows of plugin `id` before it is installed, from its
+ * files (name -> bytes): each README, and the icon its manifest names,
+ * copied to dist/ for the catalog release; their addresses there, and the
+ * plugin's stats.
+ */
+function marketOf(id, manifest, fileList) {
+  const at = (asset) => `${REPOSITORY}/releases/download/catalog/${asset}`;
+  const readme = {};
+  for (const [name, bytes] of fileList) {
+    const m = README.exec(name);
+    if (!m) continue;
+    const lang = m[1] ?? "en";
+    const asset = `readme-${id}.${lang}.md`;
+    writeFileSync(join(DIST, asset), bytes);
+    readme[lang] = at(asset);
+  }
+  const out = Object.keys(readme).length ? { readme } : {};
+  const icon = typeof manifest.icon === "string" ? manifest.icon : "";
+  const ext = /\.(svg|png)$/i.exec(icon)?.[1]?.toLowerCase();
+  const iconBytes = ext && fileList.find(([name]) => name === icon)?.[1];
+  if (iconBytes) {
+    const asset = `icon-${id}.${ext}`;
+    writeFileSync(join(DIST, asset), iconBytes);
+    out.icon = at(asset);
+  }
+  return { ...out, ...(stats[id] ?? {}) };
+}
+
 /** A plugin's pictures for the market (`screenshots/*.png`, in name
  *  order), copied to dist/ as shot-<id>-<n>.png for the catalog release;
  *  their addresses there. */
@@ -95,6 +137,7 @@ for (const id of ids) {
   const manifest = manifestOf(id);
   if (check) continue;
   const zip = new JSZip();
+  const shipped = [];
   // Fixed dates and no folder entries (JSZip would date those now): the
   // same sources make the same zip, and the same hash.
   const options = {
@@ -105,7 +148,9 @@ for (const id of ids) {
     const name = relative(join(PLUGINS, id), path);
     // Pictures for the market go up beside the catalog, not in the package.
     if (name.startsWith(`${SCREENSHOTS}/`)) continue;
-    zip.file(name, readFileSync(path), options);
+    const bytes = readFileSync(path);
+    zip.file(name, bytes, options);
+    shipped.push([name, bytes]);
   }
   for (const [target, lib] of Object.entries(libs)) {
     if (!target.startsWith(`${id}/`)) continue;
@@ -138,6 +183,7 @@ for (const id of ids) {
     sha256: createHash("sha256").update(bytes).digest("hex"),
     size: bytes.length,
     screenshots: screenshotsOf(id),
+    ...marketOf(id, manifest, shipped),
   });
   console.log(`${file}  ${(bytes.length / 1024).toFixed(0)} KB`);
 }
@@ -246,6 +292,10 @@ for (const file of communityFiles) {
     throw new Error(`${url}: not the zip that was reviewed (${entry.sha256})`);
   const file = `${entry.id}-${entry.version}.zip`;
   writeFileSync(join(DIST, file), bytes);
+  const inZip = [];
+  for (const [name, f] of Object.entries(zip.files))
+    if (!f.dir && (README.test(name) || name === manifest.icon))
+      inZip.push([name, await f.async("nodebuffer")]);
   catalog.push({
     id: entry.id,
     version: entry.version,
@@ -254,6 +304,7 @@ for (const file of communityFiles) {
     url: `${REPOSITORY}/releases/download/${entry.id}-v${entry.version}/${file}`,
     sha256,
     size: bytes.length,
+    ...marketOf(entry.id, manifest, inZip),
   });
   console.log(`${entry.id}-${entry.version}  from ${entry.repo}`);
 }

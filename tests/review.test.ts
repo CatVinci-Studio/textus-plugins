@@ -19,8 +19,7 @@ function plugin(over: Record<string, unknown> = {}, files: Record<string, string
   const all: Record<string, string> = {
     "textus-plugin.json": JSON.stringify(manifest),
     "host.js": "exports.activate = function () {};",
-    "README.md": "# Word Count",
-    "USAGE.md": "Use it.",
+    "README.md": "# Word Count\n\nUse it.",
     ...files,
   };
   const pkg = new Map(Object.entries(all).map(([k, v]) => [k, Buffer.from(v)]));
@@ -77,15 +76,14 @@ describe("review", () => {
     expect(verdict(results)).toBe("warn");
   });
 
-  it("wants a README, USAGE, an open license, and no borrowed name", () => {
+  it("wants a README in the package, an open license, and no borrowed name", () => {
     const p = plugin({ name: "Official Word Count" });
-    p.pkg.delete("USAGE.md");
-    p.source.delete("USAGE.md");
+    p.pkg.delete("README.md");
     p.source.set("LICENSE", Buffer.from("All rights reserved."));
     const details = review(p)
       .filter((r) => r.check === "content")
       .map((r) => r.detail);
-    expect(details.join(" ")).toMatch(/no USAGE\.md/);
+    expect(details.join(" ")).toMatch(/no README\.md in the package/);
     expect(details.join(" ")).toMatch(/doesn't recognise/);
     expect(details.join(" ")).toMatch(/CatVinci or Official/);
   });
