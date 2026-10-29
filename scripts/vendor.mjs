@@ -24,3 +24,24 @@ await build({
   outfile: `${ROOT}vendor/markdownlint.js`,
 });
 console.log("vendor/markdownlint.js");
+
+await build({
+  stdin: {
+    contents: `
+      import { Marp } from "@marp-team/marp-core";
+      globalThis.Marp = Marp;
+    `,
+    resolveDir: ROOT,
+  },
+  // A plugin's scripts run as one CommonJS module: hidden from Marp's
+  // dependencies, which would take module.exports for their own.
+  banner: { js: "(function (module, exports) {" },
+  footer: { js: "})();" },
+  bundle: true,
+  format: "iife",
+  platform: "browser",
+  minify: true,
+  legalComments: "eof",
+  outfile: `${ROOT}vendor/marp-core.js`,
+});
+console.log("vendor/marp-core.js");

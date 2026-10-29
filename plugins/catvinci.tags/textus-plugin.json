@@ -1,0 +1,144 @@
+{
+  "id": "catvinci.tags",
+  "name": "%name%",
+  "version": "0.1.0",
+  "publisher": "catvinci",
+  "author": "CatVinci Studio",
+  "description": "%description%",
+  "icon": "icon.svg",
+  "license": "MIT",
+  "repository": "https://github.com/CatVinci-Studio/textus-plugins",
+  "engines": {
+    "textus": ">=1.3.0-beta.6"
+  },
+  "main": [
+    "tag-edit.js",
+    "host.js"
+  ],
+  "permissions": [
+    "files.read",
+    "files.write"
+  ],
+  "contributes": {
+    "sidebarTabs": [
+      {
+        "id": "catvinci.tags.panel",
+        "title": "%name%",
+        "icon": "tab.svg",
+        "type": "list"
+      }
+    ]
+  },
+  "l10n": {
+    "en": {
+      "name": "Tags",
+      "description": "Every #tag in the open folder in the sidebar, with how many notes use it: open one for its notes, rename a tag everywhere, or merge two by renaming one to the other.",
+      "rename": "Rename…",
+      "renameTitle": "Rename {0} in every note to:",
+      "renamed": "{0} is {1} now, in {2} notes.",
+      "invalid": "A tag is letters, digits, _, - and /, and not only digits.",
+      "filter": "Filter tags",
+      "none": "No tags in this folder yet.",
+      "nofolder": "Open a folder to see its tags."
+    },
+    "zh": {
+      "name": "标签",
+      "description": "在侧边栏列出所打开文件夹里的所有 #标签 及使用它们的笔记数：展开查看笔记，在所有笔记里重命名标签，或把一个标签改成另一个的名字来合并。",
+      "rename": "重命名…",
+      "renameTitle": "把所有笔记里的 {0} 改为：",
+      "renamed": "{0} 已改为 {1}，共 {2} 篇笔记。",
+      "invalid": "标签只能由文字、数字、_、- 和 / 组成，且不能全是数字。",
+      "filter": "筛选标签",
+      "none": "这个文件夹里还没有标签。",
+      "nofolder": "打开一个文件夹来查看它的标签。"
+    },
+    "zh-Hant": {
+      "name": "標籤",
+      "description": "在側邊欄列出所開啟資料夾裡的所有 #標籤 及使用它們的筆記數：展開查看筆記，在所有筆記裡重新命名標籤，或把一個標籤改成另一個的名字來合併。",
+      "rename": "重新命名…",
+      "renameTitle": "把所有筆記裡的 {0} 改為：",
+      "renamed": "{0} 已改為 {1}，共 {2} 篇筆記。",
+      "invalid": "標籤只能由文字、數字、_、- 和 / 組成，且不能全是數字。",
+      "filter": "篩選標籤",
+      "none": "這個資料夾裡還沒有標籤。",
+      "nofolder": "開啟一個資料夾來查看它的標籤。"
+    },
+    "ja": {
+      "name": "タグ",
+      "description": "開いているフォルダのすべての #タグ と使っているノートの数をサイドバーに表示します。開くとノートの一覧、どのノートでも名前を変更、別のタグ名に変えれば統合できます。",
+      "rename": "名前を変更…",
+      "renameTitle": "すべてのノートの {0} を次に変更:",
+      "renamed": "{0} を {1} に変更しました（{2} 件のノート）。",
+      "invalid": "タグは文字、数字、_、-、/ だけで、数字だけにはできません。",
+      "filter": "タグを絞り込む",
+      "none": "このフォルダにはまだタグがありません。",
+      "nofolder": "フォルダを開くとタグが表示されます。"
+    },
+    "ko": {
+      "name": "태그",
+      "description": "열린 폴더의 모든 #태그와 그 태그를 쓰는 노트 수를 사이드바에 보여 줍니다. 열면 노트 목록, 모든 노트에서 이름 바꾸기, 다른 태그 이름으로 바꾸면 합치기.",
+      "rename": "이름 바꾸기…",
+      "renameTitle": "모든 노트의 {0}을(를) 다음으로:",
+      "renamed": "{0}이(가) 이제 {1}입니다({2}개 노트).",
+      "invalid": "태그는 글자, 숫자, _, -, /로만 되고 숫자만으로는 안 됩니다.",
+      "filter": "태그 거르기",
+      "none": "이 폴더에는 아직 태그가 없습니다.",
+      "nofolder": "폴더를 열면 태그가 보입니다."
+    },
+    "de": {
+      "name": "Tags",
+      "description": "Alle #Tags des offenen Ordners in der Seitenleiste, mit der Zahl der Notizen: öffne einen für seine Notizen, benenne einen überall um oder führe zwei zusammen, indem du einen wie den anderen nennst.",
+      "rename": "Umbenennen…",
+      "renameTitle": "{0} in allen Notizen umbenennen in:",
+      "renamed": "{0} heißt jetzt {1}, in {2} Notizen.",
+      "invalid": "Ein Tag besteht aus Buchstaben, Ziffern, _, - und /, nicht nur aus Ziffern.",
+      "filter": "Tags filtern",
+      "none": "Noch keine Tags in diesem Ordner.",
+      "nofolder": "Öffne einen Ordner, um seine Tags zu sehen."
+    },
+    "fr": {
+      "name": "Étiquettes",
+      "description": "Toutes les #étiquettes du dossier ouvert dans la barre latérale, avec le nombre de notes : ouvrez-en une pour ses notes, renommez-la partout, ou fusionnez-en deux en donnant à l'une le nom de l'autre.",
+      "rename": "Renommer…",
+      "renameTitle": "Renommer {0} dans toutes les notes en :",
+      "renamed": "{0} est maintenant {1}, dans {2} notes.",
+      "invalid": "Une étiquette est faite de lettres, chiffres, _, - et /, pas seulement de chiffres.",
+      "filter": "Filtrer les étiquettes",
+      "none": "Pas encore d'étiquettes dans ce dossier.",
+      "nofolder": "Ouvrez un dossier pour voir ses étiquettes."
+    },
+    "es": {
+      "name": "Etiquetas",
+      "description": "Todas las #etiquetas de la carpeta abierta en la barra lateral, con cuántas notas las usan: abre una para ver sus notas, cámbiale el nombre en todas partes o une dos dándole a una el nombre de la otra.",
+      "rename": "Cambiar nombre…",
+      "renameTitle": "Cambiar {0} en todas las notas por:",
+      "renamed": "{0} ahora es {1}, en {2} notas.",
+      "invalid": "Una etiqueta tiene letras, números, _, - y /, y no solo números.",
+      "filter": "Filtrar etiquetas",
+      "none": "Aún no hay etiquetas en esta carpeta.",
+      "nofolder": "Abre una carpeta para ver sus etiquetas."
+    },
+    "pt": {
+      "name": "Tags",
+      "description": "Todas as #tags da pasta aberta na barra lateral, com quantas notas as usam: abra uma para ver suas notas, renomeie em todas as notas ou junte duas dando a uma o nome da outra.",
+      "rename": "Renomear…",
+      "renameTitle": "Renomear {0} em todas as notas para:",
+      "renamed": "{0} agora é {1}, em {2} notas.",
+      "invalid": "Uma tag tem letras, números, _, - e /, e não só números.",
+      "filter": "Filtrar tags",
+      "none": "Ainda não há tags nesta pasta.",
+      "nofolder": "Abra uma pasta para ver suas tags."
+    },
+    "ru": {
+      "name": "Теги",
+      "description": "Все #теги открытой папки на боковой панели с числом заметок: откройте тег, чтобы увидеть заметки, переименуйте его везде или объедините два, назвав один как другой.",
+      "rename": "Переименовать…",
+      "renameTitle": "Переименовать {0} во всех заметках в:",
+      "renamed": "{0} теперь {1}, в {2} заметках.",
+      "invalid": "Тег состоит из букв, цифр, _, - и /, и не только из цифр.",
+      "filter": "Фильтр тегов",
+      "none": "В этой папке пока нет тегов.",
+      "nofolder": "Откройте папку, чтобы увидеть её теги."
+    }
+  }
+}
