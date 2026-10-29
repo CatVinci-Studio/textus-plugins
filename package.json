@@ -11,6 +11,7 @@
     "vendor": "node scripts/vendor.mjs"
   },
   "devDependencies": {
+    "@marp-team/marp-core": "4.4.0",
     "@plantuml/core": "1.2026.9",
     "abcjs": "6.7.2",
     "chart.js": "4.5.1",

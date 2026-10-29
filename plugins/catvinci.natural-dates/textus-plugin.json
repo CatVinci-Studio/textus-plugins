@@ -1,0 +1,123 @@
+{
+  "id": "catvinci.natural-dates",
+  "name": "%name%",
+  "version": "0.1.0",
+  "publisher": "catvinci",
+  "author": "CatVinci Studio",
+  "description": "%description%",
+  "icon": "icon.svg",
+  "license": "MIT",
+  "repository": "https://github.com/CatVinci-Studio/textus-plugins",
+  "engines": {
+    "textus": ">=1.3.0-beta.6"
+  },
+  "main": [
+    "dates.js",
+    "host.js"
+  ],
+  "permissions": [
+    "editor.read"
+  ],
+  "activationEvents": [
+    "onEditor"
+  ],
+  "contributes": {
+    "completions": [
+      {
+        "id": "catvinci.natural-dates.at",
+        "where": "text",
+        "pattern": "@[^\\s@]{0,20}"
+      }
+    ],
+    "settings": [
+      {
+        "key": "insert",
+        "type": "enum",
+        "default": "date",
+        "title": "%insert%",
+        "options": [
+          {
+            "value": "date",
+            "label": "%asDate%"
+          },
+          {
+            "value": "link",
+            "label": "%asLink%"
+          }
+        ]
+      }
+    ]
+  },
+  "l10n": {
+    "en": {
+      "name": "Natural Dates",
+      "description": "Type @ and a day - @tomorrow, @next friday, @下周五, @明日 - and pick the date it names, written as 2026-11-06 or as a link to that day's note.",
+      "insert": "Insert as",
+      "asDate": "A date",
+      "asLink": "A link to the day's note"
+    },
+    "zh": {
+      "name": "自然语言日期",
+      "description": "输入 @ 加上一个日子（@明天、@下周五、@tomorrow、@明日），选中后写入它对应的日期，可以是 2026-11-06 这样的日期，也可以是那天每日笔记的链接。",
+      "insert": "插入为",
+      "asDate": "日期",
+      "asLink": "那天每日笔记的链接"
+    },
+    "zh-Hant": {
+      "name": "自然語言日期",
+      "description": "輸入 @ 加上一個日子（@明天、@下週五、@tomorrow、@明日），選中後寫入它對應的日期，可以是 2026-11-06 這樣的日期，也可以是那天每日筆記的連結。",
+      "insert": "插入為",
+      "asDate": "日期",
+      "asLink": "那天每日筆記的連結"
+    },
+    "ja": {
+      "name": "日付の自然入力",
+      "description": "@ と日を入力（@明日、@来週金曜日、@tomorrow、@下周五）して選ぶと、その日付を 2026-11-06 の形か、その日のデイリーノートへのリンクとして書き込みます。",
+      "insert": "挿入する形",
+      "asDate": "日付",
+      "asLink": "その日のノートへのリンク"
+    },
+    "ko": {
+      "name": "자연어 날짜",
+      "description": "@와 날짜 표현(@tomorrow, @next friday, @明日, @下周五)을 입력해 고르면 그 날짜를 2026-11-06 형식이나 그날 데일리 노트 링크로 씁니다.",
+      "insert": "넣을 형식",
+      "asDate": "날짜",
+      "asLink": "그날 노트 링크"
+    },
+    "de": {
+      "name": "Natürliche Daten",
+      "description": "Tippe @ und einen Tag - @tomorrow, @next friday, @下周五, @明日 - und wähle das Datum, das er meint, als 2026-11-06 oder als Link zur Notiz dieses Tages.",
+      "insert": "Einfügen als",
+      "asDate": "Datum",
+      "asLink": "Link zur Tagesnotiz"
+    },
+    "fr": {
+      "name": "Dates naturelles",
+      "description": "Tapez @ et un jour - @tomorrow, @next friday, @下周五, @明日 - et choisissez la date qu'il désigne, écrite 2026-11-06 ou en lien vers la note de ce jour.",
+      "insert": "Insérer comme",
+      "asDate": "Une date",
+      "asLink": "Un lien vers la note du jour"
+    },
+    "es": {
+      "name": "Fechas naturales",
+      "description": "Escribe @ y un día - @tomorrow, @next friday, @下周五, @明日 - y elige la fecha que nombra, escrita como 2026-11-06 o como enlace a la nota de ese día.",
+      "insert": "Insertar como",
+      "asDate": "Una fecha",
+      "asLink": "Un enlace a la nota del día"
+    },
+    "pt": {
+      "name": "Datas naturais",
+      "description": "Digite @ e um dia - @tomorrow, @next friday, @下周五, @明日 - e escolha a data que ele indica, escrita como 2026-11-06 ou como link para a nota daquele dia.",
+      "insert": "Inserir como",
+      "asDate": "Uma data",
+      "asLink": "Um link para a nota do dia"
+    },
+    "ru": {
+      "name": "Естественные даты",
+      "description": "Введите @ и день - @tomorrow, @next friday, @下周五, @明日 - и выберите дату, которую он означает: в виде 2026-11-06 или ссылкой на заметку этого дня.",
+      "insert": "Вставлять как",
+      "asDate": "Дату",
+      "asLink": "Ссылку на заметку дня"
+    }
+  }
+}
