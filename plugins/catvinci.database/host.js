@@ -218,6 +218,7 @@ exports.activate = function (ctx) {
     textus.commands.register("catvinci.database.importNotion", importNotion),
     textus.ai.registerTool("create_database", createDatabase),
     // A page edited here, or anywhere: every block on screen again.
+    textus.files.onDidChangeRoot(again),
     textus.metadata.onDidChange(again),
     textus.files.onDidChange(again),
     textus.files.onDidCreate(again),

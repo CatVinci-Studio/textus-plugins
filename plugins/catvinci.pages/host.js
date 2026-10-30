@@ -77,6 +77,7 @@ async function showCrumb() {
 }
 
 async function newSubpage(path) {
+  root = await textus.files.root();
   if (!root) return textus.ui.message(t("needsFolder"));
   const active = await textus.editor.getPath();
   const parent = typeof path === "string" ? path : active;
@@ -114,6 +115,7 @@ async function setIcon(path) {
 }
 
 async function up() {
+  root = await textus.files.root();
   const rel = relOf(await textus.editor.getPath());
   if (!rel) return;
   const above = pages.ancestors(rel, docs.map((d) => d.rel));
@@ -140,6 +142,7 @@ exports.activate = function (ctx) {
     textus.commands.register("catvinci.pages.newSubpage", newSubpage),
     textus.commands.register("catvinci.pages.setIcon", setIcon),
     textus.commands.register("catvinci.pages.up", up),
+    textus.files.onDidChangeRoot(later),
     textus.metadata.onDidChange(later),
     textus.files.onDidCreate(later),
     textus.files.onDidRename(later),

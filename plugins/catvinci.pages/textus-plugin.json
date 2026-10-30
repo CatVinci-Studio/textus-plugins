@@ -21,6 +21,9 @@
     "editor.read",
     "editor.write"
   ],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
   "contributes": {
     "commands": [
       {
