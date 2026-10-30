@@ -290,8 +290,8 @@ for (const file of communityFiles) {
   // The zip the review saw, when the listing pins it.
   if (entry.sha256 && entry.sha256 !== sha256)
     throw new Error(`${url}: not the zip that was reviewed (${entry.sha256})`);
-  const file = `${entry.id}-${entry.version}.zip`;
-  writeFileSync(join(DIST, file), bytes);
+  const asset = `${entry.id}-${entry.version}.zip`;
+  writeFileSync(join(DIST, asset), bytes);
   const inZip = [];
   for (const [name, f] of Object.entries(zip.files))
     if (!f.dir && (README.test(name) || name === manifest.icon))
@@ -301,7 +301,7 @@ for (const file of communityFiles) {
     version: entry.version,
     official: false,
     manifest,
-    url: `${REPOSITORY}/releases/download/${entry.id}-v${entry.version}/${file}`,
+    url: `${REPOSITORY}/releases/download/${entry.id}-v${entry.version}/${asset}`,
     sha256,
     size: bytes.length,
     ...marketOf(entry.id, manifest, inZip),
