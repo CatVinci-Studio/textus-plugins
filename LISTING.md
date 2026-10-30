@@ -45,7 +45,7 @@ Themes are shared in [textus-themes](https://github.com/CatVinci-Studio/textus-t
 4. The review runs on the pull request and posts what it found:
    - **the package** - its manifest, id and version, size, no programs or native libraries;
    - **its source** - every file in the zip is the tagged repository's, byte for byte;
-   - **permissions** - each one listed; new ones since the last version, and broad ones (`network:*`, `files.write`, `editor.write`), wait for a person;
+   - **permissions** - each one listed; new ones since the last version, and broad ones (`network:*`, `files.write`, `editor.write`, `background`), wait for a person;
    - **the code** - no `eval`, no code loaded from the web, no keys written in, nothing minified that isn't a named library;
    - **what comes with it** - a `README.md` in the package, an open-source LICENSE, English and Chinese strings, no name that borrows "CatVinci" or "Official". The README is what **Get more** shows on your plugin's page, and its guide once installed: what it does and how to reach it. Add `README.zh.md`, `README.ja.md` and so on for other languages; Textus shows the one in the reader's language, English otherwise.
 5. A maintainer tries it in Textus, adds the reviewed zip's `sha256` to the file and merges. The release workflow copies that zip here and **Get more** lists it.
@@ -109,7 +109,7 @@ Textus 的 **设置 › 扩展 › 获取更多** 里有三类东西：插件和
 4. PR 上会自动审查并贴出结果：
    - **包**：清单、id 和版本、大小，不能有可执行文件和原生库；
    - **源码一致**：zip 里每个文件都和仓库那个标签的文件逐字节相同；
-   - **权限**：列出全部权限；比上一版多出的、范围大的（`network:*`、`files.write`、`editor.write`）要等人看；
+   - **权限**：列出全部权限；比上一版多出的、范围大的（`network:*`、`files.write`、`editor.write`、`background`）要等人看；
    - **代码**：不能用 `eval`、不能从网上加载代码、不能写死密钥，压缩过的代码只能是写明来源的库；
    - **附带内容**：包里的 `README.md`、开源许可证、中英文文字，名字不能借用「CatVinci」或「Official」。README 就是「获取更多」里插件页显示的介绍，也是安装后的使用说明：写清它做什么、从哪里用。其他语言可以加 `README.zh.md`、`README.ja.md` 等，Textus 按读者的语言显示，没有就显示英文。
 5. 维护者在 Textus 里试用，把审查过的 zip 的 `sha256` 填进文件后合并。发布流程把这个 zip 复制到本仓库，**获取更多** 里就能看到。

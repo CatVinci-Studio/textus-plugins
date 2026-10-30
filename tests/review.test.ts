@@ -76,6 +76,11 @@ describe("review", () => {
     expect(verdict(results)).toBe("warn");
   });
 
+  it("asks why a plugin runs code in the background", () => {
+    const results = review(plugin({ permissions: ["notifications", "background"] }));
+    expect(levels(results, "permissions")).toEqual(["warn"]);
+  });
+
   it("wants a README in the package, an open license, and no borrowed name", () => {
     const p = plugin({ name: "Official Word Count" });
     p.pkg.delete("README.md");
