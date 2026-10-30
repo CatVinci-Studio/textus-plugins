@@ -30,8 +30,9 @@ const LICENSES = [
   "ISC License",
   "Permission to use, copy, modify, and/or distribute this software",
 ];
-/** Permissions whose reason the description should give. */
-const BROAD = ["network:*", "files.write", "editor.write"];
+/** Permissions whose reason the description should give: `background`
+ *  runs the plugin's code with every window closed. */
+const BROAD = ["network:*", "files.write", "editor.write", "background"];
 /** Code that turns text into code, loads code from the web, or looks
  *  like something it shouldn't: what each is, and how bad. */
 const SCANS = [
