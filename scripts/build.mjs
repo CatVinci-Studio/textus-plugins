@@ -18,7 +18,8 @@
 // For the market, before a plugin is installed: its README (README.md,
 // README.<lang>.md) and icon go up on the `catalog` release too, and
 // index.json lists where. dist/stats.json, when the release workflow
-// wrote it (scripts/stats.mjs), adds each plugin's installs and dates.
+// wrote it (scripts/stats.mjs), adds each plugin's installs and dates and
+// each skill's installs.
 
 import { createHash } from "node:crypto";
 import {
@@ -73,10 +74,11 @@ function manifestOf(id) {
   return manifest;
 }
 
-/** Each plugin's installs and first and latest release dates, when
- *  counted (scripts/stats.mjs). */
+/** Each plugin's installs and first and latest release dates, and each
+ *  skill's installs, when counted (scripts/stats.mjs). */
 const STATS = join(DIST, "stats.json");
 const stats = existsSync(STATS) ? JSON.parse(readFileSync(STATS, "utf8")) : {};
+const statsOf = (kind, id) => stats[kind]?.[id] ?? {};
 
 /** A README's language from its name: README.md is English. */
 const README = /^README(?:\.([A-Za-z]{2,3}(?:-[A-Za-z]+)?))?\.md$/;
@@ -107,7 +109,7 @@ function marketOf(id, manifest, fileList) {
     writeFileSync(join(DIST, asset), iconBytes);
     out.icon = at(asset);
   }
-  return { ...out, ...(stats[id] ?? {}) };
+  return { ...out, ...statsOf("plugin", id) };
 }
 
 /** A plugin's pictures for the market (`screenshots/*.png`, in name
@@ -257,6 +259,7 @@ for (const file of skillFiles) {
     url: `${REPOSITORY}/releases/download/catalog/${asset}`,
     sha256: createHash("sha256").update(skill.bytes).digest("hex"),
     size: skill.bytes.length,
+    ...statsOf("skill", skill.name),
   });
   console.log(`${asset}  ${skill.bytes.length} bytes`);
 }
