@@ -1,0 +1,441 @@
+{
+  "id": "catvinci.database",
+  "name": "%name%",
+  "version": "0.1.0",
+  "publisher": "catvinci",
+  "author": "CatVinci Studio",
+  "description": "%description%",
+  "icon": "icon.svg",
+  "license": "MIT",
+  "repository": "https://github.com/CatVinci-Studio/textus-plugins",
+  "engines": {
+    "textus": ">=1.3.0-beta.8"
+  },
+  "main": [
+    "db.js",
+    "host.js"
+  ],
+  "permissions": [
+    "files.read",
+    "files.write",
+    "editor.read",
+    "editor.write",
+    "ai.tools"
+  ],
+  "contributes": {
+    "commands": [
+      {
+        "command": "catvinci.database.new",
+        "title": "%new%"
+      },
+      {
+        "command": "catvinci.database.importNotion",
+        "title": "%importNotion%"
+      }
+    ],
+    "menus": {
+      "editor/slash": [
+        {
+          "command": "catvinci.database.new"
+        }
+      ],
+      "file/context": [
+        {
+          "command": "catvinci.database.importNotion",
+          "when": "fileExtension == .csv"
+        }
+      ],
+      "app/plugins": [
+        {
+          "command": "catvinci.database.new"
+        }
+      ]
+    },
+    "codeBlocks": [
+      {
+        "language": "database",
+        "title": "%name%"
+      }
+    ],
+    "aiTools": [
+      {
+        "name": "create_database",
+        "description": "%toolDescription%",
+        "parameters": {
+          "type": "object",
+          "required": [
+            "name",
+            "rows"
+          ],
+          "properties": {
+            "name": {
+              "type": "string",
+              "description": "The database's name, also its folder's."
+            },
+            "view": {
+              "type": "string",
+              "enum": [
+                "table",
+                "board",
+                "calendar",
+                "gallery"
+              ]
+            },
+            "sort": {
+              "type": "string",
+              "description": "A property to sort by; -name for descending."
+            },
+            "group": {
+              "type": "string",
+              "description": "The property a board groups by."
+            },
+            "rows": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": [
+                  "name"
+                ],
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "properties": {
+                    "type": "object",
+                    "description": "Front matter: dates as YYYY-MM-DD, lists as arrays, numbers, true/false."
+                  },
+                  "body": {
+                    "type": "string",
+                    "description": "Markdown under the title, if any."
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    ]
+  },
+  "l10n": {
+    "en": {
+      "name": "Database",
+      "description": "A folder's documents as a table, a board, a calendar or a gallery, their front matter the columns - edit them in place. Imports Notion databases.",
+      "new": "New Database…",
+      "importNotion": "Import from Notion…",
+      "table": "Table",
+      "board": "Board",
+      "calendar": "Calendar",
+      "gallery": "Gallery",
+      "page": "Page",
+      "add": "New",
+      "count": "{0} pages",
+      "empty": "No pages here yet.",
+      "noValue": "No value",
+      "noGroup": "Give the pages a list property (say focus: [Work]) to group them by.",
+      "noDate": "Give the pages a date property (say start: 2026-01-05) to place them by.",
+      "today": "Today",
+      "prev": "Previous month",
+      "next": "Next month",
+      "missing": "Open a folder to see its pages.",
+      "newTitle": "Page title",
+      "exists": "“{0}” is already there.",
+      "needsSaved": "Save this document in the open folder first: the database's folder goes beside it.",
+      "needsFolder": "Open a folder first.",
+      "dbName": "Database name",
+      "importPick": "Choose a Notion export's .csv file in the sidebar (right-click it).",
+      "importing": "Importing {0}",
+      "imported": "{0} pages imported into {1}.",
+      "aiNote": "Put the block where the user wants the database; its pages are made.",
+      "toolDescription": "Makes a database: a folder of documents whose front matter holds each one's properties, and a ```database block that shows them as a table, board, calendar or gallery. Returns the block to insert.",
+      "locale": "en"
+    },
+    "zh": {
+      "name": "数据库",
+      "description": "把一个文件夹里的文档显示成表格、看板、日历或画廊，文档开头的属性就是各列，可以直接编辑。可导入 Notion 数据库。",
+      "new": "新建数据库…",
+      "importNotion": "从 Notion 导入…",
+      "table": "表格",
+      "board": "看板",
+      "calendar": "日历",
+      "gallery": "画廊",
+      "page": "页面",
+      "add": "新建",
+      "count": "{0} 个页面",
+      "empty": "这里还没有页面。",
+      "noValue": "未填写",
+      "noGroup": "给页面加一个列表属性（比如 focus: [工作]）就能按它分组。",
+      "noDate": "给页面加一个日期属性（比如 start: 2026-01-05）就能按它排进日历。",
+      "today": "今天",
+      "prev": "上个月",
+      "next": "下个月",
+      "missing": "打开一个文件夹才能看到其中的页面。",
+      "newTitle": "页面标题",
+      "exists": "“{0}”已经存在。",
+      "needsSaved": "请先把这篇文档保存在打开的文件夹里：数据库的文件夹会放在它旁边。",
+      "needsFolder": "请先打开一个文件夹。",
+      "dbName": "数据库名称",
+      "importPick": "在侧边栏右键 Notion 导出的 .csv 文件来导入。",
+      "importing": "正在导入 {0}",
+      "imported": "已把 {0} 个页面导入到 {1}。",
+      "aiNote": "把这个块放到用户想要的位置；页面已经建好。",
+      "toolDescription": "创建一个数据库：一个文件夹，里面每篇文档的开头属性就是它的各项属性；再加一个 ```database 块，用表格、看板、日历或画廊展示它们。返回要插入的块。",
+      "locale": "zh-CN"
+    },
+    "zh-Hant": {
+      "name": "資料庫",
+      "description": "把一個資料夾裡的文件顯示成表格、看板、日曆或畫廊，文件開頭的屬性就是各欄，可以直接編輯。可匯入 Notion 資料庫。",
+      "new": "新增資料庫…",
+      "importNotion": "從 Notion 匯入…",
+      "table": "表格",
+      "board": "看板",
+      "calendar": "日曆",
+      "gallery": "畫廊",
+      "page": "頁面",
+      "add": "新增",
+      "count": "{0} 個頁面",
+      "empty": "這裡還沒有頁面。",
+      "noValue": "未填寫",
+      "noGroup": "給頁面加一個清單屬性（例如 focus: [工作]）就能依它分組。",
+      "noDate": "給頁面加一個日期屬性（例如 start: 2026-01-05）就能依它排進日曆。",
+      "today": "今天",
+      "prev": "上個月",
+      "next": "下個月",
+      "missing": "打開一個資料夾才能看到其中的頁面。",
+      "newTitle": "頁面標題",
+      "exists": "「{0}」已經存在。",
+      "needsSaved": "請先把這份文件儲存在打開的資料夾裡：資料庫的資料夾會放在它旁邊。",
+      "needsFolder": "請先打開一個資料夾。",
+      "dbName": "資料庫名稱",
+      "importPick": "在側邊欄右鍵 Notion 匯出的 .csv 檔來匯入。",
+      "importing": "正在匯入 {0}",
+      "imported": "已把 {0} 個頁面匯入到 {1}。",
+      "aiNote": "Put the block where the user wants the database; its pages are made.",
+      "toolDescription": "Makes a database: a folder of documents whose front matter holds each one's properties, and a ```database block that shows them as a table, board, calendar or gallery. Returns the block to insert.",
+      "locale": "zh-TW"
+    },
+    "ja": {
+      "name": "データベース",
+      "description": "フォルダ内の文書を表・ボード・カレンダー・ギャラリーで表示。フロントマターが各列で、その場で編集できます。Notion のデータベースも取り込めます。",
+      "new": "新しいデータベース…",
+      "importNotion": "Notion から取り込む…",
+      "table": "表",
+      "board": "ボード",
+      "calendar": "カレンダー",
+      "gallery": "ギャラリー",
+      "page": "ページ",
+      "add": "新規",
+      "count": "{0} ページ",
+      "empty": "まだページがありません。",
+      "noValue": "未設定",
+      "noGroup": "リストのプロパティ（例 focus: [仕事]）があればグループ分けできます。",
+      "noDate": "日付のプロパティ（例 start: 2026-01-05）があればカレンダーに並べられます。",
+      "today": "今日",
+      "prev": "前の月",
+      "next": "次の月",
+      "missing": "フォルダを開くとページが表示されます。",
+      "newTitle": "ページのタイトル",
+      "exists": "「{0}」はすでにあります。",
+      "needsSaved": "先にこの文書を開いているフォルダに保存してください。データベースのフォルダはその隣に作られます。",
+      "needsFolder": "先にフォルダを開いてください。",
+      "dbName": "データベース名",
+      "importPick": "サイドバーで Notion から書き出した .csv を右クリックして取り込みます。",
+      "importing": "{0} を取り込み中",
+      "imported": "{0} ページを {1} に取り込みました。",
+      "aiNote": "Put the block where the user wants the database; its pages are made.",
+      "toolDescription": "Makes a database: a folder of documents whose front matter holds each one's properties, and a ```database block that shows them as a table, board, calendar or gallery. Returns the block to insert.",
+      "locale": "ja"
+    },
+    "ko": {
+      "name": "데이터베이스",
+      "description": "폴더의 문서를 표·보드·캘린더·갤러리로 보여 줍니다. 프런트 매터가 각 열이며 바로 편집할 수 있습니다. Notion 데이터베이스도 가져옵니다.",
+      "new": "새 데이터베이스…",
+      "importNotion": "Notion에서 가져오기…",
+      "table": "표",
+      "board": "보드",
+      "calendar": "캘린더",
+      "gallery": "갤러리",
+      "page": "페이지",
+      "add": "새로 만들기",
+      "count": "페이지 {0}개",
+      "empty": "아직 페이지가 없습니다.",
+      "noValue": "값 없음",
+      "noGroup": "목록 속성(예: focus: [업무])이 있으면 그것으로 묶을 수 있습니다.",
+      "noDate": "날짜 속성(예: start: 2026-01-05)이 있으면 캘린더에 놓을 수 있습니다.",
+      "today": "오늘",
+      "prev": "이전 달",
+      "next": "다음 달",
+      "missing": "폴더를 열면 페이지가 보입니다.",
+      "newTitle": "페이지 제목",
+      "exists": "“{0}”이(가) 이미 있습니다.",
+      "needsSaved": "먼저 이 문서를 열린 폴더에 저장하세요. 데이터베이스 폴더는 그 옆에 만들어집니다.",
+      "needsFolder": "먼저 폴더를 여세요.",
+      "dbName": "데이터베이스 이름",
+      "importPick": "사이드바에서 Notion에서 내보낸 .csv를 오른쪽 클릭해 가져오세요.",
+      "importing": "{0} 가져오는 중",
+      "imported": "{0}개 페이지를 {1}에 가져왔습니다.",
+      "aiNote": "Put the block where the user wants the database; its pages are made.",
+      "toolDescription": "Makes a database: a folder of documents whose front matter holds each one's properties, and a ```database block that shows them as a table, board, calendar or gallery. Returns the block to insert.",
+      "locale": "ko"
+    },
+    "de": {
+      "name": "Datenbank",
+      "description": "Die Dokumente eines Ordners als Tabelle, Board, Kalender oder Galerie, ihr Front Matter als Spalten – direkt bearbeitbar. Importiert Notion-Datenbanken.",
+      "new": "Neue Datenbank …",
+      "importNotion": "Aus Notion importieren …",
+      "table": "Tabelle",
+      "board": "Board",
+      "calendar": "Kalender",
+      "gallery": "Galerie",
+      "page": "Seite",
+      "add": "Neu",
+      "count": "{0} Seiten",
+      "empty": "Noch keine Seiten.",
+      "noValue": "Kein Wert",
+      "noGroup": "Geben Sie den Seiten eine Listen-Eigenschaft (etwa focus: [Arbeit]), um danach zu gruppieren.",
+      "noDate": "Geben Sie den Seiten ein Datum (etwa start: 2026-01-05), um sie im Kalender zu platzieren.",
+      "today": "Heute",
+      "prev": "Voriger Monat",
+      "next": "Nächster Monat",
+      "missing": "Öffnen Sie einen Ordner, um seine Seiten zu sehen.",
+      "newTitle": "Seitentitel",
+      "exists": "„{0}“ gibt es schon.",
+      "needsSaved": "Speichern Sie dieses Dokument zuerst im geöffneten Ordner: Der Ordner der Datenbank kommt daneben.",
+      "needsFolder": "Öffnen Sie zuerst einen Ordner.",
+      "dbName": "Name der Datenbank",
+      "importPick": "Klicken Sie in der Seitenleiste mit der rechten Maustaste auf die .csv eines Notion-Exports.",
+      "importing": "{0} wird importiert",
+      "imported": "{0} Seiten nach {1} importiert.",
+      "aiNote": "Put the block where the user wants the database; its pages are made.",
+      "toolDescription": "Makes a database: a folder of documents whose front matter holds each one's properties, and a ```database block that shows them as a table, board, calendar or gallery. Returns the block to insert.",
+      "locale": "de"
+    },
+    "es": {
+      "name": "Base de datos",
+      "description": "Los documentos de una carpeta como tabla, tablero, calendario o galería; sus metadatos son las columnas y se editan ahí mismo. Importa bases de datos de Notion.",
+      "new": "Nueva base de datos…",
+      "importNotion": "Importar desde Notion…",
+      "table": "Tabla",
+      "board": "Tablero",
+      "calendar": "Calendario",
+      "gallery": "Galería",
+      "page": "Página",
+      "add": "Nueva",
+      "count": "{0} páginas",
+      "empty": "Aún no hay páginas.",
+      "noValue": "Sin valor",
+      "noGroup": "Da a las páginas una propiedad de lista (como focus: [Trabajo]) para agruparlas.",
+      "noDate": "Da a las páginas una fecha (como start: 2026-01-05) para colocarlas en el calendario.",
+      "today": "Hoy",
+      "prev": "Mes anterior",
+      "next": "Mes siguiente",
+      "missing": "Abre una carpeta para ver sus páginas.",
+      "newTitle": "Título de la página",
+      "exists": "«{0}» ya existe.",
+      "needsSaved": "Guarda primero este documento en la carpeta abierta: la carpeta de la base de datos va a su lado.",
+      "needsFolder": "Abre primero una carpeta.",
+      "dbName": "Nombre de la base de datos",
+      "importPick": "Haz clic derecho en la barra lateral sobre el .csv exportado de Notion.",
+      "importing": "Importando {0}",
+      "imported": "{0} páginas importadas en {1}.",
+      "aiNote": "Put the block where the user wants the database; its pages are made.",
+      "toolDescription": "Makes a database: a folder of documents whose front matter holds each one's properties, and a ```database block that shows them as a table, board, calendar or gallery. Returns the block to insert.",
+      "locale": "es"
+    },
+    "fr": {
+      "name": "Base de données",
+      "description": "Les documents d’un dossier en tableau, tableau Kanban, calendrier ou galerie ; leurs métadonnées sont les colonnes, modifiables sur place. Importe les bases Notion.",
+      "new": "Nouvelle base de données…",
+      "importNotion": "Importer depuis Notion…",
+      "table": "Tableau",
+      "board": "Kanban",
+      "calendar": "Calendrier",
+      "gallery": "Galerie",
+      "page": "Page",
+      "add": "Nouvelle",
+      "count": "{0} pages",
+      "empty": "Pas encore de pages.",
+      "noValue": "Sans valeur",
+      "noGroup": "Donnez aux pages une propriété liste (comme focus: [Travail]) pour les regrouper.",
+      "noDate": "Donnez aux pages une date (comme start: 2026-01-05) pour les placer au calendrier.",
+      "today": "Aujourd’hui",
+      "prev": "Mois précédent",
+      "next": "Mois suivant",
+      "missing": "Ouvrez un dossier pour voir ses pages.",
+      "newTitle": "Titre de la page",
+      "exists": "« {0} » existe déjà.",
+      "needsSaved": "Enregistrez d’abord ce document dans le dossier ouvert : le dossier de la base va à côté.",
+      "needsFolder": "Ouvrez d’abord un dossier.",
+      "dbName": "Nom de la base",
+      "importPick": "Faites un clic droit dans la barre latérale sur le .csv d’un export Notion.",
+      "importing": "Import de {0}",
+      "imported": "{0} pages importées dans {1}.",
+      "aiNote": "Put the block where the user wants the database; its pages are made.",
+      "toolDescription": "Makes a database: a folder of documents whose front matter holds each one's properties, and a ```database block that shows them as a table, board, calendar or gallery. Returns the block to insert.",
+      "locale": "fr"
+    },
+    "pt": {
+      "name": "Banco de dados",
+      "description": "Os documentos de uma pasta como tabela, quadro, calendário ou galeria; os metadados são as colunas, editáveis ali mesmo. Importa bancos de dados do Notion.",
+      "new": "Novo banco de dados…",
+      "importNotion": "Importar do Notion…",
+      "table": "Tabela",
+      "board": "Quadro",
+      "calendar": "Calendário",
+      "gallery": "Galeria",
+      "page": "Página",
+      "add": "Nova",
+      "count": "{0} páginas",
+      "empty": "Ainda não há páginas.",
+      "noValue": "Sem valor",
+      "noGroup": "Dê às páginas uma propriedade de lista (como focus: [Trabalho]) para agrupá-las.",
+      "noDate": "Dê às páginas uma data (como start: 2026-01-05) para colocá-las no calendário.",
+      "today": "Hoje",
+      "prev": "Mês anterior",
+      "next": "Próximo mês",
+      "missing": "Abra uma pasta para ver as páginas.",
+      "newTitle": "Título da página",
+      "exists": "“{0}” já existe.",
+      "needsSaved": "Salve este documento na pasta aberta primeiro: a pasta do banco fica ao lado.",
+      "needsFolder": "Abra uma pasta primeiro.",
+      "dbName": "Nome do banco de dados",
+      "importPick": "Clique com o botão direito na barra lateral no .csv exportado do Notion.",
+      "importing": "Importando {0}",
+      "imported": "{0} páginas importadas em {1}.",
+      "aiNote": "Put the block where the user wants the database; its pages are made.",
+      "toolDescription": "Makes a database: a folder of documents whose front matter holds each one's properties, and a ```database block that shows them as a table, board, calendar or gallery. Returns the block to insert.",
+      "locale": "pt"
+    },
+    "ru": {
+      "name": "База данных",
+      "description": "Документы папки как таблица, доска, календарь или галерея; их метаданные — столбцы, правятся на месте. Импортирует базы Notion.",
+      "new": "Новая база данных…",
+      "importNotion": "Импорт из Notion…",
+      "table": "Таблица",
+      "board": "Доска",
+      "calendar": "Календарь",
+      "gallery": "Галерея",
+      "page": "Страница",
+      "add": "Создать",
+      "count": "Страниц: {0}",
+      "empty": "Страниц пока нет.",
+      "noValue": "Без значения",
+      "noGroup": "Дайте страницам свойство-список (например focus: [Работа]), чтобы группировать по нему.",
+      "noDate": "Дайте страницам дату (например start: 2026-01-05), чтобы разместить их в календаре.",
+      "today": "Сегодня",
+      "prev": "Предыдущий месяц",
+      "next": "Следующий месяц",
+      "missing": "Откройте папку, чтобы увидеть её страницы.",
+      "newTitle": "Название страницы",
+      "exists": "«{0}» уже есть.",
+      "needsSaved": "Сначала сохраните документ в открытой папке: папка базы будет рядом.",
+      "needsFolder": "Сначала откройте папку.",
+      "dbName": "Название базы",
+      "importPick": "Щёлкните правой кнопкой в боковой панели по .csv из экспорта Notion.",
+      "importing": "Импорт {0}",
+      "imported": "Импортировано страниц: {0} в {1}.",
+      "aiNote": "Put the block where the user wants the database; its pages are made.",
+      "toolDescription": "Makes a database: a folder of documents whose front matter holds each one's properties, and a ```database block that shows them as a table, board, calendar or gallery. Returns the block to insert.",
+      "locale": "ru"
+    }
+  }
+}
