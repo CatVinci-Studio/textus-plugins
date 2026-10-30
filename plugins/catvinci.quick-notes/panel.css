@@ -1,5 +1,5 @@
 body {
-  background: var(--sidebar-bg);
+  background: var(--ui-subtle);
 }
 #notes {
   padding: var(--space-2);
@@ -8,9 +8,9 @@ body {
   display: block;
   margin-bottom: var(--space-2);
   padding: var(--space-2);
-  background: var(--bg);
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius-block);
+  background: var(--ui-bg);
+  border: 1px solid var(--ui-border);
+  border-radius: var(--shape-m);
 }
 textarea {
   display: block;
@@ -36,12 +36,12 @@ textarea:focus {
 .note-actions .when {
   flex: 1 0 100%;
   white-space: nowrap;
-  font-size: var(--text-xs);
+  font-size: var(--text-caption);
 }
 .note-actions button {
   min-height: 0;
   padding: 2px var(--space-2);
-  font-size: var(--text-xs);
+  font-size: var(--text-caption);
 }
 
 /* The search over many notes. */
@@ -65,10 +65,10 @@ textarea:focus {
   justify-content: space-between;
   gap: var(--space-2);
   padding: var(--space-2) var(--space-3);
-  border-radius: var(--radius-control);
-  background: var(--editor-text);
-  color: var(--bg);
-  font-size: var(--text-sm);
+  border-radius: var(--shape-m);
+  background: var(--ui-text);
+  color: var(--ui-bg);
+  font-size: var(--text-footnote);
   animation: undo-in var(--dur-base, 180ms) var(--ease-out, ease-out);
 }
 .undo-bar[hidden] {

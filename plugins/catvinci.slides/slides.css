@@ -22,7 +22,7 @@ body {
 button {
   padding: 2px 10px;
   border: 1px solid rgba(127, 127, 127, 0.35);
-  border-radius: 6px;
+  border-radius: var(--shape-pill);
   background: transparent;
   color: inherit;
   font: inherit;

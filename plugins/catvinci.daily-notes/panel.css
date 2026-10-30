@@ -1,5 +1,5 @@
 body {
-  background: var(--sidebar-bg);
+  background: var(--ui-subtle);
 }
 body {
   overflow-x: hidden;
@@ -16,7 +16,7 @@ body {
   flex: 1;
   min-width: 0;
   text-align: center;
-  font-size: var(--text-md);
+  font-size: var(--text-body);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -29,8 +29,8 @@ body {
 }
 .weekday {
   text-align: center;
-  font-size: var(--text-xs);
-  color: var(--chrome-muted);
+  font-size: var(--text-caption);
+  color: var(--ui-muted);
   padding-bottom: var(--space-1);
 }
 .day {
@@ -39,17 +39,17 @@ body {
   min-height: 0;
   padding: 0;
   border: 0;
-  border-radius: var(--radius-small);
+  border-radius: var(--shape-s);
   background: transparent;
-  color: var(--sidebar-text);
-  font-size: var(--text-sm);
+  color: var(--ui-text);
+  font-size: var(--text-footnote);
 }
 .day.outside {
-  color: var(--chrome-muted);
+  color: var(--ui-muted);
   opacity: 0.55;
 }
 .day.today {
-  color: var(--chrome-accent);
+  color: var(--ui-accent);
   font-weight: 600;
 }
 .day.has-note::after {
@@ -61,5 +61,5 @@ body {
   height: 4px;
   margin-left: -2px;
   border-radius: 50%;
-  background: var(--chrome-accent);
+  background: var(--ui-accent);
 }

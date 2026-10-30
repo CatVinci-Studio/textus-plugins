@@ -12,7 +12,7 @@ body {
   overflow: auto;
   /* The grey the pages sit on reaches the bottom of the tab, however
      short the document. */
-  background: var(--sidebar-bg);
+  background: var(--ui-subtle);
 }
 #status:empty {
   display: none;
@@ -21,7 +21,7 @@ body {
 #pages .docx-wrapper {
   min-height: 100%;
   box-sizing: border-box;
-  background: var(--sidebar-bg);
+  background: var(--ui-subtle);
   padding: var(--space-5);
 }
 #pages .docx-wrapper > section.docx {
@@ -40,9 +40,9 @@ body {
 }
 /* A match, and the one Enter is on. */
 #pages mark.hit {
-  background: color-mix(in srgb, var(--chrome-accent) 25%, transparent);
+  background: color-mix(in srgb, var(--ui-accent) 25%, transparent);
   color: inherit;
 }
 #pages mark.hit.current {
-  background: color-mix(in srgb, var(--chrome-accent) 55%, transparent);
+  background: color-mix(in srgb, var(--ui-accent) 55%, transparent);
 }
