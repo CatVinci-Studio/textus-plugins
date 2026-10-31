@@ -16,7 +16,7 @@
 
 A plugin is a folder with a `textus-plugin.json` manifest ([Writing plugins](https://github.com/CatVinci-Studio/Textus/blob/main/docs/dev/writing-plugins.md)). CatVinci Studio's own are in [`plugins/`](plugins/) here; yours lives in a repository of your own, and a one-file listing in [`community/`](community/) points to it.
 
-- **Permissions it needs, and no more.** Each permission in the manifest is asked for before the plugin runs; one that the plugin's purpose doesn't explain is a reason not to list it. `network:` names the hosts it talks to - `network:*` only for a plugin whose purpose is the open web (a web view).
+- **Permissions it needs, and no more.** Each permission in the manifest is asked for before the plugin runs; one that the plugin's purpose doesn't explain is a reason not to list it. `network:` names the hosts it talks to - `network:*` only for a plugin whose purpose is the open web (a web view) or a server the user types in (their own sync or storage), which it reaches over HTTPS and names in its README.
 - **Works offline,** apart from what plainly needs the network (Zotero's local API, a web page), and says so when it can't reach something.
 - **Says where it runs.** Every manifest names its `platforms`: `["desktop", "ios"]`, or `["desktop"]` for a plugin that can't work on iOS: one that needs a program on the computer (Zotero, a local server) or opens any web page. One that works in the background (`background` code, or `requires` Keep running in the background) is desktop-only by default and can't name `ios`. A plugin offered on iOS is tried in a phone-sized window first.
 - **English and Chinese.** Its `l10n` has at least `en` and `zh`; Textus falls back to English for the other languages.
@@ -79,7 +79,7 @@ Textus 的 **设置 › 扩展 › 获取更多** 里有三类东西：插件和
 
 插件是一个带 `textus-plugin.json` 清单的文件夹（见 [Writing plugins](https://github.com/CatVinci-Studio/Textus/blob/main/docs/dev/writing-plugins.md)）。CatVinci Studio 自己的插件在本仓库的 [`plugins/`](plugins/) 里；你的插件放在你自己的仓库，在 [`community/`](community/) 里加一个文件指向它。
 
-- **只要需要的权限**：清单里的每个权限都会在运行前问用户；用途解释不了的权限就是不上架的理由。`network:` 写明要访问的主机，只有以开放网页为用途的插件（网页视图）才能用 `network:*`。
+- **只要需要的权限**：清单里的每个权限都会在运行前问用户；用途解释不了的权限就是不上架的理由。`network:` 写明要访问的主机，只有以开放网页为用途的插件（网页视图），或连接用户自己填写的服务器（自己的同步或存储服务）的插件，才能用 `network:*`；后者只走 HTTPS，并在 README 里写明。
 - **能离线用**：除了明显要联网的功能（Zotero 本地接口、网页），连不上时要告诉用户。
 - **写明能在哪里用**：每个清单都要写 `platforms`：电脑和 iPhone/iPad 都能用写 `["desktop", "ios"]`，在 iOS 上用不了的写 `["desktop"]`，比如需要电脑上的程序（Zotero、本地服务）或能打开任意网页的。需要后台的插件（有 `background` 代码，或 `requires` 了「保持在后台运行」）默认只支持电脑，不能写 `ios`。支持 iOS 的插件要先在手机大小的窗口里试过。
 - **中英文**：`l10n` 至少有 `en` 和 `zh`，其他语言 Textus 会用英文。
