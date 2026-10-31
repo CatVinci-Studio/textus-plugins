@@ -14,7 +14,7 @@ body {
   gap: var(--space-3);
   padding: var(--space-4);
   overflow: auto;
-  background: var(--sidebar-bg);
+  background: var(--ui-subtle);
 }
 .list {
   flex: none;
@@ -22,9 +22,9 @@ body {
   max-height: 100%;
   display: flex;
   flex-direction: column;
-  background: var(--bg);
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius-block);
+  background: var(--ui-bg);
+  border: 1px solid var(--ui-border);
+  border-radius: var(--shape-m);
 }
 .list-head {
   display: flex;
@@ -35,11 +35,11 @@ body {
 .list-title {
   flex: 1;
   font-weight: 600;
-  color: var(--chrome-text);
+  color: var(--ui-text);
   cursor: text;
 }
 .list-count {
-  font-size: var(--text-xs);
+  font-size: var(--text-caption);
 }
 .cards {
   flex: 1;
@@ -50,8 +50,8 @@ body {
   margin: 0;
 }
 .cards.drop-target {
-  background: var(--sidebar-hover);
-  border-radius: var(--radius-small);
+  background: var(--ui-hover);
+  border-radius: var(--shape-s);
 }
 .card {
   display: flex;
@@ -59,9 +59,9 @@ body {
   gap: var(--space-2);
   margin-bottom: var(--space-2);
   padding: var(--space-2);
-  background: var(--sidebar-bg);
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius-small);
+  background: var(--ui-subtle);
+  border: 1px solid var(--ui-border);
+  border-radius: var(--shape-s);
   cursor: grab;
 }
 .card.dragging {
@@ -69,7 +69,7 @@ body {
 }
 .card.done .card-text {
   text-decoration: line-through;
-  color: var(--chrome-muted);
+  color: var(--ui-muted);
 }
 .card-text {
   flex: 1;
@@ -96,7 +96,7 @@ body {
 }
 .icon.remove {
   visibility: hidden;
-  font-size: var(--text-xs);
+  font-size: var(--text-caption);
 }
 .list-head:hover .icon.remove,
 .card:hover .icon.remove {
@@ -105,7 +105,7 @@ body {
 
 /* A card's [[link]] to a note. */
 .note-link {
-  color: var(--chrome-accent);
+  color: var(--ui-accent);
   text-decoration: underline;
   text-decoration-color: color-mix(in srgb, currentColor 40%, transparent);
   text-underline-offset: 2px;
@@ -115,7 +115,7 @@ body {
   opacity: 0.5;
 }
 .list.list-drop {
-  outline: 2px dashed color-mix(in srgb, var(--chrome-accent) 50%, transparent);
+  outline: 2px dashed color-mix(in srgb, var(--ui-accent) 50%, transparent);
   outline-offset: 2px;
 }
 .list-head {

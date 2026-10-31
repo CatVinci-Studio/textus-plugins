@@ -19,7 +19,7 @@ body {
   min-height: 0;
   overflow: auto;
   padding: var(--space-5) var(--space-4);
-  background: var(--sidebar-bg);
+  background: var(--ui-subtle);
 }
 #status:empty {
   display: none;
@@ -81,7 +81,7 @@ body {
   display: contents;
 }
 .textLayer ::selection {
-  background: color-mix(in srgb, var(--chrome-accent) 30%, transparent);
+  background: color-mix(in srgb, var(--ui-accent) 30%, transparent);
 }
 .textLayer .endOfContent {
   display: block;
@@ -106,9 +106,9 @@ body {
 }
 #find-count {
   min-width: 3em;
-  font-size: var(--text-xs);
+  font-size: var(--text-caption);
 }
 .textLayer span.hit {
-  background: color-mix(in srgb, var(--chrome-accent) 28%, transparent);
-  border-radius: 2px;
+  background: color-mix(in srgb, var(--ui-accent) 28%, transparent);
+  border-radius: var(--shape-xs);
 }

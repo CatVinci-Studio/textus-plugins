@@ -4,9 +4,9 @@ html,
 body {
   margin: 0;
   background: transparent;
-  color: var(--editor-text);
+  color: var(--ui-text);
   font-family: var(--font-sans);
-  font-size: var(--text-sm);
+  font-size: var(--text-footnote);
 }
 button {
   font: inherit;
@@ -28,40 +28,40 @@ button {
 .nav button {
   padding: 3px 10px;
   border: 1px solid transparent;
-  border-radius: var(--radius-control);
+  border-radius: var(--shape-pill);
   background: none;
-  color: var(--chrome-muted);
+  color: var(--ui-muted);
   cursor: pointer;
 }
 #views button[aria-selected="true"] {
-  border-color: var(--border-color);
-  background: var(--sidebar-bg);
-  color: var(--editor-text);
+  border-color: var(--ui-border);
+  background: var(--ui-subtle);
+  color: var(--ui-text);
 }
 #views button:hover,
 #add:hover,
 .nav button:hover {
-  color: var(--editor-text);
+  color: var(--ui-text);
 }
 #count {
-  color: var(--chrome-muted);
+  color: var(--ui-muted);
 }
 #add {
-  border-color: var(--border-color);
+  border-color: var(--ui-border);
 }
 .empty,
 .problem {
   padding: var(--space-3);
-  color: var(--chrome-muted);
+  color: var(--ui-muted);
 }
 .problem {
-  color: var(--danger);
+  color: var(--ui-danger);
 }
 
 /* Table */
 .table-wrap {
   overflow-x: auto;
-  border-top: 1px solid var(--border-color);
+  border-top: 1px solid var(--ui-border);
 }
 table {
   width: 100%;
@@ -70,25 +70,25 @@ table {
 th,
 td {
   padding: 6px 8px;
-  border-bottom: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--ui-border);
   text-align: left;
   vertical-align: top;
   white-space: nowrap;
 }
 th {
-  color: var(--chrome-muted);
+  color: var(--ui-muted);
   font-weight: 500;
 }
 td + td,
 th + th {
-  border-left: 1px solid var(--border-color);
+  border-left: 1px solid var(--ui-border);
 }
 td.cell {
   min-width: 90px;
   cursor: text;
 }
 td.cell:hover {
-  background: var(--sidebar-bg);
+  background: var(--ui-subtle);
 }
 .page-link {
   margin: 0;
@@ -107,7 +107,7 @@ td.cell:hover {
   display: inline-block;
   margin: 0 4px 2px 0;
   padding: 0 6px;
-  border-radius: 4px;
+  border-radius: var(--shape-pill);
   background: color-mix(in srgb, var(--tag-hue, #3f6fb5) 16%, transparent);
   line-height: 1.6;
 }
@@ -116,9 +116,9 @@ td.cell:hover {
   box-sizing: border-box;
   font: inherit;
   color: inherit;
-  background: var(--bg);
+  background: var(--ui-bg);
   border: 1px solid var(--ui-primary);
-  border-radius: 4px;
+  border-radius: var(--shape-pill);
   padding: 2px 4px;
 }
 .stars {
@@ -137,8 +137,8 @@ td.cell:hover {
 .lane {
   flex: none;
   width: 220px;
-  border-radius: var(--radius-block);
-  background: var(--sidebar-bg);
+  border-radius: var(--shape-m);
+  background: var(--ui-subtle);
   padding: var(--space-2);
 }
 .lane.drop {
@@ -153,9 +153,9 @@ td.cell:hover {
 .card {
   margin-bottom: var(--space-2);
   padding: var(--space-2);
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius-control);
-  background: var(--bg);
+  border: 1px solid var(--ui-border);
+  border-radius: var(--shape-s);
+  background: var(--ui-bg);
   cursor: grab;
 }
 .card .page-link {
@@ -163,14 +163,14 @@ td.cell:hover {
   margin-bottom: 2px;
 }
 .card .prop {
-  color: var(--chrome-muted);
+  color: var(--ui-muted);
 }
 .lane .new {
   width: 100%;
   padding: 4px;
   border: 0;
   background: none;
-  color: var(--chrome-muted);
+  color: var(--ui-muted);
   cursor: pointer;
   text-align: left;
 }
@@ -188,17 +188,17 @@ td.cell:hover {
 .month {
   display: grid;
   grid-template-columns: repeat(7, minmax(0, 1fr));
-  border-top: 1px solid var(--border-color);
-  border-left: 1px solid var(--border-color);
+  border-top: 1px solid var(--ui-border);
+  border-left: 1px solid var(--ui-border);
 }
 .weekday,
 .day {
-  border-right: 1px solid var(--border-color);
-  border-bottom: 1px solid var(--border-color);
+  border-right: 1px solid var(--ui-border);
+  border-bottom: 1px solid var(--ui-border);
   padding: 4px;
 }
 .weekday {
-  color: var(--chrome-muted);
+  color: var(--ui-muted);
   text-align: center;
 }
 .day {
@@ -206,13 +206,13 @@ td.cell:hover {
   overflow: hidden;
 }
 .day.other {
-  color: var(--chrome-muted);
-  background: var(--sidebar-bg);
+  color: var(--ui-muted);
+  background: var(--ui-subtle);
 }
 .day.today .num {
   color: var(--ui-on-primary);
   background: var(--ui-primary);
-  border-radius: 999px;
+  border-radius: var(--shape-pill);
   padding: 0 6px;
 }
 .chip {
@@ -220,7 +220,7 @@ td.cell:hover {
   margin-top: 2px;
   padding: 1px 4px;
   border: 0;
-  border-radius: 4px;
+  border-radius: var(--shape-pill);
   background: color-mix(in srgb, var(--ui-primary, #3f6fb5) 14%, transparent);
   overflow: hidden;
   text-overflow: ellipsis;
@@ -241,13 +241,13 @@ td.cell:hover {
 }
 .tile {
   overflow: hidden;
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius-block);
-  background: var(--bg);
+  border: 1px solid var(--ui-border);
+  border-radius: var(--shape-m);
+  background: var(--ui-bg);
 }
 .tile .cover {
   height: 96px;
-  background: var(--sidebar-bg) center / cover no-repeat;
+  background: var(--ui-subtle) center / cover no-repeat;
   font-size: 40px;
   display: flex;
   align-items: center;

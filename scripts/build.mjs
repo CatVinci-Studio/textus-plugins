@@ -71,6 +71,19 @@ function manifestOf(id) {
       throw new Error(`${id}: the manifest has no ${key}`);
   if (typeof manifest.engines?.textus !== "string")
     throw new Error(`${id}: the manifest has no engines.textus`);
+  // Where it runs, said outright: ["desktop", "ios"] or ["desktop"].
+  const platforms = manifest.platforms;
+  if (
+    !Array.isArray(platforms) ||
+    !platforms.length ||
+    !platforms.every((p) => p === "desktop" || p === "ios")
+  )
+    throw new Error(`${id}: platforms must list desktop, ios or both`);
+  const inBackground =
+    !!manifest.background ||
+    (manifest.requires ?? []).some((r) => r.setting === "runInBackground");
+  if (inBackground && manifest.platforms?.includes("ios"))
+    throw new Error(`${id}: works in the background, so not on ios`);
   return manifest;
 }
 

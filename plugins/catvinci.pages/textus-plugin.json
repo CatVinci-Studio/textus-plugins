@@ -1,7 +1,7 @@
 {
   "id": "catvinci.pages",
   "name": "%name%",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "publisher": "catvinci",
   "author": "CatVinci Studio",
   "description": "%description%",
@@ -11,6 +11,7 @@
   "engines": {
     "textus": ">=1.3.0-beta.8"
   },
+  "platforms": ["desktop", "ios"],
   "main": [
     "pages.js",
     "host.js"
@@ -92,7 +93,7 @@
       "filter": "Find a page"
     },
     "zh": {
-      "name": "页面",
+      "name": "页面树",
       "description": "把文档当作层层嵌套的页面：侧边栏里的页面树，用 / 菜单新建并链接子页面，页面图标，以及当前页面所在的上级页面。",
       "newSubpage": "新建子页面…",
       "setIcon": "设置页面图标…",
@@ -109,7 +110,7 @@
       "filter": "查找页面"
     },
     "zh-Hant": {
-      "name": "頁面",
+      "name": "頁面樹",
       "description": "把文件當作層層巢狀的頁面：側邊欄裡的頁面樹，用 / 選單新增並連結子頁面，頁面圖示，以及目前頁面所在的上層頁面。",
       "newSubpage": "新增子頁面…",
       "setIcon": "設定頁面圖示…",

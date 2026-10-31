@@ -12,6 +12,7 @@ function plugin(over: Record<string, unknown> = {}, files: Record<string, string
     version: "0.2.0",
     main: "host.js",
     engines: { textus: ">=1.3.0-beta.2" },
+    platforms: ["desktop", "ios"],
     permissions: ["editor.read"],
     l10n: { en: { hello: "Hi" }, zh: { hello: "你好" } },
     ...over,
@@ -74,6 +75,17 @@ describe("review", () => {
     });
     expect(levels(results, "permissions")).toEqual(["warn", "warn"]);
     expect(verdict(results)).toBe("warn");
+  });
+
+  it("wants where it runs said, and the background kept off iOS", () => {
+    const fails = (over: object) =>
+      review(plugin(over)).filter((r) => r.check === "package" && r.level === "fail");
+    expect(fails({ platforms: undefined })).toHaveLength(1);
+    expect(fails({ platforms: ["android"] })).toHaveLength(1);
+    expect(
+      fails({ requires: [{ setting: "runInBackground" }], platforms: ["desktop", "ios"] }),
+    ).toHaveLength(1);
+    expect(fails({ requires: [{ setting: "runInBackground" }], platforms: ["desktop"] })).toHaveLength(0);
   });
 
   it("asks why a plugin runs code in the background", () => {
