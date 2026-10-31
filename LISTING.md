@@ -18,7 +18,7 @@ A plugin is a folder with a `textus-plugin.json` manifest ([Writing plugins](htt
 
 - **Permissions it needs, and no more.** Each permission in the manifest is asked for before the plugin runs; one that the plugin's purpose doesn't explain is a reason not to list it. `network:` names the hosts it talks to - `network:*` only for a plugin whose purpose is the open web (a web view).
 - **Works offline,** apart from what plainly needs the network (Zotero's local API, a web page), and says so when it can't reach something.
-- **Says where it runs.** Left out, `platforms` means the desktop and iPhone/iPad alike, so a plugin that can't work on iOS sets `"platforms": ["desktop"]`: one that needs a program on the computer (Zotero, a local server) or opens any web page. One that works in the background (`background` code, or `requires` Keep running in the background) is desktop-only by default and can't name `ios`. A plugin offered on iOS is tried in a phone-sized window first.
+- **Says where it runs.** Every manifest names its `platforms`: `["desktop", "ios"]`, or `["desktop"]` for a plugin that can't work on iOS: one that needs a program on the computer (Zotero, a local server) or opens any web page. One that works in the background (`background` code, or `requires` Keep running in the background) is desktop-only by default and can't name `ios`. A plugin offered on iOS is tried in a phone-sized window first.
 - **English and Chinese.** Its `l10n` has at least `en` and `zh`; Textus falls back to English for the other languages.
 - **Tested.** Its flows run in Textus's e2e tests or yours, and `npm run check` passes.
 - **Versioned.** A change ships as a new `version`; a published version never changes.
@@ -81,7 +81,7 @@ Textus 的 **设置 › 扩展 › 获取更多** 里有三类东西：插件和
 
 - **只要需要的权限**：清单里的每个权限都会在运行前问用户；用途解释不了的权限就是不上架的理由。`network:` 写明要访问的主机，只有以开放网页为用途的插件（网页视图）才能用 `network:*`。
 - **能离线用**：除了明显要联网的功能（Zotero 本地接口、网页），连不上时要告诉用户。
-- **写明能在哪里用**：不写 `platforms` 就表示电脑和 iPhone/iPad 都能用；在 iOS 上用不了的插件要写 `"platforms": ["desktop"]`，比如需要电脑上的程序（Zotero、本地服务）或能打开任意网页的。需要后台的插件（有 `background` 代码，或 `requires` 了「保持在后台运行」）默认只支持电脑，不能写 `ios`。支持 iOS 的插件要先在手机大小的窗口里试过。
+- **写明能在哪里用**：每个清单都要写 `platforms`：电脑和 iPhone/iPad 都能用写 `["desktop", "ios"]`，在 iOS 上用不了的写 `["desktop"]`，比如需要电脑上的程序（Zotero、本地服务）或能打开任意网页的。需要后台的插件（有 `background` 代码，或 `requires` 了「保持在后台运行」）默认只支持电脑，不能写 `ios`。支持 iOS 的插件要先在手机大小的窗口里试过。
 - **中英文**：`l10n` 至少有 `en` 和 `zh`，其他语言 Textus 会用英文。
 - **有测试**：流程在 Textus 的 e2e 测试或你自己的测试里跑过，`npm run check` 通过。
 - **有版本**：改动发新的 `version`，已发布的版本不再改。

@@ -98,6 +98,19 @@ export function review({ entry, pkg, source, previous = null, libs = {} }) {
       add("fail", "package", `The manifest has no ${key}.`);
   if (typeof manifest.engines?.textus !== "string")
     add("fail", "package", "The manifest has no engines.textus.");
+  const platforms = manifest.platforms;
+  if (
+    !Array.isArray(platforms) ||
+    !platforms.length ||
+    !platforms.every((p) => p === "desktop" || p === "ios")
+  )
+    add("fail", "package", 'The manifest names no platforms: ["desktop", "ios"], or ["desktop"] for one iOS can\'t run.');
+  else if (
+    platforms.includes("ios") &&
+    (manifest.background ||
+      (manifest.requires ?? []).some((r) => r.setting === "runInBackground"))
+  )
+    add("fail", "package", "It works in the background, which iOS has none of: its platforms can't name ios.");
   if (manifest.main && !pkg.has(manifest.main))
     add("fail", "package", `Its main, ${manifest.main}, isn't in the zip.`);
   if (manifest.publisher === "catvinci" || entry.id.startsWith("catvinci."))
