@@ -27,11 +27,11 @@
       "description": "Draws a Markdown outline - headings and lists - as a mind map."
     },
     "zh": {
-      "name": "思维导图",
+      "name": "思维导图（Markmap）",
       "description": "把 Markdown 大纲（标题和列表）画成思维导图。"
     },
     "zh-Hant": {
-      "name": "心智圖",
+      "name": "心智圖（Markmap）",
       "description": "把 Markdown 大綱（標題和清單）畫成心智圖。"
     },
     "ja": {

@@ -27,11 +27,11 @@
       "description": "Events in order, a line each: when | what | more."
     },
     "zh": {
-      "name": "时间线",
+      "name": "时间轴图",
       "description": "按顺序排列的事件，每行一个：时间 | 事件 | 说明。"
     },
     "zh-Hant": {
-      "name": "時間軸",
+      "name": "時間軸圖",
       "description": "依序排列的事件，每行一個：時間 | 事件 | 說明。"
     },
     "ja": {

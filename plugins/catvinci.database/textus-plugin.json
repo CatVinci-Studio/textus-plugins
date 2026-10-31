@@ -150,7 +150,7 @@
       "locale": "en"
     },
     "zh": {
-      "name": "数据库",
+      "name": "数据库视图",
       "description": "把一个文件夹里的文档显示成表格、看板、日历或画廊，文档开头的属性就是各列，可以直接编辑。可导入 Notion 数据库。",
       "new": "新建数据库…",
       "importNotion": "从 Notion 导入…",
@@ -182,7 +182,7 @@
       "locale": "zh-CN"
     },
     "zh-Hant": {
-      "name": "資料庫",
+      "name": "資料庫檢視",
       "description": "把一個資料夾裡的文件顯示成表格、看板、日曆或畫廊，文件開頭的屬性就是各欄，可以直接編輯。可匯入 Notion 資料庫。",
       "new": "新增資料庫…",
       "importNotion": "從 Notion 匯入…",
