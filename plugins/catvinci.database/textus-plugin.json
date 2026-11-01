@@ -120,7 +120,7 @@
   },
   "l10n": {
     "en": {
-      "name": "Database",
+      "name": "Database Views",
       "description": "A folder's documents as a table, a board, a calendar or a gallery, their front matter the columns - edit them in place. Imports Notion databases.",
       "new": "New Database…",
       "importNotion": "Import from Notion…",
@@ -324,7 +324,7 @@
       "open": "打開"
     },
     "ja": {
-      "name": "データベース",
+      "name": "データベースビュー",
       "description": "フォルダ内の文書を表・ボード・カレンダー・ギャラリーで表示。フロントマターが各列で、その場で編集できます。Notion のデータベースも取り込めます。",
       "new": "新しいデータベース…",
       "importNotion": "Notion から取り込む…",
@@ -392,7 +392,7 @@
       "open": "開く"
     },
     "ko": {
-      "name": "데이터베이스",
+      "name": "데이터베이스 보기",
       "description": "폴더의 문서를 표·보드·캘린더·갤러리로 보여 줍니다. 프런트 매터가 각 열이며 바로 편집할 수 있습니다. Notion 데이터베이스도 가져옵니다.",
       "new": "새 데이터베이스…",
       "importNotion": "Notion에서 가져오기…",
@@ -460,7 +460,7 @@
       "open": "열기"
     },
     "de": {
-      "name": "Datenbank",
+      "name": "Datenbankansichten",
       "description": "Die Dokumente eines Ordners als Tabelle, Board, Kalender oder Galerie, ihr Front Matter als Spalten – direkt bearbeitbar. Importiert Notion-Datenbanken.",
       "new": "Neue Datenbank …",
       "importNotion": "Aus Notion importieren …",
@@ -528,7 +528,7 @@
       "open": "Öffnen"
     },
     "es": {
-      "name": "Base de datos",
+      "name": "Vistas de base de datos",
       "description": "Los documentos de una carpeta como tabla, tablero, calendario o galería; sus metadatos son las columnas y se editan ahí mismo. Importa bases de datos de Notion.",
       "new": "Nueva base de datos…",
       "importNotion": "Importar desde Notion…",
@@ -596,7 +596,7 @@
       "open": "Abrir"
     },
     "fr": {
-      "name": "Base de données",
+      "name": "Vues de base de données",
       "description": "Les documents d’un dossier en tableau, tableau Kanban, calendrier ou galerie ; leurs métadonnées sont les colonnes, modifiables sur place. Importe les bases Notion.",
       "new": "Nouvelle base de données…",
       "importNotion": "Importer depuis Notion…",
@@ -664,7 +664,7 @@
       "open": "Ouvrir"
     },
     "pt": {
-      "name": "Banco de dados",
+      "name": "Visualizações de banco de dados",
       "description": "Os documentos de uma pasta como tabela, quadro, calendário ou galeria; os metadados são as colunas, editáveis ali mesmo. Importa bancos de dados do Notion.",
       "new": "Novo banco de dados…",
       "importNotion": "Importar do Notion…",
@@ -732,7 +732,7 @@
       "open": "Abrir"
     },
     "ru": {
-      "name": "База данных",
+      "name": "Представления базы данных",
       "description": "Документы папки как таблица, доска, календарь или галерея; их метаданные — столбцы, правятся на месте. Импортирует базы Notion.",
       "new": "Новая база данных…",
       "importNotion": "Импорт из Notion…",
