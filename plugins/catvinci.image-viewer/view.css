@@ -15,12 +15,14 @@ body {
   border-bottom: 1px solid var(--ui-border);
 }
 #bar .tx-input[type="number"] {
+  flex: none;
   width: 56px;
   min-height: var(--control-height-sm);
   text-align: right;
 }
 #bar #find,
 #find-bar .tx-input {
+  flex: none;
   width: 180px;
   min-height: var(--control-height-sm);
 }
