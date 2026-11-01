@@ -1,7 +1,7 @@
 {
   "id": "catvinci.database",
   "name": "%name%",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "publisher": "catvinci",
   "author": "CatVinci Studio",
   "description": "%description%",
@@ -9,7 +9,7 @@
   "license": "MIT",
   "repository": "https://github.com/CatVinci-Studio/textus-plugins",
   "engines": {
-    "textus": ">=1.3.0-beta.9"
+    "textus": ">=1.3.2"
   },
   "platforms": ["desktop", "ios"],
   "main": [
@@ -55,7 +55,8 @@
     "codeBlocks": [
       {
         "language": "database",
-        "title": "%name%"
+        "title": "%name%",
+        "frame": "none"
       }
     ],
     "aiTools": [
@@ -183,7 +184,8 @@
       "type.date": "Date",
       "type.checkbox": "Checkbox",
       "type.url": "URL",
-      "deleteAsk": "Delete “{0}” from {1} pages?"
+      "deleteAsk": "Delete “{0}” from {1} pages?",
+      "open": "Open"
     },
     "zh": {
       "name": "数据库视图",
@@ -250,7 +252,8 @@
       "type.date": "日期",
       "type.checkbox": "复选框",
       "type.url": "网址",
-      "deleteAsk": "要从 {1} 个页面中删除“{0}”吗？"
+      "deleteAsk": "要从 {1} 个页面中删除“{0}”吗？",
+      "open": "打开"
     },
     "zh-Hant": {
       "name": "資料庫檢視",
@@ -317,7 +320,8 @@
       "type.date": "日期",
       "type.checkbox": "核取方塊",
       "type.url": "網址",
-      "deleteAsk": "要從 {1} 個頁面中刪除「{0}」嗎？"
+      "deleteAsk": "要從 {1} 個頁面中刪除「{0}」嗎？",
+      "open": "打開"
     },
     "ja": {
       "name": "データベース",
@@ -384,7 +388,8 @@
       "type.date": "日付",
       "type.checkbox": "チェックボックス",
       "type.url": "URL",
-      "deleteAsk": "{1} ページから「{0}」を削除しますか？"
+      "deleteAsk": "{1} ページから「{0}」を削除しますか？",
+      "open": "開く"
     },
     "ko": {
       "name": "데이터베이스",
@@ -451,7 +456,8 @@
       "type.date": "날짜",
       "type.checkbox": "체크박스",
       "type.url": "URL",
-      "deleteAsk": "{1}개 페이지에서 “{0}”을(를) 삭제할까요?"
+      "deleteAsk": "{1}개 페이지에서 “{0}”을(를) 삭제할까요?",
+      "open": "열기"
     },
     "de": {
       "name": "Datenbank",
@@ -518,7 +524,8 @@
       "type.date": "Datum",
       "type.checkbox": "Kontrollkästchen",
       "type.url": "URL",
-      "deleteAsk": "„{0}“ aus {1} Seiten löschen?"
+      "deleteAsk": "„{0}“ aus {1} Seiten löschen?",
+      "open": "Öffnen"
     },
     "es": {
       "name": "Base de datos",
@@ -585,7 +592,8 @@
       "type.date": "Fecha",
       "type.checkbox": "Casilla",
       "type.url": "URL",
-      "deleteAsk": "¿Eliminar «{0}» de {1} páginas?"
+      "deleteAsk": "¿Eliminar «{0}» de {1} páginas?",
+      "open": "Abrir"
     },
     "fr": {
       "name": "Base de données",
@@ -652,7 +660,8 @@
       "type.date": "Date",
       "type.checkbox": "Case à cocher",
       "type.url": "URL",
-      "deleteAsk": "Supprimer « {0} » de {1} pages ?"
+      "deleteAsk": "Supprimer « {0} » de {1} pages ?",
+      "open": "Ouvrir"
     },
     "pt": {
       "name": "Banco de dados",
@@ -719,7 +728,8 @@
       "type.date": "Data",
       "type.checkbox": "Caixa de seleção",
       "type.url": "URL",
-      "deleteAsk": "Excluir “{0}” de {1} páginas?"
+      "deleteAsk": "Excluir “{0}” de {1} páginas?",
+      "open": "Abrir"
     },
     "ru": {
       "name": "База данных",
@@ -786,7 +796,8 @@
       "type.date": "Дата",
       "type.checkbox": "Флажок",
       "type.url": "URL",
-      "deleteAsk": "Удалить «{0}» из страниц ({1})?"
+      "deleteAsk": "Удалить «{0}» из страниц ({1})?",
+      "open": "Открыть"
     }
   }
 }
