@@ -56,5 +56,15 @@
       .map(([p, d]) => ({ phrase: p, date: iso(d) }));
   }
 
-  root.naturalDates = { suggest: suggest, iso: iso };
+  /** The date `phrase` names, whole: one of the phrases, or any number of
+   *  days ahead ("in 12 days", "12天后", "12日後"); null for none. */
+  function parse(phrase, today) {
+    const q = String(phrase).trim().replace(/^@/, "").toLowerCase();
+    const found = phrases(today).find(([p]) => p === q);
+    if (found) return iso(found[1]);
+    const days = /^in (\d+) days?$|^(\d+)\s*(?:天后|日後)$/.exec(q);
+    return days ? iso(add(today, Number(days[1] || days[2]))) : null;
+  }
+
+  root.naturalDates = { suggest: suggest, iso: iso, parse: parse };
 })(typeof window !== "undefined" ? window : globalThis);
