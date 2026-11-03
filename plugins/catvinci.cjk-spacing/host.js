@@ -3,7 +3,15 @@
 // "other" is the front matter.
 const SKIP = new Set(["code", "math", "html", "other"]);
 
+/** Textus AI's tool: the text spaced, nothing written. */
+function fixSpacing(input) {
+  const text = String(input.text || "");
+  const spaced = cjkSpacing.spaceDocument(text);
+  return { text: spaced, changed: spaced !== text };
+}
+
 exports.activate = function () {
+  textus.ai.registerTool("fix_cjk_spacing", fixSpacing);
   textus.commands.registerEditorCommand(
     "catvinci.cjk-spacing.space",
     async function (editor) {
