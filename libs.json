@@ -53,5 +53,6 @@
   "catvinci.markdown-lint/lib/markdownlint.js": "./vendor/markdownlint.js",
   "catvinci.slides/lib/marp-core.js": "./vendor/marp-core.js",
   "catvinci.tasks/lib/folder-paths.js": "./shared/folder-paths.js",
-  "catvinci.kanban/lib/folder-paths.js": "./shared/folder-paths.js"
+  "catvinci.kanban/lib/folder-paths.js": "./shared/folder-paths.js",
+  "catvinci.backlinks/lib/folder-paths.js": "./shared/folder-paths.js"
 }

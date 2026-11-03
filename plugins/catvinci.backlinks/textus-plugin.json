@@ -1,7 +1,7 @@
 {
   "id": "catvinci.backlinks",
   "name": "%name%",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "publisher": "catvinci",
   "author": "CatVinci Studio",
   "description": "%description%",
@@ -13,13 +13,15 @@
   },
   "platforms": ["desktop", "ios"],
   "main": [
+    "lib/folder-paths.js",
     "mentions.js",
     "host.js"
   ],
   "permissions": [
     "editor.read",
     "files.read",
-    "files.write"
+    "files.write",
+    "ai.tools"
   ],
   "contributes": {
     "sidebarTabs": [
@@ -32,6 +34,21 @@
     ],
     "suggestFor": [
       "wikilinks"
+    ],
+    "aiTools": [
+      {
+        "name": "list_backlinks",
+        "description": "%tool.list_backlinks%",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "path": {
+              "type": "string",
+              "description": "The document's path in the open folder; the document in front when left out."
+            }
+          }
+        }
+      }
     ]
   },
   "l10n": {
@@ -48,7 +65,8 @@
       "none": "No links to or from this document yet.",
       "nofolder": "Open a folder to see the links between its documents.",
       "nodoc": "Open a document to see what links to it.",
-      "notInFolder": "This document isn't in the open folder."
+      "notInFolder": "This document isn't in the open folder.",
+      "tool.list_backlinks": "For a document - the one in front unless a path is given - lists the notes linking to it (path, line, the line's text), the lines naming it without a link, and the notes it links to."
     },
     "zh": {
       "name": "反向链接",
@@ -63,7 +81,8 @@
       "none": "还没有链接到这篇文档或从它链出的笔记。",
       "nofolder": "打开一个文件夹，查看其中文档之间的链接。",
       "nodoc": "打开一篇文档，查看哪些笔记链接到它。",
-      "notInFolder": "这篇文档不在打开的文件夹中。"
+      "notInFolder": "这篇文档不在打开的文件夹中。",
+      "tool.list_backlinks": "针对一篇文档（默认当前文档）：列出链接到它的笔记（路径、行号、那一行的文字）、提到它却没加链接的行，以及它链接到的笔记。"
     },
     "zh-Hant": {
       "name": "反向連結",
@@ -78,7 +97,8 @@
       "none": "還沒有連結到這篇文件或從它連出的筆記。",
       "nofolder": "開啟一個資料夾，查看其中文件之間的連結。",
       "nodoc": "開啟一篇文件，查看哪些筆記連結到它。",
-      "notInFolder": "這篇文件不在開啟的資料夾中。"
+      "notInFolder": "這篇文件不在開啟的資料夾中。",
+      "tool.list_backlinks": "針對一份文件（預設目前文件）：列出連結到它的筆記（路徑、行號、那一行的文字）、提到它卻沒加連結的行，以及它連結到的筆記。"
     },
     "ja": {
       "name": "バックリンク",
@@ -93,7 +113,8 @@
       "none": "この文書へのリンクも、この文書からのリンクもまだありません。",
       "nofolder": "フォルダを開くと、文書どうしのリンクが表示されます。",
       "nodoc": "文書を開くと、そこへのリンクが表示されます。",
-      "notInFolder": "この文書は開いているフォルダにありません。"
+      "notInFolder": "この文書は開いているフォルダにありません。",
+      "tool.list_backlinks": "ある文書（パスがなければ前面の文書）について、そこへリンクしているノート（パス・行番号・その行の本文）、リンクせずに名前を挙げている行、その文書からのリンク先を一覧にします。"
     },
     "ko": {
       "name": "백링크",
@@ -108,7 +129,8 @@
       "none": "이 문서로 오가는 링크가 아직 없습니다.",
       "nofolder": "폴더를 열면 문서 사이의 링크를 볼 수 있습니다.",
       "nodoc": "문서를 열면 그 문서를 링크하는 노트가 보입니다.",
-      "notInFolder": "이 문서는 열린 폴더에 없습니다."
+      "notInFolder": "이 문서는 열린 폴더에 없습니다.",
+      "tool.list_backlinks": "어떤 문서(경로가 없으면 앞에 열린 문서)에 대해, 그 문서로 링크하는 노트(경로·줄 번호·그 줄의 내용), 링크 없이 이름만 언급한 줄, 그 문서가 링크하는 노트를 나열합니다."
     },
     "es": {
       "name": "Enlaces entrantes",
@@ -123,7 +145,8 @@
       "none": "Todavía no hay enlaces hacia o desde este documento.",
       "nofolder": "Abre una carpeta para ver los enlaces entre sus documentos.",
       "nodoc": "Abre un documento para ver qué lo enlaza.",
-      "notInFolder": "Este documento no está en la carpeta abierta."
+      "notInFolder": "Este documento no está en la carpeta abierta.",
+      "tool.list_backlinks": "Para un documento - el que está al frente si no se da ruta - enumera las notas que enlazan a él (ruta, línea y texto de la línea), las líneas que lo nombran sin enlace y las notas a las que enlaza."
     },
     "fr": {
       "name": "Rétroliens",
@@ -138,7 +161,8 @@
       "none": "Aucun lien vers ou depuis ce document pour l’instant.",
       "nofolder": "Ouvrez un dossier pour voir les liens entre ses documents.",
       "nodoc": "Ouvrez un document pour voir ce qui le lie.",
-      "notInFolder": "Ce document n’est pas dans le dossier ouvert."
+      "notInFolder": "Ce document n’est pas dans le dossier ouvert.",
+      "tool.list_backlinks": "Pour un document - celui au premier plan si aucun chemin n'est donné - liste les notes qui y renvoient (chemin, ligne, texte de la ligne), les lignes qui le nomment sans lien, et les notes vers lesquelles il renvoie."
     },
     "de": {
       "name": "Rückverweise",
@@ -153,7 +177,8 @@
       "none": "Noch keine Links zu oder von diesem Dokument.",
       "nofolder": "Öffne einen Ordner, um die Links zwischen seinen Dokumenten zu sehen.",
       "nodoc": "Öffne ein Dokument, um zu sehen, was darauf verlinkt.",
-      "notInFolder": "Dieses Dokument liegt nicht im geöffneten Ordner."
+      "notInFolder": "Dieses Dokument liegt nicht im geöffneten Ordner.",
+      "tool.list_backlinks": "Listet für ein Dokument - das vordere, wenn kein Pfad angegeben ist - die Notizen auf, die darauf verlinken (Pfad, Zeile, Text der Zeile), die Zeilen, die es ohne Link nennen, und die Notizen, auf die es verlinkt."
     },
     "ru": {
       "name": "Обратные ссылки",
@@ -168,7 +193,8 @@
       "none": "Ссылок на этот документ и из него пока нет.",
       "nofolder": "Откройте папку, чтобы увидеть ссылки между документами.",
       "nodoc": "Откройте документ, чтобы увидеть, что на него ссылается.",
-      "notInFolder": "Этот документ не в открытой папке."
+      "notInFolder": "Этот документ не в открытой папке.",
+      "tool.list_backlinks": "Для документа - переднего, если путь не указан, - перечисляет заметки со ссылками на него (путь, строка, текст строки), строки, где он назван без ссылки, и заметки, на которые он ссылается."
     },
     "pt": {
       "name": "Backlinks",
@@ -183,7 +209,8 @@
       "none": "Ainda não há links para ou deste documento.",
       "nofolder": "Abra uma pasta para ver os links entre seus documentos.",
       "nodoc": "Abra um documento para ver o que aponta para ele.",
-      "notInFolder": "Este documento não está na pasta aberta."
+      "notInFolder": "Este documento não está na pasta aberta.",
+      "tool.list_backlinks": "Para um documento - o que está em primeiro plano se não for dado caminho - lista as notas que apontam para ele (caminho, linha, texto da linha), as linhas que o nomeiam sem link e as notas para onde ele aponta."
     }
   }
 }
