@@ -17,3 +17,11 @@ Zeichnet eine Markdown-Gliederung (Überschriften und Listen) als Mindmap.
 - Writers
 - Reviewers
 ```
+
+<!-- ai-tools -->
+## Werkzeuge für Textus AI
+
+Ist das Plugin installiert, kann Textus AI sie im Gespräch nutzen:
+
+- `check_markmap`: Prüft die Quelle eines ```markmap-Blocks - eine Markdown-Gliederung, deren Überschriften und Listenpunkte die Äste der Mindmap sind -, bevor er in ein Dokument kommt, ohne ihn zu zeichnen. Gibt ok zurück oder die Probleme, die zuerst zu beheben sind. Die Quelle ohne ihren Zaun übergeben.
+<!-- /ai-tools -->

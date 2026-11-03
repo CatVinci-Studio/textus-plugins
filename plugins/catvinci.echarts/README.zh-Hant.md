@@ -15,3 +15,11 @@
   series: [{ type: "bar", data: [120, 200, 150] }]
 }
 ```
+
+<!-- ai-tools -->
+## Textus AI 工具
+
+裝上這個外掛後，Textus AI 在對話中可以使用：
+
+- `check_echarts`：在把 ```echarts 區塊寫進文件之前檢查它的原始碼（JSON 格式的 ECharts option：附類型的 series，以及它們所在的座標軸或元件），不實際繪製。回傳 ok，或需要先修正的問題。傳入時不帶程式碼圍欄。
+<!-- /ai-tools -->

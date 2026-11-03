@@ -6,3 +6,11 @@ Qué enlaza al documento abierto y a dónde enlaza él, en la pestaña **Enlaces
 - **Menciones sin enlace**: líneas que nombran esta nota – por su nombre de archivo, su primer encabezado o los `aliases` de su front matter – sin enlace. Haz clic derecho y elige **Enlazar** para convertirla en un [[enlace]].
 - **Enlaces salientes**: las notas a las que enlaza esta, incluidas las que aún no existen.
 - El campo de arriba filtra la lista.
+
+<!-- ai-tools -->
+## Herramientas para Textus AI
+
+Con el plugin instalado, Textus AI puede usarlas en una conversación:
+
+- `list_backlinks`: Para un documento - el que está al frente si no se da ruta - enumera las notas que enlazan a él (ruta, línea y texto de la línea), las líneas que lo nombran sin enlace y las notas a las que enlaza.
+<!-- /ai-tools -->

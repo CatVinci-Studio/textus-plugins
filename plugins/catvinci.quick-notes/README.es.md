@@ -7,3 +7,11 @@ Apunta algo sin salir del documento.
 - La pestaña **Notas rápidas** de la barra lateral las lista: inserta una en el documento, ábrela como documento o elimínala.
 - ¿La borraste por error? **Deshacer**, abajo, la recupera durante unos segundos. Una nota nueva que se deja vacía desaparece sola.
 - Con muchas notas, arriba aparece un campo de búsqueda.
+
+<!-- ai-tools -->
+## Herramientas para Textus AI
+
+Con el plugin instalado, Textus AI puede usarlas en una conversación:
+
+- `add_note`: Añade una nota rápida al principio de la lista de Notas rápidas de la barra lateral, para insertarla luego en un documento o abrirla como uno.
+<!-- /ai-tools -->

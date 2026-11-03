@@ -36,3 +36,13 @@ All of it is kept in the block, in lines you can read and change: `columns: star
 **From Notion**: export the database as Markdown & CSV, unzip it into the open folder, right-click its `.csv` in the sidebar and choose **Import from Notion…**. Its pages come in as documents with their properties as front matter, with a page showing them.
 
 **With Textus AI**: ask for one - "make a 2026 weekly calendar with a focus and a rating" - and it makes the folder, its pages and the block.
+
+<!-- ai-tools -->
+## Tools for Textus AI
+
+Once it is installed, Textus AI can use these in a conversation:
+
+- `create_database`: Makes a database: a folder of documents whose front matter holds each one's properties, and a ```database block that shows them as a table, board, calendar or gallery. Returns the block to insert.
+- `query_rows`: Reads a database's rows - the documents in its folder - each with its name, path and properties, filtered and sorted as a ```database block's filter and sort lines would.
+- `add_row`: Adds a row to a database: a document in its folder, named for the row, with its properties in its front matter. Every block showing that folder shows it.
+<!-- /ai-tools -->

@@ -16,3 +16,11 @@ L:1/4
 K:C
 C D E F | G A B c |
 ```
+
+<!-- ai-tools -->
+## Ferramentas para o Textus AI
+
+Com o plugin instalado, o Textus AI pode usá-las numa conversa:
+
+- `check_abc`: Verifica o código de um bloco ```abc - notação musical ABC: um cabeçalho de campos que termina em K:, e depois as notas - antes de entrar num documento, sem o desenhar. Devolve ok, ou os problemas a corrigir primeiro. Passe o código sem a cerca.
+<!-- /ai-tools -->

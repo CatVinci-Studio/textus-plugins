@@ -16,3 +16,11 @@ L:1/4
 K:C
 C D E F | G A B c |
 ```
+
+<!-- ai-tools -->
+## Werkzeuge für Textus AI
+
+Ist das Plugin installiert, kann Textus AI sie im Gespräch nutzen:
+
+- `check_abc`: Prüft die Quelle eines ```abc-Blocks - ABC-Notenschrift: ein Kopf aus Feldern, der mit K: endet, dann die Noten -, bevor er in ein Dokument kommt, ohne ihn zu zeichnen. Gibt ok zurück oder die Probleme, die zuerst zu beheben sind. Die Quelle ohne ihren Zaun übergeben.
+<!-- /ai-tools -->

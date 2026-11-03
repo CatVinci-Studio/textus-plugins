@@ -17,3 +17,11 @@ Draws a Markdown outline - headings and lists - as a mind map.
 - Writers
 - Reviewers
 ```
+
+<!-- ai-tools -->
+## Tools for Textus AI
+
+Once it is installed, Textus AI can use these in a conversation:
+
+- `check_markmap`: Checks the source of a ```markmap block - a Markdown outline whose headings and list items are the mind map's branches - before it goes into a document, without drawing it. Returns ok, or the problems to fix first. Pass the source without its fence.
+<!-- /ai-tools -->

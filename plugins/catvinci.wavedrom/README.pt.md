@@ -14,3 +14,11 @@ Diagramas de tempo digitais a partir de WaveJSON.
   { name: "data", wave: "x.345x", data: ["a", "b", "c"] }
 ]}
 ```
+
+<!-- ai-tools -->
+## Ferramentas para o Textus AI
+
+Com o plugin instalado, o Textus AI pode usá-las numa conversa:
+
+- `check_wavedrom`: Verifica o código de um bloco ```wavedrom - WaveJSON: faixas de sinal com as suas strings wave e data, ou os campos de um registo - antes de entrar num documento, sem o desenhar. Devolve ok, ou os problemas a corrigir primeiro. Passe o código sem a cerca.
+<!-- /ai-tools -->

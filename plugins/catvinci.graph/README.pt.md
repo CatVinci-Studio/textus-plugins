@@ -8,3 +8,11 @@ Suas notas e os links entre elas, como um grafo.
 - O botão de controles deslizantes no topo abre os ajustes do grafo:
   - **Filtros**: busca (`path:ideias`, `file:rascunho`, `tag:#afazer`, um `-` para excluir), tags como nós, notas ainda não criadas, notas sem links. O grafo lateral também define até onde vai.
   - **Grupos**: dê cor às notas que uma busca encontra.
+
+<!-- ai-tools -->
+## Ferramentas para o Textus AI
+
+Com o plugin instalado, o Textus AI pode usá-las numa conversa:
+
+- `list_neighbours`: A vizinhança de um documento no grafo de notas - o que está em primeiro plano se não for dado caminho: as notas a poucos links, em qualquer sentido, cada uma com a quantos links está, e os links entre elas. Um [[link]] para uma nota que não existe aparece como kind missing.
+<!-- /ai-tools -->

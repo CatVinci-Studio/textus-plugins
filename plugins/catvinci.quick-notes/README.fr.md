@@ -7,3 +7,11 @@ Notez quelque chose sans quitter le document.
 - L’onglet **Notes rapides** de la barre latérale les liste : insérez-en une dans le document, ouvrez-la comme document ou supprimez-la.
 - Supprimée par erreur ? **Annuler**, en bas, la ramène pendant quelques secondes. Une nouvelle note laissée vide disparaît d’elle-même.
 - Quand il y a beaucoup de notes, un champ de recherche apparaît en haut.
+
+<!-- ai-tools -->
+## Outils pour Textus AI
+
+Une fois le plugin installé, Textus AI peut s’en servir dans une conversation :
+
+- `add_note`: Ajoute une note rapide en haut de la liste des Notes rapides de la barre latérale, à insérer plus tard dans un document ou à ouvrir comme document.
+<!-- /ai-tools -->

@@ -17,3 +17,11 @@ Gráficos simples a partir de uma configuração do Chart.js.
   }
 }
 ```
+
+<!-- ai-tools -->
+## Ferramentas para o Textus AI
+
+Com o plugin instalado, o Textus AI pode usá-las numa conversa:
+
+- `check_chartjs`: Verifica o código de um bloco ```chartjs - uma configuração do Chart.js 4 em JSON: type, data com labels e datasets, options - antes de entrar num documento, sem o desenhar. Devolve ok, ou os problemas a corrigir primeiro. Passe o código sem a cerca.
+<!-- /ai-tools -->

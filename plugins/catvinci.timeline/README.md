@@ -13,3 +13,11 @@ Events in order, a line each: when | what | more.
 2024-09 | Review | Notes from three readers
 2025-01 | Published
 ```
+
+<!-- ai-tools -->
+## Tools for Textus AI
+
+Once it is installed, Textus AI can use these in a conversation:
+
+- `check_timeline`: Checks the source of a ```timeline block - one event per line, written when | what | more - before it goes into a document, without drawing it. Returns ok, or the problems to fix first. Pass the source without its fence.
+<!-- /ai-tools -->

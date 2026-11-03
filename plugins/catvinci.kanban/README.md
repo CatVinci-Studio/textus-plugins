@@ -17,3 +17,14 @@ Boards of cards in lists, kept as a plain Markdown file.
 
 - [x] Pick a title
 ```
+
+<!-- ai-tools -->
+## Tools for Textus AI
+
+Once it is installed, Textus AI can use these in a conversation:
+
+- `list_boards`: Lists the Kanban boards (name.kanban.md files) in the open folder, each with its lists and how many cards each holds.
+- `read_board`: Reads a Kanban board: its lists in order, each with its cards' text and whether each is done.
+- `add_card`: Adds a card to the end of a list on a Kanban board.
+- `move_card`: Moves a card on a Kanban board to another list, or to another place in its own.
+<!-- /ai-tools -->

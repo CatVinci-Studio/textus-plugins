@@ -15,3 +15,11 @@ ECharts 옵션으로 차트를 그립니다: 막대, 선, 원형 등.
   series: [{ type: "bar", data: [120, 200, 150] }]
 }
 ```
+
+<!-- ai-tools -->
+## Textus AI 도구
+
+이 플러그인을 설치하면 Textus AI가 대화 중에 사용할 수 있습니다:
+
+- `check_echarts`: ```echarts 블록의 소스(JSON으로 쓴 ECharts option: 유형이 있는 series와 그것이 그려지는 축이나 컴포넌트)를 문서에 넣기 전에 그리지 않고 검사합니다. ok나 먼저 고칠 문제를 돌려줍니다. 펜스 없이 소스만 넘기세요.
+<!-- /ai-tools -->
