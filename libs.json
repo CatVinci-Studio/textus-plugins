@@ -57,5 +57,8 @@
   "catvinci.backlinks/lib/folder-paths.js": "./shared/folder-paths.js",
   "catvinci.graph/lib/folder-paths.js": "./shared/folder-paths.js",
   "catvinci.version-history/lib/folder-paths.js": "./shared/folder-paths.js",
-  "catvinci.writing-stats/lib/folder-paths.js": "./shared/folder-paths.js"
+  "catvinci.writing-stats/lib/folder-paths.js": "./shared/folder-paths.js",
+  "catvinci.chartjs/lib/parse-loose.js": "./shared/parse-loose.js",
+  "catvinci.echarts/lib/parse-loose.js": "./shared/parse-loose.js",
+  "catvinci.wavedrom/lib/parse-loose.js": "./shared/parse-loose.js"
 }
