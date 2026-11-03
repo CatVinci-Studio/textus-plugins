@@ -9,6 +9,7 @@ import { LOCK } from "./model";
 const account = "TEST_ACCESS_KEY",
   secret = "test-only-secret";
 const objects = new Map<string, Buffer>();
+const folders = new Set(["/dav/", "/dav/notes/"]);
 const recorded: {
   method: string;
   path: string;
@@ -40,7 +41,20 @@ beforeAll(async () => {
       return;
     }
     if (method === "MKCOL") {
-      res.writeHead(405).end();
+      const parent = path.replace(/[^/]+\/$/, "");
+      // Nutstore: 409 for a folder that exists, and no new folders at the top.
+      const nutstore = mode === "nutstoreFolders";
+      if (folders.has(path)) res.writeHead(nutstore ? 409 : 405).end();
+      else if (!folders.has(parent) || (nutstore && parent === "/dav/"))
+        res.writeHead(409).end();
+      else {
+        folders.add(path);
+        res.writeHead(201).end();
+      }
+      return;
+    }
+    if (method === "PROPFIND") {
+      res.writeHead(folders.has(path) ? 207 : 404).end();
       return;
     }
     if (method === "GET" || method === "HEAD") {
@@ -230,6 +244,29 @@ describe("storage protocols over HTTP", () => {
     }
     expect(recorded.length - start).toBe(3);
   });
+  it("syncs into Nutstore folders that already exist", async () => {
+    mode = "nutstoreFolders";
+    try {
+      const prefix = `notes/${crypto.randomUUID()}`;
+      await testConnection(make("nutstore", { prefix }));
+      // A new session no longer knows the folders and asks for them again.
+      await testConnection(make("nutstore", { prefix }));
+    } finally {
+      mode = "normal";
+    }
+  });
+
+  it("names the folder Nutstore won't create", async () => {
+    mode = "nutstoreFolders";
+    try {
+      await expect(
+        testConnection(make("nutstore", { prefix: "brand-new/notes" })),
+      ).rejects.toMatchObject({ code: "folderNotCreated", args: ["brand-new"] });
+    } finally {
+      mode = "normal";
+    }
+  });
+
   it("can release its lock after Nutstore's transfer budget is exhausted", async () => {
     const store = new RemoteStore(
       normalizeConfig({ provider: "nutstore" }),
