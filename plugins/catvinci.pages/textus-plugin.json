@@ -1,7 +1,7 @@
 {
   "id": "catvinci.pages",
   "name": "%name%",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "publisher": "catvinci",
   "author": "CatVinci Studio",
   "description": "%description%",
@@ -20,7 +20,8 @@
     "files.read",
     "files.write",
     "editor.read",
-    "editor.write"
+    "editor.write",
+    "ai.tools"
   ],
   "activationEvents": [
     "onStartupFinished"
@@ -72,6 +73,36 @@
         "icon": "tab.svg",
         "type": "list"
       }
+    ],
+    "aiTools": [
+      {
+        "name": "create_page",
+        "description": "%tool.create_page%",
+        "parameters": {
+          "type": "object",
+          "required": [
+            "title"
+          ],
+          "properties": {
+            "title": {
+              "type": "string",
+              "description": "The page's title, also its file's name."
+            },
+            "parent": {
+              "type": "string",
+              "description": "The parent page's path in the open folder, to make this a sub-page of it; at the top of the folder when left out."
+            },
+            "icon": {
+              "type": "string",
+              "description": "An emoji for the page's icon."
+            },
+            "body": {
+              "type": "string",
+              "description": "Markdown under the title, if any."
+            }
+          }
+        }
+      }
     ]
   },
   "l10n": {
@@ -90,7 +121,8 @@
       "otherIcon": "Other…",
       "iconPrompt": "An emoji for this page",
       "empty": "No documents in the open folder.",
-      "filter": "Find a page"
+      "filter": "Find a page",
+      "tool.create_page": "Makes a page: a document titled as given at the top of the open folder, or a sub-page in the folder beside its parent page, with an icon if given. Returns its path and the [[link]] to put in the parent."
     },
     "zh": {
       "name": "页面树",
@@ -107,7 +139,8 @@
       "otherIcon": "其他…",
       "iconPrompt": "给这个页面一个表情符号",
       "empty": "打开的文件夹里还没有文档。",
-      "filter": "查找页面"
+      "filter": "查找页面",
+      "tool.create_page": "新建一个页面：在打开的文件夹顶层新建以该标题命名的文档，或在父页面旁的同名文件夹中新建子页面；可设图标。返回它的路径，以及要放进父页面的 [[链接]]。"
     },
     "zh-Hant": {
       "name": "頁面樹",
@@ -124,7 +157,8 @@
       "otherIcon": "其他…",
       "iconPrompt": "給這個頁面一個表情符號",
       "empty": "打開的資料夾裡還沒有文件。",
-      "filter": "尋找頁面"
+      "filter": "尋找頁面",
+      "tool.create_page": "新建一個頁面：在開啟的資料夾頂層新建以該標題命名的文件，或在父頁面旁的同名資料夾中新建子頁面；可設圖示。回傳它的路徑，以及要放進父頁面的 [[連結]]。"
     },
     "ja": {
       "name": "ページ",
@@ -141,7 +175,8 @@
       "otherIcon": "その他…",
       "iconPrompt": "このページの絵文字",
       "empty": "開いているフォルダに文書がありません。",
-      "filter": "ページを検索"
+      "filter": "ページを検索",
+      "tool.create_page": "ページを作ります。開いているフォルダの最上位にそのタイトルの文書を作るか、親ページの隣のフォルダにサブページを作り、アイコンがあれば付けます。パスと、親ページに置く [[リンク]] を返します。"
     },
     "ko": {
       "name": "페이지",
@@ -158,7 +193,8 @@
       "otherIcon": "기타…",
       "iconPrompt": "이 페이지의 이모지",
       "empty": "열린 폴더에 문서가 없습니다.",
-      "filter": "페이지 찾기"
+      "filter": "페이지 찾기",
+      "tool.create_page": "페이지를 만듭니다. 열린 폴더 맨 위에 그 제목의 문서를 만들거나, 부모 페이지 옆 폴더에 하위 페이지를 만들고, 아이콘이 있으면 붙입니다. 경로와 부모 페이지에 넣을 [[링크]]를 돌려줍니다."
     },
     "de": {
       "name": "Seiten",
@@ -175,7 +211,8 @@
       "otherIcon": "Anderes …",
       "iconPrompt": "Ein Emoji für diese Seite",
       "empty": "Keine Dokumente im geöffneten Ordner.",
-      "filter": "Seite suchen"
+      "filter": "Seite suchen",
+      "tool.create_page": "Legt eine Seite an: ein Dokument mit dem Titel oben im geöffneten Ordner oder eine Unterseite im Ordner neben ihrer übergeordneten Seite, mit Symbol, falls angegeben. Gibt ihren Pfad und den [[Link]] für die übergeordnete Seite zurück."
     },
     "es": {
       "name": "Páginas",
@@ -192,7 +229,8 @@
       "otherIcon": "Otro…",
       "iconPrompt": "Un emoji para esta página",
       "empty": "No hay documentos en la carpeta abierta.",
-      "filter": "Buscar una página"
+      "filter": "Buscar una página",
+      "tool.create_page": "Crea una página: un documento con ese título en la raíz de la carpeta abierta, o una subpágina en la carpeta junto a su página madre, con icono si se da. Devuelve su ruta y el [[enlace]] para poner en la página madre."
     },
     "fr": {
       "name": "Pages",
@@ -209,7 +247,8 @@
       "otherIcon": "Autre…",
       "iconPrompt": "Un emoji pour cette page",
       "empty": "Aucun document dans le dossier ouvert.",
-      "filter": "Chercher une page"
+      "filter": "Chercher une page",
+      "tool.create_page": "Crée une page : un document portant ce titre à la racine du dossier ouvert, ou une sous-page dans le dossier à côté de sa page parente, avec une icône si elle est donnée. Renvoie son chemin et le [[lien]] à mettre dans la page parente."
     },
     "pt": {
       "name": "Páginas",
@@ -226,7 +265,8 @@
       "otherIcon": "Outro…",
       "iconPrompt": "Um emoji para esta página",
       "empty": "Nenhum documento na pasta aberta.",
-      "filter": "Encontrar uma página"
+      "filter": "Encontrar uma página",
+      "tool.create_page": "Cria uma página: um documento com esse título na raiz da pasta aberta, ou uma subpágina na pasta ao lado da página-mãe, com ícone se for dado. Devolve o caminho e o [[link]] a pôr na página-mãe."
     },
     "ru": {
       "name": "Страницы",
@@ -243,7 +283,8 @@
       "otherIcon": "Другой…",
       "iconPrompt": "Эмодзи для этой страницы",
       "empty": "В открытой папке нет документов.",
-      "filter": "Найти страницу"
+      "filter": "Найти страницу",
+      "tool.create_page": "Создаёт страницу: документ с этим заголовком в корне открытой папки или подстраницу в папке рядом с родительской страницей, со значком, если он задан. Возвращает её путь и [[ссылку]] для родительской страницы."
     }
   }
 }
