@@ -17,6 +17,19 @@ async function cardFor(url) {
   return { url: url };
 }
 
+/** Textus AI's tool: what a page says of itself, and its ```card block. */
+async function fetchLinkCard(input) {
+  const url = String(input.url || "").trim();
+  if (!linkCards.isUrl(url)) return { error: "url must be an http(s) address." };
+  const card = await cardFor(url);
+  const fetched = "title" in card;
+  return Object.assign({}, card, {
+    fetched: fetched,
+    block: block(card),
+    note: fetched ? undefined : "The page couldn't be read; the card holds its address alone.",
+  });
+}
+
 const block = (card) => "```card\n" + linkCards.write(card) + "\n```\n";
 
 async function insertCard() {
@@ -32,6 +45,7 @@ async function insertCard() {
 exports.activate = function (ctx) {
   ctx.subscriptions.push(
     textus.commands.register("catvinci.link-cards.insert", insertCard),
+    textus.ai.registerTool("fetch_link_card", fetchLinkCard),
     textus.views.registerCodeBlock("card", {
       render: async (codeBlock, webview) => {
         webview.html = await ctx.plugin.readText("card.html");

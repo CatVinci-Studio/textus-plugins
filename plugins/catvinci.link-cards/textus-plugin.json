@@ -1,7 +1,7 @@
 {
   "id": "catvinci.link-cards",
   "name": "%name%",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "publisher": "catvinci",
   "author": "CatVinci Studio",
   "description": "%description%",
@@ -19,7 +19,8 @@
   "permissions": [
     "editor.read",
     "editor.write",
-    "network:*"
+    "network:*",
+    "ai.tools"
   ],
   "contributes": {
     "commands": [
@@ -47,6 +48,24 @@
         "frame": "none",
         "title": "%name%"
       }
+    ],
+    "aiTools": [
+      {
+        "name": "fetch_link_card",
+        "description": "%tool.fetch_link_card%",
+        "parameters": {
+          "type": "object",
+          "required": [
+            "url"
+          ],
+          "properties": {
+            "url": {
+              "type": "string",
+              "description": "The page's http or https address."
+            }
+          }
+        }
+      }
     ]
   },
   "l10n": {
@@ -57,7 +76,8 @@
       "urlPrompt": "Link to make a card of",
       "notUrl": "That isn't a web address (https://…).",
       "fetching": "Getting the page…",
-      "refresh": "Fetch again"
+      "refresh": "Fetch again",
+      "tool.fetch_link_card": "Fetches a web page's title, description, picture and site name, and returns them with a ```card block that shows the link as a card - to insert where the user wants it."
     },
     "zh": {
       "name": "链接卡片",
@@ -66,7 +86,8 @@
       "urlPrompt": "要做成卡片的链接",
       "notUrl": "这不是网址（https://…）。",
       "fetching": "正在获取网页…",
-      "refresh": "重新获取"
+      "refresh": "重新获取",
+      "tool.fetch_link_card": "抓取网页的标题、简介、配图和网站名，连同一个把链接显示成卡片的 ```card 块一起返回，可插入到用户想要的位置。"
     },
     "zh-Hant": {
       "name": "連結卡片",
@@ -75,7 +96,8 @@
       "urlPrompt": "要做成卡片的連結",
       "notUrl": "這不是網址（https://…）。",
       "fetching": "正在取得網頁…",
-      "refresh": "重新取得"
+      "refresh": "重新取得",
+      "tool.fetch_link_card": "擷取網頁的標題、簡介、配圖和網站名稱，連同一個把連結顯示成卡片的 ```card 區塊一起回傳，可插入到使用者想要的位置。"
     },
     "ja": {
       "name": "リンクカード",
@@ -84,7 +106,8 @@
       "urlPrompt": "カードにするリンク",
       "notUrl": "Web アドレス（https://…）ではありません。",
       "fetching": "ページを取得中…",
-      "refresh": "再取得"
+      "refresh": "再取得",
+      "tool.fetch_link_card": "ウェブページのタイトル・説明・画像・サイト名を取得し、リンクをカードとして表示する ```card ブロックと一緒に返します。ユーザーが望む場所に挿入できます。"
     },
     "ko": {
       "name": "링크 카드",
@@ -93,7 +116,8 @@
       "urlPrompt": "카드로 만들 링크",
       "notUrl": "웹 주소(https://…)가 아닙니다.",
       "fetching": "페이지를 가져오는 중…",
-      "refresh": "다시 가져오기"
+      "refresh": "다시 가져오기",
+      "tool.fetch_link_card": "웹 페이지의 제목·설명·그림·사이트 이름을 가져와, 링크를 카드로 보여 주는 ```card 블록과 함께 돌려줍니다. 사용자가 원하는 곳에 넣으면 됩니다."
     },
     "de": {
       "name": "Link-Karten",
@@ -102,7 +126,8 @@
       "urlPrompt": "Link für die Karte",
       "notUrl": "Das ist keine Webadresse (https://…).",
       "fetching": "Seite wird geladen …",
-      "refresh": "Neu laden"
+      "refresh": "Neu laden",
+      "tool.fetch_link_card": "Holt Titel, Beschreibung, Bild und Seitennamen einer Webseite und gibt sie mit einem ```card-Block zurück, der den Link als Karte zeigt - zum Einfügen, wo der Nutzer ihn will."
     },
     "es": {
       "name": "Tarjetas de enlace",
@@ -111,7 +136,8 @@
       "urlPrompt": "Enlace para la tarjeta",
       "notUrl": "Eso no es una dirección web (https://…).",
       "fetching": "Obteniendo la página…",
-      "refresh": "Volver a obtener"
+      "refresh": "Volver a obtener",
+      "tool.fetch_link_card": "Obtiene el título, la descripción, la imagen y el nombre del sitio de una página web, y los devuelve con un bloque ```card que muestra el enlace como tarjeta, para insertarlo donde el usuario quiera."
     },
     "fr": {
       "name": "Cartes de lien",
@@ -120,7 +146,8 @@
       "urlPrompt": "Lien à transformer en carte",
       "notUrl": "Ce n’est pas une adresse web (https://…).",
       "fetching": "Récupération de la page…",
-      "refresh": "Récupérer à nouveau"
+      "refresh": "Récupérer à nouveau",
+      "tool.fetch_link_card": "Récupère le titre, la description, l'image et le nom du site d'une page web, et les renvoie avec un bloc ```card qui montre le lien en carte - à insérer là où l'utilisateur le veut."
     },
     "pt": {
       "name": "Cartões de link",
@@ -129,7 +156,8 @@
       "urlPrompt": "Link para o cartão",
       "notUrl": "Isso não é um endereço web (https://…).",
       "fetching": "Obtendo a página…",
-      "refresh": "Obter de novo"
+      "refresh": "Obter de novo",
+      "tool.fetch_link_card": "Obtém o título, a descrição, a imagem e o nome do site de uma página web, e devolve-os com um bloco ```card que mostra o link como cartão - para inserir onde o utilizador quiser."
     },
     "ru": {
       "name": "Карточки ссылок",
@@ -138,7 +166,8 @@
       "urlPrompt": "Ссылка для карточки",
       "notUrl": "Это не веб-адрес (https://…).",
       "fetching": "Загрузка страницы…",
-      "refresh": "Загрузить снова"
+      "refresh": "Загрузить снова",
+      "tool.fetch_link_card": "Получает заголовок, описание, картинку и название сайта веб-страницы и возвращает их с блоком ```card, показывающим ссылку карточкой, - чтобы вставить, куда хочет пользователь."
     }
   }
 }
