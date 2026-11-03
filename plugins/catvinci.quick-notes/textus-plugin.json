@@ -1,7 +1,7 @@
 {
   "id": "catvinci.quick-notes",
   "name": "%name%",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "publisher": "catvinci",
   "author": "CatVinci Studio",
   "description": "%description%",
@@ -14,7 +14,8 @@
   "platforms": ["desktop"],
   "main": "host.js",
   "permissions": [
-    "editor.write"
+    "editor.write",
+    "ai.tools"
   ],
   "requires": [
     {
@@ -53,6 +54,24 @@
         "title": "%name%",
         "icon": "tab.svg"
       }
+    ],
+    "aiTools": [
+      {
+        "name": "add_note",
+        "description": "%tool.add_note%",
+        "parameters": {
+          "type": "object",
+          "required": [
+            "text"
+          ],
+          "properties": {
+            "text": {
+              "type": "string",
+              "description": "The note, plain text or Markdown."
+            }
+          }
+        }
+      }
     ]
   },
   "l10n": {
@@ -72,7 +91,8 @@
       "search": "Search notes",
       "deleted": "Note deleted",
       "undo": "Undo",
-      "actions": "Actions"
+      "actions": "Actions",
+      "tool.add_note": "Adds a quick note to the top of the Quick Notes list in the sidebar, to be inserted into a document or opened as one later."
     },
     "zh": {
       "name": "快速笔记",
@@ -90,7 +110,8 @@
       "search": "搜索笔记",
       "deleted": "已删除笔记",
       "undo": "撤销",
-      "actions": "操作"
+      "actions": "操作",
+      "tool.add_note": "在侧边栏的快速笔记列表顶部添加一条笔记，之后可以插入文档，或单独打开成一篇文档。"
     },
     "zh-Hant": {
       "name": "快速筆記",
@@ -108,7 +129,8 @@
       "search": "搜尋筆記",
       "deleted": "已刪除筆記",
       "undo": "復原",
-      "actions": "操作"
+      "actions": "操作",
+      "tool.add_note": "在側邊欄的快速筆記列表頂端新增一則筆記，之後可以插入文件，或單獨開成一份文件。"
     },
     "ja": {
       "name": "クイックノート",
@@ -126,7 +148,8 @@
       "search": "ノートを検索",
       "deleted": "ノートを削除しました",
       "undo": "元に戻す",
-      "actions": "操作"
+      "actions": "操作",
+      "tool.add_note": "サイドバーのクイックノートの一覧の先頭にメモを追加します。あとで文書に挿入したり、文書として開いたりできます。"
     },
     "ko": {
       "name": "빠른 메모",
@@ -144,7 +167,8 @@
       "search": "노트 검색",
       "deleted": "노트를 삭제했습니다",
       "undo": "실행 취소",
-      "actions": "작업"
+      "actions": "작업",
+      "tool.add_note": "사이드바의 빠른 메모 목록 맨 위에 메모를 추가합니다. 나중에 문서에 넣거나 문서로 열 수 있습니다."
     },
     "es": {
       "name": "Notas rápidas",
@@ -162,7 +186,8 @@
       "search": "Buscar notas",
       "deleted": "Nota eliminada",
       "undo": "Deshacer",
-      "actions": "Acciones"
+      "actions": "Acciones",
+      "tool.add_note": "Añade una nota rápida al principio de la lista de Notas rápidas de la barra lateral, para insertarla luego en un documento o abrirla como uno."
     },
     "fr": {
       "name": "Notes rapides",
@@ -180,7 +205,8 @@
       "search": "Rechercher dans les notes",
       "deleted": "Note supprimée",
       "undo": "Annuler",
-      "actions": "Actions"
+      "actions": "Actions",
+      "tool.add_note": "Ajoute une note rapide en haut de la liste des Notes rapides de la barre latérale, à insérer plus tard dans un document ou à ouvrir comme document."
     },
     "de": {
       "name": "Schnellnotizen",
@@ -198,7 +224,8 @@
       "search": "Notizen durchsuchen",
       "deleted": "Notiz gelöscht",
       "undo": "Rückgängig",
-      "actions": "Aktionen"
+      "actions": "Aktionen",
+      "tool.add_note": "Fügt oben in der Liste der Schnellnotizen in der Seitenleiste eine Notiz hinzu, die sich später in ein Dokument einfügen oder als Dokument öffnen lässt."
     },
     "ru": {
       "name": "Быстрые заметки",
@@ -216,7 +243,8 @@
       "search": "Поиск по заметкам",
       "deleted": "Заметка удалена",
       "undo": "Отменить",
-      "actions": "Действия"
+      "actions": "Действия",
+      "tool.add_note": "Добавляет быструю заметку в начало списка быстрых заметок на боковой панели, чтобы потом вставить её в документ или открыть как документ."
     },
     "pt": {
       "name": "Notas rápidas",
@@ -234,7 +262,8 @@
       "search": "Pesquisar notas",
       "deleted": "Nota excluída",
       "undo": "Desfazer",
-      "actions": "Ações"
+      "actions": "Ações",
+      "tool.add_note": "Adiciona uma nota rápida no topo da lista de Notas rápidas da barra lateral, para inserir depois num documento ou abrir como um."
     }
   }
 }
