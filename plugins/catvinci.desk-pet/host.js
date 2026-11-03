@@ -279,6 +279,14 @@ exports.activate = function (ctx) {
       },
     },
   );
+  // The first time she is turned on she shows herself; after that she
+  // comes and goes as you leave her.
+  const store = ctx.storage.global;
+  void store.get("introduced").then((introduced) => {
+    if (introduced) return;
+    void store.set("introduced", true);
+    void textus.layout.openFloating(VIEW);
+  });
   void textus.ai.state().then((state) => {
     if (state && state.state !== "idle") void aiChanged(state);
   });

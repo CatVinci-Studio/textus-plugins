@@ -19,6 +19,7 @@
     "host.js"
   ],
   "activationEvents": [
+    "onStartupFinished",
     "onCommand:catvinci.desk-pet.toggle"
   ],
   "permissions": [],
