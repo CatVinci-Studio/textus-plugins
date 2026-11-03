@@ -112,7 +112,7 @@ export function folder(files: Record<string, string>) {
     root: async () => root,
     find: async (glob = "**/*.md") => {
       const re = new RegExp(
-        "^" + glob.replace(/[.+^${}()|[\]\\]/g, "\\$&").replace(/\*\*\//g, "(?:.*/)?").replace(/\*/g, "[^/]*") + "$",
+        "^" + glob.replace(/[.+^${}()|[\]\\]/g, "\\$&").replace(/\*\*\//g, "\0").replace(/\*/g, "[^/]*").replace(/\0/g, "(?:.*/)?") + "$",
       );
       return Object.keys(files).filter((r) => re.test(r)).map((r) => ({ path: root + "/" + r, rel: r }));
     },
