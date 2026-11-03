@@ -1,7 +1,7 @@
 {
   "id": "catvinci.version-history",
   "name": "%name%",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "publisher": "catvinci",
   "author": "CatVinci Studio",
   "description": "%description%",
@@ -12,14 +12,19 @@
     "textus": ">=1.3.2"
   },
   "platforms": ["desktop", "ios"],
-  "main": "host.js",
+  "main": [
+    "lib/folder-paths.js",
+    "diff.js",
+    "host.js"
+  ],
   "activationEvents": [
     "onStartupFinished"
   ],
   "permissions": [
     "files.read",
     "editor.read",
-    "editor.propose"
+    "editor.propose",
+    "ai.tools"
   ],
   "contributes": {
     "sidebarTabs": [
@@ -27,6 +32,42 @@
         "id": "catvinci.version-history.panel",
         "title": "%history%",
         "icon": "tab.svg"
+      }
+    ],
+    "aiTools": [
+      {
+        "name": "list_versions",
+        "description": "%tool.list_versions%",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "path": {
+              "type": "string",
+              "description": "The document's path in the open folder; the document in front when left out."
+            }
+          }
+        }
+      },
+      {
+        "name": "diff_versions",
+        "description": "%tool.diff_versions%",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "path": {
+              "type": "string",
+              "description": "The document's path in the open folder; the document in front when left out."
+            },
+            "from": {
+              "type": "integer",
+              "description": "The older side: a version number from list_versions; the document as it is now when left out."
+            },
+            "to": {
+              "type": "integer",
+              "description": "The newer side: a version number; the document as it is now when left out."
+            }
+          }
+        }
       }
     ]
   },
@@ -44,7 +85,9 @@
       "same": "Same as now",
       "large": "Too many changes to compare line by line.",
       "since": "Changed since:",
-      "refresh": "Refresh"
+      "refresh": "Refresh",
+      "tool.list_versions": "Lists the saved versions of a document - the one in front unless a path is given - newest first, numbered from 1, each with when it was saved and its size.",
+      "tool.diff_versions": "Shows what changed between two versions of a document, or between a version and the document as it is now, line by line: + added, - removed, with a little context."
     },
     "zh": {
       "name": "版本历史",
@@ -59,7 +102,9 @@
       "same": "和现在一样",
       "large": "改动太多，无法逐行比较。",
       "since": "之后的改动：",
-      "refresh": "刷新"
+      "refresh": "刷新",
+      "tool.list_versions": "列出一篇文档（默认当前文档）保存过的各个版本，最新的在前，从 1 开始编号，每个版本带保存时间和大小。",
+      "tool.diff_versions": "逐行显示一篇文档两个版本之间、或某个版本与当前内容之间的改动：+ 表示新增，- 表示删除，并附少量上下文。"
     },
     "zh-Hant": {
       "name": "版本紀錄",
@@ -74,7 +119,9 @@
       "same": "和現在一樣",
       "large": "改動太多，無法逐行比較。",
       "since": "之後的改動：",
-      "refresh": "重新整理"
+      "refresh": "重新整理",
+      "tool.list_versions": "列出一份文件（預設目前文件）儲存過的各個版本，最新的在前，從 1 開始編號，每個版本附儲存時間和大小。",
+      "tool.diff_versions": "逐行顯示一份文件兩個版本之間、或某個版本與目前內容之間的改動：+ 表示新增，- 表示刪除，並附少量上下文。"
     },
     "ja": {
       "name": "バージョン履歴",
@@ -89,7 +136,9 @@
       "same": "現在と同じ",
       "large": "変更が多すぎて、行ごとに比べられません。",
       "since": "その後の変更：",
-      "refresh": "再読み込み"
+      "refresh": "再読み込み",
+      "tool.list_versions": "ある文書（パスがなければ前面の文書）の保存された版を新しい順に 1 から番号を付けて、保存日時と大きさとともに一覧にします。",
+      "tool.diff_versions": "文書の二つの版の間、またはある版と今の文書の間の変更を行ごとに示します。+ は追加、- は削除で、前後の行を少し添えます。"
     },
     "ko": {
       "name": "버전 기록",
@@ -104,7 +153,9 @@
       "same": "지금과 같음",
       "large": "바뀐 곳이 너무 많아 줄별로 비교할 수 없습니다.",
       "since": "그 뒤의 변경:",
-      "refresh": "새로 고침"
+      "refresh": "새로 고침",
+      "tool.list_versions": "어떤 문서(경로가 없으면 앞에 열린 문서)의 저장된 버전을 최신순으로 1부터 번호를 매겨, 저장 시각과 크기와 함께 나열합니다.",
+      "tool.diff_versions": "문서의 두 버전 사이, 또는 어떤 버전과 지금 문서 사이에 바뀐 것을 줄 단위로 보여 줍니다. +는 추가, -는 삭제이며 앞뒤 줄을 조금 덧붙입니다."
     },
     "es": {
       "name": "Historial de versiones",
@@ -119,7 +170,9 @@
       "same": "Igual que ahora",
       "large": "Demasiados cambios para compararlos línea a línea.",
       "since": "Cambios desde entonces:",
-      "refresh": "Actualizar"
+      "refresh": "Actualizar",
+      "tool.list_versions": "Enumera las versiones guardadas de un documento - el que está al frente si no se da ruta -, la más reciente primero, numeradas desde 1, cada una con cuándo se guardó y su tamaño.",
+      "tool.diff_versions": "Muestra, línea a línea, qué cambió entre dos versiones de un documento, o entre una versión y el documento tal como está: + añadido, - quitado, con algo de contexto."
     },
     "fr": {
       "name": "Historique des versions",
@@ -134,7 +187,9 @@
       "same": "Identique à maintenant",
       "large": "Trop de changements pour comparer ligne par ligne.",
       "since": "Modifié depuis :",
-      "refresh": "Actualiser"
+      "refresh": "Actualiser",
+      "tool.list_versions": "Liste les versions enregistrées d'un document - celui au premier plan si aucun chemin n'est donné -, la plus récente d'abord, numérotées à partir de 1, chacune avec sa date d'enregistrement et sa taille.",
+      "tool.diff_versions": "Montre, ligne par ligne, ce qui a changé entre deux versions d'un document, ou entre une version et le document tel qu'il est : + ajouté, - retiré, avec un peu de contexte."
     },
     "de": {
       "name": "Versionsverlauf",
@@ -149,7 +204,9 @@
       "same": "Wie jetzt",
       "large": "Zu viele Änderungen, um Zeile für Zeile zu vergleichen.",
       "since": "Seitdem geändert:",
-      "refresh": "Aktualisieren"
+      "refresh": "Aktualisieren",
+      "tool.list_versions": "Listet die gespeicherten Versionen eines Dokuments auf - des vorderen, wenn kein Pfad angegeben ist -, die neueste zuerst, ab 1 nummeriert, jede mit Speicherzeit und Größe.",
+      "tool.diff_versions": "Zeigt Zeile für Zeile, was sich zwischen zwei Versionen eines Dokuments geändert hat, oder zwischen einer Version und dem jetzigen Dokument: + hinzugefügt, - entfernt, mit etwas Kontext."
     },
     "ru": {
       "name": "История версий",
@@ -164,7 +221,9 @@
       "same": "Как сейчас",
       "large": "Слишком много изменений для построчного сравнения.",
       "since": "Изменено с тех пор:",
-      "refresh": "Обновить"
+      "refresh": "Обновить",
+      "tool.list_versions": "Перечисляет сохранённые версии документа - переднего, если путь не указан, - от новой к старой, с номерами от 1, временем сохранения и размером.",
+      "tool.diff_versions": "Построчно показывает, что изменилось между двумя версиями документа или между версией и документом сейчас: + добавлено, - удалено, с небольшим контекстом."
     },
     "pt": {
       "name": "Histórico de versões",
@@ -179,7 +238,9 @@
       "same": "Igual a agora",
       "large": "Mudanças demais para comparar linha a linha.",
       "since": "Mudou desde então:",
-      "refresh": "Atualizar"
+      "refresh": "Atualizar",
+      "tool.list_versions": "Lista as versões guardadas de um documento - o que está em primeiro plano se não for dado caminho -, a mais recente primeiro, numeradas a partir de 1, cada uma com quando foi guardada e o tamanho.",
+      "tool.diff_versions": "Mostra, linha a linha, o que mudou entre duas versões de um documento, ou entre uma versão e o documento como está: + adicionado, - removido, com algum contexto."
     }
   }
 }
