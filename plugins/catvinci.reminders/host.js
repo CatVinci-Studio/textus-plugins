@@ -9,18 +9,23 @@ const LIMIT = 30;
 let list = null;
 let soon = [];
 
-/** Every document's reminders read again, and the next ones scheduled;
- *  those no longer in a document are cleared. */
-async function sync() {
-  const root = await textus.files.root();
-  if (!root) return;
+/** Every reminder in the folder's documents. */
+async function readAll() {
   const all = [];
   for (const doc of await textus.files.find("**/*.md")) {
     const text = await textus.files.readText(doc.path).catch(() => "");
     if (!text.includes("(@")) continue;
     for (const r of reminders.find(text)) all.push(Object.assign({ path: doc.path, rel: doc.rel }, r));
   }
-  soon = reminders.upcoming(all, new Date(), LIMIT);
+  return all;
+}
+
+/** Every document's reminders read again, and the next ones scheduled;
+ *  those no longer in a document are cleared. */
+async function sync() {
+  const root = await textus.files.root();
+  if (!root) return;
+  soon = reminders.upcoming(await readAll(), new Date(), LIMIT);
   const keep = new Set(soon.map((r) => reminders.jobId(r.rel, r)));
   for (const job of await textus.schedule.list()) if (!keep.has(job.id)) await textus.schedule.clear(job.id);
   for (const r of soon)
@@ -62,6 +67,36 @@ async function remind() {
   await textus.editor.insertText(" " + reminders.mark(when));
 }
 
+// Textus AI's tools.
+const WHEN = /^(\d{4}-\d{2}-\d{2})(?:[ T](\d{1,2}):(\d{2}))?$/;
+
+async function listReminders(input) {
+  if (!(await textus.files.root())) return { error: "No folder is open." };
+  const limit = Math.max(1, Number(input.limit) || LIMIT);
+  return {
+    reminders: reminders.upcoming(await readAll(), new Date(), limit).map((r) => ({
+      when: r.when.replace("T", " "),
+      text: r.text,
+      path: r.rel,
+      line: r.line,
+    })),
+  };
+}
+
+async function addReminder(input) {
+  const m = WHEN.exec(String(input.when || "").trim());
+  if (!m) return { error: "when must be YYYY-MM-DD HH:MM, or YYYY-MM-DD for nine that morning." };
+  const at = new Date(m[1] + "T" + (m[2] || "9").padStart(2, "0") + ":" + (m[3] || "00") + ":00");
+  if (isNaN(at)) return { error: "when is not a date." };
+  const text = String(input.text || "").replace(/\s*\n\s*/g, " ").trim();
+  if (!text) return { error: "The reminder has no text." };
+  const line = "- [ ] " + text + " " + reminders.mark(at);
+  // Only the document in front can be written to (editor.write).
+  if (!(await textus.editor.edit({ action: "append", text: line })))
+    return { error: "Couldn't add it to the document in front." };
+  return { added: line, past: at < new Date() };
+}
+
 exports.activate = function (ctx) {
   let pending = null;
   const later = () => {
@@ -89,6 +124,8 @@ exports.activate = function (ctx) {
     textus.files.onDidCreate(later),
     textus.files.onDidDelete(later),
     textus.files.onDidRename(later),
+    textus.ai.registerTool("list_reminders", listReminders),
+    textus.ai.registerTool("add_reminder", addReminder),
   );
   void sync();
 };
