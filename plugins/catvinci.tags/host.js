@@ -65,7 +65,7 @@ async function notesWithTag(input) {
   if (!(await textus.files.root())) return { error: "No folder is open." };
   const tag = String(input.tag || "").trim().replace(/^#/, "");
   // Nested tags count for their parent: #project/alpha is a #project note.
-  const has = (d) => d.tags.some((t) => t === tag || t.startsWith(tag + "/"));
+  const has = (d) => d.tags.some((name) => name === tag || name.startsWith(tag + "/"));
   const docs = (await textus.metadata.all()).filter(has);
   return { tag: tag, notes: docs.map((d) => ({ title: d.title, path: d.rel, tags: d.tags })) };
 }

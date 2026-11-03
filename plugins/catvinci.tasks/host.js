@@ -125,7 +125,7 @@ async function listTasks(input) {
     for (const task of doc.tasks) {
       if (status !== "all" && task.done !== (status === "done")) continue;
       if (path && doc.rel !== path) continue;
-      if (tag && !(task.tags || []).some((t) => t.replace(/^#/, "") === tag)) continue;
+      if (tag && !(task.tags || []).some((name) => name.replace(/^#/, "") === tag)) continue;
       if (input.due_before && !(task.due && task.due <= input.due_before)) continue;
       if (query && !task.text.toLowerCase().includes(query)) continue;
       found.push({
