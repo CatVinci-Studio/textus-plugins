@@ -1,8 +1,10 @@
 // Desk Pet: a chibi companion in a floating view. Textus-chan, or the
 // LLM-chan of the model Textus AI is using while it works; she writes as you
 // type, daydreams and dozes when you stop, is pleased when you save, leans
-// in when Textus AI is at work and sleeps while Textus is away. She hears
-// only that something happened - never a word of the document or the chat.
+// in when Textus AI is at work, answers a poke and sleeps while Textus is
+// away. She hears only that something happened - never a word of the
+// document or the chat. What each one says, in her own voice, is in
+// lines/<language>.json.
 
 const t = (key, ...args) => textus.l10n.t(key, ...args);
 const VIEW = "catvinci.desk-pet.pet";
@@ -53,24 +55,42 @@ const BY_PROVIDER = {
   xai: "grok",
 };
 
+/** Every one is drawn looking right: on the right she turns to face in. */
+const turned = () => side === "right";
+
 /** After this long without typing she daydreams, then dozes. */
 const DAYDREAM_MS = 60 * 1000;
 const DOZE_MS = 4 * 60 * 1000;
 /** A guest stays this long after Textus AI is done. */
 const GUEST_MS = 90 * 1000;
-/** Typing this long without a long pause, and she cheers you on. */
+/** Typing this long without a long pause, and she cheers you on; this
+ *  much longer, and she asks you to rest. */
 const FLOW_MS = 10 * 60 * 1000;
+const REST_MS = 50 * 60 * 1000;
+/** Away this long, and she welcomes you back. */
+const BACK_MS = 30 * 60 * 1000;
 
 let webview = null;
 let shownFor = null;
 let pose = "daydream";
+/** The half of the window or screen she sits in: she faces the middle. */
+let side = "right";
 let guest = null;
 let aiBusy = false;
 let away = false;
 let flowSince = null;
 let lastTyped = 0;
+let awaySince = 0;
+/** False while folded to a dot. */
+let visible = true;
+/** Whether Textus AI proposed an edit in the request under way. */
+let proposed = false;
+let lines = null;
+/** activate's context: the plugin's own files and storage. */
+let context = null;
 const timers = {};
 const said = {};
+const lastLine = {};
 
 function later(name, ms, run) {
   clearTimeout(timers[name]);
@@ -104,7 +124,8 @@ function page(character) {
   @keyframes breathe { 0%, 100% { transform: scale(1, 1); } 50% { transform: scale(1.012, 1.02); } }
   @keyframes hop { 0%, 100% { transform: translateY(0); } 40% { transform: translateY(-10px); } }
   body.paused img { animation-play-state: paused; }
-  .bubble { position: absolute; top: 24px; left: 50%; max-width: 92%; transform: translateX(-50%);
+  .stage.turned { transform: scaleX(-1); }
+  .bubble { position: absolute; top: 0; left: 50%; max-width: 92%; transform: translateX(-50%);
     padding: 4px 9px; border-radius: 12px; background: var(--ui-bg); color: var(--ui-text);
     box-shadow: var(--shadow-popover); font-size: 12px; line-height: 1.35; text-align: center;
     opacity: 0; transition: opacity var(--dur-normal, 0.2s) var(--ease-standard); pointer-events: none; }
@@ -126,6 +147,7 @@ function page(character) {
   api.onMessage((m) => {
     if (m.pose) show(m.pose, m.hop);
     if (typeof m.paused === "boolean") document.body.classList.toggle("paused", m.paused);
+    if (typeof m.turned === "boolean") document.querySelector(".stage").classList.toggle("turned", m.turned);
     if (m.say) {
       bubble.textContent = m.say;
       bubble.classList.add("on");
@@ -134,6 +156,7 @@ function page(character) {
     }
   });
   show(${JSON.stringify(pose)}, false);
+  document.querySelector(".stage").classList.toggle("turned", ${JSON.stringify(turned())});
 </script></body></html>`;
 }
 
@@ -146,15 +169,44 @@ async function refresh() {
   webview.html = page(character);
 }
 
+/** Still while folded or while Textus is away: nothing to draw for. */
+function stillness() {
+  webview?.postMessage({ paused: !visible || away, turned: turned() });
+}
+
 function set(next, options = {}) {
   pose = next;
   webview?.postMessage({ pose: next, hop: !!options.hop });
 }
 
-async function say(key) {
-  if (!webview || !(await setting("bubbles"))) return;
-  webview.postMessage({ say: t(key) });
+/** The lines in the UI's language, else English. */
+async function loadLines() {
+  const language = textus.env.language || "en";
+  for (const name of [language, language.split("-")[0], "en"]) {
+    try {
+      lines = JSON.parse(await context.plugin.readText(`lines/${name}.json`));
+      return;
+    } catch {
+      // No lines in that language: the next one.
+    }
+  }
 }
+
+/** One of her lines for the moment, never the same twice running. */
+async function say(moment) {
+  if (!webview || !(await setting("bubbles"))) return;
+  const choices = lines?.[shownFor]?.[moment] ?? lines?.textus?.[moment];
+  if (!choices || choices.length === 0) return;
+  const key = `${shownFor}:${moment}`;
+  const pick = choices.filter((line) => line !== lastLine[key]);
+  const line = (pick.length ? pick : choices)[
+    Math.floor(Math.random() * (pick.length || choices.length))
+  ];
+  lastLine[key] = line;
+  webview.postMessage({ say: line });
+}
+
+const today = () => new Date().toLocaleDateString("en-CA");
 
 /** What she does once nothing happens: daydream, then doze. */
 function settle() {
@@ -179,13 +231,15 @@ async function typed() {
   if (!flowSince || now - lastTyped > DAYDREAM_MS) flowSince = now;
   lastTyped = now;
   if (!aiBusy) set("writing");
-  if (now - flowSince > FLOW_MS && said.flow !== flowSince) {
+  if (now - flowSince > REST_MS && said.rest !== flowSince) {
+    said.rest = flowSince;
+    void say("rest");
+  } else if (now - flowSince > FLOW_MS && said.flow !== flowSince) {
     said.flow = flowSince;
     void say("flow");
   }
-  const night = new Date().toLocaleDateString("en-CA");
-  if (isNight() && said.night !== night && (await setting("night"))) {
-    said.night = night;
+  if (isNight() && said.night !== today() && (await setting("night"))) {
+    said.night = today();
     void say("late");
   }
   settle();
@@ -193,11 +247,10 @@ async function typed() {
 
 function saved() {
   if (aiBusy) return;
-  const day = new Date().toLocaleDateString("en-CA");
-  if (said.first !== day) {
-    said.first = day;
+  if (said.firstSave !== today()) {
+    said.firstSave = today();
     set("celebrate", { hop: true });
-    void say("first");
+    void say("firstSave");
   } else {
     set("happy", { hop: true });
     void say("saved");
@@ -213,6 +266,8 @@ async function aiChanged(state) {
     clearTimeout(timers.guest);
     const arriving = !aiBusy;
     aiBusy = true;
+    if (arriving) proposed = false;
+    if (state.state === "proposing") proposed = true;
     guest = BY_PROVIDER[provider] || null;
     await refresh();
     set(arriving ? "surprised" : "curious", { hop: arriving });
@@ -224,7 +279,13 @@ async function aiChanged(state) {
   }
   if (!aiBusy) return;
   aiBusy = false;
-  set("happy", { hop: true });
+  if (state && state.ended === "failed") {
+    set("surprised");
+    void say("failed");
+  } else if (!state || state.ended !== "stopped") {
+    set("happy", { hop: true });
+    void say(proposed ? "review" : "done");
+  } else set("daydream");
   later("guest", GUEST_MS, async () => {
     guest = null;
     await refresh();
@@ -233,18 +294,44 @@ async function aiChanged(state) {
 }
 
 function appChanged(state) {
+  const wasAway = away;
   away = state !== "active";
+  if (away && !wasAway) awaySince = Date.now();
+  stillness();
   if (away) {
     clearTimeout(timers.daydream);
     clearTimeout(timers.doze);
     set("asleep");
   } else {
     set("daydream", { hop: true });
+    if (wasAway && Date.now() - awaySince > BACK_MS) void say("back");
     settle();
   }
 }
 
+/** A poke surprises her; petting pleases her; being carried off and set
+ *  down, she gathers herself. */
+function touched(touch) {
+  if (touch.view !== VIEW) return;
+  clearTimeout(timers.afterTouch);
+  if (touch.kind === "pet") {
+    set("happy", { hop: true });
+    void say("pet");
+  } else if (touch.kind === "moved") {
+    set("surprised");
+    void say("moved");
+  } else {
+    set(aiBusy ? "curious" : "surprised", { hop: true });
+    void say("poke");
+  }
+  later("afterTouch", 2500, () => {
+    if (!away) set(aiBusy ? "curious" : "daydream");
+  });
+}
+
 exports.activate = function (ctx) {
+  context = ctx;
+  void loadLines();
   ctx.subscriptions.push(
     textus.views.registerWebview(VIEW, {
       resolve: async (view) => {
@@ -254,7 +341,12 @@ exports.activate = function (ctx) {
         view.onDidDispose(() => {
           if (webview === view) webview = null;
         });
-        void say("start");
+        // Hello once a day; after that she just comes back.
+        const store = context.storage.global;
+        if ((await store.get("hello")) !== today()) {
+          await store.set("hello", today());
+          void say("hello");
+        }
         settle();
       },
     }),
@@ -264,7 +356,10 @@ exports.activate = function (ctx) {
       else await textus.layout.openFloating(VIEW);
     }),
     textus.layout.onDidChangeFloating((change) => {
-      if (change.view === VIEW) webview?.postMessage({ paused: !change.visible });
+      if (change.view !== VIEW) return;
+      if (change.side) side = change.side;
+      visible = change.visible;
+      stillness();
     }),
     textus.app.onDidActivity((activity) => {
       if (activity.kind === "typing") void typed();
@@ -272,6 +367,8 @@ exports.activate = function (ctx) {
     }),
     textus.ai.onDidChangeState((state) => void aiChanged(state)),
     textus.app.onDidChangeState(appChanged),
+    textus.layout.onDidTouchFloating(touched),
+    textus.env.onDidChangeLanguage(() => void loadLines()),
     textus.settings.onDidChange(() => void refresh()),
     {
       dispose: () => {
