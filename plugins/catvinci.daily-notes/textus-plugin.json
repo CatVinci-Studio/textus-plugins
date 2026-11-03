@@ -1,7 +1,7 @@
 {
   "id": "catvinci.daily-notes",
   "name": "%name%",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "publisher": "catvinci",
   "author": "CatVinci Studio",
   "description": "%description%",
@@ -16,7 +16,8 @@
   "permissions": [
     "files.read",
     "files.write",
-    "editor.read"
+    "editor.read",
+    "ai.tools"
   ],
   "contributes": {
     "commands": [
@@ -74,6 +75,41 @@
         "title": "%template%",
         "description": "%templateHelp%"
       }
+    ],
+    "aiTools": [
+      {
+        "name": "read_daily_note",
+        "description": "%tool.read_daily_note%",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "date": {
+              "type": "string",
+              "description": "The day, YYYY-MM-DD; today when left out."
+            }
+          }
+        }
+      },
+      {
+        "name": "append_to_daily_note",
+        "description": "%tool.append_to_daily_note%",
+        "parameters": {
+          "type": "object",
+          "required": [
+            "text"
+          ],
+          "properties": {
+            "text": {
+              "type": "string",
+              "description": "Markdown to add at the end of the note."
+            },
+            "date": {
+              "type": "string",
+              "description": "The day, YYYY-MM-DD; today when left out."
+            }
+          }
+        }
+      }
     ]
   },
   "l10n": {
@@ -92,7 +128,9 @@
       "nextMonth": "Next month",
       "prevMonth": "Previous month",
       "previous": "Open the Day Before",
-      "next": "Open the Day After"
+      "next": "Open the Day After",
+      "tool.read_daily_note": "Reads the daily note of a day - today's unless a date is given - from the daily notes folder: its path, whether it exists, and its text.",
+      "tool.append_to_daily_note": "Adds Markdown to the end of a day's daily note - today's unless a date is given - making the note from its template first if there is none."
     },
     "zh": {
       "name": "日历与每日笔记",
@@ -109,7 +147,9 @@
       "nextMonth": "下个月",
       "prevMonth": "上个月",
       "previous": "打开前一天的笔记",
-      "next": "打开后一天的笔记"
+      "next": "打开后一天的笔记",
+      "tool.read_daily_note": "读取某一天的日记（默认今天）：从日记文件夹中给出它的路径、是否存在以及全文。",
+      "tool.append_to_daily_note": "在某一天的日记（默认今天）末尾追加 Markdown 内容；如果还没有这篇日记，先按模板新建。"
     },
     "zh-Hant": {
       "name": "日曆與每日筆記",
@@ -126,7 +166,9 @@
       "nextMonth": "下個月",
       "prevMonth": "上個月",
       "previous": "開啟前一天的筆記",
-      "next": "開啟後一天的筆記"
+      "next": "開啟後一天的筆記",
+      "tool.read_daily_note": "讀取某一天的日記（預設今天）：從日記資料夾中給出它的路徑、是否存在以及全文。",
+      "tool.append_to_daily_note": "在某一天的日記（預設今天）末尾附加 Markdown 內容；如果還沒有這篇日記，先依範本新建。"
     },
     "ja": {
       "name": "カレンダーとデイリーノート",
@@ -143,7 +185,9 @@
       "nextMonth": "次の月",
       "prevMonth": "前の月",
       "previous": "前の日のノートを開く",
-      "next": "次の日のノートを開く"
+      "next": "次の日のノートを開く",
+      "tool.read_daily_note": "ある日のデイリーノート（日付がなければ今日）をデイリーノートのフォルダから読みます。パス、あるかどうか、本文を返します。",
+      "tool.append_to_daily_note": "ある日のデイリーノート（日付がなければ今日）の末尾に Markdown を書き足します。ノートがなければ先にテンプレートから作ります。"
     },
     "ko": {
       "name": "달력과 데일리 노트",
@@ -160,7 +204,9 @@
       "nextMonth": "다음 달",
       "prevMonth": "이전 달",
       "previous": "전날 노트 열기",
-      "next": "다음 날 노트 열기"
+      "next": "다음 날 노트 열기",
+      "tool.read_daily_note": "어느 날의 데일리 노트(날짜가 없으면 오늘)를 데일리 노트 폴더에서 읽습니다. 경로, 있는지 여부, 본문을 돌려줍니다.",
+      "tool.append_to_daily_note": "어느 날의 데일리 노트(날짜가 없으면 오늘) 끝에 Markdown을 덧붙입니다. 노트가 없으면 먼저 템플릿으로 만듭니다."
     },
     "es": {
       "name": "Calendario y notas diarias",
@@ -177,7 +223,9 @@
       "nextMonth": "Mes siguiente",
       "prevMonth": "Mes anterior",
       "previous": "Abrir el día anterior",
-      "next": "Abrir el día siguiente"
+      "next": "Abrir el día siguiente",
+      "tool.read_daily_note": "Lee la nota diaria de un día - la de hoy si no se da fecha - de la carpeta de notas diarias: su ruta, si existe y su texto.",
+      "tool.append_to_daily_note": "Añade Markdown al final de la nota diaria de un día - la de hoy si no se da fecha -, creándola antes desde su plantilla si no existe."
     },
     "fr": {
       "name": "Calendrier et notes du jour",
@@ -194,7 +242,9 @@
       "nextMonth": "Mois suivant",
       "prevMonth": "Mois précédent",
       "previous": "Ouvrir la veille",
-      "next": "Ouvrir le lendemain"
+      "next": "Ouvrir le lendemain",
+      "tool.read_daily_note": "Lit la note quotidienne d'un jour - celle d'aujourd'hui si aucune date n'est donnée - dans le dossier des notes quotidiennes : son chemin, si elle existe, et son texte.",
+      "tool.append_to_daily_note": "Ajoute du Markdown à la fin de la note quotidienne d'un jour - celle d'aujourd'hui si aucune date n'est donnée -, en la créant d'abord depuis son modèle si elle n'existe pas."
     },
     "de": {
       "name": "Kalender und Tagesnotizen",
@@ -211,7 +261,9 @@
       "nextMonth": "Nächster Monat",
       "prevMonth": "Vorheriger Monat",
       "previous": "Vorherigen Tag öffnen",
-      "next": "Nächsten Tag öffnen"
+      "next": "Nächsten Tag öffnen",
+      "tool.read_daily_note": "Liest die Tagesnotiz eines Tages - heute, wenn kein Datum angegeben ist - aus dem Ordner der Tagesnotizen: ihren Pfad, ob es sie gibt, und ihren Text.",
+      "tool.append_to_daily_note": "Fügt Markdown am Ende der Tagesnotiz eines Tages an - heute, wenn kein Datum angegeben ist - und legt die Notiz vorher aus ihrer Vorlage an, falls es sie nicht gibt."
     },
     "ru": {
       "name": "Календарь и ежедневные заметки",
@@ -228,7 +280,9 @@
       "nextMonth": "Следующий месяц",
       "prevMonth": "Предыдущий месяц",
       "previous": "Открыть предыдущий день",
-      "next": "Открыть следующий день"
+      "next": "Открыть следующий день",
+      "tool.read_daily_note": "Читает ежедневную заметку за день - сегодняшнюю, если дата не указана - из папки ежедневных заметок: её путь, существует ли она и её текст.",
+      "tool.append_to_daily_note": "Дописывает Markdown в конец ежедневной заметки за день - сегодняшней, если дата не указана, - сначала создавая её по шаблону, если её нет."
     },
     "pt": {
       "name": "Calendário e notas diárias",
@@ -245,7 +299,9 @@
       "nextMonth": "Próximo mês",
       "prevMonth": "Mês anterior",
       "previous": "Abrir o dia anterior",
-      "next": "Abrir o dia seguinte"
+      "next": "Abrir o dia seguinte",
+      "tool.read_daily_note": "Lê a nota diária de um dia - a de hoje se não houver data - da pasta de notas diárias: o caminho, se existe e o texto.",
+      "tool.append_to_daily_note": "Acrescenta Markdown ao fim da nota diária de um dia - a de hoje se não houver data -, criando-a antes a partir do modelo se não existir."
     }
   }
 }
