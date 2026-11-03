@@ -85,7 +85,16 @@ export function loadPlugin(id: string, api: Any = {}, storage = memoryStorage())
     },
   });
   const exports: Any = {};
-  new Function("exports", "textus", main.map((f) => sourceOf(id, f)).join("\n;\n"))(exports, textus);
+  // markdownlint's entity decoding makes an element of the host frame's
+  // page as it loads; Marp takes a page for a browser's, so gets none.
+  const document = main.includes("lib/markdownlint.js")
+    ? { createElement: () => ({ innerHTML: "", textContent: "" }) }
+    : undefined;
+  new Function("exports", "textus", "document", main.map((f) => sourceOf(id, f)).join("\n;\n"))(
+    exports,
+    textus,
+    document,
+  );
   exports.activate({
     subscriptions: [],
     storage: { global: storage },
