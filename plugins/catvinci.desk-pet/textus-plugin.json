@@ -1,0 +1,415 @@
+{
+  "id": "catvinci.desk-pet",
+  "name": "%name%",
+  "version": "0.1.0",
+  "publisher": "catvinci",
+  "author": "CatVinci Studio",
+  "description": "%description%",
+  "icon": "icon.svg",
+  "license": "MIT",
+  "repository": "https://github.com/CatVinci-Studio/textus-plugins",
+  "engines": {
+    "textus": ">=1.3.6-beta.1"
+  },
+  "platforms": [
+    "desktop",
+    "ios"
+  ],
+  "main": [
+    "host.js"
+  ],
+  "activationEvents": [
+    "onCommand:catvinci.desk-pet.toggle"
+  ],
+  "permissions": [],
+  "contributes": {
+    "commands": [
+      {
+        "command": "catvinci.desk-pet.toggle",
+        "title": "%toggle%"
+      }
+    ],
+    "menus": {
+      "app/plugins": [
+        {
+          "command": "catvinci.desk-pet.toggle"
+        }
+      ]
+    },
+    "floatingViews": [
+      {
+        "id": "catvinci.desk-pet.pet",
+        "title": "%pet%",
+        "width": 180,
+        "height": 200,
+        "place": "either"
+      }
+    ],
+    "settings": [
+      {
+        "key": "character",
+        "type": "enum",
+        "default": "auto",
+        "title": "%character%",
+        "options": [
+          {
+            "value": "auto",
+            "label": "%auto%"
+          },
+          {
+            "value": "textus",
+            "label": "%textus%"
+          },
+          {
+            "value": "claude",
+            "label": "%claude%"
+          },
+          {
+            "value": "gpt",
+            "label": "%gpt%"
+          },
+          {
+            "value": "gemini",
+            "label": "%gemini%"
+          },
+          {
+            "value": "deepseek",
+            "label": "%deepseek%"
+          },
+          {
+            "value": "kimi",
+            "label": "%kimi%"
+          },
+          {
+            "value": "qwen",
+            "label": "%qwen%"
+          },
+          {
+            "value": "doubao",
+            "label": "%doubao%"
+          },
+          {
+            "value": "glm",
+            "label": "%glm%"
+          },
+          {
+            "value": "minimax",
+            "label": "%minimax%"
+          },
+          {
+            "value": "grok",
+            "label": "%grok%"
+          },
+          {
+            "value": "wenxin",
+            "label": "%wenxin%"
+          }
+        ]
+      },
+      {
+        "key": "bubbles",
+        "type": "boolean",
+        "default": true,
+        "title": "%bubbles%"
+      },
+      {
+        "key": "night",
+        "type": "boolean",
+        "default": true,
+        "title": "%night%"
+      }
+    ]
+  },
+  "l10n": {
+    "en": {
+      "name": "Desk Pet",
+      "description": "A chibi companion that floats on your desktop or in the window while you write: Textus-chan, or the LLM-chan of the model Textus AI is using. She writes when you type, dozes when you stop, cheers when you save and leans in when Textus AI is at work.",
+      "toggle": "Show or Hide the Desk Pet",
+      "pet": "Desk Pet",
+      "character": "Who keeps you company",
+      "auto": "Follow Textus AI's model",
+      "bubbles": "Speech bubbles",
+      "night": "Remind me to rest late at night",
+      "start": "The pact is sealed - a new page. Let's begin.",
+      "saved": "Sealed.",
+      "guest": "Oh? A guest has come to help?",
+      "stuck": "Inspiration's offline. Tea first.",
+      "late": "It's late. Even mages need to sleep.",
+      "flow": "Heh. The Quill Textus is awakening…",
+      "first": "The first seal of the day!",
+      "textus": "Textus-chan",
+      "claude": "Claude-chan",
+      "gpt": "GPT-chan",
+      "gemini": "Gemini-chan",
+      "deepseek": "DeepSeek-chan",
+      "kimi": "Kimi-chan",
+      "qwen": "Qwen-chan",
+      "doubao": "Doubao-chan",
+      "glm": "GLM-chan",
+      "minimax": "MiniMax-chan",
+      "grok": "Grok-chan",
+      "wenxin": "ERNIE-chan"
+    },
+    "zh": {
+      "name": "桌宠",
+      "description": "写作时陪着你的 Q 版小伙伴，浮在桌面上或窗口里：Textus 娘，或者 Textus AI 正在用的模型对应的大模型娘。你打字她写字，停下她打盹，保存时开心，Textus AI 干活时她凑过来看。",
+      "toggle": "显示或隐藏桌宠",
+      "pet": "桌宠",
+      "character": "陪你的是",
+      "auto": "跟随 Textus AI 的模型",
+      "bubbles": "对话气泡",
+      "night": "深夜提醒我休息",
+      "start": "契约成立——新的一页，开始吧。",
+      "saved": "已封缄。",
+      "guest": "咦，有客人来帮忙了？",
+      "stuck": "唔……灵感暂时离线，先喝杯茶吧。",
+      "late": "已经很晚了哦。魔法师也是要睡觉的。",
+      "flow": "哼哼，羽笔·Textus 的力量正在觉醒……",
+      "first": "今天的第一枚封缄！",
+      "textus": "Textus 娘",
+      "claude": "Claude 娘",
+      "gpt": "GPT 娘",
+      "gemini": "Gemini 娘",
+      "deepseek": "DeepSeek 娘",
+      "kimi": "Kimi 娘",
+      "qwen": "通义千问娘",
+      "doubao": "豆包娘",
+      "glm": "GLM 娘",
+      "minimax": "MiniMax 娘",
+      "grok": "Grok 娘",
+      "wenxin": "文心一言娘"
+    },
+    "zh-Hant": {
+      "name": "桌寵",
+      "description": "寫作時陪著你的 Q 版小夥伴，浮在桌面上或視窗裡：Textus 娘，或 Textus AI 正在用的模型對應的大模型娘。你打字她寫字，停下她打盹，儲存時開心，Textus AI 工作時她湊過來看。",
+      "toggle": "顯示或隱藏桌寵",
+      "pet": "桌寵",
+      "character": "陪你的是",
+      "auto": "跟隨 Textus AI 的模型",
+      "bubbles": "對話氣泡",
+      "night": "深夜提醒我休息",
+      "start": "契約成立——新的一頁，開始吧。",
+      "saved": "已封緘。",
+      "guest": "咦，有客人來幫忙了？",
+      "stuck": "唔……靈感暫時離線，先喝杯茶吧。",
+      "late": "已經很晚了喔。魔法師也是要睡覺的。",
+      "flow": "哼哼，羽筆·Textus 的力量正在覺醒……",
+      "first": "今天的第一枚封緘！",
+      "textus": "Textus 娘",
+      "claude": "Claude 娘",
+      "gpt": "GPT 娘",
+      "gemini": "Gemini 娘",
+      "deepseek": "DeepSeek 娘",
+      "kimi": "Kimi 娘",
+      "qwen": "通義千問娘",
+      "doubao": "豆包娘",
+      "glm": "GLM 娘",
+      "minimax": "MiniMax 娘",
+      "grok": "Grok 娘",
+      "wenxin": "文心一言娘"
+    },
+    "ja": {
+      "name": "デスクペット",
+      "description": "書いているあいだ、デスクトップやウインドウに浮かぶちびキャラの相棒：Textus ちゃん、または Textus AI が使っているモデルの LLM ちゃん。入力すると書き、手を止めるとうたた寝し、保存すると喜び、Textus AI が働くとのぞき込みます。",
+      "toggle": "デスクペットを表示/非表示",
+      "pet": "デスクペット",
+      "character": "そばにいるのは",
+      "auto": "Textus AI のモデルに合わせる",
+      "bubbles": "吹き出し",
+      "night": "深夜は休むよう知らせる",
+      "start": "契約成立――新しいページ、始めよう。",
+      "saved": "封緘完了。",
+      "guest": "あれ、お客さんが手伝いに？",
+      "stuck": "うーん……ひらめきは休憩中。まずはお茶にしよう。",
+      "late": "もう遅いよ。魔法使いだって眠るんだから。",
+      "flow": "ふふん、羽ペン・Textus の力が目覚めていく……",
+      "first": "今日最初の封緘！",
+      "textus": "Textus ちゃん",
+      "claude": "Claude ちゃん",
+      "gpt": "GPT ちゃん",
+      "gemini": "Gemini ちゃん",
+      "deepseek": "DeepSeek ちゃん",
+      "kimi": "Kimi ちゃん",
+      "qwen": "Qwen ちゃん",
+      "doubao": "Doubao ちゃん",
+      "glm": "GLM ちゃん",
+      "minimax": "MiniMax ちゃん",
+      "grok": "Grok ちゃん",
+      "wenxin": "ERNIE ちゃん"
+    },
+    "ko": {
+      "name": "데스크 펫",
+      "description": "글을 쓰는 동안 바탕화면이나 창에 떠 있는 치비 친구: Textus 짱, 또는 Textus AI가 쓰는 모델의 LLM 짱. 타이핑하면 글을 쓰고, 멈추면 졸고, 저장하면 기뻐하고, Textus AI가 일하면 다가와 봅니다.",
+      "toggle": "데스크 펫 보이기/숨기기",
+      "pet": "데스크 펫",
+      "character": "곁에 있는 친구",
+      "auto": "Textus AI의 모델 따라가기",
+      "bubbles": "말풍선",
+      "night": "밤늦게 쉬라고 알려 주기",
+      "start": "계약 성립 - 새 페이지, 시작하자.",
+      "saved": "봉인 완료.",
+      "guest": "어? 손님이 도와주러 왔네?",
+      "stuck": "음… 영감이 잠시 오프라인이야. 차부터 마시자.",
+      "late": "벌써 늦었어. 마법사도 자야 한다고.",
+      "flow": "후후, 깃펜 Textus의 힘이 깨어나고 있어…",
+      "first": "오늘의 첫 번째 봉인!",
+      "textus": "Textus 짱",
+      "claude": "Claude 짱",
+      "gpt": "GPT 짱",
+      "gemini": "Gemini 짱",
+      "deepseek": "DeepSeek 짱",
+      "kimi": "Kimi 짱",
+      "qwen": "Qwen 짱",
+      "doubao": "Doubao 짱",
+      "glm": "GLM 짱",
+      "minimax": "MiniMax 짱",
+      "grok": "Grok 짱",
+      "wenxin": "ERNIE 짱"
+    },
+    "de": {
+      "name": "Schreibtisch-Pet",
+      "description": "Ein Chibi-Begleiter, der beim Schreiben auf dem Schreibtisch oder im Fenster schwebt: Textus-chan oder das LLM-chan des Modells, das Textus AI gerade nutzt. Sie schreibt, wenn du tippst, döst, wenn du aufhörst, freut sich beim Speichern und schaut zu, wenn Textus AI arbeitet.",
+      "toggle": "Schreibtisch-Pet ein- oder ausblenden",
+      "pet": "Schreibtisch-Pet",
+      "character": "Wer dir Gesellschaft leistet",
+      "auto": "Dem Modell von Textus AI folgen",
+      "bubbles": "Sprechblasen",
+      "night": "Spät in der Nacht an eine Pause erinnern",
+      "start": "Der Pakt ist besiegelt – eine neue Seite. Fangen wir an.",
+      "saved": "Versiegelt.",
+      "guest": "Oh? Ein Gast kommt helfen?",
+      "stuck": "Hmm… die Inspiration ist offline. Erst mal Tee.",
+      "late": "Es ist spät. Auch Magierinnen müssen schlafen.",
+      "flow": "Hehe. Die Kraft der Feder Textus erwacht …",
+      "first": "Das erste Siegel des Tages!",
+      "textus": "Textus-chan",
+      "claude": "Claude-chan",
+      "gpt": "GPT-chan",
+      "gemini": "Gemini-chan",
+      "deepseek": "DeepSeek-chan",
+      "kimi": "Kimi-chan",
+      "qwen": "Qwen-chan",
+      "doubao": "Doubao-chan",
+      "glm": "GLM-chan",
+      "minimax": "MiniMax-chan",
+      "grok": "Grok-chan",
+      "wenxin": "ERNIE-chan"
+    },
+    "fr": {
+      "name": "Compagnon de bureau",
+      "description": "Un compagnon chibi qui flotte sur le bureau ou dans la fenêtre pendant que vous écrivez : Textus-chan, ou la LLM-chan du modèle qu'utilise Textus AI. Elle écrit quand vous tapez, somnole quand vous vous arrêtez, se réjouit quand vous enregistrez et se penche quand Textus AI travaille.",
+      "toggle": "Afficher ou masquer le compagnon",
+      "pet": "Compagnon de bureau",
+      "character": "Qui vous tient compagnie",
+      "auto": "Suivre le modèle de Textus AI",
+      "bubbles": "Bulles de dialogue",
+      "night": "Me rappeler de me reposer tard le soir",
+      "start": "Le pacte est scellé – une nouvelle page. Commençons.",
+      "saved": "Scellé.",
+      "guest": "Oh ? Une invitée vient nous aider ?",
+      "stuck": "Hmm… l'inspiration est hors ligne. Un thé d'abord.",
+      "late": "Il est tard. Même les magiciennes dorment.",
+      "flow": "Héhé. Le pouvoir de la Plume Textus s'éveille…",
+      "first": "Le premier sceau de la journée !",
+      "textus": "Textus-chan",
+      "claude": "Claude-chan",
+      "gpt": "GPT-chan",
+      "gemini": "Gemini-chan",
+      "deepseek": "DeepSeek-chan",
+      "kimi": "Kimi-chan",
+      "qwen": "Qwen-chan",
+      "doubao": "Doubao-chan",
+      "glm": "GLM-chan",
+      "minimax": "MiniMax-chan",
+      "grok": "Grok-chan",
+      "wenxin": "ERNIE-chan"
+    },
+    "es": {
+      "name": "Mascota de escritorio",
+      "description": "Una compañera chibi que flota en el escritorio o en la ventana mientras escribes: Textus-chan, o la LLM-chan del modelo que usa Textus AI. Escribe cuando tecleas, dormita cuando paras, se alegra cuando guardas y se asoma cuando Textus AI trabaja.",
+      "toggle": "Mostrar u ocultar la mascota",
+      "pet": "Mascota de escritorio",
+      "character": "Quién te acompaña",
+      "auto": "Seguir el modelo de Textus AI",
+      "bubbles": "Bocadillos",
+      "night": "Recordarme descansar de madrugada",
+      "start": "El pacto está sellado: una página nueva. Empecemos.",
+      "saved": "Sellado.",
+      "guest": "¿Eh? ¿Ha venido una invitada a ayudar?",
+      "stuck": "Mmm… la inspiración está desconectada. Primero, un té.",
+      "late": "Ya es tarde. Hasta las magas duermen.",
+      "flow": "Je, je. El poder de la Pluma Textus despierta…",
+      "first": "¡El primer sello del día!",
+      "textus": "Textus-chan",
+      "claude": "Claude-chan",
+      "gpt": "GPT-chan",
+      "gemini": "Gemini-chan",
+      "deepseek": "DeepSeek-chan",
+      "kimi": "Kimi-chan",
+      "qwen": "Qwen-chan",
+      "doubao": "Doubao-chan",
+      "glm": "GLM-chan",
+      "minimax": "MiniMax-chan",
+      "grok": "Grok-chan",
+      "wenxin": "ERNIE-chan"
+    },
+    "pt": {
+      "name": "Mascote de mesa",
+      "description": "Uma companheira chibi que flutua na área de trabalho ou na janela enquanto você escreve: Textus-chan, ou a LLM-chan do modelo que o Textus AI está usando. Ela escreve quando você digita, cochila quando você para, comemora quando você salva e se aproxima quando o Textus AI trabalha.",
+      "toggle": "Mostrar ou ocultar a mascote",
+      "pet": "Mascote de mesa",
+      "character": "Quem faz companhia",
+      "auto": "Seguir o modelo do Textus AI",
+      "bubbles": "Balões de fala",
+      "night": "Lembrar-me de descansar tarde da noite",
+      "start": "O pacto está selado – uma página nova. Vamos começar.",
+      "saved": "Selado.",
+      "guest": "Ué? Uma convidada veio ajudar?",
+      "stuck": "Hmm… a inspiração está offline. Primeiro, um chá.",
+      "late": "Já é tarde. Até as magas dormem.",
+      "flow": "Hehe. O poder da Pena Textus está despertando…",
+      "first": "O primeiro selo do dia!",
+      "textus": "Textus-chan",
+      "claude": "Claude-chan",
+      "gpt": "GPT-chan",
+      "gemini": "Gemini-chan",
+      "deepseek": "DeepSeek-chan",
+      "kimi": "Kimi-chan",
+      "qwen": "Qwen-chan",
+      "doubao": "Doubao-chan",
+      "glm": "GLM-chan",
+      "minimax": "MiniMax-chan",
+      "grok": "Grok-chan",
+      "wenxin": "ERNIE-chan"
+    },
+    "ru": {
+      "name": "Настольный питомец",
+      "description": "Чиби-спутница, которая парит на рабочем столе или в окне, пока вы пишете: Textus-тян или LLM-тян модели, которой пользуется Textus AI. Пишет, когда вы печатаете, дремлет, когда останавливаетесь, радуется сохранению и заглядывает, когда работает Textus AI.",
+      "toggle": "Показать или скрыть питомца",
+      "pet": "Настольный питомец",
+      "character": "Кто составит компанию",
+      "auto": "Как модель Textus AI",
+      "bubbles": "Реплики в облачках",
+      "night": "Напоминать об отдыхе поздно ночью",
+      "start": "Договор заключён — новая страница. Начнём.",
+      "saved": "Запечатано.",
+      "guest": "О? К нам пришла гостья помочь?",
+      "stuck": "Хм… вдохновение не в сети. Сначала чай.",
+      "late": "Уже поздно. Даже волшебницам нужно спать.",
+      "flow": "Хе-хе. Сила Пера Textus пробуждается…",
+      "first": "Первая печать за день!",
+      "textus": "Textus-тян",
+      "claude": "Claude-тян",
+      "gpt": "GPT-тян",
+      "gemini": "Gemini-тян",
+      "deepseek": "DeepSeek-тян",
+      "kimi": "Kimi-тян",
+      "qwen": "Qwen-тян",
+      "doubao": "Doubao-тян",
+      "glm": "GLM-тян",
+      "minimax": "MiniMax-тян",
+      "grok": "Grok-тян",
+      "wenxin": "ERNIE-тян"
+    }
+  }
+}
