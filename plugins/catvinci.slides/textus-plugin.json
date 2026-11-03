@@ -1,7 +1,7 @@
 {
   "id": "catvinci.slides",
   "name": "%name%",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "publisher": "catvinci",
   "author": "CatVinci Studio",
   "description": "%description%",
@@ -18,7 +18,8 @@
   ],
   "permissions": [
     "editor.read",
-    "files.write"
+    "files.write",
+    "ai.tools"
   ],
   "contributes": {
     "commands": [
@@ -47,6 +48,16 @@
         "title": "%name%",
         "type": "webview"
       }
+    ],
+    "aiTools": [
+      {
+        "name": "export_slides",
+        "description": "%tool.export_slides%",
+        "parameters": {
+          "type": "object",
+          "properties": {}
+        }
+      }
     ]
   },
   "l10n": {
@@ -59,7 +70,8 @@
       "fullScreen": "Full Screen",
       "empty": "No slides yet",
       "saveFirst": "Save the document first: the slides are saved beside it.",
-      "exported": "Saved {0}"
+      "exported": "Saved {0}",
+      "tool.export_slides": "Saves the document in front as a Marp slide deck - slides apart at each --- line - in one HTML file beside it (name.slides.html) that presents itself in any browser. Returns its path and how many slides it has."
     },
     "zh": {
       "name": "Marp",
@@ -70,7 +82,8 @@
       "fullScreen": "全屏",
       "empty": "还没有幻灯片",
       "saveFirst": "请先保存文档：幻灯片会保存在它旁边。",
-      "exported": "已保存 {0}"
+      "exported": "已保存 {0}",
+      "tool.export_slides": "把当前文档按 Marp 幻灯片导出（每条 --- 分隔一页），在它旁边保存为一个 HTML 文件（name.slides.html），可在任何浏览器中放映。返回文件路径和页数。"
     },
     "zh-Hant": {
       "name": "Marp",
@@ -81,7 +94,8 @@
       "fullScreen": "全螢幕",
       "empty": "還沒有投影片",
       "saveFirst": "請先儲存文件：投影片會存在它旁邊。",
-      "exported": "已儲存 {0}"
+      "exported": "已儲存 {0}",
+      "tool.export_slides": "把目前文件依 Marp 投影片匯出（每條 --- 分隔一頁），在它旁邊儲存為一個 HTML 檔（name.slides.html），可在任何瀏覽器中放映。回傳檔案路徑和頁數。"
     },
     "ja": {
       "name": "Marp",
@@ -92,7 +106,8 @@
       "fullScreen": "全画面",
       "empty": "スライドはまだありません",
       "saveFirst": "先に文書を保存してください。スライドはその隣に保存されます。",
-      "exported": "{0} を保存しました"
+      "exported": "{0} を保存しました",
+      "tool.export_slides": "前面の文書を Marp のスライド（--- の行ごとに一枚）として、隣に一つの HTML ファイル（name.slides.html）に保存します。どのブラウザでも発表できます。パスとスライドの枚数を返します。"
     },
     "ko": {
       "name": "Marp",
@@ -103,7 +118,8 @@
       "fullScreen": "전체 화면",
       "empty": "아직 슬라이드가 없습니다",
       "saveFirst": "먼저 문서를 저장하세요. 슬라이드는 그 옆에 저장됩니다.",
-      "exported": "{0} 저장함"
+      "exported": "{0} 저장함",
+      "tool.export_slides": "앞에 열린 문서를 Marp 슬라이드(--- 줄마다 한 장)로, 옆에 HTML 파일 하나(name.slides.html)로 저장합니다. 어느 브라우저에서나 발표할 수 있습니다. 경로와 슬라이드 수를 돌려줍니다."
     },
     "de": {
       "name": "Marp",
@@ -114,7 +130,8 @@
       "fullScreen": "Vollbild",
       "empty": "Noch keine Folien",
       "saveFirst": "Speichere das Dokument zuerst: Die Folien kommen daneben.",
-      "exported": "{0} gespeichert"
+      "exported": "{0} gespeichert",
+      "tool.export_slides": "Speichert das vordere Dokument als Marp-Foliensatz - eine Folie je ---Zeile - in einer HTML-Datei daneben (name.slides.html), die sich in jedem Browser selbst vorführt. Gibt ihren Pfad und die Folienzahl zurück."
     },
     "fr": {
       "name": "Marp",
@@ -125,7 +142,8 @@
       "fullScreen": "Plein écran",
       "empty": "Pas encore de diapositives",
       "saveFirst": "Enregistrez d'abord le document : les diapositives sont enregistrées à côté.",
-      "exported": "{0} enregistré"
+      "exported": "{0} enregistré",
+      "tool.export_slides": "Enregistre le document au premier plan comme une présentation Marp - une diapositive par ligne --- - dans un fichier HTML à côté (name.slides.html) qui se présente dans n'importe quel navigateur. Renvoie son chemin et son nombre de diapositives."
     },
     "es": {
       "name": "Marp",
@@ -136,7 +154,8 @@
       "fullScreen": "Pantalla completa",
       "empty": "Aún no hay diapositivas",
       "saveFirst": "Guarda primero el documento: las diapositivas se guardan a su lado.",
-      "exported": "Guardado {0}"
+      "exported": "Guardado {0}",
+      "tool.export_slides": "Guarda el documento al frente como una presentación de Marp - una diapositiva por cada línea --- - en un archivo HTML a su lado (name.slides.html) que se presenta en cualquier navegador. Devuelve su ruta y cuántas diapositivas tiene."
     },
     "pt": {
       "name": "Marp",
@@ -147,7 +166,8 @@
       "fullScreen": "Tela cheia",
       "empty": "Ainda não há slides",
       "saveFirst": "Salve o documento primeiro: os slides ficam ao lado dele.",
-      "exported": "{0} salvo"
+      "exported": "{0} salvo",
+      "tool.export_slides": "Guarda o documento em primeiro plano como uma apresentação Marp - um diapositivo por cada linha --- - num ficheiro HTML ao lado (name.slides.html) que se apresenta em qualquer navegador. Devolve o caminho e quantos diapositivos tem."
     },
     "ru": {
       "name": "Marp",
@@ -158,7 +178,8 @@
       "fullScreen": "Во весь экран",
       "empty": "Слайдов пока нет",
       "saveFirst": "Сначала сохраните документ: слайды сохраняются рядом с ним.",
-      "exported": "Сохранено: {0}"
+      "exported": "Сохранено: {0}",
+      "tool.export_slides": "Сохраняет документ на переднем плане как слайды Marp - слайд на каждую строку --- - в один HTML-файл рядом (name.slides.html), который показывается в любом браузере. Возвращает путь и число слайдов."
     }
   }
 }
