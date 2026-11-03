@@ -9,3 +9,12 @@ Write `(@2026-11-02 09:00)` in a line - a task, a heading, any line - and you're
 - Textus keeps the reminders itself: they come while a window is open, and with every window closed when **Keep running in the background** is on (Settings › General). One missed while Textus wasn't running comes when it next starts.
 
 The marks are written as Obsidian's Reminder plugin writes them, so the same notes remind you there too.
+
+<!-- ai-tools -->
+## Tools for Textus AI
+
+Once it is installed, Textus AI can use these in a conversation:
+
+- `list_reminders`: Lists the coming reminders - (@2026-11-02 09:00) marks in the open folder's documents - soonest first, each with its time, text, document path and line.
+- `add_reminder`: Adds a reminder as a task line with its time, - [ ] text (@2026-11-02 09:00), at the end of the document in front; a notification comes then.
+<!-- /ai-tools -->

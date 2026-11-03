@@ -13,3 +13,11 @@
 2024-09 | Review | Notes from three readers
 2025-01 | Published
 ```
+
+<!-- ai-tools -->
+## Textus AI 工具
+
+装上这个插件后，Textus AI 在对话中可以使用：
+
+- `check_timeline`：在把 ```timeline 块写进文档之前检查它的源码（每行一个事件，写成 时间 | 事件 | 补充），不实际绘制。返回 ok，或需要先修正的问题。传入时不带代码围栏。
+<!-- /ai-tools -->

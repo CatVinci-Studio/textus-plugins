@@ -14,3 +14,11 @@ WaveJSON으로 디지털 타이밍 다이어그램을 그립니다.
   { name: "data", wave: "x.345x", data: ["a", "b", "c"] }
 ]}
 ```
+
+<!-- ai-tools -->
+## Textus AI 도구
+
+이 플러그인을 설치하면 Textus AI가 대화 중에 사용할 수 있습니다:
+
+- `check_wavedrom`: ```wavedrom 블록의 소스(WaveJSON: wave 문자열과 data가 있는 신호 레인, 또는 레지스터의 필드)를 문서에 넣기 전에 그리지 않고 검사합니다. ok나 먼저 고칠 문제를 돌려줍니다. 펜스 없이 소스만 넘기세요.
+<!-- /ai-tools -->

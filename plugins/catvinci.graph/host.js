@@ -7,7 +7,7 @@
 /** What activate was given: the plugin's storage and own files. */
 let ctx;
 
-/* global graphLinks */
+/* global graphLinks, folderPaths */
 let graph = null;
 let building = null;
 let stale = true;
@@ -152,8 +152,38 @@ async function page(webview, file) {
   webview.onDidDispose(() => relabel.dispose());
 }
 
+/** Textus AI's tool: the notes within `depth` links of one, either way,
+ *  each with how many links away, and the links between them. */
+async function listNeighbours(input) {
+  const root = await textus.files.root();
+  if (!root) return { error: "No folder is open." };
+  const rel = input.path ? folderPaths.clean(root, input.path, true) : null;
+  const docs = await textus.metadata.all();
+  const focus = rel ? (docs.find((d) => d.rel === rel) || {}).path : await focusPath();
+  if (!focus || !docs.some((d) => d.path === focus))
+    return { error: rel ? "No document " + rel + " in the folder." : "No document is open." };
+  const g = graphLinks.graphFromMetadata(docs, { tags: !!input.tags });
+  const depth = Math.min(3, Math.max(1, Number(input.depth) || 1));
+  const near = graphLinks.neighbourhood(g, focus, depth);
+  const away = new Map([[focus, 0]]);
+  for (let d = 1; d <= depth; d++)
+    for (const e of near.edges)
+      for (const [a, b] of [[e.source, e.target], [e.target, e.source]])
+        if (away.get(a) === d - 1 && !away.has(b)) away.set(b, d);
+  const label = new Map(near.nodes.map((n) => [n.id, n.rel || n.name]));
+  return {
+    document: label.get(focus),
+    notes: near.nodes
+      .filter((n) => n.id !== focus)
+      .map((n) => ({ name: n.name, path: n.rel, kind: n.kind, distance: away.get(n.id) }))
+      .sort((a, b) => a.distance - b.distance || a.name.localeCompare(b.name)),
+    links: near.edges.map((e) => ({ from: label.get(e.source), to: label.get(e.target), both: e.both })),
+  };
+}
+
 exports.activate = function (context) {
   ctx = context;
+  textus.ai.registerTool("list_neighbours", listNeighbours);
   textus.metadata.onDidChange(changed);
   textus.files.onDidChangeRoot(changed);
   textus.editor.onDidChangeActive(sendAll);

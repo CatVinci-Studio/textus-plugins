@@ -101,6 +101,16 @@ async function dayInFront() {
   return m ? m[1] : dateOf(new Date());
 }
 
+/** The day's note, made from the template if there is none. Created only
+ *  where there is no note: one already there, even one that can't be read
+ *  just now, is never written over. */
+async function ensureNote(path, date) {
+  const template = String(
+    (await textus.settings.get("template")) || "# {{date}}\\n\\n",
+  );
+  await textus.files.create(path, fill(template, date)).catch(() => {});
+}
+
 async function openDay(date) {
   const where = await folder();
   if (!where) {
@@ -108,14 +118,53 @@ async function openDay(date) {
     return;
   }
   const path = join(where.dir, date + ".md");
-  // Created only where there is no note: one already there, even one that
-  // can't be read just now, is never written over.
-  const template = String(
-    (await textus.settings.get("template")) || "# {{date}}\\n\\n",
-  );
-  await textus.files.create(path, fill(template, date)).catch(() => {});
+  await ensureNote(path, date);
   await textus.layout.open(path);
   await refresh();
+}
+
+// Textus AI's tools: a day as YYYY-MM-DD, today when not given.
+const DAY = /^\d{4}-\d{2}-\d{2}$/;
+const LIST_ITEM = /^\s*(?:[-*+]|\d+[.)])\s/;
+
+async function noteOf(input) {
+  const where = await folder();
+  if (!where) return { error: "No folder is open." };
+  const date = input.date ? String(input.date).trim() : dateOf(new Date());
+  if (!DAY.test(date)) return { error: "date must be YYYY-MM-DD." };
+  const path = join(where.dir, date + ".md");
+  const rel = path.slice(where.root.replace(/[\\/]+$/, "").length + 1).replace(/\\/g, "/");
+  return { date: date, path: path, rel: rel };
+}
+
+async function readDailyNote(input) {
+  const note = await noteOf(input);
+  if (note.error) return note;
+  const exists = !!(await textus.files.stat(note.path));
+  return {
+    date: note.date,
+    path: note.rel,
+    exists: exists,
+    text: exists ? await textus.files.readText(note.path) : null,
+  };
+}
+
+async function appendToDailyNote(input) {
+  const note = await noteOf(input);
+  if (note.error) return note;
+  const add = String(input.text || "").replace(/\s+$/, "");
+  if (!add.trim()) return { error: "There is no text to add." };
+  await textus.files.createFolder(note.path.replace(/[\\/][^\\/]*$/, "")).catch(() => {});
+  await ensureNote(note.path, note.date);
+  await textus.files.process(note.path, function (text) {
+    const kept = text.replace(/\s+$/, "");
+    const last = kept.slice(kept.lastIndexOf("\n") + 1);
+    // A list item after a list item stays in its list.
+    const gap = !kept ? "" : LIST_ITEM.test(last) && LIST_ITEM.test(add) ? "\n" : "\n\n";
+    return kept + gap + add + "\n";
+  });
+  await refresh();
+  return { date: note.date, path: note.rel, added: add };
 }
 
 exports.activate = function (context) {
@@ -130,6 +179,8 @@ exports.activate = function (context) {
   textus.commands.register("catvinci.daily-notes.next", async function () {
     return openDay(shift(await dayInFront(), 1));
   });
+  textus.ai.registerTool("read_daily_note", readDailyNote);
+  textus.ai.registerTool("append_to_daily_note", appendToDailyNote);
   textus.files.onDidChangeRoot(refresh);
   textus.files.onDidSave(refresh);
   textus.files.onDidCreate(refresh);

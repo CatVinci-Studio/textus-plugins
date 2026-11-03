@@ -15,3 +15,11 @@ paginate: true
 ```
 
 基于 [Marp Core](https://github.com/marp-team/marp-core)（MIT），自带主题（default、gaia、uncover）、公式和代码高亮，所以这个插件约 4 MB。
+
+<!-- ai-tools -->
+## Textus AI 工具
+
+装上这个插件后，Textus AI 在对话中可以使用：
+
+- `export_slides`：把当前文档按 Marp 幻灯片导出（每条 --- 分隔一页），在它旁边保存为一个 HTML 文件（name.slides.html），可在任何浏览器中放映。返回文件路径和页数。
+<!-- /ai-tools -->

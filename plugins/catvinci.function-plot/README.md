@@ -13,3 +13,11 @@ Graphs of functions, one per line: sin(x), x^2 - 1.
 sin(x)
 x^2 / 4 - 1
 ```
+
+<!-- ai-tools -->
+## Tools for Textus AI
+
+Once it is installed, Textus AI can use these in a conversation:
+
+- `check_function_plot`: Checks the source of a ```function-plot block - functions of x, one per line, with + - * / ^, brackets, pi, e and the usual functions - before it goes into a document, without drawing it. Returns ok, or the problems to fix first. Pass the source without its fence.
+<!-- /ai-tools -->

@@ -17,3 +17,11 @@ Chart.js の設定からシンプルなグラフを描きます。
   }
 }
 ```
+
+<!-- ai-tools -->
+## Textus AI のツール
+
+このプラグインを入れると、Textus AI が会話の中で使えます：
+
+- `check_chartjs`：```chartjs ブロックのソース（JSON で書いた Chart.js 4 の設定。type、labels と datasets を持つ data、options）を、文書に入れる前に描画せずに検査します。ok か、先に直すべき問題を返します。フェンスを除いたソースを渡してください。
+<!-- /ai-tools -->

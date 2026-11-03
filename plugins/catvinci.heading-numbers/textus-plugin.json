@@ -1,7 +1,7 @@
 {
   "id": "catvinci.heading-numbers",
   "name": "%name%",
-  "version": "0.1.3",
+  "version": "0.2.0",
   "publisher": "catvinci",
   "author": "CatVinci Studio",
   "description": "%description%",
@@ -14,7 +14,8 @@
   "platforms": ["desktop", "ios"],
   "main": "host.js",
   "permissions": [
-    "editor.read"
+    "editor.read",
+    "ai.tools"
   ],
   "activationEvents": [
     "onEditor"
@@ -27,58 +28,90 @@
         "default": true,
         "title": "%inExports%"
       }
+    ],
+    "aiTools": [
+      {
+        "name": "number_headings",
+        "description": "%tool.number_headings%",
+        "parameters": {
+          "type": "object",
+          "required": [
+            "text"
+          ],
+          "properties": {
+            "text": {
+              "type": "string",
+              "description": "The Markdown whose headings to number."
+            },
+            "remove": {
+              "type": "boolean",
+              "description": "Take the numbers out instead."
+            }
+          }
+        }
+      }
     ]
   },
   "l10n": {
     "en": {
       "name": "Heading Numbers",
       "description": "Numbers headings as you write - 1, 1.1, 1.2 - without changing the text; exports can carry the numbers too.",
-      "inExports": "Numbers in exports"
+      "inExports": "Numbers in exports",
+      "tool.number_headings": "Writes numbers into the headings of some Markdown - 1, 1.1, 1.2 - counted as the editor shows them (a lone title heading isn't numbered), replacing numbers already there; or, with remove, takes them out. Returns the text; writes nothing."
     },
     "zh": {
       "name": "标题编号",
       "description": "写作时给标题自动编号（1、1.1、1.2），不改动原文；导出时也可以带上编号。",
-      "inExports": "导出时带编号"
+      "inExports": "导出时带编号",
+      "tool.number_headings": "把编号写进一段 Markdown 的标题里（1、1.1、1.2），编号方式与编辑器中显示的一致（单独的总标题不编号），已有的编号会被替换；设 remove 时则去掉编号。返回处理后的文本，不写入任何文件。"
     },
     "zh-Hant": {
       "name": "標題編號",
       "description": "寫作時為標題自動編號（1、1.1、1.2），不改動原文；匯出時也可以帶上編號。",
-      "inExports": "匯出時帶編號"
+      "inExports": "匯出時帶編號",
+      "tool.number_headings": "把編號寫進一段 Markdown 的標題裡（1、1.1、1.2），編號方式與編輯器中顯示的一致（單獨的總標題不編號），已有的編號會被取代；設 remove 時則移除編號。回傳處理後的文字，不寫入任何檔案。"
     },
     "ja": {
       "name": "見出し番号",
       "description": "書きながら見出しに番号（1、1.1、1.2）を振ります。本文は変えません。書き出しにも番号を付けられます。",
-      "inExports": "書き出しにも番号を付ける"
+      "inExports": "書き出しにも番号を付ける",
+      "tool.number_headings": "Markdown の見出しに番号（1、1.1、1.2）を書き込みます。番号の付け方はエディタの表示と同じで（一つだけの表題には付けません）、既にある番号は置き換えます。remove を指定すると番号を取り除きます。文章を返し、何も書き込みません。"
     },
     "ko": {
       "name": "제목 번호",
       "description": "쓰는 동안 제목에 번호(1, 1.1, 1.2)를 붙입니다. 원문은 바꾸지 않으며 내보낼 때도 번호를 넣을 수 있습니다.",
-      "inExports": "내보낼 때 번호 넣기"
+      "inExports": "내보낼 때 번호 넣기",
+      "tool.number_headings": "Markdown의 제목에 번호(1, 1.1, 1.2)를 써 넣습니다. 번호는 편집기에 보이는 것과 같이 매기며(하나뿐인 표제는 제외), 이미 있는 번호는 바꿉니다. remove를 주면 번호를 뺍니다. 글을 돌려주고 아무것도 쓰지 않습니다."
     },
     "es": {
       "name": "Numeración de títulos",
       "description": "Numera los títulos mientras escribes (1, 1.1, 1.2) sin cambiar el texto; las exportaciones pueden llevar los números.",
-      "inExports": "Números en las exportaciones"
+      "inExports": "Números en las exportaciones",
+      "tool.number_headings": "Escribe números en los encabezados de un Markdown - 1, 1.1, 1.2 -, contados como los muestra el editor (un título único no se numera), y sustituye los que ya hubiera; con remove, los quita. Devuelve el texto; no escribe nada."
     },
     "fr": {
       "name": "Numérotation des titres",
       "description": "Numérote les titres pendant l’écriture (1, 1.1, 1.2) sans changer le texte ; les exports peuvent garder les numéros.",
-      "inExports": "Numéros dans les exports"
+      "inExports": "Numéros dans les exports",
+      "tool.number_headings": "Écrit des numéros dans les titres d'un Markdown - 1, 1.1, 1.2 -, comptés comme l'éditeur les montre (un titre unique n'est pas numéroté), en remplaçant ceux déjà là ; avec remove, les retire. Renvoie le texte ; n'écrit rien."
     },
     "de": {
       "name": "Überschriften-Nummern",
       "description": "Nummeriert Überschriften beim Schreiben (1, 1.1, 1.2), ohne den Text zu ändern; Exporte können die Nummern mitnehmen.",
-      "inExports": "Nummern in Exporten"
+      "inExports": "Nummern in Exporten",
+      "tool.number_headings": "Schreibt Nummern in die Überschriften von Markdown - 1, 1.1, 1.2 -, gezählt wie der Editor sie zeigt (ein einzelner Titel bleibt ohne), und ersetzt vorhandene Nummern; mit remove nimmt es sie heraus. Gibt den Text zurück; schreibt nichts."
     },
     "ru": {
       "name": "Нумерация заголовков",
       "description": "Нумерует заголовки по ходу письма (1, 1.1, 1.2), не меняя текст; при экспорте номера тоже можно сохранить.",
-      "inExports": "Номера при экспорте"
+      "inExports": "Номера при экспорте",
+      "tool.number_headings": "Вписывает номера в заголовки Markdown - 1, 1.1, 1.2 - так же, как их показывает редактор (единственный заглавный заголовок не нумеруется), заменяя имеющиеся; с remove убирает их. Возвращает текст; ничего не записывает."
     },
     "pt": {
       "name": "Numeração de títulos",
       "description": "Numera os títulos enquanto você escreve (1, 1.1, 1.2) sem mudar o texto; as exportações podem levar os números.",
-      "inExports": "Números nas exportações"
+      "inExports": "Números nas exportações",
+      "tool.number_headings": "Escreve números nos títulos de um Markdown - 1, 1.1, 1.2 -, contados como o editor os mostra (um título único não é numerado), substituindo os que já existam; com remove, retira-os. Devolve o texto; não escreve nada."
     }
   }
 }

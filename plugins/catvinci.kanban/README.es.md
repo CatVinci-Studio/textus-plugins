@@ -17,3 +17,14 @@ Tableros de tarjetas en listas, guardados como un archivo Markdown normal.
 
 - [x] Elegir un título
 ```
+
+<!-- ai-tools -->
+## Herramientas para Textus AI
+
+Con el plugin instalado, Textus AI puede usarlas en una conversación:
+
+- `list_boards`: Enumera los tableros Kanban (archivos name.kanban.md) de la carpeta abierta, cada uno con sus listas y cuántas tarjetas tiene cada una.
+- `read_board`: Lee un tablero Kanban: sus listas en orden, cada una con el texto de sus tarjetas y si están hechas.
+- `add_card`: Añade una tarjeta al final de una lista de un tablero Kanban.
+- `move_card`: Mueve una tarjeta de un tablero Kanban a otra lista, o a otro lugar de la suya.
+<!-- /ai-tools -->

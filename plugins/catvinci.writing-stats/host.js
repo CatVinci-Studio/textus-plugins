@@ -2,7 +2,7 @@
 // against a daily goal, the run of days it was met, and - when opened - the
 // whole folder. Today counts the words added to any document today.
 
-/* global writingCount */
+/* global folderPaths, writingCount */
 const t = (key, ...args) => textus.l10n.t(key, ...args);
 /** The plugin's own place, for today's tally and the days met. */
 let store = null;
@@ -110,6 +110,48 @@ async function items(parent) {
   return out;
 }
 
+/** Textus AI's tool: the counts of a document, a folder's documents, or
+ *  the document in front. */
+async function countWords(input) {
+  const root = await textus.files.root();
+  const total = { words: 0, characters: 0, cjk: 0 };
+  const add = (text) => {
+    const c = writingCount.count(text);
+    for (const key in total) total[key] += c[key];
+  };
+  let target;
+  let documents = 1;
+  if (input.path === undefined || input.path === null) {
+    const text = await textus.editor.getText();
+    if (text === null) return { error: "No document is open." };
+    add(text);
+    target = folderPaths.rel(root, await textus.editor.getPath()) || "the document in front";
+  } else {
+    if (!root) return { error: "No folder is open." };
+    const rel = folderPaths.clean(root, input.path, false);
+    if (rel === null) return { error: "path must be in the open folder." };
+    // A document's path ends in .md; else a folder's documents, or the
+    // document of that name without its .md.
+    const all = await textus.metadata.all();
+    let inside = /\.(md|markdown)$/i.test(rel)
+      ? all.filter((d) => d.rel === rel)
+      : all.filter((d) => !rel || d.rel.startsWith(rel + "/"));
+    if (!inside.length) inside = all.filter((d) => d.rel === rel + ".md");
+    if (!inside.length) return { error: "No documents at " + rel + "." };
+    for (const doc of inside) add(await textus.files.readText(doc.path).catch(() => ""));
+    const one = inside.length === 1 && [rel, rel + ".md"].includes(inside[0].rel);
+    target = one ? inside[0].rel : rel || "/";
+    documents = inside.length;
+  }
+  return {
+    path: target,
+    documents: documents,
+    words: total.words,
+    characters: total.characters,
+    reading_minutes: writingCount.readingMinutes(total),
+  };
+}
+
 exports.activate = function (ctx) {
   store = ctx.storage.global;
   list = textus.views.registerList("catvinci.writing-stats.panel", {
@@ -125,6 +167,7 @@ exports.activate = function (ctx) {
       list.refresh();
     }),
     textus.settings.onDidChange(() => list.refresh()),
+    textus.ai.registerTool("count_words", countWords),
   );
   void onChange();
 };

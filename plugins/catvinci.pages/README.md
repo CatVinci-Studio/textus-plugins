@@ -8,3 +8,11 @@ Documents as pages inside pages, as in Notion, kept as plain Markdown files.
 - **Where you are**: in a sub-page, the status bar shows the pages above it - `Life › 2026 Calendar › Week 1`. Click it to go up to one.
 
 Nothing is stored anywhere but your files: other Markdown apps see ordinary documents, folders and links.
+
+<!-- ai-tools -->
+## Tools for Textus AI
+
+Once it is installed, Textus AI can use these in a conversation:
+
+- `create_page`: Makes a page: a document titled as given at the top of the open folder, or a sub-page in the folder beside its parent page, with an icon if given. Returns its path and the [[link]] to put in the parent.
+<!-- /ai-tools -->

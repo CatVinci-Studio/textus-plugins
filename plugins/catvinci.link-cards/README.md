@@ -17,3 +17,11 @@ image: https://textus.catvinci.com/og.png
 - **Fetch again** under a card brings the page's latest title and picture.
 
 To read pages, the plugin asks to reach any web address; it fetches only the links you make cards of.
+
+<!-- ai-tools -->
+## Tools for Textus AI
+
+Once it is installed, Textus AI can use these in a conversation:
+
+- `fetch_link_card`: Fetches a web page's title, description, picture and site name, and returns them with a ```card block that shows the link as a card - to insert where the user wants it.
+<!-- /ai-tools -->

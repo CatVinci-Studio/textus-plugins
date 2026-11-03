@@ -15,3 +15,11 @@
   series: [{ type: "bar", data: [120, 200, 150] }]
 }
 ```
+
+<!-- ai-tools -->
+## Textus AI 工具
+
+装上这个插件后，Textus AI 在对话中可以使用：
+
+- `check_echarts`：在把 ```echarts 块写进文档之前检查它的源码（JSON 格式的 ECharts option：带类型的 series，以及它们所在的坐标轴或组件），不实际绘制。返回 ok，或需要先修正的问题。传入时不带代码围栏。
+<!-- /ai-tools -->

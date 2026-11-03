@@ -26,8 +26,17 @@ async function add(text) {
   return note;
 }
 
+/** Textus AI's tool: a note added to the top of the list. */
+async function addNote(input) {
+  const text = String(input.text || "").trim();
+  if (!text) return { error: "The note has no text." };
+  const note = await add(text);
+  return { added: note.text, notes: (await notes()).length };
+}
+
 exports.activate = function (context) {
   ctx = context;
+  textus.ai.registerTool("add_note", addNote);
   textus.commands.register(
     "catvinci.quick-notes.capture",
     async function () {

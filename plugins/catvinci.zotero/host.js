@@ -181,8 +181,36 @@ function reference(item) {
   );
 }
 
+/** Textus AI's tool: the library's items for `query`, each with the
+ *  citation the user's style writes for it. */
+async function searchLibrary(input) {
+  const query = String(input.query || "").trim();
+  if (!query) return { error: "Say what to look for." };
+  const style = await textus.settings.get("style");
+  let items;
+  try {
+    items = await search(query, "everything");
+  } catch (err) {
+    return { error: err.message };
+  }
+  const limit = Math.min(30, Math.max(1, Number(input.limit) || 10));
+  return {
+    items: items.slice(0, limit).map((item) => ({
+      key: item.key,
+      title: item.data.title || "",
+      authors: authors(item),
+      year: year(item),
+      type: item.data.itemType,
+      publication: item.data.publicationTitle || item.data.bookTitle || item.data.publisher || "",
+      citation_key: citationKey(item),
+      citation: citation(item, style),
+    })),
+  };
+}
+
 exports.activate = function (context) {
   ctx = context;
+  textus.ai.registerTool("search_library", searchLibrary);
   // Resting on a citation shows what it cites (Textus 1.3 and later).
   textus.editor.registerHover({
       provideHover: async function (target) {

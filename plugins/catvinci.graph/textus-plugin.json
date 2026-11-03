@@ -1,7 +1,7 @@
 {
   "id": "catvinci.graph",
   "name": "%name%",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "publisher": "catvinci",
   "author": "CatVinci Studio",
   "description": "%description%",
@@ -13,12 +13,14 @@
   },
   "platforms": ["desktop", "ios"],
   "main": [
+    "lib/folder-paths.js",
     "links.js",
     "host.js"
   ],
   "permissions": [
     "files.read",
-    "editor.read"
+    "editor.read",
+    "ai.tools"
   ],
   "contributes": {
     "commands": [
@@ -52,6 +54,29 @@
         "title": "%local%",
         "icon": "tab.svg"
       }
+    ],
+    "aiTools": [
+      {
+        "name": "list_neighbours",
+        "description": "%tool.list_neighbours%",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "path": {
+              "type": "string",
+              "description": "The document's path in the open folder; the document in front when left out."
+            },
+            "depth": {
+              "type": "integer",
+              "description": "How many links away to go, 1 to 3; 1 by default."
+            },
+            "tags": {
+              "type": "boolean",
+              "description": "Count shared #tags as links too."
+            }
+          }
+        }
+      }
     ]
   },
   "l10n": {
@@ -81,7 +106,8 @@
       "set.groupQuery": "Search, e.g. path:ideas or tag:#draft",
       "set.removeGroup": "Remove group",
       "set.newGroup": "New group",
-      "set.reset": "Restore defaults"
+      "set.reset": "Restore defaults",
+      "tool.list_neighbours": "A document's neighbourhood in the graph of notes - the one in front unless a path is given: the notes within a few links of it either way, each with how many links away, and the links between them. A [[link]] to no note shows as kind missing."
     },
     "zh": {
       "name": "关系图谱",
@@ -107,7 +133,8 @@
       "set.groupQuery": "搜索，如 path:想法 或 tag:#草稿",
       "set.removeGroup": "删除分组",
       "set.newGroup": "新建分组",
-      "set.reset": "恢复默认"
+      "set.reset": "恢复默认",
+      "tool.list_neighbours": "给出一篇文档（默认当前文档）在笔记关系图中的周边：几步链接之内（不论方向）的笔记、各自相隔几步，以及它们之间的链接。指向不存在笔记的 [[链接]] 记为 missing。"
     },
     "zh-Hant": {
       "name": "關係圖譜",
@@ -133,7 +160,8 @@
       "set.groupQuery": "搜尋，如 path:想法 或 tag:#草稿",
       "set.removeGroup": "刪除分組",
       "set.newGroup": "新增分組",
-      "set.reset": "還原預設值"
+      "set.reset": "還原預設值",
+      "tool.list_neighbours": "給出一份文件（預設目前文件）在筆記關係圖中的周邊：幾步連結之內（不論方向）的筆記、各自相隔幾步，以及它們之間的連結。指向不存在筆記的 [[連結]] 記為 missing。"
     },
     "ja": {
       "name": "グラフビュー",
@@ -159,7 +187,8 @@
       "set.groupQuery": "検索（例: path:アイデア、tag:#下書き）",
       "set.removeGroup": "グループを削除",
       "set.newGroup": "新しいグループ",
-      "set.reset": "デフォルトに戻す"
+      "set.reset": "デフォルトに戻す",
+      "tool.list_neighbours": "ある文書（パスがなければ前面の文書）のノートのグラフでの近傍を返します。向きを問わず数リンク以内のノートと、それぞれ何リンク離れているか、その間のリンクです。存在しないノートへの [[リンク]] は kind が missing になります。"
     },
     "ko": {
       "name": "그래프 보기",
@@ -185,7 +214,8 @@
       "set.groupQuery": "검색 (예: path:아이디어, tag:#초안)",
       "set.removeGroup": "그룹 삭제",
       "set.newGroup": "새 그룹",
-      "set.reset": "기본값으로 복원"
+      "set.reset": "기본값으로 복원",
+      "tool.list_neighbours": "어떤 문서(경로가 없으면 앞에 열린 문서)의 노트 그래프 속 이웃을 돌려줍니다. 방향과 관계없이 몇 링크 안의 노트, 각각 몇 링크 떨어졌는지, 그 사이의 링크입니다. 없는 노트로 가는 [[링크]]는 kind가 missing입니다."
     },
     "es": {
       "name": "Vista de grafo",
@@ -213,7 +243,8 @@
       "set.groupQuery": "Buscar, p. ej. path:ideas o tag:#borrador",
       "set.removeGroup": "Quitar grupo",
       "set.newGroup": "Nuevo grupo",
-      "set.reset": "Restablecer"
+      "set.reset": "Restablecer",
+      "tool.list_neighbours": "El entorno de un documento en el grafo de notas - el que está al frente si no se da ruta -: las notas a pocos enlaces en cualquier sentido, cada una con a cuántos enlaces está, y los enlaces entre ellas. Un [[enlace]] a una nota que no existe aparece como kind missing."
     },
     "fr": {
       "name": "Vue en graphe",
@@ -241,7 +272,8 @@
       "set.groupQuery": "Rechercher, ex. path:idées ou tag:#brouillon",
       "set.removeGroup": "Supprimer le groupe",
       "set.newGroup": "Nouveau groupe",
-      "set.reset": "Rétablir les valeurs par défaut"
+      "set.reset": "Rétablir les valeurs par défaut",
+      "tool.list_neighbours": "Le voisinage d'un document dans le graphe des notes - celui au premier plan si aucun chemin n'est donné : les notes à quelques liens, dans un sens ou l'autre, chacune avec sa distance en liens, et les liens entre elles. Un [[lien]] vers une note inexistante a le type missing."
     },
     "de": {
       "name": "Graphansicht",
@@ -269,7 +301,8 @@
       "set.groupQuery": "Suche, z. B. path:Ideen oder tag:#Entwurf",
       "set.removeGroup": "Gruppe entfernen",
       "set.newGroup": "Neue Gruppe",
-      "set.reset": "Standard wiederherstellen"
+      "set.reset": "Standard wiederherstellen",
+      "tool.list_neighbours": "Die Umgebung eines Dokuments im Notizgraphen - des vorderen, wenn kein Pfad angegeben ist: die Notizen wenige Links entfernt, in beide Richtungen, jede mit ihrem Abstand, und die Links zwischen ihnen. Ein [[Link]] ins Leere hat die Art missing."
     },
     "ru": {
       "name": "Граф заметок",
@@ -301,7 +334,8 @@
       "set.groupQuery": "Поиск, напр. path:идеи или tag:#черновик",
       "set.removeGroup": "Удалить группу",
       "set.newGroup": "Новая группа",
-      "set.reset": "Восстановить по умолчанию"
+      "set.reset": "Восстановить по умолчанию",
+      "tool.list_neighbours": "Окрестность документа в графе заметок - переднего, если путь не указан: заметки в нескольких ссылках от него в любую сторону, с расстоянием в ссылках, и ссылки между ними. [[Ссылка]] на несуществующую заметку имеет вид missing."
     },
     "pt": {
       "name": "Visão de grafo",
@@ -329,7 +363,8 @@
       "set.groupQuery": "Buscar, ex. path:ideias ou tag:#rascunho",
       "set.removeGroup": "Remover grupo",
       "set.newGroup": "Novo grupo",
-      "set.reset": "Restaurar padrões"
+      "set.reset": "Restaurar padrões",
+      "tool.list_neighbours": "A vizinhança de um documento no grafo de notas - o que está em primeiro plano se não for dado caminho: as notas a poucos links, em qualquer sentido, cada uma com a quantos links está, e os links entre elas. Um [[link]] para uma nota que não existe aparece como kind missing."
     }
   }
 }

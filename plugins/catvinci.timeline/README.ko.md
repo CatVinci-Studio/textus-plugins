@@ -13,3 +13,11 @@
 2024-09 | Review | Notes from three readers
 2025-01 | Published
 ```
+
+<!-- ai-tools -->
+## Textus AI 도구
+
+이 플러그인을 설치하면 Textus AI가 대화 중에 사용할 수 있습니다:
+
+- `check_timeline`: ```timeline 블록의 소스(한 줄에 사건 하나를 언제 | 무엇 | 덧붙임 으로 쓴 것)를 문서에 넣기 전에 그리지 않고 검사합니다. ok나 먼저 고칠 문제를 돌려줍니다. 펜스 없이 소스만 넘기세요.
+<!-- /ai-tools -->

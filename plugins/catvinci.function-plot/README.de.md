@@ -13,3 +13,11 @@ Funktionsgraphen, einer pro Zeile: sin(x), x^2 - 1.
 sin(x)
 x^2 / 4 - 1
 ```
+
+<!-- ai-tools -->
+## Werkzeuge für Textus AI
+
+Ist das Plugin installiert, kann Textus AI sie im Gespräch nutzen:
+
+- `check_function_plot`: Prüft die Quelle eines ```function-plot-Blocks - Funktionen von x, eine pro Zeile, mit + - * / ^, Klammern, pi, e und den üblichen Funktionen -, bevor er in ein Dokument kommt, ohne ihn zu zeichnen. Gibt ok zurück oder die Probleme, die zuerst zu beheben sind. Die Quelle ohne ihren Zaun übergeben.
+<!-- /ai-tools -->

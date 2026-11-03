@@ -1,7 +1,7 @@
 {
   "id": "catvinci.database",
   "name": "%name%",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "publisher": "catvinci",
   "author": "CatVinci Studio",
   "description": "%description%",
@@ -115,6 +115,66 @@
             }
           }
         }
+      },
+      {
+        "name": "query_rows",
+        "description": "%tool.query_rows%",
+        "parameters": {
+          "type": "object",
+          "required": [
+            "database"
+          ],
+          "properties": {
+            "database": {
+              "type": "string",
+              "description": "The database's folder: its path in the open folder, as create_database gives it."
+            },
+            "filter": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "Conditions all rows must meet, as a block writes them: \"status = done\", \"rating >= 4\", \"tags has work\", \"due empty\"; operators = != > < >= <= has !has empty !empty."
+            },
+            "sort": {
+              "type": "string",
+              "description": "Properties to sort by, comma-separated; -name for descending."
+            },
+            "limit": {
+              "type": "integer",
+              "description": "At most this many rows; 100 by default."
+            }
+          }
+        }
+      },
+      {
+        "name": "add_row",
+        "description": "%tool.add_row%",
+        "parameters": {
+          "type": "object",
+          "required": [
+            "database",
+            "name"
+          ],
+          "properties": {
+            "database": {
+              "type": "string",
+              "description": "The database's folder: its path in the open folder, as create_database gives it."
+            },
+            "name": {
+              "type": "string",
+              "description": "The row's name, also its document's."
+            },
+            "properties": {
+              "type": "object",
+              "description": "Front matter: dates as YYYY-MM-DD, lists as arrays, numbers, true/false."
+            },
+            "body": {
+              "type": "string",
+              "description": "Markdown under the title, if any."
+            }
+          }
+        }
       }
     ]
   },
@@ -185,7 +245,9 @@
       "type.checkbox": "Checkbox",
       "type.url": "URL",
       "deleteAsk": "Delete “{0}” from {1} pages?",
-      "open": "Open"
+      "open": "Open",
+      "tool.query_rows": "Reads a database's rows - the documents in its folder - each with its name, path and properties, filtered and sorted as a ```database block's filter and sort lines would.",
+      "tool.add_row": "Adds a row to a database: a document in its folder, named for the row, with its properties in its front matter. Every block showing that folder shows it."
     },
     "zh": {
       "name": "数据库视图",
@@ -253,7 +315,9 @@
       "type.checkbox": "复选框",
       "type.url": "网址",
       "deleteAsk": "要从 {1} 个页面中删除“{0}”吗？",
-      "open": "打开"
+      "open": "打开",
+      "tool.query_rows": "读取数据库的行（即其文件夹里的文档），每行带名称、路径和各项属性；可以像 ```database 块的 filter 和 sort 行那样筛选和排序。",
+      "tool.add_row": "在数据库中添加一行：在其文件夹里新建一篇以该行命名的文档，各项属性写在开头属性中。展示该文件夹的每个块都会显示它。"
     },
     "zh-Hant": {
       "name": "資料庫檢視",
@@ -284,7 +348,7 @@
       "importing": "正在匯入 {0}",
       "imported": "已把 {0} 個頁面匯入到 {1}。",
       "aiNote": "Put the block where the user wants the database; its pages are made.",
-      "toolDescription": "Makes a database: a folder of documents whose front matter holds each one's properties, and a ```database block that shows them as a table, board, calendar or gallery. Returns the block to insert.",
+      "toolDescription": "建立一個資料庫：一個資料夾，裡面每份文件的開頭屬性就是它的各項屬性；再加一個 ```database 區塊，以表格、看板、日曆或圖庫展示它們。回傳要插入的區塊。",
       "locale": "zh-TW",
       "filter": "篩選",
       "sort": "排序",
@@ -321,7 +385,9 @@
       "type.checkbox": "核取方塊",
       "type.url": "網址",
       "deleteAsk": "要從 {1} 個頁面中刪除「{0}」嗎？",
-      "open": "打開"
+      "open": "打開",
+      "tool.query_rows": "讀取資料庫的列（即其資料夾裡的文件），每列附名稱、路徑和各項屬性；可以像 ```database 區塊的 filter 和 sort 行那樣篩選和排序。",
+      "tool.add_row": "在資料庫中新增一列：在其資料夾裡新建一份以該列命名的文件，各項屬性寫在開頭屬性中。展示該資料夾的每個區塊都會顯示它。"
     },
     "ja": {
       "name": "データベースビュー",
@@ -352,7 +418,7 @@
       "importing": "{0} を取り込み中",
       "imported": "{0} ページを {1} に取り込みました。",
       "aiNote": "Put the block where the user wants the database; its pages are made.",
-      "toolDescription": "Makes a database: a folder of documents whose front matter holds each one's properties, and a ```database block that shows them as a table, board, calendar or gallery. Returns the block to insert.",
+      "toolDescription": "データベースを作ります。各文書のフロントマターにそれぞれのプロパティを持つ文書のフォルダと、それらを表・ボード・カレンダー・ギャラリーで見せる ```database ブロックです。挿入するブロックを返します。",
       "locale": "ja",
       "filter": "フィルター",
       "sort": "並べ替え",
@@ -389,7 +455,9 @@
       "type.checkbox": "チェックボックス",
       "type.url": "URL",
       "deleteAsk": "{1} ページから「{0}」を削除しますか？",
-      "open": "開く"
+      "open": "開く",
+      "tool.query_rows": "データベースの行（そのフォルダにある文書）を、名前・パス・プロパティとともに読みます。```database ブロックの filter と sort の行と同じように絞り込み、並べ替えます。",
+      "tool.add_row": "データベースに行を追加します。そのフォルダに行の名前の文書を作り、プロパティをフロントマターに書きます。そのフォルダを表示するすべてのブロックに現れます。"
     },
     "ko": {
       "name": "데이터베이스 보기",
@@ -420,7 +488,7 @@
       "importing": "{0} 가져오는 중",
       "imported": "{0}개 페이지를 {1}에 가져왔습니다.",
       "aiNote": "Put the block where the user wants the database; its pages are made.",
-      "toolDescription": "Makes a database: a folder of documents whose front matter holds each one's properties, and a ```database block that shows them as a table, board, calendar or gallery. Returns the block to insert.",
+      "toolDescription": "데이터베이스를 만듭니다. 각 문서의 프런트 매터에 그 속성을 담은 문서 폴더와, 그것들을 표·보드·달력·갤러리로 보여 주는 ```database 블록입니다. 넣을 블록을 돌려줍니다.",
       "locale": "ko",
       "filter": "필터",
       "sort": "정렬",
@@ -457,7 +525,9 @@
       "type.checkbox": "체크박스",
       "type.url": "URL",
       "deleteAsk": "{1}개 페이지에서 “{0}”을(를) 삭제할까요?",
-      "open": "열기"
+      "open": "열기",
+      "tool.query_rows": "데이터베이스의 행(그 폴더에 있는 문서)을 이름·경로·속성과 함께 읽습니다. ```database 블록의 filter와 sort 줄처럼 거르고 정렬합니다.",
+      "tool.add_row": "데이터베이스에 행을 추가합니다. 그 폴더에 행 이름의 문서를 만들고 속성을 프런트 매터에 적습니다. 그 폴더를 보여 주는 모든 블록에 나타납니다."
     },
     "de": {
       "name": "Datenbankansichten",
@@ -488,7 +558,7 @@
       "importing": "{0} wird importiert",
       "imported": "{0} Seiten nach {1} importiert.",
       "aiNote": "Put the block where the user wants the database; its pages are made.",
-      "toolDescription": "Makes a database: a folder of documents whose front matter holds each one's properties, and a ```database block that shows them as a table, board, calendar or gallery. Returns the block to insert.",
+      "toolDescription": "Legt eine Datenbank an: einen Ordner mit Dokumenten, deren Front Matter ihre Eigenschaften hält, und einen ```database-Block, der sie als Tabelle, Board, Kalender oder Galerie zeigt. Gibt den einzufügenden Block zurück.",
       "locale": "de",
       "filter": "Filter",
       "sort": "Sortieren",
@@ -525,7 +595,9 @@
       "type.checkbox": "Kontrollkästchen",
       "type.url": "URL",
       "deleteAsk": "„{0}“ aus {1} Seiten löschen?",
-      "open": "Öffnen"
+      "open": "Öffnen",
+      "tool.query_rows": "Liest die Zeilen einer Datenbank - die Dokumente in ihrem Ordner -, jede mit Name, Pfad und Eigenschaften, gefiltert und sortiert wie mit den filter- und sort-Zeilen eines ```database-Blocks.",
+      "tool.add_row": "Fügt einer Datenbank eine Zeile hinzu: ein Dokument in ihrem Ordner, nach der Zeile benannt, mit ihren Eigenschaften im Front Matter. Jeder Block, der den Ordner zeigt, zeigt sie."
     },
     "es": {
       "name": "Vistas de base de datos",
@@ -556,7 +628,7 @@
       "importing": "Importando {0}",
       "imported": "{0} páginas importadas en {1}.",
       "aiNote": "Put the block where the user wants the database; its pages are made.",
-      "toolDescription": "Makes a database: a folder of documents whose front matter holds each one's properties, and a ```database block that shows them as a table, board, calendar or gallery. Returns the block to insert.",
+      "toolDescription": "Crea una base de datos: una carpeta de documentos cuyo front matter guarda las propiedades de cada uno, y un bloque ```database que los muestra como tabla, tablero, calendario o galería. Devuelve el bloque que hay que insertar.",
       "locale": "es",
       "filter": "Filtrar",
       "sort": "Ordenar",
@@ -593,7 +665,9 @@
       "type.checkbox": "Casilla",
       "type.url": "URL",
       "deleteAsk": "¿Eliminar «{0}» de {1} páginas?",
-      "open": "Abrir"
+      "open": "Abrir",
+      "tool.query_rows": "Lee las filas de una base de datos - los documentos de su carpeta -, cada una con su nombre, ruta y propiedades, filtradas y ordenadas como lo harían las líneas filter y sort de un bloque ```database.",
+      "tool.add_row": "Añade una fila a una base de datos: un documento en su carpeta, con el nombre de la fila y sus propiedades en el front matter. Todo bloque que muestre esa carpeta la muestra."
     },
     "fr": {
       "name": "Vues de base de données",
@@ -624,7 +698,7 @@
       "importing": "Import de {0}",
       "imported": "{0} pages importées dans {1}.",
       "aiNote": "Put the block where the user wants the database; its pages are made.",
-      "toolDescription": "Makes a database: a folder of documents whose front matter holds each one's properties, and a ```database block that shows them as a table, board, calendar or gallery. Returns the block to insert.",
+      "toolDescription": "Crée une base de données : un dossier de documents dont le front matter porte les propriétés de chacun, et un bloc ```database qui les montre en tableau, tableau Kanban, calendrier ou galerie. Renvoie le bloc à insérer.",
       "locale": "fr",
       "filter": "Filtrer",
       "sort": "Trier",
@@ -661,7 +735,9 @@
       "type.checkbox": "Case à cocher",
       "type.url": "URL",
       "deleteAsk": "Supprimer « {0} » de {1} pages ?",
-      "open": "Ouvrir"
+      "open": "Ouvrir",
+      "tool.query_rows": "Lit les lignes d'une base de données - les documents de son dossier -, chacune avec son nom, son chemin et ses propriétés, filtrées et triées comme le feraient les lignes filter et sort d'un bloc ```database.",
+      "tool.add_row": "Ajoute une ligne à une base de données : un document dans son dossier, au nom de la ligne, avec ses propriétés dans son front matter. Tout bloc qui montre ce dossier l'affiche."
     },
     "pt": {
       "name": "Visualizações de banco de dados",
@@ -692,7 +768,7 @@
       "importing": "Importando {0}",
       "imported": "{0} páginas importadas em {1}.",
       "aiNote": "Put the block where the user wants the database; its pages are made.",
-      "toolDescription": "Makes a database: a folder of documents whose front matter holds each one's properties, and a ```database block that shows them as a table, board, calendar or gallery. Returns the block to insert.",
+      "toolDescription": "Cria uma base de dados: uma pasta de documentos cujo front matter guarda as propriedades de cada um, e um bloco ```database que os mostra como tabela, quadro, calendário ou galeria. Devolve o bloco a inserir.",
       "locale": "pt",
       "filter": "Filtrar",
       "sort": "Ordenar",
@@ -729,7 +805,9 @@
       "type.checkbox": "Caixa de seleção",
       "type.url": "URL",
       "deleteAsk": "Excluir “{0}” de {1} páginas?",
-      "open": "Abrir"
+      "open": "Abrir",
+      "tool.query_rows": "Lê as linhas de uma base de dados - os documentos da sua pasta -, cada uma com o nome, o caminho e as propriedades, filtradas e ordenadas como fariam as linhas filter e sort de um bloco ```database.",
+      "tool.add_row": "Adiciona uma linha a uma base de dados: um documento na sua pasta, com o nome da linha e as propriedades no front matter. Todos os blocos que mostram essa pasta passam a mostrá-la."
     },
     "ru": {
       "name": "Представления базы данных",
@@ -760,7 +838,7 @@
       "importing": "Импорт {0}",
       "imported": "Импортировано страниц: {0} в {1}.",
       "aiNote": "Put the block where the user wants the database; its pages are made.",
-      "toolDescription": "Makes a database: a folder of documents whose front matter holds each one's properties, and a ```database block that shows them as a table, board, calendar or gallery. Returns the block to insert.",
+      "toolDescription": "Создаёт базу данных: папку документов, во front matter каждого из которых хранятся его свойства, и блок ```database, показывающий их таблицей, доской, календарём или галереей. Возвращает блок для вставки.",
       "locale": "ru",
       "filter": "Фильтр",
       "sort": "Сортировка",
@@ -797,7 +875,9 @@
       "type.checkbox": "Флажок",
       "type.url": "URL",
       "deleteAsk": "Удалить «{0}» из страниц ({1})?",
-      "open": "Открыть"
+      "open": "Открыть",
+      "tool.query_rows": "Читает строки базы данных - документы в её папке, - каждую с именем, путём и свойствами, с отбором и сортировкой, как строки filter и sort блока ```database.",
+      "tool.add_row": "Добавляет строку в базу данных: документ в её папке с именем строки и свойствами во front matter. Её покажет каждый блок, показывающий эту папку."
     }
   }
 }

@@ -17,3 +17,11 @@ Dibuja un esquema en Markdown (títulos y listas) como mapa mental.
 - Writers
 - Reviewers
 ```
+
+<!-- ai-tools -->
+## Herramientas para Textus AI
+
+Con el plugin instalado, Textus AI puede usarlas en una conversación:
+
+- `check_markmap`: Revisa el código de un bloque ```markmap - un esquema en Markdown cuyos encabezados y elementos de lista son las ramas del mapa mental - antes de que entre en un documento, sin dibujarlo. Devuelve ok, o los problemas que hay que corregir antes. Pasa el código sin su valla.
+<!-- /ai-tools -->

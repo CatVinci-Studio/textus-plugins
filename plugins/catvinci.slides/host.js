@@ -41,18 +41,29 @@ addEventListener("click",(e)=>show(e.clientX>innerWidth/3?i+1:i-1));show(i);
 </script></body></html>`;
 }
 
-async function exportHtml() {
+/** The document in front saved as a deck beside it: the deck's path and
+ *  how many slides it has; null for an unsaved document. */
+async function writeDeck() {
   const path = await textus.editor.getPath();
   const text = await textus.editor.getText();
-  if (!path || text === null) {
-    textus.ui.notice(t("saveFirst"), { tone: "warning" });
-    return;
-  }
+  if (!path || text === null) return null;
   const { html, css } = render(text);
   const target = path.replace(/\.(md|markdown)$/i, "") + ".slides.html";
   const name = path.split(/[\\/]/).pop();
   await textus.files.writeText(target, standalone(name, html, css));
-  textus.ui.notice(t("exported", target.split(/[\\/]/).pop()));
+  return { path: target, slides: (html.match(/<svg[^>]*data-marpit-svg/g) || []).length };
+}
+
+async function exportHtml() {
+  const deck = await writeDeck();
+  if (!deck) return textus.ui.notice(t("saveFirst"), { tone: "warning" });
+  textus.ui.notice(t("exported", deck.path.split(/[\\/]/).pop()));
+}
+
+/** Textus AI's tool. */
+async function exportSlides() {
+  const deck = await writeDeck();
+  return deck || { error: "Open a saved Markdown document first: the deck is made from the document in front." };
 }
 
 exports.activate = function (ctx) {
@@ -81,6 +92,7 @@ exports.activate = function (ctx) {
       await textus.layout.openView("catvinci.slides.view", { where: "beside" });
     }),
     textus.commands.register("catvinci.slides.export", exportHtml),
+    textus.ai.registerTool("export_slides", exportSlides),
     textus.editor.onDidChange(update),
     textus.editor.onDidChangeActive(update),
   );

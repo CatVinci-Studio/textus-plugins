@@ -124,13 +124,23 @@ export class RemoteStore implements ObjectStore {
     for (const part of parts) {
       path += `${encodeURIComponent(part)}/`;
       if (this.dirs.has(path)) continue;
-      const res = await this.request(
-        "MKCOL",
-        `${this.config.endpoint}/${path}`,
-      );
-      if (res.status !== 405) this.require(res);
+      const url = `${this.config.endpoint}/${path}`;
+      const res = await this.request("MKCOL", url);
+      // Servers answer "already there" differently (Nutstore with 409, others
+      // 405), so a refused MKCOL is checked before it counts as a failure.
+      const made = res.status >= 200 && res.status < 300;
+      if (!made && !(await this.isFolder(url))) {
+        if ([401, 403, 429, 507].includes(res.status)) this.require(res);
+        throw new SyncError("folderNotCreated", [
+          decodeURIComponent(path.slice(0, -1)),
+        ]);
+      }
       this.dirs.add(path);
     }
+  }
+  private async isFolder(url: string): Promise<boolean> {
+    const res = await this.request("PROPFIND", url, undefined, { Depth: "0" });
+    return res.status === 207 || res.status === 200;
   }
   async get(key: string): Promise<Uint8Array | null> {
     const res = await this.request(

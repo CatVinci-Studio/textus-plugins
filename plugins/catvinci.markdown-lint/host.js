@@ -34,7 +34,28 @@ function tooltip(error) {
   );
 }
 
+/** Textus AI's tool: the issues in some Markdown, or the document in
+ *  front, and with `fix` the text with the fixes markdownlint knows. */
+async function lintMarkdown(input) {
+  const text = typeof input.text === "string" ? input.text : await textus.editor.getText();
+  if (text === null) return { error: "Give the Markdown to check, or open a document." };
+  const errors = lint(text).sort((a, b) => a.lineNumber - b.lineNumber);
+  const out = {
+    issues: errors.map((e) => ({
+      line: e.lineNumber,
+      rule: e.ruleNames.join("/"),
+      description: e.ruleDescription,
+      detail: e.errorDetail || undefined,
+      context: e.errorContext || undefined,
+      fixable: !!e.fixInfo,
+    })),
+  };
+  if (input.fix) out.fixed = markdownlint.applyFixes(text, errors.filter((e) => e.fixInfo));
+  return out;
+}
+
 exports.activate = function () {
+  textus.ai.registerTool("lint_markdown", lintMarkdown);
   textus.editor.registerDecorations({
     decorate: function (blocks) {
       const marks = [];

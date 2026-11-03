@@ -16,3 +16,11 @@ L:1/4
 K:C
 C D E F | G A B c |
 ```
+
+<!-- ai-tools -->
+## Tools for Textus AI
+
+Once it is installed, Textus AI can use these in a conversation:
+
+- `check_abc`: Checks the source of a ```abc block - ABC music notation: a header of fields ending in K:, then the notes - before it goes into a document, without drawing it. Returns ok, or the problems to fix first. Pass the source without its fence.
+<!-- /ai-tools -->

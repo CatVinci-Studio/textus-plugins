@@ -3,7 +3,7 @@
 // links to - in a list in the sidebar that Textus draws. What Textus
 // knows of the folder (textus.metadata) says where they are.
 
-/* global backlinkMentions */
+/* global backlinkMentions, folderPaths */
 const t = (key, ...args) => textus.l10n.t(key, ...args);
 /** Unlinked mentions are looked for up to this many lines. */
 const SEARCH_LIMIT = 300;
@@ -42,34 +42,17 @@ async function focusPath() {
   return last;
 }
 
-async function items() {
-  if (!(await textus.files.root())) {
-    list.setMessage(t("nofolder"));
-    return [];
-  }
-  const focus = await focusPath();
-  const docs = focus ? await textus.metadata.all() : [];
-  const doc = docs.find((d) => d.path === focus);
-  if (!doc) {
-    list.setMessage(focus ? t("notInFolder") : t("nodoc"));
-    return [];
-  }
-  list.setMessage(t("of", stem(focus)));
-  const relOf = new Map(docs.map((d) => [d.path, d.rel]));
+/** What links to `focus`, the lines naming it without a link, and where
+ *  it links to. Lines count from 0, as the index does. */
+async function gather(focus, doc) {
   const files = new Map();
-
   const linked = [];
   const linkedLines = new Set();
   for (const b of await textus.metadata.backlinks(focus)) {
     if (b.path === focus || linkedLines.has(b.path + ":" + b.line)) continue;
     linkedLines.add(b.path + ":" + b.line);
     const line = (await linesOf(b.path, files))[b.line] || b.text;
-    linked.push({
-      id: "in:" + b.path + ":" + b.line,
-      label: short(line.trim()),
-      detail: relOf.get(b.path),
-      location: { path: b.path, line: b.line, text: line.trim().slice(0, 60) },
-    });
+    linked.push({ path: b.path, line: b.line, text: line });
   }
 
   const full = await textus.metadata.get(focus);
@@ -91,21 +74,7 @@ async function items() {
       if (text === undefined || backlinkMentions.findMention(text, name) < 0)
         continue;
       seen.add(key);
-      unlinked.push({
-        id: "named:" + key,
-        label: short(text.trim()),
-        detail: hit.rel,
-        location: { path: hit.path, line: line, text: text.trim().slice(0, 60) },
-        actions: [
-          {
-            label: t("link"),
-            command: "catvinci.backlinks.link",
-            args: [
-              { path: hit.path, line: line, text: text, name: name, to: focus },
-            ],
-          },
-        ],
-      });
+      unlinked.push({ path: hit.path, line: line, text: text, name: name });
     }
   }
 
@@ -119,17 +88,57 @@ async function items() {
     const key = (l.resolved || name).toLowerCase();
     if (out.has(key)) continue;
     out.add(key);
-    outgoing.push({
-      id: "out:" + key,
-      label: name,
-      description: l.resolved ? relOf.get(l.resolved) : undefined,
-      icon: "file",
-      badge: l.resolved ? undefined : { text: t("missing"), tone: "muted" },
-      location: l.resolved
-        ? { path: l.resolved }
-        : { path: focus, line: l.line, text: l.text.slice(0, 60) },
-    });
+    outgoing.push({ name: name, resolved: l.resolved, line: l.line, text: l.text, key: key });
   }
+  return { linked: linked, unlinked: unlinked, outgoing: outgoing };
+}
+
+async function items() {
+  if (!(await textus.files.root())) {
+    list.setMessage(t("nofolder"));
+    return [];
+  }
+  const focus = await focusPath();
+  const docs = focus ? await textus.metadata.all() : [];
+  const doc = docs.find((d) => d.path === focus);
+  if (!doc) {
+    list.setMessage(focus ? t("notInFolder") : t("nodoc"));
+    return [];
+  }
+  list.setMessage(t("of", stem(focus)));
+  const relOf = new Map(docs.map((d) => [d.path, d.rel]));
+  const found = await gather(focus, doc);
+  const at = (path, line, text) => ({ path: path, line: line, text: text.trim().slice(0, 60) });
+
+  const linked = found.linked.map((b) => ({
+    id: "in:" + b.path + ":" + b.line,
+    label: short(b.text.trim()),
+    detail: relOf.get(b.path),
+    location: at(b.path, b.line, b.text),
+  }));
+  const unlinked = found.unlinked.map((m) => ({
+    id: "named:" + m.path + ":" + m.line,
+    label: short(m.text.trim()),
+    detail: relOf.get(m.path),
+    location: at(m.path, m.line, m.text),
+    actions: [
+      {
+        label: t("link"),
+        command: "catvinci.backlinks.link",
+        args: [
+          { path: m.path, line: m.line, text: m.text, name: m.name, to: focus },
+        ],
+      },
+    ],
+  }));
+  const outgoing = found.outgoing.map((l) => ({
+    id: "out:" + l.key,
+    label: l.name,
+    description: l.resolved ? relOf.get(l.resolved) : undefined,
+    icon: "file",
+    badge: l.resolved ? undefined : { text: t("missing"), tone: "muted" },
+    location: l.resolved ? { path: l.resolved } : at(focus, l.line, l.text),
+  }));
 
   const section = (key, entries) =>
     entries.map((item) =>
@@ -139,6 +148,27 @@ async function items() {
     section("unlinked", unlinked),
     section("outgoing", outgoing),
   );
+}
+
+/** Textus AI's tool: a document's backlinks, unlinked mentions and links,
+ *  by paths in the folder and lines from 1. */
+async function listBacklinks(input) {
+  const root = await textus.files.root();
+  if (!root) return { error: "No folder is open." };
+  const rel = input.path ? folderPaths.clean(root, input.path, true) : null;
+  const focus = rel ? folderPaths.abs(root, rel) : await focusPath();
+  const docs = await textus.metadata.all();
+  const doc = focus && docs.find((d) => d.path === focus || d.rel === rel);
+  if (!doc) return { error: rel ? "No document " + rel + " in the folder." : "No document is open." };
+  const relOf = new Map(docs.map((d) => [d.path, d.rel]));
+  const found = await gather(doc.path, doc);
+  const place = (e) => ({ path: relOf.get(e.path) || e.path, line: e.line + 1, text: e.text.trim() });
+  return {
+    document: doc.rel,
+    linked: found.linked.map(place),
+    unlinked: found.unlinked.map(place),
+    outgoing: found.outgoing.map((l) => ({ name: l.name, path: l.resolved ? relOf.get(l.resolved) || null : null })),
+  };
 }
 
 /** Links the mention on `line` of `path`, if the line still says it. */
@@ -178,5 +208,6 @@ exports.activate = function (ctx) {
     textus.files.onDidChangeRoot(refresh),
     textus.editor.onDidChangeActive(refresh),
     textus.layout.onDidChangeLayout(refresh),
+    textus.ai.registerTool("list_backlinks", listBacklinks),
   );
 };

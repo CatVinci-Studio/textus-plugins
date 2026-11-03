@@ -61,7 +61,42 @@ function exportCss(start) {
   return ".milkdown { counter-reset: tx-h" + start + "; }\n" + css;
 }
 
+/** A dotted number already before a heading's words: 1.2, 3. or 1.2. */
+const OLD_NUMBER = /^\d{1,2}(?:\.\d{1,2})*\.\s+|^\d{1,2}(?:\.\d{1,2})+\s+/;
+
+/** `words` without the number before them: a dotted one, or a bare one
+ *  only when it is the number this heading gets ("7 Methods" keeps its 7). */
+function withoutNumber(words, mine) {
+  if (mine && words.startsWith(mine + " ")) return words.slice(mine.length + 1);
+  return words.replace(OLD_NUMBER, "");
+}
+
+/** Textus AI's tool: the headings of some Markdown numbered in their text,
+ *  as the editor draws them; or, with `remove`, their numbers taken out. */
+function numberHeadings(input) {
+  const lines = String(input.text || "").split("\n");
+  const blocks = [];
+  let fence = null;
+  lines.forEach((line, i) => {
+    const f = /^\s{0,3}(`{3,}|~{3,})/.exec(line);
+    if (f && (!fence || f[1][0] === fence[0])) fence = fence ? null : f[1];
+    else if (!fence && /^#{1,6}\s/.test(line)) {
+      const [, marks, words] = /^(#+\s+)(.*)$/.exec(line);
+      blocks.push({ id: i, kind: "heading", marks: marks, words: words });
+    }
+  });
+  const shown = blocks.map((b) => ({ id: b.id, kind: b.kind, markdown: b.marks }));
+  const mine = numbers(shown, startOf(shown));
+  const number = input.remove ? {} : mine;
+  for (const b of blocks) {
+    const words = withoutNumber(b.words, mine[b.id]);
+    lines[b.id] = b.marks + (number[b.id] ? number[b.id] + " " : "") + words;
+  }
+  return { text: lines.join("\n") };
+}
+
 exports.activate = function () {
+  textus.ai.registerTool("number_headings", numberHeadings);
   textus.editor.registerDecorations({
     decorate: async function (inSight) {
       const blocks = (await textus.editor.getBlocks()) || [];

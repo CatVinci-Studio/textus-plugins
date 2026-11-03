@@ -18,8 +18,21 @@ async function keep(bookmarks) {
 
 const fileName = (path) => path.split(/[\\/]/).pop();
 
+/** Textus AI's tool: the bookmarks, documents by their path in the open
+ *  folder (in full when outside it). */
+async function listBookmarks() {
+  const root = await textus.files.root();
+  const base = root && root.replace(/[\\/]+$/, "").replace(/\\/g, "/") + "/";
+  const relOf = (path) => {
+    const p = path.replace(/\\/g, "/");
+    return base && p.startsWith(base) ? p.slice(base.length) : path;
+  };
+  return { bookmarks: (await all()).map((mark) => ({ text: mark.text, path: relOf(mark.path) })) };
+}
+
 exports.activate = function (context) {
   ctx = context;
+  textus.ai.registerTool("list_bookmarks", listBookmarks);
   list = textus.views.registerList("catvinci.bookmarks.panel", {
     emptyText: t("empty"),
     items: async function () {

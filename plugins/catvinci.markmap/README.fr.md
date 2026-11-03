@@ -17,3 +17,11 @@ Dessine un plan Markdown (titres et listes) en carte mentale.
 - Writers
 - Reviewers
 ```
+
+<!-- ai-tools -->
+## Outils pour Textus AI
+
+Une fois le plugin installé, Textus AI peut s’en servir dans une conversation :
+
+- `check_markmap`: Vérifie la source d'un bloc ```markmap - un plan Markdown dont les titres et les éléments de liste sont les branches de la carte mentale - avant qu'il n'entre dans un document, sans le dessiner. Renvoie ok, ou les problèmes à corriger d'abord. Passez la source sans sa clôture.
+<!-- /ai-tools -->

@@ -126,6 +126,32 @@ async function up() {
   if (picked) await textus.layout.open(join(root, picked));
 }
 
+/** Textus AI's tool: a page, or a sub-page of another, and the link to
+ *  put in its parent. */
+async function createPage(input) {
+  root = await textus.files.root();
+  if (!root) return { error: t("needsFolder") };
+  const title = String(input.title || "").trim();
+  if (!pages.fileName(title)) return { error: "The page has no title." };
+  let parentRel = null;
+  if (input.parent) {
+    parentRel = String(input.parent).trim().replace(/\\/g, "/").replace(/^\.?\/+/, "");
+    if (!/\.md$/i.test(parentRel)) parentRel += ".md";
+    if (parentRel.split("/").includes("..") || !(await textus.files.stat(join(root, parentRel))))
+      return { error: "No page " + parentRel + " in the folder." };
+  }
+  const rel = parentRel ? pages.subpage(parentRel, title) : pages.fileName(title) + ".md";
+  const file = join(root, rel);
+  if (await textus.files.stat(file)) return { error: t("exists", title) };
+  if (rel.includes("/"))
+    await textus.files.createFolder(join(root, rel.slice(0, rel.lastIndexOf("/")))).catch(() => {});
+  const body = input.body ? "\n" + String(input.body).replace(/\s+$/, "") + "\n" : "";
+  await textus.files.create(file, "# " + title + "\n" + body);
+  if (input.icon) await textus.files.frontmatter.update(file, (fm) => void (fm.icon = String(input.icon)));
+  const rels = docs.map((d) => d.rel).concat([rel]);
+  return { path: rel, parent: parentRel, link: pages.link(rel, rels) };
+}
+
 exports.activate = function (ctx) {
   let pending = null;
   const later = () => {
@@ -142,6 +168,7 @@ exports.activate = function (ctx) {
     textus.commands.register("catvinci.pages.newSubpage", newSubpage),
     textus.commands.register("catvinci.pages.setIcon", setIcon),
     textus.commands.register("catvinci.pages.up", up),
+    textus.ai.registerTool("create_page", createPage),
     textus.files.onDidChangeRoot(later),
     textus.metadata.onDidChange(later),
     textus.files.onDidCreate(later),

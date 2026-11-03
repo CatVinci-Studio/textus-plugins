@@ -15,3 +15,11 @@ Charts from an ECharts option - bars, lines, pies, maps and more.
   series: [{ type: "bar", data: [120, 200, 150] }]
 }
 ```
+
+<!-- ai-tools -->
+## Tools for Textus AI
+
+Once it is installed, Textus AI can use these in a conversation:
+
+- `check_echarts`: Checks the source of a ```echarts block - an ECharts option as JSON: series with their types, and the axes or components they are drawn on - before it goes into a document, without drawing it. Returns ok, or the problems to fix first. Pass the source without its fence.
+<!-- /ai-tools -->

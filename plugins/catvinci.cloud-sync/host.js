@@ -881,13 +881,21 @@ var RemoteStore = class {
     for (const part of parts) {
       path += `${encodeURIComponent(part)}/`;
       if (this.dirs.has(path)) continue;
-      const res = await this.request(
-        "MKCOL",
-        `${this.config.endpoint}/${path}`
-      );
-      if (res.status !== 405) this.require(res);
+      const url = `${this.config.endpoint}/${path}`;
+      const res = await this.request("MKCOL", url);
+      const made = res.status >= 200 && res.status < 300;
+      if (!made && !await this.isFolder(url)) {
+        if ([401, 403, 429, 507].includes(res.status)) this.require(res);
+        throw new SyncError("folderNotCreated", [
+          decodeURIComponent(path.slice(0, -1))
+        ]);
+      }
       this.dirs.add(path);
     }
+  }
+  async isFolder(url) {
+    const res = await this.request("PROPFIND", url, void 0, { Depth: "0" });
+    return res.status === 207 || res.status === 200;
   }
   async get(key) {
     const res = await this.request(

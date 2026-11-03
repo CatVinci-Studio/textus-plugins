@@ -8,3 +8,11 @@ Cite from your Zotero library while you write.
 - Pick an item and the citation goes in at the caret.
 - **Plugins › Insert References List** adds a list of every work the document cites at its end.
 - How a citation is written is in the plugin's settings.
+
+<!-- ai-tools -->
+## Tools for Textus AI
+
+Once it is installed, Textus AI can use these in a conversation:
+
+- `search_library`: Searches the user's Zotero library on this computer (Zotero 7 or later must be running): each item's key, title, authors, year, type, where it appeared, citation key, and the citation to insert in the user's chosen style. Fails with what to do when Zotero can't be reached.
+<!-- /ai-tools -->

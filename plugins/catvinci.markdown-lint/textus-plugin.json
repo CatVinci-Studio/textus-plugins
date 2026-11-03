@@ -1,7 +1,7 @@
 {
   "id": "catvinci.markdown-lint",
   "name": "%name%",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "publisher": "catvinci",
   "author": "CatVinci Studio",
   "description": "%description%",
@@ -13,7 +13,7 @@
   },
   "platforms": ["desktop", "ios"],
   "main": ["lib/markdownlint.js", "host.js"],
-  "permissions": ["editor.read", "editor.write"],
+  "permissions": ["editor.read", "editor.write", "ai.tools"],
   "activationEvents": ["onEditor"],
   "contributes": {
     "commands": [
@@ -33,7 +33,26 @@
           "command": "catvinci.markdown-lint.fix"
         }
       ]
-    }
+    },
+    "aiTools": [
+      {
+        "name": "lint_markdown",
+        "description": "%tool.lint_markdown%",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "text": {
+              "type": "string",
+              "description": "The Markdown to check; the document in front when left out."
+            },
+            "fix": {
+              "type": "boolean",
+              "description": "Also return the text with every fix markdownlint knows applied."
+            }
+          }
+        }
+      }
+    ]
   },
   "l10n": {
     "en": {
@@ -41,70 +60,80 @@
       "description": "Underlines Markdown that breaks common style rules, and fixes what it can in one go.",
       "fix": "Fix Markdown",
       "fixed": "Fixed {0} blocks.",
-      "clean": "Nothing to fix."
+      "clean": "Nothing to fix.",
+      "tool.lint_markdown": "Checks Markdown - given, or the document in front - with markdownlint's rules, as the editor underlines them: each issue's line, rule, description and whether it can be fixed; with fix, also the fixed text. Changes nothing itself."
     },
     "zh": {
       "name": "Markdown 检查",
       "description": "给不合常见规范的 Markdown 画上波浪线，能修的一键修好。",
       "fix": "修正 Markdown",
       "fixed": "已修正 {0} 处。",
-      "clean": "没有需要修正的地方。"
+      "clean": "没有需要修正的地方。",
+      "tool.lint_markdown": "用 markdownlint 的规则检查 Markdown（给定的文本或当前文档），与编辑器中划线提示的一致：每个问题的行号、规则、说明以及能否自动修复；设 fix 时还返回修复后的文本。本身不改动任何内容。"
     },
     "zh-Hant": {
       "name": "Markdown 檢查",
       "description": "為不合常見規範的 Markdown 畫上波浪線，能修的一鍵修好。",
       "fix": "修正 Markdown",
       "fixed": "已修正 {0} 處。",
-      "clean": "沒有需要修正的地方。"
+      "clean": "沒有需要修正的地方。",
+      "tool.lint_markdown": "用 markdownlint 的規則檢查 Markdown（給定的文字或目前文件），與編輯器中劃線提示的一致：每個問題的行號、規則、說明以及能否自動修正；設 fix 時還回傳修正後的文字。本身不改動任何內容。"
     },
     "ja": {
       "name": "Markdown チェック",
       "description": "よくあるスタイル規則に合わない Markdown に波線を引き、直せるものは一度に直します。",
       "fix": "Markdown を修正",
       "fixed": "{0} か所を修正しました。",
-      "clean": "直すところはありません。"
+      "clean": "直すところはありません。",
+      "tool.lint_markdown": "Markdown（渡された文章か前面の文書）を、エディタが下線で示すのと同じ markdownlint の規則で検査します。各問題の行・規則・説明・自動修正できるかを返し、fix を指定すると修正後の文章も返します。それ自体は何も変更しません。"
     },
     "ko": {
       "name": "Markdown 검사",
       "description": "흔한 스타일 규칙에 어긋나는 Markdown에 물결선을 긋고, 고칠 수 있는 것은 한 번에 고칩니다.",
       "fix": "Markdown 고치기",
       "fixed": "{0}곳을 고쳤습니다.",
-      "clean": "고칠 것이 없습니다."
+      "clean": "고칠 것이 없습니다.",
+      "tool.lint_markdown": "Markdown(주어진 글이나 앞에 열린 문서)을 편집기가 밑줄로 보여 주는 것과 같은 markdownlint 규칙으로 검사합니다. 각 문제의 줄·규칙·설명·자동 수정 가능 여부를 돌려주고, fix를 주면 고친 글도 돌려줍니다. 스스로는 아무것도 바꾸지 않습니다."
     },
     "es": {
       "name": "Revisión de Markdown",
       "description": "Subraya el Markdown que rompe reglas de estilo comunes y corrige de una vez lo que puede.",
       "fix": "Corregir Markdown",
       "fixed": "{0} bloques corregidos.",
-      "clean": "Nada que corregir."
+      "clean": "Nada que corregir.",
+      "tool.lint_markdown": "Revisa Markdown - dado, o el documento al frente - con las reglas de markdownlint, como las subraya el editor: la línea, la regla, la descripción de cada problema y si se puede corregir; con fix, también el texto corregido. No cambia nada por sí mismo."
     },
     "fr": {
       "name": "Vérification Markdown",
       "description": "Souligne le Markdown qui enfreint les règles de style courantes et corrige d’un coup ce qu’il peut.",
       "fix": "Corriger le Markdown",
       "fixed": "{0} blocs corrigés.",
-      "clean": "Rien à corriger."
+      "clean": "Rien à corriger.",
+      "tool.lint_markdown": "Vérifie du Markdown - fourni, ou le document au premier plan - avec les règles de markdownlint, comme l'éditeur les souligne : ligne, règle, description de chaque problème et s'il se corrige ; avec fix, aussi le texte corrigé. Ne modifie rien lui-même."
     },
     "de": {
       "name": "Markdown-Prüfung",
       "description": "Unterstreicht Markdown, das gängige Stilregeln verletzt, und behebt, was es kann, in einem Schritt.",
       "fix": "Markdown korrigieren",
       "fixed": "{0} Blöcke korrigiert.",
-      "clean": "Nichts zu korrigieren."
+      "clean": "Nichts zu korrigieren.",
+      "tool.lint_markdown": "Prüft Markdown - übergeben oder das vordere Dokument - mit den Regeln von markdownlint, wie der Editor sie unterstreicht: Zeile, Regel, Beschreibung und Behebbarkeit jedes Problems; mit fix auch den korrigierten Text. Ändert selbst nichts."
     },
     "ru": {
       "name": "Проверка Markdown",
       "description": "Подчёркивает Markdown, нарушающий общие правила оформления, и исправляет всё, что может, за раз.",
       "fix": "Исправить Markdown",
       "fixed": "Исправлено блоков: {0}.",
-      "clean": "Исправлять нечего."
+      "clean": "Исправлять нечего.",
+      "tool.lint_markdown": "Проверяет Markdown - переданный или документ на переднем плане - по правилам markdownlint, как их подчёркивает редактор: строка, правило, описание каждой проблемы и можно ли её исправить; с fix - ещё и исправленный текст. Сам ничего не меняет."
     },
     "pt": {
       "name": "Verificação de Markdown",
       "description": "Sublinha o Markdown que quebra regras de estilo comuns e corrige de uma vez o que puder.",
       "fix": "Corrigir Markdown",
       "fixed": "{0} blocos corrigidos.",
-      "clean": "Nada a corrigir."
+      "clean": "Nada a corrigir.",
+      "tool.lint_markdown": "Verifica Markdown - dado, ou o documento em primeiro plano - com as regras do markdownlint, como o editor as sublinha: a linha, a regra, a descrição de cada problema e se se corrige; com fix, também o texto corrigido. Não altera nada por si."
     }
   }
 }

@@ -17,3 +17,11 @@ Simple charts from a Chart.js configuration.
   }
 }
 ```
+
+<!-- ai-tools -->
+## Tools for Textus AI
+
+Once it is installed, Textus AI can use these in a conversation:
+
+- `check_chartjs`: Checks the source of a ```chartjs block - a Chart.js 4 configuration as JSON: type, data with labels and datasets, options - before it goes into a document, without drawing it. Returns ok, or the problems to fix first. Pass the source without its fence.
+<!-- /ai-tools -->

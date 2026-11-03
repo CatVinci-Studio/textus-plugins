@@ -7,3 +7,12 @@ Una nota para cada día y un calendario para llegar a cualquiera de ellas.
 - Las notas se guardan en una carpeta dentro de la carpeta abierta. Su nombre y el texto con el que empieza un día nuevo se cambian en los ajustes del complemento; la semana empieza como en tu región.
 - **Complementos › Abrir el día anterior** y **Abrir el día siguiente** pasan de la nota de un día a las vecinas.
 - La plantilla admite {{weekday}}, {{yesterday}}, {{tomorrow}} y {{time}} además de {{date}}; por ejemplo, `[[{{yesterday}}]]` enlaza cada día con el anterior.
+
+<!-- ai-tools -->
+## Herramientas para Textus AI
+
+Con el plugin instalado, Textus AI puede usarlas en una conversación:
+
+- `read_daily_note`: Lee la nota diaria de un día - la de hoy si no se da fecha - de la carpeta de notas diarias: su ruta, si existe y su texto.
+- `append_to_daily_note`: Añade Markdown al final de la nota diaria de un día - la de hoy si no se da fecha -, creándola antes desde su plantilla si no existe.
+<!-- /ai-tools -->

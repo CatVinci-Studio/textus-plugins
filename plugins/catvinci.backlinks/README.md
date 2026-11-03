@@ -6,3 +6,11 @@ What links to the document in front, and where it links to - in the **Backlinks*
 - **Unlinked mentions**: lines that name this note - by its file name, first heading or `aliases` in its front matter - without a link. Right-click one and choose **Link** to make it a [[link]].
 - **Outgoing links**: the notes this one links to, and the ones it links to that don't exist yet.
 - The field at the top filters the list.
+
+<!-- ai-tools -->
+## Tools for Textus AI
+
+Once it is installed, Textus AI can use these in a conversation:
+
+- `list_backlinks`: For a document - the one in front unless a path is given - lists the notes linking to it (path, line, the line's text), the lines naming it without a link, and the notes it links to.
+<!-- /ai-tools -->

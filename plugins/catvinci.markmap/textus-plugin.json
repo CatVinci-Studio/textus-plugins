@@ -1,7 +1,7 @@
 {
   "id": "catvinci.markmap",
   "name": "%name%",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "publisher": "catvinci",
   "author": "CatVinci Studio",
   "description": "%description%",
@@ -12,56 +12,84 @@
     "textus": ">=1.3.2"
   },
   "platforms": ["desktop", "ios"],
-  "main": ["lib/chart-host.js", "host.js"],
-  "permissions": [],
+  "main": ["lib/chart-host.js", "check.js", "host.js"],
+  "permissions": ["ai.tools"],
   "contributes": {
     "codeBlocks": [
       {
         "language": "markmap",
         "title": "%name%"
       }
+    ],
+    "aiTools": [
+      {
+        "name": "check_markmap",
+        "description": "%tool.check_markmap%",
+        "parameters": {
+          "type": "object",
+          "required": [
+            "source"
+          ],
+          "properties": {
+            "source": {
+              "type": "string",
+              "description": "The block's source, without its ``` fence."
+            }
+          }
+        }
+      }
     ]
   },
   "l10n": {
     "en": {
       "name": "Mind Map",
-      "description": "Draws a Markdown outline - headings and lists - as a mind map."
+      "description": "Draws a Markdown outline - headings and lists - as a mind map.",
+      "tool.check_markmap": "Checks the source of a ```markmap block - a Markdown outline whose headings and list items are the mind map's branches - before it goes into a document, without drawing it. Returns ok, or the problems to fix first. Pass the source without its fence."
     },
     "zh": {
       "name": "思维导图（Markmap）",
-      "description": "把 Markdown 大纲（标题和列表）画成思维导图。"
+      "description": "把 Markdown 大纲（标题和列表）画成思维导图。",
+      "tool.check_markmap": "在把 ```markmap 块写进文档之前检查它的源码（以标题和列表项作为思维导图分支的 Markdown 大纲），不实际绘制。返回 ok，或需要先修正的问题。传入时不带代码围栏。"
     },
     "zh-Hant": {
       "name": "心智圖（Markmap）",
-      "description": "把 Markdown 大綱（標題和清單）畫成心智圖。"
+      "description": "把 Markdown 大綱（標題和清單）畫成心智圖。",
+      "tool.check_markmap": "在把 ```markmap 區塊寫進文件之前檢查它的原始碼（以標題和清單項目作為心智圖分支的 Markdown 大綱），不實際繪製。回傳 ok，或需要先修正的問題。傳入時不帶程式碼圍欄。"
     },
     "ja": {
       "name": "マインドマップ",
-      "description": "Markdown のアウトライン（見出しとリスト）をマインドマップとして描きます。"
+      "description": "Markdown のアウトライン（見出しとリスト）をマインドマップとして描きます。",
+      "tool.check_markmap": "```markmap ブロックのソース（見出しとリスト項目がマインドマップの枝になる Markdown のアウトライン）を、文書に入れる前に描画せずに検査します。ok か、先に直すべき問題を返します。フェンスを除いたソースを渡してください。"
     },
     "ko": {
       "name": "마인드맵",
-      "description": "Markdown 개요(제목과 목록)를 마인드맵으로 그립니다."
+      "description": "Markdown 개요(제목과 목록)를 마인드맵으로 그립니다.",
+      "tool.check_markmap": "```markmap 블록의 소스(제목과 목록 항목이 마인드맵의 가지가 되는 Markdown 개요)를 문서에 넣기 전에 그리지 않고 검사합니다. ok나 먼저 고칠 문제를 돌려줍니다. 펜스 없이 소스만 넘기세요."
     },
     "es": {
       "name": "Mapa mental",
-      "description": "Dibuja un esquema en Markdown (títulos y listas) como mapa mental."
+      "description": "Dibuja un esquema en Markdown (títulos y listas) como mapa mental.",
+      "tool.check_markmap": "Revisa el código de un bloque ```markmap - un esquema en Markdown cuyos encabezados y elementos de lista son las ramas del mapa mental - antes de que entre en un documento, sin dibujarlo. Devuelve ok, o los problemas que hay que corregir antes. Pasa el código sin su valla."
     },
     "fr": {
       "name": "Carte mentale",
-      "description": "Dessine un plan Markdown (titres et listes) en carte mentale."
+      "description": "Dessine un plan Markdown (titres et listes) en carte mentale.",
+      "tool.check_markmap": "Vérifie la source d'un bloc ```markmap - un plan Markdown dont les titres et les éléments de liste sont les branches de la carte mentale - avant qu'il n'entre dans un document, sans le dessiner. Renvoie ok, ou les problèmes à corriger d'abord. Passez la source sans sa clôture."
     },
     "de": {
       "name": "Mindmap",
-      "description": "Zeichnet eine Markdown-Gliederung (Überschriften und Listen) als Mindmap."
+      "description": "Zeichnet eine Markdown-Gliederung (Überschriften und Listen) als Mindmap.",
+      "tool.check_markmap": "Prüft die Quelle eines ```markmap-Blocks - eine Markdown-Gliederung, deren Überschriften und Listenpunkte die Äste der Mindmap sind -, bevor er in ein Dokument kommt, ohne ihn zu zeichnen. Gibt ok zurück oder die Probleme, die zuerst zu beheben sind. Die Quelle ohne ihren Zaun übergeben."
     },
     "ru": {
       "name": "Интеллект-карта",
-      "description": "Рисует план на Markdown (заголовки и списки) в виде интеллект-карты."
+      "description": "Рисует план на Markdown (заголовки и списки) в виде интеллект-карты.",
+      "tool.check_markmap": "Проверяет исходный текст блока ```markmap - план на Markdown, заголовки и пункты списков которого - ветви ментальной карты - до того, как он попадёт в документ, не рисуя его. Возвращает ok или проблемы, которые нужно сначала исправить. Передавайте текст без ограждения."
     },
     "pt": {
       "name": "Mapa mental",
-      "description": "Desenha um esboço em Markdown (títulos e listas) como mapa mental."
+      "description": "Desenha um esboço em Markdown (títulos e listas) como mapa mental.",
+      "tool.check_markmap": "Verifica o código de um bloco ```markmap - um esquema em Markdown cujos títulos e itens de lista são os ramos do mapa mental - antes de entrar num documento, sem o desenhar. Devolve ok, ou os problemas a corrigir primeiro. Passe o código sem a cerca."
     }
   }
 }

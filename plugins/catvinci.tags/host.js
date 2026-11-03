@@ -54,6 +54,22 @@ async function rename(from) {
   textus.ui.notice(t("renamed", "#" + from, "#" + to, docs.length));
 }
 
+// Textus AI's tools.
+async function listTags() {
+  if (!(await textus.files.root())) return { error: "No folder is open." };
+  const tags = await textus.metadata.tags();
+  return { tags: tags.sort((a, b) => b.count - a.count || a.tag.localeCompare(b.tag)) };
+}
+
+async function notesWithTag(input) {
+  if (!(await textus.files.root())) return { error: "No folder is open." };
+  const tag = String(input.tag || "").trim().replace(/^#/, "");
+  // Nested tags count for their parent: #project/alpha is a #project note.
+  const has = (d) => d.tags.some((name) => name === tag || name.startsWith(tag + "/"));
+  const docs = (await textus.metadata.all()).filter(has);
+  return { tag: tag, notes: docs.map((d) => ({ title: d.title, path: d.rel, tags: d.tags })) };
+}
+
 exports.activate = function (ctx) {
   list = textus.views.registerList("catvinci.tags.panel", {
     items,
@@ -66,5 +82,7 @@ exports.activate = function (ctx) {
     textus.commands.register("catvinci.tags.rename", (tag) => rename(tag).finally(refresh)),
     textus.metadata.onDidChange(refresh),
     textus.files.onDidChangeRoot(refresh),
+    textus.ai.registerTool("list_tags", listTags),
+    textus.ai.registerTool("notes_with_tag", notesWithTag),
   );
 };

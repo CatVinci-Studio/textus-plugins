@@ -13,3 +13,11 @@
 2024-09 | Review | Notes from three readers
 2025-01 | Published
 ```
+
+<!-- ai-tools -->
+## Textus AI のツール
+
+このプラグインを入れると、Textus AI が会話の中で使えます：
+
+- `check_timeline`：```timeline ブロックのソース（一行に一つの出来事を いつ | 何が | 補足 と書いたもの）を、文書に入れる前に描画せずに検査します。ok か、先に直すべき問題を返します。フェンスを除いたソースを渡してください。
+<!-- /ai-tools -->

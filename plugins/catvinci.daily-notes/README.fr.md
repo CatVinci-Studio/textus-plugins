@@ -7,3 +7,12 @@ Une note par jour, et un calendrier pour accéder à chacune.
 - Les notes sont rangées dans un dossier du dossier ouvert. Son nom et le texte de départ d’un nouveau jour se règlent dans les réglages de l’extension ; la semaine commence comme dans votre région.
 - **Extensions › Ouvrir la veille** et **Ouvrir le lendemain** passent de la note d’un jour à ses voisines.
 - Le modèle accepte {{weekday}}, {{yesterday}}, {{tomorrow}} et {{time}} en plus de {{date}} ; par exemple, `[[{{yesterday}}]]` relie chaque jour à la veille.
+
+<!-- ai-tools -->
+## Outils pour Textus AI
+
+Une fois le plugin installé, Textus AI peut s’en servir dans une conversation :
+
+- `read_daily_note`: Lit la note quotidienne d'un jour - celle d'aujourd'hui si aucune date n'est donnée - dans le dossier des notes quotidiennes : son chemin, si elle existe, et son texte.
+- `append_to_daily_note`: Ajoute du Markdown à la fin de la note quotidienne d'un jour - celle d'aujourd'hui si aucune date n'est donnée -, en la créant d'abord depuis son modèle si elle n'existe pas.
+<!-- /ai-tools -->

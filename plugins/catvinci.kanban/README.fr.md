@@ -17,3 +17,14 @@ Des tableaux de cartes en listes, enregistrés dans un simple fichier Markdown.
 
 - [x] Choisir un titre
 ```
+
+<!-- ai-tools -->
+## Outils pour Textus AI
+
+Une fois le plugin installé, Textus AI peut s’en servir dans une conversation :
+
+- `list_boards`: Liste les tableaux Kanban (fichiers name.kanban.md) du dossier ouvert, chacun avec ses listes et le nombre de cartes de chacune.
+- `read_board`: Lit un tableau Kanban : ses listes dans l'ordre, chacune avec le texte de ses cartes et si elles sont faites.
+- `add_card`: Ajoute une carte à la fin d'une liste d'un tableau Kanban.
+- `move_card`: Déplace une carte d'un tableau Kanban vers une autre liste, ou à une autre place dans la sienne.
+<!-- /ai-tools -->

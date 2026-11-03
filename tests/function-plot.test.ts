@@ -1,15 +1,13 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 
-/** Function Plot's page script, run with its page stubbed out. */
+/** Function Plot's parser (plugins/catvinci.function-plot/plot.js), a plain
+ *  script its page and host both run. */
 const source = readFileSync(
-  new URL("../plugins/catvinci.function-plot/draw.js", import.meta.url),
+  new URL("../plugins/catvinci.function-plot/plot.js", import.meta.url),
   "utf8",
 );
-const { compile, bound } = new Function(
-  "drawChartBlock",
-  source + "\nreturn { compile, bound };",
-)(() => {}) as {
+const { compile, bound } = new Function(source + "\nreturn { compile, bound };")() as {
   compile: (text: string) => (x: number) => number;
   bound: (value: string | undefined, fallback: number) => number;
 };

@@ -1,7 +1,7 @@
 {
   "id": "catvinci.tags",
   "name": "%name%",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "publisher": "catvinci",
   "author": "CatVinci Studio",
   "description": "%description%",
@@ -18,7 +18,8 @@
   ],
   "permissions": [
     "files.read",
-    "files.write"
+    "files.write",
+    "ai.tools"
   ],
   "contributes": {
     "sidebarTabs": [
@@ -27,6 +28,32 @@
         "title": "%name%",
         "icon": "tab.svg",
         "type": "list"
+      }
+    ],
+    "aiTools": [
+      {
+        "name": "list_tags",
+        "description": "%tool.list_tags%",
+        "parameters": {
+          "type": "object",
+          "properties": {}
+        }
+      },
+      {
+        "name": "notes_with_tag",
+        "description": "%tool.notes_with_tag%",
+        "parameters": {
+          "type": "object",
+          "required": [
+            "tag"
+          ],
+          "properties": {
+            "tag": {
+              "type": "string",
+              "description": "The tag, with or without #; its nested tags (tag/sub) count too."
+            }
+          }
+        }
       }
     ]
   },
@@ -40,7 +67,9 @@
       "invalid": "A tag is letters, digits, _, - and /, and not only digits.",
       "filter": "Filter tags",
       "none": "No tags in this folder yet.",
-      "nofolder": "Open a folder to see its tags."
+      "nofolder": "Open a folder to see its tags.",
+      "tool.list_tags": "Lists every #tag in the open folder's documents with how many documents use it, the most used first.",
+      "tool.notes_with_tag": "Lists the documents in the open folder that have a #tag, each with its title, path and tags."
     },
     "zh": {
       "name": "标签",
@@ -51,7 +80,9 @@
       "invalid": "标签只能由文字、数字、_、- 和 / 组成，且不能全是数字。",
       "filter": "筛选标签",
       "none": "这个文件夹里还没有标签。",
-      "nofolder": "打开一个文件夹来查看它的标签。"
+      "nofolder": "打开一个文件夹来查看它的标签。",
+      "tool.list_tags": "列出打开的文件夹中所有文档用到的 #标签，以及每个标签被多少篇文档使用，用得最多的排在前面。",
+      "tool.notes_with_tag": "列出打开的文件夹中带有某个 #标签的文档，每篇带标题、路径和它的全部标签。"
     },
     "zh-Hant": {
       "name": "標籤",
@@ -62,7 +93,9 @@
       "invalid": "標籤只能由文字、數字、_、- 和 / 組成，且不能全是數字。",
       "filter": "篩選標籤",
       "none": "這個資料夾裡還沒有標籤。",
-      "nofolder": "開啟一個資料夾來查看它的標籤。"
+      "nofolder": "開啟一個資料夾來查看它的標籤。",
+      "tool.list_tags": "列出開啟的資料夾中所有文件用到的 #標籤，以及每個標籤被多少份文件使用，用得最多的排在前面。",
+      "tool.notes_with_tag": "列出開啟的資料夾中帶有某個 #標籤的文件，每份附標題、路徑和它的全部標籤。"
     },
     "ja": {
       "name": "タグ",
@@ -73,7 +106,9 @@
       "invalid": "タグは文字、数字、_、-、/ だけで、数字だけにはできません。",
       "filter": "タグを絞り込む",
       "none": "このフォルダにはまだタグがありません。",
-      "nofolder": "フォルダを開くとタグが表示されます。"
+      "nofolder": "フォルダを開くとタグが表示されます。",
+      "tool.list_tags": "開いているフォルダの文書で使われている #タグをすべて、使っている文書の数とともに、多い順に一覧にします。",
+      "tool.notes_with_tag": "開いているフォルダで、ある #タグを持つ文書を、タイトル・パス・タグとともに一覧にします。"
     },
     "ko": {
       "name": "태그",
@@ -84,7 +119,9 @@
       "invalid": "태그는 글자, 숫자, _, -, /로만 되고 숫자만으로는 안 됩니다.",
       "filter": "태그 거르기",
       "none": "이 폴더에는 아직 태그가 없습니다.",
-      "nofolder": "폴더를 열면 태그가 보입니다."
+      "nofolder": "폴더를 열면 태그가 보입니다.",
+      "tool.list_tags": "열린 폴더의 문서에 쓰인 #태그를 모두, 각각 몇 개의 문서에 쓰였는지와 함께 많이 쓰인 순으로 나열합니다.",
+      "tool.notes_with_tag": "열린 폴더에서 어떤 #태그가 붙은 문서를 제목·경로·태그와 함께 나열합니다."
     },
     "de": {
       "name": "Tags",
@@ -95,7 +132,9 @@
       "invalid": "Ein Tag besteht aus Buchstaben, Ziffern, _, - und /, nicht nur aus Ziffern.",
       "filter": "Tags filtern",
       "none": "Noch keine Tags in diesem Ordner.",
-      "nofolder": "Öffne einen Ordner, um seine Tags zu sehen."
+      "nofolder": "Öffne einen Ordner, um seine Tags zu sehen.",
+      "tool.list_tags": "Listet jeden #Tag in den Dokumenten des geöffneten Ordners auf, mit der Zahl der Dokumente, die ihn nutzen, den häufigsten zuerst.",
+      "tool.notes_with_tag": "Listet die Dokumente im geöffneten Ordner mit einem #Tag auf, jedes mit Titel, Pfad und Tags."
     },
     "fr": {
       "name": "Étiquettes",
@@ -106,7 +145,9 @@
       "invalid": "Une étiquette est faite de lettres, chiffres, _, - et /, pas seulement de chiffres.",
       "filter": "Filtrer les étiquettes",
       "none": "Pas encore d'étiquettes dans ce dossier.",
-      "nofolder": "Ouvrez un dossier pour voir ses étiquettes."
+      "nofolder": "Ouvrez un dossier pour voir ses étiquettes.",
+      "tool.list_tags": "Liste tous les #tags des documents du dossier ouvert avec le nombre de documents qui les utilisent, les plus utilisés d'abord.",
+      "tool.notes_with_tag": "Liste les documents du dossier ouvert qui portent un #tag, chacun avec son titre, son chemin et ses tags."
     },
     "es": {
       "name": "Etiquetas",
@@ -117,7 +158,9 @@
       "invalid": "Una etiqueta tiene letras, números, _, - y /, y no solo números.",
       "filter": "Filtrar etiquetas",
       "none": "Aún no hay etiquetas en esta carpeta.",
-      "nofolder": "Abre una carpeta para ver sus etiquetas."
+      "nofolder": "Abre una carpeta para ver sus etiquetas.",
+      "tool.list_tags": "Enumera todas las #etiquetas de los documentos de la carpeta abierta con cuántos documentos usan cada una, las más usadas primero.",
+      "tool.notes_with_tag": "Enumera los documentos de la carpeta abierta que tienen una #etiqueta, cada uno con su título, ruta y etiquetas."
     },
     "pt": {
       "name": "Tags",
@@ -128,7 +171,9 @@
       "invalid": "Uma tag tem letras, números, _, - e /, e não só números.",
       "filter": "Filtrar tags",
       "none": "Ainda não há tags nesta pasta.",
-      "nofolder": "Abra uma pasta para ver suas tags."
+      "nofolder": "Abra uma pasta para ver suas tags.",
+      "tool.list_tags": "Lista todas as #tags dos documentos da pasta aberta com quantos documentos usam cada uma, as mais usadas primeiro.",
+      "tool.notes_with_tag": "Lista os documentos da pasta aberta que têm uma #tag, cada um com o título, o caminho e as tags."
     },
     "ru": {
       "name": "Теги",
@@ -139,7 +184,9 @@
       "invalid": "Тег состоит из букв, цифр, _, - и /, и не только из цифр.",
       "filter": "Фильтр тегов",
       "none": "В этой папке пока нет тегов.",
-      "nofolder": "Откройте папку, чтобы увидеть её теги."
+      "nofolder": "Откройте папку, чтобы увидеть её теги.",
+      "tool.list_tags": "Перечисляет все #теги в документах открытой папки с числом документов, где каждый встречается, начиная с самых частых.",
+      "tool.notes_with_tag": "Перечисляет документы открытой папки с #тегом, каждый с заголовком, путём и тегами."
     }
   }
 }

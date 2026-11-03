@@ -7,3 +7,11 @@ Anote algo sem sair do documento.
 - A aba **Notas rápidas** da barra lateral as lista: insira uma no documento, abra-a como documento ou exclua-a.
 - Apagou sem querer? **Desfazer**, embaixo, a traz de volta por alguns segundos. Uma nota nova deixada em branco some sozinha.
 - Com muitas notas, um campo de busca aparece no topo.
+
+<!-- ai-tools -->
+## Ferramentas para o Textus AI
+
+Com o plugin instalado, o Textus AI pode usá-las numa conversa:
+
+- `add_note`: Adiciona uma nota rápida no topo da lista de Notas rápidas da barra lateral, para inserir depois num documento ou abrir como um.
+<!-- /ai-tools -->

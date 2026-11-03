@@ -45,6 +45,7 @@ Plugins from other repositories are listed through [`community/`](community/): o
 npm ci
 npm run check   # reads every manifest, runs the tests
 npm run build   # dist/: the zips and index.json
+node scripts/readme-tools.mjs   # each README's "Tools for Textus AI", from its manifest
 ```
 
 Cloud Sync keeps its typed development source and protocol tests in

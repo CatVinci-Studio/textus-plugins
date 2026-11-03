@@ -17,3 +17,11 @@
   }
 }
 ```
+
+<!-- ai-tools -->
+## Textus AI 工具
+
+裝上這個外掛後，Textus AI 在對話中可以使用：
+
+- `check_chartjs`：在把 ```chartjs 區塊寫進文件之前檢查它的原始碼（JSON 格式的 Chart.js 4 設定：type、附 labels 和 datasets 的 data、options），不實際繪製。回傳 ok，或需要先修正的問題。傳入時不帶程式碼圍欄。
+<!-- /ai-tools -->

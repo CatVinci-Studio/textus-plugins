@@ -13,3 +13,11 @@ Gráficas de funciones, una por línea: sin(x), x^2 - 1.
 sin(x)
 x^2 / 4 - 1
 ```
+
+<!-- ai-tools -->
+## Herramientas para Textus AI
+
+Con el plugin instalado, Textus AI puede usarlas en una conversación:
+
+- `check_function_plot`: Revisa el código de un bloque ```function-plot - funciones de x, una por línea, con + - * / ^, paréntesis, pi, e y las funciones habituales - antes de que entre en un documento, sin dibujarlo. Devuelve ok, o los problemas que hay que corregir antes. Pasa el código sin su valla.
+<!-- /ai-tools -->

@@ -14,3 +14,11 @@ WaveJSON からデジタルタイミング図を描きます。
   { name: "data", wave: "x.345x", data: ["a", "b", "c"] }
 ]}
 ```
+
+<!-- ai-tools -->
+## Textus AI のツール
+
+このプラグインを入れると、Textus AI が会話の中で使えます：
+
+- `check_wavedrom`：```wavedrom ブロックのソース（WaveJSON。wave 文字列と data を持つ信号のレーン、またはレジスタのフィールド）を、文書に入れる前に描画せずに検査します。ok か、先に直すべき問題を返します。フェンスを除いたソースを渡してください。
+<!-- /ai-tools -->

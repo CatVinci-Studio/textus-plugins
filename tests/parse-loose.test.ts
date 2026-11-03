@@ -1,20 +1,13 @@
 import { beforeAll, describe, expect, it } from "vitest";
 
-/** The chart plugins' page code (shared/chart-page.js), a plain script
- *  run in the page; here with just enough of a page around it. */
+/** The JSON reader the chart plugins share (shared/parse-loose.js), a plain
+ *  script run in their pages and hosts. */
 let parseLoose: (source: string) => unknown;
 
 beforeAll(async () => {
-  const g = globalThis as Record<string, unknown>;
-  g.window = g;
-  g.acquireTextusApi = () => ({
-    onMessage() {},
-    onExport() {},
-    postMessage() {},
-  });
-  const script = "../shared/chart-page.js";
+  const script = "../shared/parse-loose.js";
   await import(/* @vite-ignore */ script);
-  parseLoose = g.parseLoose as typeof parseLoose;
+  parseLoose = (globalThis as Record<string, unknown>).parseLoose as typeof parseLoose;
 });
 
 describe("parseLoose", () => {

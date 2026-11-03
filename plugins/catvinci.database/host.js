@@ -255,6 +255,61 @@ function notionBody(text) {
   return lines.slice(i).join("\n").trim();
 }
 
+/** A row: a document in `folder` named for it, its properties in its front
+ *  matter. False when it has no name or one of that name is there. */
+async function makeRow(folder, row) {
+  const title = fileName(String(row.name || ""));
+  if (!title) return false;
+  const file = join(root, folder + "/" + title + ".md");
+  if (await textus.files.stat(file)) return false;
+  await textus.files.create(file, "# " + String(row.name).trim() + "\n" + (row.body ? "\n" + row.body + "\n" : ""));
+  if (row.properties && typeof row.properties === "object")
+    await textus.files.frontmatter.update(file, (fm) => Object.assign(fm, row.properties));
+  return true;
+}
+
+/** The database folder a tool names, by its path in the open folder. */
+async function databaseFolder(name) {
+  root = await textus.files.root();
+  if (!root) return { error: t("needsFolder") };
+  const folder = String(name || "").trim().replace(/\\/g, "/").replace(/^\.?\/+|\/+$/g, "");
+  if (!folder || folder.split("/").includes("..")) return { error: "database must be its folder's path in the open folder." };
+  return { folder: folder };
+}
+
+/** Textus AI's tool: a database's rows, filtered and sorted as a block's
+ *  lines would. */
+async function queryRows(input) {
+  const where = await databaseFolder(input.database);
+  if (where.error) return where;
+  const lines = [].concat(input.filter || []).map((f) => "filter: " + f);
+  if (input.sort) lines.push("sort: " + input.sort);
+  const spec = database.parseSpec(lines.join("\n"));
+  const rows = database.rowsOf(await textus.metadata.all(), where.folder);
+  if (!rows.length) return { error: "No documents in " + where.folder + "." };
+  const shown = database.viewRows(rows, spec);
+  const limit = Math.max(1, Number(input.limit) || 100);
+  return {
+    database: where.folder,
+    total: shown.length,
+    rows: shown.slice(0, limit).map((r) => ({
+      name: r.name,
+      path: r.rel,
+      properties: Object.fromEntries(Object.entries(r.props).map(([k, v]) => [k, plain(v)])),
+    })),
+  };
+}
+
+/** Textus AI's tool: one more row in a database. */
+async function addRow(input) {
+  const where = await databaseFolder(input.database);
+  if (where.error) return where;
+  await textus.files.createFolder(join(root, where.folder)).catch(() => {});
+  if (!(await makeRow(where.folder, input)))
+    return { error: input.name ? "A row named " + input.name + " is there already." : "The row has no name." };
+  return { database: where.folder, path: where.folder + "/" + fileName(String(input.name)) + ".md" };
+}
+
 /** Textus AI's tool: a folder of documents with these properties, and the
  *  block to show them, for the AI to put where the user wants it. */
 async function createDatabase(input) {
@@ -267,16 +322,8 @@ async function createDatabase(input) {
   const folder = (dir ? dir + "/" : "") + name;
   await textus.files.createFolder(join(root, folder)).catch(() => {});
   let made = 0;
-  for (const row of Array.isArray(input.rows) ? input.rows.slice(0, 400) : []) {
-    const title = fileName(String(row.name || ""));
-    if (!title) continue;
-    const file = join(root, folder + "/" + title + ".md");
-    if (await textus.files.stat(file)) continue;
-    await textus.files.create(file, "# " + String(row.name).trim() + "\n" + (row.body ? "\n" + row.body + "\n" : ""));
-    if (row.properties && typeof row.properties === "object")
-      await textus.files.frontmatter.update(file, (fm) => Object.assign(fm, row.properties));
-    made++;
-  }
+  for (const row of Array.isArray(input.rows) ? input.rows.slice(0, 400) : [])
+    if (await makeRow(folder, row)) made++;
   const view = database.VIEWS.includes(input.view) ? input.view : "table";
   const lines = ["from: " + name, "view: " + view];
   if (input.sort) lines.push("sort: " + input.sort);
@@ -300,6 +347,8 @@ exports.activate = function (ctx) {
     textus.commands.register("catvinci.database.new", newDatabase),
     textus.commands.register("catvinci.database.importNotion", importNotion),
     textus.ai.registerTool("create_database", createDatabase),
+    textus.ai.registerTool("query_rows", queryRows),
+    textus.ai.registerTool("add_row", addRow),
     // A page edited here, or anywhere: every block on screen again.
     textus.files.onDidChangeRoot(again),
     textus.metadata.onDidChange(again),

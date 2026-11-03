@@ -8,3 +8,13 @@ Alle Aufgaben deines Ordners in einer Liste.
 - Ob erledigte Aufgaben erscheinen, steht in den Einstellungen des Plugins.
 - Gib einer Aufgabe ein Datum (`📅 2026-11-01` oder `due:2026-11-01`), dann erscheint es als Badge; überfällige Aufgaben und solche, die innerhalb einer Woche fällig sind, stehen zuerst, unter **Bald fällig**.
 - Das Feld oben filtert die Liste nach Wörtern, nach dem Namen des Dokuments oder nach seiner Überschrift.
+
+<!-- ai-tools -->
+## Werkzeuge für Textus AI
+
+Ist das Plugin installiert, kann Textus AI sie im Gespräch nutzen:
+
+- `list_tasks`: Listet die Markdown-Aufgaben (- [ ] ...) in den Dokumenten des geöffneten Ordners auf - standardmäßig nur offene -, jede mit Text, Fälligkeit, Dokumentpfad und Zeile. Filtert nach Status, Dokument, Tag, Fälligkeit und Wörtern.
+- `add_task`: Fügt einem Dokument im geöffneten Ordner eine Aufgabe (- [ ] ...) hinzu: am Ende oder am Ende des Abschnitts unter einer Überschrift, mit Fälligkeit, falls angegeben. Legt das Dokument an, wenn es fehlt. Gibt zurück, wo sie steht.
+- `complete_task`: Hakt eine Aufgabe ab (- [x]) - oder öffnet sie mit done false wieder - anhand von Dokumentpfad und Zeile, wie list_tasks sie liefert.
+<!-- /ai-tools -->

@@ -75,8 +75,80 @@ async function show() {
   });
 }
 
+// Textus AI's tools: versions numbered from 1, the newest.
+
+/* global folderPaths, lineDiff */
+const CONTEXT = 2;
+
+/** The document a tool means: its path in the folder, or the one in front. */
+async function documentOf(input) {
+  const root = await textus.files.root();
+  if (input.path) {
+    const rel = root && folderPaths.clean(root, input.path, true);
+    if (!rel) return { error: "path must be a document's path in the open folder." };
+    return { path: folderPaths.abs(root, rel), name: rel };
+  }
+  const path = await textus.editor.getPath();
+  if (!path) return { error: "No document is open." };
+  return { path: path, name: folderPaths.rel(root, path) || path };
+}
+
+async function listVersions(input) {
+  const doc = await documentOf(input);
+  if (doc.error) return doc;
+  return {
+    document: doc.name,
+    versions: (await versionsOf(doc.path)).map((v, i) => ({
+      version: i + 1,
+      saved: new Date(v.at).toISOString(),
+      lines: v.text.split("\n").length,
+      characters: v.text.length,
+    })),
+  };
+}
+
+/** A diff as text: "+ " added, "- " removed, CONTEXT lines around each
+ *  change, "…" for what is left out. */
+function diffText(parts) {
+  const near = new Set();
+  parts.forEach((p, i) => {
+    if (p.kind === "same") return;
+    for (let j = i - CONTEXT; j <= i + CONTEXT; j++) near.add(j);
+  });
+  const out = [];
+  parts.forEach((p, i) => {
+    if (!near.has(i)) {
+      if (out[out.length - 1] !== "…") out.push("…");
+      return;
+    }
+    out.push((p.kind === "added" ? "+ " : p.kind === "removed" ? "- " : "  ") + p.line);
+  });
+  return out.join("\n");
+}
+
+async function diffVersions(input) {
+  const doc = await documentOf(input);
+  if (doc.error) return doc;
+  const versions = await versionsOf(doc.path);
+  const pick = async (n) => {
+    if (n === undefined || n === null || n === "current" || n === 0)
+      return { label: "current", text: await textus.files.readText(doc.path) };
+    const v = versions[Number(n) - 1];
+    return v ? { label: "version " + n, text: v.text } : null;
+  };
+  const from = await pick(input.from);
+  const to = await pick(input.to);
+  if (!from || !to) return { error: doc.name + " has " + versions.length + " versions; number them from 1, the newest." };
+  const parts = lineDiff(from.text, to.text);
+  if (!parts) return { error: "The two are too far apart to compare line by line." };
+  const changed = parts.some((p) => p.kind !== "same");
+  return { document: doc.name, from: from.label, to: to.label, diff: changed ? diffText(parts) : "(no changes)" };
+}
+
 exports.activate = function (context) {
   ctx = context;
+  textus.ai.registerTool("list_versions", listVersions);
+  textus.ai.registerTool("diff_versions", diffVersions);
   textus.files.onDidSave(record);
   textus.editor.onDidChangeActive(show);
   textus.views.registerWebview("catvinci.version-history.panel", {

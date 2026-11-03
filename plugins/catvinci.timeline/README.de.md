@@ -13,3 +13,11 @@ Ereignisse der Reihe nach, eines pro Zeile: wann | was | mehr.
 2024-09 | Review | Notes from three readers
 2025-01 | Published
 ```
+
+<!-- ai-tools -->
+## Werkzeuge für Textus AI
+
+Ist das Plugin installiert, kann Textus AI sie im Gespräch nutzen:
+
+- `check_timeline`: Prüft die Quelle eines ```timeline-Blocks - ein Ereignis pro Zeile, geschrieben als wann | was | mehr -, bevor er in ein Dokument kommt, ohne ihn zu zeichnen. Gibt ok zurück oder die Probleme, die zuerst zu beheben sind. Die Quelle ohne ihren Zaun übergeben.
+<!-- /ai-tools -->
