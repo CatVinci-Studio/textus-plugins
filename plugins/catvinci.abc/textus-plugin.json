@@ -1,7 +1,7 @@
 {
   "id": "catvinci.abc",
   "name": "%name%",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "publisher": "catvinci",
   "author": "CatVinci Studio",
   "description": "%description%",
@@ -12,56 +12,84 @@
     "textus": ">=1.3.2"
   },
   "platforms": ["desktop", "ios"],
-  "main": ["lib/chart-host.js", "host.js"],
-  "permissions": [],
+  "main": ["lib/chart-host.js", "check.js", "host.js"],
+  "permissions": ["ai.tools"],
   "contributes": {
     "codeBlocks": [
       {
         "language": "abc",
         "title": "%name%"
       }
+    ],
+    "aiTools": [
+      {
+        "name": "check_abc",
+        "description": "%tool.check_abc%",
+        "parameters": {
+          "type": "object",
+          "required": [
+            "source"
+          ],
+          "properties": {
+            "source": {
+              "type": "string",
+              "description": "The block's source, without its ``` fence."
+            }
+          }
+        }
+      }
     ]
   },
   "l10n": {
     "en": {
       "name": "Sheet Music (ABC)",
-      "description": "Sheet music from ABC notation."
+      "description": "Sheet music from ABC notation.",
+      "tool.check_abc": "Checks the source of a ```abc block - ABC music notation: a header of fields ending in K:, then the notes - before it goes into a document, without drawing it. Returns ok, or the problems to fix first. Pass the source without its fence."
     },
     "zh": {
       "name": "乐谱（ABC）",
-      "description": "用 ABC 记谱法写乐谱。"
+      "description": "用 ABC 记谱法写乐谱。",
+      "tool.check_abc": "在把 ```abc 块写进文档之前检查它的源码（ABC 乐谱记法：以 K: 结尾的字段头部，然后是音符），不实际绘制。返回 ok，或需要先修正的问题。传入时不带代码围栏。"
     },
     "zh-Hant": {
       "name": "樂譜（ABC）",
-      "description": "用 ABC 記譜法寫樂譜。"
+      "description": "用 ABC 記譜法寫樂譜。",
+      "tool.check_abc": "在把 ```abc 區塊寫進文件之前檢查它的原始碼（ABC 樂譜記法：以 K: 結尾的欄位標頭，然後是音符），不實際繪製。回傳 ok，或需要先修正的問題。傳入時不帶程式碼圍欄。"
     },
     "ja": {
       "name": "楽譜（ABC）",
-      "description": "ABC 記譜法から楽譜を描きます。"
+      "description": "ABC 記譜法から楽譜を描きます。",
+      "tool.check_abc": "```abc ブロックのソース（ABC 記譜法。K: で終わるフィールドのヘッダーと、そのあとの音符）を、文書に入れる前に描画せずに検査します。ok か、先に直すべき問題を返します。フェンスを除いたソースを渡してください。"
     },
     "ko": {
       "name": "악보(ABC)",
-      "description": "ABC 표기법으로 악보를 그립니다."
+      "description": "ABC 표기법으로 악보를 그립니다.",
+      "tool.check_abc": "```abc 블록의 소스(ABC 악보 표기법: K:로 끝나는 필드 머리글, 그다음 음표)를 문서에 넣기 전에 그리지 않고 검사합니다. ok나 먼저 고칠 문제를 돌려줍니다. 펜스 없이 소스만 넘기세요."
     },
     "es": {
       "name": "Partituras (ABC)",
-      "description": "Partituras a partir de notación ABC."
+      "description": "Partituras a partir de notación ABC.",
+      "tool.check_abc": "Revisa el código de un bloque ```abc - notación musical ABC: una cabecera de campos que termina en K:, y luego las notas - antes de que entre en un documento, sin dibujarlo. Devuelve ok, o los problemas que hay que corregir antes. Pasa el código sin su valla."
     },
     "fr": {
       "name": "Partitions (ABC)",
-      "description": "Des partitions à partir de la notation ABC."
+      "description": "Des partitions à partir de la notation ABC.",
+      "tool.check_abc": "Vérifie la source d'un bloc ```abc - la notation musicale ABC : un en-tête de champs qui finit par K:, puis les notes - avant qu'il n'entre dans un document, sans le dessiner. Renvoie ok, ou les problèmes à corriger d'abord. Passez la source sans sa clôture."
     },
     "de": {
       "name": "Noten (ABC)",
-      "description": "Noten aus ABC-Notation."
+      "description": "Noten aus ABC-Notation.",
+      "tool.check_abc": "Prüft die Quelle eines ```abc-Blocks - ABC-Notenschrift: ein Kopf aus Feldern, der mit K: endet, dann die Noten -, bevor er in ein Dokument kommt, ohne ihn zu zeichnen. Gibt ok zurück oder die Probleme, die zuerst zu beheben sind. Die Quelle ohne ihren Zaun übergeben."
     },
     "ru": {
       "name": "Ноты (ABC)",
-      "description": "Ноты по записи ABC."
+      "description": "Ноты по записи ABC.",
+      "tool.check_abc": "Проверяет исходный текст блока ```abc - нотная запись ABC: заголовок из полей, оканчивающийся K:, затем ноты - до того, как он попадёт в документ, не рисуя его. Возвращает ok или проблемы, которые нужно сначала исправить. Передавайте текст без ограждения."
     },
     "pt": {
       "name": "Partituras (ABC)",
-      "description": "Partituras a partir da notação ABC."
+      "description": "Partituras a partir da notação ABC.",
+      "tool.check_abc": "Verifica o código de um bloco ```abc - notação musical ABC: um cabeçalho de campos que termina em K:, e depois as notas - antes de entrar num documento, sem o desenhar. Devolve ok, ou os problemas a corrigir primeiro. Passe o código sem a cerca."
     }
   }
 }

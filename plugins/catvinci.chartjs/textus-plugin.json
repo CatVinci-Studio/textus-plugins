@@ -1,7 +1,7 @@
 {
   "id": "catvinci.chartjs",
   "name": "%name%",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "publisher": "catvinci",
   "author": "CatVinci Studio",
   "description": "%description%",
@@ -12,56 +12,84 @@
     "textus": ">=1.3.2"
   },
   "platforms": ["desktop", "ios"],
-  "main": ["lib/chart-host.js", "host.js"],
-  "permissions": [],
+  "main": ["lib/parse-loose.js", "lib/chart-host.js", "check.js", "host.js"],
+  "permissions": ["ai.tools"],
   "contributes": {
     "codeBlocks": [
       {
         "language": "chartjs",
         "title": "%name%"
       }
+    ],
+    "aiTools": [
+      {
+        "name": "check_chartjs",
+        "description": "%tool.check_chartjs%",
+        "parameters": {
+          "type": "object",
+          "required": [
+            "source"
+          ],
+          "properties": {
+            "source": {
+              "type": "string",
+              "description": "The block's source, without its ``` fence."
+            }
+          }
+        }
+      }
     ]
   },
   "l10n": {
     "en": {
       "name": "Chart.js",
-      "description": "Simple charts from a Chart.js configuration."
+      "description": "Simple charts from a Chart.js configuration.",
+      "tool.check_chartjs": "Checks the source of a ```chartjs block - a Chart.js 4 configuration as JSON: type, data with labels and datasets, options - before it goes into a document, without drawing it. Returns ok, or the problems to fix first. Pass the source without its fence."
     },
     "zh": {
       "name": "Chart.js",
-      "description": "用 Chart.js 配置画简单的图表。"
+      "description": "用 Chart.js 配置画简单的图表。",
+      "tool.check_chartjs": "在把 ```chartjs 块写进文档之前检查它的源码（JSON 格式的 Chart.js 4 配置：type、带 labels 和 datasets 的 data、options），不实际绘制。返回 ok，或需要先修正的问题。传入时不带代码围栏。"
     },
     "zh-Hant": {
       "name": "Chart.js",
-      "description": "用 Chart.js 設定畫簡單的圖表。"
+      "description": "用 Chart.js 設定畫簡單的圖表。",
+      "tool.check_chartjs": "在把 ```chartjs 區塊寫進文件之前檢查它的原始碼（JSON 格式的 Chart.js 4 設定：type、附 labels 和 datasets 的 data、options），不實際繪製。回傳 ok，或需要先修正的問題。傳入時不帶程式碼圍欄。"
     },
     "ja": {
       "name": "Chart.js",
-      "description": "Chart.js の設定からシンプルなグラフを描きます。"
+      "description": "Chart.js の設定からシンプルなグラフを描きます。",
+      "tool.check_chartjs": "```chartjs ブロックのソース（JSON で書いた Chart.js 4 の設定。type、labels と datasets を持つ data、options）を、文書に入れる前に描画せずに検査します。ok か、先に直すべき問題を返します。フェンスを除いたソースを渡してください。"
     },
     "ko": {
       "name": "Chart.js",
-      "description": "Chart.js 설정으로 간단한 차트를 그립니다."
+      "description": "Chart.js 설정으로 간단한 차트를 그립니다.",
+      "tool.check_chartjs": "```chartjs 블록의 소스(JSON으로 쓴 Chart.js 4 설정: type, labels와 datasets가 있는 data, options)를 문서에 넣기 전에 그리지 않고 검사합니다. ok나 먼저 고칠 문제를 돌려줍니다. 펜스 없이 소스만 넘기세요."
     },
     "es": {
       "name": "Chart.js",
-      "description": "Gráficos sencillos a partir de una configuración de Chart.js."
+      "description": "Gráficos sencillos a partir de una configuración de Chart.js.",
+      "tool.check_chartjs": "Revisa el código de un bloque ```chartjs - una configuración de Chart.js 4 en JSON: type, data con labels y datasets, options - antes de que entre en un documento, sin dibujarlo. Devuelve ok, o los problemas que hay que corregir antes. Pasa el código sin su valla."
     },
     "fr": {
       "name": "Chart.js",
-      "description": "Des graphiques simples à partir d’une configuration Chart.js."
+      "description": "Des graphiques simples à partir d’une configuration Chart.js.",
+      "tool.check_chartjs": "Vérifie la source d'un bloc ```chartjs - une configuration Chart.js 4 en JSON : type, data avec labels et datasets, options - avant qu'il n'entre dans un document, sans le dessiner. Renvoie ok, ou les problèmes à corriger d'abord. Passez la source sans sa clôture."
     },
     "de": {
       "name": "Chart.js",
-      "description": "Einfache Diagramme aus einer Chart.js-Konfiguration."
+      "description": "Einfache Diagramme aus einer Chart.js-Konfiguration.",
+      "tool.check_chartjs": "Prüft die Quelle eines ```chartjs-Blocks - eine Chart.js-4-Konfiguration als JSON: type, data mit labels und datasets, options -, bevor er in ein Dokument kommt, ohne ihn zu zeichnen. Gibt ok zurück oder die Probleme, die zuerst zu beheben sind. Die Quelle ohne ihren Zaun übergeben."
     },
     "ru": {
       "name": "Chart.js",
-      "description": "Простые диаграммы по настройкам Chart.js."
+      "description": "Простые диаграммы по настройкам Chart.js.",
+      "tool.check_chartjs": "Проверяет исходный текст блока ```chartjs - конфигурация Chart.js 4 в JSON: type, data с labels и datasets, options - до того, как он попадёт в документ, не рисуя его. Возвращает ok или проблемы, которые нужно сначала исправить. Передавайте текст без ограждения."
     },
     "pt": {
       "name": "Chart.js",
-      "description": "Gráficos simples a partir de uma configuração do Chart.js."
+      "description": "Gráficos simples a partir de uma configuração do Chart.js.",
+      "tool.check_chartjs": "Verifica o código de um bloco ```chartjs - uma configuração do Chart.js 4 em JSON: type, data com labels e datasets, options - antes de entrar num documento, sem o desenhar. Devolve ok, ou os problemas a corrigir primeiro. Passe o código sem a cerca."
     }
   }
 }
