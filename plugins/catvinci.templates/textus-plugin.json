@@ -1,7 +1,7 @@
 {
   "id": "catvinci.templates",
   "name": "%name%",
-  "version": "0.1.3",
+  "version": "0.2.0",
   "publisher": "catvinci",
   "author": "CatVinci Studio",
   "description": "%description%",
@@ -13,7 +13,7 @@
   },
   "platforms": ["desktop", "ios"],
   "main": "host.js",
-  "permissions": ["files.read", "files.write", "editor.read", "editor.write"],
+  "permissions": ["files.read", "files.write", "editor.read", "editor.write", "ai.tools"],
   "contributes": {
     "commands": [
       {
@@ -51,7 +51,42 @@
           "command": "catvinci.templates.new"
         }
       ]
-    }
+    },
+    "aiTools": [
+      {
+        "name": "list_templates",
+        "description": "%tool.list_templates%",
+        "parameters": {
+          "type": "object",
+          "properties": {}
+        }
+      },
+      {
+        "name": "create_from_template",
+        "description": "%tool.create_from_template%",
+        "parameters": {
+          "type": "object",
+          "required": [
+            "template",
+            "title"
+          ],
+          "properties": {
+            "template": {
+              "type": "string",
+              "description": "The template's name, as list_templates gives it."
+            },
+            "title": {
+              "type": "string",
+              "description": "The new document's title, also its file's name."
+            },
+            "folder": {
+              "type": "string",
+              "description": "The folder to make it in, a path in the open folder; its top when left out."
+            }
+          }
+        }
+      }
+    ]
   },
   "l10n": {
     "en": {
@@ -69,7 +104,9 @@
       "meeting": "Meeting Notes",
       "attendees": "Attendees",
       "agenda": "Agenda",
-      "actions": "Actions"
+      "actions": "Actions",
+      "tool.list_templates": "Lists the user's document templates, each with its name and its Markdown, where {{date}}, {{time}} and {{title}} are filled in when it is used.",
+      "tool.create_from_template": "Makes a new document in the open folder from one of the user's templates, its {{date}}, {{time}} and {{title}} filled in. Returns its path."
     },
     "zh": {
       "name": "模板",
@@ -86,7 +123,9 @@
       "meeting": "会议记录",
       "attendees": "参加者",
       "agenda": "议程",
-      "actions": "待办"
+      "actions": "待办",
+      "tool.list_templates": "列出用户的文档模板，每个带名称和 Markdown 内容；使用时其中的 {{date}}、{{time}} 和 {{title}} 会被填入。",
+      "tool.create_from_template": "用用户的某个模板在打开的文件夹中新建一篇文档，并填入 {{date}}、{{time}} 和 {{title}}。返回它的路径。"
     },
     "zh-Hant": {
       "name": "範本",
@@ -103,7 +142,9 @@
       "meeting": "會議記錄",
       "attendees": "參加者",
       "agenda": "議程",
-      "actions": "待辦"
+      "actions": "待辦",
+      "tool.list_templates": "列出使用者的文件範本，每個附名稱和 Markdown 內容；使用時其中的 {{date}}、{{time}} 和 {{title}} 會被填入。",
+      "tool.create_from_template": "用使用者的某個範本在開啟的資料夾中新建一份文件，並填入 {{date}}、{{time}} 和 {{title}}。回傳它的路徑。"
     },
     "ja": {
       "name": "テンプレート",
@@ -120,7 +161,9 @@
       "meeting": "議事録",
       "attendees": "出席者",
       "agenda": "議題",
-      "actions": "アクション"
+      "actions": "アクション",
+      "tool.list_templates": "ユーザーの文書テンプレートを、名前と Markdown とともに一覧にします。使うときに {{date}}・{{time}}・{{title}} が埋められます。",
+      "tool.create_from_template": "ユーザーのテンプレートから、開いているフォルダに新しい文書を作り、{{date}}・{{time}}・{{title}} を埋めます。パスを返します。"
     },
     "ko": {
       "name": "템플릿",
@@ -137,7 +180,9 @@
       "meeting": "회의록",
       "attendees": "참석자",
       "agenda": "안건",
-      "actions": "할 일"
+      "actions": "할 일",
+      "tool.list_templates": "사용자의 문서 템플릿을 이름과 Markdown과 함께 나열합니다. 쓸 때 {{date}}, {{time}}, {{title}}이 채워집니다.",
+      "tool.create_from_template": "사용자의 템플릿으로 열린 폴더에 새 문서를 만들고 {{date}}, {{time}}, {{title}}을 채웁니다. 경로를 돌려줍니다."
     },
     "es": {
       "name": "Plantillas",
@@ -154,7 +199,9 @@
       "meeting": "Notas de reunión",
       "attendees": "Asistentes",
       "agenda": "Orden del día",
-      "actions": "Acciones"
+      "actions": "Acciones",
+      "tool.list_templates": "Enumera las plantillas de documento del usuario, cada una con su nombre y su Markdown, donde {{date}}, {{time}} y {{title}} se rellenan al usarla.",
+      "tool.create_from_template": "Crea un documento nuevo en la carpeta abierta a partir de una plantilla del usuario, con {{date}}, {{time}} y {{title}} rellenados. Devuelve su ruta."
     },
     "fr": {
       "name": "Modèles",
@@ -171,7 +218,9 @@
       "meeting": "Compte rendu de réunion",
       "attendees": "Participants",
       "agenda": "Ordre du jour",
-      "actions": "Actions"
+      "actions": "Actions",
+      "tool.list_templates": "Liste les modèles de document de l'utilisateur, chacun avec son nom et son Markdown, où {{date}}, {{time}} et {{title}} sont remplis à l'usage.",
+      "tool.create_from_template": "Crée un nouveau document dans le dossier ouvert à partir d'un modèle de l'utilisateur, avec {{date}}, {{time}} et {{title}} remplis. Renvoie son chemin."
     },
     "de": {
       "name": "Vorlagen",
@@ -188,7 +237,9 @@
       "meeting": "Besprechungsnotizen",
       "attendees": "Teilnehmende",
       "agenda": "Tagesordnung",
-      "actions": "Aufgaben"
+      "actions": "Aufgaben",
+      "tool.list_templates": "Listet die Dokumentvorlagen des Nutzers auf, jede mit Name und Markdown, in dem {{date}}, {{time}} und {{title}} beim Verwenden ausgefüllt werden.",
+      "tool.create_from_template": "Legt aus einer Vorlage des Nutzers ein neues Dokument im geöffneten Ordner an, mit ausgefüllten {{date}}, {{time}} und {{title}}. Gibt seinen Pfad zurück."
     },
     "ru": {
       "name": "Шаблоны",
@@ -205,7 +256,9 @@
       "meeting": "Заметки встречи",
       "attendees": "Участники",
       "agenda": "Повестка",
-      "actions": "Действия"
+      "actions": "Действия",
+      "tool.list_templates": "Перечисляет шаблоны документов пользователя, каждый с именем и Markdown, где {{date}}, {{time}} и {{title}} заполняются при использовании.",
+      "tool.create_from_template": "Создаёт новый документ в открытой папке по шаблону пользователя, заполняя {{date}}, {{time}} и {{title}}. Возвращает его путь."
     },
     "pt": {
       "name": "Modelos",
@@ -222,7 +275,9 @@
       "meeting": "Notas de reunião",
       "attendees": "Participantes",
       "agenda": "Pauta",
-      "actions": "Ações"
+      "actions": "Ações",
+      "tool.list_templates": "Lista os modelos de documento do utilizador, cada um com o nome e o Markdown, onde {{date}}, {{time}} e {{title}} são preenchidos ao usá-lo.",
+      "tool.create_from_template": "Cria um novo documento na pasta aberta a partir de um modelo do utilizador, com {{date}}, {{time}} e {{title}} preenchidos. Devolve o caminho."
     }
   }
 }

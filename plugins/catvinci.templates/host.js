@@ -62,8 +62,36 @@ function join(root, name) {
   return root.replace(/[\\/]+$/, "") + sep + name;
 }
 
+// Textus AI's tools.
+async function listTemplates() {
+  const out = [];
+  for (const file of await templates())
+    out.push({ name: file.replace(/\.md$/, ""), text: await ctx.storage.global.readText(file) });
+  return { templates: out };
+}
+
+async function createFromTemplate(input) {
+  const root = await textus.files.root();
+  if (!root) return { error: t("needsFolder") };
+  const names = await templates();
+  const wanted = String(input.template || "").replace(/\.md$/, "").toLowerCase();
+  const file = names.find((n) => n.replace(/\.md$/, "").toLowerCase() === wanted);
+  if (!file) return { error: "No template " + JSON.stringify(input.template) + "; there are: " + names.map((n) => n.replace(/\.md$/, "")).join(", ") };
+  const title = String(input.title || "").trim() || file.replace(/\.md$/, "");
+  const folder = String(input.folder || "").replace(/\\/g, "/").replace(/^\.?\/+|\/+$/g, "");
+  if (folder.split("/").includes("..")) return { error: "folder must be in the open folder." };
+  const rel = (folder ? folder + "/" : "") + title.replace(/[\\/:*?"<>|]/g, "-") + ".md";
+  const path = join(root, rel);
+  if (await textus.files.stat(path)) return { error: t("exists", title) };
+  if (folder) await textus.files.createFolder(join(root, folder)).catch(() => {});
+  await textus.files.create(path, fill(await ctx.storage.global.readText(file), title));
+  return { path: rel, template: file.replace(/\.md$/, "") };
+}
+
 exports.activate = function (context) {
   ctx = context;
+  textus.ai.registerTool("list_templates", listTemplates);
+  textus.ai.registerTool("create_from_template", createFromTemplate);
   textus.commands.register("catvinci.templates.new", async function () {
     const root = await textus.files.root();
     if (!root) return textus.ui.message(t("needsFolder"));
