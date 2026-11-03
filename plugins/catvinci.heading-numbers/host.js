@@ -61,7 +61,31 @@ function exportCss(start) {
   return ".milkdown { counter-reset: tx-h" + start + "; }\n" + css;
 }
 
+/** A number already before a heading's words: 1, 1.2, 3. */
+const OLD_NUMBER = /^\d{1,2}(?:\.\d{1,2})*\.?\s+/;
+
+/** Textus AI's tool: the headings of some Markdown numbered in their text,
+ *  as the editor draws them; or, with `remove`, their numbers taken out. */
+function numberHeadings(input) {
+  const lines = String(input.text || "").split("\n");
+  const blocks = [];
+  let fence = null;
+  lines.forEach((line, i) => {
+    const f = /^\s{0,3}(`{3,}|~{3,})/.exec(line);
+    if (f && (!fence || f[1][0] === fence[0])) fence = fence ? null : f[1];
+    else if (!fence && /^#{1,6}\s/.test(line)) {
+      const [, marks, words] = /^(#+\s+)(.*)$/.exec(line);
+      blocks.push({ id: i, kind: "heading", marks: marks, words: words.replace(OLD_NUMBER, "") });
+    }
+  });
+  const shown = blocks.map((b) => ({ id: b.id, kind: b.kind, markdown: b.marks }));
+  const number = input.remove ? {} : numbers(shown, startOf(shown));
+  for (const b of blocks) lines[b.id] = b.marks + (number[b.id] ? number[b.id] + " " : "") + b.words;
+  return { text: lines.join("\n") };
+}
+
 exports.activate = function () {
+  textus.ai.registerTool("number_headings", numberHeadings);
   textus.editor.registerDecorations({
     decorate: async function (inSight) {
       const blocks = (await textus.editor.getBlocks()) || [];
