@@ -1,7 +1,7 @@
 {
   "id": "catvinci.writing-stats",
   "name": "%name%",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "publisher": "catvinci",
   "author": "CatVinci Studio",
   "description": "%description%",
@@ -13,12 +13,14 @@
   },
   "platforms": ["desktop", "ios"],
   "main": [
+    "lib/folder-paths.js",
     "count.js",
     "host.js"
   ],
   "permissions": [
     "editor.read",
-    "files.read"
+    "files.read",
+    "ai.tools"
   ],
   "contributes": {
     "sidebarTabs": [
@@ -35,6 +37,21 @@
         "type": "number",
         "default": 500,
         "title": "%goal%"
+      }
+    ],
+    "aiTools": [
+      {
+        "name": "count_words",
+        "description": "%tool.count_words%",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "path": {
+              "type": "string",
+              "description": "A document's or a folder's path in the open folder; \"\" for the whole folder; the document in front when left out."
+            }
+          }
+        }
       }
     ]
   },
@@ -58,7 +75,8 @@
       "days": "{0} days",
       "folder": "Whole folder",
       "folderGroup": "Folder",
-      "none": "Open a document to see its numbers."
+      "none": "Open a document to see its numbers.",
+      "tool.count_words": "Counts words, characters and minutes to read for a document, every document in a folder, or the document in front - a Chinese, Japanese or Korean character counts as a word, Markdown's marks don't."
     },
     "zh": {
       "name": "写作统计",
@@ -79,7 +97,8 @@
       "days": "{0} 天",
       "folder": "整个文件夹",
       "folderGroup": "文件夹",
-      "none": "打开一篇文档即可看到统计。"
+      "none": "打开一篇文档即可看到统计。",
+      "tool.count_words": "统计一篇文档、某个文件夹里所有文档或当前文档的字数、字符数和阅读时长（分钟）；每个中日韩文字算一个词，Markdown 标记不计。"
     },
     "zh-Hant": {
       "name": "寫作統計",
@@ -100,7 +119,8 @@
       "days": "{0} 天",
       "folder": "整個資料夾",
       "folderGroup": "資料夾",
-      "none": "開啟一篇文件即可看到統計。"
+      "none": "開啟一篇文件即可看到統計。",
+      "tool.count_words": "統計一份文件、某個資料夾裡所有文件或目前文件的字數、字元數和閱讀時間（分鐘）；每個中日韓文字算一個詞，Markdown 標記不計。"
     },
     "ja": {
       "name": "執筆統計",
@@ -121,7 +141,8 @@
       "days": "{0} 日",
       "folder": "フォルダ全体",
       "folderGroup": "フォルダ",
-      "none": "文書を開くと統計が表示されます。"
+      "none": "文書を開くと統計が表示されます。",
+      "tool.count_words": "文書、フォルダ内のすべての文書、または前面の文書の語数・文字数・読了時間（分）を数えます。中国語・日本語・韓国語の文字は一字を一語とし、Markdown の記号は数えません。"
     },
     "ko": {
       "name": "글쓰기 통계",
@@ -142,7 +163,8 @@
       "days": "{0}일",
       "folder": "폴더 전체",
       "folderGroup": "폴더",
-      "none": "문서를 열면 통계가 보입니다."
+      "none": "문서를 열면 통계가 보입니다.",
+      "tool.count_words": "문서 하나, 폴더 안의 모든 문서, 또는 앞에 열린 문서의 단어 수·글자 수·읽는 시간(분)을 셉니다. 한중일 문자는 한 글자를 한 단어로 세고, Markdown 기호는 세지 않습니다."
     },
     "de": {
       "name": "Schreibstatistik",
@@ -163,7 +185,8 @@
       "days": "{0} Tage",
       "folder": "Ganzer Ordner",
       "folderGroup": "Ordner",
-      "none": "Öffne ein Dokument, um seine Zahlen zu sehen."
+      "none": "Öffne ein Dokument, um seine Zahlen zu sehen.",
+      "tool.count_words": "Zählt Wörter, Zeichen und Leseminuten eines Dokuments, aller Dokumente eines Ordners oder des vorderen Dokuments - ein chinesisches, japanisches oder koreanisches Zeichen zählt als Wort, Markdown-Zeichen nicht."
     },
     "fr": {
       "name": "Statistiques d'écriture",
@@ -184,7 +207,8 @@
       "days": "{0} jours",
       "folder": "Tout le dossier",
       "folderGroup": "Dossier",
-      "none": "Ouvrez un document pour voir ses chiffres."
+      "none": "Ouvrez un document pour voir ses chiffres.",
+      "tool.count_words": "Compte les mots, les caractères et les minutes de lecture d'un document, de tous les documents d'un dossier ou du document au premier plan ; un caractère chinois, japonais ou coréen compte pour un mot, les marques Markdown ne comptent pas."
     },
     "es": {
       "name": "Estadísticas de escritura",
@@ -205,7 +229,8 @@
       "days": "{0} días",
       "folder": "Toda la carpeta",
       "folderGroup": "Carpeta",
-      "none": "Abre un documento para ver sus cifras."
+      "none": "Abre un documento para ver sus cifras.",
+      "tool.count_words": "Cuenta palabras, caracteres y minutos de lectura de un documento, de todos los documentos de una carpeta o del documento al frente; un carácter chino, japonés o coreano cuenta como palabra y las marcas de Markdown no cuentan."
     },
     "pt": {
       "name": "Estatísticas de escrita",
@@ -226,7 +251,8 @@
       "days": "{0} dias",
       "folder": "Pasta toda",
       "folderGroup": "Pasta",
-      "none": "Abra um documento para ver os números."
+      "none": "Abra um documento para ver os números.",
+      "tool.count_words": "Conta palavras, caracteres e minutos de leitura de um documento, de todos os documentos de uma pasta ou do documento em primeiro plano; um carácter chinês, japonês ou coreano conta como palavra e as marcas de Markdown não contam."
     },
     "ru": {
       "name": "Статистика письма",
@@ -247,7 +273,8 @@
       "days": "{0} дн.",
       "folder": "Вся папка",
       "folderGroup": "Папка",
-      "none": "Откройте документ, чтобы увидеть цифры."
+      "none": "Откройте документ, чтобы увидеть цифры.",
+      "tool.count_words": "Считает слова, символы и минуты чтения для документа, всех документов папки или документа на переднем плане; китайский, японский или корейский иероглиф считается словом, разметка Markdown не считается."
     }
   }
 }

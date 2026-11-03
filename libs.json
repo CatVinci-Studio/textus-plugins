@@ -56,5 +56,6 @@
   "catvinci.kanban/lib/folder-paths.js": "./shared/folder-paths.js",
   "catvinci.backlinks/lib/folder-paths.js": "./shared/folder-paths.js",
   "catvinci.graph/lib/folder-paths.js": "./shared/folder-paths.js",
-  "catvinci.version-history/lib/folder-paths.js": "./shared/folder-paths.js"
+  "catvinci.version-history/lib/folder-paths.js": "./shared/folder-paths.js",
+  "catvinci.writing-stats/lib/folder-paths.js": "./shared/folder-paths.js"
 }
