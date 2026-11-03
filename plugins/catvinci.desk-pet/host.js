@@ -126,8 +126,8 @@ function page(character) {
   body.paused img { animation-play-state: paused; }
   .stage.turned { transform: scaleX(-1); }
   .bubble { position: absolute; top: 0; left: 50%; max-width: 92%; transform: translateX(-50%);
-    padding: 4px 9px; border-radius: 12px; background: var(--ui-bg); color: var(--ui-text);
-    box-shadow: var(--shadow-popover); font-size: 12px; line-height: 1.35; text-align: center;
+    padding: var(--space-1) var(--space-2); border: 1px solid var(--ui-border); border-radius: var(--shape-m);
+    background: var(--ui-surface); color: var(--ui-text); font-size: var(--text-secondary); line-height: 1.4; text-align: center;
     opacity: 0; transition: opacity var(--dur-normal, 0.2s) var(--ease-standard); pointer-events: none; }
   .bubble.on { opacity: 1; }
   @media (prefers-reduced-motion: reduce) { img.on, img.hop { animation: none; } }
