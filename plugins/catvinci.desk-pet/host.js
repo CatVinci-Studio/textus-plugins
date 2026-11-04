@@ -1,4 +1,4 @@
-// Desk Pet: a chibi companion in a floating view. Textus-chan, or the
+// Desk Pet: a chibi companion in a floating view. Moyu, or the
 // LLM-chan of the model Textus AI is using while it works; she writes as you
 // type, daydreams and dozes when you stop, is pleased when you save, leans
 // in when Textus AI is at work, answers a poke and sleeps while Textus is
@@ -103,7 +103,7 @@ async function setting(key) {
 }
 
 /** Who is out: the one chosen, else the guest of Textus AI's model while
- *  it works and a little after, else Textus-chan. */
+ *  it works and a little after, else Moyu. */
 async function who() {
   const chosen = await setting("character");
   if (chosen && chosen !== "auto" && CHARACTERS.includes(chosen)) return chosen;
