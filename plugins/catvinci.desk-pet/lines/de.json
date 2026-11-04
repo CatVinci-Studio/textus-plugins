@@ -8,12 +8,12 @@
     "saved": ["Versiegelt.", "Wachssiegel gedrückt.", "Sicher im Regal."],
     "firstSave": ["Das erste Siegel des Tages!", "Seite eins, verzaubert.", "Gut. Der Tag hat einen Anfang."],
     "stuck": ["Hmm... Muse offline. Erst Tee?", "Festgefahren? Ich warte mit dir.", "Leere gehört auch zur Geschichte."],
-    "flow": ["Heh. Die Macht der Feder erwacht...", "Es fließt. Hör nicht auf.", "Die Worte leuchten."],
+    "flow": ["Heh. Die Macht der Feder erwacht...", "Schön geschrieben. Weiter so!", "Die Worte leuchten."],
     "rest": ["Schon lange dabei. Streck dich mal?", "Mana ist knapp. Etwas Wasser?", "Fünf Minuten Pause. Ich halte Wache."],
     "late": ["Es ist spät. Auch Magier schlafen.", "Tiefe Nacht. Morgen geht auch.", "Den Mond von heute heb ich dir auf."],
-    "guest": ["Oh, ein Gast kommt helfen?", "Herein, die Regale gehören dir.", "Ein Gast! Ich mach Tee."],
-    "review": ["Der Gast hat Änderungen da. Schaust du?", "Neue Notizen warten auf dich.", "Die Korrekturen sind da. Prüf sie."],
-    "done": ["Der Gast ist fertig.", "Fertig. Gut gemacht.", "Wieder ein Kapitel geschlossen."],
+    "guest": ["Ich feile ein wenig mit.", "Ich helf dir!", "Überarbeiten wir's zusammen."],
+    "review": ["Ich hab ein paar Stellen geändert. Schaust du?", "Neue Notizen warten auf dich.", "Ich hab es überarbeitet. Prüf es."],
+    "done": ["Ich hab's zu Ende geschrieben.", "Fertig. Gut gemacht.", "Wieder ein Kapitel geschlossen."],
     "failed": ["Der Zauber verpuffte... nochmal?", "Ein kleines Missgeschick.", "Tinte verschüttet. Keine Eile."]
   },
   "claude": {

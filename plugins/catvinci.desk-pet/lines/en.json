@@ -8,12 +8,12 @@
     "saved": ["Sealed.", "Wax seal, pressed.", "Safely shelved."],
     "firstSave": ["Today's first seal!", "Page one, enchanted.", "Good. Today has a beginning."],
     "stuck": ["Hmm... inspiration's offline. Tea first?", "Stuck? I'll wait with you.", "Blank space is part of the story too."],
-    "flow": ["Heh. The power of the quill awakens...", "You're flowing. Don't stop.", "The words are glowing."],
+    "flow": ["Heh. The power of the quill awakens...", "Beautifully written. Keep going!", "The words are glowing."],
     "rest": ["You've been at it a while. Stretch?", "Mana's low. Some water?", "Five minutes off. I'll keep watch."],
     "late": ["It's late. Even wizards sleep.", "Night's deep. Tomorrow works too.", "I'll keep tonight's moon for you."],
-    "guest": ["Oh, a guest has come to help?", "Come in, the shelves are yours.", "A guest! I'll make tea."],
-    "review": ["Our guest left edits. Take a look?", "New notes, waiting for you.", "Revisions are in. Check them."],
-    "done": ["Our guest is done.", "Finished. Well done.", "Another chapter closed."],
+    "guest": ["Let me add a few touches.", "I'm here to help!", "Let's revise it together."],
+    "review": ["I made a few edits. Take a look?", "New notes, waiting for you.", "I've revised it. Check it over."],
+    "done": ["All written!", "Finished. Well done.", "Another chapter closed."],
     "failed": ["The spell fizzled... try again?", "A small mishap.", "Spilled ink. No rush."]
   },
   "claude": {

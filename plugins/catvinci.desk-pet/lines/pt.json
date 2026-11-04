@@ -8,12 +8,12 @@
     "saved": ["Selado.", "Selo de cera, prensado.", "Guardado na estante."],
     "firstSave": ["O primeiro selo do dia!", "Página um, encantada.", "Bom. O dia já tem um começo."],
     "stuck": ["Hmm… inspiração offline. Um chá?", "Travou? Eu espero com você.", "O branco também faz parte da história."],
-    "flow": ["Hehe. O poder da pena desperta…", "Está fluindo. Não pare.", "As palavras estão brilhando."],
+    "flow": ["Hehe. O poder da pena desperta…", "Está ficando ótimo. Continue!", "As palavras estão brilhando."],
     "rest": ["Faz tempo, hein. Que tal se alongar?", "Mana baixa. Um pouco de água?", "Cinco minutos de pausa. Eu vigio."],
     "late": ["Está tarde. Até magos dormem.", "Noite funda. Amanhã também dá.", "Guardo a lua de hoje pra você."],
-    "guest": ["Oh, um convidado veio ajudar?", "Entre, as estantes são suas.", "Um convidado! Vou fazer chá."],
-    "review": ["O convidado deixou edições. Vai olhar?", "Notas novas esperando por você.", "As revisões chegaram. Confira."],
-    "done": ["O convidado terminou.", "Pronto. Bom trabalho.", "Mais um capítulo fechado."],
+    "guest": ["Deixa eu fazer uns ajustes.", "Vim ajudar!", "Vamos revisar juntos."],
+    "review": ["Mudei algumas partes. Vai olhar?", "Notas novas esperando por você.", "Fiz minhas revisões. Confira."],
+    "done": ["Terminei de escrever!", "Pronto. Bom trabalho.", "Mais um capítulo fechado."],
     "failed": ["O feitiço falhou… de novo?", "Um pequeno contratempo.", "Tinta derramada. Sem pressa."]
   },
   "claude": {
