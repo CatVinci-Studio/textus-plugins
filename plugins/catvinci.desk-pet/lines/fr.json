@@ -8,12 +8,12 @@
     "saved": ["Scellé.", "Sceau de cire apposé.", "Rangé en sûreté."],
     "firstSave": ["Le premier sceau du jour !", "Page une, enchantée.", "Bien. La journée a un début."],
     "stuck": ["Hmm… l'inspiration est hors ligne. Un thé ?", "Bloqué ? J'attends avec toi.", "Le blanc fait partie de l'histoire."],
-    "flow": ["Héhé. Le pouvoir de la plume s'éveille…", "Ça coule. Ne t'arrête pas.", "Les mots brillent."],
+    "flow": ["Héhé. Le pouvoir de la plume s'éveille…", "Très bien écrit. Courage !", "Les mots brillent."],
     "rest": ["Ça fait longtemps. On s'étire ?", "Mana à plat. Un peu d'eau ?", "Cinq minutes de pause. Je veille."],
     "late": ["Il est tard. Même les mages dorment.", "Nuit noire. Demain, c'est bien aussi.", "Je te garde la lune de ce soir."],
-    "guest": ["Oh, un invité vient aider ?", "Entre, les étagères sont à toi.", "Un invité ! Je fais du thé."],
-    "review": ["L'invité a laissé des retouches. On voit ?", "De nouvelles notes t'attendent.", "Les corrections sont là. Vérifie."],
-    "done": ["L'invité a terminé.", "Fini. Bien joué.", "Encore un chapitre refermé."],
+    "guest": ["Je vais faire quelques retouches.", "Je viens t'aider !", "Corrigeons ça ensemble."],
+    "review": ["J'ai retouché quelques passages. Tu regardes ?", "De nouvelles notes t'attendent.", "J'ai fait les corrections. Vérifie."],
+    "done": ["J'ai fini d'écrire !", "Fini. Bien joué.", "Encore un chapitre refermé."],
     "failed": ["Le sort a fait pschitt… on réessaie ?", "Un petit contretemps.", "De l'encre renversée. Pas de panique."]
   },
   "claude": {

@@ -8,12 +8,12 @@
     "saved": ["Sellado.", "Sello de lacre, puesto.", "A salvo en la estantería."],
     "firstSave": ["¡El primer sello del día!", "Página uno, hechizada.", "Bien. El día ya tiene comienzo."],
     "stuck": ["Mmm… inspiración desconectada. ¿Té?", "¿Atascado? Espero contigo.", "El blanco también es parte de la historia."],
-    "flow": ["Je. El poder de la pluma despierta…", "Vas fluido. No pares.", "Las palabras brillan."],
+    "flow": ["Je. El poder de la pluma despierta…", "Escribes muy bien. ¡Ánimo!", "Las palabras brillan."],
     "rest": ["Llevas mucho rato. ¿Te estiras?", "Poco maná. ¿Un poco de agua?", "Cinco minutos de pausa. Yo vigilo."],
     "late": ["Es tarde. Hasta los magos duermen.", "Noche cerrada. Mañana también vale.", "Te guardo la luna de esta noche."],
-    "guest": ["Oh, ¿viene un invitado a ayudar?", "Pasa, las estanterías son tuyas.", "¡Un invitado! Voy a por té."],
-    "review": ["El invitado dejó cambios. ¿Miras?", "Notas nuevas te esperan.", "Llegaron las correcciones. Revísalas."],
-    "done": ["El invitado terminó.", "Listo. Buen trabajo.", "Otro capítulo cerrado."],
+    "guest": ["Déjame retocar un poco.", "¡Vengo a ayudarte!", "Revisémoslo juntos."],
+    "review": ["Cambié algunas cosas. ¿Les echas un vistazo?", "Notas nuevas te esperan.", "Hice unas correcciones. Revísalas."],
+    "done": ["¡Ya terminé!", "Listo. Buen trabajo.", "Otro capítulo cerrado."],
     "failed": ["El hechizo falló… ¿otra vez?", "Un pequeño percance.", "Tinta derramada. Sin prisa."]
   },
   "claude": {
