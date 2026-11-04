@@ -20,7 +20,8 @@
   ],
   "activationEvents": [
     "onStartupFinished",
-    "onCommand:catvinci.desk-pet.toggle"
+    "onCommand:catvinci.desk-pet.toggle",
+    "onCommand:catvinci.desk-pet.switch"
   ],
   "permissions": [],
   "contributes": {
@@ -28,12 +29,22 @@
       {
         "command": "catvinci.desk-pet.toggle",
         "title": "%toggle%"
+      },
+      {
+        "command": "catvinci.desk-pet.switch",
+        "title": "%switch%"
       }
     ],
     "menus": {
       "app/plugins": [
         {
           "command": "catvinci.desk-pet.toggle"
+        }
+      ],
+      "floating/context": [
+        {
+          "command": "catvinci.desk-pet.switch",
+          "when": "view == catvinci.desk-pet.pet"
         }
       ]
     },
@@ -142,7 +153,9 @@
       "glm": "GLM-chan",
       "minimax": "MiniMax-chan",
       "grok": "Grok-chan",
-      "wenxin": "ERNIE-chan"
+      "wenxin": "ERNIE-chan",
+      "switch": "Switch Character…",
+      "current": "now"
     },
     "zh": {
       "name": "桌宠",
@@ -164,7 +177,9 @@
       "glm": "GLM 娘",
       "minimax": "MiniMax 娘",
       "grok": "Grok 娘",
-      "wenxin": "文心一言娘"
+      "wenxin": "文心一言娘",
+      "switch": "切换角色…",
+      "current": "当前"
     },
     "zh-Hant": {
       "name": "桌寵",
@@ -186,7 +201,9 @@
       "glm": "GLM 娘",
       "minimax": "MiniMax 娘",
       "grok": "Grok 娘",
-      "wenxin": "文心一言娘"
+      "wenxin": "文心一言娘",
+      "switch": "切換角色…",
+      "current": "目前"
     },
     "ja": {
       "name": "デスクペット",
@@ -208,7 +225,9 @@
       "glm": "GLM ちゃん",
       "minimax": "MiniMax ちゃん",
       "grok": "Grok ちゃん",
-      "wenxin": "ERNIE ちゃん"
+      "wenxin": "ERNIE ちゃん",
+      "switch": "キャラクターを切り替え…",
+      "current": "現在"
     },
     "ko": {
       "name": "데스크 펫",
@@ -230,7 +249,9 @@
       "glm": "GLM 짱",
       "minimax": "MiniMax 짱",
       "grok": "Grok 짱",
-      "wenxin": "ERNIE 짱"
+      "wenxin": "ERNIE 짱",
+      "switch": "캐릭터 바꾸기…",
+      "current": "현재"
     },
     "de": {
       "name": "Schreibtisch-Pet",
@@ -252,7 +273,9 @@
       "glm": "GLM-chan",
       "minimax": "MiniMax-chan",
       "grok": "Grok-chan",
-      "wenxin": "ERNIE-chan"
+      "wenxin": "ERNIE-chan",
+      "switch": "Figur wechseln…",
+      "current": "jetzt"
     },
     "fr": {
       "name": "Compagnon de bureau",
@@ -274,7 +297,9 @@
       "glm": "GLM-chan",
       "minimax": "MiniMax-chan",
       "grok": "Grok-chan",
-      "wenxin": "ERNIE-chan"
+      "wenxin": "ERNIE-chan",
+      "switch": "Changer de personnage…",
+      "current": "actuel"
     },
     "es": {
       "name": "Mascota de escritorio",
@@ -296,7 +321,9 @@
       "glm": "GLM-chan",
       "minimax": "MiniMax-chan",
       "grok": "Grok-chan",
-      "wenxin": "ERNIE-chan"
+      "wenxin": "ERNIE-chan",
+      "switch": "Cambiar de personaje…",
+      "current": "actual"
     },
     "pt": {
       "name": "Mascote de mesa",
@@ -318,7 +345,9 @@
       "glm": "GLM-chan",
       "minimax": "MiniMax-chan",
       "grok": "Grok-chan",
-      "wenxin": "ERNIE-chan"
+      "wenxin": "ERNIE-chan",
+      "switch": "Trocar de personagem…",
+      "current": "atual"
     },
     "ru": {
       "name": "Настольный питомец",
@@ -340,7 +369,9 @@
       "glm": "GLM-тян",
       "minimax": "MiniMax-тян",
       "grok": "Grok-тян",
-      "wenxin": "ERNIE-тян"
+      "wenxin": "ERNIE-тян",
+      "switch": "Сменить персонажа…",
+      "current": "сейчас"
     }
   }
 }

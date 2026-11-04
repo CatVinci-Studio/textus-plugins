@@ -356,6 +356,19 @@ exports.activate = function (ctx) {
       if (open.some((v) => v.view === VIEW)) await textus.layout.closeFloating(VIEW);
       else await textus.layout.openFloating(VIEW);
     }),
+    // From her right-click menu: who keeps you company.
+    textus.commands.register("catvinci.desk-pet.switch", async () => {
+      const now = (await setting("character")) || "auto";
+      const picked = await textus.ui.pick(
+        ["auto", ...CHARACTERS].map((value) => ({
+          label: t(value),
+          value,
+          description: value === now ? t("current") : undefined,
+        })),
+        { placeholder: t("character") },
+      );
+      if (typeof picked === "string") await textus.settings.set("character", picked);
+    }),
     textus.layout.onDidChangeFloating((change) => {
       if (change.view !== VIEW) return;
       if (change.side) side = change.side;
