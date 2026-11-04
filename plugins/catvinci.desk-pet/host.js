@@ -55,7 +55,8 @@ const BY_PROVIDER = {
   xai: "grok",
 };
 
-/** Every one is drawn looking right: on the right she turns to face in. */
+
+/** Every pose is drawn looking right: on the right she turns to look in. */
 const turned = () => side === "right";
 
 /** After this long without typing she daydreams, then dozes. */
@@ -117,7 +118,6 @@ function page(character) {
   return `<!doctype html><html><head><style>
   body { margin: 0; height: 100vh; overflow: hidden; user-select: none; }
   .stage { position: absolute; inset: var(--space-6) 0 0; }
-  /* Against the outer edge: turned, the right one. */
   img { position: absolute; bottom: 0; left: 0; max-width: 100%; max-height: 100%; opacity: 0; transform-origin: 50% 100%;
     transition: opacity var(--dur-fast) var(--ease-standard); pointer-events: none; }
   img.on { opacity: 1; animation: breathe 3.6s ease-in-out infinite; }
@@ -125,7 +125,7 @@ function page(character) {
   @keyframes breathe { 0%, 100% { transform: scale(1, 1); } 50% { transform: scale(1.012, 1.02); } }
   @keyframes hop { 0%, 100% { transform: translateY(0); } 40% { transform: translateY(-10px); } }
   body.paused img { animation-play-state: paused; }
-  .stage.turned { transform: scaleX(-1); }
+  .stage.turned img { left: auto; right: 0; scale: -1 1; }
   .bubble { position: absolute; top: 0; left: 50%; max-width: 92%; transform: translateX(-50%);
     padding: var(--space-1) var(--space-2); border: 1px solid var(--ui-border); border-radius: var(--shape-m);
     background: var(--ui-surface); color: var(--ui-text); font-size: var(--text-secondary); line-height: 1.4; text-align: center;
