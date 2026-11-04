@@ -1,0 +1,377 @@
+{
+  "id": "catvinci.desk-pet",
+  "name": "%name%",
+  "version": "0.1.0",
+  "publisher": "catvinci",
+  "author": "CatVinci Studio",
+  "description": "%description%",
+  "icon": "icon.svg",
+  "license": "MIT",
+  "repository": "https://github.com/CatVinci-Studio/textus-plugins",
+  "engines": {
+    "textus": ">=1.3.6"
+  },
+  "platforms": [
+    "desktop",
+    "ios"
+  ],
+  "main": [
+    "host.js"
+  ],
+  "activationEvents": [
+    "onStartupFinished",
+    "onCommand:catvinci.desk-pet.toggle",
+    "onCommand:catvinci.desk-pet.switch"
+  ],
+  "permissions": [],
+  "contributes": {
+    "commands": [
+      {
+        "command": "catvinci.desk-pet.toggle",
+        "title": "%toggle%"
+      },
+      {
+        "command": "catvinci.desk-pet.switch",
+        "title": "%switch%"
+      }
+    ],
+    "menus": {
+      "app/plugins": [
+        {
+          "command": "catvinci.desk-pet.toggle"
+        }
+      ],
+      "floating/context": [
+        {
+          "command": "catvinci.desk-pet.switch",
+          "when": "view == catvinci.desk-pet.pet"
+        }
+      ]
+    },
+    "floatingViews": [
+      {
+        "id": "catvinci.desk-pet.pet",
+        "title": "%pet%",
+        "width": 180,
+        "height": 200,
+        "place": "either"
+      }
+    ],
+    "settings": [
+      {
+        "key": "character",
+        "type": "enum",
+        "default": "auto",
+        "title": "%character%",
+        "options": [
+          {
+            "value": "auto",
+            "label": "%auto%"
+          },
+          {
+            "value": "textus",
+            "label": "%textus%"
+          },
+          {
+            "value": "claude",
+            "label": "%claude%"
+          },
+          {
+            "value": "gpt",
+            "label": "%gpt%"
+          },
+          {
+            "value": "gemini",
+            "label": "%gemini%"
+          },
+          {
+            "value": "deepseek",
+            "label": "%deepseek%"
+          },
+          {
+            "value": "kimi",
+            "label": "%kimi%"
+          },
+          {
+            "value": "qwen",
+            "label": "%qwen%"
+          },
+          {
+            "value": "doubao",
+            "label": "%doubao%"
+          },
+          {
+            "value": "glm",
+            "label": "%glm%"
+          },
+          {
+            "value": "minimax",
+            "label": "%minimax%"
+          },
+          {
+            "value": "grok",
+            "label": "%grok%"
+          },
+          {
+            "value": "wenxin",
+            "label": "%wenxin%"
+          }
+        ]
+      },
+      {
+        "key": "bubbles",
+        "type": "boolean",
+        "default": true,
+        "title": "%bubbles%"
+      },
+      {
+        "key": "night",
+        "type": "boolean",
+        "default": true,
+        "title": "%night%"
+      }
+    ]
+  },
+  "l10n": {
+    "en": {
+      "name": "Desk Pet",
+      "description": "A chibi companion that floats on your desktop or in the window while you write: Moyu, or the LLM-chan of the model Textus AI is using. She writes when you type, dozes when you stop, cheers when you save and leans in when Textus AI is at work.",
+      "toggle": "Show or Hide the Desk Pet",
+      "pet": "Desk Pet",
+      "character": "Who keeps you company",
+      "auto": "Follow Textus AI's model",
+      "bubbles": "Speech bubbles",
+      "night": "Remind me to rest late at night",
+      "textus": "Moyu",
+      "claude": "Claude-chan",
+      "gpt": "GPT-chan",
+      "gemini": "Gemini-chan",
+      "deepseek": "DeepSeek-chan",
+      "kimi": "Kimi-chan",
+      "qwen": "Qwen-chan",
+      "doubao": "Doubao-chan",
+      "glm": "GLM-chan",
+      "minimax": "MiniMax-chan",
+      "grok": "Grok-chan",
+      "wenxin": "ERNIE-chan",
+      "switch": "Switch Character…",
+      "current": "now"
+    },
+    "zh": {
+      "name": "桌宠",
+      "description": "写作时陪着你的 Q 版小伙伴，浮在桌面上或窗口里：墨羽，或者 Textus AI 正在用的模型对应的大模型娘。你打字她写字，停下她打盹，保存时开心，Textus AI 干活时她凑过来看。",
+      "toggle": "显示或隐藏桌宠",
+      "pet": "桌宠",
+      "character": "陪你的是",
+      "auto": "跟随 Textus AI 的模型",
+      "bubbles": "对话气泡",
+      "night": "深夜提醒我休息",
+      "textus": "墨羽",
+      "claude": "Claude 娘",
+      "gpt": "GPT 娘",
+      "gemini": "Gemini 娘",
+      "deepseek": "DeepSeek 娘",
+      "kimi": "Kimi 娘",
+      "qwen": "通义千问娘",
+      "doubao": "豆包娘",
+      "glm": "GLM 娘",
+      "minimax": "MiniMax 娘",
+      "grok": "Grok 娘",
+      "wenxin": "文心一言娘",
+      "switch": "切换角色…",
+      "current": "当前"
+    },
+    "zh-Hant": {
+      "name": "桌寵",
+      "description": "寫作時陪著你的 Q 版小夥伴，浮在桌面上或視窗裡：墨羽，或 Textus AI 正在用的模型對應的大模型娘。你打字她寫字，停下她打盹，儲存時開心，Textus AI 工作時她湊過來看。",
+      "toggle": "顯示或隱藏桌寵",
+      "pet": "桌寵",
+      "character": "陪你的是",
+      "auto": "跟隨 Textus AI 的模型",
+      "bubbles": "對話氣泡",
+      "night": "深夜提醒我休息",
+      "textus": "墨羽",
+      "claude": "Claude 娘",
+      "gpt": "GPT 娘",
+      "gemini": "Gemini 娘",
+      "deepseek": "DeepSeek 娘",
+      "kimi": "Kimi 娘",
+      "qwen": "通義千問娘",
+      "doubao": "豆包娘",
+      "glm": "GLM 娘",
+      "minimax": "MiniMax 娘",
+      "grok": "Grok 娘",
+      "wenxin": "文心一言娘",
+      "switch": "切換角色…",
+      "current": "目前"
+    },
+    "ja": {
+      "name": "デスクペット",
+      "description": "書いているあいだ、デスクトップやウインドウに浮かぶちびキャラの相棒：墨羽、または Textus AI が使っているモデルの LLM ちゃん。入力すると書き、手を止めるとうたた寝し、保存すると喜び、Textus AI が働くとのぞき込みます。",
+      "toggle": "デスクペットを表示/非表示",
+      "pet": "デスクペット",
+      "character": "そばにいるのは",
+      "auto": "Textus AI のモデルに合わせる",
+      "bubbles": "吹き出し",
+      "night": "深夜は休むよう知らせる",
+      "textus": "墨羽",
+      "claude": "Claude ちゃん",
+      "gpt": "GPT ちゃん",
+      "gemini": "Gemini ちゃん",
+      "deepseek": "DeepSeek ちゃん",
+      "kimi": "Kimi ちゃん",
+      "qwen": "Qwen ちゃん",
+      "doubao": "Doubao ちゃん",
+      "glm": "GLM ちゃん",
+      "minimax": "MiniMax ちゃん",
+      "grok": "Grok ちゃん",
+      "wenxin": "ERNIE ちゃん",
+      "switch": "キャラクターを切り替え…",
+      "current": "現在"
+    },
+    "ko": {
+      "name": "데스크 펫",
+      "description": "글을 쓰는 동안 바탕화면이나 창에 떠 있는 치비 친구: Moyu(墨羽), 또는 Textus AI가 쓰는 모델의 LLM 짱. 타이핑하면 글을 쓰고, 멈추면 졸고, 저장하면 기뻐하고, Textus AI가 일하면 다가와 봅니다.",
+      "toggle": "데스크 펫 보이기/숨기기",
+      "pet": "데스크 펫",
+      "character": "곁에 있는 친구",
+      "auto": "Textus AI의 모델 따라가기",
+      "bubbles": "말풍선",
+      "night": "밤늦게 쉬라고 알려 주기",
+      "textus": "Moyu(墨羽)",
+      "claude": "Claude 짱",
+      "gpt": "GPT 짱",
+      "gemini": "Gemini 짱",
+      "deepseek": "DeepSeek 짱",
+      "kimi": "Kimi 짱",
+      "qwen": "Qwen 짱",
+      "doubao": "Doubao 짱",
+      "glm": "GLM 짱",
+      "minimax": "MiniMax 짱",
+      "grok": "Grok 짱",
+      "wenxin": "ERNIE 짱",
+      "switch": "캐릭터 바꾸기…",
+      "current": "현재"
+    },
+    "de": {
+      "name": "Schreibtisch-Pet",
+      "description": "Ein Chibi-Begleiter, der beim Schreiben auf dem Schreibtisch oder im Fenster schwebt: Moyu oder das LLM-chan des Modells, das Textus AI gerade nutzt. Sie schreibt, wenn du tippst, döst, wenn du aufhörst, freut sich beim Speichern und schaut zu, wenn Textus AI arbeitet.",
+      "toggle": "Schreibtisch-Pet ein- oder ausblenden",
+      "pet": "Schreibtisch-Pet",
+      "character": "Wer dir Gesellschaft leistet",
+      "auto": "Dem Modell von Textus AI folgen",
+      "bubbles": "Sprechblasen",
+      "night": "Spät in der Nacht an eine Pause erinnern",
+      "textus": "Moyu",
+      "claude": "Claude-chan",
+      "gpt": "GPT-chan",
+      "gemini": "Gemini-chan",
+      "deepseek": "DeepSeek-chan",
+      "kimi": "Kimi-chan",
+      "qwen": "Qwen-chan",
+      "doubao": "Doubao-chan",
+      "glm": "GLM-chan",
+      "minimax": "MiniMax-chan",
+      "grok": "Grok-chan",
+      "wenxin": "ERNIE-chan",
+      "switch": "Figur wechseln…",
+      "current": "jetzt"
+    },
+    "fr": {
+      "name": "Compagnon de bureau",
+      "description": "Un compagnon chibi qui flotte sur le bureau ou dans la fenêtre pendant que vous écrivez : Moyu, ou la LLM-chan du modèle qu'utilise Textus AI. Elle écrit quand vous tapez, somnole quand vous vous arrêtez, se réjouit quand vous enregistrez et se penche quand Textus AI travaille.",
+      "toggle": "Afficher ou masquer le compagnon",
+      "pet": "Compagnon de bureau",
+      "character": "Qui vous tient compagnie",
+      "auto": "Suivre le modèle de Textus AI",
+      "bubbles": "Bulles de dialogue",
+      "night": "Me rappeler de me reposer tard le soir",
+      "textus": "Moyu",
+      "claude": "Claude-chan",
+      "gpt": "GPT-chan",
+      "gemini": "Gemini-chan",
+      "deepseek": "DeepSeek-chan",
+      "kimi": "Kimi-chan",
+      "qwen": "Qwen-chan",
+      "doubao": "Doubao-chan",
+      "glm": "GLM-chan",
+      "minimax": "MiniMax-chan",
+      "grok": "Grok-chan",
+      "wenxin": "ERNIE-chan",
+      "switch": "Changer de personnage…",
+      "current": "actuel"
+    },
+    "es": {
+      "name": "Mascota de escritorio",
+      "description": "Una compañera chibi que flota en el escritorio o en la ventana mientras escribes: Moyu, o la LLM-chan del modelo que usa Textus AI. Escribe cuando tecleas, dormita cuando paras, se alegra cuando guardas y se asoma cuando Textus AI trabaja.",
+      "toggle": "Mostrar u ocultar la mascota",
+      "pet": "Mascota de escritorio",
+      "character": "Quién te acompaña",
+      "auto": "Seguir el modelo de Textus AI",
+      "bubbles": "Bocadillos",
+      "night": "Recordarme descansar de madrugada",
+      "textus": "Moyu",
+      "claude": "Claude-chan",
+      "gpt": "GPT-chan",
+      "gemini": "Gemini-chan",
+      "deepseek": "DeepSeek-chan",
+      "kimi": "Kimi-chan",
+      "qwen": "Qwen-chan",
+      "doubao": "Doubao-chan",
+      "glm": "GLM-chan",
+      "minimax": "MiniMax-chan",
+      "grok": "Grok-chan",
+      "wenxin": "ERNIE-chan",
+      "switch": "Cambiar de personaje…",
+      "current": "actual"
+    },
+    "pt": {
+      "name": "Mascote de mesa",
+      "description": "Uma companheira chibi que flutua na área de trabalho ou na janela enquanto você escreve: Moyu, ou a LLM-chan do modelo que o Textus AI está usando. Ela escreve quando você digita, cochila quando você para, comemora quando você salva e se aproxima quando o Textus AI trabalha.",
+      "toggle": "Mostrar ou ocultar a mascote",
+      "pet": "Mascote de mesa",
+      "character": "Quem faz companhia",
+      "auto": "Seguir o modelo do Textus AI",
+      "bubbles": "Balões de fala",
+      "night": "Lembrar-me de descansar tarde da noite",
+      "textus": "Moyu",
+      "claude": "Claude-chan",
+      "gpt": "GPT-chan",
+      "gemini": "Gemini-chan",
+      "deepseek": "DeepSeek-chan",
+      "kimi": "Kimi-chan",
+      "qwen": "Qwen-chan",
+      "doubao": "Doubao-chan",
+      "glm": "GLM-chan",
+      "minimax": "MiniMax-chan",
+      "grok": "Grok-chan",
+      "wenxin": "ERNIE-chan",
+      "switch": "Trocar de personagem…",
+      "current": "atual"
+    },
+    "ru": {
+      "name": "Настольный питомец",
+      "description": "Чиби-спутница, которая парит на рабочем столе или в окне, пока вы пишете: Мою или LLM-тян модели, которой пользуется Textus AI. Пишет, когда вы печатаете, дремлет, когда останавливаетесь, радуется сохранению и заглядывает, когда работает Textus AI.",
+      "toggle": "Показать или скрыть питомца",
+      "pet": "Настольный питомец",
+      "character": "Кто составит компанию",
+      "auto": "Как модель Textus AI",
+      "bubbles": "Реплики в облачках",
+      "night": "Напоминать об отдыхе поздно ночью",
+      "textus": "Мою",
+      "claude": "Claude-тян",
+      "gpt": "GPT-тян",
+      "gemini": "Gemini-тян",
+      "deepseek": "DeepSeek-тян",
+      "kimi": "Kimi-тян",
+      "qwen": "Qwen-тян",
+      "doubao": "Doubao-тян",
+      "glm": "GLM-тян",
+      "minimax": "MiniMax-тян",
+      "grok": "Grok-тян",
+      "wenxin": "ERNIE-тян",
+      "switch": "Сменить персонажа…",
+      "current": "сейчас"
+    }
+  }
+}
