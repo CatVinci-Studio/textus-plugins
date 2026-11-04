@@ -116,8 +116,9 @@ function page(character) {
   ).join("");
   return `<!doctype html><html><head><style>
   body { margin: 0; height: 100vh; overflow: hidden; user-select: none; }
-  .stage { position: absolute; inset: 22px 0 0; display: flex; align-items: flex-end; justify-content: center; }
-  img { position: absolute; bottom: 0; max-width: 100%; max-height: 100%; opacity: 0; transform-origin: 50% 100%;
+  .stage { position: absolute; inset: var(--space-6) 0 0; }
+  /* Against the outer edge: turned, the right one. */
+  img { position: absolute; bottom: 0; left: 0; max-width: 100%; max-height: 100%; opacity: 0; transform-origin: 50% 100%;
     transition: opacity var(--dur-fast) var(--ease-standard); pointer-events: none; }
   img.on { opacity: 1; animation: breathe 3.6s ease-in-out infinite; }
   img.hop { animation: hop 0.5s var(--ease-spring-bouncy, ease-out), breathe 3.6s ease-in-out 0.5s infinite; }
