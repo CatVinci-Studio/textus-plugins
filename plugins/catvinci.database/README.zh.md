@@ -33,7 +33,7 @@ sort: start
 
 这些设置都记在块里，看得懂也能手改：`columns: start, focus`（显示哪些列、什么顺序）、`sort: -rate`（`-` 表示倒序）、`filter: focus has 研究`（`=`、`!=`、`has`、`!has`、`>`、`<`、`empty`、`!empty`，每行一个）、`group:`、`date:`、`end:`、`types: status=select`（属性类型）。
 
-**从 Notion 导入**：在 Notion 里把数据库导出为 Markdown & CSV，解压到打开的文件夹里，在侧边栏右键它的 `.csv`，选择**从 Notion 导入…**。每个页面都会变成一篇文档，属性写进开头，并附带一个展示它们的页面。
+**从 Notion 导入**：在 Notion 里把数据库导出为 Markdown & CSV，解压到打开的文件夹里，在侧边栏右键它的 `.csv`，选择**导入 Notion 数据库…**。每个页面都会变成一篇文档，属性写进开头，并附带一个展示它们的页面。
 
 **用 Textus AI**：直接说"做一个 2026 年的周历，记录每周重点和评分"，它会建好文件夹、各个页面和这个块。
 

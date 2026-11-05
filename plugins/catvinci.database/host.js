@@ -4,7 +4,7 @@
 // makes one. Also: a Notion export's CSV as such a folder, and a tool for
 // Textus AI to make one.
 
-/* global database */
+/* global database, notionCsv */
 const t = (key, ...args) => textus.l10n.t(key, ...args);
 const STRINGS = [
   "table", "board", "calendar", "gallery", "page", "add", "count", "empty",
@@ -219,8 +219,8 @@ async function importNotion(path) {
   const rel = relOf(csv);
   const dir = rel.includes("/") ? rel.slice(0, rel.lastIndexOf("/")) : "";
   const exportName = rel.slice(dir.length ? dir.length + 1 : 0).replace(/\.csv$/i, "").replace(/_all$/, "");
-  const name = database.withoutId(exportName);
-  const rows = database.fromNotionCsv(await textus.files.readText(csv));
+  const name = notionCsv.withoutId(exportName);
+  const rows = notionCsv.fromNotionCsv(await textus.files.readText(csv));
   const folder = (dir ? dir + "/" : "") + fileName(name);
   await textus.files.createFolder(join(root, folder)).catch(() => {});
   const pages = await textus.files.list(join(root, (dir ? dir + "/" : "") + exportName)).catch(() => []);
@@ -230,8 +230,8 @@ async function importNotion(path) {
       report({ fraction: i / rows.length, message: row.name });
       const file = join(root, folder + "/" + fileName(row.name) + ".md");
       if (await textus.files.stat(file)) continue;
-      const page = pages.find((p) => /\.md$/i.test(p.name) && database.withoutId(p.name.replace(/\.md$/i, "")) === row.name);
-      const body = page ? notionBody(await textus.files.readText(page.path)) : "";
+      const page = pages.find((p) => /\.md$/i.test(p.name) && notionCsv.withoutId(p.name.replace(/\.md$/i, "")) === row.name);
+      const body = page ? notionCsv.notionBody(await textus.files.readText(page.path)) : "";
       await textus.files.create(file, "# " + row.name + "\n" + (body ? "\n" + body + "\n" : ""));
       await textus.files.frontmatter.update(file, (fm) => Object.assign(fm, row.props));
       made++;
@@ -242,17 +242,6 @@ async function importNotion(path) {
     await textus.files.create(index, "# " + name + "\n\n```database\nfrom: " + fileName(name) + "\nview: table\n```\n");
   await textus.layout.open(index);
   textus.ui.notice(t("imported", made, name));
-}
-
-/** A Notion page's text without its title and the property lines under it,
- *  which are in the front matter now. */
-function notionBody(text) {
-  const lines = text.replace(/\r\n/g, "\n").split("\n");
-  let i = 0;
-  if (/^# /.test(lines[i] || "")) i++;
-  while (i < lines.length && lines[i].trim() === "") i++;
-  while (i < lines.length && /^[^:\n]{1,60}: .+$/.test(lines[i])) i++;
-  return lines.slice(i).join("\n").trim();
 }
 
 /** A row: a document in `folder` named for it, its properties in its front
