@@ -1,8 +1,7 @@
-import { readFileSync, readdirSync, statSync } from "node:fs";
-import { join, relative } from "node:path";
-import JSZip from "jszip";
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
 import { beforeAll, describe, expect, it } from "vitest";
-import { loadPlugin, memoryStorage } from "./plugin-host";
+import { FIXTURE, H, exportFiles, id } from "./notion-fixture";
 
 /** Notion Import's conversion (plugins/catvinci.notion-import/notion.js),
  *  run on a synthetic export (tests/fixtures/notion-export). */
@@ -14,18 +13,6 @@ beforeAll(async () => {
   await import(/* @vite-ignore */ "../plugins/catvinci.notion-import/notion.js");
   ni = (globalThis as unknown as { notionImport: unknown }).notionImport;
 });
-
-const FIXTURE = new URL("./fixtures/notion-export/", import.meta.url).pathname;
-const H = "0a1b2c3d4e5f60718293a4b5c6d7e8f9";
-const id = (c: string) => c.repeat(32);
-
-function exportFiles(): string[] {
-  const walk = (dir: string): string[] =>
-    readdirSync(dir).flatMap((name) =>
-      statSync(join(dir, name)).isDirectory() ? walk(join(dir, name)) : [relative(FIXTURE, join(dir, name))],
-    );
-  return walk(FIXTURE).sort();
-}
 
 /** An import into memory: the files written (bytes as their size) and the report. */
 async function importOf(paths: string[], read: (path: string, kind: string) => Promise<unknown>, abortAfter = 0) {
@@ -543,145 +530,5 @@ describe("suggestions and the report", () => {
     for (const s of ni.recommend(stats)) expect(en).toEqual(expect.arrayContaining([s.why, "plugin." + s.id]));
     for (const [lang, strings] of Object.entries(manifest.l10n)) expect(Object.keys(strings as object), lang).toEqual(en);
     expect(Object.keys(manifest.l10n)).toHaveLength(10);
-  });
-});
-
-describe("zips", () => {
-  async function zipOf(files: Record<string, string>) {
-    const zip = new JSZip();
-    for (const [name, text] of Object.entries(files)) zip.file(name, text);
-    return zip.generateAsync({ type: "uint8array" });
-  }
-
-  it("reads an export's zip, without the folder it is in", async () => {
-    const bytes = await zipOf({ [`Export-x/Home ${H}.md`]: "# Home\n", "Export-x/.DS_Store": "", "__MACOSX/Export-x/._Home.md": "" });
-    const source = await ni.zipSource(JSZip, bytes);
-    expect(source.paths).toEqual([`Home ${H}.md`]);
-    expect(await source.read(`Home ${H}.md`, "text")).toBe("# Home\n");
-    expect(ni.isExport(source.paths)).toBe(true);
-  });
-
-  it("opens Part-1.zip, Part-2.zip… inside a large export as one", async () => {
-    const part1 = await zipOf({ [`Home ${H}.md`]: "# Home\n" });
-    const part2 = await zipOf({ [`Home ${H}/Sub ${id("1")}.md`]: "# Sub\n" });
-    const outer = new JSZip();
-    outer.file("Export-x-Part-1.zip", part1);
-    outer.file("Export-x-Part-2.zip", part2);
-    const source = await ni.zipSource(JSZip, await outer.generateAsync({ type: "uint8array" }));
-    expect(source.paths.sort()).toEqual([`Home ${H}.md`, `Home ${H}/Sub ${id("1")}.md`]);
-    expect(await source.read(`Home ${H}/Sub ${id("1")}.md`, "text")).toBe("# Sub\n");
-  });
-
-  it("knows a zip that isn't Notion's", async () => {
-    const source = await ni.zipSource(JSZip, await zipOf({ "notes/a.md": "# A\n", "b.csv": "x\n" }));
-    expect(ni.isExport(source.paths)).toBe(false);
-  });
-});
-
-describe("the plugin", () => {
-  it("loads with jszip before its scripts and asks only to read and write files", () => {
-    const { manifest } = loadPlugin("catvinci.notion-import");
-    expect(manifest.permissions).toEqual(["files.read", "files.write"]);
-    expect(manifest.main).toEqual(["lib/notion-csv.js", "lib/jszip.min.js", "notion.js", "host.js"]);
-  });
-});
-
-/** The open folder, its files by path: enough of textus.files for the host. */
-function disk(files: Record<string, Uint8Array | string>) {
-  const root = "/root";
-  const dirs = new Set<string>();
-  const rel = (path: string) => path.slice(root.length + 1);
-  const isDir = (r: string) => dirs.has(r) || Object.keys(files).some((f) => f.startsWith(r + "/"));
-  return {
-    files,
-    dirs,
-    api: {
-      root: async () => root,
-      find: async (glob: string) => {
-        const exts = /\{(.+)\}$/.exec(glob)?.[1].split(",") ?? [glob.split(".").pop()];
-        return Object.keys(files)
-          .filter((f) => exts.some((e) => f.endsWith("." + e)))
-          .map((f) => ({ path: root + "/" + f, rel: f }));
-      },
-      stat: async (path: string) =>
-        rel(path) in files || isDir(rel(path)) ? { path, name: path.split("/").pop(), isDir: isDir(rel(path)) } : null,
-      read: async (path: string) => files[rel(path)] as Uint8Array,
-      readText: async (path: string) => String(files[rel(path)]),
-      createFolder: async (path: string) => void dirs.add(rel(path)),
-      create: async (path: string, text: string) => {
-        if (rel(path) in files) throw new Error("Exists: " + path);
-        files[rel(path)] = text;
-      },
-      write: async (path: string, bytes: Uint8Array) => void (files[rel(path)] = bytes),
-    },
-  };
-}
-
-describe("the import command", () => {
-  async function run(installed: string[], offer: (args: unknown) => Promise<unknown>) {
-    const zip = new JSZip();
-    for (const path of exportFiles()) zip.file("Export-x/" + path, readFileSync(join(FIXTURE, path)));
-    const folder = disk({ "Inbox/Export-x.zip": await zip.generateAsync({ type: "uint8array" }) });
-    const commands = new Map<string, (...args: unknown[]) => Promise<unknown>>();
-    const messages: string[] = [];
-    const opened: string[] = [];
-    const picks: unknown[][] = [];
-    const t = (key: string, ...args: unknown[]) => [key, ...args].join("|");
-    loadPlugin(
-      "catvinci.notion-import",
-      {
-        l10n: { t },
-        files: folder.api,
-        commands: {
-          register: (id: string, run: (...args: unknown[]) => Promise<unknown>) => {
-            commands.set(id, run);
-            return { dispose() {} };
-          },
-          execute: async (id: string, args: unknown) => (id === "textus.offerPlugin" ? offer(args) : null),
-        },
-        ui: {
-          pick: async (items: { value: unknown }[]) => {
-            picks.push(items);
-            return items[0].value;
-          },
-          withProgress: async (_title: string, task: (r: () => void, s: AbortSignal) => Promise<unknown>) =>
-            task(() => {}, new AbortController().signal),
-          message: async (text: string) => void messages.push(text),
-          notice: async (text: string) => void messages.push(text),
-        },
-        layout: { open: async (path: string) => void opened.push(path) },
-        plugins: { get: async (id: string) => (installed.includes(id) ? {} : null) },
-      },
-      memoryStorage(),
-    );
-    await commands.get("catvinci.notion-import.import")!();
-    return { folder, commands, messages, opened, picks };
-  }
-
-  it("imports the zip it picked into a new dated folder and opens the report", async () => {
-    const { folder, messages, opened, picks } = await run(["catvinci.pages"], async () => true);
-    expect(picks[0]).toEqual([{ label: "Export-x.zip", description: "Inbox/Export-x.zip", value: "/root/Inbox/Export-x.zip" }]);
-    const target = [...folder.dirs][0];
-    expect(target).toMatch(/^folderName\|\d{4}-\d{2}-\d{2}$/);
-    expect(folder.files[target + "/Home/Projects/Launch.md"]).toContain("# Launch");
-    expect(folder.files[target + "/Home/logo.png"]).toBeInstanceOf(Uint8Array);
-    expect(opened).toEqual(["/root/" + target + "/reportName.md"]);
-    const report = String(folder.files[target + "/reportName.md"]);
-    expect(report).toContain("- **plugin.catvinci.database**: why.catvinci.database");
-    expect(report).not.toContain("plugin.catvinci.pages");
-    expect(messages).toEqual(["done|13|2|" + target]);
-  });
-
-  it("offers a suggested plugin through Textus, or says where to find it", async () => {
-    const offers: unknown[] = [];
-    const ok = await run([], async (args) => void offers.push(args));
-    await ok.commands.get("catvinci.notion-import.recommend")!();
-    expect(offers).toEqual([{ id: "catvinci.pages", reason: "why.catvinci.pages" }]);
-
-    const old = await run([], async () => {
-      throw new Error("No command textus.offerPlugin.");
-    });
-    await old.commands.get("catvinci.notion-import.recommend")!();
-    expect(old.messages.at(-1)).toBe("offerFallback|plugin.catvinci.pages");
   });
 });

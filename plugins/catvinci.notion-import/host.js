@@ -1,6 +1,5 @@
-// Notion Import: a Notion export - its .zip, or the folder it unzips to,
-// in the open folder - imported into a new folder beside it (notion.js),
-// then a report page with the plugins that would help.
+// Notion Import: a Notion export in the open folder (its .zip, or the folder it unzips to) imported
+// into a new dated folder at the open folder's top, then a report page with the plugins that help.
 
 /* global notionImport, notionCsv, JSZip */
 // jszip, run before this file, takes the host's module.exports for itself,
@@ -10,7 +9,11 @@ if (typeof module !== "undefined") module.exports = exports;
 
 const t = (key, ...args) => textus.l10n.t(key, ...args);
 const RECOMMENDED = "recommended";
+// Textus hands a plugin at most 256 MB in one read; a folder is read a file at a time.
+const MAX_READ = 256 * 1024 * 1024;
 let context = null;
+// Folders an import running now has picked but not yet made.
+const claimed = new Set();
 
 const trim = (path) => path.replace(/[\\/]+$/, "");
 const join = (dir, rel) => (rel ? trim(dir) + "/" + rel : trim(dir));
@@ -25,10 +28,10 @@ const today = () => {
   return d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate());
 };
 
-/** Every file under `dir`, by its path in it. */
-async function filesUnder(dir) {
+async function filesUnder(dir, signal) {
   const out = [];
   const walk = async (at, prefix) => {
+    if (signal.aborted) return;
     for (const entry of await textus.files.list(at)) {
       if (entry.name.startsWith(".")) continue;
       if (entry.isDir) await walk(entry.path, prefix + entry.name + "/");
@@ -61,21 +64,21 @@ async function choices(root) {
 async function freeFolder(dir, name) {
   for (let n = 1; ; n++) {
     const path = join(dir, n === 1 ? name : name + " " + n);
-    if (!(await textus.files.stat(path))) return path;
+    if (!(await textus.files.stat(path)) && !claimed.has(path)) {
+      claimed.add(path);
+      return path;
+    }
   }
 }
 
 /** The export at `path` (a .zip or a folder) as importExport reads it. */
-async function sourceOf(path) {
-  const stat = await textus.files.stat(path);
-  if (stat && stat.isDir) {
-    const { paths } = notionImport.tidyPaths(await filesUnder(path));
-    return {
-      paths,
-      read: (rel, kind) => (kind === "text" ? textus.files.readText(join(path, rel)) : textus.files.read(join(path, rel))),
-    };
-  }
-  return notionImport.zipSource(Zip, await textus.files.read(path));
+async function sourceOf(path, stat, signal) {
+  if (!stat || !stat.isDir) return notionImport.zipSource(Zip, await textus.files.read(path));
+  // Notion's links are NFC; a Mac's Archive Utility writes names decomposed.
+  const raw = new Map((await filesUnder(path, signal)).map((p) => [p.normalize("NFC"), p]));
+  const { top, paths } = notionImport.tidyPaths([...raw.keys()]);
+  const at = (rel) => join(path, raw.get(top + rel));
+  return { paths, read: (rel, kind) => (kind === "text" ? textus.files.readText(at(rel)) : textus.files.read(at(rel))) };
 }
 
 async function importNotion(arg) {
@@ -88,13 +91,16 @@ async function importNotion(arg) {
     source = await textus.ui.pick(items, { placeholder: t("pickSource") });
     if (!source) return;
   }
-  const target = await freeFolder(root, t("folderName", today()));
   const name = String(source).replace(/\\/g, "/").split("/").pop();
+  const stat = await textus.files.stat(source);
+  if (stat && !stat.isDir && stat.size > MAX_READ) return textus.ui.message(t("tooBig", name));
+  const target = await freeFolder(root, t("folderName", today()));
   let report;
   try {
     report = await textus.ui.withProgress(t("importing"), async (progress, signal) => {
       progress({ message: t("reading") });
-      const from = await sourceOf(source);
+      const from = await sourceOf(source, stat, signal);
+      if (signal.aborted) return false;
       if (!notionImport.isExport(from.paths)) return null;
       await textus.files.createFolder(target);
       return notionImport.importExport({
@@ -110,7 +116,10 @@ async function importNotion(arg) {
     });
   } catch (err) {
     return textus.ui.message(t("failed", String((err && err.message) || err)), { tone: "error" });
+  } finally {
+    claimed.delete(target);
   }
+  if (report === false) return;
   if (!report) return textus.ui.message(t("notExport", name));
   const suggestions = await stillMissing(notionImport.recommend(report.stats));
   await context.storage.global.set(RECOMMENDED, suggestions.map((s) => s.id));
@@ -121,7 +130,6 @@ async function importNotion(arg) {
   textus.ui.notice(report.stopped ? t("cancelled", where) : t("done", report.pages + report.rows, report.databases, where));
 }
 
-/** A document name in `dir` not taken by the import. */
 async function freeName(dir, name) {
   for (let n = 1; ; n++) {
     const candidate = n === 1 ? name : name + " " + n;
@@ -129,15 +137,13 @@ async function freeName(dir, name) {
   }
 }
 
-/** The suggestions whose plugin isn't installed and on. */
 async function stillMissing(suggestions) {
   const out = [];
   for (const s of suggestions) if ((await textus.plugins.get(s.id).catch(() => null)) === null) out.push(s);
   return out;
 }
 
-/** The last import's suggestions, one to install: Textus asks first and
- *  shows its permissions. Older Textus can't be asked from a plugin. */
+/** The last import's suggestions, one to install: Textus asks first and shows its permissions. */
 async function recommend() {
   const ids = (await context.storage.global.get(RECOMMENDED)) || [];
   const left = await stillMissing(ids.map((id) => ({ id, why: "why." + id })));
@@ -147,11 +153,9 @@ async function recommend() {
     { placeholder: t("recommendPick") },
   );
   if (!id) return;
-  try {
-    await textus.commands.execute("textus.offerPlugin", { id, reason: t("why." + id) });
-  } catch {
-    await textus.ui.message(t("offerFallback", t("plugin." + id)));
-  }
+  const offered = await textus.commands.execute("textus.offerPlugin", { id, reason: t("why." + id) }).catch(() => false);
+  // Declined, muted, offline, or a Textus too old to be asked: say where the plugin is.
+  if (offered !== true) await textus.ui.notice(t("offerFallback", t("plugin." + id)));
 }
 
 exports.activate = function (ctx) {
