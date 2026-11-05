@@ -323,9 +323,8 @@
     return fm + "# " + title + "\n" + (text ? "\n" + text + "\n" : "");
   }
 
-  /** Each row's page among `pages`, or null. Names settle most; Notion cuts long file names and
-   *  swaps / : ? … in them, so a page left over goes by its own title, and rows sharing a name
-   *  take the page whose property lines agree with their cells. */
+  /** Each row's page, or null: by file name, else by the page's own title (Notion cuts long names
+   *  and swaps / : ? in them); rows sharing a name take the page whose properties agree. */
   async function pagesOfRows(rows, table, pages, read) {
     const keys = (table[0] || []).map(N.propertyName);
     const seen = new Map();

@@ -51,9 +51,12 @@ const importFixture = (options: { abortAfter?: number; fail?: string } = {}) =>
     options.abortAfter,
   );
 
-/** The import of an export given as its files' texts. */
-const importMemory = (files: Record<string, string>) =>
-  importOf(Object.keys(files), async (path, kind) => (kind === "text" ? files[path] : new TextEncoder().encode(files[path])));
+/** The import of an export given as its files' texts; reading `fail` fails. */
+const importMemory = (files: Record<string, string>, fail = "") =>
+  importOf(Object.keys(files), async (path, kind) => {
+    if (path === fail) throw new Error(TOO_BIG);
+    return kind === "text" ? files[path] : new TextEncoder().encode(files[path]);
+  });
 
 describe("names", () => {
   it("drops Notion's id and what file systems refuse", () => {
@@ -411,6 +414,13 @@ describe("an export's harder cases", () => {
     expect(out[`DB/${long.slice(0, 50)}.md`]).toBe(`---\nstatus: Done\n---\n# ${long}\n\nBody one.\n`);
     expect(out["DB/Q1 Q2  plan.md"]).toBe("---\nstatus: Doing\n---\n# Q1/Q2: plan?\n\nBody two.\n");
     expect(report).toMatchObject({ rows: 2, pages: 0 });
+  });
+
+  it("goes on when a row's page can't be read while it looks for it", async () => {
+    const page = `DB ${D}/Q1 Q2  plan  ${id("2")}.md`;
+    const { out, report } = await importMemory({ [`DB ${D}.csv`]: 'Name,Status\n"Q1/Q2: plan?",Doing\n', [page]: "# Q1/Q2: plan?" }, page);
+    expect(out["DB/Q1-Q2- plan-.md"]).toBe("---\nstatus: Doing\n---\n# Q1/Q2: plan?\n");
+    expect(report.failed).toEqual([{ path: page, error: TOO_BIG }]);
   });
 
   it("gives rows that share a title the page whose properties agree with them", async () => {
