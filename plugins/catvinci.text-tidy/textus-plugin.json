@@ -1,0 +1,247 @@
+{
+  "id": "catvinci.text-tidy",
+  "name": "%name%",
+  "version": "0.1.0",
+  "publisher": "catvinci",
+  "author": "CatVinci Studio",
+  "description": "%description%",
+  "icon": "icon.svg",
+  "license": "MIT",
+  "repository": "https://github.com/CatVinci-Studio/textus-plugins",
+  "engines": {
+    "textus": ">=1.3.0-beta.2"
+  },
+  "platforms": [
+    "desktop",
+    "ios"
+  ],
+  "main": [
+    "tidy.js",
+    "host.js"
+  ],
+  "permissions": [
+    "editor.read",
+    "editor.write"
+  ],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "contributes": {
+    "commands": [
+      {
+        "command": "catvinci.text-tidy.removeBlankLines",
+        "title": "%removeBlankLines%"
+      },
+      {
+        "command": "catvinci.text-tidy.trimTrailing",
+        "title": "%trimTrailing%"
+      },
+      {
+        "command": "catvinci.text-tidy.fullPunctuation",
+        "title": "%fullPunctuation%"
+      },
+      {
+        "command": "catvinci.text-tidy.halfPunctuation",
+        "title": "%halfPunctuation%"
+      },
+      {
+        "command": "catvinci.text-tidy.halfLetters",
+        "title": "%halfLetters%"
+      },
+      {
+        "command": "catvinci.text-tidy.joinLines",
+        "title": "%joinLines%"
+      }
+    ],
+    "menus": {
+      "app/plugins": [
+        {
+          "command": "catvinci.text-tidy.removeBlankLines"
+        },
+        {
+          "command": "catvinci.text-tidy.trimTrailing"
+        },
+        {
+          "command": "catvinci.text-tidy.fullPunctuation"
+        },
+        {
+          "command": "catvinci.text-tidy.halfPunctuation"
+        },
+        {
+          "command": "catvinci.text-tidy.halfLetters"
+        },
+        {
+          "command": "catvinci.text-tidy.joinLines"
+        }
+      ],
+      "editor/context": [
+        {
+          "command": "catvinci.text-tidy.joinLines",
+          "when": "editorHasSelection"
+        }
+      ]
+    }
+  },
+  "l10n": {
+    "en": {
+      "name": "Text Tidy",
+      "description": "Tidy text in one step: remove blank lines and trailing spaces, switch punctuation between Chinese and English, turn full-width letters into ASCII, and join lines.",
+      "removeBlankLines": "Remove Blank Lines",
+      "trimTrailing": "Remove Trailing Spaces",
+      "fullPunctuation": "Chinese Punctuation in Chinese Text",
+      "halfPunctuation": "English Punctuation in English Text",
+      "halfLetters": "Full-Width Letters and Digits to ASCII",
+      "joinLines": "Join Selected Lines",
+      "done": "Tidied {0} places.",
+      "doneSelection": "Selection tidied.",
+      "none": "Nothing to tidy.",
+      "selectFirst": "Select the lines to join first.",
+      "confirmWhole": "Tidy the whole document? Select some text first to tidy only that.",
+      "confirmOk": "Tidy"
+    },
+    "zh": {
+      "name": "文本整理",
+      "description": "一键整理文字：删除空行和行尾空格，中英文标点互转，全角字母数字转半角，合并多行。",
+      "removeBlankLines": "删除空行",
+      "trimTrailing": "删除行尾空格",
+      "fullPunctuation": "中文里改用中文标点",
+      "halfPunctuation": "英文里改用英文标点",
+      "halfLetters": "全角字母数字转半角",
+      "joinLines": "合并选中的行",
+      "done": "已整理 {0} 处。",
+      "doneSelection": "选中的文字已整理。",
+      "none": "没有需要整理的地方。",
+      "selectFirst": "请先选中要合并的几行。",
+      "confirmWhole": "整理整篇文档吗？只想整理一部分，请先选中那部分文字。",
+      "confirmOk": "整理"
+    },
+    "zh-Hant": {
+      "name": "文字整理",
+      "description": "一鍵整理文字：刪除空行和行尾空格，中英文標點互轉，全形字母數字轉半形，合併多行。",
+      "removeBlankLines": "刪除空行",
+      "trimTrailing": "刪除行尾空格",
+      "fullPunctuation": "中文裡改用中文標點",
+      "halfPunctuation": "英文裡改用英文標點",
+      "halfLetters": "全形字母數字轉半形",
+      "joinLines": "合併選取的行",
+      "done": "已整理 {0} 處。",
+      "doneSelection": "選取的文字已整理。",
+      "none": "沒有需要整理的地方。",
+      "selectFirst": "請先選取要合併的幾行。",
+      "confirmWhole": "整理整份文件嗎？只想整理一部分，請先選取那部分文字。",
+      "confirmOk": "整理"
+    },
+    "ja": {
+      "name": "テキスト整形",
+      "description": "ワンステップで整形：空行と行末の空白を削除、和文と欧文の句読点を切り替え、全角英数字を半角に、行を結合。",
+      "removeBlankLines": "空行を削除",
+      "trimTrailing": "行末の空白を削除",
+      "fullPunctuation": "和文に全角の句読点",
+      "halfPunctuation": "欧文に半角の句読点",
+      "halfLetters": "全角英数字を半角に",
+      "joinLines": "選択した行を結合",
+      "done": "{0} か所を整形しました。",
+      "doneSelection": "選択範囲を整形しました。",
+      "none": "整形するところはありません。",
+      "selectFirst": "結合する行を先に選択してください。",
+      "confirmWhole": "文書全体を整形しますか？一部だけなら、先にその部分を選択してください。",
+      "confirmOk": "整形"
+    },
+    "ko": {
+      "name": "텍스트 정리",
+      "description": "한 번에 정리: 빈 줄과 줄 끝 공백 삭제, 중국어·영어 문장 부호 전환, 전각 영문·숫자를 반각으로, 줄 합치기.",
+      "removeBlankLines": "빈 줄 삭제",
+      "trimTrailing": "줄 끝 공백 삭제",
+      "fullPunctuation": "중국어 문장에 전각 문장 부호",
+      "halfPunctuation": "영어 문장에 반각 문장 부호",
+      "halfLetters": "전각 영문·숫자를 반각으로",
+      "joinLines": "선택한 줄 합치기",
+      "done": "{0}곳을 정리했습니다.",
+      "doneSelection": "선택한 텍스트를 정리했습니다.",
+      "none": "정리할 곳이 없습니다.",
+      "selectFirst": "합칠 줄을 먼저 선택하세요.",
+      "confirmWhole": "문서 전체를 정리할까요? 일부만 정리하려면 먼저 그 부분을 선택하세요.",
+      "confirmOk": "정리"
+    },
+    "es": {
+      "name": "Ordenar texto",
+      "description": "Ordena el texto en un paso: quita líneas en blanco y espacios finales, cambia la puntuación entre chino e inglés, pasa letras de ancho completo a ASCII y une líneas.",
+      "removeBlankLines": "Quitar líneas en blanco",
+      "trimTrailing": "Quitar espacios finales",
+      "fullPunctuation": "Puntuación china en texto chino",
+      "halfPunctuation": "Puntuación inglesa en texto inglés",
+      "halfLetters": "Letras y dígitos de ancho completo a ASCII",
+      "joinLines": "Unir líneas seleccionadas",
+      "done": "Ordenados {0} sitios.",
+      "doneSelection": "Selección ordenada.",
+      "none": "No hay nada que ordenar.",
+      "selectFirst": "Selecciona primero las líneas que quieres unir.",
+      "confirmWhole": "¿Ordenar todo el documento? Para ordenar solo una parte, selecciónala primero.",
+      "confirmOk": "Ordenar"
+    },
+    "fr": {
+      "name": "Nettoyage du texte",
+      "description": "Nettoyez le texte en une étape : lignes vides et espaces en fin de ligne supprimés, ponctuation chinoise ou anglaise selon le texte, lettres pleine chasse en ASCII, lignes réunies.",
+      "removeBlankLines": "Supprimer les lignes vides",
+      "trimTrailing": "Supprimer les espaces en fin de ligne",
+      "fullPunctuation": "Ponctuation chinoise dans le texte chinois",
+      "halfPunctuation": "Ponctuation anglaise dans le texte anglais",
+      "halfLetters": "Lettres et chiffres pleine chasse en ASCII",
+      "joinLines": "Réunir les lignes sélectionnées",
+      "done": "{0} endroits nettoyés.",
+      "doneSelection": "Sélection nettoyée.",
+      "none": "Rien à nettoyer.",
+      "selectFirst": "Sélectionnez d’abord les lignes à réunir.",
+      "confirmWhole": "Nettoyer tout le document ? Pour n’en nettoyer qu’une partie, sélectionnez-la d’abord.",
+      "confirmOk": "Nettoyer"
+    },
+    "de": {
+      "name": "Text aufräumen",
+      "description": "Text in einem Schritt aufräumen: Leerzeilen und Leerzeichen am Zeilenende entfernen, Satzzeichen zwischen Chinesisch und Englisch umstellen, Vollbreite-Buchstaben in ASCII umwandeln, Zeilen zusammenfügen.",
+      "removeBlankLines": "Leerzeilen entfernen",
+      "trimTrailing": "Leerzeichen am Zeilenende entfernen",
+      "fullPunctuation": "Chinesische Satzzeichen in chinesischem Text",
+      "halfPunctuation": "Englische Satzzeichen in englischem Text",
+      "halfLetters": "Vollbreite Buchstaben und Ziffern in ASCII",
+      "joinLines": "Ausgewählte Zeilen zusammenfügen",
+      "done": "{0} Stellen aufgeräumt.",
+      "doneSelection": "Auswahl aufgeräumt.",
+      "none": "Nichts aufzuräumen.",
+      "selectFirst": "Wähle zuerst die Zeilen aus, die zusammengefügt werden sollen.",
+      "confirmWhole": "Das ganze Dokument aufräumen? Um nur einen Teil aufzuräumen, wähle ihn zuerst aus.",
+      "confirmOk": "Aufräumen"
+    },
+    "ru": {
+      "name": "Уборка текста",
+      "description": "Приводит текст в порядок за один шаг: убирает пустые строки и пробелы в конце строк, меняет пунктуацию между китайской и английской, переводит полноширинные буквы в ASCII, объединяет строки.",
+      "removeBlankLines": "Убрать пустые строки",
+      "trimTrailing": "Убрать пробелы в конце строк",
+      "fullPunctuation": "Китайская пунктуация в китайском тексте",
+      "halfPunctuation": "Английская пунктуация в английском тексте",
+      "halfLetters": "Полноширинные буквы и цифры в ASCII",
+      "joinLines": "Объединить выделенные строки",
+      "done": "Исправлено мест: {0}.",
+      "doneSelection": "Выделенный текст приведён в порядок.",
+      "none": "Исправлять нечего.",
+      "selectFirst": "Сначала выделите строки, которые нужно объединить.",
+      "confirmWhole": "Привести в порядок весь документ? Чтобы обработать только часть, сначала выделите её.",
+      "confirmOk": "Привести в порядок"
+    },
+    "pt": {
+      "name": "Arrumar texto",
+      "description": "Arrume o texto em um passo: remove linhas em branco e espaços no fim das linhas, troca a pontuação entre chinês e inglês, converte letras de largura total em ASCII e junta linhas.",
+      "removeBlankLines": "Remover linhas em branco",
+      "trimTrailing": "Remover espaços no fim das linhas",
+      "fullPunctuation": "Pontuação chinesa em texto chinês",
+      "halfPunctuation": "Pontuação inglesa em texto inglês",
+      "halfLetters": "Letras e dígitos de largura total em ASCII",
+      "joinLines": "Juntar linhas selecionadas",
+      "done": "{0} lugares arrumados.",
+      "doneSelection": "Seleção arrumada.",
+      "none": "Nada para arrumar.",
+      "selectFirst": "Selecione primeiro as linhas que quer juntar.",
+      "confirmWhole": "Arrumar o documento inteiro? Para arrumar só uma parte, selecione-a primeiro.",
+      "confirmOk": "Arrumar"
+    }
+  }
+}
