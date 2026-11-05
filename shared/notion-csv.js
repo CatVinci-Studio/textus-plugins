@@ -48,30 +48,41 @@
     return m ? m[1].toLowerCase() : null;
   }
 
-  const MONTHS = ["january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december"];
+  // The month names Notion writes long dates with: English, German, French, Spanish, Portuguese.
+  const MONTHS = [
+    "january february march april may june july august september october november december",
+    "januar februar märz april mai juni juli august september oktober november dezember",
+    "janvier février mars avril mai juin juillet août septembre octobre novembre décembre",
+    "enero febrero marzo abril mayo junio julio agosto septiembre octubre noviembre diciembre",
+    "janeiro fevereiro março abril maio junho julho agosto setembro outubro novembro dezembro",
+  ]
+    .join(" ")
+    .split(" ");
   const pad = (n) => String(n).padStart(2, "0");
   const day = (y, m, d) => (m >= 1 && m <= 12 && d >= 1 && d <= 31 ? y + "-" + pad(m) + "-" + pad(d) : null);
-  /** A month's number from its English name or its first three or four
-   *  letters ("Sept"); 0 for anything else. */
+  /** A month's number from its name or its first three or four letters
+   *  ("Sept"); 0 for anything else. */
   function month(name) {
     const n = name.toLowerCase();
-    return MONTHS.findIndex((m) => m === n || (n.length >= 3 && n.length <= 4 && m.startsWith(n))) + 1;
+    return (MONTHS.findIndex((m) => m === n || (n.length >= 3 && n.length <= 4 && m.startsWith(n))) % 12) + 1;
   }
 
   /** A date as Notion writes it in its export - "January 4, 2026",
-   *  "4 January 2026", "2026/01/04", "2026-01-04", "2026年1月4日",
-   *  "2026년 1월 4일", a time after it or not - as 2026-01-04; null for
-   *  anything else. */
+   *  "4. Januar 2026", "4 de enero de 2026", "2026/01/04", "2026-01-04",
+   *  "2026年1月4日", "2026년 1월 4일", a time after it or not - as
+   *  2026-01-04; null for anything else, text that only starts with one too. */
   function dateOf(text) {
     const v = String(text).trim();
-    let m = /^([A-Za-z]{3,9})\.? (\d{1,2}), (\d{4})\b/.exec(v);
-    if (m && month(m[1])) return day(m[3], month(m[1]), Number(m[2]));
-    m = /^(\d{1,2}) ([A-Za-z]{3,9})\.? (\d{4})\b/.exec(v);
-    if (m && month(m[2])) return day(m[3], month(m[2]), Number(m[1]));
-    m = /^(\d{4})[-/.](\d{1,2})[-/.](\d{1,2})(?![\d])/.exec(v);
-    if (m) return day(m[1], Number(m[2]), Number(m[3]));
+    // After the date, only a time ("3:00 PM", "下午3:00", "오후 3:00 → 4:00 PM").
+    const whole = (m) => /^(?:\s+\D{0,3}\d{1,2}:\d{2}.*)?$/.test(v.slice(m[0].length));
+    let m = /^([A-Za-z]{3,9})\.? (\d{1,2}), (\d{4})/.exec(v);
+    if (m && month(m[1]) && whole(m)) return day(m[3], month(m[1]), Number(m[2]));
+    m = /^(\d{1,2})\.? (?:de )?(\p{L}{3,10})\.? (?:de )?(\d{4})/u.exec(v);
+    if (m && month(m[2]) && whole(m)) return day(m[3], month(m[2]), Number(m[1]));
+    m = /^(\d{4})[-/](\d{1,2})[-/](\d{1,2})/.exec(v);
+    if (m && whole(m)) return day(m[1], Number(m[2]), Number(m[3]));
     m = /^(\d{4})\s*[年년]\s*(\d{1,2})\s*[月월]\s*(\d{1,2})\s*[日일]/.exec(v);
-    if (m) return day(m[1], Number(m[2]), Number(m[3]));
+    if (m && whole(m)) return day(m[1], Number(m[2]), Number(m[3]));
     return null;
   }
 
@@ -92,7 +103,8 @@
     const v = String(cell).trim();
     if (!v) return null;
     const items = [];
-    const item = /\s*(?:,\s*)?([^()]*?)\s*\(([^()\s]*(?:\.md|[0-9a-f]{32})(?:[?#][^()\s]*)?)\)/giy;
+    // A title or path may hold parentheses ("Plan (v2)"); an item ends at a comma.
+    const item = /\s*(?:,\s*)?(.*?)\s*\(((?:[^\s()]|\([^\s()]*\))*?(?:\.md|[0-9a-f]{32})(?:[?#][^\s()]*)?)\)(?=\s*,|\s*$)/giy;
     let m;
     let end = 0;
     while ((m = item.exec(v))) {
@@ -103,8 +115,9 @@
   }
 
   /** A Notion cell as a front matter value: its dates as 2026-01-04 (a
-   *  range's first day), Yes/No as true/false, numbers as numbers, and a
-   *  multi-select's "a, b" as a list when the column holds lists. */
+   *  range's first day), Yes/No as true/false, numbers as numbers when they
+   *  read back the same, and a multi-select's "a, b" as a list when the
+   *  column holds lists. */
   function cellValue(cell, asList) {
     const v = String(cell).trim();
     if (v === "") return null;
@@ -112,12 +125,14 @@
     if (date) return date;
     if (v === "Yes" || v === "No") return v === "Yes";
     if (asList) return v.split(",").map((s) => s.trim()).filter(Boolean);
-    if (/^-?\d+(\.\d+)?$/.test(v)) return Number(v);
+    const n = Number(v);
+    if (/^-?\d+(\.\d+)?$/.test(v) && String(n) === v) return n;
     return v;
   }
 
   /** A Notion CSV as documents: `{ name, props }` each, the first column
-   *  the name. A column whose cells hold commas in most rows is a list; one
+   *  the name. A column whose cells hold commas in most rows, or whose
+   *  options also stand alone in a cell, is a list; one
    *  whose cells all name pages is a relation, each page given as
    *  `options.relation(item)` makes it (its title by default); a date
    *  range's end is in `<key>_end`. */
@@ -130,7 +145,10 @@
     const related = filled.map((cells) => cells.length > 0 && cells.every((v) => relationItems(v)));
     const listy = filled.map((cells) => {
       const commas = cells.filter((v) => v.includes(", ") && !dateOf(v) && !rangeOf(v));
-      return cells.length > 0 && commas.length * 2 >= cells.length;
+      // Notion's options hold no commas, so one alone in a cell is an option.
+      const single = new Set(cells);
+      const alone = commas.some((v) => v.split(",").some((p) => single.has(p.trim())));
+      return cells.length > 0 && (commas.length * 2 >= cells.length || alone);
     });
     return body.map((cells) => {
       const props = {};
@@ -169,8 +187,9 @@
   }
 
   /** A Notion page's parts: its title, the `Key: value` lines under it (as
-   *  `[key, value]` pairs, in order) and the rest. */
-  function pageParts(text) {
+   *  `[key, value]` pairs, in order) and the rest. Only a database row has
+   *  property lines: without `withProps` they stay in the body. */
+  function pageParts(text, withProps = true) {
     const lines = String(text).replace(/\r\n?/g, "\n").split("\n");
     let i = 0;
     while (i < lines.length && lines[i].trim() === "") i++;
@@ -188,7 +207,7 @@
     }
     // Property lines are a block of their own; a paragraph that starts
     // "Note: …" and goes on is body text.
-    const block = props.length && (k === lines.length || lines[k].trim() === "");
+    const block = withProps && props.length && (k === lines.length || lines[k].trim() === "");
     const from = heading && block ? k : heading ? i : 0;
     return {
       title,

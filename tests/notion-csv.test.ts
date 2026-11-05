@@ -41,9 +41,31 @@ describe("Notion's CSV", () => {
     expect(csv.dateOf("2026年1月4日")).toBe("2026-01-04");
     expect(csv.dateOf("2026年1月4日 15:00")).toBe("2026-01-04");
     expect(csv.dateOf("2026년 1월 4일")).toBe("2026-01-04");
+    expect(csv.dateOf("2026년 1월 4일 오후 3:00")).toBe("2026-01-04");
+    expect(csv.dateOf("January 4, 2026 10:00 AM → 12:00 PM")).toBe("2026-01-04");
     expect(csv.dateOf("Mayday 4, 2026")).toBeNull();
     expect(csv.dateOf("2026-13-01")).toBeNull();
     expect(csv.dateOf("Version 1.3.8")).toBeNull();
+  });
+
+  it("reads Notion's long dates in German, French, Spanish and Portuguese", () => {
+    expect(csv.dateOf("4. Januar 2026")).toBe("2026-01-04");
+    expect(csv.dateOf("4. März 2026")).toBe("2026-03-04");
+    expect(csv.dateOf("4 janvier 2026")).toBe("2026-01-04");
+    expect(csv.dateOf("1 août 2026 15:00")).toBe("2026-08-01");
+    expect(csv.dateOf("4 de enero de 2026")).toBe("2026-01-04");
+    expect(csv.dateOf("4 de janeiro de 2026")).toBe("2026-01-04");
+    expect(csv.rangeOf("4. Januar 2026 → 6. Januar 2026")).toEqual({ start: "2026-01-04", end: "2026-01-06" });
+    expect(csv.dateOf("3 Bananen 2026")).toBeNull();
+  });
+
+  it("leaves text that only starts with a date, and versions, as text", () => {
+    expect(csv.dateOf("2026-01-04 release shipped")).toBeNull();
+    expect(csv.dateOf("4 May 2026 was the kickoff")).toBeNull();
+    expect(csv.dateOf("Mar 3, 2026 retro: went well")).toBeNull();
+    expect(csv.dateOf("2024.10.2")).toBeNull();
+    const rows = csv.fromNotionCsv('Name,Version,Due\nA,2024.10.2,"January 4, 2026"\nB,2025.1.3,"January 5, 2026"\n');
+    expect(rows[0].props).toEqual({ version: "2024.10.2", due: "2026-01-04" });
   });
 
   it("splits a date range into its two ends", () => {
@@ -60,6 +82,15 @@ describe("Notion's CSV", () => {
     expect(csv.cellValue("a, b", true)).toEqual(["a", "b"]);
     expect(csv.cellValue("In progress")).toBe("In progress");
     expect(csv.cellValue("  ")).toBeNull();
+    // Digits that wouldn't read back the same stay text: zip codes, ids, versions.
+    expect(csv.cellValue("02139")).toBe("02139");
+    expect(csv.cellValue("1.10")).toBe("1.10");
+    expect(csv.cellValue("12345678901234567890")).toBe("12345678901234567890");
+  });
+
+  it("reads a multi-select whose rows mostly hold one option as lists", () => {
+    const rows = csv.fromNotionCsv('Name,Tags\nA,"Health, Personal"\nB,Health\nC,Personal\nD,Work\n');
+    expect(rows.map((r: { props: { tags: unknown } }) => r.props.tags)).toEqual([["Health", "Personal"], ["Health"], ["Personal"], ["Work"]]);
   });
 
   it("reads a relation's pages, by path or notion.so address", () => {
@@ -70,6 +101,18 @@ describe("Notion's CSV", () => {
     ]);
     expect(csv.relationItems("Plain text (with a note)")).toBeNull();
     expect(csv.relationItems("")).toBeNull();
+  });
+
+  it("reads related pages whose titles have parentheses", () => {
+    const id = "4".repeat(32);
+    const web = `https://www.notion.so/Plan-v2-${"3".repeat(32)}`;
+    expect(csv.relationItems(`Plan (v2) (Projects%20x/Plan%20(v2)%20${id}.md), Web (${web})`)).toEqual([
+      { title: "Plan (v2)", target: `Projects%20x/Plan%20(v2)%20${id}.md` },
+      { title: "Web", target: web },
+    ]);
+    expect(csv.relationItems(`X (Projects%20x/X%20${id}.md) extra`)).toBeNull();
+    const rows = csv.fromNotionCsv(`Name,Rel\nA,"Plan (v2) (Plan%20(v2)%20${id}.md)"\nB,Garden (Garden%20${id}.md)\n`);
+    expect(rows.map((r: { props: { rel: unknown } }) => r.props.rel)).toEqual([["Plan (v2)"], ["Garden"]]);
   });
 
   it("gives relations as titles by default, or as the caller makes them, and keeps a range's end", () => {
@@ -108,5 +151,11 @@ describe("Notion's CSV", () => {
     expect(csv.pageParts("# A\n\nNote: this\nand more text\n").props).toEqual([]);
     expect(csv.pageParts("# A\n\nNote: this\nand more text\n").body).toBe("Note: this\nand more text");
     expect(csv.notionBody("# A\n\nKey: v\n\nBody")).toBe("Body");
+    // Only a database row has property lines: another page keeps them as text.
+    expect(csv.pageParts("# Meeting\n\nDate: Mar 3, 2026 retro\n\nAgenda", false)).toEqual({
+      title: "Meeting",
+      props: [],
+      body: "Date: Mar 3, 2026 retro\n\nAgenda",
+    });
   });
 });
