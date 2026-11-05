@@ -378,7 +378,7 @@
     const report = {
       pages: 0, databases: 0, rows: 0, files: 0, total: paths.length, done: 0, stopped: false,
       missing: [], failed: [], blocks: { callout: [], icon: [] },
-      stats: { subpages: 0, databases: 0, boards: 0, dateDatabases: 0, links: 0, todos: 0, urls: 0, pdfs: 0, templates: 0 },
+      stats: { subpages: 0, databases: 0, links: 0, todos: 0, urls: 0, pdfs: 0, templates: 0 },
       written: [],
     };
     const made = new Set([""]);
@@ -451,8 +451,6 @@
         await writeText(db.page, view.text);
         report.databases++;
         report.stats.databases++;
-        if (view.group) report.stats.boards++;
-        if (view.date) report.stats.dateDatabases++;
       });
       for (const p of paths) if (p === db.csv || layout.files.get(p) === db.page) step(p);
     }
@@ -492,12 +490,9 @@
     const all = [
       ["catvinci.pages", stats.subpages > 0],
       ["catvinci.database", stats.databases > 0],
-      ["catvinci.kanban", stats.boards > 0],
       ["catvinci.backlinks", stats.links > 0],
       ["catvinci.quick-preview", stats.links > 0],
       ["catvinci.tasks", stats.todos >= 10],
-      ["catvinci.daily-notes", stats.dateDatabases > 0],
-      ["catvinci.reminders", stats.dateDatabases > 0],
       ["catvinci.link-cards", stats.urls > 0],
       ["catvinci.pdf-viewer", stats.pdfs > 0],
       ["catvinci.templates", stats.templates > 0],

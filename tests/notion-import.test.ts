@@ -371,7 +371,7 @@ describe("the fixture's import", () => {
     expect(report).toMatchObject({ pages: 7, databases: 2, rows: 6, files: 4, total: 18, done: 18, stopped: false });
     expect(report.missing).toEqual([{ page: "Home.md", target: `Home ${H}/Deleted Page ${id("b")}.md` }]);
     expect(report.blocks).toEqual({ callout: ["Home.md", "Home.md", "读书笔记/三体.md"], icon: ["Home.md"] });
-    expect(report.stats).toMatchObject({ subpages: 3, databases: 2, boards: 2, dateDatabases: 2, todos: 10, urls: 2, pdfs: 1, templates: 1 });
+    expect(report.stats).toEqual({ subpages: 3, databases: 2, links: report.stats.links, todos: 10, urls: 2, pdfs: 1, templates: 1 });
     expect(report.stats.links).toBeGreaterThan(5);
   });
 
@@ -474,19 +474,17 @@ describe("an export's harder cases", () => {
 });
 
 describe("suggestions and the report", () => {
-  const stats = { subpages: 3, databases: 2, boards: 1, dateDatabases: 1, links: 4, todos: 10, urls: 1, pdfs: 1, templates: 1 };
-  const none = { subpages: 0, databases: 0, boards: 0, dateDatabases: 0, links: 0, todos: 0, urls: 0, pdfs: 0, templates: 0 };
+  const stats = { subpages: 3, databases: 2, links: 4, todos: 10, urls: 1, pdfs: 1, templates: 1 };
+  const none = { subpages: 0, databases: 0, links: 0, todos: 0, urls: 0, pdfs: 0, templates: 0 };
 
+  // Only plugins that work on what the import writes: Kanban, Reminders and Daily Notes read files of their own.
   it("suggests a plugin for each thing the export holds, in order", () => {
     expect(ni.recommend(stats).map((s: { id: string }) => s.id)).toEqual([
       "catvinci.pages",
       "catvinci.database",
-      "catvinci.kanban",
       "catvinci.backlinks",
       "catvinci.quick-preview",
       "catvinci.tasks",
-      "catvinci.daily-notes",
-      "catvinci.reminders",
       "catvinci.link-cards",
       "catvinci.pdf-viewer",
       "catvinci.templates",
