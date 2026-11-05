@@ -27,15 +27,14 @@ function exportFiles(): string[] {
   return walk(FIXTURE).sort();
 }
 
-/** The import of the fixture into memory: the files written, and the report. */
-async function importFixture(options: { abortAfter?: number } = {}) {
+/** An import into memory: the files written (bytes as their size) and the report. */
+async function importOf(paths: string[], read: (path: string, kind: string) => Promise<unknown>, abortAfter = 0) {
   const out: Record<string, string> = {};
   const folders: string[] = [];
   const controller = new AbortController();
   const report = await ni.importExport({
-    paths: exportFiles(),
-    read: async (path: string, kind: string) =>
-      kind === "text" ? readFileSync(join(FIXTURE, path), "utf8") : new Uint8Array(readFileSync(join(FIXTURE, path))),
+    paths,
+    read,
     write: {
       folder: async (path: string) => void folders.push(path),
       text: async (path: string, text: string) => {
@@ -45,12 +44,29 @@ async function importFixture(options: { abortAfter?: number } = {}) {
       bytes: async (path: string, bytes: Uint8Array) => void (out[path] = `<${bytes.length} bytes>`),
     },
     progress: (done: number) => {
-      if (options.abortAfter && done >= options.abortAfter) controller.abort();
+      if (abortAfter && done >= abortAfter) controller.abort();
     },
     signal: controller.signal,
   });
   return { out, folders, report };
 }
+
+const TOO_BIG = "The file is too big to open here.";
+
+/** The fixture's import; `fail` names the files whose read fails. */
+const importFixture = (options: { abortAfter?: number; fail?: string } = {}) =>
+  importOf(
+    exportFiles(),
+    async (path, kind) => {
+      if (path === options.fail) throw new Error(TOO_BIG);
+      return kind === "text" ? readFileSync(join(FIXTURE, path), "utf8") : new Uint8Array(readFileSync(join(FIXTURE, path)));
+    },
+    options.abortAfter,
+  );
+
+/** The import of an export given as its files' texts. */
+const importMemory = (files: Record<string, string>) =>
+  importOf(Object.keys(files), async (path, kind) => (kind === "text" ? files[path] : new TextEncoder().encode(files[path])));
 
 describe("names", () => {
   it("drops Notion's id and what file systems refuse", () => {
@@ -60,6 +76,9 @@ describe("names", () => {
     expect(ni.cleanName(`  ${H}`)).toBe("Untitled");
     expect(ni.cleanName("")).toBe("Untitled");
     expect(ni.cleanName("x".repeat(150))).toHaveLength(100);
+    // Never half an emoji, and within what ext4 takes for a name in bytes.
+    expect(ni.cleanName("x".repeat(99) + "😀 party")).toBe("x".repeat(99) + "😀");
+    expect(new TextEncoder().encode(ni.cleanName("中".repeat(120))).length).toBeLessThanOrEqual(200);
     // Decomposed (as a Mac may write it) becomes composed.
     expect(ni.cleanName("Café")).toBe("Café");
   });
@@ -98,6 +117,16 @@ describe("names", () => {
     const layout = ni.plan([`plans ${id("1")}.md`, `Plans ${id("2")}.md`]);
     expect([...layout.files.values()].sort()).toEqual(["Plans.md", "plans 2.md"]);
   });
+
+  it("numbers thousands of pages with one name quickly, and keeps an attachment's own name", () => {
+    const paths = Array.from({ length: 20000 }, (_, i) => `Untitled ${i.toString(16).padStart(32, "0")}.md`);
+    const start = performance.now();
+    const layout = ni.plan(paths);
+    expect(performance.now() - start).toBeLessThan(2000);
+    expect(layout.files.get(paths[19999])).toBe("Untitled 20000.md");
+    const mixed = ni.plan([`A ${id("1")}.md`, `A ${id("2")}.md`, "A.png"]);
+    expect(mixed.files.get("A.png")).toBe("A.png");
+  }, 60000);
 
   it("drops the folder a whole zip is in, and a Mac's extra files", () => {
     expect(ni.tidyPaths(["Export-1/a.md", "Export-1/b/c.md", "__MACOSX/Export-1/._a.md", "Export-1/.DS_Store"])).toEqual({
@@ -153,6 +182,16 @@ describe("links", () => {
     ]);
   });
 
+  it("follow pages whose titles have brackets or parentheses", () => {
+    const found: { kind: string }[] = [];
+    const layout = ni.plan([`Home ${H}.md`, `Home ${H}/[WIP] Spec ${id("4")}.md`, `Home ${H}/Plan (draft) ${id("3")}.md`]);
+    const text = `[[WIP] Spec](Home%20${H}/%5BWIP%5D%20Spec%20${id("4")}.md) [Plan (draft)](Home%20${H}/Plan%20(draft)%20${id("3")}.md)`;
+    expect(ni.rewriteLinks(text, `Home ${H}.md`, "Home.md", layout, (l: never) => found.push(l))).toBe(
+      "[[WIP] Spec](Home/[WIP]%20Spec.md) [Plan (draft)](Home/Plan%20%28draft%29.md)",
+    );
+    expect(found.map((l) => l.kind)).toEqual(["page", "page"]);
+  });
+
   it("encode what a link can't hold", () => {
     expect(ni.encodeLink("A (1)/b#c?.md")).toBe("A%20%281%29/b%23c%3F.md");
     expect(ni.relative("a/b", "a/c/d.md")).toBe("../c/d.md");
@@ -166,11 +205,15 @@ describe("Notion's blocks", () => {
     const text =
       "<aside>\n💡 Remember this.\n\nSecond line.\n</aside>\n\n" +
       '<aside>\n<img src="https://www.notion.so/icons/bulb.svg" alt="https://www.notion.so/icons/bulb.svg" width="40px" />\n\nPlain.\n\n</aside>\n\n' +
-      '<aside>\n<img src="x.png" alt="📌" />\n\nPinned.\n</aside>';
+      '<aside>\n<img src="x.png" alt="📌" />\n\nPinned.\n</aside>\n\n' +
+      // As Notion mostly writes it: the icon before the first words.
+      '<aside>\n<img src="https://www.notion.so/icons/info-alternate_blue.svg" alt="https://www.notion.so/icons/info-alternate_blue.svg" width="40px" /> Gazebo 8 is used.\n\n</aside>\n\n' +
+      '<aside>\n<img src="x.png" alt="📌" /> Pinned inline.\n</aside>';
     expect(ni.convertCallouts(text, (k: string) => kinds.push(k))).toBe(
-      "> [!NOTE]\n> 💡 Remember this.\n>\n> Second line.\n\n> [!NOTE]\n> Plain.\n\n> [!NOTE]\n> 📌 Pinned.",
+      "> [!NOTE]\n> 💡 Remember this.\n>\n> Second line.\n\n> [!NOTE]\n> Plain.\n\n> [!NOTE]\n> 📌 Pinned.\n\n" +
+        "> [!NOTE]\n> Gazebo 8 is used.\n\n> [!NOTE]\n> 📌 Pinned inline.",
     );
-    expect(kinds).toEqual(["callout", "callout", "icon", "callout"]);
+    expect(kinds).toEqual(["callout", "callout", "icon", "callout", "callout", "icon", "callout"]);
   });
 
   it("leave toggles and callouts in code as they are", () => {
@@ -223,6 +266,12 @@ describe("databases", () => {
       "# Tasks\n\n```database\nfrom: Tasks\nview: table\n```\n\n```database\nfrom: Tasks\nview: board\ngroup: status\n```\n\n" +
         "```database\nfrom: Tasks\nview: calendar\ndate: due\nend: due_end\n```\n",
     );
+  });
+
+  it("add a board for a status column even when every row's status differs", () => {
+    const rows = [{ props: { status: "Not started" } }, { props: { status: "In progress" } }, { props: { status: "Done" } }];
+    expect(ni.boardKey(rows)).toBe("status");
+    expect(ni.boardKey([{ props: { problem_statement: "a" } }, { props: { problem_statement: "b" } }])).toBeNull();
   });
 
   it("is a table alone without a status or a date", () => {
@@ -314,10 +363,10 @@ describe("the fixture's import", () => {
     expect(out["读书笔记/任务.md"]).toContain("view: calendar\ndate: 日期");
   });
 
-  it("puts a page's property lines in its front matter and links CJK names", async () => {
+  it("keeps the opening Key: value lines of a page that isn't a row, and links CJK names", async () => {
     const { out } = await importFixture();
     const page = out["读书笔记.md"];
-    expect(page.startsWith("---\n创建时间: 2026-01-04\n标签: 科幻\n已读: true\n---\n# 读书笔记\n\n我的读书笔记。")).toBe(true);
+    expect(page.startsWith("# 读书笔记\n\n创建时间: 2026年1月4日\n标签: 科幻\n已读: Yes\n\n我的读书笔记。")).toBe(true);
     expect(page).toContain("[三体](读书笔记/三体.md)");
     expect(page).toContain("[任务](读书笔记/任务.md)");
     expect(page).toContain("<details>\n<summary>折叠内容</summary>");
@@ -339,12 +388,101 @@ describe("the fixture's import", () => {
     expect(report.stats.links).toBeGreaterThan(5);
   });
 
+  it("lists a file it couldn't read, and imports the rest", async () => {
+    const { out, report } = await importFixture({ fail: `Home ${H}/Spec.pdf` });
+    expect(report.failed).toEqual([{ path: `Home ${H}/Spec.pdf`, error: TOO_BIG }]);
+    expect(report).toMatchObject({ done: 18, total: 18, files: 3, stopped: false });
+    expect(out).not.toHaveProperty("Home/Spec.pdf");
+    expect(out["Home.md"]).toContain("[Spec](Home/Spec.pdf)");
+    const t = (key: string, ...args: unknown[]) => [key, ...args].join("|");
+    expect(ni.reportPage(report, [], t, { source: "x", date: "d" })).toContain(
+      `## failedTitle\n\nfailedIntro\n\n- \`Home ${H}/Spec.pdf\`: ${TOO_BIG}\n`,
+    );
+  });
+
   it("stops between files when cancelled, keeping what it wrote", async () => {
     const { out, report } = await importFixture({ abortAfter: 3 });
     expect(report.stopped).toBe(true);
     expect(report.done).toBeLessThan(report.total);
     expect(Object.keys(out).length).toBeGreaterThan(0);
     expect(Object.keys(out).length).toBeLessThan(19);
+  });
+});
+
+describe("an export's harder cases", () => {
+  const D = id("d");
+  const rowDocs = (out: Record<string, string>, dir: string) => Object.keys(out).filter((p) => p.startsWith(dir + "/")).sort();
+
+  it("finds a row's page when Notion cut its file name or swapped / : ? in it", async () => {
+    const long = "How we migrated the billing service to the new event bus";
+    const { out, report } = await importMemory({
+      [`DB ${D}.csv`]: `Name,Status\n${long},Done\n"Q1/Q2: plan?",Doing\n`,
+      [`DB ${D}/${long.slice(0, 50)} ${id("1")}.md`]: `# ${long}\n\nStatus: Done\n\nBody one.`,
+      [`DB ${D}/Q1 Q2  plan  ${id("2")}.md`]: "# Q1/Q2: plan?\n\nStatus: Doing\n\nBody two.",
+    });
+    expect(rowDocs(out, "DB")).toEqual([`DB/${long.slice(0, 50)}.md`, "DB/Q1 Q2  plan.md"]);
+    expect(out[`DB/${long.slice(0, 50)}.md`]).toBe(`---\nstatus: Done\n---\n# ${long}\n\nBody one.\n`);
+    expect(out["DB/Q1 Q2  plan.md"]).toBe("---\nstatus: Doing\n---\n# Q1/Q2: plan?\n\nBody two.\n");
+    expect(report).toMatchObject({ rows: 2, pages: 0 });
+  });
+
+  it("gives rows that share a title the page whose properties agree with them", async () => {
+    const { out } = await importMemory({
+      [`Meetings ${D}.csv`]: 'Name,Date\nWeekly sync,"January 5, 2026"\nWeekly sync,"January 12, 2026"\n',
+      [`Meetings ${D}/Weekly sync ${id("c")}.md`]: "# Weekly sync\n\nDate: January 12, 2026\n\nJan 12 notes",
+      [`Meetings ${D}/Weekly sync ${id("f")}.md`]: "# Weekly sync\n\nDate: January 5, 2026\n\nJan 5 notes",
+    });
+    expect(out["Meetings/Weekly sync.md"]).toBe("---\ndate: 2026-01-12\n---\n# Weekly sync\n\nJan 12 notes\n");
+    expect(out["Meetings/Weekly sync 2.md"]).toBe("---\ndate: 2026-01-05\n---\n# Weekly sync\n\nJan 5 notes\n");
+  });
+
+  it("matches tens of thousands of rows to their pages quickly", async () => {
+    const files: Record<string, string> = {};
+    const names = Array.from({ length: 20000 }, (_, i) => `Row ${i}`);
+    files[`Big ${D}.csv`] = "Name\n" + [...names].reverse().join("\n") + "\n";
+    names.forEach((name, i) => (files[`Big ${D}/${name} ${i.toString(16).padStart(32, "0")}.md`] = `# ${name}\n\nBody ${i}`));
+    const start = performance.now();
+    const { out, report } = await importMemory(files);
+    expect(performance.now() - start).toBeLessThan(5000);
+    expect(report).toMatchObject({ rows: 20000, pages: 0 });
+    expect(out["Big/Row 7.md"]).toBe("# Row 7\n\nBody 7\n");
+  }, 120000);
+
+  it("copies a .csv or .md attached to a page as it is", async () => {
+    const sales = "Region,Q1\nNorth,10\nSouth,20\n";
+    const notes = "# My notes\n\nStatus: Draft\n\nbody";
+    const { out } = await importMemory({
+      [`Home ${H}.md`]: `# Home\n\n[sales.csv](Home%20${H}/sales.csv) [notes](Home%20${H}/notes.md)`,
+      [`Home ${H}/sales.csv`]: sales,
+      [`Home ${H}/notes.md`]: notes,
+    });
+    expect(out).toEqual({
+      "Home.md": "# Home\n\n[sales.csv](Home/sales.csv) [notes](Home/notes.md)\n",
+      "Home/sales.csv": `<${sales.length} bytes>`,
+      "Home/notes.md": `<${notes.length} bytes>`,
+    });
+  });
+
+  it("reads property lines only on a database's row pages", async () => {
+    const { out } = await importMemory({
+      [`Home ${H}.md`]: `# Home\n\nSource: [Guide](Home%20${H}/Guide%20${id("1")}.md)\n\nMore text.`,
+      [`Home ${H}/Guide ${id("1")}.md`]: "# Guide\n\nDate: Mar 3, 2026 retro\n\nAgenda",
+      [`DB ${D}.csv`]: "Name,Status\nA,Done\n",
+      [`DB ${D}/B ${id("2")}.md`]: "# B\n\nStatus: Doing\n\nA row the CSV doesn't have.",
+    });
+    expect(out["Home.md"]).toBe("# Home\n\nSource: [Guide](Home/Guide.md)\n\nMore text.\n");
+    expect(out["Home/Guide.md"]).toBe("# Guide\n\nDate: Mar 3, 2026 retro\n\nAgenda\n");
+    expect(out["DB/B.md"]).toBe("---\nstatus: Doing\n---\n# B\n\nA row the CSV doesn't have.\n");
+  });
+
+  it("links a relation to a page whose title has parentheses", async () => {
+    const P = id("e");
+    const { out } = await importMemory({
+      [`Projects ${P}.csv`]: "Name\nPlan (v2)\n",
+      [`Projects ${P}/Plan (v2) ${id("3")}.md`]: "# Plan (v2)\n\nBody",
+      [`Tasks ${D}.csv`]: `Name,Project\nA,Plan (v2) (Projects%20${P}/Plan%20(v2)%20${id("3")}.md)\n`,
+    });
+    expect(out["Tasks/A.md"]).toContain('project:\n  - "[Plan (v2)](../Projects/Plan%20%28v2%29.md)"');
   });
 });
 
@@ -393,7 +531,7 @@ describe("suggestions and the report", () => {
   });
 
   it("says when it was cancelled, and leaves out empty sections", () => {
-    const report = { pages: 1, databases: 0, rows: 0, files: 0, done: 1, total: 5, stopped: true, missing: [], blocks: { callout: [], icon: [] } };
+    const report = { pages: 1, databases: 0, rows: 0, files: 0, done: 1, total: 5, stopped: true, missing: [], failed: [], blocks: { callout: [], icon: [] } };
     const page = ni.reportPage(report, [], (key: string, ...args: unknown[]) => [key, ...args].join("|"), { source: "x", date: "d" });
     expect(page).toContain("> [!WARNING]\n> stopped|1|5");
     expect(page).not.toContain("##");

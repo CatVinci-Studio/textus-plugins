@@ -1,29 +1,22 @@
-// Notion Import: a Notion export ("Markdown & CSV") as a Textus folder.
-// Pure functions over paths and text, shared by the host and the tests:
-// names without Notion's ids, links that follow them, property lines and
-// CSV rows as front matter, callouts as notes, and the report. Paths are
-// `/`-separated; the export's are relative to its top, the new ones to the
-// import folder. Runs after lib/notion-csv.js.
+// Notion Import: a Notion export ("Markdown & CSV") as a Textus folder. No textus.* calls here,
+// so the tests drive it directly; paths are `/`-separated. Runs after lib/notion-csv.js.
 
 (function (root) {
   const N = root.notionCsv;
 
-  // ------------------------------------------------------------------
-  // Names
-  // ------------------------------------------------------------------
-
   const NAME_MAX = 100;
+  // ext4 takes 255 bytes a name: room left for " 2" and an extension.
+  const NAME_BYTES = 200;
+  const utf8 = new TextEncoder();
 
   /** A name as a file or folder name on every system: Notion's id gone,
    *  NFC, no characters Windows refuses, not too long. */
   function cleanName(name) {
-    let s = N.withoutId(name)
-      .normalize("NFC")
-      .replace(/[\\/:*?"<>|\u0000-\u001f]/g, "-")
-      .trim()
-      .replace(/[. ]+$/, "");
-    if (s.length > NAME_MAX) s = s.slice(0, NAME_MAX).trim();
-    return s || "Untitled";
+    const safe = N.withoutId(name).normalize("NFC").replace(/[\\/:*?"<>|\u0000-\u001f]/g, "-").trim();
+    // By code points, so an emoji is never cut in half.
+    const chars = Array.from(safe).slice(0, NAME_MAX);
+    while (utf8.encode(chars.join("")).length > NAME_BYTES) chars.pop();
+    return chars.join("").trim().replace(/[. ]+$/, "") || "Untitled";
   }
 
   const dirOf = (path) => (path.includes("/") ? path.slice(0, path.lastIndexOf("/")) : "");
@@ -36,26 +29,29 @@
     return { stem: m[1], ext: m[2] || "" };
   }
 
+  const counted = new WeakMap();
+
   /** `base`, or `base 2`, `base 3`…: the first whose every name (base
    *  plus each of `suffixes`) is free in `taken`, which keeps them. */
   function unique(taken, base, suffixes) {
-    for (let n = 1; ; n++) {
+    // Where the last search for these names ended: every number below it is still taken.
+    const next = counted.get(taken) || counted.set(taken, new Map()).get(taken);
+    const key = [base.toLowerCase()].concat(suffixes).join("\n");
+    for (let n = next.get(key) || 1; ; n++) {
       const name = n === 1 ? base : base + " " + n;
       const names = suffixes.map((s) => (name + s).toLowerCase());
       if (names.some((x) => taken.has(x))) continue;
       names.forEach((x) => taken.add(x));
+      next.set(key, n + 1);
       return name;
     }
   }
 
-  /** The import's layout from the export's files: where each one goes,
-   *  and the databases. A page `Title <id>.md` and its folder `Title <id>/`
-   *  keep one name, `Title.md` and `Title/`, as the Pages plugin has them;
-   *  a database `Name <id>.csv` (or `_all.csv`, preferred) becomes a page
-   *  `Name.md` beside the folder of its rows `Name/`. A name met twice in a
-   *  folder gets " 2". */
+  /** Where each file goes: `Title <id>.md` and its folder become `Title.md` and `Title/`, as Pages
+   *  has them; a database CSV becomes a page beside its rows' folder; `copies` are attachments. */
   function plan(paths) {
     const files = new Map();
+    const copies = new Set();
     const byId = new Map();
     const databases = [];
     const taken = new Map();
@@ -76,9 +72,11 @@
       const attachments = [];
       for (const name of here.files) {
         const { stem, ext } = splitExt(name);
-        if (/^\.md$/i.test(ext)) group(stem).page = name;
-        else if (/^\.csv$/i.test(ext)) group(stem.replace(/_all$/, "")).csv.push(name);
-        else attachments.push(name);
+        const key = /^\.csv$/i.test(ext) ? stem.replace(/_all$/, "") : stem;
+        // Notion's pages and databases end in an id; an attached file keeps its own name.
+        if (!/^\.(md|csv)$/i.test(ext) || !N.idOf(key)) attachments.push(name);
+        else if (/^\.md$/i.test(ext)) group(key).page = name;
+        else group(key).csv.push(name);
       }
       for (const name of here.dirs) group(name).dir = name;
       for (const key of [...groups.keys()].sort()) {
@@ -106,17 +104,13 @@
       for (const name of attachments.sort()) {
         const { stem, ext } = splitExt(name);
         files.set(joinPath(oldDir, name), joinPath(newDir, unique(used, cleanName(stem), [ext]) + ext));
+        copies.add(joinPath(oldDir, name));
       }
     }
     walk("", "");
-    return { files, byId, databases, taken };
+    return { files, byId, databases, taken, copies };
   }
 
-  // ------------------------------------------------------------------
-  // Links
-  // ------------------------------------------------------------------
-
-  /** `to` written relative to the folder `fromDir`. */
   function relative(fromDir, to) {
     const a = fromDir ? fromDir.split("/") : [];
     const b = to.split("/");
@@ -125,8 +119,6 @@
     return a.slice(i).map(() => "..").concat(b.slice(i)).join("/");
   }
 
-  /** A path as a link's target: the characters a Markdown link can't hold
-   *  as they are, encoded. */
   const encodeLink = (path) => path.replace(/[%() <>#?]/g, (c) => "%" + c.charCodeAt(0).toString(16).toUpperCase().padStart(2, "0"));
 
   function decode(text) {
@@ -137,7 +129,6 @@
     }
   }
 
-  /** `link` from the folder `dir`, `.` and `..` worked out. */
   function resolve(dir, link) {
     const out = dir ? dir.split("/") : [];
     for (const part of link.split("/")) {
@@ -150,8 +141,7 @@
   const NOTION_URL = /^https?:\/\/(?:www\.)?notion\.(?:so|site)\//i;
   const SCHEME = /^[a-z][a-z0-9+.-]*:/i;
 
-  /** Applies `change` to the parts of `text` outside code: fenced blocks
-   *  and inline code spans stay as they are. */
+  /** `change` applied outside fenced blocks and inline code spans. */
   function outsideCode(text, change) {
     const parts = text.split(/(^(?:```|~~~)[^\n]*\n[\s\S]*?(?:^(?:```|~~~)[ \t]*$|(?![\s\S])))/m);
     return parts
@@ -165,13 +155,8 @@
       .join("");
   }
 
-  /**
-   * The page's links made to point at the new places: `from` and `to` are
-   * the page's old and new paths, `layout` what plan() gave. Links into the
-   * export (relative, or notion.so with an id the export has) follow;
-   * anything else stays. `found` hears each one: `{ target, kind }`, kind
-   * "page" (a document of the import), "file", "missing" or "web".
-   */
+  /** Links into the export (relative, or notion.so with an id it has) follow the page from `from`
+   *  to `to`; others stay. `found` hears each: kind "page", "file", "missing" or "web". */
   function rewriteLinks(text, from, to, layout, found) {
     const note = found || (() => {});
     const newDir = dirOf(to);
@@ -189,7 +174,8 @@
       return at ? { at, rest } : undefined;
     };
     return outsideCode(text, (part) =>
-      part.replace(/(!?\[[^\]\n]*\]\()(<[^>\n]+>|[^)\s]+)((?:\s+"[^"\n]*")?\))/g, (all, open, raw, close) => {
+      // Link text may hold a [pair], a target a (pair): titles like "[WIP] Plan (v2)".
+      part.replace(/(!?\[(?:[^[\]\n]|\[[^[\]\n]*\])*\]\()(<[^>\n]+>|(?:[^()\s]|\([^()\s]*\))+)((?:\s+"[^"\n]*")?\))/g, (all, open, raw, close) => {
         const target = raw.startsWith("<") ? raw.slice(1, -1) : raw;
         if (!target || target.startsWith("#")) return all;
         const hit = local(target);
@@ -207,15 +193,10 @@
     );
   }
 
-  // ------------------------------------------------------------------
-  // Notion's blocks
-  // ------------------------------------------------------------------
-
   const EMOJI = /^\p{Extended_Pictographic}/u;
 
-  /** Callouts (`<aside>`) as GitHub notes, `> [!NOTE]`, their emoji kept
-   *  on the first line; an icon that is one of Notion's own pictures goes.
-   *  `found` hears "callout" and "icon" for each. */
+  /** Callouts (`<aside>`) as GitHub notes, `> [!NOTE]`, their emoji kept; an icon that is one of
+   *  Notion's own pictures goes. `found` hears "callout" and "icon". */
   function convertCallouts(text, found) {
     const note = found || (() => {});
     return outsideCode(text, (part) =>
@@ -223,12 +204,14 @@
         note("callout");
         let lines = inner.split("\n");
         let icon = "";
-        const img = /^\s*<img\b[^>]*>\s*$/i.exec(lines.find((l) => l.trim()) || "");
+        // Notion puts the icon before the first words, or on a line of its own.
+        const first = lines.findIndex((l) => l.trim());
+        const img = first < 0 ? null : /^\s*<img\b[^>]*>[ \t]*/i.exec(lines[first]);
         if (img) {
           const alt = (/\balt="([^"]*)"/i.exec(img[0]) || [])[1] || "";
           if (EMOJI.test(alt)) icon = alt;
           else note("icon");
-          lines.splice(lines.indexOf(lines.find((l) => l.trim())), 1);
+          lines[first] = lines[first].slice(img[0].length);
         }
         while (lines.length && !lines[0].trim()) lines.shift();
         while (lines.length && !lines[lines.length - 1].trim()) lines.pop();
@@ -238,10 +221,6 @@
       }),
     );
   }
-
-  // ------------------------------------------------------------------
-  // Front matter
-  // ------------------------------------------------------------------
 
   const RESERVED = /^(?:true|false|yes|no|on|off|null|~)$/i;
 
@@ -254,7 +233,6 @@
     return plain ? s : JSON.stringify(s);
   }
 
-  /** `props` as a front matter block (with its fences); "" for none. */
   function frontMatter(props) {
     const lines = [];
     for (const [key, value] of Object.entries(props)) {
@@ -268,8 +246,6 @@
     return lines.length ? "---\n" + lines.join("\n") + "\n---\n" : "";
   }
 
-  /** A page property line's value: a date (and a range's end), Yes/No,
-   *  a number, a relation's pages or text. */
   function propertyValue(text) {
     const range = N.rangeOf(text);
     if (range) return range;
@@ -278,8 +254,7 @@
     return N.cellValue(text, false);
   }
 
-  /** Props, with each relation `{ relation: { title, target } }` as a
-   *  link from the document at `to`. */
+  /** Props with each `{ relation }` as a link from the document at `to`. */
   function linkRelations(props, to, layout, found) {
     const out = {};
     const link = (item) => {
@@ -297,14 +272,10 @@
     return out;
   }
 
-  // ------------------------------------------------------------------
-  // Databases
-  // ------------------------------------------------------------------
+  // Whole words of a key: "problem_statement" isn't a status.
+  const STATUS = /(?:^|_)(?:status|state|stage|estado|statut|état|zustand|статус)(?:_|$)|状态|狀態|阶段|階段|ステータス|상태/i;
 
-  const STATUS = /status|state|stage|状态|狀態|阶段|階段|ステータス|상태|estado|statut|état|zustand|статус/i;
-
-  /** The property a board groups by: a status-like one, else text with a
-   *  few values said again and again; null for none. */
+  /** A status-like property, else text with a few values said again and again; null for none. */
   function boardKey(rows) {
     const keys = [];
     for (const row of rows) for (const k of Object.keys(row.props)) if (!keys.includes(k)) keys.push(k);
@@ -312,12 +283,11 @@
       const said = rows.map((r) => r.props[k]).filter((v) => v !== undefined && v !== null);
       if (!said.length || !said.every((v) => typeof v === "string" && v.length <= 40 && !/^\d{4}-\d{2}-\d{2}$/.test(v) && !/^\[/.test(v))) return false;
       const values = new Set(said);
-      return values.size <= 10 && values.size < said.length;
+      return values.size <= 10 && (STATUS.test(k) || values.size < said.length);
     });
     return selects.find((k) => STATUS.test(k)) || selects[0] || null;
   }
 
-  /** The first date property, its range's end aside; null for none. */
   function dateKey(rows) {
     const keys = [];
     for (const row of rows) for (const k of Object.keys(row.props)) if (!keys.includes(k)) keys.push(k);
@@ -330,8 +300,6 @@
     );
   }
 
-  /** A database's page: its title and a table, with a board when it has a
-   *  status and a calendar when it has a date. */
   function databasePage(name, folderName, rows) {
     const block = (lines) => "```database\nfrom: " + folderName + "\n" + lines.join("\n") + "\n```\n";
     const out = ["# " + name + "\n", block(["view: table"])];
@@ -342,16 +310,10 @@
     return { text: out.join("\n"), group, date };
   }
 
-  // ------------------------------------------------------------------
-  // The import
-  // ------------------------------------------------------------------
-
   const TODO = /^\s*[-*+] \[[ xX]\] /gm;
   const BOOKMARK = /^\s*(?:\[[^\]\n]*\]\((https?:[^)\s]+)\)|<?(https?:\/\/\S+?)>?)\s*$/gm;
   const TEMPLATE = /template|模板|範本|テンプレート|템플릿|plantilla|modèle|vorlage|шаблон|modelo/i;
 
-  /** A page written for Textus: front matter from `props`, its title, and
-   *  its body with links and callouts converted; `found` hears what it met. */
   function convertPage(body, title, props, from, to, layout, found) {
     let text = convertCallouts(body, (kind) => found.block(kind, to));
     text = rewriteLinks(text, from, to, layout, (link) => found.link(link, to));
@@ -361,20 +323,61 @@
     return fm + "# " + title + "\n" + (text ? "\n" + text + "\n" : "");
   }
 
-  /**
-   * Imports the export: `paths` its files, `read(path, "text" | "bytes")`
-   * reads one, `write` puts things in the import folder - `folder(path)`,
-   * `text(path, text)`, `bytes(path, bytes)`. A file at a time, so a large
-   * export never sits in memory as a whole; `progress(done, total, path)`
-   * after each, and a `signal` that stops it between files. Resolves with
-   * the report: what was imported, what wasn't found, and the numbers the
-   * plugin suggestions go by.
-   */
+  /** Each row's page among `pages`, or null. Names settle most; Notion cuts long file names and
+   *  swaps / : ? … in them, so a page left over goes by its own title, and rows sharing a name
+   *  take the page whose property lines agree with their cells. */
+  async function pagesOfRows(rows, table, pages, read) {
+    const keys = (table[0] || []).map(N.propertyName);
+    const seen = new Map();
+    const peek = async (p) => {
+      if (!seen.has(p)) {
+        // One that can't be read is reported when its row is written.
+        const text = await Promise.resolve().then(() => read(p, "text")).catch(() => "");
+        const { title, props } = N.pageParts(text);
+        seen.set(p, { title, props });
+      }
+      return seen.get(p);
+    };
+    const fit = async (p, i) => {
+      const { title, props } = await peek(p);
+      const cells = table[i + 1] || [];
+      const agree = props.filter(([k, v]) => (cells[keys.indexOf(N.propertyName(k))] || "").trim() === v).length;
+      return { score: (title === rows[i].name ? 1000 : 0) + agree, whole: title === rows[i].name && agree === props.length };
+    };
+    const out = rows.map(() => null);
+    const pass = async (keyOf, left) => {
+      const by = new Map();
+      for (const p of left) {
+        const key = await keyOf(p);
+        (by.get(key) || by.set(key, []).get(key)).push(p);
+      }
+      for (const [i, row] of rows.entries()) {
+        const same = !out[i] && by.get(row.name);
+        if (!same || !same.length) continue;
+        let best = 0;
+        // The first page that agrees in everything ends the search.
+        for (let j = 0, top = -1; same.length > 1 && j < same.length; j++) {
+          const { score, whole } = await fit(same[j], i);
+          if (score > top) [top, best] = [score, j];
+          if (whole) break;
+        }
+        out[i] = same.splice(best, 1)[0];
+      }
+    };
+    await pass(async (p) => N.withoutId(splitExt(baseOf(p)).stem), pages);
+    const taken = new Set(out);
+    const left = pages.filter((p) => !taken.has(p));
+    if (left.length && out.includes(null)) await pass(async (p) => (await peek(p)).title, left);
+    return out;
+  }
+
+  /** Imports the export a file at a time, so a large one never sits in memory whole; `signal`
+   *  stops it between files. A file that can't be read or written goes in `report.failed`. */
   async function importExport({ paths, read, write, progress, signal }) {
     const layout = plan(paths);
     const report = {
       pages: 0, databases: 0, rows: 0, files: 0, total: paths.length, done: 0, stopped: false,
-      missing: [], blocks: { callout: [], icon: [] },
+      missing: [], failed: [], blocks: { callout: [], icon: [] },
       stats: { subpages: 0, databases: 0, boards: 0, dateDatabases: 0, links: 0, todos: 0, urls: 0, pdfs: 0, templates: 0 },
       written: [],
     };
@@ -405,80 +408,85 @@
       if (progress) progress(report.done, report.total, path);
     };
     const stopped = () => signal && signal.aborted && (report.stopped = true);
+    const attempt = async (path, work) => {
+      try {
+        await work();
+      } catch (err) {
+        report.failed.push({ path, error: String((err && err.message) || err) });
+      }
+    };
     const writeText = async (path, text) => {
       await folder(dirOf(path));
       await write.text(path, text);
       report.written.push(path);
     };
     const pageFolders = new Set([...layout.files.values()].filter((p) => /\.md$/i.test(p)).map((p) => p.slice(0, -3)));
+    const pagesIn = new Map();
+    for (const p of paths) if (/\.md$/i.test(p) && !layout.copies.has(p)) (pagesIn.get(dirOf(p)) || pagesIn.set(dirOf(p), []).get(dirOf(p))).push(p);
     const rowPages = new Set();
 
     // Databases: a document per row, its body from the row's page.
     for (const db of layout.databases) {
       if (stopped()) return report;
-      const source = await read(db.csv, "text");
+      let source = "";
+      await attempt(db.csv, async () => (source = await read(db.csv, "text")));
       const rows = N.fromNotionCsv(source, { relation: (item) => ({ relation: item }) });
-      const pages = paths.filter((p) => db.from && dirOf(p) === db.from && /\.md$/i.test(p));
+      const pages = await pagesOfRows(rows, N.parseCsv(source), (db.from && pagesIn.get(db.from)) || [], read);
       const used = layout.taken.get(db.folder) || new Set();
       layout.taken.set(db.folder, used);
-      const docs = [];
-      for (const row of rows) {
-        const page = pages.find((p) => !rowPages.has(p) && N.withoutId(baseOf(p).slice(0, -3)) === row.name);
-        let to;
-        if (page) {
-          rowPages.add(page);
-          to = layout.files.get(page);
-        } else to = joinPath(db.folder, unique(used, cleanName(row.name), [".md", ""]) + ".md");
-        docs.push({ row, page, to });
-      }
-      for (const { row, page, to } of docs) {
+      for (const [i, row] of rows.entries()) {
         if (stopped()) return report;
-        const body = page ? N.pageParts(await read(page, "text")).body : "";
-        await writeText(to, convertPage(body, row.name, row.props, page || db.csv, to, layout, found));
-        report.rows++;
+        const page = pages[i];
+        if (page) rowPages.add(page);
+        const to = page ? layout.files.get(page) : joinPath(db.folder, unique(used, cleanName(row.name), [".md", ""]) + ".md");
+        await attempt(page || to, async () => {
+          const body = page ? N.pageParts(await read(page, "text")).body : "";
+          await writeText(to, convertPage(body, row.name, row.props, page || db.csv, to, layout, found));
+          report.rows++;
+        });
         if (page) step(page);
       }
-      const view = databasePage(db.name, baseOf(db.folder), rows.map((r) => ({ props: linkRelations(r.props, db.page, layout) })));
-      await writeText(db.page, view.text);
-      report.databases++;
-      report.stats.databases++;
-      if (view.group) report.stats.boards++;
-      if (view.date) report.stats.dateDatabases++;
+      await attempt(db.page, async () => {
+        const view = databasePage(db.name, baseOf(db.folder), rows.map((r) => ({ props: linkRelations(r.props, db.page, layout) })));
+        await writeText(db.page, view.text);
+        report.databases++;
+        report.stats.databases++;
+        if (view.group) report.stats.boards++;
+        if (view.date) report.stats.dateDatabases++;
+      });
       for (const p of paths) if (p === db.csv || layout.files.get(p) === db.page) step(p);
     }
 
+    const rowFolders = new Set(layout.databases.map((db) => db.from).filter(Boolean));
     for (const path of paths) {
-      if (rowPages.has(path) || /\.csv$/i.test(path)) continue;
+      const copy = layout.copies.has(path);
+      if (rowPages.has(path) || (/\.csv$/i.test(path) && !copy)) continue;
       if (stopped()) return report;
       const to = layout.files.get(path);
-      if (/\.md$/i.test(path)) {
-        const page = N.pageParts(await read(path, "text"));
-        const props = {};
-        for (const [key, value] of page.props) props[N.propertyName(key)] = propertyValue(value);
-        const title = page.title || cleanName(splitExt(baseOf(path)).stem);
-        await writeText(to, convertPage(page.body, title, props, path, to, layout, found));
-        report.pages++;
-        if (pageFolders.has(dirOf(to))) report.stats.subpages++;
-        if (TEMPLATE.test(title)) report.stats.templates++;
-      } else {
-        await folder(dirOf(to));
-        await write.bytes(to, await read(path, "bytes"));
-        report.written.push(to);
-        report.files++;
-        if (/\.pdf$/i.test(path)) report.stats.pdfs++;
-      }
+      await attempt(path, async () => {
+        if (/\.md$/i.test(path) && !copy) {
+          const page = N.pageParts(await read(path, "text"), rowFolders.has(dirOf(path)));
+          const props = {};
+          for (const [key, value] of page.props) props[N.propertyName(key)] = propertyValue(value);
+          const title = page.title || cleanName(splitExt(baseOf(path)).stem);
+          await writeText(to, convertPage(page.body, title, props, path, to, layout, found));
+          report.pages++;
+          if (pageFolders.has(dirOf(to))) report.stats.subpages++;
+          if (TEMPLATE.test(title)) report.stats.templates++;
+        } else {
+          await folder(dirOf(to));
+          await write.bytes(to, await read(path, "bytes"));
+          report.written.push(to);
+          report.files++;
+          if (/\.pdf$/i.test(path)) report.stats.pdfs++;
+        }
+      });
       step(path);
     }
     return report;
   }
 
-  // ------------------------------------------------------------------
-  // Suggestions and the report
-  // ------------------------------------------------------------------
-
-  /** The official plugins that make the import better, by what it holds:
-   *  `{ id, why }` each, in the order shown, `why` the l10n key of the line
-   *  saying so. Installed ones (`installed`, a Set of ids) are left out. */
+  /** The official plugins that help with what the import holds, `installed` ones left out. */
   function recommend(stats, installed) {
     const has = installed || new Set();
     const all = [
@@ -497,7 +505,6 @@
     return all.filter(([id, yes]) => yes && !has.has(id)).map(([id]) => ({ id, why: "why." + id }));
   }
 
-  /** The report page, in the UI language (`t` looks up l10n strings). */
   function reportPage(report, suggestions, t, meta) {
     const link = (path) => "[" + splitExt(baseOf(path)).stem + "](" + encodeLink(path) + ")";
     const out = ["# " + t("reportTitle"), "", t("reportFrom", meta.source, meta.date), ""];
@@ -513,6 +520,10 @@
       out.push("", "## " + t("missingTitle"), "", t("missingIntro"), "");
       for (const m of report.missing) out.push("- " + link(m.page) + ": `" + m.target.replace(/`/g, "'") + "`");
     }
+    if (report.failed.length) {
+      out.push("", "## " + t("failedTitle"), "", t("failedIntro"), "");
+      for (const f of report.failed) out.push("- `" + f.path.replace(/`/g, "'") + "`: " + f.error.replace(/\s+/g, " "));
+    }
     const callouts = report.blocks.callout.length;
     const icons = report.blocks.icon.length;
     if (callouts || icons) {
@@ -525,9 +536,7 @@
 
   const pagesOf = (pages, link) => "(" + [...new Set(pages)].map(link).join(", ") + ")";
 
-  /** The export's files without the files a Mac's zip adds, and without
-   *  the folder all of them are in (a zip often has one): `{ top, paths }`,
-   *  `top` that folder's path with its "/". */
+  /** The files without a Mac zip's extras and without the one folder they're all in, as `top`. */
   function tidyPaths(paths) {
     const kept = paths.filter((p) => !/(^|\/)(__MACOSX\/|\.DS_Store$)/.test(p) && !p.endsWith("/"));
     let top = "";
@@ -540,9 +549,7 @@
     return { top, paths: kept.map((p) => p.slice(top.length)) };
   }
 
-  /** The files of a zip, a zip of zips (Notion splits a large export into
-   *  Part-1.zip, Part-2.zip…) opened too: `{ paths, read }` for
-   *  importExport. `JSZip` is the library. */
+  /** A zip as importExport reads it; Notion splits a large export into Part-N zips inside one. */
   async function zipSource(JSZip, bytes) {
     const entries = new Map();
     const add = async (zip) => {
@@ -562,8 +569,7 @@
     };
   }
 
-  /** Whether `paths` look like a Notion export: a page or database whose
-   *  name ends in an id. */
+  /** A Notion export has a page or database whose name ends in an id. */
   const isExport = (paths) => paths.some((p) => /\.(md|csv)$/i.test(p) && N.idOf(splitExt(baseOf(p)).stem));
 
   root.notionImport = {
