@@ -1,7 +1,7 @@
 // Database: the documents of a folder as rows, their front matter as
-// properties. What a ```database block asks for, the rows it gets, and a
-// Notion export's CSV as documents. Pure functions, shared by the host and
-// the tests; paths are `/`-separated and relative to the open folder.
+// properties. What a ```database block asks for and the rows it gets. Pure
+// functions, shared by the host and the tests; paths are `/`-separated and
+// relative to the open folder. Notion's CSV is read by lib/notion-csv.js.
 
 (function (root) {
   const VIEWS = ["table", "board", "calendar", "gallery"];
@@ -295,102 +295,6 @@
     return spec.date || Object.keys(types).find((k) => types[k] === "date") || null;
   }
 
-  // ------------------------------------------------------------------
-  // Notion's export: a database is a CSV beside a folder of its pages,
-  // each name ending in a 32-character id.
-  // ------------------------------------------------------------------
-
-  /** RFC 4180 CSV as rows of cells; a leading BOM goes. */
-  function parseCsv(source) {
-    const s = String(source).replace(/^﻿/, "");
-    const rows = [];
-    let row = [];
-    let cell = "";
-    let quoted = false;
-    for (let i = 0; i < s.length; i++) {
-      const c = s[i];
-      if (quoted) {
-        if (c === '"' && s[i + 1] === '"') {
-          cell += '"';
-          i++;
-        } else if (c === '"') quoted = false;
-        else cell += c;
-      } else if (c === '"') quoted = true;
-      else if (c === ",") {
-        row.push(cell);
-        cell = "";
-      } else if (c === "\n" || c === "\r") {
-        if (c === "\r" && s[i + 1] === "\n") i++;
-        row.push(cell);
-        rows.push(row);
-        row = [];
-        cell = "";
-      } else cell += c;
-    }
-    if (cell !== "" || row.length) {
-      row.push(cell);
-      rows.push(row);
-    }
-    return rows.filter((r) => r.some((c) => c !== ""));
-  }
-
-  /** A Notion name without its id: "Week1 1a2b…(32 hex)" is "Week1". */
-  const withoutId = (name) => name.replace(/\s+[0-9a-f]{32}$/i, "").trim();
-
-  const MONTHS = { january: 1, february: 2, march: 3, april: 4, may: 5, june: 6, july: 7, august: 8, september: 9, october: 10, november: 11, december: 12 };
-
-  /** A Notion cell as a front matter value: its dates as 2026-01-04 (a
-   *  range's first day), Yes/No as true/false, numbers as numbers, and a
-   *  multi-select's "a, b" as a list when the column holds lists. */
-  function cellValue(cell, asList) {
-    const v = cell.trim();
-    if (v === "") return null;
-    const date = /^([A-Z][a-z]+) (\d{1,2}), (\d{4})/.exec(v);
-    if (date && MONTHS[date[1].toLowerCase()]) {
-      const pad = (n) => String(n).padStart(2, "0");
-      return date[3] + "-" + pad(MONTHS[date[1].toLowerCase()]) + "-" + pad(Number(date[2]));
-    }
-    if (/^\d{4}\/\d{2}\/\d{2}/.test(v)) return v.slice(0, 10).replace(/\//g, "-");
-    if (v === "Yes" || v === "No") return v === "Yes";
-    if (asList) return v.split(",").map((s) => s.trim()).filter(Boolean);
-    if (/^-?\d+(\.\d+)?$/.test(v)) return Number(v);
-    return v;
-  }
-
-  /** A Notion CSV as documents: `{ name, props }` each, the first column
-   *  the name. A column whose cells hold commas in most rows is a list. */
-  function fromNotionCsv(source) {
-    const [head, ...body] = parseCsv(source);
-    if (!head) return [];
-    const keys = head.map((h) => h.trim());
-    const listy = keys.map((_, i) => {
-      const filled = body.map((r) => (r[i] || "").trim()).filter(Boolean);
-      const commas = filled.filter((v) => v.includes(", ") && !/^[A-Z][a-z]+ \d{1,2}, \d{4}/.test(v));
-      return filled.length > 0 && commas.length * 2 >= filled.length;
-    });
-    return body.map((cells) => {
-      const props = {};
-      keys.forEach((key, i) => {
-        if (i === 0) return;
-        const value = cellValue(cells[i] || "", listy[i]);
-        if (value !== null) props[propertyName(key)] = value;
-      });
-      return { name: withoutId(cells[0] || "Untitled"), props };
-    });
-  }
-
-  /** A Notion column's name as a front matter key: "Start Day" is
-   *  "start_day". */
-  function propertyName(name) {
-    return (
-      name
-        .trim()
-        .toLowerCase()
-        .replace(/[^\p{L}\p{N}]+/gu, "_")
-        .replace(/^_+|_+$/g, "") || "property"
-    );
-  }
-
   root.database = {
     VIEWS,
     TYPES,
@@ -409,9 +313,5 @@
     regroup,
     dateKey,
     text,
-    parseCsv,
-    withoutId,
-    fromNotionCsv,
-    propertyName,
   };
 })(typeof window !== "undefined" ? window : globalThis);

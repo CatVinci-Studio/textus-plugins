@@ -101,17 +101,4 @@ describe("database", () => {
     );
     expect(db.writeSpec(db.dropKey(spec, "focus"))).toBe("view: table\ncolumns: rate");
   });
-
-  it("turns a Notion export's CSV into documents with front matter", () => {
-    const csv =
-      "﻿Week name,Start Day,End Day,Focus Field,Rate\n" +
-      'Week1 0123456789abcdef0123456789abcdef,"January 1, 2026","January 4, 2026",Personal,\n' +
-      'Week11,"March 9, 2026","March 15, 2026","Health, Personal",4\n' +
-      'Week14,"March 30, 2026","April 5, 2026","Research, Work",\n';
-    expect(db.fromNotionCsv(csv)).toEqual([
-      { name: "Week1", props: { start_day: "2026-01-01", end_day: "2026-01-04", focus_field: ["Personal"] } },
-      { name: "Week11", props: { start_day: "2026-03-09", end_day: "2026-03-15", focus_field: ["Health", "Personal"], rate: 4 } },
-      { name: "Week14", props: { start_day: "2026-03-30", end_day: "2026-04-05", focus_field: ["Research", "Work"] } },
-    ]);
-  });
 });
