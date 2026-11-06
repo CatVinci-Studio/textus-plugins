@@ -12,10 +12,7 @@
     "textus": ">=1.3.2"
   },
   "platforms": ["desktop", "ios"],
-  "main": [
-    "db.js",
-    "host.js"
-  ],
+  "main": ["lib/folder-paths.js", "db.js", "host.js"],
   "permissions": [
     "files.read",
     "files.write",

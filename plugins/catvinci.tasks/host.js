@@ -20,8 +20,7 @@ const t = (key, ...args) => textus.l10n.t(key, ...args);
 function day(offset) {
   const d = new Date();
   d.setDate(d.getDate() + offset);
-  const two = (n) => String(n).padStart(2, "0");
-  return d.getFullYear() + "-" + two(d.getMonth() + 1) + "-" + two(d.getDate());
+  return dates.day(d);
 }
 
 /** "3 open tasks", in the language's plural form ("open.few"…). */
@@ -110,7 +109,7 @@ async function setDone(task, done) {
 // Textus AI's tools. Paths are the documents' paths in the folder, lines
 // count from 1.
 
-/* global folderPaths */
+/* global folderPaths, dates */
 const NO_FOLDER = { error: "No folder is open." };
 const DAY = /^\d{4}-\d{2}-\d{2}$/;
 const HEADING = /^(#{1,6})\s+(.*?)\s*#*\s*$/;

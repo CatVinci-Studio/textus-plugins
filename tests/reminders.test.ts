@@ -5,6 +5,7 @@ import { beforeAll, describe, expect, it } from "vitest";
 let r: any;
 
 beforeAll(async () => {
+  await import("../shared/dates.js");
   const script = "../plugins/catvinci.reminders/reminders.js";
   await import(/* @vite-ignore */ script);
   r = (globalThis as unknown as { reminders: unknown }).reminders;

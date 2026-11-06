@@ -1,4 +1,5 @@
 import { beforeAll, describe, expect, it } from "vitest";
+import { loadPlugin } from "./plugin-host";
 
 /** Text Tidy's rules (plugins/catvinci.text-tidy/tidy.js), a plain script
  *  that puts itself on the global object. */
@@ -101,5 +102,27 @@ describe("a whole document", () => {
     expect(tidy.tidy(doc, "fullPunctuation")).toBe(
       "---\ntitle: a,b\n---\n\n你好，世界\n\n```\n你好,code\n```\n\n$$\na,b\n$$\n",
     );
+  });
+});
+
+describe("the command on a whole document", () => {
+  it("leaves link definitions untouched", async () => {
+    const commands = new Map<string, (editor: unknown) => Promise<void>>();
+    let edits: unknown[] = [];
+    loadPlugin("catvinci.text-tidy", {
+      commands: { registerEditorCommand: (id: string, run: (editor: unknown) => Promise<void>) => void commands.set(id, run) },
+      ui: { confirm: async () => true, notice: async () => {} },
+    });
+    // The title on a line of its own: the rules alone would change it.
+    const definition = '[文档]: https://a.com/x,y\n"标题,副题"';
+    await commands.get("catvinci.text-tidy.fullPunctuation")!({
+      getSelection: async () => null,
+      getBlocks: async () => [
+        { id: "a", kind: "definition", markdown: definition },
+        { id: "b", kind: "paragraph", markdown: "你好,世界" },
+      ],
+      edit: async (changes: unknown[]) => void (edits = changes),
+    });
+    expect(edits).toEqual([{ action: "replace", block: "b", text: "你好，世界" }]);
   });
 });

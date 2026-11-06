@@ -6,6 +6,7 @@ let nd: {
 };
 
 beforeAll(async () => {
+  await import("../shared/dates.js");
   const script = "../plugins/catvinci.natural-dates/dates.js";
   await import(/* @vite-ignore */ script);
   nd = (globalThis as unknown as { naturalDates: typeof nd }).naturalDates;

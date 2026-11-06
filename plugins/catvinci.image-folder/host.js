@@ -2,13 +2,11 @@
 // "<document>.assets/" beside it, and the link with it; renaming the
 // document in its folder renames that folder and its links. Textus saves
 // the picture first (Settings › Images), so this follows its file events.
-/* global imageFolder */
+/* global imageFolder, folderPaths, freeName */
 const WAIT_MS = 3000;
 const STEP_MS = 150;
 
-const slash = (p) => (p ? String(p).replace(/\\/g, "/") : null);
-/** `path` in the separator `like` uses. */
-const native = (path, like) => (/\\/.test(like) && !/\//.test(like) ? path.replace(/\//g, "\\") : path);
+const { slash, native } = folderPaths;
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 /** The block of the document in front linking to one of `forms`, once the
@@ -28,10 +26,8 @@ async function blockLinking(doc, forms) {
 /** A path in `dir` for `name` no file has: "a.png", "a-1.png"… */
 async function freePath(dir, name, like) {
   const dot = name.lastIndexOf(".");
-  for (let n = 0; ; n++) {
-    const candidate = dir + "/" + (n ? name.slice(0, dot) + "-" + n + name.slice(dot) : name);
-    if (!(await textus.files.stat(native(candidate, like)))) return candidate;
-  }
+  const taken = (candidate) => textus.files.stat(native(dir + "/" + candidate, like));
+  return dir + "/" + (await freeName(name.slice(0, dot), taken, { ext: name.slice(dot), sep: "-", first: 1 }));
 }
 
 const moving = new Set();

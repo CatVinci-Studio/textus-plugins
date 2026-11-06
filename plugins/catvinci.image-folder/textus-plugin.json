@@ -14,10 +14,7 @@
   "platforms": [
     "desktop"
   ],
-  "main": [
-    "folder.js",
-    "host.js"
-  ],
+  "main": ["lib/folder-paths.js", "lib/free-name.js", "folder.js", "host.js"],
   "permissions": [
     "files.read",
     "files.write",

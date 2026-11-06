@@ -2,7 +2,7 @@
 // your coding. Heartbeats wait in a queue that survives being offline and
 // go in batches; nothing is sent until you set your API key.
 
-/* global wakaBeat */
+/* global wakaBeat, folderPaths */
 const t = (key, ...args) => textus.l10n.t(key, ...args);
 const API = "https://api.wakatime.com/api/v1/users/current";
 const BATCH = 25;
@@ -20,7 +20,7 @@ const auth = (key) => "Basic " + btoa(key);
 
 async function details(path) {
   const folder = await textus.files.root().catch(() => null);
-  const read = (rel) => (folder ? textus.files.readText(folder.replace(/[\\/]+$/, "") + "/" + rel).catch(() => null) : null);
+  const read = (rel) => (folder ? textus.files.readText(folderPaths.abs(folder, rel)).catch(() => null) : null);
   const text = await textus.editor.getText().catch(() => null);
   return {
     project: wakaBeat.project(folder, await read(".wakatime-project")),

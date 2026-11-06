@@ -2,6 +2,7 @@
 // then, as Obsidian's Reminder plugin writes them; `(@2026-11-02)` is at
 // nine that morning. Pure, for the host and the tests.
 
+/* global dates */
 (function (root) {
   const MARK = /\(@(\d{4}-\d{2}-\d{2})(?:[ T](\d{1,2}):(\d{2}))?\)/;
   const DONE = /^\s*[-*+]\s+\[[xX]\]/;
@@ -49,8 +50,7 @@
 
   /** The mark for a moment: `(@2026-11-02 09:00)`. */
   function mark(date) {
-    const pad = (n) => String(n).padStart(2, "0");
-    return "(@" + date.getFullYear() + "-" + pad(date.getMonth() + 1) + "-" + pad(date.getDate()) + " " + pad(date.getHours()) + ":" + pad(date.getMinutes()) + ")";
+    return "(@" + dates.format(date, "YYYY-MM-DD HH:mm") + ")";
   }
 
   root.reminders = { find, upcoming, jobId, mark };

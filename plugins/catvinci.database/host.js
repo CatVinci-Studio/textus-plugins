@@ -4,7 +4,7 @@
 // makes one. Also: a tool for Textus AI to make one. Notion exports are
 // imported by the Notion Import plugin, the one place for that.
 
-/* global database */
+/* global database, folderPaths */
 const t = (key, ...args) => textus.l10n.t(key, ...args);
 const STRINGS = [
   "table", "board", "calendar", "gallery", "page", "add", "count", "empty",
@@ -20,13 +20,8 @@ let root = null;
 /** The blocks on screen, each sending itself again. */
 const live = new Set();
 
-const join = (dir, rel) => (rel ? dir.replace(/[\\/]+$/, "") + "/" + rel : dir);
-const relOf = (path) => {
-  if (!root || !path) return null;
-  const base = root.replace(/[\\/]+$/, "").replace(/\\/g, "/") + "/";
-  const p = path.replace(/\\/g, "/");
-  return p.startsWith(base) ? p.slice(base.length) : null;
-};
+const join = folderPaths.abs;
+const relOf = (path) => folderPaths.rel(root, path);
 const fileName = (title) => title.trim().replace(/[\\/:*?"<>|#^[\]]/g, "-");
 
 /** Front matter values as the page can show them: dates as their day. */
@@ -227,8 +222,8 @@ async function makeRow(folder, row) {
 async function databaseFolder(name) {
   root = await textus.files.root();
   if (!root) return { error: t("needsFolder") };
-  const folder = String(name || "").trim().replace(/\\/g, "/").replace(/^\.?\/+|\/+$/g, "");
-  if (!folder || folder.split("/").includes("..")) return { error: "database must be its folder's path in the open folder." };
+  const folder = folderPaths.clean(root, name, false);
+  if (!folder) return { error: "database must be its folder's path in the open folder." };
   return { folder: folder };
 }
 

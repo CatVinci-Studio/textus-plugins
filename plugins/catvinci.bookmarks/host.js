@@ -2,6 +2,7 @@
 // (ctx.storage.global, "bookmarks") and listed in the sidebar by document;
 // a click opens the document at those words. A renamed document's
 // bookmarks follow it (files.onDidRename).
+/* global folderPaths */
 let ctx;
 let list;
 const t = (key, ...args) => textus.l10n.t(key, ...args);
@@ -22,12 +23,9 @@ const fileName = (path) => path.split(/[\\/]/).pop();
  *  folder (in full when outside it). */
 async function listBookmarks() {
   const root = await textus.files.root();
-  const base = root && root.replace(/[\\/]+$/, "").replace(/\\/g, "/") + "/";
-  const relOf = (path) => {
-    const p = path.replace(/\\/g, "/");
-    return base && p.startsWith(base) ? p.slice(base.length) : path;
+  return {
+    bookmarks: (await all()).map((mark) => ({ text: mark.text, path: folderPaths.rel(root, mark.path) ?? mark.path })),
   };
-  return { bookmarks: (await all()).map((mark) => ({ text: mark.text, path: relOf(mark.path) })) };
 }
 
 exports.activate = function (context) {

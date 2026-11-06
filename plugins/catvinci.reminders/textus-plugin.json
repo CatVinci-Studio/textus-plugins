@@ -12,10 +12,7 @@
     "textus": ">=1.3.0-beta.8"
   },
   "platforms": ["desktop"],
-  "main": [
-    "reminders.js",
-    "host.js"
-  ],
+  "main": ["lib/dates.js", "reminders.js", "host.js"],
   "permissions": [
     "files.read",
     "editor.write",

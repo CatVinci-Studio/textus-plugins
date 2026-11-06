@@ -13,10 +13,7 @@ const TEMPLATE = function () {
   );
 };
 
-function join(root, name) {
-  const sep = root.includes("\\") && !root.includes("/") ? "\\" : "/";
-  return root.replace(/[\\/]+$/, "") + sep + name;
-}
+const join = folderPaths.abs;
 
 // Textus AI's tools: boards named by their path in the folder, lists by
 // their title, cards by their text.
