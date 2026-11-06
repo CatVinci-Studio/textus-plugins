@@ -8,6 +8,7 @@ Every task in your folder, in one list.
 - Whether finished tasks show is in the plugin's settings.
 - Give a task a date - `📅 2026-11-01` or `due:2026-11-01` - and it shows as a badge; tasks past due or due within a week are listed first, under **Due soon**.
 - The field at the top filters the list by words, the document's name or its heading.
+- Cards on a Kanban board (`name.kanban.md`) are left to the board and are not listed.
 
 <!-- ai-tools -->
 ## Tools for Textus AI

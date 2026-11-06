@@ -8,6 +8,7 @@ Alle Aufgaben deines Ordners in einer Liste.
 - Ob erledigte Aufgaben erscheinen, steht in den Einstellungen des Plugins.
 - Gib einer Aufgabe ein Datum (`📅 2026-11-01` oder `due:2026-11-01`), dann erscheint es als Badge; überfällige Aufgaben und solche, die innerhalb einer Woche fällig sind, stehen zuerst, unter **Bald fällig**.
 - Das Feld oben filtert die Liste nach Wörtern, nach dem Namen des Dokuments oder nach seiner Überschrift.
+- Karten eines Kanban-Boards (`name.kanban.md`) gehören zum Board und werden nicht aufgeführt.
 
 <!-- ai-tools -->
 ## Werkzeuge für Textus AI

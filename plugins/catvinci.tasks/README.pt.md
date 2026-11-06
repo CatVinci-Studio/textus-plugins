@@ -8,6 +8,7 @@ Todas as tarefas da sua pasta, numa só lista.
 - Mostrar ou não as tarefas concluídas está nos ajustes do plugin.
 - Dê uma data a uma tarefa (`📅 2026-11-01` ou `due:2026-11-01`) e ela aparece como uma etiqueta; as tarefas vencidas ou que vencem em até uma semana ficam primeiro, em **Vencem em breve**.
 - O campo no topo filtra a lista por palavras, pelo nome do documento ou pelo título dele.
+- Os cartões de um quadro Kanban (`nome.kanban.md`) ficam no quadro e não são listados.
 
 <!-- ai-tools -->
 ## Ferramentas para o Textus AI

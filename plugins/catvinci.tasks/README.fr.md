@@ -8,6 +8,7 @@ Toutes les tâches de votre dossier, dans une seule liste.
 - L’affichage des tâches terminées se règle dans les réglages de l’extension.
 - Donnez une date à une tâche (`📅 2026-11-01` ou `due:2026-11-01`) et elle s’affiche sous forme de pastille ; les tâches en retard ou dues dans la semaine sont listées en premier, sous **Bientôt dues**.
 - Le champ en haut filtre la liste par mots, par nom du document ou par titre.
+- Les cartes d’un tableau Kanban (`nom.kanban.md`) restent au tableau et ne sont pas listées.
 
 <!-- ai-tools -->
 ## Outils pour Textus AI

@@ -1,7 +1,7 @@
 {
   "id": "catvinci.tasks",
   "name": "%name%",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "publisher": "catvinci",
   "author": "CatVinci Studio",
   "description": "%description%",
@@ -14,6 +14,7 @@
   "platforms": ["desktop", "ios"],
   "main": [
     "lib/folder-paths.js",
+    "lib/text-lines.js",
     "host.js"
   ],
   "permissions": [

@@ -174,19 +174,15 @@ async function listBacklinks(input) {
 /** Links the mention on `line` of `path`, if the line still says it. */
 async function link(mention) {
   await textus.files.process(mention.path, function (text) {
-    const eol = text.includes("\r\n") ? "\r\n" : "\n";
-    const lines = text.split(/\r?\n/);
+    const rows = textLines.split(text);
+    const row = rows[mention.line];
     // The file changed since it was listed: nothing is written; the list
     // is drawn again from what is there now.
-    if (lines[mention.line] !== mention.text) return text;
-    const linked = backlinkMentions.linkMention(
-      lines[mention.line],
-      mention.name,
-      stem(mention.to),
-    );
+    if (!row || row.text !== mention.text) return text;
+    const linked = backlinkMentions.linkMention(row.text, mention.name, stem(mention.to));
     if (!linked) return text;
-    lines[mention.line] = linked;
-    return lines.join(eol);
+    row.text = linked;
+    return textLines.join(rows);
   });
 }
 

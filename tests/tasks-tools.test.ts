@@ -54,3 +54,18 @@ describe("tasks' tools", () => {
     expect(await tools.get("complete_task")!({ path: "Plan.md", line: 3, text: "Other" })).toHaveProperty("error");
   });
 });
+
+it("leaves a Kanban board's cards to the board, in the panel and the tools", async () => {
+  const task = (text: string, line: number) => ({ text, line, done: false, due: null, tags: [] });
+  const metadata = {
+    all: async () => [
+      { path: "/root/Plan.md", rel: "Plan.md", headings: [], tasks: [task("Write", 0)] },
+      { path: "/root/Work.kanban.md", rel: "Work.kanban.md", headings: [], tasks: [task("Card", 2)] },
+    ],
+  };
+  let panel: { items: () => Promise<{ label: string }[]> } | null = null;
+  const views = { registerList: (_id: string, p: typeof panel) => ((panel = p), { setMessage() {}, refresh() {}, dispose() {} }) };
+  const { tools } = loadPlugin("catvinci.tasks", { files: { ...folder({}), root: async () => "/root" }, metadata, views });
+  expect((await tools.get("list_tasks")!({})).tasks.map((t: { text: string }) => t.text)).toEqual(["Write"]);
+  expect((await panel!.items()).map((i) => i.label)).toEqual(["Write"]);
+});
