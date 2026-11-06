@@ -34,8 +34,12 @@ it("Tasks adds a task with its neighbours' ending, the rest byte for byte", asyn
 it("Backlinks links a mention without touching other lines' endings", async () => {
   const files = { "Log.md": mixed, "Ideas.md": "# Ideas\n" };
   let link: ((m: unknown) => Promise<void>) | null = null;
-  const commands = { register: (_id: string, fn: typeof link) => ((link = fn), { dispose() {} }) };
-  loadPlugin("catvinci.backlinks", { files: folder(files), commands });
+  const commands = {
+    register: (id: string, fn: typeof link) => (id === "catvinci.backlinks.link" && (link = fn), { dispose() {} }),
+  };
+  // Textus writes the link (metadata.linkTo); here, as a wiki link.
+  const metadata = { linkTo: async (to: string) => `[[${to.replace(/^.*\//, "").replace(/\.md$/, "")}]]` };
+  loadPlugin("catvinci.backlinks", { files: folder(files), commands, metadata });
   await link!({ path: "/root/Log.md", line: 4, text: "See Ideas here.", name: "Ideas", to: "/root/Ideas.md" });
   expect(files["Log.md"]).toBe(mixed.replace("See Ideas here.", "See [[Ideas]] here."));
 });
