@@ -369,7 +369,8 @@ test("a save syncs a few seconds later and the status bar says how sync stands",
   const remote = new Remote();
   await open(page, remote, { "/work/notes/note.md": "# Saved" });
   const panel = await configure(page, "s3");
-  const status = page.locator('[data-status="catvinci.cloud-sync/status"]');
+  // A plugin with menu commands shows its first item as one button in the bar.
+  const status = page.locator('[data-status-plugin="catvinci.cloud-sync"]');
   await expect(status).toHaveText("Not synced yet");
   await panel.locator("#automatic").check();
   await panel.locator("#interval").press("Enter");
@@ -393,7 +394,7 @@ test("a save syncs a few seconds later and the status bar says how sync stands",
   );
   remote.failure = 500;
   await status.click();
-  await panel.locator("#sync").click();
+  await page.getByRole("menuitem", { name: "Sync now" }).click();
   await expect(status).toHaveText("Sync error");
 });
 
