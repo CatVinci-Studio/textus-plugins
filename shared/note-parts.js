@@ -143,13 +143,14 @@
     return shown(text, blocksOf(text), bodyStart(text.split(/\r?\n/)), Infinity);
   }
 
-  /** A heading's words as a link names them: `#My Heading`, `#my-heading`. */
+  /** A heading's words as a link names them: `#My Heading`, `#my-heading`.
+   *  The app's rule (headingSlug), so a plugin finds the heading a click does. */
   function slug(words) {
     return String(words)
       .trim()
       .toLowerCase()
-      .replace(/[^\p{L}\p{N}\s-]/gu, "")
-      .replace(/\s+/g, "-");
+      .replace(/[^\p{L}\p{M}\p{N}\p{Pc}\- ]/gu, "")
+      .replace(/ /g, "-");
   }
 
   /** The section under heading `name`, its heading line included, to the
