@@ -1,23 +1,29 @@
-// Paths for the tools plugins give Textus AI: the model names a document
-// by its path in the open folder ("Projects/Plan.md"), and is answered the
-// same way. Shared by the plugins whose tools take paths: each lists this
-// as lib/folder-paths.js in libs.json and runs it before its host.js.
+// Paths in the open folder: a document by its place in it
+// ("Projects/Plan.md"), as Textus AI's tools name one, and back to the
+// path the system uses. Each plugin using it lists this as
+// lib/folder-paths.js in libs.json and runs it before its host.js.
 /* exported folderPaths */
 var folderPaths = (function () {
   "use strict";
   var trim = (root) => root.replace(/[\\/]+$/, "");
+  var windows = (path) => path.includes("\\") && !path.includes("/");
+
+  /** `path` "/"-separated; null for none. */
+  var slash = (path) => (path ? String(path).replace(/\\/g, "/") : null);
+
+  /** A "/"-separated `path` in the separator `like` (another path) uses. */
+  var native = (path, like) => (windows(like) ? path.replace(/\//g, "\\") : path);
 
   /** `rel` ("a/b.md") as a path under `root`, in the root's own separator. */
   function abs(root, rel) {
-    var sep = root.includes("\\") && !root.includes("/") ? "\\" : "/";
-    return rel ? trim(root) + sep + rel.split("/").join(sep) : trim(root);
+    return rel ? trim(root) + (windows(root) ? "\\" : "/") + native(rel, root) : trim(root);
   }
 
   /** `path`'s place in the folder, "/"-separated; null outside it. */
   function rel(root, path) {
     if (!root || !path) return null;
-    var base = trim(root).replace(/\\/g, "/") + "/";
-    var p = String(path).replace(/\\/g, "/");
+    var base = slash(trim(root)) + "/";
+    var p = slash(path);
     return p.startsWith(base) ? p.slice(base.length) : null;
   }
 
@@ -34,5 +40,5 @@ var folderPaths = (function () {
     return p;
   }
 
-  return { abs: abs, rel: rel, clean: clean };
+  return { abs: abs, rel: rel, clean: clean, slash: slash, native: native };
 })();

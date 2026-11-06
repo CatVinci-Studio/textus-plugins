@@ -3,21 +3,11 @@
 // first time a day is opened. The sidebar's calendar marks the days that
 // have one. In an Obsidian vault, .obsidian/daily-notes.json says the
 // folder, the name's format and the template (read, never written).
-/* global obsidianVault */
+/* global obsidianVault, folderPaths, dates */
 /** What activate was given: the plugin's storage and own files. */
 let ctx;
 
 let panel = null;
-
-const pad = (n) => String(n).padStart(2, "0");
-function dateOf(day) {
-  return (
-    day.getFullYear() + "-" + pad(day.getMonth() + 1) + "-" + pad(day.getDate())
-  );
-}
-
-/** `root` and `parts` joined with the root's own separator. */
-const join = (...parts) => obsidianVault.join(...parts);
 
 /** Where the notes go and how they are named and begun: the vault's
  *  daily notes settings when it has them, else the plugin's. */
@@ -31,7 +21,7 @@ async function folder() {
   return {
     root: root,
     rel: rel,
-    dir: join(root, ...rel.split("/")),
+    dir: folderPaths.abs(root, rel),
     format: (vault && vault.format) || "YYYY-MM-DD",
     template: vault ? (vault.template ? { file: vault.template } : { text: "" }) : null,
   };
@@ -40,16 +30,18 @@ async function folder() {
 /** The note of `date` (YYYY-MM-DD) and its path in the folder. */
 function noteFor(where, date) {
   const [y, m, d] = date.split("-").map(Number);
-  const name = obsidianVault.formatDate(new Date(y, m - 1, d), where.format, textus.env.language);
+  const name = dates.format(new Date(y, m - 1, d), where.format, textus.env.language);
   const rel = (where.rel ? where.rel + "/" : "") + name + ".md";
-  return { rel: rel, path: join(where.root, ...rel.split("/")) };
+  return { rel: rel, path: folderPaths.abs(where.root, rel) };
 }
 
 /** The date a document is the note of, from its path; null for none. */
 function dateAt(where, path) {
-  const base = where.root.replace(/[\\/]+$/, "").replace(/\\/g, "/") + "/" + (where.rel ? where.rel + "/" : "");
-  const p = String(path || "").replace(/\\/g, "/");
-  return p.startsWith(base) ? obsidianVault.parseDate(p.slice(base.length).replace(/\.md$/i, ""), where.format) : null;
+  const inside = folderPaths.rel(where.root, path);
+  const prefix = where.rel ? where.rel + "/" : "";
+  return inside !== null && inside.startsWith(prefix)
+    ? dates.parse(inside.slice(prefix.length).replace(/\.md$/i, ""), where.format)
+    : null;
 }
 
 /** The dates that have a note, from the folder's file names. */
@@ -84,46 +76,34 @@ async function refresh() {
 /** `date` (YYYY-MM-DD) `days` later, or earlier when negative. */
 function shift(date, days) {
   const [y, m, d] = date.split("-").map(Number);
-  return dateOf(new Date(y, m - 1, d + days));
+  return dates.day(new Date(y, m - 1, d + days));
 }
 
 /** A new day's note: the template with its {{…}} filled in for `date`;
  *  {{date:FORMAT}} and {{time:FORMAT}} as Obsidian writes them. */
 function fill(template, date, title) {
   const [y, m, d] = date.split("-").map(Number);
-  const now = new Date();
-  const as = (day, format) => obsidianVault.formatDate(day, format, textus.env.language);
-  template = template.replace(/\{\{(date|time):([^}]*)\}\}/g, (all, kind, format) =>
-    as(kind === "date" ? new Date(y, m - 1, d) : now, format),
-  );
+  const day = new Date(y, m - 1, d);
   const values = {
     title: title,
-    date: date,
-    weekday: new Date(y, m - 1, d).toLocaleDateString(textus.env.language, {
-      weekday: "long",
-    }),
+    weekday: day.toLocaleDateString(textus.env.language, { weekday: "long" }),
     yesterday: shift(date, -1),
     tomorrow: shift(date, 1),
-    time: pad(now.getHours()) + ":" + pad(now.getMinutes()),
   };
-  return template
-    .replace(/\{\{(\w+)\}\}/g, (all, name) =>
-      name in values ? values[name] : all,
-    )
-    .replace(/\\n/g, "\n");
+  return dates.fill(template, { day: day, language: textus.env.language, values: values }).replace(/\\n/g, "\n");
 }
 
 /** The day of the note in front - a daily note's name - else today. */
 async function dayInFront() {
   const where = await folder();
   const path = await textus.editor.getPath().catch(() => null);
-  return (where && dateAt(where, path)) || dateOf(new Date());
+  return (where && dateAt(where, path)) || dates.day(new Date());
 }
 
 /** A new note's template: the vault's template note, a template of the
  *  Templates folder named by the setting, or the setting's own text. */
 async function templateText(where) {
-  const read = (rel) => textus.files.readText(join(where.root, ...rel.split("/"))).catch(() => null);
+  const read = (rel) => textus.files.readText(folderPaths.abs(where.root, rel)).catch(() => null);
   if (where.template) return where.template.file ? (await read(where.template.file.replace(/(\.md)?$/i, ".md"))) || "" : "";
   const setting = String((await textus.settings.get("template")) || "# {{date}}\\n\\n");
   if (/[{}\n\\]/.test(setting)) return setting;
@@ -160,7 +140,7 @@ const LIST_ITEM = /^\s*(?:[-*+]|\d+[.)])\s/;
 async function noteOf(input) {
   const where = await folder();
   if (!where) return { error: "No folder is open." };
-  const date = input.date ? String(input.date).trim() : dateOf(new Date());
+  const date = input.date ? String(input.date).trim() : dates.day(new Date());
   if (!DAY.test(date)) return { error: "date must be YYYY-MM-DD." };
   const note = noteFor(where, date);
   return { date: date, path: note.path, rel: note.rel, where: where, note: note };
@@ -198,7 +178,7 @@ async function appendToDailyNote(input) {
 exports.activate = function (context) {
   ctx = context;
   textus.commands.register("catvinci.daily-notes.today", function () {
-    return openDay(dateOf(new Date()));
+    return openDay(dates.day(new Date()));
   });
   // From a day's note to the one before or after it.
   textus.commands.register("catvinci.daily-notes.previous", async function () {

@@ -12,11 +12,7 @@
     "textus": ">=1.3.0-beta.2"
   },
   "platforms": ["desktop", "ios"],
-  "main": [
-    "lib/folder-paths.js",
-    "lib/text-lines.js",
-    "host.js"
-  ],
+  "main": ["lib/dates.js", "lib/folder-paths.js", "lib/text-lines.js", "host.js"],
   "permissions": [
     "files.read",
     "files.write",

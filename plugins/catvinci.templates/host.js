@@ -3,43 +3,29 @@
 // - filled in as they are used ({{date}}, {{time}}, {{title}},
 // {{date:YYYY-MM-DD}}) into a new document or at the caret. Templates kept
 // in the plugin's storage before 0.3 are copied there once.
-/* global obsidianVault */
+/* global obsidianVault, folderPaths, dates, freeName */
 let ctx;
 const t = (key, ...args) => textus.l10n.t(key, ...args);
-const join = (...parts) => obsidianVault.join(...parts);
 const MOVED = "movedToFolder";
 
-function fill(text, title) {
-  const now = new Date();
-  const as = (format) => obsidianVault.formatDate(now, format, textus.env.language);
-  return text
-    .replace(/\{\{(date|time)(?::([^}]*))?\}\}/g, (all, kind, format) =>
-      as(format || (kind === "date" ? "YYYY-MM-DD" : "HH:mm")),
-    )
-    .replace(/\{\{title\}\}/g, () => title);
-}
+const fill = (text, title) => dates.fill(text, { language: textus.env.language, values: { title: title } });
 
 /** The open folder and its templates folder; null without a folder. */
 async function where() {
   const root = await textus.files.root();
   if (!root) return null;
   const rel = await obsidianVault.templatesFolder(textus.files, root);
-  return { root: root, rel: rel, dir: join(root, ...rel.split("/")) };
+  return { root: root, rel: rel, dir: folderPaths.abs(root, rel) };
 }
 
 /** `name`.md in `dir`, or "name 2.md"… when that is taken: nothing is
  *  ever written over. Returns the name used. */
 async function createFree(dir, name, text) {
-  for (let n = 1; ; n++) {
-    const candidate = n === 1 ? name : name + " " + n;
-    const path = join(dir, candidate + ".md");
-    if (await textus.files.stat(path)) {
-      if (n === 1 && (await textus.files.readText(path).catch(() => null)) === text) return candidate;
-      continue;
-    }
-    await textus.files.create(path, text);
-    return candidate;
-  }
+  const at = (candidate) => folderPaths.abs(dir, candidate + ".md");
+  if ((await textus.files.readText(at(name)).catch(() => null)) === text) return name;
+  const free = await freeName(name, async (candidate) => !!(await textus.files.stat(at(candidate))));
+  await textus.files.create(at(free), text);
+  return free;
 }
 
 /** Once: the templates kept in the plugin's storage, as files in the
@@ -76,7 +62,7 @@ async function templatesOrStarter(place) {
     t("actions") + "\n\n- [ ] \n";
   await textus.files.createFolder(place.dir).catch(() => {});
   const name = await createFree(place.dir, t("meeting"), starter);
-  return [{ name: name, path: join(place.dir, name + ".md") }];
+  return [{ name: name, path: folderPaths.abs(place.dir, name + ".md") }];
 }
 
 async function pickTemplate(place) {
@@ -106,12 +92,12 @@ async function createFromTemplate(input) {
   const tpl = list.find((x) => x.name.toLowerCase() === wanted);
   if (!tpl) return { error: "No template " + JSON.stringify(input.template) + "; there are: " + list.map((x) => x.name).join(", ") };
   const title = String(input.title || "").trim() || tpl.name.split("/").pop();
-  const folder = String(input.folder || "").replace(/\\/g, "/").replace(/^\.?\/+|\/+$/g, "");
-  if (folder.split("/").includes("..")) return { error: "folder must be in the open folder." };
+  const folder = folderPaths.clean(place.root, input.folder, false);
+  if (folder === null) return { error: "folder must be in the open folder." };
   const rel = (folder ? folder + "/" : "") + title.replace(/[\\/:*?"<>|]/g, "-") + ".md";
-  const path = join(place.root, rel);
+  const path = folderPaths.abs(place.root, rel);
   if (await textus.files.stat(path)) return { error: t("exists", title) };
-  if (folder) await textus.files.createFolder(join(place.root, folder)).catch(() => {});
+  if (folder) await textus.files.createFolder(folderPaths.abs(place.root, folder)).catch(() => {});
   await textus.files.create(path, fill(await textus.files.readText(tpl.path), title));
   return { path: rel, template: tpl.name };
 }
@@ -127,7 +113,7 @@ exports.activate = function (context) {
     if (!template) return;
     const title = await textus.ui.input({ prompt: t("docName"), value: template.name });
     if (!title || !title.trim()) return;
-    const path = join(place.root, title.trim().replace(/[\\/:*?"<>|]/g, "-") + ".md");
+    const path = folderPaths.abs(place.root, title.trim().replace(/[\\/:*?"<>|]/g, "-") + ".md");
     if (await textus.files.stat(path)) return textus.ui.message(t("exists", title.trim()));
     await textus.files.create(path, fill(template.text, title.trim()));
     await textus.layout.open(path);

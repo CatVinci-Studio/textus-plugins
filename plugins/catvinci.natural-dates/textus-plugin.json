@@ -12,10 +12,7 @@
     "textus": ">=1.3.0-beta.6"
   },
   "platforms": ["desktop", "ios"],
-  "main": [
-    "dates.js",
-    "host.js"
-  ],
+  "main": ["lib/dates.js", "dates.js", "host.js"],
   "permissions": [
     "editor.read",
     "ai.tools"

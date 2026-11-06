@@ -14,12 +14,7 @@
   "platforms": [
     "desktop"
   ],
-  "main": [
-    "lib/notion-csv.js",
-    "lib/jszip.min.js",
-    "notion.js",
-    "host.js"
-  ],
+  "main": ["lib/folder-paths.js", "lib/dates.js", "lib/free-name.js", "lib/notion-csv.js", "lib/jszip.min.js", "notion.js", "host.js"],
   "permissions": [
     "files.read",
     "files.write"

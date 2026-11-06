@@ -59,4 +59,11 @@ describe("daily notes in an Obsidian vault, and from Templates", () => {
     await tools.get("append_to_daily_note")!({ date: "2026-11-02", text: "- [ ] Call" });
     expect(files["Daily/2026-11-02.md"]).toBe("## 2026-11-02\n\n- [ ]\n- [ ] Call\n");
   });
+
+  it("fills in the setting's template for the note's day", async () => {
+    const files: Record<string, string> = {};
+    const tools = load(files, { template: "# {{date}} {{weekday}}\\n{{yesterday}} {{tomorrow}} {{title}} {{nope}}\\n" });
+    await tools.get("append_to_daily_note")!({ date: "2026-03-01", text: "Sun." });
+    expect(files["Daily/2026-03-01.md"]).toBe("# 2026-03-01 Sunday\n2026-02-28 2026-03-02 2026-03-01 {{nope}}\n\nSun.\n");
+  });
 });
