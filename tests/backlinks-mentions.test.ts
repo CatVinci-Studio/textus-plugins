@@ -5,7 +5,7 @@ import { beforeAll, describe, expect, it } from "vitest";
 let mentions: {
   namesOf: (stem: string, title: string, frontmatter: Record<string, unknown> | null) => string[];
   findMention: (line: string, name: string) => number;
-  linkMention: (line: string, name: string, stem: string) => string | null;
+  linkMention: (line: string, name: string, link: string) => string | null;
 };
 
 beforeAll(async () => {
@@ -35,10 +35,10 @@ describe("unlinked mentions", () => {
     expect(mentions.findMention("我今天读了卡片盒笔记法的书", "卡片盒笔记法")).toBe(5);
   });
 
-  it("links the first mention, keeping the words as written", () => {
-    expect(mentions.linkMention("About Zettel.", "Zettel", "Zettel")).toBe("About [[Zettel]].");
-    expect(mentions.linkMention("about zettel.", "Zettel", "Zettel")).toBe("about [[Zettel|zettel]].");
-    expect(mentions.linkMention("My slip box", "Slip box", "Zettel")).toBe("My [[Zettel|slip box]]");
-    expect(mentions.linkMention("Nothing here", "Zettel", "Zettel")).toBeNull();
+  it("puts the link in place of the first mention outside links", () => {
+    expect(mentions.linkMention("[[Zettel]] and about zettel.", "Zettel", "[[Zettel|zettel]]")).toBe(
+      "[[Zettel]] and about [[Zettel|zettel]].",
+    );
+    expect(mentions.linkMention("Nothing here", "Zettel", "[[Zettel]]")).toBeNull();
   });
 });

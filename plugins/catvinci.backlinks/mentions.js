@@ -49,12 +49,10 @@
     return -1;
   }
 
-  /** `line` with its first mention of `name` made a [[link]] to `stem`. */
-  function linkMention(line, name, stem) {
+  /** `line` with its first mention of `name` replaced by `link`. */
+  function linkMention(line, name, link) {
     const at = findMention(line, name);
     if (at < 0) return null;
-    const said = line.slice(at, at + name.length);
-    const link = said === stem ? "[[" + stem + "]]" : "[[" + stem + "|" + said + "]]";
     return line.slice(0, at) + link + line.slice(at + name.length);
   }
 

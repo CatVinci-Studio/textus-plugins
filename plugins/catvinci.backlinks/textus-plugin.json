@@ -1,7 +1,7 @@
 {
   "id": "catvinci.backlinks",
   "name": "%name%",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "publisher": "catvinci",
   "author": "CatVinci Studio",
   "description": "%description%",
@@ -9,16 +9,19 @@
   "license": "MIT",
   "repository": "https://github.com/CatVinci-Studio/textus-plugins",
   "engines": {
-    "textus": ">=1.3.0-beta.2"
+    "textus": ">=1.3.9"
   },
   "platforms": ["desktop", "ios"],
   "main": [
     "lib/folder-paths.js",
+    "lib/note-parts.js",
     "mentions.js",
+    "complete.js",
     "host.js"
   ],
   "permissions": [
     "editor.read",
+    "editor.write",
     "files.read",
     "files.write",
     "ai.tools"
@@ -30,6 +33,32 @@
         "title": "%name%",
         "icon": "tab.svg",
         "type": "list"
+      }
+    ],
+    "completions": [
+      {
+        "id": "catvinci.backlinks.notes",
+        "where": "text",
+        "pattern": "\\[\\[([^\\]|#^\\n]*)",
+        "title": "%notes%"
+      },
+      {
+        "id": "catvinci.backlinks.headings",
+        "where": "text",
+        "pattern": "\\[\\[([^\\]|#^\\n]*)#(?:[^\\]|#^\\n]*#)*([^\\]|#^\\n]*)",
+        "title": "%headings%"
+      },
+      {
+        "id": "catvinci.backlinks.blocks",
+        "where": "text",
+        "pattern": "\\[\\[([^\\]|#^\\n]*)#\\^([^\\]|#^\\n]*)",
+        "title": "%blocks%"
+      }
+    ],
+    "embeds": [
+      {
+        "id": "catvinci.backlinks.embed",
+        "targets": ["note", "heading", "block"]
       }
     ],
     "suggestFor": [
@@ -53,8 +82,11 @@
   },
   "l10n": {
     "en": {
-      "name": "Backlinks",
-      "description": "Two-way links for the document in front: the notes that link to it, the ones that name it without a link - linked in one click - and the notes it links to.",
+      "name": "Two-way Links",
+      "description": "Two-way links: type [[ to link a note, a heading or a block, and ![[ to embed one; in the sidebar, the notes that link to the document in front, the ones that name it without a link - linked in one click - and the notes it links to.",
+      "notes": "Notes",
+      "headings": "Headings",
+      "blocks": "Blocks",
       "of": "Links of “{0}”",
       "linked": "Linked mentions",
       "unlinked": "Unlinked mentions",
@@ -69,8 +101,11 @@
       "tool.list_backlinks": "For a document - the one in front unless a path is given - lists the notes linking to it (path, line, the line's text), the lines naming it without a link, and the notes it links to."
     },
     "zh": {
-      "name": "反向链接",
-      "description": "双向链接（双链）：针对当前文档，列出链接到它的笔记、提到它却没加链接的地方（一键补上链接），以及它链接出去的笔记。",
+      "name": "双向链接",
+      "description": "双向链接（双链）：输入 [[ 链接笔记、标题或段落，输入 ![[ 把它嵌进来；侧边栏列出链接到当前文档的笔记、提到它却没加链接的地方（一键补上链接），以及它链接出去的笔记。",
+      "notes": "笔记",
+      "headings": "标题",
+      "blocks": "段落",
       "of": "“{0}”的链接",
       "linked": "已链接提及",
       "unlinked": "未链接提及",
@@ -85,8 +120,11 @@
       "tool.list_backlinks": "针对一篇文档（默认当前文档）：列出链接到它的笔记（路径、行号、那一行的文字）、提到它却没加链接的行，以及它链接到的笔记。"
     },
     "zh-Hant": {
-      "name": "反向連結",
-      "description": "雙向連結（雙鏈）：針對目前文件，列出連結到它的筆記、提到它卻沒加連結的地方（一鍵補上連結），以及它連結出去的筆記。",
+      "name": "雙向連結",
+      "description": "雙向連結（雙鏈）：輸入 [[ 連結筆記、標題或段落，輸入 ![[ 把它嵌入進來；側邊欄列出連結到目前文件的筆記、提到它卻沒加連結的地方（一鍵補上連結），以及它連結出去的筆記。",
+      "notes": "筆記",
+      "headings": "標題",
+      "blocks": "段落",
       "of": "「{0}」的連結",
       "linked": "已連結提及",
       "unlinked": "未連結提及",
@@ -101,8 +139,11 @@
       "tool.list_backlinks": "針對一份文件（預設目前文件）：列出連結到它的筆記（路徑、行號、那一行的文字）、提到它卻沒加連結的行，以及它連結到的筆記。"
     },
     "ja": {
-      "name": "バックリンク",
-      "description": "双方向リンク：開いている文書について、リンクしているノート、リンクせずに名前を出しているノート（ワンクリックでリンク化）、この文書からのリンク先を表示します。",
+      "name": "双方向リンク",
+      "description": "双方向リンク：[[ と入力してノート・見出し・ブロックにリンクし、![[ で埋め込みます。サイドバーには、開いている文書にリンクしているノート、リンクせずに名前を出しているノート（ワンクリックでリンク化）、この文書からのリンク先を表示します。",
+      "notes": "ノート",
+      "headings": "見出し",
+      "blocks": "ブロック",
       "of": "「{0}」のリンク",
       "linked": "リンクされた言及",
       "unlinked": "リンクされていない言及",
@@ -117,8 +158,11 @@
       "tool.list_backlinks": "ある文書（パスがなければ前面の文書）について、そこへリンクしているノート（パス・行番号・その行の本文）、リンクせずに名前を挙げている行、その文書からのリンク先を一覧にします。"
     },
     "ko": {
-      "name": "백링크",
-      "description": "양방향 링크: 지금 문서를 링크하는 노트, 링크 없이 이름만 언급한 곳(한 번에 링크로 변환), 이 문서가 링크하는 노트를 보여 줍니다.",
+      "name": "양방향 링크",
+      "description": "양방향 링크: [[를 입력해 노트·제목·블록을 링크하고, ![[로 넣어 보여 줍니다. 사이드바에는 지금 문서를 링크하는 노트, 링크 없이 이름만 언급한 곳(한 번에 링크로 변환), 이 문서가 링크하는 노트가 보입니다.",
+      "notes": "노트",
+      "headings": "제목",
+      "blocks": "블록",
       "of": "“{0}”의 링크",
       "linked": "링크된 언급",
       "unlinked": "링크되지 않은 언급",
@@ -133,8 +177,11 @@
       "tool.list_backlinks": "어떤 문서(경로가 없으면 앞에 열린 문서)에 대해, 그 문서로 링크하는 노트(경로·줄 번호·그 줄의 내용), 링크 없이 이름만 언급한 줄, 그 문서가 링크하는 노트를 나열합니다."
     },
     "es": {
-      "name": "Enlaces entrantes",
-      "description": "Enlaces bidireccionales del documento abierto: las notas que lo enlazan, las que lo nombran sin enlace – enlazables con un clic – y las notas a las que enlaza.",
+      "name": "Enlaces bidireccionales",
+      "description": "Enlaces bidireccionales: escribe [[ para enlazar una nota, un encabezado o un bloque, y ![[ para incrustarlo; en la barra lateral, las notas que enlazan el documento abierto, las que lo nombran sin enlace – enlazables con un clic – y las notas a las que enlaza.",
+      "notes": "Notas",
+      "headings": "Encabezados",
+      "blocks": "Bloques",
       "of": "Enlaces de «{0}»",
       "linked": "Menciones enlazadas",
       "unlinked": "Menciones sin enlace",
@@ -149,8 +196,11 @@
       "tool.list_backlinks": "Para un documento - el que está al frente si no se da ruta - enumera las notas que enlazan a él (ruta, línea y texto de la línea), las líneas que lo nombran sin enlace y las notas a las que enlaza."
     },
     "fr": {
-      "name": "Rétroliens",
-      "description": "Liens bidirectionnels du document ouvert : les notes qui le lient, celles qui le nomment sans lien – à lier en un clic – et les notes vers lesquelles il pointe.",
+      "name": "Liens bidirectionnels",
+      "description": "Liens bidirectionnels : tapez [[ pour lier une note, un titre ou un bloc, et ![[ pour l’intégrer ; dans la barre latérale, les notes qui lient le document ouvert, celles qui le nomment sans lien – à lier en un clic – et les notes vers lesquelles il pointe.",
+      "notes": "Notes",
+      "headings": "Titres",
+      "blocks": "Blocs",
       "of": "Liens de « {0} »",
       "linked": "Mentions liées",
       "unlinked": "Mentions non liées",
@@ -165,8 +215,11 @@
       "tool.list_backlinks": "Pour un document - celui au premier plan si aucun chemin n'est donné - liste les notes qui y renvoient (chemin, ligne, texte de la ligne), les lignes qui le nomment sans lien, et les notes vers lesquelles il renvoie."
     },
     "de": {
-      "name": "Rückverweise",
-      "description": "Bidirektionale Links des geöffneten Dokuments: die Notizen, die darauf verlinken, die es ohne Link erwähnen – mit einem Klick verlinkt – und die Notizen, auf die es verlinkt.",
+      "name": "Bidirektionale Links",
+      "description": "Bidirektionale Links: Tippe [[, um eine Notiz, eine Überschrift oder einen Block zu verlinken, und ![[, um sie einzubetten; in der Seitenleiste die Notizen, die auf das geöffnete Dokument verlinken, die es ohne Link erwähnen – mit einem Klick verlinkt – und die Notizen, auf die es verlinkt.",
+      "notes": "Notizen",
+      "headings": "Überschriften",
+      "blocks": "Blöcke",
       "of": "Links von „{0}“",
       "linked": "Verlinkte Erwähnungen",
       "unlinked": "Unverlinkte Erwähnungen",
@@ -181,8 +234,11 @@
       "tool.list_backlinks": "Listet für ein Dokument - das vordere, wenn kein Pfad angegeben ist - die Notizen auf, die darauf verlinken (Pfad, Zeile, Text der Zeile), die Zeilen, die es ohne Link nennen, und die Notizen, auf die es verlinkt."
     },
     "ru": {
-      "name": "Обратные ссылки",
-      "description": "Двусторонние ссылки открытого документа: заметки, которые на него ссылаются, упоминают его без ссылки (ссылка — в один клик), и заметки, на которые он ссылается.",
+      "name": "Двусторонние ссылки",
+      "description": "Двусторонние ссылки: наберите [[, чтобы сослаться на заметку, заголовок или блок, и ![[, чтобы встроить их; на боковой панели — заметки, которые ссылаются на открытый документ, упоминают его без ссылки (ссылка — в один клик), и заметки, на которые он ссылается.",
+      "notes": "Заметки",
+      "headings": "Заголовки",
+      "blocks": "Блоки",
       "of": "Ссылки «{0}»",
       "linked": "Упоминания со ссылкой",
       "unlinked": "Упоминания без ссылки",
@@ -197,8 +253,11 @@
       "tool.list_backlinks": "Для документа - переднего, если путь не указан, - перечисляет заметки со ссылками на него (путь, строка, текст строки), строки, где он назван без ссылки, и заметки, на которые он ссылается."
     },
     "pt": {
-      "name": "Backlinks",
-      "description": "Links bidirecionais do documento aberto: as notas que apontam para ele, as que o citam sem link – com link em um clique – e as notas para as quais ele aponta.",
+      "name": "Links bidirecionais",
+      "description": "Links bidirecionais: digite [[ para criar um link para uma nota, um título ou um bloco, e ![[ para incorporá-lo; na barra lateral, as notas que apontam para o documento aberto, as que o citam sem link – com link em um clique – e as notas para as quais ele aponta.",
+      "notes": "Notas",
+      "headings": "Títulos",
+      "blocks": "Blocos",
       "of": "Links de “{0}”",
       "linked": "Menções com link",
       "unlinked": "Menções sem link",

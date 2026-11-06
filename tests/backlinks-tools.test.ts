@@ -20,6 +20,8 @@ it("lists a document's backlinks, unlinked mentions and links, lines from 1, as 
     all: async () => docs,
     get: async () => ({ frontmatter: {} }),
     backlinks: async () => [{ path: "/root/Log.md", line: 3, text: "[[Plan]]" }],
+    // Where a click would make the note a link finds none for.
+    resolveNote: async (link: string) => ({ path: "/root/" + link.slice(2, -2) + ".md", exists: false, kind: "note", line: null }),
     search: async () => ({
       hits: [
         { path: "/root/Log.md", rel: "Log.md", line: 3, text: "Worked on the Plan today." },
@@ -48,6 +50,30 @@ it("lists a document's backlinks, unlinked mentions and links, lines from 1, as 
     ["in:/root/Log.md:3", "linked · 1"],
     ["named:/root/Log.md:2", "unlinked · 1"],
     ["out:/root/ideas.md", "outgoing · 2"],
-    ["out:gone", "outgoing · 2"],
+    ["out:/root/gone.md", "outgoing · 2"],
   ]);
+});
+
+it("links an unlinked mention as Textus writes links, keeping every other byte and line ending", async () => {
+  const before = "# Log\r\n\r\nWorked on the plan today.\nMore in [[Plan]].\r\nEnd";
+  const files: Record<string, string> = { "Log.md": before, "Plan.md": "# Plan\n" };
+  let link: ((mention: unknown) => Promise<void>) | null = null;
+  const commands = {
+    register: (id: string, run: typeof link) => {
+      if (id === "catvinci.backlinks.link") link = run;
+      return { dispose() {} };
+    },
+  };
+  const metadata = {
+    linkTo: async (to: string, _from: string, o: { alias?: string }) =>
+      "[[" + to.slice(6, -3) + (o.alias ? "|" + o.alias : "") + "]]",
+  };
+  loadPlugin("catvinci.backlinks", { files: folder(files), metadata, commands });
+  const mention = { path: "/root/Log.md", line: 2, text: "Worked on the plan today.", name: "Plan", to: "/root/Plan.md" };
+  await link!(mention);
+  expect(files["Log.md"]).toBe(before.replace("the plan today", "the [[Plan|plan]] today"));
+  // The line changed since it was listed: nothing is written.
+  const now = files["Log.md"];
+  await link!({ ...mention, line: 0 });
+  expect(files["Log.md"]).toBe(now);
 });
