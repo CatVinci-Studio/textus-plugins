@@ -1,6 +1,7 @@
 // Quick Insert: the / menu's blocks are Textus's own Format commands, run
 // straight from the manifest (`runs`), so they land before the next key;
-// here are the rest: a callout, today's date, Turn into… and emoji.
+// here are the rest: a callout, Turn into… and emoji. Dates are Natural
+// Dates' (@today).
 
 /* global quickEmoji */
 const t = (key, ...args) => textus.l10n.t(key, ...args);
@@ -18,12 +19,6 @@ const BLOCKS = {
   code: "code-block",
 };
 
-function today() {
-  const d = new Date();
-  const pad = (n) => String(n).padStart(2, "0");
-  return d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate());
-}
-
 async function turnInto() {
   const name = await textus.ui.pick(
     Object.keys(BLOCKS).map((value) => ({ label: t(value), value: value })),
@@ -37,7 +32,6 @@ exports.activate = function (ctx) {
     textus.commands.register("catvinci.quick-insert." + name, run);
   ctx.subscriptions.push(
     command("callout", () => textus.editor.insertText("> [!NOTE]\n> ")),
-    command("date", () => textus.editor.insertText(today())),
     command("turnInto", turnInto),
     textus.editor.registerCompletion("catvinci.quick-insert.emoji", {
       provideCompletions(context) {

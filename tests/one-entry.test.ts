@@ -16,3 +16,7 @@ const titles = (match: RegExp) =>
 it("has one Notion import, in Notion Import", () => {
   expect(titles(/^import.*notion/i)).toEqual(["catvinci.notion-import: Import from Notion…"]);
 });
+
+it("has one way to write today's date: Natural Dates' @today", () => {
+  expect(titles(/today's date/i)).toEqual([]);
+});

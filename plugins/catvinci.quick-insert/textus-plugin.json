@@ -1,7 +1,7 @@
 {
   "id": "catvinci.quick-insert",
   "name": "%name%",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "publisher": "catvinci",
   "author": "CatVinci Studio",
   "description": "%description%",
@@ -150,10 +150,6 @@
         "title": "%callout%"
       },
       {
-        "command": "catvinci.quick-insert.date",
-        "title": "%date%"
-      },
-      {
         "command": "catvinci.quick-insert.turnInto",
         "title": "%turnInto%"
       }
@@ -200,9 +196,6 @@
           "command": "catvinci.quick-insert.callout"
         },
         {
-          "command": "catvinci.quick-insert.date"
-        },
-        {
           "command": "catvinci.quick-insert.turnInto"
         }
       ]
@@ -233,7 +226,6 @@
       "table": "Table",
       "divider": "Divider",
       "callout": "Callout",
-      "date": "Today's date",
       "turnInto": "Turn into…"
     },
     "zh": {
@@ -253,7 +245,6 @@
       "table": "表格",
       "divider": "分隔线",
       "callout": "提示框",
-      "date": "今天的日期",
       "turnInto": "转换为…"
     },
     "zh-Hant": {
@@ -273,7 +264,6 @@
       "table": "表格",
       "divider": "分隔線",
       "callout": "提示框",
-      "date": "今天的日期",
       "turnInto": "轉換為…"
     },
     "ja": {
@@ -293,7 +283,6 @@
       "table": "表",
       "divider": "区切り線",
       "callout": "コールアウト",
-      "date": "今日の日付",
       "turnInto": "変換…"
     },
     "ko": {
@@ -313,7 +302,6 @@
       "table": "표",
       "divider": "구분선",
       "callout": "콜아웃",
-      "date": "오늘 날짜",
       "turnInto": "변환…"
     },
     "de": {
@@ -333,7 +321,6 @@
       "table": "Tabelle",
       "divider": "Trennlinie",
       "callout": "Hinweis",
-      "date": "Heutiges Datum",
       "turnInto": "Umwandeln in …"
     },
     "es": {
@@ -353,7 +340,6 @@
       "table": "Tabla",
       "divider": "Separador",
       "callout": "Aviso",
-      "date": "Fecha de hoy",
       "turnInto": "Convertir en…"
     },
     "fr": {
@@ -373,7 +359,6 @@
       "table": "Tableau",
       "divider": "Séparateur",
       "callout": "Encadré",
-      "date": "Date du jour",
       "turnInto": "Transformer en…"
     },
     "pt": {
@@ -393,7 +378,6 @@
       "table": "Tabela",
       "divider": "Divisor",
       "callout": "Destaque",
-      "date": "Data de hoje",
       "turnInto": "Transformar em…"
     },
     "ru": {
@@ -413,7 +397,6 @@
       "table": "Таблица",
       "divider": "Разделитель",
       "callout": "Выноска",
-      "date": "Сегодняшняя дата",
       "turnInto": "Преобразовать в…"
     }
   }
