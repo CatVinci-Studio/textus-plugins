@@ -1,7 +1,7 @@
 {
   "id": "catvinci.backlinks",
   "name": "%name%",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "publisher": "catvinci",
   "author": "CatVinci Studio",
   "description": "%description%",
@@ -54,7 +54,7 @@
   "l10n": {
     "en": {
       "name": "Backlinks",
-      "description": "For the document in front: the notes that link to it, the ones that name it without a link - linked in one click - and the notes it links to.",
+      "description": "Two-way links for the document in front: the notes that link to it, the ones that name it without a link - linked in one click - and the notes it links to.",
       "of": "Links of “{0}”",
       "linked": "Linked mentions",
       "unlinked": "Unlinked mentions",
@@ -70,7 +70,7 @@
     },
     "zh": {
       "name": "反向链接",
-      "description": "针对当前文档：列出链接到它的笔记、提到它却没加链接的地方（一键补上链接），以及它链接出去的笔记。",
+      "description": "双向链接（双链）：针对当前文档，列出链接到它的笔记、提到它却没加链接的地方（一键补上链接），以及它链接出去的笔记。",
       "of": "“{0}”的链接",
       "linked": "已链接提及",
       "unlinked": "未链接提及",
@@ -86,7 +86,7 @@
     },
     "zh-Hant": {
       "name": "反向連結",
-      "description": "針對目前文件：列出連結到它的筆記、提到它卻沒加連結的地方（一鍵補上連結），以及它連結出去的筆記。",
+      "description": "雙向連結（雙鏈）：針對目前文件，列出連結到它的筆記、提到它卻沒加連結的地方（一鍵補上連結），以及它連結出去的筆記。",
       "of": "「{0}」的連結",
       "linked": "已連結提及",
       "unlinked": "未連結提及",
@@ -102,7 +102,7 @@
     },
     "ja": {
       "name": "バックリンク",
-      "description": "開いている文書について、リンクしているノート、リンクせずに名前を出しているノート（ワンクリックでリンク化）、この文書からのリンク先を表示します。",
+      "description": "双方向リンク：開いている文書について、リンクしているノート、リンクせずに名前を出しているノート（ワンクリックでリンク化）、この文書からのリンク先を表示します。",
       "of": "「{0}」のリンク",
       "linked": "リンクされた言及",
       "unlinked": "リンクされていない言及",
@@ -118,7 +118,7 @@
     },
     "ko": {
       "name": "백링크",
-      "description": "지금 문서를 링크하는 노트, 링크 없이 이름만 언급한 곳(한 번에 링크로 변환), 이 문서가 링크하는 노트를 보여 줍니다.",
+      "description": "양방향 링크: 지금 문서를 링크하는 노트, 링크 없이 이름만 언급한 곳(한 번에 링크로 변환), 이 문서가 링크하는 노트를 보여 줍니다.",
       "of": "“{0}”의 링크",
       "linked": "링크된 언급",
       "unlinked": "링크되지 않은 언급",
@@ -134,7 +134,7 @@
     },
     "es": {
       "name": "Enlaces entrantes",
-      "description": "Para el documento abierto: las notas que lo enlazan, las que lo nombran sin enlace – enlazables con un clic – y las notas a las que enlaza.",
+      "description": "Enlaces bidireccionales del documento abierto: las notas que lo enlazan, las que lo nombran sin enlace – enlazables con un clic – y las notas a las que enlaza.",
       "of": "Enlaces de «{0}»",
       "linked": "Menciones enlazadas",
       "unlinked": "Menciones sin enlace",
@@ -150,7 +150,7 @@
     },
     "fr": {
       "name": "Rétroliens",
-      "description": "Pour le document ouvert : les notes qui le lient, celles qui le nomment sans lien – à lier en un clic – et les notes vers lesquelles il pointe.",
+      "description": "Liens bidirectionnels du document ouvert : les notes qui le lient, celles qui le nomment sans lien – à lier en un clic – et les notes vers lesquelles il pointe.",
       "of": "Liens de « {0} »",
       "linked": "Mentions liées",
       "unlinked": "Mentions non liées",
@@ -166,7 +166,7 @@
     },
     "de": {
       "name": "Rückverweise",
-      "description": "Für das geöffnete Dokument: die Notizen, die darauf verlinken, die es ohne Link erwähnen – mit einem Klick verlinkt – und die Notizen, auf die es verlinkt.",
+      "description": "Bidirektionale Links des geöffneten Dokuments: die Notizen, die darauf verlinken, die es ohne Link erwähnen – mit einem Klick verlinkt – und die Notizen, auf die es verlinkt.",
       "of": "Links von „{0}“",
       "linked": "Verlinkte Erwähnungen",
       "unlinked": "Unverlinkte Erwähnungen",
@@ -182,7 +182,7 @@
     },
     "ru": {
       "name": "Обратные ссылки",
-      "description": "Для открытого документа: заметки, которые на него ссылаются, упоминают его без ссылки (ссылка — в один клик), и заметки, на которые он ссылается.",
+      "description": "Двусторонние ссылки открытого документа: заметки, которые на него ссылаются, упоминают его без ссылки (ссылка — в один клик), и заметки, на которые он ссылается.",
       "of": "Ссылки «{0}»",
       "linked": "Упоминания со ссылкой",
       "unlinked": "Упоминания без ссылки",
@@ -198,7 +198,7 @@
     },
     "pt": {
       "name": "Backlinks",
-      "description": "Para o documento aberto: as notas que apontam para ele, as que o citam sem link – com link em um clique – e as notas para as quais ele aponta.",
+      "description": "Links bidirecionais do documento aberto: as notas que apontam para ele, as que o citam sem link – com link em um clique – e as notas para as quais ele aponta.",
       "of": "Links de “{0}”",
       "linked": "Menções com link",
       "unlinked": "Menções sem link",

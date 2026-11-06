@@ -1,5 +1,7 @@
 # Rückverweise
 
+> Bidirektionale Links wie `[[Notiz]]` sind in Textus eingebaut: Sie schreiben und öffnen sie ohne Plugin. Dieses Plugin ergänzt die andere Hälfte: wer auf das geöffnete Dokument verlinkt.
+
 Was auf das geöffnete Dokument verlinkt und wohin es verlinkt – im Tab **Rückverweise** der Seitenleiste.
 
 - **Verlinkte Erwähnungen**: die Zeilen anderer Notizen, die mit [[Wiki-Links]] oder Links auf diese Datei hierher führen. Ein Klick springt dorthin.
