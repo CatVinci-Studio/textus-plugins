@@ -74,7 +74,12 @@ export class MemoryLocal implements LocalFiles {
   }
   async move(from: string, to: string, expected: string) {
     const old = this.files.get(from);
-    if (this.files.has(to) || !old || (await hash(old)) !== expected)
+    if (
+      this.deferred.has(from) ||
+      this.files.has(to) ||
+      !old ||
+      (await hash(old)) !== expected
+    )
       return false;
     this.files.set(to, old);
     this.files.delete(from);

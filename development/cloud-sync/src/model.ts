@@ -7,6 +7,8 @@ export const MAX_FILES = 20000;
 export const HEAD = "v1/head.json";
 export const LOCK = "v1/lock.json";
 export const TRASH_DAYS = 30;
+/** Newest trash entries kept, so a renamed big folder can't fill the manifest. */
+export const MAX_TRASH = 2000;
 
 export interface Config {
   provider: "s3" | "webdav" | "nutstore";

@@ -42,6 +42,8 @@ class Controller {
   /** Stores whose exclusive create was proven this session. */
   private tested = new Set<string>();
   private abort?: AbortController;
+  /** The latest run's workspace; its own trash and rename events arrive late. */
+  private workspace?: Workspace;
   private disposed = false;
   private state: ViewState = {
     root: null,
@@ -227,14 +229,16 @@ class Controller {
         return;
       }
       const base = parseBase(await this.ctx.storage.global.get(key));
+      this.pacer.started();
+      this.workspace = new Workspace(
+        this.api,
+        root,
+        this.ctx.storage.global,
+        this.abort.signal,
+      );
       const result = await synchronize({
         store: encrypted,
-        local: new Workspace(
-          this.api,
-          root,
-          this.ctx.storage.global,
-          this.abort.signal,
-        ),
+        local: this.workspace,
         base,
         signal: this.abort.signal,
         saveBase: (next) => this.ctx.storage.global.set(key, next),
@@ -329,6 +333,9 @@ class Controller {
     view.onDidDispose(() => this.views.delete(view));
     view.html = await this.ctx.plugin.readText("panel.html");
   }
+  private changed(path: string) {
+    if (!this.workspace?.touched.has(path)) this.pacer.saved();
+  }
   async start() {
     const { api, ctx } = this;
     ctx.subscriptions.push(
@@ -341,9 +348,8 @@ class Controller {
       }),
       api.views.registerSettingsPage({ resolve: (view) => this.resolve(view) }),
       api.files.onDidSave(() => this.pacer.saved()),
-      // Our own trash and renames arrive while busy and need no new sync.
-      api.files.onDidDelete(() => this.state.busy || this.pacer.saved()),
-      api.files.onDidRename(() => this.state.busy || this.pacer.saved()),
+      api.files.onDidDelete(({ path }) => this.changed(path)),
+      api.files.onDidRename(({ from }) => this.changed(from)),
       api.files.onDidChangeRoot(({ path }) => {
         if (path === this.state.root) return;
         this.abort?.abort();

@@ -12,6 +12,8 @@ import {
 
 export class Workspace implements LocalFiles {
   private reservations: Reservations;
+  /** Paths this run trashed or renamed, so their file events start no new sync. */
+  readonly touched = new Set<string>();
   constructor(
     private api: Textus.Api,
     readonly root: string,
@@ -137,20 +139,25 @@ export class Workspace implements LocalFiles {
     if (await this.open(path)) return "deferred" as const;
     if (!(await this.holds(relative, expected))) return false;
     await this.check();
+    this.touched.add(path);
     await this.api.files.trash(path);
     return true;
   }
   async move(from: string, to: string, expected: string) {
     await this.check();
-    const target = this.path(to);
+    const source = this.path(from),
+      target = this.path(to);
+    // Renaming under an open tab would let its next save recreate the old file.
     if (
+      (await this.open(source)) ||
       (await this.api.files.stat(target)) ||
       !(await this.holds(from, expected))
     )
       return false;
     await this.check();
+    this.touched.add(source);
     try {
-      await this.api.files.rename(this.path(from), target);
+      await this.api.files.rename(source, target);
     } catch {
       return false;
     }

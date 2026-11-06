@@ -1,7 +1,7 @@
 import { afterEach, describe as suite, expect, it, vi } from "vitest";
 import { parseManifest } from "./content";
 import { openEncryptedStore } from "./encrypted-store";
-import { HEAD, encode } from "./model";
+import { HEAD, MAX_TRASH, encode } from "./model";
 import { MemoryLocal, MemoryStore, bytes, text } from "./test-fixtures";
 
 const manifest = async (store: MemoryStore) =>
@@ -35,12 +35,15 @@ suite("deletions and renames", () => {
     expect(text(a.files.get("keep.md"))).toBe("k");
   });
   it("keeps an edit made on one side over a deletion on the other", async () => {
-    const { remote, a, b } = await pair({ "note.md": "base" });
+    const { remote, a, b } = await pair({ "note.md": "base", "plain.md": "p" });
     a.files.delete("note.md");
+    a.files.delete("plain.md");
     b.files.set("note.md", bytes("edited"));
     await b.sync(remote);
     await a.sync(remote);
     expect(text(a.files.get("note.md"))).toBe("edited");
+    await b.sync(remote);
+    expect(b.files.has("plain.md")).toBe(false);
 
     a.files.set("note.md", bytes("edited again"));
     await a.sync(remote);
@@ -48,7 +51,7 @@ suite("deletions and renames", () => {
     await a.sync(remote);
     await b.sync(remote);
     expect(text(b.files.get("note.md"))).toBe("edited again");
-    expect(b.trashed).toEqual([]);
+    expect(b.trashed.map(([p]) => p)).toEqual(["plain.md"]);
   });
   it("never treats a file not yet synced as deleted on first sync", async () => {
     const remote = new MemoryStore();
@@ -80,6 +83,18 @@ suite("deletions and renames", () => {
     expect(b.trashed).toEqual([]);
     expect((await b.sync(remote)).unchanged).toBe(1);
   });
+  it("renames a file open in a tab only after it is closed", async () => {
+    const { remote, a, b } = await pair({ "old.md": "body" });
+    a.files.set("new.md", a.files.get("old.md")!);
+    a.files.delete("old.md");
+    await a.sync(remote);
+    b.deferred.add("old.md");
+    expect(await b.sync(remote)).toMatchObject({ moved: 0, downloaded: 1 });
+    expect(b.files.has("old.md")).toBe(true);
+    b.deferred.clear();
+    expect((await b.sync(remote)).removed).toBe(1);
+    expect([...b.files.keys()]).toEqual(["new.md"]);
+  });
   it("purges remote trash entries after 30 days", async () => {
     vi.useFakeTimers({ toFake: ["Date"] });
     vi.setSystemTime(new Date("2026-01-01T00:00:00Z"));
@@ -99,6 +114,19 @@ suite("deletions and renames", () => {
     expect((await manifest(remote)).trash?.map((t) => t.path)).toEqual([
       "b.md",
     ]);
+  });
+  it("keeps only the newest trash entries", async () => {
+    const files = Object.fromEntries(
+      Array.from({ length: MAX_TRASH + 1 }, (_, i) => [`${i}.md`, `${i}`]),
+    );
+    const { remote, a } = await pair({ ...files, "keep.md": "k" });
+    a.files.delete("0.md");
+    await a.sync(remote);
+    for (let i = 1; i <= MAX_TRASH; i++) a.files.delete(`${i}.md`);
+    expect((await a.sync(remote)).removed).toBe(MAX_TRASH);
+    const trash = (await manifest(remote)).trash!;
+    expect(trash).toHaveLength(MAX_TRASH);
+    expect(trash[0].path).toBe("1.md");
   });
   it("waits to trash a file that is open, without losing track of the deletion", async () => {
     const { remote, a, b } = await pair({ "open.md": "x" });
@@ -134,6 +162,8 @@ suite("deletions and renames", () => {
     await a.sync(store);
     a.files.delete("secret-name.md");
     await a.sync(store);
+    const head = parseManifest((await store.get(HEAD))!);
+    expect(head.trash?.map((t) => t.path)).toEqual(["secret-name.md"]);
     const everything = [...raw.values].map(([k, v]) => k + text(v)).join("\n");
     expect(everything).not.toContain("secret-name");
   });

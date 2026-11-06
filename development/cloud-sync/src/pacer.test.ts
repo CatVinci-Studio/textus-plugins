@@ -65,3 +65,12 @@ it("spaces save-triggered syncs by the provider's gap", () => {
   vi.advanceTimersByTime(1_000);
   expect(runs).toHaveLength(1);
 });
+it("drops a pending save that a manual sync already covered", () => {
+  pacer.configure(pace);
+  pacer.saved();
+  vi.advanceTimersByTime(1_000);
+  pacer.started();
+  pacer.finished();
+  vi.advanceTimersByTime(60_000);
+  expect(runs).toEqual([]);
+});

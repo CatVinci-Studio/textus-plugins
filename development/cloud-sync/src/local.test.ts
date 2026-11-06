@@ -179,3 +179,19 @@ it("renames only an unchanged file onto a free name", async () => {
   expect(f.api.files.rename).toHaveBeenCalledOnce();
   expect(f.files.has("/notes/b/c.md")).toBe(true);
 });
+it("leaves a file open in a tab under its name instead of renaming it", async () => {
+  const f = fixture();
+  f.open();
+  expect(await f.local.move("a.md", "b.md", await hash(bytes("before")))).toBe(
+    false,
+  );
+  expect(f.api.files.rename).not.toHaveBeenCalled();
+  expect(f.files.has("/notes/a.md")).toBe(true);
+});
+it("remembers the paths it trashed and renamed", async () => {
+  const f = fixture();
+  const before = await hash(bytes("before"));
+  await f.local.move("a.md", "b.md", before);
+  await f.local.remove("b.md", before);
+  expect([...f.local.touched]).toEqual(["/notes/a.md", "/notes/b.md"]);
+});

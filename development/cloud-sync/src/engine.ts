@@ -5,6 +5,7 @@ import {
   HEAD,
   LOCK,
   MAX_MANIFEST_SIZE,
+  MAX_TRASH,
   SyncError,
   TRASH_DAYS,
   blockKey,
@@ -247,6 +248,7 @@ export async function synchronize(options: Options): Promise<Result> {
     await local.check();
     await ownLock();
     progress("publishing", actions.length, actions.length);
+    next.trash = next.trash!.slice(-MAX_TRASH);
     if (
       !raw ||
       JSON.stringify([next.files, next.trash]) !==

@@ -16,11 +16,12 @@ so the service sees neither their contents nor their names. Requires Textus
 
 On another device, open the matching folder and enter the same service, the
 same remote folder and the same sync password. Turn on **Sync automatically
-while Textus is open**: it then syncs a few seconds after you save, deletes or
-renames a file, and every few minutes in case nothing triggered it.
+while Textus is open**: it then syncs a few seconds after you save or rename a
+file, and every few minutes in case nothing triggered it. A file you delete goes
+out with the next sync.
 
 Once a connection is saved, the status bar shows how sync stands: **Synced ·
-2 min ago**, **Syncing…**, **Sync conflict** or **Sync error**. Click it to
+2 min. ago**, **Syncing…**, **Sync conflict** or **Sync error**. Click it to
 open the panel.
 
 When both devices changed the same file, both versions stay: yours in place,
@@ -79,14 +80,19 @@ shared blocks are reused; ETags are not treated as content hashes.
   attachments keep both versions, even when only one side changed. The current
   plugin API has no conditional binary replacement operation.
 - A file deleted on one device is deleted on the others at their next sync,
-  and nothing is lost on the way: the remote keeps it in an encrypted trash
-  for 30 days, and the other devices move it to the system Trash. A rename
-  reaches the other devices as a rename.
+  and the other devices move it to the system Trash, where you can restore it.
+  The remote lists deleted files in its encrypted manifest for 30 days (the
+  newest 2,000); there is no way to restore from that list in the app yet.
+  A rename reaches the other devices as a rename.
+- There is no remote garbage collection yet: a deleted file's encrypted
+  blocks and old snapshots stay on the server, and anyone with the sync
+  password can still recover it from there. To remove content for good, use
+  a fresh remote folder for a cleaned workspace.
 - An edit wins over a deletion: if one device deleted a file the other edited
   since they last synced, the edited file comes back everywhere.
 - A device syncing a folder for the first time never deletes anything; a file
   only one side has is copied to the other.
-- Files open in a tab are not removed; close them and sync again.
+- Files open in a tab are not removed or renamed; close them and sync again.
 - Update every device to 0.4 before relying on deletions: an older device puts
   a file deleted elsewhere back.
 
@@ -97,15 +103,15 @@ needs read, write and delete permission in the dedicated remote folder
 
 ## Requests per sync
 
-Measured by the tests on S3, where each storage call is one request, for a small
-document after the session's first sync (the first also checks the server's
-exclusive writes: 4 requests more on S3):
+Measured by the tests over HTTP for a small document, after the session's
+first sync (the first also checks the server's exclusive writes: 4 requests
+more on S3):
 
-| Sync | S3 | WebDAV / Nutstore |
-| --- | --- | --- |
-| Nothing changed | 8 | 16 |
-| One edited document (one 2 MiB block) | 17 | 32 |
-| One deleted file | 14 | 26 |
+| Sync                                  | S3  | WebDAV / Nutstore |
+| ------------------------------------- | --- | ----------------- |
+| Nothing changed                       | 8   | 16                |
+| One edited document (one 2 MiB block) | 17  | 32                |
+| One deleted file                      | 14  | 26                |
 
 Each further changed block adds 3 requests on S3, up to 5 on WebDAV. WebDAV costs more because it creates
 folders and takes the lock with an upload and a `MOVE`. Syncs after saves wait

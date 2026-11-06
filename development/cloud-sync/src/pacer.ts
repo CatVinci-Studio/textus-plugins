@@ -32,6 +32,10 @@ export class Pacer {
     this.since ??= this.now();
     this.arm();
   }
+  /** Any sync, manual too, covers the saves made before it. */
+  started() {
+    this.since = null;
+  }
   finished() {
     this.last = this.now();
     this.arm();
@@ -57,7 +61,7 @@ export class Pacer {
     this.timer = setTimeout(() => {
       // A sync is already running: look again shortly; its end re-arms too.
       if (this.busy()) return this.wait(this.pace?.settle ?? 0);
-      this.since = null;
+      this.started();
       this.run();
     }, ms);
   }

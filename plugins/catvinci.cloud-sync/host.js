@@ -37,6 +37,7 @@ var MAX_FILES = 2e4;
 var HEAD = "v1/head.json";
 var LOCK = "v1/lock.json";
 var TRASH_DAYS = 30;
+var MAX_TRASH = 2e3;
 var SyncError = class extends Error {
   constructor(code, args = []) {
     super(code);
@@ -437,6 +438,7 @@ async function synchronize(options) {
     await local.check();
     await ownLock();
     progress("publishing", actions.length, actions.length);
+    next.trash = next.trash.slice(-MAX_TRASH);
     if (!raw || JSON.stringify([next.files, next.trash]) !== JSON.stringify([remote.files, remote.trash ?? []])) {
       next.revision = crypto.randomUUID();
       next.updatedAt = (/* @__PURE__ */ new Date()).toISOString();
@@ -1202,6 +1204,8 @@ var Workspace = class {
     this.root = root;
     this.signal = signal;
     __publicField(this, "reservations");
+    /** Paths this run trashed or renamed, so their file events start no new sync. */
+    __publicField(this, "touched", /* @__PURE__ */ new Set());
     this.reservations = new Reservations(storage, root);
   }
   async check() {
@@ -1314,17 +1318,19 @@ var Workspace = class {
     if (await this.open(path)) return "deferred";
     if (!await this.holds(relative, expected)) return false;
     await this.check();
+    this.touched.add(path);
     await this.api.files.trash(path);
     return true;
   }
   async move(from, to, expected) {
     await this.check();
-    const target = this.path(to);
-    if (await this.api.files.stat(target) || !await this.holds(from, expected))
+    const source = this.path(from), target = this.path(to);
+    if (await this.open(source) || await this.api.files.stat(target) || !await this.holds(from, expected))
       return false;
     await this.check();
+    this.touched.add(source);
     try {
-      await this.api.files.rename(this.path(from), target);
+      await this.api.files.rename(source, target);
     } catch {
       return false;
     }
@@ -1397,6 +1403,10 @@ var Pacer = class {
     this.since ?? (this.since = this.now());
     this.arm();
   }
+  /** Any sync, manual too, covers the saves made before it. */
+  started() {
+    this.since = null;
+  }
   finished() {
     this.last = this.now();
     this.arm();
@@ -1418,7 +1428,7 @@ var Pacer = class {
   wait(ms) {
     this.timer = setTimeout(() => {
       if (this.busy()) return this.wait(this.pace?.settle ?? 0);
-      this.since = null;
+      this.started();
       this.run();
     }, ms);
   }
@@ -1539,6 +1549,8 @@ var Controller = class {
     /** Stores whose exclusive create was proven this session. */
     __publicField(this, "tested", /* @__PURE__ */ new Set());
     __publicField(this, "abort");
+    /** The latest run's workspace; its own trash and rename events arrive late. */
+    __publicField(this, "workspace");
     __publicField(this, "disposed", false);
     __publicField(this, "state", {
       root: null,
@@ -1696,14 +1708,16 @@ var Controller = class {
         return;
       }
       const base = parseBase(await this.ctx.storage.global.get(key));
+      this.pacer.started();
+      this.workspace = new Workspace(
+        this.api,
+        root,
+        this.ctx.storage.global,
+        this.abort.signal
+      );
       const result = await synchronize({
         store: encrypted,
-        local: new Workspace(
-          this.api,
-          root,
-          this.ctx.storage.global,
-          this.abort.signal
-        ),
+        local: this.workspace,
         base,
         signal: this.abort.signal,
         saveBase: (next) => this.ctx.storage.global.set(key, next),
@@ -1785,6 +1799,9 @@ var Controller = class {
     view.onDidDispose(() => this.views.delete(view));
     view.html = await this.ctx.plugin.readText("panel.html");
   }
+  changed(path) {
+    if (!this.workspace?.touched.has(path)) this.pacer.saved();
+  }
   async start() {
     const { api, ctx } = this;
     ctx.subscriptions.push(
@@ -1798,9 +1815,8 @@ var Controller = class {
       }),
       api.views.registerSettingsPage({ resolve: (view) => this.resolve(view) }),
       api.files.onDidSave(() => this.pacer.saved()),
-      // Our own trash and renames arrive while busy and need no new sync.
-      api.files.onDidDelete(() => this.state.busy || this.pacer.saved()),
-      api.files.onDidRename(() => this.state.busy || this.pacer.saved()),
+      api.files.onDidDelete(({ path }) => this.changed(path)),
+      api.files.onDidRename(({ from }) => this.changed(from)),
       api.files.onDidChangeRoot(({ path }) => {
         if (path === this.state.root) return;
         this.abort?.abort();

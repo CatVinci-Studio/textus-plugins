@@ -3,7 +3,8 @@ import { createServer, type Server } from "node:http";
 import { createHash, createHmac } from "node:crypto";
 import { normalizeConfig } from "./config";
 import { RemoteStore, testConnection, type Fetch } from "./transport";
-import { bytes, text } from "./test-fixtures";
+import { MemoryLocal, bytes, text } from "./test-fixtures";
+import { openEncryptedStore } from "./encrypted-store";
 import { LOCK } from "./model";
 
 const account = "TEST_ACCESS_KEY",
@@ -261,7 +262,10 @@ describe("storage protocols over HTTP", () => {
     try {
       await expect(
         testConnection(make("nutstore", { prefix: "brand-new/notes" })),
-      ).rejects.toMatchObject({ code: "folderNotCreated", args: ["brand-new"] });
+      ).rejects.toMatchObject({
+        code: "folderNotCreated",
+        args: ["brand-new"],
+      });
     } finally {
       mode = "normal";
     }
@@ -286,5 +290,35 @@ describe("storage protocols over HTTP", () => {
     expect(text(await store.get(LOCK))).toBe("owner");
     await store.remove(LOCK);
     expect(await store.get(LOCK)).toBeNull();
+  });
+
+  // README's request table: each sync as the plugin runs it, with a new store.
+  it.each([
+    ["s3", [8, 17, 14]],
+    ["webdav", [16, 32, 26]],
+    ["nutstore", [16, 32, 26]],
+  ] as const)("counts %s requests per sync", async (provider, expected) => {
+    mode = "normal";
+    const prefix = `notes/${crypto.randomUUID()}`;
+    const password = "test-only long sync passphrase";
+    const local = new MemoryLocal({ "a.md": "one", "b.md": "two" });
+    const first = await openEncryptedStore(
+      make(provider, { prefix }),
+      password,
+    );
+    await testConnection(first);
+    await local.sync(first);
+    const measure = async () => {
+      const start = recorded.length;
+      await local.sync(
+        await openEncryptedStore(make(provider, { prefix }), password),
+      );
+      return recorded.length - start;
+    };
+    const idle = await measure();
+    local.files.set("a.md", bytes("edited"));
+    const edited = await measure();
+    local.files.delete("b.md");
+    expect([idle, edited, await measure()]).toEqual(expected);
   });
 });

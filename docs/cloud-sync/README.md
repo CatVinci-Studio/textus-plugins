@@ -5,6 +5,11 @@ plugin migration of Ciao1019/textus-cloud-sync at `59baab6`, including ChengAo
 Shen's merged 0.3.0 interface improvements. The synchronization and encryption
 protocols are unchanged; the plugin ID and local storage namespace are new.
 
+0.4.0 (2026-11-05) adds a tenth browser flow per engine (sync after a save,
+status bar texts, one connection check per session), and the WebDAV fixture
+now answers `PROPFIND`: 10 passed in Chromium and 10 in WebKit. The tables
+below record the 0.3.0 run.
+
 ## Environment
 
 | Component                  | Version                                           |
@@ -126,8 +131,9 @@ states; protocol assertions verify encryption and file preservation.
 - Encryption has no independent audit. Object sizes/counts, timing and block
   reuse are observable, and malicious replay of old authenticated state is
   not guaranteed to be detected. Local workspace files remain readable.
-- Deletion propagation, remote garbage collection, password-reset recovery,
-  in-place password rotation and single-snapshot restore UI are not provided.
+- Remote garbage collection, restoring from the remote trash list,
+  password-reset recovery, in-place password rotation and single-snapshot
+  restore UI are not provided. Deletions and renames propagate since 0.4.0.
   Existing binary changes keep both copies and open destinations are deferred.
 - The `network:*` policy now explicitly permits user-entered HTTPS storage
   servers; see [LISTING.md](../../LISTING.md). The previously blocking catalog
