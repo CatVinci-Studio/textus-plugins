@@ -16,12 +16,13 @@ const stem = (path) =>
     .replace(/\.(md|markdown)$/i, "");
 const short = (text) => (text.length > 200 ? text.slice(0, 199) + "…" : text);
 
-/** The note a link Textus found no file for would make; null for a web
- *  address or a file that isn't a note. */
-async function missingNote(target, from) {
+/** The note a link the index found no file for goes to, as a click takes
+ *  it - one to make, or one the index missed; null for a web address or a
+ *  file that isn't a note. */
+async function noteOf(target, from) {
   if (/^[a-z][a-z0-9+.-]*:/i.test(target)) return null;
   const found = await textus.metadata.resolveNote("[[" + target + "]]", from);
-  return found && found.kind === "note" ? found.path : null;
+  return found && found.kind === "note" ? found : null;
 }
 
 /** The lines of each file, read once a refresh. */
@@ -91,12 +92,13 @@ async function gather(focus, doc) {
   const out = new Set();
   for (const l of doc.links) {
     // A [[link]] to no note still shows, as the note a click would make.
-    const to = l.resolved || (await missingNote(l.target, focus));
-    if (!to) continue;
-    const key = to.toLowerCase();
+    const found = l.resolved ? { path: l.resolved, exists: true } : await noteOf(l.target, focus);
+    if (!found) continue;
+    const key = found.path.toLowerCase();
     if (out.has(key)) continue;
     out.add(key);
-    outgoing.push({ name: stem(to), resolved: l.resolved, line: l.line, text: l.text, key: key });
+    const resolved = found.exists ? found.path : null;
+    outgoing.push({ name: stem(found.path), resolved: resolved, line: l.line, text: l.text, key: key });
   }
   return { linked: linked, unlinked: unlinked, outgoing: outgoing };
 }

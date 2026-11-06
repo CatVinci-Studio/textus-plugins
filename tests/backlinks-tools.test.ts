@@ -77,3 +77,21 @@ it("links an unlinked mention as Textus writes links, keeping every other byte a
   await link!({ ...mention, line: 0 });
   expect(files["Log.md"]).toBe(now);
 });
+
+it("lists an outgoing link the index left unresolved as the note a click finds", async () => {
+  const docs = [
+    { path: "/root/A.md", rel: "A.md", title: "A", links: [{ target: "Note v1.2", resolved: null, line: 0, text: "[[Note v1.2]]" }] },
+    { path: "/root/Note v1.2.md", rel: "Note v1.2.md", title: "Note v1.2", links: [] },
+  ];
+  const metadata = {
+    all: async () => docs,
+    get: async () => ({ frontmatter: {} }),
+    backlinks: async () => [],
+    search: async () => ({ hits: [] }),
+    resolveNote: async () => ({ path: "/root/Note v1.2.md", exists: true, kind: "note", line: null }),
+  };
+  const { tools } = loadPlugin("catvinci.backlinks", { files: folder({ "A.md": "[[Note v1.2]]" }), metadata });
+  expect((await tools.get("list_backlinks")!({ path: "A.md" })).outgoing).toEqual([
+    { name: "Note v1.2", path: "Note v1.2.md" },
+  ]);
+});
