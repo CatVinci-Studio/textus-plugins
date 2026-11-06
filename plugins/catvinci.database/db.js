@@ -1,7 +1,7 @@
 // Database: the documents of a folder as rows, their front matter as
 // properties. What a ```database block asks for and the rows it gets. Pure
 // functions, shared by the host and the tests; paths are `/`-separated and
-// relative to the open folder. Notion's CSV is read by lib/notion-csv.js.
+// relative to the open folder.
 
 (function (root) {
   const VIEWS = ["table", "board", "calendar", "gallery"];

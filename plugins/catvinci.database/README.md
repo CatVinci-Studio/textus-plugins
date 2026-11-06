@@ -33,7 +33,7 @@ sort: start
 
 All of it is kept in the block, in lines you can read and change: `columns: start, focus` (which, in what order), `sort: -rate` (`-` for descending), `filter: focus has Research` (`=`, `!=`, `has`, `!has`, `>`, `<`, `empty`, `!empty`, one per line), `group:`, `date:`, `end:`, `types: status=select` (a property's kind).
 
-**From Notion**: export the database as Markdown & CSV, unzip it into the open folder, right-click its `.csv` in the sidebar and choose **Import Notion Database…**. Its pages come in as documents with their properties as front matter, with a page showing them.
+**From Notion**: install the **Notion Import** plugin and use **Plugins › Import from Notion…** on the export. Each database comes in as documents with their properties as front matter, with a page showing them as a database.
 
 **With Textus AI**: ask for one - "make a 2026 weekly calendar with a focus and a rating" - and it makes the folder, its pages and the block.
 
