@@ -67,7 +67,9 @@ class Remote {
       body: data.toString("base64"),
     });
     if (this.failure) return response(this.failure);
+    // Every folder already exists, as MKCOL's 405 says.
     if (method === "MKCOL") return response(405);
+    if (method === "PROPFIND") return response(207);
     if (method === "GET" || method === "HEAD")
       return response(
         this.files.has(path) ? 200 : 404,
