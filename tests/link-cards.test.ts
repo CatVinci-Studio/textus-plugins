@@ -17,11 +17,11 @@ describe("link cards", () => {
       <meta name="description" content="Writes with you.">
       <meta property="og:image" content="/og.png">
       <meta property="og:site_name" content="CatVinci"></head></html>`;
-    expect(lc.fromHtml(html, "https://textus.catvinci.com/a")).toEqual({
-      url: "https://textus.catvinci.com/a",
+    expect(lc.fromHtml(html, "https://textus.md/a")).toEqual({
+      url: "https://textus.md/a",
       title: "Textus & you",
       description: "Writes with you.",
-      image: "https://textus.catvinci.com/og.png",
+      image: "https://textus.md/og.png",
       site: "CatVinci",
     });
     expect(lc.fromHtml("<title> Plain </title>", "https://x.org").title).toBe("Plain");

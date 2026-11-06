@@ -1,6 +1,6 @@
 # Textus Plugins
 
-The plugins for [Textus](https://textus.catvinci.com), the Markdown editor. None of them comes with Textus: you install the ones you want from **Settings › Plugins › Get plugins**, and Textus downloads them from this repository.
+The plugins for [Textus](https://textus.md), the Markdown editor. None of them comes with Textus: you install the ones you want from **Settings › Plugins › Get plugins**, and Textus downloads them from this repository.
 
 ## The plugins
 

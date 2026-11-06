@@ -1,13 +1,13 @@
 // What the market shows of each plugin and skill beside its manifest
 // (build.mjs reads it): installs, ever and in the last 30 days, from
-// Textus's anonymous install counts (textus.catvinci.com/api/ext/stats;
+// Textus's anonymous install counts (textus.md/api/ext/stats;
 // the app's services/ext-stats), and a plugin's first and latest release
 // dates from GitHub. Counts the endpoint can't give are left out. Run by
 // the release workflow, with GH_TOKEN, before the build:
 // `node scripts/stats.mjs > dist/stats.json`.
 
 const REPO = "CatVinci-Studio/textus-plugins";
-const EXT_STATS = "https://textus.catvinci.com/api/ext/stats";
+const EXT_STATS = "https://textus.md/api/ext/stats";
 
 /** Each plugin's first and latest release dates, from `releases`
  *  (GitHub's release objects, `<id>-v<version>`), by id. */

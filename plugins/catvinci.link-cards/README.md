@@ -7,10 +7,10 @@ A link as a card: its page's title, description and picture, the site's name - c
 
 ````markdown
 ```card
-url: https://textus.catvinci.com
+url: https://textus.md
 title: Textus
 description: A Markdown editor with AI that writes with you.
-image: https://textus.catvinci.com/og.png
+image: https://textus.md/og.png
 ```
 ````
 

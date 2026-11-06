@@ -7,10 +7,10 @@
 
 ````markdown
 ```card
-url: https://textus.catvinci.com
+url: https://textus.md
 title: Textus
 description: 和你一起写作的 Markdown 编辑器。
-image: https://textus.catvinci.com/og.png
+image: https://textus.md/og.png
 ```
 ````
 
