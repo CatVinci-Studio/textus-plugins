@@ -113,10 +113,11 @@ more on S3):
 | One edited document (one 2 MiB block) | 17  | 32                |
 | One deleted file                      | 14  | 26                |
 
-Each further changed block adds 3 requests on S3, up to 5 on WebDAV. WebDAV costs more because it creates
-folders and takes the lock with an upload and a `MOVE`. Syncs after saves wait
-until saving settles (5 s), and no sooner than 30 s (WebDAV) or 3 min (Nutstore)
-after the previous one, which keeps Nutstore under its 550 requests per 30 minutes.
+Each further changed block adds 3 requests on S3, up to 5 on WebDAV. WebDAV
+costs more because it creates folders and takes the lock with an upload and a
+`MOVE`. Syncs after saves wait until saving settles (5 s), and no sooner than
+30 s (WebDAV) or 3 min (Nutstore) after the previous one, which keeps Nutstore
+under its 550 requests per 30 minutes.
 
 ## End-to-end encryption
 
