@@ -251,7 +251,7 @@ async function queryRows(input) {
 }
 
 /** Textus AI's tool: one more row in a database. */
-async function addRow(input) {
+async function addRowTool(input) {
   const where = await databaseFolder(input.database);
   if (where.error) return where;
   await textus.files.createFolder(join(root, where.folder)).catch(() => {});
@@ -297,7 +297,7 @@ exports.activate = function (ctx) {
     textus.commands.register("catvinci.database.new", newDatabase),
     textus.ai.registerTool("create_database", createDatabase),
     textus.ai.registerTool("query_rows", queryRows),
-    textus.ai.registerTool("add_row", addRow),
+    textus.ai.registerTool("add_row", addRowTool),
     // A page edited here, or anywhere: every block on screen again.
     textus.files.onDidChangeRoot(again),
     textus.metadata.onDidChange(again),
