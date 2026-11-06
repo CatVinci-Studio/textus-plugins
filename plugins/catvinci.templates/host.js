@@ -1,91 +1,119 @@
-// Templates: Markdown files kept in the plugin's own global folder
-// (ctx.storage.global), filled in as they are used - {{date}}, {{time}},
-// {{title}} - into a new document or at the caret.
+// Templates: Markdown files in the open folder's templates folder -
+// Templates/, or the one an Obsidian vault names in .obsidian/templates.json
+// - filled in as they are used ({{date}}, {{time}}, {{title}},
+// {{date:YYYY-MM-DD}}) into a new document or at the caret. Templates kept
+// in the plugin's storage before 0.3 are copied there once.
+/* global obsidianVault */
 let ctx;
 const t = (key, ...args) => textus.l10n.t(key, ...args);
-const pad = (n) => String(n).padStart(2, "0");
+const join = (...parts) => obsidianVault.join(...parts);
+const MOVED = "movedToFolder";
 
 function fill(text, title) {
   const now = new Date();
+  const as = (format) => obsidianVault.formatDate(now, format, textus.env.language);
   return text
-    .replace(
-      /\{\{date\}\}/g,
-      now.getFullYear() +
-        "-" +
-        pad(now.getMonth() + 1) +
-        "-" +
-        pad(now.getDate()),
+    .replace(/\{\{(date|time)(?::([^}]*))?\}\}/g, (all, kind, format) =>
+      as(format || (kind === "date" ? "YYYY-MM-DD" : "HH:mm")),
     )
-    .replace(/\{\{time\}\}/g, pad(now.getHours()) + ":" + pad(now.getMinutes()))
     .replace(/\{\{title\}\}/g, () => title);
 }
 
-/** The templates there are; a first one is written if there are none. */
-async function templates() {
-  let names = (await ctx.storage.global.files()).filter((f) =>
-    f.endsWith(".md"),
-  );
-  if (!names.length) {
-    await ctx.storage.global.writeText(
-      t("meeting") + ".md",
-      "# {{title}}\n\n{{date}} {{time}}\n\n## " +
-        t("attendees") +
-        "\n\n- \n\n## " +
-        t("agenda") +
-        "\n\n1. \n\n## " +
-        t("actions") +
-        "\n\n- [ ] \n",
-    );
-    names = [t("meeting") + ".md"];
-  }
-  return names.sort();
+/** The open folder and its templates folder; null without a folder. */
+async function where() {
+  const root = await textus.files.root();
+  if (!root) return null;
+  const rel = await obsidianVault.templatesFolder(textus.files, root);
+  return { root: root, rel: rel, dir: join(root, ...rel.split("/")) };
 }
 
-async function pickTemplate() {
-  const name = await textus.ui.pick(
-    (await templates()).map((file) => ({
-      label: file.replace(/\.md$/, ""),
-      value: file,
-    })),
+/** `name`.md in `dir`, or "name 2.md"… when that is taken: nothing is
+ *  ever written over. Returns the name used. */
+async function createFree(dir, name, text) {
+  for (let n = 1; ; n++) {
+    const candidate = n === 1 ? name : name + " " + n;
+    const path = join(dir, candidate + ".md");
+    if (await textus.files.stat(path)) {
+      if (n === 1 && (await textus.files.readText(path).catch(() => null)) === text) return candidate;
+      continue;
+    }
+    await textus.files.create(path, text);
+    return candidate;
+  }
+}
+
+/** Once: the templates kept in the plugin's storage, as files in the
+ *  templates folder, with a notice saying where. The stored ones stay. */
+async function moveStored(place) {
+  if (await ctx.storage.global.get(MOVED)) return;
+  const stored = (await ctx.storage.global.files()).filter((f) => f.endsWith(".md"));
+  if (stored.length) {
+    await textus.files.createFolder(place.dir).catch(() => {});
+    for (const file of stored)
+      await createFree(place.dir, file.replace(/\.md$/, ""), await ctx.storage.global.readText(file));
+    textus.ui.notice(t("moved", stored.length, place.rel));
+  }
+  await ctx.storage.global.set(MOVED, true);
+}
+
+/** The templates in the folder: name (its path in the templates folder,
+ *  without .md) and path. */
+async function templates(place) {
+  await moveStored(place);
+  const prefix = place.rel + "/";
+  return (await textus.files.find(place.rel + "/**/*.md").catch(() => []))
+    .filter((f) => f.rel.startsWith(prefix))
+    .map((f) => ({ name: f.rel.slice(prefix.length).replace(/\.md$/i, ""), path: f.path }))
+    .sort((a, b) => a.name.localeCompare(b.name));
+}
+
+/** The templates; a first one is written when there are none. */
+async function templatesOrStarter(place) {
+  const found = await templates(place);
+  if (found.length) return found;
+  const starter =
+    "# {{title}}\n\n{{date}} {{time}}\n\n## " + t("attendees") + "\n\n- \n\n## " + t("agenda") + "\n\n1. \n\n## " +
+    t("actions") + "\n\n- [ ] \n";
+  await textus.files.createFolder(place.dir).catch(() => {});
+  const name = await createFree(place.dir, t("meeting"), starter);
+  return [{ name: name, path: join(place.dir, name + ".md") }];
+}
+
+async function pickTemplate(place) {
+  const list = await templatesOrStarter(place);
+  const path = await textus.ui.pick(
+    list.map((tpl) => ({ label: tpl.name, value: tpl.path })),
     { placeholder: t("pick") },
   );
-  return name
-    ? {
-        name: String(name).replace(/\.md$/, ""),
-        text: await ctx.storage.global.readText(name),
-      }
-    : null;
-}
-
-function join(root, name) {
-  const sep = root.includes("\\") && !root.includes("/") ? "\\" : "/";
-  return root.replace(/[\\/]+$/, "") + sep + name;
+  const tpl = path && list.find((x) => x.path === path);
+  return tpl ? { name: tpl.name.split("/").pop(), text: await textus.files.readText(tpl.path) } : null;
 }
 
 // Textus AI's tools.
 async function listTemplates() {
+  const place = await where();
+  if (!place) return { error: t("needsFolder") };
   const out = [];
-  for (const file of await templates())
-    out.push({ name: file.replace(/\.md$/, ""), text: await ctx.storage.global.readText(file) });
-  return { templates: out };
+  for (const tpl of await templates(place)) out.push({ name: tpl.name, text: await textus.files.readText(tpl.path) });
+  return { folder: place.rel, templates: out };
 }
 
 async function createFromTemplate(input) {
-  const root = await textus.files.root();
-  if (!root) return { error: t("needsFolder") };
-  const names = await templates();
+  const place = await where();
+  if (!place) return { error: t("needsFolder") };
+  const list = await templates(place);
   const wanted = String(input.template || "").replace(/\.md$/, "").toLowerCase();
-  const file = names.find((n) => n.replace(/\.md$/, "").toLowerCase() === wanted);
-  if (!file) return { error: "No template " + JSON.stringify(input.template) + "; there are: " + names.map((n) => n.replace(/\.md$/, "")).join(", ") };
-  const title = String(input.title || "").trim() || file.replace(/\.md$/, "");
+  const tpl = list.find((x) => x.name.toLowerCase() === wanted);
+  if (!tpl) return { error: "No template " + JSON.stringify(input.template) + "; there are: " + list.map((x) => x.name).join(", ") };
+  const title = String(input.title || "").trim() || tpl.name.split("/").pop();
   const folder = String(input.folder || "").replace(/\\/g, "/").replace(/^\.?\/+|\/+$/g, "");
   if (folder.split("/").includes("..")) return { error: "folder must be in the open folder." };
   const rel = (folder ? folder + "/" : "") + title.replace(/[\\/:*?"<>|]/g, "-") + ".md";
-  const path = join(root, rel);
+  const path = join(place.root, rel);
   if (await textus.files.stat(path)) return { error: t("exists", title) };
-  if (folder) await textus.files.createFolder(join(root, folder)).catch(() => {});
-  await textus.files.create(path, fill(await ctx.storage.global.readText(file), title));
-  return { path: rel, template: file.replace(/\.md$/, "") };
+  if (folder) await textus.files.createFolder(join(place.root, folder)).catch(() => {});
+  await textus.files.create(path, fill(await textus.files.readText(tpl.path), title));
+  return { path: rel, template: tpl.name };
 }
 
 exports.activate = function (context) {
@@ -93,42 +121,33 @@ exports.activate = function (context) {
   textus.ai.registerTool("list_templates", listTemplates);
   textus.ai.registerTool("create_from_template", createFromTemplate);
   textus.commands.register("catvinci.templates.new", async function () {
-    const root = await textus.files.root();
-    if (!root) return textus.ui.message(t("needsFolder"));
-    const template = await pickTemplate();
+    const place = await where();
+    if (!place) return textus.ui.message(t("needsFolder"));
+    const template = await pickTemplate(place);
     if (!template) return;
-    const title = await textus.ui.input({
-      prompt: t("docName"),
-      value: template.name,
-    });
+    const title = await textus.ui.input({ prompt: t("docName"), value: template.name });
     if (!title || !title.trim()) return;
-    const path = join(root, title.trim().replace(/[\\/:*?"<>|]/g, "-") + ".md");
-    if (await textus.files.stat(path))
-      return textus.ui.message(t("exists", title.trim()));
+    const path = join(place.root, title.trim().replace(/[\\/:*?"<>|]/g, "-") + ".md");
+    if (await textus.files.stat(path)) return textus.ui.message(t("exists", title.trim()));
     await textus.files.create(path, fill(template.text, title.trim()));
     await textus.layout.open(path);
   });
-  textus.commands.registerEditorCommand(
-    "catvinci.templates.insert",
-    async function (editor) {
-      const template = await pickTemplate();
-      if (!template) return;
-      const path = (await editor.getPath()) || "";
-      const title =
-        path.split(/[\\/]/).pop().replace(/\.md$/i, "") || template.name;
-      await editor.insertText(fill(template.text, title));
-    },
-  );
-  textus.commands.registerEditorCommand(
-    "catvinci.templates.save",
-    async function (editor) {
-      const name = await textus.ui.input({ prompt: t("templateName") });
-      if (!name || !name.trim()) return;
-      await ctx.storage.global.writeText(
-        name.trim() + ".md",
-        (await editor.getText()) || "",
-      );
-      textus.ui.notice(t("saved", name.trim()), { tone: "success" });
-    },
-  );
+  textus.commands.registerEditorCommand("catvinci.templates.insert", async function (editor) {
+    const place = await where();
+    if (!place) return textus.ui.message(t("needsFolder"));
+    const template = await pickTemplate(place);
+    if (!template) return;
+    const path = (await editor.getPath()) || "";
+    const title = path.split(/[\\/]/).pop().replace(/\.md$/i, "") || template.name;
+    await editor.insertText(fill(template.text, title));
+  });
+  textus.commands.registerEditorCommand("catvinci.templates.save", async function (editor) {
+    const place = await where();
+    if (!place) return textus.ui.message(t("needsFolder"));
+    const name = await textus.ui.input({ prompt: t("templateName") });
+    if (!name || !name.trim()) return;
+    await textus.files.createFolder(place.dir).catch(() => {});
+    const saved = await createFree(place.dir, name.trim().replace(/[\\/:*?"<>|]/g, "-"), (await editor.getText()) || "");
+    textus.ui.notice(t("saved", saved, place.rel), { tone: "success" });
+  });
 };

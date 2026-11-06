@@ -67,5 +67,7 @@
   "catvinci.text-tidy/lib/markdown-keep.js": "./shared/markdown-keep.js",
   "catvinci.markdown-lint/lib/markdown-keep.js": "./shared/markdown-keep.js",
   "catvinci.tasks/lib/text-lines.js": "./shared/text-lines.js",
-  "catvinci.backlinks/lib/text-lines.js": "./shared/text-lines.js"
+  "catvinci.backlinks/lib/text-lines.js": "./shared/text-lines.js",
+  "catvinci.templates/lib/obsidian-vault.js": "./shared/obsidian-vault.js",
+  "catvinci.daily-notes/lib/obsidian-vault.js": "./shared/obsidian-vault.js"
 }
