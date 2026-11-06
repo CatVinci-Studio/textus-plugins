@@ -1,7 +1,7 @@
 {
   "id": "catvinci.daily-notes",
   "name": "%name%",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "publisher": "catvinci",
   "author": "CatVinci Studio",
   "description": "%description%",
@@ -37,7 +37,7 @@
     "keybindings": [
       {
         "command": "catvinci.daily-notes.today",
-        "key": "mod+alt+d"
+        "key": "mod+alt+j"
       }
     ],
     "menus": {
