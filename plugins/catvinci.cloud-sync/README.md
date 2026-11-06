@@ -16,7 +16,12 @@ so the service sees neither their contents nor their names. Requires Textus
 
 On another device, open the matching folder and enter the same service, the
 same remote folder and the same sync password. Turn on **Sync automatically
-while Textus is open** to sync every few minutes.
+while Textus is open**: it then syncs a few seconds after you save, deletes or
+renames a file, and every few minutes in case nothing triggered it.
+
+Once a connection is saved, the status bar shows how sync stands: **Synced ·
+2 min ago**, **Syncing…**, **Sync conflict** or **Sync error**. Click it to
+open the panel.
 
 When both devices changed the same file, both versions stay: yours in place,
 the other device's in `Sync conflicts/`.
@@ -73,15 +78,39 @@ shared blocks are reused; ETags are not treated as content hashes.
   `files.process` API. Existing binary files are never overwritten: differing
   attachments keep both versions, even when only one side changed. The current
   plugin API has no conditional binary replacement operation.
-- Deletions are deliberately not propagated in this release. A file that
-  remains remotely will return after local deletion; renames retain the old
-  remote path as well. To remove content permanently, use a fresh remote folder
-  for a cleaned workspace. There is no remote garbage collection yet.
+- A file deleted on one device is deleted on the others at their next sync,
+  and nothing is lost on the way: the remote keeps it in an encrypted trash
+  for 30 days, and the other devices move it to the system Trash. A rename
+  reaches the other devices as a rename.
+- An edit wins over a deletion: if one device deleted a file the other edited
+  since they last synced, the edited file comes back everywhere.
+- A device syncing a folder for the first time never deletes anything; a file
+  only one side has is copied to the other.
+- Files open in a tab are not removed; close them and sync again.
+- Update every device to 0.4 before relying on deletions: an older device puts
+  a file deleted elsewhere back.
 
 Content and filenames are **encrypted before upload**, with HTTPS in transit.
 Use a private S3 bucket or WebDAV folder. The service account
 needs read, write and delete permission in the dedicated remote folder
 (delete is needed for temporary objects and locks).
+
+## Requests per sync
+
+Measured by the tests on S3, where each storage call is one request, for a small
+document after the session's first sync (the first also checks the server's
+exclusive writes: 4 requests more on S3):
+
+| Sync | S3 | WebDAV / Nutstore |
+| --- | --- | --- |
+| Nothing changed | 8 | 16 |
+| One edited document (one 2 MiB block) | 17 | 32 |
+| One deleted file | 14 | 26 |
+
+Each further changed block adds 3 requests on S3, up to 5 on WebDAV. WebDAV costs more because it creates
+folders and takes the lock with an upload and a `MOVE`. Syncs after saves wait
+until saving settles (5 s), and no sooner than 30 s (WebDAV) or 3 min (Nutstore)
+after the previous one, which keeps Nutstore under its 550 requests per 30 minutes.
 
 ## End-to-end encryption
 
@@ -120,7 +149,7 @@ impossible. A full backup must include the descriptor and encrypted objects.
 - `v1/head.json`: the public encryption descriptor (`textus-cloud-sync-e2ee/1`).
   The old path is intentional: v0.1 clients reject this format before uploading files.
 - `v1/lock.json`: shared exclusion with old and new clients; no document data.
-- `v2/head.bin`: encrypted current manifest.
+- `v2/head.bin`: encrypted current manifest, with the trash of deleted files.
 - `v2/blocks/<prefix>/<HMAC>`: encrypted content blocks.
 - `v2/snapshots/<revision>.bin`: immutable encrypted manifests.
 

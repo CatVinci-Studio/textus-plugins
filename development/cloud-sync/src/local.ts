@@ -127,6 +127,35 @@ export class Workspace implements LocalFiles {
     }
     return files;
   }
+  private async holds(relative: string, expected: string) {
+    const current = await this.read(relative);
+    return !!current && (await hash(current)) === expected;
+  }
+  async remove(relative: string, expected: string) {
+    await this.check();
+    const path = this.path(relative);
+    if (await this.open(path)) return "deferred" as const;
+    if (!(await this.holds(relative, expected))) return false;
+    await this.check();
+    await this.api.files.trash(path);
+    return true;
+  }
+  async move(from: string, to: string, expected: string) {
+    await this.check();
+    const target = this.path(to);
+    if (
+      (await this.api.files.stat(target)) ||
+      !(await this.holds(from, expected))
+    )
+      return false;
+    await this.check();
+    try {
+      await this.api.files.rename(this.path(from), target);
+    } catch {
+      return false;
+    }
+    return true;
+  }
   async apply(
     relative: string,
     bytes: Uint8Array,

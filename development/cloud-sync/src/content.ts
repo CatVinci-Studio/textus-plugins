@@ -26,6 +26,31 @@ export async function describe(bytes: Uint8Array): Promise<Entry> {
   }
   return { hash: await hash(bytes), size: bytes.length, blocks };
 }
+function checkEntry(e: Entry) {
+  if (
+    !e ||
+    !/^[a-f0-9]{64}$/.test(e.hash) ||
+    !Number.isSafeInteger(e.size) ||
+    e.size < 0 ||
+    e.size > MAX_FILE_SIZE ||
+    !Array.isArray(e.blocks) ||
+    e.blocks.length > Math.ceil(MAX_FILE_SIZE / CHUNK_SIZE)
+  )
+    throw new Error();
+  let total = 0;
+  for (const b of e.blocks) {
+    if (
+      !b ||
+      !/^[a-f0-9]{64}$/.test(b.hash) ||
+      !Number.isSafeInteger(b.size) ||
+      b.size <= 0 ||
+      b.size > CHUNK_SIZE
+    )
+      throw new Error();
+    total += b.size;
+  }
+  if (total !== e.size) throw new Error();
+}
 export function parseManifest(raw: Uint8Array): Manifest {
   try {
     if (raw.length > MAX_MANIFEST_SIZE) throw new Error();
@@ -37,7 +62,8 @@ export function parseManifest(raw: Uint8Array): Manifest {
       typeof value.revision !== "string" ||
       typeof value.updatedAt !== "string" ||
       !value.files ||
-      Array.isArray(value.files)
+      Array.isArray(value.files) ||
+      (value.trash !== undefined && !Array.isArray(value.trash))
     )
       throw new Error();
     const keys = Object.keys(value.files);
@@ -47,30 +73,17 @@ export function parseManifest(raw: Uint8Array): Manifest {
       const canonical = path.normalize("NFC").toLowerCase();
       if (!inScope(path) || folded.has(canonical)) throw new Error();
       folded.add(canonical);
-      const e = value.files[path];
+      checkEntry(value.files[path]);
+    }
+    for (const t of value.trash ?? []) {
       if (
-        !e ||
-        !/^[a-f0-9]{64}$/.test(e.hash) ||
-        !Number.isSafeInteger(e.size) ||
-        e.size < 0 ||
-        e.size > MAX_FILE_SIZE ||
-        !Array.isArray(e.blocks) ||
-        e.blocks.length > Math.ceil(MAX_FILE_SIZE / CHUNK_SIZE)
+        !t ||
+        typeof t.path !== "string" ||
+        !inScope(t.path) ||
+        !Number.isFinite(Date.parse(t.deletedAt))
       )
         throw new Error();
-      let total = 0;
-      for (const b of e.blocks) {
-        if (
-          !b ||
-          !/^[a-f0-9]{64}$/.test(b.hash) ||
-          !Number.isSafeInteger(b.size) ||
-          b.size <= 0 ||
-          b.size > CHUNK_SIZE
-        )
-          throw new Error();
-        total += b.size;
-      }
-      if (total !== e.size) throw new Error();
+      checkEntry(t.entry);
     }
     return value;
   } catch {

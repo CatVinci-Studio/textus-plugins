@@ -50,10 +50,12 @@ class Remote {
   files = new Map<string, Buffer>();
   failure: number | null = null;
   methods: string[] = [];
+  paths: string[] = [];
   async request(req: Request) {
     const path = new URL(req.url).pathname,
       method = req.method;
     this.methods.push(method);
+    this.paths.push(path);
     const headers = Object.fromEntries(
       Object.entries(req.headers).map(([k, v]) => [k.toLowerCase(), v]),
     );
@@ -359,6 +361,40 @@ test("automatic sync runs on its configured interval and Enter saves through the
   expect(
     [...remote.files.keys()].some((key) => key.endsWith("/v2/head.bin")),
   ).toBe(true);
+});
+
+test("a save syncs a few seconds later and the status bar says how sync stands", async ({
+  page,
+}) => {
+  const remote = new Remote();
+  await open(page, remote, { "/work/notes/note.md": "# Saved" });
+  const panel = await configure(page, "s3");
+  const status = page.locator('[data-status="catvinci.cloud-sync/status"]');
+  await expect(status).toHaveText("Not synced yet");
+  await panel.locator("#automatic").check();
+  await panel.locator("#interval").press("Enter");
+  await expect(panel.locator("#sync")).toBeEnabled();
+  await sync(page);
+  await expect(status).toHaveText("Synced · just now");
+  const head = () =>
+    remote.files.get(
+      [...remote.files.keys()].find((k) => k.endsWith("/v2/head.bin"))!,
+    );
+  const before = head();
+  const probes = remote.paths.filter((p) => p.includes("/probes/")).length;
+  await page.locator(".sidebar .tree-row", { hasText: "note.md" }).click();
+  await page.locator('[data-active-tab="true"] .ProseMirror').click();
+  await page.keyboard.type(" again");
+  await page.keyboard.press("ControlOrMeta+s");
+  await expect.poll(() => head() !== before, { timeout: 20_000 }).toBe(true);
+  await expect(status).toHaveText("Synced · just now");
+  expect(remote.paths.filter((p) => p.includes("/probes/")).length).toBe(
+    probes,
+  );
+  remote.failure = 500;
+  await status.click();
+  await panel.locator("#sync").click();
+  await expect(status).toHaveText("Sync error");
 });
 
 test("a wrong sync password leaves both devices unchanged, then the correct password decrypts", async ({

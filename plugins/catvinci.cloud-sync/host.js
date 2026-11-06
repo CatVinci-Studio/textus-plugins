@@ -36,6 +36,7 @@ var MAX_MANIFEST_SIZE = 8 * 1024 * 1024;
 var MAX_FILES = 2e4;
 var HEAD = "v1/head.json";
 var LOCK = "v1/lock.json";
+var TRASH_DAYS = 30;
 var SyncError = class extends Error {
   constructor(code, args = []) {
     super(code);
@@ -62,12 +63,18 @@ var defaults = {
   interval: 5
 };
 var providers = {
-  s3: { transport: "s3", endpoint: "", requestLimit: Infinity },
-  webdav: { transport: "dav", endpoint: "", requestLimit: Infinity },
+  s3: { transport: "s3", endpoint: "", requestLimit: Infinity, saveGap: 0 },
+  webdav: {
+    transport: "dav",
+    endpoint: "",
+    requestLimit: Infinity,
+    saveGap: 3e4
+  },
   nutstore: {
     transport: "dav",
     endpoint: "https://dav.jianguoyun.com/dav",
-    requestLimit: 550
+    requestLimit: 550,
+    saveGap: 18e4
   }
 };
 function relativePath(value) {
@@ -162,13 +169,24 @@ async function describe(bytes) {
   }
   return { hash: await hash(bytes), size: bytes.length, blocks };
 }
+function checkEntry(e) {
+  if (!e || !/^[a-f0-9]{64}$/.test(e.hash) || !Number.isSafeInteger(e.size) || e.size < 0 || e.size > MAX_FILE_SIZE || !Array.isArray(e.blocks) || e.blocks.length > Math.ceil(MAX_FILE_SIZE / CHUNK_SIZE))
+    throw new Error();
+  let total = 0;
+  for (const b of e.blocks) {
+    if (!b || !/^[a-f0-9]{64}$/.test(b.hash) || !Number.isSafeInteger(b.size) || b.size <= 0 || b.size > CHUNK_SIZE)
+      throw new Error();
+    total += b.size;
+  }
+  if (total !== e.size) throw new Error();
+}
 function parseManifest(raw) {
   try {
     if (raw.length > MAX_MANIFEST_SIZE) throw new Error();
     const value = JSON.parse(
       new TextDecoder("utf-8", { fatal: true }).decode(raw)
     );
-    if (value.format !== FORMAT || typeof value.revision !== "string" || typeof value.updatedAt !== "string" || !value.files || Array.isArray(value.files))
+    if (value.format !== FORMAT || typeof value.revision !== "string" || typeof value.updatedAt !== "string" || !value.files || Array.isArray(value.files) || value.trash !== void 0 && !Array.isArray(value.trash))
       throw new Error();
     const keys = Object.keys(value.files);
     if (keys.length > MAX_FILES) throw new Error();
@@ -177,16 +195,12 @@ function parseManifest(raw) {
       const canonical = path.normalize("NFC").toLowerCase();
       if (!inScope(path) || folded.has(canonical)) throw new Error();
       folded.add(canonical);
-      const e = value.files[path];
-      if (!e || !/^[a-f0-9]{64}$/.test(e.hash) || !Number.isSafeInteger(e.size) || e.size < 0 || e.size > MAX_FILE_SIZE || !Array.isArray(e.blocks) || e.blocks.length > Math.ceil(MAX_FILE_SIZE / CHUNK_SIZE))
+      checkEntry(value.files[path]);
+    }
+    for (const t of value.trash ?? []) {
+      if (!t || typeof t.path !== "string" || !inScope(t.path) || !Number.isFinite(Date.parse(t.deletedAt)))
         throw new Error();
-      let total = 0;
-      for (const b of e.blocks) {
-        if (!b || !/^[a-f0-9]{64}$/.test(b.hash) || !Number.isSafeInteger(b.size) || b.size <= 0 || b.size > CHUNK_SIZE)
-          throw new Error();
-        total += b.size;
-      }
-      if (total !== e.size) throw new Error();
+      checkEntry(t.entry);
     }
     return value;
   } catch {
@@ -205,11 +219,32 @@ function parseBase(raw) {
 
 // development/cloud-sync/src/planner.ts
 function plan(local, remote, base) {
-  return [.../* @__PURE__ */ new Set([...Object.keys(local), ...Object.keys(remote)])].sort().map((path) => {
+  return [
+    .../* @__PURE__ */ new Set([
+      ...Object.keys(local),
+      ...Object.keys(remote),
+      ...Object.keys(base)
+    ])
+  ].sort().map((path) => {
     const l = local[path]?.hash, r = remote[path]?.hash, b = base[path];
-    const kind = l === r ? "equal" : !l ? "download" : !r ? "upload" : l === b ? "download" : r === b ? "upload" : "conflict";
+    const kind = l === r ? l ? "equal" : "forget" : !l ? r === b ? "deleteRemote" : "download" : !r ? l === b ? "deleteLocal" : "upload" : l === b ? "download" : r === b ? "upload" : "conflict";
     return { path, kind };
   });
+}
+function moves(actions, local, remote, base) {
+  const gone = /* @__PURE__ */ new Map();
+  for (const a of actions)
+    if (a.kind === "deleteLocal" && !gone.has(local[a.path].hash))
+      gone.set(local[a.path].hash, a.path);
+  const pairs = /* @__PURE__ */ new Map();
+  for (const a of actions) {
+    const from = gone.get(remote[a.path]?.hash);
+    if (a.kind === "download" && from && !local[a.path] && !base[a.path]) {
+      pairs.set(a.path, from);
+      gone.delete(remote[a.path].hash);
+    }
+  }
+  return pairs;
 }
 function conflictPath(path, hash3) {
   const safe = path.replace(/^\.textus\//, "Textus project/");
@@ -281,12 +316,22 @@ async function synchronize(options) {
     progress("scanning", 0, 0);
     const files = await local.scan();
     checkAbort(signal);
-    const next = { ...remote, files: { ...remote.files } };
+    const now = /* @__PURE__ */ new Date();
+    const cutoff = now.getTime() - TRASH_DAYS * 864e5;
+    const next = {
+      ...remote,
+      files: { ...remote.files },
+      trash: (remote.trash ?? []).filter(
+        (t) => Date.parse(t.deletedAt) > cutoff
+      )
+    };
     const base = { format: FORMAT, files: { ...options.base.files } };
     const known = /* @__PURE__ */ new Set();
     const result = {
       uploaded: 0,
       downloaded: 0,
+      removed: 0,
+      moved: 0,
       conflicts: [],
       deferred: [],
       unchanged: 0
@@ -318,15 +363,45 @@ async function synchronize(options) {
       }
       throw new SyncError("localChanged");
     };
+    const done = /* @__PURE__ */ new Set();
+    for (const [to, from] of moves(actions, files, remote.files, base.files)) {
+      checkAbort(signal);
+      await local.check();
+      if (!await local.move(from, to, files[from].hash)) continue;
+      delete base.files[from];
+      base.files[to] = files[from].hash;
+      done.add(from).add(to);
+      result.moved++;
+    }
     for (let i = 0; i < actions.length; i++) {
       checkAbort(signal);
       await local.check();
       const { path, kind } = actions[i];
       progress("transferring", i, actions.length);
       const l = files[path], r = remote.files[path];
+      if (done.has(path)) continue;
       if (kind === "equal") {
         base.files[path] = l.hash;
         result.unchanged++;
+        continue;
+      }
+      if (kind === "forget") {
+        delete base.files[path];
+        continue;
+      }
+      if (kind === "deleteRemote") {
+        delete next.files[path];
+        next.trash.push({ path, deletedAt: now.toISOString(), entry: r });
+        delete base.files[path];
+        result.removed++;
+        continue;
+      }
+      if (kind === "deleteLocal") {
+        const removed = await local.remove(path, l.hash);
+        if (removed === true) {
+          delete base.files[path];
+          result.removed++;
+        } else result.deferred.push(path);
         continue;
       }
       if (kind === "download" || kind === "conflict") {
@@ -362,7 +437,7 @@ async function synchronize(options) {
     await local.check();
     await ownLock();
     progress("publishing", actions.length, actions.length);
-    if (!raw || JSON.stringify(next.files) !== JSON.stringify(remote.files)) {
+    if (!raw || JSON.stringify([next.files, next.trash]) !== JSON.stringify([remote.files, remote.trash ?? []])) {
       next.revision = crypto.randomUUID();
       next.updatedAt = (/* @__PURE__ */ new Date()).toISOString();
       const document = encode(next);
@@ -1229,6 +1304,32 @@ var Workspace = class {
     }
     return files;
   }
+  async holds(relative, expected) {
+    const current = await this.read(relative);
+    return !!current && await hash(current) === expected;
+  }
+  async remove(relative, expected) {
+    await this.check();
+    const path = this.path(relative);
+    if (await this.open(path)) return "deferred";
+    if (!await this.holds(relative, expected)) return false;
+    await this.check();
+    await this.api.files.trash(path);
+    return true;
+  }
+  async move(from, to, expected) {
+    await this.check();
+    const target = this.path(to);
+    if (await this.api.files.stat(target) || !await this.holds(from, expected))
+      return false;
+    await this.check();
+    try {
+      await this.api.files.rename(this.path(from), target);
+    } catch {
+      return false;
+    }
+    return true;
+  }
   async apply(relative, bytes, expected) {
     await this.check();
     const path = this.path(relative);
@@ -1271,6 +1372,55 @@ var Workspace = class {
       return "deferred";
     await this.reservations.clear(relative);
     return true;
+  }
+};
+
+// development/cloud-sync/src/pacer.ts
+var MAX_WAIT = 6e4;
+var Pacer = class {
+  constructor(run, busy, now = () => Date.now()) {
+    this.run = run;
+    this.busy = busy;
+    this.now = now;
+    __publicField(this, "timer");
+    __publicField(this, "since", null);
+    __publicField(this, "last", -Infinity);
+    __publicField(this, "pace", null);
+  }
+  configure(pace) {
+    this.pace = pace;
+    if (!pace) this.since = null;
+    this.arm();
+  }
+  saved() {
+    if (!this.pace) return;
+    this.since ?? (this.since = this.now());
+    this.arm();
+  }
+  finished() {
+    this.last = this.now();
+    this.arm();
+  }
+  stop() {
+    this.configure(null);
+  }
+  arm() {
+    clearTimeout(this.timer);
+    if (!this.pace) return;
+    const { settle, gap, every } = this.pace;
+    const now = this.now();
+    const at = this.since === null ? now + every : Math.max(
+      this.last + gap,
+      Math.min(now + settle, this.since + MAX_WAIT)
+    );
+    this.wait(at - now);
+  }
+  wait(ms) {
+    this.timer = setTimeout(() => {
+      if (this.busy()) return this.wait(this.pace?.settle ?? 0);
+      this.since = null;
+      this.run();
+    }, ms);
   }
 };
 
@@ -1350,6 +1500,28 @@ var Settings = class {
   }
 };
 
+// development/cloud-sync/src/status.ts
+var units = [
+  ["day", 864e5],
+  ["hour", 36e5],
+  ["minute", 6e4]
+];
+function statusText(s, now, t, language) {
+  if (!s.configured) return null;
+  if (s.busy) return t("statusSyncing");
+  if (s.error) return t("statusError");
+  if (s.result?.conflicts.length) return t("statusConflict");
+  if (!s.lastRun) return t("statusNever");
+  const age = now - Date.parse(s.lastRun);
+  const unit = units.find(([, ms]) => age >= ms);
+  if (!unit) return t("statusJustNow");
+  const when = new Intl.RelativeTimeFormat(language, { style: "short" }).format(
+    -Math.floor(age / unit[1]),
+    unit[0]
+  );
+  return t("statusSynced", when);
+}
+
 // development/cloud-sync/src/host.ts
 var Controller = class {
   constructor(ctx, api) {
@@ -1357,7 +1529,15 @@ var Controller = class {
     this.api = api;
     __publicField(this, "settings");
     __publicField(this, "views", /* @__PURE__ */ new Set());
-    __publicField(this, "timer");
+    __publicField(this, "pacer", new Pacer(
+      () => void this.operation("sync"),
+      () => this.state.busy
+    ));
+    __publicField(this, "item");
+    __publicField(this, "shown", null);
+    __publicField(this, "clock");
+    /** Stores whose exclusive create was proven this session. */
+    __publicField(this, "tested", /* @__PURE__ */ new Set());
     __publicField(this, "abort");
     __publicField(this, "disposed", false);
     __publicField(this, "state", {
@@ -1378,6 +1558,22 @@ var Controller = class {
   broadcast() {
     for (const view of this.views)
       this.send(view, { type: "state", ...this.state });
+    this.showStatus();
+  }
+  showStatus() {
+    const text = this.disposed ? null : statusText(this.state, Date.now(), this.t, this.api.env.language);
+    if (!text) {
+      this.item?.dispose();
+      this.item = void 0;
+    } else if (!this.item)
+      this.item = this.api.ui.statusItem("status", {
+        text,
+        tooltip: this.state.message,
+        command: `${ID}.open`
+      });
+    else if (text !== this.shown)
+      this.item.update({ text, tooltip: this.state.message });
+    this.shown = text;
   }
   message(key, error = false, ...args) {
     this.state.message = this.t(key, ...args);
@@ -1420,15 +1616,13 @@ var Controller = class {
       }
     }
     this.broadcast();
-    this.schedule();
-  }
-  schedule() {
-    clearTimeout(this.timer);
-    if (this.disposed || !this.state.config.automatic || !this.state.configured || !this.state.root)
-      return;
-    this.timer = setTimeout(() => {
-      void this.operation("sync");
-    }, this.state.config.interval * 6e4);
+    this.pacer.configure(
+      !this.disposed && config.automatic && configured && root ? {
+        settle: 5e3,
+        gap: providers[config.provider].saveGap,
+        every: config.interval * 6e4
+      } : null
+    );
   }
   async store() {
     const root = await this.api.files.root();
@@ -1473,7 +1667,6 @@ var Controller = class {
     this.state.progress = null;
     this.abort = new AbortController();
     this.message(kind === "sync" ? "scanning" : "testing");
-    clearTimeout(this.timer);
     try {
       const { root, config, store } = await this.store();
       if (kind === "unlock") {
@@ -1494,7 +1687,9 @@ var Controller = class {
         }
       );
       await this.ctx.storage.global.set(`vault:${key}`, encrypted.fingerprint);
-      await testConnection(encrypted);
+      if (kind === "test" || !this.tested.has(key))
+        await testConnection(encrypted);
+      this.tested.add(key);
       checkAbort(this.abort.signal);
       if (kind === "test") {
         this.message("tested");
@@ -1528,6 +1723,8 @@ var Controller = class {
       const parts = [
         ["doneUploaded", result.uploaded],
         ["doneDownloaded", result.downloaded],
+        ["doneRemoved", result.removed],
+        ["doneMoved", result.moved],
         ["doneConflicts", result.conflicts.length],
         ["doneDeferred", result.deferred.length]
       ].filter(([, n]) => n > 0).map(([key2, n]) => this.t(key2, n));
@@ -1541,7 +1738,7 @@ var Controller = class {
       this.state.progress = null;
       this.abort = void 0;
       this.broadcast();
-      this.schedule();
+      this.pacer.finished();
     }
   }
   async receive(message) {
@@ -1600,6 +1797,10 @@ var Controller = class {
         resolve: (view) => this.resolve(view)
       }),
       api.views.registerSettingsPage({ resolve: (view) => this.resolve(view) }),
+      api.files.onDidSave(() => this.pacer.saved()),
+      // Our own trash and renames arrive while busy and need no new sync.
+      api.files.onDidDelete(() => this.state.busy || this.pacer.saved()),
+      api.files.onDidRename(() => this.state.busy || this.pacer.saved()),
       api.files.onDidChangeRoot(({ path }) => {
         if (path === this.state.root) return;
         this.abort?.abort();
@@ -1607,12 +1808,15 @@ var Controller = class {
       }),
       { dispose: () => this.stop() }
     );
+    this.clock = setInterval(() => this.showStatus(), 3e4);
     await this.refresh();
   }
   stop() {
     this.disposed = true;
-    clearTimeout(this.timer);
+    clearInterval(this.clock);
+    this.pacer.stop();
     this.abort?.abort();
+    this.showStatus();
   }
 };
 var controller;
