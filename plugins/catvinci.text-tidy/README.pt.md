@@ -11,4 +11,4 @@ Sem nada selecionado, pergunta antes de arrumar o documento inteiro.
 - **Letras e dígitos de largura total em ASCII**: ＡＢＣ１２３ vira ABC123.
 - **Juntar linhas selecionadas** (também no clique direito): as linhas selecionadas viram uma só, sem espaço entre chinês e com um entre palavras.
 
-Código, fórmulas, endereços de links, HTML e front matter ficam como estão.
+Código, fórmulas, links, #tags, lembretes (@…), comentários %%, HTML e front matter ficam como estão. Os parênteses mudam aos pares: 价格(USD) vira 价格（USD）.

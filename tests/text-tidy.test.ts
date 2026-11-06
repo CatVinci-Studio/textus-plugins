@@ -13,6 +13,7 @@ let tidy: {
 };
 
 beforeAll(async () => {
+  await import("../shared/markdown-keep.js");
   const script = "../plugins/catvinci.text-tidy/tidy.js";
   await import(/* @vite-ignore */ script);
   tidy = (globalThis as unknown as { textTidy: typeof tidy }).textTidy;

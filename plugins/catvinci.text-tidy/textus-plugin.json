@@ -1,7 +1,7 @@
 {
   "id": "catvinci.text-tidy",
   "name": "%name%",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "publisher": "catvinci",
   "author": "CatVinci Studio",
   "description": "%description%",
@@ -15,10 +15,7 @@
     "desktop",
     "ios"
   ],
-  "main": [
-    "tidy.js",
-    "host.js"
-  ],
+  "main": ["lib/markdown-keep.js", "tidy.js", "host.js"],
   "permissions": [
     "editor.read",
     "editor.write"

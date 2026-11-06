@@ -11,4 +11,4 @@ Sans sélection, il demande avant de nettoyer tout le document.
 - **Lettres et chiffres pleine chasse en ASCII** : ＡＢＣ１２３ devient ABC123.
 - **Réunir les lignes sélectionnées** (aussi au clic droit) : les lignes sélectionnées n’en font plus qu’une, sans espace entre caractères chinois et avec une espace entre les mots.
 
-Le code, les formules, les adresses des liens, le HTML et le front matter restent tels quels.
+Le code, les formules, les liens, les #tags, les rappels (@…), les commentaires %%, le HTML et le front matter restent tels quels. Les parenthèses changent par paires : 价格(USD) devient 价格（USD）.
