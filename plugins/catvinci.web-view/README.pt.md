@@ -4,7 +4,7 @@ Leia páginas da web numa aba ao lado das suas notas, sem sair do Textus.
 
 ## Abrir uma página
 
-- **Ctrl+clique** num link da web num documento (**⌘+clique** num Mac).
+- **Ctrl+clique** num link da web num documento (**⌘+clique** num Mac). Antes, ligue **Abrir numa aba os links da web clicados com Ctrl/⌘** nos ajustes; senão, eles abrem no seu navegador.
 - **Plugins › Abrir uma página da web…**: escolha uma página já aberta ou digite um endereço; se digitar palavras, elas são pesquisadas.
 - Selecione um link ou algumas palavras, clique com o botão direito, **Abrir ou pesquisar a seleção numa aba**.
 - O buscador fica nas configurações do plugin: DuckDuckGo, Google, Bing ou Baidu.
