@@ -1,9 +1,11 @@
-import { defaults } from "./config";
+import { defaults, providers } from "./config";
 import { parseBase } from "./content";
 import { synchronize } from "./engine";
 import { openEncryptedStore } from "./encrypted-store";
 import { Workspace } from "./local";
+import { Pacer } from "./pacer";
 import { Settings } from "./settings";
+import { statusText } from "./status";
 import { RemoteStore, testConnection } from "./transport";
 import {
   ID,
@@ -30,8 +32,18 @@ interface ViewState {
 class Controller {
   private settings: Settings;
   private views = new Set<Textus.Webview>();
-  private timer?: ReturnType<typeof setTimeout>;
+  private pacer = new Pacer(
+    () => void this.operation("sync"),
+    () => this.state.busy,
+  );
+  private item?: Textus.StatusItemHandle;
+  private shown: string | null = null;
+  private clock?: ReturnType<typeof setInterval>;
+  /** Stores whose exclusive create was proven this session. */
+  private tested = new Set<string>();
   private abort?: AbortController;
+  /** The latest run's workspace; its own trash and rename events arrive late. */
+  private workspace?: Workspace;
   private disposed = false;
   private state: ViewState = {
     root: null,
@@ -57,6 +69,24 @@ class Controller {
   private broadcast() {
     for (const view of this.views)
       this.send(view, { type: "state", ...this.state });
+    this.showStatus();
+  }
+  private showStatus() {
+    const text = this.disposed
+      ? null
+      : statusText(this.state, Date.now(), this.t, this.api.env.language);
+    if (!text) {
+      this.item?.dispose();
+      this.item = undefined;
+    } else if (!this.item)
+      this.item = this.api.ui.statusItem("status", {
+        text,
+        tooltip: this.state.message,
+        command: `${ID}.open`,
+      });
+    else if (text !== this.shown)
+      this.item.update({ text, tooltip: this.state.message });
+    this.shown = text;
   }
   private message(key: string, error = false, ...args: unknown[]) {
     this.state.message = this.t(key, ...args);
@@ -105,20 +135,15 @@ class Controller {
       }
     }
     this.broadcast();
-    this.schedule();
-  }
-  private schedule() {
-    clearTimeout(this.timer);
-    if (
-      this.disposed ||
-      !this.state.config.automatic ||
-      !this.state.configured ||
-      !this.state.root
-    )
-      return;
-    this.timer = setTimeout(() => {
-      void this.operation("sync");
-    }, this.state.config.interval * 60_000);
+    this.pacer.configure(
+      !this.disposed && config.automatic && configured && root
+        ? {
+            settle: 5_000,
+            gap: providers[config.provider].saveGap,
+            every: config.interval * 60_000,
+          }
+        : null,
+    );
   }
   private async store() {
     const root = await this.api.files.root();
@@ -172,7 +197,6 @@ class Controller {
     this.state.progress = null;
     this.abort = new AbortController();
     this.message(kind === "sync" ? "scanning" : "testing");
-    clearTimeout(this.timer);
     try {
       const { root, config, store } = await this.store();
       if (kind === "unlock") {
@@ -196,21 +220,25 @@ class Controller {
         },
       );
       await this.ctx.storage.global.set(`vault:${key}`, encrypted.fingerprint);
-      await testConnection(encrypted);
+      if (kind === "test" || !this.tested.has(key))
+        await testConnection(encrypted);
+      this.tested.add(key);
       checkAbort(this.abort.signal);
       if (kind === "test") {
         this.message("tested");
         return;
       }
       const base = parseBase(await this.ctx.storage.global.get(key));
+      this.pacer.started();
+      this.workspace = new Workspace(
+        this.api,
+        root,
+        this.ctx.storage.global,
+        this.abort.signal,
+      );
       const result = await synchronize({
         store: encrypted,
-        local: new Workspace(
-          this.api,
-          root,
-          this.ctx.storage.global,
-          this.abort.signal,
-        ),
+        local: this.workspace,
         base,
         signal: this.abort.signal,
         saveBase: (next) => this.ctx.storage.global.set(key, next),
@@ -232,6 +260,8 @@ class Controller {
         [
           ["doneUploaded", result.uploaded],
           ["doneDownloaded", result.downloaded],
+          ["doneRemoved", result.removed],
+          ["doneMoved", result.moved],
           ["doneConflicts", result.conflicts.length],
           ["doneDeferred", result.deferred.length],
         ] as const
@@ -248,7 +278,7 @@ class Controller {
       this.state.progress = null;
       this.abort = undefined;
       this.broadcast();
-      this.schedule();
+      this.pacer.finished();
     }
   }
   private async receive(message: unknown) {
@@ -303,6 +333,9 @@ class Controller {
     view.onDidDispose(() => this.views.delete(view));
     view.html = await this.ctx.plugin.readText("panel.html");
   }
+  private changed(path: string) {
+    if (!this.workspace?.touched.has(path)) this.pacer.saved();
+  }
   async start() {
     const { api, ctx } = this;
     ctx.subscriptions.push(
@@ -314,6 +347,9 @@ class Controller {
         resolve: (view) => this.resolve(view),
       }),
       api.views.registerSettingsPage({ resolve: (view) => this.resolve(view) }),
+      api.files.onDidSave(() => this.pacer.saved()),
+      api.files.onDidDelete(({ path }) => this.changed(path)),
+      api.files.onDidRename(({ from }) => this.changed(from)),
       api.files.onDidChangeRoot(({ path }) => {
         if (path === this.state.root) return;
         this.abort?.abort();
@@ -321,12 +357,15 @@ class Controller {
       }),
       { dispose: () => this.stop() },
     );
+    this.clock = setInterval(() => this.showStatus(), 30_000);
     await this.refresh();
   }
   stop() {
     this.disposed = true;
-    clearTimeout(this.timer);
+    clearInterval(this.clock);
+    this.pacer.stop();
     this.abort?.abort();
+    this.showStatus();
   }
 }
 

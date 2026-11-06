@@ -6,6 +6,9 @@ export const MAX_MANIFEST_SIZE = 8 * 1024 * 1024;
 export const MAX_FILES = 20000;
 export const HEAD = "v1/head.json";
 export const LOCK = "v1/lock.json";
+export const TRASH_DAYS = 30;
+/** Newest trash entries kept, so a renamed big folder can't fill the manifest. */
+export const MAX_TRASH = 2000;
 
 export interface Config {
   provider: "s3" | "webdav" | "nutstore";
@@ -35,11 +38,18 @@ export interface Entry {
   size: number;
   blocks: Block[];
 }
+export interface Trashed {
+  path: string;
+  deletedAt: string;
+  entry: Entry;
+}
 export interface Manifest {
   format: typeof FORMAT;
   revision: string;
   updatedAt: string;
   files: Record<string, Entry>;
+  /** Deleted files, kept TRASH_DAYS; older clients carry it along unread. */
+  trash?: Trashed[];
 }
 export interface Base {
   format: typeof FORMAT;
@@ -61,11 +71,17 @@ export interface LocalFiles {
     bytes: Uint8Array,
     expected: string | null,
   ): Promise<boolean | "deferred">;
+  /** To the system Trash, only while it still has the `expected` hash. */
+  remove(path: string, expected: string): Promise<boolean | "deferred">;
+  /** False when `from` changed or `to` exists. */
+  move(from: string, to: string, expected: string): Promise<boolean>;
   check(): Promise<void>;
 }
 export interface Result {
   uploaded: number;
   downloaded: number;
+  removed: number;
+  moved: number;
   conflicts: string[];
   deferred: string[];
   unchanged: number;

@@ -37,6 +37,7 @@ export class MemoryLocal implements LocalFiles {
   files = new Map<string, Uint8Array>();
   deferred = new Set<string>();
   binary = new Set<string>();
+  trashed: [string, Uint8Array][] = [];
   base: Base = emptyBase();
   beforeApply?: () => void;
   constructor(files: Record<string, string> = {}) {
@@ -61,6 +62,27 @@ export class MemoryLocal implements LocalFiles {
     )
       return false;
     this.files.set(path, value.slice());
+    return true;
+  }
+  async remove(path: string, expected: string) {
+    if (this.deferred.has(path)) return "deferred" as const;
+    const old = this.files.get(path);
+    if (!old || (await hash(old)) !== expected) return false;
+    this.trashed.push([path, old]);
+    this.files.delete(path);
+    return true;
+  }
+  async move(from: string, to: string, expected: string) {
+    const old = this.files.get(from);
+    if (
+      this.deferred.has(from) ||
+      this.files.has(to) ||
+      !old ||
+      (await hash(old)) !== expected
+    )
+      return false;
+    this.files.set(to, old);
+    this.files.delete(from);
     return true;
   }
   async sync(store: ObjectStore, signal?: AbortSignal) {
