@@ -16,6 +16,6 @@ What it becomes:
 
 What stays behind: Notion's export has no page icons, covers, comments or saved database views (filters, sorts), so they don't come over. Formula and rollup properties keep the value they had, columns come one after another, an inline database becomes a link to its page, and mentions of people and dates are plain text.
 
-The report counts what was imported, lists the links it couldn't find and the blocks it changed, and suggests the plugins that help with what you brought over: Pages for sub-pages, Database Views for databases, Backlinks and Quick Preview for linked pages, and so on. **Plugins › Plugins That Help After a Notion Import…** offers to install one; Textus asks first. Nothing is installed by itself.
+The report counts what was imported, lists the links it couldn't find and the blocks it changed, and suggests the plugins that help with what you brought over: Pages for sub-pages, Database Views for databases, Two-way Links and Quick Preview for linked pages, and so on. **Plugins › Plugins That Help After a Notion Import…** offers to install one; Textus asks first. Nothing is installed by itself.
 
 Everything happens on your computer: the plugin reads and writes files in the open folder only, and never uses the network.

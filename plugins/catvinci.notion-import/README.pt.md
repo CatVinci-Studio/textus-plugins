@@ -16,6 +16,6 @@ No que se transforma:
 
 O que não vem junto: a exportação do Notion não tem ícones nem capas de página, comentários ou as visualizações salvas dos bancos (filtros, ordenações), então eles não vêm. Propriedades de fórmula e rollup mantêm o valor que tinham, as colunas ficam uma após a outra, um banco de dados incorporado vira um link para a página dele, e menções de pessoas e datas viram texto simples.
 
-O relatório conta o que foi importado, lista os links não encontrados e os blocos alterados, e sugere os plugins que ajudam com o que você trouxe: Páginas para subpáginas, Visualizações de banco de dados para bancos, Backlinks e Prévia rápida para páginas ligadas, e assim por diante. **Plugins › Plugins que ajudam após importar do Notion…** oferece instalar um; o Textus pergunta antes. Nada é instalado sozinho.
+O relatório conta o que foi importado, lista os links não encontrados e os blocos alterados, e sugere os plugins que ajudam com o que você trouxe: Páginas para subpáginas, Visualizações de banco de dados para bancos, Links bidirecionais e Prévia rápida para páginas ligadas, e assim por diante. **Plugins › Plugins que ajudam após importar do Notion…** oferece instalar um; o Textus pergunta antes. Nada é instalado sozinho.
 
 Tudo acontece no seu computador: o plugin só lê e grava arquivos na pasta aberta e nunca usa a rede.

@@ -9,7 +9,7 @@ type Doc = {
   path: string;
   rel: string;
   tags: string[];
-  links: { target: string; resolved: string | null; line: number; text: string }[];
+  links: { target: string; resolved: string | null; missing?: string; line: number; text: string }[];
 };
 let links: {
   graphFromMetadata: (docs: Doc[], options?: { tags?: boolean }) => Graph;
@@ -33,9 +33,11 @@ const doc = (rel: string, to: string[] = [], tags: string[] = []): Doc => ({
   path: `/n/${rel}`,
   rel,
   tags,
+  // Graph View's host marks the note a click would make on a link to none.
   links: to.map((t, line) => ({
     target: t,
     resolved: t.endsWith(".md") ? `/n/${t}` : null,
+    missing: t.endsWith(".md") || t.includes(":") ? undefined : `/n/${t}.md`,
     line,
     text: `[[${t}]]`,
   })),
@@ -89,7 +91,7 @@ describe("the settings panel's filters", () => {
       "/n/alone.md",
       "/n/ideas/one.md",
       "/n/two.md",
-      "missing:later",
+      "missing:/n/later.md",
     ]);
     expect(ids(links.filterGraph(folder(), { ...base, tags: true }))).toContain("tag:#draft");
     const strict = links.filterGraph(folder(), { ...base, existingOnly: true, orphans: false });

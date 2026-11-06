@@ -41,12 +41,27 @@ async function settingsOf(isLocal) {
   return Object.assign({}, isLocal ? LOCAL_DEFAULTS : DEFAULTS, saved);
 }
 
+/** The folder's documents, each link to no file marked with the note a
+ *  click on it would make (`missing`), as Textus resolves links. */
+async function documents() {
+  const docs = await textus.metadata.all();
+  const asks = [];
+  for (const doc of docs)
+    for (const l of doc.links)
+      if (!l.resolved && !/^[a-z][a-z0-9+.-]*:/i.test(l.target))
+        asks.push(
+          textus.metadata.resolveNote("[[" + l.target + "]]", doc.path).then((found) => {
+            if (found && found.kind === "note") l[found.exists ? "resolved" : "missing"] = found.path;
+          }),
+        );
+  await Promise.all(asks);
+  return docs;
+}
+
 async function build() {
   const root = await textus.files.root();
   if (!root) return null;
-  return graphLinks.graphFromMetadata(await textus.metadata.all(), {
-    tags: true,
-  });
+  return graphLinks.graphFromMetadata(await documents(), { tags: true });
 }
 
 async function current() {
@@ -158,7 +173,7 @@ async function listNeighbours(input) {
   const root = await textus.files.root();
   if (!root) return { error: "No folder is open." };
   const rel = input.path ? folderPaths.clean(root, input.path, true) : null;
-  const docs = await textus.metadata.all();
+  const docs = await documents();
   const focus = rel ? (docs.find((d) => d.rel === rel) || {}).path : await focusPath();
   if (!focus || !docs.some((d) => d.path === focus))
     return { error: rel ? "No document " + rel + " in the folder." : "No document is open." };

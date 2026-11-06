@@ -51,13 +51,11 @@
           link(doc.path, l.resolved);
           continue;
         }
-        // A link that leads nowhere is a node when written as a name - a
-        // [[wiki link]] - not a web address or a path.
-        const name = l.target.split("#")[0].trim();
-        if (!name || /^[a-z][a-z0-9+.-]*:/i.test(name) || /[\\/.]/.test(name))
-          continue;
-        const id = "missing:" + name.toLowerCase();
-        node(id, name, "missing");
+        // A link that leads nowhere is the note a click would make
+        // (`missing`, from metadata.resolveNote); a web address is none.
+        if (!l.missing) continue;
+        const id = "missing:" + l.missing.toLowerCase();
+        node(id, stem(l.missing), "missing");
         link(doc.path, id);
       }
       if (withTags)
