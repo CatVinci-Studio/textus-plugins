@@ -24,12 +24,15 @@ function sourceOf(id: string, file: string): string {
 }
 
 export function manifestOf(id: string): Any {
-  return JSON.parse(readFileSync(new URL(`${id}/textus-plugin.json`, ROOT), "utf8"));
+  return JSON.parse(
+    readFileSync(new URL(`${id}/textus-plugin.json`, ROOT), "utf8"),
+  );
 }
 
 const noop = (): Any =>
   new Proxy(function () {}, {
-    get: (_t, key) => (key === "then" ? undefined : key === "dispose" ? () => {} : noop()),
+    get: (_t, key) =>
+      key === "then" ? undefined : key === "dispose" ? () => {} : noop(),
     apply: () => noop(),
   });
 
@@ -40,7 +43,9 @@ function fake(api: Any): Any {
       if (key === "then") return undefined;
       if (key in target) {
         const value = target[key];
-        return value && typeof value === "object" && !Array.isArray(value) ? fake(value) : value;
+        return value && typeof value === "object" && !Array.isArray(value)
+          ? fake(value)
+          : value;
       }
       return noop();
     },
@@ -52,14 +57,19 @@ export function memoryStorage(files: Record<string, string> = {}) {
   const values = new Map<string, unknown>();
   return {
     get: async (key: string) => values.get(key),
-    set: async (key: string, value: unknown) => void values.set(key, structuredClone(value)),
+    set: async (key: string, value: unknown) =>
+      void values.set(key, structuredClone(value)),
     files: async () => Object.keys(files),
     readText: async (name: string) => files[name],
     writeText: async (name: string, text: string) => void (files[name] = text),
   };
 }
 
-export function loadPlugin(id: string, api: Any = {}, storage = memoryStorage()) {
+export function loadPlugin(
+  id: string,
+  api: Any = {},
+  storage = memoryStorage(),
+) {
   const manifest = manifestOf(id);
   const main: string[] = [].concat(manifest.main);
   const tools = new Map<string, Tool>();
@@ -68,7 +78,11 @@ export function loadPlugin(id: string, api: Any = {}, storage = memoryStorage())
     l10n: { t: (key: string, ...args: unknown[]) => [key, ...args].join(" ") },
     env: { language: "en" },
     files: { root: async () => null },
-    editor: { getPath: async () => null, getText: async () => null, getBlocks: async () => null },
+    editor: {
+      getPath: async () => null,
+      getText: async () => null,
+      getBlocks: async () => null,
+    },
     settings: { get: async () => undefined },
     metadata: { all: async () => [] },
   };
@@ -90,14 +104,23 @@ export function loadPlugin(id: string, api: Any = {}, storage = memoryStorage())
   const document = main.includes("lib/markdownlint.js")
     ? { createElement: () => ({ innerHTML: "", textContent: "" }) }
     : undefined;
-  new Function("exports", "textus", "document", main.map((f) => sourceOf(id, f)).join("\n;\n"))(
-    exports,
-    textus,
-    document,
-  );
+  new Function(
+    "exports",
+    "textus",
+    "document",
+    main.map((f) => sourceOf(id, f)).join("\n;\n"),
+  )(exports, textus, document);
+  const secrets = new Map<string, string>();
   exports.activate({
     subscriptions: [],
     storage: { global: storage },
+    secrets: {
+      get: async (key: string) => secrets.get(key) ?? null,
+      set: async (key: string, value: string | null) => {
+        if (value === null) secrets.delete(key);
+        else secrets.set(key, value);
+      },
+    },
     plugin: { readText: async (file: string) => sourceOf(id, file) },
   });
   return { tools, manifest };
@@ -116,7 +139,9 @@ function conventionsOf(files: Record<string, string>, root: string) {
     }
   };
   const at = <T>(value: T) => ({ value, app: "obsidian", root });
-  const full = (rel: string) => root + (rel.replace(/^\/+|\/+$/g, "") ? "/" + rel.replace(/^\/+|\/+$/g, "") : "");
+  const full = (rel: string) =>
+    root +
+    (rel.replace(/^\/+|\/+$/g, "") ? "/" + rel.replace(/^\/+|\/+$/g, "") : "");
   const vault = Object.keys(files).some((f) => f.startsWith(".obsidian/"));
   const templates = vault ? json(".obsidian/templates.json")?.folder : null;
   const daily = vault ? json(".obsidian/daily-notes.json") : null;
@@ -127,7 +152,13 @@ function conventionsOf(files: Record<string, string>, root: string) {
       ? at({
           folder: full(daily.folder || ""),
           format: daily.format || "YYYY-MM-DD",
-          template: daily.template ? full(/\.md$/i.test(daily.template) ? daily.template : daily.template + ".md") : null,
+          template: daily.template
+            ? full(
+                /\.md$/i.test(daily.template)
+                  ? daily.template
+                  : daily.template + ".md",
+              )
+            : null,
         })
       : null,
   };
@@ -149,22 +180,34 @@ export function folder(files: Record<string, string>) {
     root: async () => root,
     find: async (glob = "**/*.md") => {
       const re = new RegExp(
-        "^" + glob.replace(/[.+^${}()|[\]\\]/g, "\\$&").replace(/\*\*\//g, "\0").replace(/\*/g, "[^/]*").replace(/\0/g, "(?:.*/)?") + "$",
+        "^" +
+          glob
+            .replace(/[.+^${}()|[\]\\]/g, "\\$&")
+            .replace(/\*\*\//g, "\0")
+            .replace(/\*/g, "[^/]*")
+            .replace(/\0/g, "(?:.*/)?") +
+          "$",
       );
-      return Object.keys(files).filter((r) => re.test(r)).map((r) => ({ path: root + "/" + r, rel: r }));
+      return Object.keys(files)
+        .filter((r) => re.test(r))
+        .map((r) => ({ path: root + "/" + r, rel: r }));
     },
     list: async (dir: string) => {
       const prefix = rel(dir.replace(/\/$/, "") + "/x").slice(0, -1);
       return Object.keys(files)
-        .filter((r) => r.startsWith(prefix) && !r.slice(prefix.length).includes("/"))
+        .filter(
+          (r) => r.startsWith(prefix) && !r.slice(prefix.length).includes("/"),
+        )
         .map(entry);
     },
-    stat: async (path: string) => (rel(path) in files ? entry(rel(path)) : null),
+    stat: async (path: string) =>
+      rel(path) in files ? entry(rel(path)) : null,
     readText: async (path: string) => {
       if (!(rel(path) in files)) throw new Error("No file " + path);
       return files[rel(path)];
     },
-    writeText: async (path: string, text: string) => void (files[rel(path)] = text),
+    writeText: async (path: string, text: string) =>
+      void (files[rel(path)] = text),
     create: async (path: string, text = "") => {
       if (rel(path) in files) throw new Error("Exists: " + path);
       files[rel(path)] = text;
