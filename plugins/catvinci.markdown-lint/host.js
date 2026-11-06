@@ -2,13 +2,15 @@
 // findings underlined where they are; Fix Markdown applies the fixes it
 // knows, a block at a time, as one undo step.
 // Rules about the document as a whole (heading levels, the first line,
-// blank lines between blocks) are off: a block is checked on its own, and
-// Textus writes the blank lines itself.
+// blank lines between blocks, anchors and reference definitions) are off:
+// a block is checked on its own, and Textus writes the blank lines itself.
+// MD018 is off because "#tag" at a line's start is a tag, not a heading.
 const CONFIG = {
   default: true,
   MD001: false,
   MD012: false,
   MD013: false,
+  MD018: false,
   MD022: false,
   MD024: false,
   MD025: false,
@@ -17,12 +19,24 @@ const CONFIG = {
   MD033: false,
   MD041: false,
   MD047: false,
+  MD051: false,
+  MD052: false,
+  MD053: false,
 };
-const SKIP = new Set(["code", "math", "html"]);
+const SKIP = new Set(markdownKeep.SKIP_KINDS);
+
+/** Whether an issue touches what no rewriting plugin changes. */
+function inKept(lines, error) {
+  if (!error.errorRange) return false;
+  const [column, length] = error.errorRange;
+  const line = markdownKeep.mask(lines[error.lineNumber - 1] || "");
+  return line.slice(column - 1, column - 1 + length).includes("\0");
+}
 
 function lint(markdown) {
-  return markdownlint.lint({ strings: { block: markdown }, config: CONFIG })
-    .block;
+  const errors = markdownlint.lint({ strings: { block: markdown }, config: CONFIG }).block;
+  const lines = markdown.split("\n");
+  return errors.filter((e) => !inKept(lines, e));
 }
 
 function tooltip(error) {

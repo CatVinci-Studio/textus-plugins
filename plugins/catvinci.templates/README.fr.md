@@ -2,6 +2,7 @@
 
 De nouveaux documents et extraits à partir de vos modèles, avec la date, l’heure et le titre remplis.
 
+- Les modèles sont des fichiers Markdown dans le dossier **Templates** du dossier ouvert (dans un coffre Obsidian, le dossier indiqué par ses réglages de modèles) : ils suivent vos notes. Ceux d’une version antérieure y sont déplacés une fois ; un nom déjà pris reçoit un numéro, rien n’est écrasé. `{{date:YYYY-MM-DD}}` et `{{time:HH:mm}}` acceptent un format, comme dans Obsidian.
 - **Nouveau depuis un modèle…** crée un document dans le dossier ouvert ; **Insérer un modèle…** (ou `/` dans le texte) l’insère au curseur.
 - **Enregistrer comme modèle…** garde le document ouvert comme modèle.
 - Dans un modèle, `{{date}}`, `{{time}}` et `{{title}}` sont remplis à l’usage. Un modèle Compte rendu de réunion est là pour commencer.

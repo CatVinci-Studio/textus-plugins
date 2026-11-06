@@ -23,11 +23,13 @@ exports.activate = function (ctx) {
     textus.editor.registerCompletion("catvinci.natural-dates.at", {
       async provideCompletions(context) {
         const typed = context.match.slice(1);
-        const asLink = (await textus.settings.get("insert")) === "link";
+        // After "(" it is a reminder, (@2026-11-06 09:00): the @ stays.
+        const reminder = /[(（]$/.test(context.text.slice(0, -context.match.length));
+        const asLink = !reminder && (await textus.settings.get("insert")) === "link";
         return naturalDates.suggest(typed, new Date(), 8).map((s) => ({
           label: "@" + s.phrase,
           detail: s.date,
-          insert: asLink ? "[[" + s.date + "]]" : s.date,
+          insert: reminder ? "@" + s.date : asLink ? "[[" + s.date + "]]" : s.date,
         }));
       },
     }),

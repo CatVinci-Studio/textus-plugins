@@ -13,5 +13,5 @@ Schreib etwas auf, ohne das Dokument zu verlassen.
 
 Ist das Plugin installiert, kann Textus AI sie im Gespräch nutzen:
 
-- `add_note`: Fügt oben in der Liste der Schnellnotizen in der Seitenleiste eine Notiz hinzu, die sich später in ein Dokument einfügen oder als Dokument öffnen lässt.
+- `add_note`: Fügt oben in der Liste der Schnellnotizen in der Seitenleiste eine Notiz hinzu, die sich später in ein Dokument einfügen oder als Dokument öffnen lässt. Das heutige Journal ist append_to_daily_note; eine Aufgabe add_task.
 <!-- /ai-tools -->

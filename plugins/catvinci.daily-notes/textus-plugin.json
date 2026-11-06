@@ -1,7 +1,7 @@
 {
   "id": "catvinci.daily-notes",
   "name": "%name%",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "publisher": "catvinci",
   "author": "CatVinci Studio",
   "description": "%description%",
@@ -12,7 +12,7 @@
     "textus": ">=1.3.2"
   },
   "platforms": ["desktop", "ios"],
-  "main": "host.js",
+  "main": ["lib/obsidian-vault.js", "host.js"],
   "permissions": [
     "files.read",
     "files.write",
@@ -37,7 +37,7 @@
     "keybindings": [
       {
         "command": "catvinci.daily-notes.today",
-        "key": "mod+alt+d"
+        "key": "mod+alt+j"
       }
     ],
     "menus": {
@@ -121,7 +121,7 @@
       "folder": "Daily notes folder",
       "folderHelp": "Inside the open folder.",
       "template": "A new day's note",
-      "templateHelp": "{{date}} becomes the day's date, {{weekday}} its name, {{yesterday}} and {{tomorrow}} the dates beside it (for [[links]]), {{time}} the time it was made; \\n starts a new line.",
+      "templateHelp": "{{date}} becomes the day's date, {{weekday}} its name, {{yesterday}} and {{tomorrow}} the dates beside it (for [[links]]), {{time}} the time it was made; \\n starts a new line. Or the name of a template in the Templates folder, such as Daily. In an Obsidian vault, the vault's daily notes settings decide.",
       "needsFolder": "Open a folder first: daily notes are kept in it.",
       "todayButton": "Today",
       "nofolder": "Open a folder, and your daily notes are kept in it.",
@@ -130,7 +130,7 @@
       "previous": "Open the Day Before",
       "next": "Open the Day After",
       "tool.read_daily_note": "Reads the daily note of a day - today's unless a date is given - from the daily notes folder: its path, whether it exists, and its text.",
-      "tool.append_to_daily_note": "Adds Markdown to the end of a day's daily note - today's unless a date is given - making the note from its template first if there is none."
+      "tool.append_to_daily_note": "Adds Markdown to the end of a day's daily note - today's unless a date is given - making the note from its template first if there is none. A note to keep for later in the sidebar is add_note; a to-do with a date is add_task."
     },
     "zh": {
       "name": "日历与每日笔记",
@@ -140,7 +140,7 @@
       "folder": "每日笔记文件夹",
       "folderHelp": "在打开的文件夹里面。",
       "template": "新一天笔记的开头",
-      "templateHelp": "{{date}} 换成当天日期，{{weekday}} 换成星期几，{{yesterday}} 和 {{tomorrow}} 换成前后一天的日期（可写成 [[链接]]），{{time}} 换成创建时间；\\n 表示换行。",
+      "templateHelp": "{{date}} 换成当天日期，{{weekday}} 换成星期几，{{yesterday}} 和 {{tomorrow}} 换成前后一天的日期（可写成 [[链接]]），{{time}} 换成创建时间；\\n 表示换行。 也可以写 Templates 文件夹里某个模板的名字，比如 Daily。在 Obsidian 库里，按库的日记设置来。",
       "needsFolder": "先打开一个文件夹，每日笔记会放在里面。",
       "todayButton": "今天",
       "nofolder": "打开一个文件夹后，每日笔记会放在里面。",
@@ -149,7 +149,7 @@
       "previous": "打开前一天的笔记",
       "next": "打开后一天的笔记",
       "tool.read_daily_note": "读取某一天的日记（默认今天）：从日记文件夹中给出它的路径、是否存在以及全文。",
-      "tool.append_to_daily_note": "在某一天的日记（默认今天）末尾追加 Markdown 内容；如果还没有这篇日记，先按模板新建。"
+      "tool.append_to_daily_note": "在某一天的日记（默认今天）末尾追加 Markdown 内容；如果还没有这篇日记，先按模板新建。 想先放在侧栏、以后再用的笔记用 add_note；带日期的待办用 add_task。"
     },
     "zh-Hant": {
       "name": "日曆與每日筆記",
@@ -159,7 +159,7 @@
       "folder": "每日筆記資料夾",
       "folderHelp": "在開啟的資料夾裡面。",
       "template": "新一天筆記的開頭",
-      "templateHelp": "{{date}} 換成當天日期，{{weekday}} 換成星期幾，{{yesterday}} 和 {{tomorrow}} 換成前後一天的日期（可寫成 [[連結]]），{{time}} 換成建立時間；\\n 表示換行。",
+      "templateHelp": "{{date}} 換成當天日期，{{weekday}} 換成星期幾，{{yesterday}} 和 {{tomorrow}} 換成前後一天的日期（可寫成 [[連結]]），{{time}} 換成建立時間；\\n 表示換行。 也可以寫 Templates 資料夾裡某個範本的名字，例如 Daily。在 Obsidian 庫裡，依庫的日記設定。",
       "needsFolder": "請先開啟一個資料夾，每日筆記會放在裡面。",
       "todayButton": "今天",
       "nofolder": "開啟一個資料夾後，每日筆記會放在裡面。",
@@ -168,7 +168,7 @@
       "previous": "開啟前一天的筆記",
       "next": "開啟後一天的筆記",
       "tool.read_daily_note": "讀取某一天的日記（預設今天）：從日記資料夾中給出它的路徑、是否存在以及全文。",
-      "tool.append_to_daily_note": "在某一天的日記（預設今天）末尾附加 Markdown 內容；如果還沒有這篇日記，先依範本新建。"
+      "tool.append_to_daily_note": "在某一天的日記（預設今天）末尾附加 Markdown 內容；如果還沒有這篇日記，先依範本新建。 想先放在側欄、之後再用的筆記用 add_note；帶日期的待辦用 add_task。"
     },
     "ja": {
       "name": "カレンダーとデイリーノート",
@@ -178,7 +178,7 @@
       "folder": "デイリーノートのフォルダ",
       "folderHelp": "開いているフォルダの中です。",
       "template": "新しい日のノート",
-      "templateHelp": "{{date}} はその日の日付、{{weekday}} は曜日、{{yesterday}} と {{tomorrow}} は前後の日付（[[リンク]] に使えます）、{{time}} は作った時刻になります。\\n で改行します。",
+      "templateHelp": "{{date}} はその日の日付、{{weekday}} は曜日、{{yesterday}} と {{tomorrow}} は前後の日付（[[リンク]] に使えます）、{{time}} は作った時刻になります。\\n で改行します。 Templates フォルダにあるテンプレートの名前（Daily など）も書けます。Obsidian の保管庫では、保管庫のデイリーノート設定に従います。",
       "needsFolder": "先にフォルダを開いてください。デイリーノートはその中に保存されます。",
       "todayButton": "今日",
       "nofolder": "フォルダを開くと、デイリーノートはその中に保存されます。",
@@ -187,7 +187,7 @@
       "previous": "前の日のノートを開く",
       "next": "次の日のノートを開く",
       "tool.read_daily_note": "ある日のデイリーノート（日付がなければ今日）をデイリーノートのフォルダから読みます。パス、あるかどうか、本文を返します。",
-      "tool.append_to_daily_note": "ある日のデイリーノート（日付がなければ今日）の末尾に Markdown を書き足します。ノートがなければ先にテンプレートから作ります。"
+      "tool.append_to_daily_note": "ある日のデイリーノート（日付がなければ今日）の末尾に Markdown を書き足します。ノートがなければ先にテンプレートから作ります。 あとで使うためサイドバーに置くメモは add_note、日付付きの ToDo は add_task です。"
     },
     "ko": {
       "name": "달력과 데일리 노트",
@@ -197,7 +197,7 @@
       "folder": "데일리 노트 폴더",
       "folderHelp": "연 폴더 안에 있습니다.",
       "template": "새 날의 노트",
-      "templateHelp": "{{date}}는 그날 날짜, {{weekday}}는 요일, {{yesterday}}와 {{tomorrow}}는 전날과 다음 날 날짜([[링크]]로 쓰기 좋음), {{time}}은 만든 시각으로 바뀌고, \\n은 줄을 바꿉니다.",
+      "templateHelp": "{{date}}는 그날 날짜, {{weekday}}는 요일, {{yesterday}}와 {{tomorrow}}는 전날과 다음 날 날짜([[링크]]로 쓰기 좋음), {{time}}은 만든 시각으로 바뀌고, \\n은 줄을 바꿉니다. Templates 폴더에 있는 템플릿 이름(예: Daily)을 써도 됩니다. Obsidian 보관함에서는 보관함의 데일리 노트 설정을 따릅니다.",
       "needsFolder": "먼저 폴더를 여세요. 데일리 노트는 그 안에 보관됩니다.",
       "todayButton": "오늘",
       "nofolder": "폴더를 열면 데일리 노트가 그 안에 보관됩니다.",
@@ -206,7 +206,7 @@
       "previous": "전날 노트 열기",
       "next": "다음 날 노트 열기",
       "tool.read_daily_note": "어느 날의 데일리 노트(날짜가 없으면 오늘)를 데일리 노트 폴더에서 읽습니다. 경로, 있는지 여부, 본문을 돌려줍니다.",
-      "tool.append_to_daily_note": "어느 날의 데일리 노트(날짜가 없으면 오늘) 끝에 Markdown을 덧붙입니다. 노트가 없으면 먼저 템플릿으로 만듭니다."
+      "tool.append_to_daily_note": "어느 날의 데일리 노트(날짜가 없으면 오늘) 끝에 Markdown을 덧붙입니다. 노트가 없으면 먼저 템플릿으로 만듭니다. 나중에 쓰려고 사이드바에 두는 메모는 add_note, 날짜가 있는 할 일은 add_task입니다."
     },
     "es": {
       "name": "Calendario y notas diarias",
@@ -216,7 +216,7 @@
       "folder": "Carpeta de notas diarias",
       "folderHelp": "Dentro de la carpeta abierta.",
       "template": "La nota de un día nuevo",
-      "templateHelp": "{{date}} se convierte en la fecha del día, {{weekday}} en su nombre, {{yesterday}} y {{tomorrow}} en las fechas vecinas (para [[enlaces]]), {{time}} en la hora de creación; \\n empieza una línea nueva.",
+      "templateHelp": "{{date}} se convierte en la fecha del día, {{weekday}} en su nombre, {{yesterday}} y {{tomorrow}} en las fechas vecinas (para [[enlaces]]), {{time}} en la hora de creación; \\n empieza una línea nueva. O el nombre de una plantilla de la carpeta Templates, como Daily. En una bóveda de Obsidian mandan sus ajustes de notas diarias.",
       "needsFolder": "Abre primero una carpeta: las notas diarias se guardan en ella.",
       "todayButton": "Hoy",
       "nofolder": "Abre una carpeta y tus notas diarias se guardarán en ella.",
@@ -225,7 +225,7 @@
       "previous": "Abrir el día anterior",
       "next": "Abrir el día siguiente",
       "tool.read_daily_note": "Lee la nota diaria de un día - la de hoy si no se da fecha - de la carpeta de notas diarias: su ruta, si existe y su texto.",
-      "tool.append_to_daily_note": "Añade Markdown al final de la nota diaria de un día - la de hoy si no se da fecha -, creándola antes desde su plantilla si no existe."
+      "tool.append_to_daily_note": "Añade Markdown al final de la nota diaria de un día - la de hoy si no se da fecha -, creándola antes desde su plantilla si no existe. Una nota para guardar en la barra lateral es add_note; una tarea con fecha, add_task."
     },
     "fr": {
       "name": "Calendrier et notes du jour",
@@ -235,7 +235,7 @@
       "folder": "Dossier des notes du jour",
       "folderHelp": "Dans le dossier ouvert.",
       "template": "La note d’un nouveau jour",
-      "templateHelp": "{{date}} devient la date du jour, {{weekday}} son nom, {{yesterday}} et {{tomorrow}} les dates voisines (pour des [[liens]]), {{time}} l’heure de création ; \\n commence une nouvelle ligne.",
+      "templateHelp": "{{date}} devient la date du jour, {{weekday}} son nom, {{yesterday}} et {{tomorrow}} les dates voisines (pour des [[liens]]), {{time}} l’heure de création ; \\n commence une nouvelle ligne. Ou le nom d’un modèle du dossier Templates, comme Daily. Dans un coffre Obsidian, ses réglages de notes du jour décident.",
       "needsFolder": "Ouvrez d’abord un dossier : les notes du jour y sont rangées.",
       "todayButton": "Aujourd’hui",
       "nofolder": "Ouvrez un dossier : vos notes du jour y seront rangées.",
@@ -244,7 +244,7 @@
       "previous": "Ouvrir la veille",
       "next": "Ouvrir le lendemain",
       "tool.read_daily_note": "Lit la note quotidienne d'un jour - celle d'aujourd'hui si aucune date n'est donnée - dans le dossier des notes quotidiennes : son chemin, si elle existe, et son texte.",
-      "tool.append_to_daily_note": "Ajoute du Markdown à la fin de la note quotidienne d'un jour - celle d'aujourd'hui si aucune date n'est donnée -, en la créant d'abord depuis son modèle si elle n'existe pas."
+      "tool.append_to_daily_note": "Ajoute du Markdown à la fin de la note quotidienne d'un jour - celle d'aujourd'hui si aucune date n'est donnée -, en la créant d'abord depuis son modèle si elle n'existe pas. Une note à garder pour plus tard dans la barre latérale, c’est add_note ; une tâche datée, add_task."
     },
     "de": {
       "name": "Kalender und Tagesnotizen",
@@ -254,7 +254,7 @@
       "folder": "Ordner für Tagesnotizen",
       "folderHelp": "Im geöffneten Ordner.",
       "template": "Die Notiz eines neuen Tages",
-      "templateHelp": "{{date}} wird zum Datum des Tages, {{weekday}} zu seinem Namen, {{yesterday}} und {{tomorrow}} zu den Nachbardaten (für [[Links]]), {{time}} zur Uhrzeit des Anlegens; \\n beginnt eine neue Zeile.",
+      "templateHelp": "{{date}} wird zum Datum des Tages, {{weekday}} zu seinem Namen, {{yesterday}} und {{tomorrow}} zu den Nachbardaten (für [[Links]]), {{time}} zur Uhrzeit des Anlegens; \\n beginnt eine neue Zeile. Oder der Name einer Vorlage im Ordner Templates, etwa Daily. In einem Obsidian-Vault gelten seine Einstellungen für Tagesnotizen.",
       "needsFolder": "Öffne zuerst einen Ordner: Die Tagesnotizen werden darin abgelegt.",
       "todayButton": "Heute",
       "nofolder": "Öffne einen Ordner, dann werden deine Tagesnotizen darin abgelegt.",
@@ -263,7 +263,7 @@
       "previous": "Vorherigen Tag öffnen",
       "next": "Nächsten Tag öffnen",
       "tool.read_daily_note": "Liest die Tagesnotiz eines Tages - heute, wenn kein Datum angegeben ist - aus dem Ordner der Tagesnotizen: ihren Pfad, ob es sie gibt, und ihren Text.",
-      "tool.append_to_daily_note": "Fügt Markdown am Ende der Tagesnotiz eines Tages an - heute, wenn kein Datum angegeben ist - und legt die Notiz vorher aus ihrer Vorlage an, falls es sie nicht gibt."
+      "tool.append_to_daily_note": "Fügt Markdown am Ende der Tagesnotiz eines Tages an - heute, wenn kein Datum angegeben ist - und legt die Notiz vorher aus ihrer Vorlage an, falls es sie nicht gibt. Eine Notiz für später in der Seitenleiste ist add_note; eine Aufgabe mit Datum add_task."
     },
     "ru": {
       "name": "Календарь и ежедневные заметки",
@@ -273,7 +273,7 @@
       "folder": "Папка ежедневных заметок",
       "folderHelp": "Внутри открытой папки.",
       "template": "Заметка нового дня",
-      "templateHelp": "{{date}} заменяется датой дня, {{weekday}} — днём недели, {{yesterday}} и {{tomorrow}} — соседними датами (для [[ссылок]]), {{time}} — временем создания; \\n начинает новую строку.",
+      "templateHelp": "{{date}} заменяется датой дня, {{weekday}} — днём недели, {{yesterday}} и {{tomorrow}} — соседними датами (для [[ссылок]]), {{time}} — временем создания; \\n начинает новую строку. Или имя шаблона из папки Templates, например Daily. В хранилище Obsidian действуют его настройки ежедневных заметок.",
       "needsFolder": "Сначала откройте папку: ежедневные заметки хранятся в ней.",
       "todayButton": "Сегодня",
       "nofolder": "Откройте папку — ежедневные заметки будут храниться в ней.",
@@ -282,7 +282,7 @@
       "previous": "Открыть предыдущий день",
       "next": "Открыть следующий день",
       "tool.read_daily_note": "Читает ежедневную заметку за день - сегодняшнюю, если дата не указана - из папки ежедневных заметок: её путь, существует ли она и её текст.",
-      "tool.append_to_daily_note": "Дописывает Markdown в конец ежедневной заметки за день - сегодняшней, если дата не указана, - сначала создавая её по шаблону, если её нет."
+      "tool.append_to_daily_note": "Дописывает Markdown в конец ежедневной заметки за день - сегодняшней, если дата не указана, - сначала создавая её по шаблону, если её нет. Заметка на потом в боковой панели — add_note; задача с датой — add_task."
     },
     "pt": {
       "name": "Calendário e notas diárias",
@@ -292,7 +292,7 @@
       "folder": "Pasta das notas diárias",
       "folderHelp": "Dentro da pasta aberta.",
       "template": "A nota de um novo dia",
-      "templateHelp": "{{date}} vira a data do dia, {{weekday}} o dia da semana, {{yesterday}} e {{tomorrow}} as datas vizinhas (para [[links]]), {{time}} a hora em que foi criada; \\n começa uma nova linha.",
+      "templateHelp": "{{date}} vira a data do dia, {{weekday}} o dia da semana, {{yesterday}} e {{tomorrow}} as datas vizinhas (para [[links]]), {{time}} a hora em que foi criada; \\n começa uma nova linha. Ou o nome de um modelo da pasta Templates, como Daily. Num cofre do Obsidian, valem os ajustes de notas diárias dele.",
       "needsFolder": "Abra uma pasta primeiro: as notas diárias ficam guardadas nela.",
       "todayButton": "Hoje",
       "nofolder": "Abra uma pasta e suas notas diárias ficarão guardadas nela.",
@@ -301,7 +301,7 @@
       "previous": "Abrir o dia anterior",
       "next": "Abrir o dia seguinte",
       "tool.read_daily_note": "Lê a nota diária de um dia - a de hoje se não houver data - da pasta de notas diárias: o caminho, se existe e o texto.",
-      "tool.append_to_daily_note": "Acrescenta Markdown ao fim da nota diária de um dia - a de hoje se não houver data -, criando-a antes a partir do modelo se não existir."
+      "tool.append_to_daily_note": "Acrescenta Markdown ao fim da nota diária de um dia - a de hoje se não houver data -, criando-a antes a partir do modelo se não existir. Uma nota para guardar na barra lateral é add_note; uma tarefa com data, add_task."
     }
   }
 }

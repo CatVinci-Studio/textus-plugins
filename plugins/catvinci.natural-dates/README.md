@@ -8,6 +8,8 @@ Type `@` and a day, and pick the date it names:
 
 It is written as a date, `2026-11-06`, or - set **Insert as** to a link - as `[[2026-11-06]]`, the day's note when you keep daily notes with that name.
 
+The list opens after a space, at the start of a line or after a bracket - not in an address like `me@example.com` or a citation like `[@key]`. After `(` the `@` stays, so `(@tomorrow` becomes a reminder, `(@2026-11-06`.
+
 <!-- ai-tools -->
 ## Tools for Textus AI
 

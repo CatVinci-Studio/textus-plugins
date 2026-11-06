@@ -11,4 +11,4 @@ With nothing selected, it asks before tidying the whole document.
 - **Full-Width Letters and Digits to ASCII**: ＡＢＣ１２３ becomes ABC123.
 - **Join Selected Lines** (also on right-click): the selected lines become one, with no space between Chinese and one between words.
 
-Code, formulas, link addresses, HTML and front matter are left as they are.
+Code, formulas, links, #tags, reminders (@…), %% comments, HTML and front matter are left as they are. Brackets change in pairs: 价格(USD) becomes 价格（USD）.

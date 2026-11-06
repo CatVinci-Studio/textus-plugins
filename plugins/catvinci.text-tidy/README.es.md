@@ -11,4 +11,4 @@ Sin nada seleccionado, pregunta antes de ordenar todo el documento.
 - **Letras y dígitos de ancho completo a ASCII**: ＡＢＣ１２３ pasa a ABC123.
 - **Unir líneas seleccionadas** (también con clic derecho): las líneas seleccionadas se vuelven una, sin espacio entre chino y con uno entre palabras.
 
-El código, las fórmulas, las direcciones de enlace, el HTML y el front matter se quedan como están.
+El código, las fórmulas, los enlaces, las #etiquetas, los recordatorios (@…), los comentarios %%, el HTML y el front matter se quedan como están. Los paréntesis cambian en parejas: 价格(USD) pasa a 价格（USD）.

@@ -193,16 +193,15 @@ async function link(mention) {
     said === stem(mention.to) ? {} : { alias: said },
   );
   await textus.files.process(mention.path, function (text) {
-    const lines = text.match(/[^\n]*\n|[^\n]+$/g) || [];
-    const line = lines[mention.line] || "";
-    const ending = /\r?\n$/.exec(line);
+    const rows = textLines.split(text);
+    const row = rows[mention.line];
     // The file changed since it was listed: nothing is written; the list
     // is drawn again from what is there now.
-    if (line.slice(0, ending ? ending.index : undefined) !== mention.text) return text;
-    lines[mention.line] =
-      backlinkMentions.linkMention(mention.text, mention.name, written) +
-      (ending ? ending[0] : "");
-    return lines.join("");
+    if (!row || row.text !== mention.text) return text;
+    const linked = backlinkMentions.linkMention(row.text, mention.name, written);
+    if (!linked) return text;
+    row.text = linked;
+    return textLines.join(rows);
   });
 }
 

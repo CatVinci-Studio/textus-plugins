@@ -13,3 +13,22 @@ it("turns a day in words into its date, from a given today", async () => {
   expect(unknown).toHaveProperty("error");
   expect(unknown.suggestions[0]).toEqual({ phrase: "tomorrow", date: "2026-10-29" });
 });
+
+/** The @ completion: where it opens (the manifest's pattern, as Textus
+ *  compiles it) and what it writes. */
+it("opens after a space or bracket only, and keeps a reminder's @", async () => {
+  let provider: { provideCompletions(c: unknown): Promise<{ insert: string }[]> } | null = null;
+  const { manifest } = loadPlugin("catvinci.natural-dates", {
+    editor: { registerCompletion: (_id: string, p: typeof provider) => ((provider = p), { dispose() {} }) },
+  });
+  const pattern = new RegExp(`(?:${manifest.contributes.completions[0].pattern})$`, "u");
+  const match = (text: string) => pattern.exec(text)?.[0] ?? null;
+  expect(match("交报告 @tom")).toBe("@tom");
+  expect(match("@tom")).toBe("@tom");
+  expect(match("交报告 (@tom")).toBe("@tom");
+  expect(match("email me@to")).toBeNull();
+  expect(match("see [@to")).toBeNull();
+  const ask = (text: string) => provider!.provideCompletions({ text, match: match(text), inMath: false });
+  expect((await ask("交报告 (@tomorrow"))[0].insert).toMatch(/^@\d{4}-\d{2}-\d{2}$/);
+  expect((await ask("交报告 @tomorrow"))[0].insert).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+});

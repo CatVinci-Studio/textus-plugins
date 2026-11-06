@@ -52,7 +52,6 @@
   "catvinci.function-plot/lib/chart.css": "./shared/chart.css",
   "catvinci.markdown-lint/lib/markdownlint.js": "./vendor/markdownlint.js",
   "catvinci.slides/lib/marp-core.js": "./vendor/marp-core.js",
-  "catvinci.database/lib/notion-csv.js": "./shared/notion-csv.js",
   "catvinci.notion-import/lib/notion-csv.js": "./shared/notion-csv.js",
   "catvinci.notion-import/lib/jszip.min.js": "jszip/dist/jszip.min.js",
   "catvinci.tasks/lib/folder-paths.js": "./shared/folder-paths.js",
@@ -65,5 +64,12 @@
   "catvinci.quick-preview/lib/note-parts.js": "./shared/note-parts.js",
   "catvinci.chartjs/lib/parse-loose.js": "./shared/parse-loose.js",
   "catvinci.echarts/lib/parse-loose.js": "./shared/parse-loose.js",
-  "catvinci.wavedrom/lib/parse-loose.js": "./shared/parse-loose.js"
+  "catvinci.wavedrom/lib/parse-loose.js": "./shared/parse-loose.js",
+  "catvinci.cjk-spacing/lib/markdown-keep.js": "./shared/markdown-keep.js",
+  "catvinci.text-tidy/lib/markdown-keep.js": "./shared/markdown-keep.js",
+  "catvinci.markdown-lint/lib/markdown-keep.js": "./shared/markdown-keep.js",
+  "catvinci.tasks/lib/text-lines.js": "./shared/text-lines.js",
+  "catvinci.backlinks/lib/text-lines.js": "./shared/text-lines.js",
+  "catvinci.templates/lib/obsidian-vault.js": "./shared/obsidian-vault.js",
+  "catvinci.daily-notes/lib/obsidian-vault.js": "./shared/obsidian-vault.js"
 }

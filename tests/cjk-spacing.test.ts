@@ -8,6 +8,7 @@ let spacing: {
 };
 
 beforeAll(async () => {
+  await import("../shared/markdown-keep.js");
   const script = "../plugins/catvinci.cjk-spacing/spacing.js";
   await import(/* @vite-ignore */ script);
   spacing = (globalThis as unknown as { cjkSpacing: typeof spacing })

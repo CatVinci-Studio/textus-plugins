@@ -1,66 +1,14 @@
 // Text Tidy's rules: blank lines, trailing spaces, punctuation width,
-// full-width letters and joined lines - in Markdown, so code, math, link
-// targets, HTML and addresses are left as written. A plain script: the host
-// and the tests read it.
+// full-width letters and joined lines - in Markdown, so what markdownKeep
+// lists (code, math, links, tags, reminders, comments, HTML, addresses) is
+// left as written. A plain script: the host and the tests read it.
 (function (root) {
   "use strict";
   var CJK = "⺀-⻿⼀-⿟぀-ゟ゠-ヺー-ヿ" + "㄀-ㄯ㈀-㋿㐀-䶿一-鿿豈-﫿";
   var isCjk = new RegExp("[" + CJK + "]");
-  var KEEP = new RegExp(
-    "(" +
-      [
-        "`[^`\\n]*`",
-        "\\$[^$\\n]*\\$",
-        "\\]\\([^)\\n]*\\)", // ](target "title")
-        "\\[\\[[^\\]\\n]*\\]\\]", // [[wiki link]]
-        "\\[\\^[^\\]\\n]*\\]", // [^footnote]
-        "^ {0,3}\\[[^\\]\\n]+\\]:.*$", // [ref]: target
-        "<[^>\\n]*>",
-        "[a-z][a-z0-9+.-]*:\\/\\/[^\\s)]+",
-        "[\\w.+-]+@[\\w-]+\\.[\\w.-]+",
-      ].join("|") +
-      ")",
-    "m",
-  );
-
-  /** `text` with `change` applied outside what KEEP protects. */
-  function outsideKept(text, change) {
-    return String(text)
-      .split(KEEP)
-      .map(function (part, i) {
-        return i % 2 ? part : change(part);
-      })
-      .join("");
-  }
-
-  /** Each line of a document that is prose, through `change`: front
-   *  matter, fenced code and $$ math are passed over. */
-  function eachProseLine(text, change) {
-    var lines = String(text).split("\n");
-    var fence = null;
-    var math = false;
-    var front = lines[0] === "---";
-    return lines
-      .map(function (line, i) {
-        if (front) {
-          if (i > 0 && line === "---") front = false;
-          return line;
-        }
-        var open = /^\s*(```+|~~~+)/.exec(line);
-        if (open) {
-          if (!fence) fence = open[1][0];
-          else if (open[1][0] === fence) fence = null;
-          return line;
-        }
-        if (fence) return line;
-        if (/^\s*\$\$/.test(line)) {
-          if (!/^\s*\$\$.*\S.*\$\$\s*$/.test(line)) math = !math;
-          return line;
-        }
-        return math ? line : change(line, i, lines);
-      })
-      .join("\n");
-  }
+  var keep = root.markdownKeep;
+  var outsideKept = keep.outside;
+  var eachProseLine = keep.eachProseLine;
 
   var HALF = ",.?!:;()";
   var FULL = "，。？！：；（）";
@@ -71,45 +19,61 @@
     toHalf[FULL[k]] = HALF[k];
   }
 
+  /** The "(" ")" pairs of a masked line to turn full-width: those with
+   *  Chinese or Japanese just outside or just inside. An unpaired one
+   *  stays. */
+  function bracketsToTurn(s) {
+    var turn = {};
+    var open = [];
+    for (var i = 0; i < s.length; i++) {
+      if (s[i] === "(") open.push(i);
+      else if (s[i] === ")" && open.length) {
+        var o = open.pop();
+        var inner = s.slice(o + 1, i).trim();
+        if (isCjk.test(s[o - 1] || "") || isCjk.test(inner[0] || "") || isCjk.test(inner[inner.length - 1] || "")) {
+          turn[o] = true;
+          turn[i] = true;
+        }
+      }
+    }
+    return turn;
+  }
+
   /** ASCII punctuation touching Chinese or Japanese text as full-width:
    *  "好,吗?" is "好，吗？". A dot between digits (1.5), "..." and
-   *  "Mr." stay; a bracket turns when its text is CJK. */
+   *  "Mr." stay; brackets turn in pairs. */
   function fullPunctuation(line) {
-    return outsideKept(line, function (s) {
-      var out = "";
-      for (var i = 0; i < s.length; i++) {
-        var c = s[i];
-        var prev = s[i - 1] || "";
-        var next = s[i + 1] || "";
-        if (!(c in toFull)) {
-          out += c;
-          continue;
-        }
-        var after = s.slice(i + 1).replace(/^ +/, "")[0] || "";
-        var cjkBefore = isCjk.test(prev);
-        var cjkAfter = isCjk.test(after);
-        if (c === "." && (/\d/.test(prev) || next === "." || prev === "." || !cjkBefore)) {
-          out += c;
-          continue;
-        }
-        if (c === "(") {
-          out += cjkAfter || cjkBefore ? "（" : c;
-          continue;
-        }
-        if (c === ")") {
-          out += cjkBefore ? "）" : c;
-          continue;
-        }
-        if (cjkBefore || (cjkAfter && c !== ":")) {
-          out += toFull[c];
-          // The space after an ASCII mark goes with it.
-          while (s[i + 1] === " " && isCjk.test(after)) i++;
-          continue;
-        }
-        out += c;
+    var s = keep.mask(line);
+    var turn = bracketsToTurn(s);
+    var out = "";
+    for (var i = 0; i < s.length; i++) {
+      var c = s[i];
+      var prev = s[i - 1] || "";
+      var next = s[i + 1] || "";
+      if (!(c in toFull)) {
+        out += line[i];
+        continue;
       }
-      return out;
-    });
+      if (c === "(" || c === ")") {
+        out += turn[i] ? toFull[c] : c;
+        continue;
+      }
+      var after = s.slice(i + 1).replace(/^ +/, "")[0] || "";
+      var cjkBefore = isCjk.test(prev);
+      var cjkAfter = isCjk.test(after);
+      if (c === "." && (/\d/.test(prev) || next === "." || prev === "." || !cjkBefore)) {
+        out += c;
+        continue;
+      }
+      if (cjkBefore || (cjkAfter && c !== ":")) {
+        out += toFull[c];
+        // The space after an ASCII mark goes with it.
+        while (s[i + 1] === " " && isCjk.test(after)) i++;
+        continue;
+      }
+      out += c;
+    }
+    return out;
   }
 
   /** Full-width punctuation in Latin text as ASCII, with the space English

@@ -15,6 +15,7 @@
   "main": [
     "lib/folder-paths.js",
     "lib/note-parts.js",
+    "lib/text-lines.js",
     "mentions.js",
     "complete.js",
     "host.js"

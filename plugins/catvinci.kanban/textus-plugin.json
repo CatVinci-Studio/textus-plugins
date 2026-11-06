@@ -1,7 +1,7 @@
 {
   "id": "catvinci.kanban",
   "name": "%name%",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "publisher": "catvinci",
   "author": "CatVinci Studio",
   "description": "%description%",
@@ -152,8 +152,8 @@
       "remove": "Remove",
       "noNote": "No note is named “{0}”.",
       "tool.list_boards": "Lists the Kanban boards (name.kanban.md files) in the open folder, each with its lists and how many cards each holds.",
-      "tool.read_board": "Reads a Kanban board: its lists in order, each with its cards' text and whether each is done.",
-      "tool.add_card": "Adds a card to the end of a list on a Kanban board.",
+      "tool.read_board": "Reads a Kanban board: its lists in order, each with its cards' text and whether each is done. Tasks written in ordinary documents are list_tasks.",
+      "tool.add_card": "Adds a card to the end of a list on a Kanban board. Only for a board (name.kanban.md); a to-do in a document is add_task.",
       "tool.move_card": "Moves a card on a Kanban board to another list, or to another place in its own."
     },
     "zh": {
@@ -175,8 +175,8 @@
       "remove": "删除",
       "noNote": "没有名为“{0}”的笔记。",
       "tool.list_boards": "列出打开的文件夹中的看板（name.kanban.md 文件），以及每个看板的各个列表和其中的卡片数。",
-      "tool.read_board": "读取一个看板：按顺序给出各个列表，以及每个列表里卡片的文字和是否已完成。",
-      "tool.add_card": "在看板某个列表的末尾添加一张卡片。",
+      "tool.read_board": "读取一个看板：按顺序给出各个列表，以及每个列表里卡片的文字和是否已完成。 普通文档里的任务用 list_tasks。",
+      "tool.add_card": "在看板某个列表的末尾添加一张卡片。 只用于看板（name.kanban.md）；文档里的待办用 add_task。",
       "tool.move_card": "把看板上的一张卡片移到另一个列表，或移到所在列表的另一个位置。"
     },
     "zh-Hant": {
@@ -198,8 +198,8 @@
       "remove": "刪除",
       "noNote": "沒有名為「{0}」的筆記。",
       "tool.list_boards": "列出開啟的資料夾中的看板（name.kanban.md 檔案），以及每個看板的各個列表和其中的卡片數。",
-      "tool.read_board": "讀取一個看板：依順序給出各個列表，以及每個列表裡卡片的文字和是否已完成。",
-      "tool.add_card": "在看板某個列表的末尾新增一張卡片。",
+      "tool.read_board": "讀取一個看板：依順序給出各個列表，以及每個列表裡卡片的文字和是否已完成。 一般文件裡的任務用 list_tasks。",
+      "tool.add_card": "在看板某個列表的末尾新增一張卡片。 只用於看板（name.kanban.md）；文件裡的待辦用 add_task。",
       "tool.move_card": "把看板上的一張卡片移到另一個列表，或移到所在列表的另一個位置。"
     },
     "ja": {
@@ -221,8 +221,8 @@
       "remove": "削除",
       "noNote": "「{0}」という名前のノートはありません。",
       "tool.list_boards": "開いているフォルダにあるカンバンボード（name.kanban.md ファイル）を、それぞれのリストと各リストのカード数とともに一覧にします。",
-      "tool.read_board": "カンバンボードを読みます。リストを順に、各カードの本文と完了かどうかとともに返します。",
-      "tool.add_card": "カンバンボードのリストの末尾にカードを追加します。",
+      "tool.read_board": "カンバンボードを読みます。リストを順に、各カードの本文と完了かどうかとともに返します。 普通の文書に書かれたタスクは list_tasks です。",
+      "tool.add_card": "カンバンボードのリストの末尾にカードを追加します。 ボード（name.kanban.md）専用です。文書の ToDo は add_task です。",
       "tool.move_card": "カンバンボードのカードを別のリストへ、または同じリストの別の位置へ移します。"
     },
     "ko": {
@@ -244,8 +244,8 @@
       "remove": "삭제",
       "noNote": "‘{0}’라는 노트가 없습니다.",
       "tool.list_boards": "열린 폴더에 있는 칸반 보드(name.kanban.md 파일)를 각 보드의 목록과 목록마다의 카드 수와 함께 나열합니다.",
-      "tool.read_board": "칸반 보드를 읽습니다. 목록을 순서대로, 각 카드의 내용과 완료 여부와 함께 돌려줍니다.",
-      "tool.add_card": "칸반 보드의 목록 끝에 카드를 추가합니다.",
+      "tool.read_board": "칸반 보드를 읽습니다. 목록을 순서대로, 각 카드의 내용과 완료 여부와 함께 돌려줍니다. 일반 문서에 쓴 할 일은 list_tasks입니다.",
+      "tool.add_card": "칸반 보드의 목록 끝에 카드를 추가합니다. 보드(name.kanban.md) 전용입니다. 문서의 할 일은 add_task입니다.",
       "tool.move_card": "칸반 보드의 카드를 다른 목록으로, 또는 같은 목록의 다른 위치로 옮깁니다."
     },
     "es": {
@@ -267,8 +267,8 @@
       "remove": "Eliminar",
       "noNote": "No hay ninguna nota llamada «{0}».",
       "tool.list_boards": "Enumera los tableros Kanban (archivos name.kanban.md) de la carpeta abierta, cada uno con sus listas y cuántas tarjetas tiene cada una.",
-      "tool.read_board": "Lee un tablero Kanban: sus listas en orden, cada una con el texto de sus tarjetas y si están hechas.",
-      "tool.add_card": "Añade una tarjeta al final de una lista de un tablero Kanban.",
+      "tool.read_board": "Lee un tablero Kanban: sus listas en orden, cada una con el texto de sus tarjetas y si están hechas. Las tareas escritas en documentos normales son list_tasks.",
+      "tool.add_card": "Añade una tarjeta al final de una lista de un tablero Kanban. Solo para un tablero (name.kanban.md); una tarea en un documento es add_task.",
       "tool.move_card": "Mueve una tarjeta de un tablero Kanban a otra lista, o a otro lugar de la suya."
     },
     "fr": {
@@ -290,8 +290,8 @@
       "remove": "Supprimer",
       "noNote": "Aucune note ne s’appelle « {0} ».",
       "tool.list_boards": "Liste les tableaux Kanban (fichiers name.kanban.md) du dossier ouvert, chacun avec ses listes et le nombre de cartes de chacune.",
-      "tool.read_board": "Lit un tableau Kanban : ses listes dans l'ordre, chacune avec le texte de ses cartes et si elles sont faites.",
-      "tool.add_card": "Ajoute une carte à la fin d'une liste d'un tableau Kanban.",
+      "tool.read_board": "Lit un tableau Kanban : ses listes dans l'ordre, chacune avec le texte de ses cartes et si elles sont faites. Les tâches écrites dans des documents ordinaires, c’est list_tasks.",
+      "tool.add_card": "Ajoute une carte à la fin d'une liste d'un tableau Kanban. Seulement pour un tableau (name.kanban.md) ; une tâche dans un document, c’est add_task.",
       "tool.move_card": "Déplace une carte d'un tableau Kanban vers une autre liste, ou à une autre place dans la sienne."
     },
     "de": {
@@ -313,8 +313,8 @@
       "remove": "Entfernen",
       "noNote": "Keine Notiz heißt „{0}“.",
       "tool.list_boards": "Listet die Kanban-Boards (Dateien name.kanban.md) im geöffneten Ordner auf, jedes mit seinen Listen und deren Kartenzahl.",
-      "tool.read_board": "Liest ein Kanban-Board: seine Listen der Reihe nach, jede mit dem Text ihrer Karten und ob sie erledigt sind.",
-      "tool.add_card": "Fügt am Ende einer Liste eines Kanban-Boards eine Karte hinzu.",
+      "tool.read_board": "Liest ein Kanban-Board: seine Listen der Reihe nach, jede mit dem Text ihrer Karten und ob sie erledigt sind. Aufgaben in gewöhnlichen Dokumenten: list_tasks.",
+      "tool.add_card": "Fügt am Ende einer Liste eines Kanban-Boards eine Karte hinzu. Nur für ein Board (name.kanban.md); eine Aufgabe in einem Dokument ist add_task.",
       "tool.move_card": "Verschiebt eine Karte eines Kanban-Boards in eine andere Liste oder an eine andere Stelle ihrer eigenen."
     },
     "ru": {
@@ -336,8 +336,8 @@
       "remove": "Удалить",
       "noNote": "Нет заметки с именем «{0}».",
       "tool.list_boards": "Перечисляет канбан-доски (файлы name.kanban.md) в открытой папке, каждую с её списками и числом карточек в них.",
-      "tool.read_board": "Читает канбан-доску: её списки по порядку, в каждом текст карточек и отметку, выполнены ли они.",
-      "tool.add_card": "Добавляет карточку в конец списка на канбан-доске.",
+      "tool.read_board": "Читает канбан-доску: её списки по порядку, в каждом текст карточек и отметку, выполнены ли они. Задачи в обычных документах — list_tasks.",
+      "tool.add_card": "Добавляет карточку в конец списка на канбан-доске. Только для доски (name.kanban.md); задача в документе — add_task.",
       "tool.move_card": "Перемещает карточку на канбан-доске в другой список или на другое место в её собственном."
     },
     "pt": {
@@ -359,8 +359,8 @@
       "remove": "Remover",
       "noNote": "Nenhuma nota se chama “{0}”.",
       "tool.list_boards": "Lista os quadros Kanban (arquivos name.kanban.md) da pasta aberta, cada um com as suas listas e quantos cartões cada uma tem.",
-      "tool.read_board": "Lê um quadro Kanban: as listas por ordem, cada uma com o texto dos cartões e se estão feitos.",
-      "tool.add_card": "Adiciona um cartão ao fim de uma lista de um quadro Kanban.",
+      "tool.read_board": "Lê um quadro Kanban: as listas por ordem, cada uma com o texto dos cartões e se estão feitos. Tarefas escritas em documentos comuns são list_tasks.",
+      "tool.add_card": "Adiciona um cartão ao fim de uma lista de um quadro Kanban. Só para um quadro (name.kanban.md); uma tarefa num documento é add_task.",
       "tool.move_card": "Move um cartão de um quadro Kanban para outra lista, ou para outro lugar na sua."
     }
   }
