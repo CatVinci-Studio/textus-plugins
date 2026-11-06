@@ -16,6 +16,6 @@ Was daraus wird:
 
 Was nicht mitkommt: Notions Export enthält keine Seitensymbole, Titelbilder, Kommentare oder gespeicherten Datenbankansichten (Filter, Sortierungen), daher kommen sie nicht mit. Formel- und Rollup-Eigenschaften behalten ihren damaligen Wert, Spalten stehen nacheinander, eine eingebettete Datenbank wird ein Link zu ihrer Seite, und Erwähnungen von Personen und Daten sind einfacher Text.
 
-Der Bericht zählt, was importiert wurde, listet nicht gefundene Links und geänderte Blöcke und schlägt Plugins vor, die beim Mitgebrachten helfen: Seiten für Unterseiten, Datenbankansichten für Datenbanken, Rückverweise und Schnellvorschau für verlinkte Seiten und so weiter. **Plugins › Hilfreiche Plugins nach einem Notion-Import…** bietet an, eines zu installieren; Textus fragt vorher. Nichts wird von selbst installiert.
+Der Bericht zählt, was importiert wurde, listet nicht gefundene Links und geänderte Blöcke und schlägt Plugins vor, die beim Mitgebrachten helfen: Seiten für Unterseiten, Datenbankansichten für Datenbanken, Bidirektionale Links und Schnellvorschau für verlinkte Seiten und so weiter. **Plugins › Hilfreiche Plugins nach einem Notion-Import…** bietet an, eines zu installieren; Textus fragt vorher. Nichts wird von selbst installiert.
 
 Alles geschieht auf Ihrem Computer: Das Plugin liest und schreibt nur Dateien im geöffneten Ordner und nutzt nie das Netzwerk.
