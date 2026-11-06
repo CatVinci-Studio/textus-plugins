@@ -1,11 +1,13 @@
 import { describe, hash, parseManifest } from "./content";
-import { conflictPath, plan } from "./planner";
+import { conflictPath, moves, plan } from "./planner";
 import {
   FORMAT,
   HEAD,
   LOCK,
   MAX_MANIFEST_SIZE,
+  MAX_TRASH,
   SyncError,
+  TRASH_DAYS,
   blockKey,
   encode,
   checkAbort,
@@ -111,12 +113,22 @@ export async function synchronize(options: Options): Promise<Result> {
     progress("scanning", 0, 0);
     const files = await local.scan();
     checkAbort(signal);
-    const next: Manifest = { ...remote, files: { ...remote.files } };
+    const now = new Date();
+    const cutoff = now.getTime() - TRASH_DAYS * 86_400_000;
+    const next: Manifest = {
+      ...remote,
+      files: { ...remote.files },
+      trash: (remote.trash ?? []).filter(
+        (t) => Date.parse(t.deletedAt) > cutoff,
+      ),
+    };
     const base: Base = { format: FORMAT, files: { ...options.base.files } };
     const known = new Set<string>();
     const result: Result = {
       uploaded: 0,
       downloaded: 0,
+      removed: 0,
+      moved: 0,
       conflicts: [],
       deferred: [],
       unchanged: 0,
@@ -158,6 +170,16 @@ export async function synchronize(options: Options): Promise<Result> {
       }
       throw new SyncError("localChanged");
     };
+    const done = new Set<string>();
+    for (const [to, from] of moves(actions, files, remote.files, base.files)) {
+      checkAbort(signal);
+      await local.check();
+      if (!(await local.move(from, to, files[from].hash))) continue;
+      delete base.files[from];
+      base.files[to] = files[from].hash;
+      done.add(from).add(to);
+      result.moved++;
+    }
     for (let i = 0; i < actions.length; i++) {
       checkAbort(signal);
       await local.check();
@@ -165,9 +187,29 @@ export async function synchronize(options: Options): Promise<Result> {
       progress("transferring", i, actions.length);
       const l = files[path],
         r = remote.files[path];
+      if (done.has(path)) continue;
       if (kind === "equal") {
         base.files[path] = l.hash;
         result.unchanged++;
+        continue;
+      }
+      if (kind === "forget") {
+        delete base.files[path];
+        continue;
+      }
+      if (kind === "deleteRemote") {
+        delete next.files[path];
+        next.trash!.push({ path, deletedAt: now.toISOString(), entry: r });
+        delete base.files[path];
+        result.removed++;
+        continue;
+      }
+      if (kind === "deleteLocal") {
+        const removed = await local.remove(path, l.hash);
+        if (removed === true) {
+          delete base.files[path];
+          result.removed++;
+        } else result.deferred.push(path);
         continue;
       }
       if (kind === "download" || kind === "conflict") {
@@ -206,7 +248,12 @@ export async function synchronize(options: Options): Promise<Result> {
     await local.check();
     await ownLock();
     progress("publishing", actions.length, actions.length);
-    if (!raw || JSON.stringify(next.files) !== JSON.stringify(remote.files)) {
+    next.trash = next.trash!.slice(-MAX_TRASH);
+    if (
+      !raw ||
+      JSON.stringify([next.files, next.trash]) !==
+        JSON.stringify([remote.files, remote.trash ?? []])
+    ) {
       next.revision = crypto.randomUUID();
       next.updatedAt = new Date().toISOString();
       const document = encode(next);

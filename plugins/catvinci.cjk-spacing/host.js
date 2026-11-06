@@ -1,7 +1,6 @@
 // CJK Spacing: a command for the document in front, and - when the
 // setting is on - the same on every save (files.onWillSave).
-// "other" is the front matter.
-const SKIP = new Set(["code", "math", "html", "other"]);
+const SKIP = new Set(markdownKeep.SKIP_KINDS);
 
 /** Textus AI's tool: the text spaced, nothing written. */
 function fixSpacing(input) {
@@ -32,6 +31,15 @@ exports.activate = function () {
   );
   textus.files.onWillSave(async function (event) {
     if (!(await textus.settings.get("onSave"))) return;
-    return cjkSpacing.spaceDocument(event.text);
+    // From 1.3.9 the blocks come too: only the prose ones change.
+    if (!Array.isArray(event.blocks)) return cjkSpacing.spaceDocument(event.text);
+    const edits = [];
+    for (const block of event.blocks) {
+      if (SKIP.has(block.kind)) continue;
+      const before = event.text.slice(block.from, block.to);
+      const spaced = cjkSpacing.spaceDocument(before);
+      if (spaced !== before) edits.push({ block: block.id, markdown: spaced });
+    }
+    return edits.length ? edits : undefined;
   });
 };

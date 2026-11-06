@@ -1,9 +1,10 @@
-// Backlinks: for the document in front, the notes linking to it, the ones
-// naming it without a link (right-click one to link it), and where it
-// links to - in a list in the sidebar that Textus draws. What Textus
-// knows of the folder (textus.metadata) says where they are.
+// Two-way Links: for the document in front, the notes linking to it, the
+// ones naming it without a link (right-click one to link it), and where it
+// links to - in a list in the sidebar that Textus draws; [[ completion
+// (complete.js); and the notes, sections and blocks ![[embeds]] show. What
+// Textus knows of the folder (textus.metadata) says where links go.
 
-/* global backlinkMentions, folderPaths */
+/* global backlinkMentions, completeLinks, folderPaths, noteParts */
 const t = (key, ...args) => textus.l10n.t(key, ...args);
 /** Unlinked mentions are looked for up to this many lines. */
 const SEARCH_LIMIT = 300;
@@ -14,6 +15,15 @@ const stem = (path) =>
     .pop()
     .replace(/\.(md|markdown)$/i, "");
 const short = (text) => (text.length > 200 ? text.slice(0, 199) + "…" : text);
+
+/** The note a link the index found no file for goes to, as a click takes
+ *  it - one to make, or one the index missed; null for a web address or a
+ *  file that isn't a note. */
+async function noteOf(target, from) {
+  if (/^[a-z][a-z0-9+.-]*:/i.test(target)) return null;
+  const found = await textus.metadata.resolveNote("[[" + target + "]]", from);
+  return found && found.kind === "note" ? found : null;
+}
 
 /** The lines of each file, read once a refresh. */
 async function linesOf(path, cache) {
@@ -81,14 +91,14 @@ async function gather(focus, doc) {
   const outgoing = [];
   const out = new Set();
   for (const l of doc.links) {
-    const name = l.resolved ? stem(l.resolved) : l.target.split("#")[0].trim();
-    // A web address isn't a note; a [[link]] to no note still shows.
-    if (!name || (!l.resolved && /^[a-z][a-z0-9+.-]*:|[\\/]/i.test(name)))
-      continue;
-    const key = (l.resolved || name).toLowerCase();
+    // A [[link]] to no note still shows, as the note a click would make.
+    const found = l.resolved ? { path: l.resolved, exists: true } : await noteOf(l.target, focus);
+    if (!found) continue;
+    const key = found.path.toLowerCase();
     if (out.has(key)) continue;
     out.add(key);
-    outgoing.push({ name: name, resolved: l.resolved, line: l.line, text: l.text, key: key });
+    const resolved = found.exists ? found.path : null;
+    outgoing.push({ name: stem(found.path), resolved: resolved, line: l.line, text: l.text, key: key });
   }
   return { linked: linked, unlinked: unlinked, outgoing: outgoing };
 }
@@ -171,23 +181,47 @@ async function listBacklinks(input) {
   };
 }
 
-/** Links the mention on `line` of `path`, if the line still says it. */
+/** Links the mention on `line` of `path`, if the line still says it, as
+ *  Textus writes links there. Every other line keeps its bytes and ending. */
 async function link(mention) {
+  const at = backlinkMentions.findMention(mention.text, mention.name);
+  if (at < 0) return;
+  const said = mention.text.slice(at, at + mention.name.length);
+  const written = await textus.metadata.linkTo(
+    mention.to,
+    mention.path,
+    said === stem(mention.to) ? {} : { alias: said },
+  );
   await textus.files.process(mention.path, function (text) {
-    const eol = text.includes("\r\n") ? "\r\n" : "\n";
-    const lines = text.split(/\r?\n/);
+    const rows = textLines.split(text);
+    const row = rows[mention.line];
     // The file changed since it was listed: nothing is written; the list
     // is drawn again from what is there now.
-    if (lines[mention.line] !== mention.text) return text;
-    const linked = backlinkMentions.linkMention(
-      lines[mention.line],
-      mention.name,
-      stem(mention.to),
-    );
+    if (!row || row.text !== mention.text) return text;
+    const linked = backlinkMentions.linkMention(row.text, mention.name, written);
     if (!linked) return text;
-    lines[mention.line] = linked;
-    return lines.join(eol);
+    row.text = linked;
+    return textLines.join(rows);
   });
+}
+
+/** What ![[embeds]] of a note, a heading's section or a block show. */
+async function provideEmbed(target) {
+  let text;
+  try {
+    text = await textus.files.readText(target.path);
+  } catch {
+    return null;
+  }
+  if (target.block) {
+    const found = noteParts.block(text, target.block);
+    return found && { markdown: found.markdown, title: stem(target.path) };
+  }
+  if (target.heading) {
+    const found = noteParts.section(text, target.heading);
+    return found && { markdown: found.markdown, title: stem(target.path) + " › " + found.heading };
+  }
+  return { markdown: noteParts.body(text) };
 }
 
 let list = null;
@@ -209,5 +243,13 @@ exports.activate = function (ctx) {
     textus.editor.onDidChangeActive(refresh),
     textus.layout.onDidChangeLayout(refresh),
     textus.ai.registerTool("list_backlinks", listBacklinks),
+    textus.commands.register("catvinci.backlinks.linkBlock", completeLinks.linkBlock),
+    textus.views.registerEmbed("catvinci.backlinks.embed", { provideEmbed: provideEmbed }),
   );
+  for (const kind of ["notes", "headings", "blocks"])
+    ctx.subscriptions.push(
+      textus.editor.registerCompletion("catvinci.backlinks." + kind, {
+        provideCompletions: completeLinks[kind],
+      }),
+    );
 };

@@ -1,12 +1,11 @@
 # Textus Plugins
 
-The plugins for [Textus](https://textus.catvinci.com), the Markdown editor. None of them comes with Textus: you install the ones you want from **Settings › Plugins › Get plugins**, and Textus downloads them from this repository.
+The plugins for [Textus](https://textus.md), the Markdown editor. None of them comes with Textus: you install the ones you want from **Settings › Plugins › Get plugins**, and Textus downloads them from this repository.
 
 ## The plugins
 
 | Plugin | What it does |
 | --- | --- |
-| Backlinks | For the document in front: the notes that link to it, the ones that name it without a link - linked in one click - and the notes it links to. |
 | Cloud Sync | End-to-end encrypted workspace sync through S3-compatible storage, WebDAV or Nutstore, preserving both versions of concurrent edits. |
 | Calendar & Daily Notes | A calendar in the sidebar and a note for each day, kept in a folder of the open folder. |
 | Emacs | Emacs keys in the editor: moving by character, word and line, the mark and region, the kill ring with C-y and M-y, C-/ undo and C-x prefixes. |
@@ -19,6 +18,7 @@ The plugins for [Textus](https://textus.catvinci.com), the Markdown editor. None
 | Quick Notes | Jot something down without leaving the document: notes in the sidebar, to insert later or open as a document. |
 | Split Panes | Two documents at once: side by side, or one above the other. Drag the line between them to share the space; a click in one brings it to the front. |
 | Tasks | Every task (- [ ]) in the open folder's documents, in one list: tick one off there, or go to it. |
+| Two-way Links | Type [[ to link a note, a heading or a block, and ![[ to embed one; in the sidebar, the notes that link to the document in front, the ones that name it without a link - linked in one click - and the notes it links to. |
 | Version History | Each save of a document kept as a version: see what changed since, and bring an old one back. |
 | Vim | Vim's modes and keys in the editor: normal, insert and visual, motions, operators, counts, registers and dot repeat, and flash jumps with s. |
 | Web View | Open web pages in a tab beside your notes. |

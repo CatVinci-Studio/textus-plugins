@@ -1,7 +1,7 @@
 {
   "id": "catvinci.reminders",
   "name": "%name%",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "publisher": "catvinci",
   "author": "CatVinci Studio",
   "description": "%description%",
@@ -12,10 +12,7 @@
     "textus": ">=1.3.0-beta.8"
   },
   "platforms": ["desktop"],
-  "main": [
-    "reminders.js",
-    "host.js"
-  ],
+  "main": ["lib/dates.js", "reminders.js", "host.js"],
   "permissions": [
     "files.read",
     "editor.write",
@@ -103,8 +100,8 @@
       "typeTime": "Date and time (2026-11-02 09:00)",
       "badTime": "That isn't a date and time like 2026-11-02 09:00.",
       "none": "Nothing to be reminded of yet. Write (@2026-11-02 09:00) in a line.",
-      "tool.list_reminders": "Lists the coming reminders - (@2026-11-02 09:00) marks in the open folder's documents - soonest first, each with its time, text, document path and line.",
-      "tool.add_reminder": "Adds a reminder as a task line with its time, - [ ] text (@2026-11-02 09:00), at the end of the document in front; a notification comes then."
+      "tool.list_reminders": "Lists the coming reminders - (@2026-11-02 09:00) marks in the open folder's documents - soonest first, each with its time, text, document path and line. Tasks by due date are list_tasks.",
+      "tool.add_reminder": "Adds a reminder as a task line with its time, - [ ] text (@2026-11-02 09:00), at the end of the document in front; a notification comes then. Use it when the user wants to be told at a time; a to-do with only a due date is add_task."
     },
     "zh": {
       "name": "提醒",
@@ -119,8 +116,8 @@
       "typeTime": "日期和时间（2026-11-02 09:00）",
       "badTime": "请写成 2026-11-02 09:00 这样的日期和时间。",
       "none": "还没有提醒。在一行里写上 (@2026-11-02 09:00) 就行。",
-      "tool.list_reminders": "列出即将到来的提醒（打开的文件夹中各文档里的 (@2026-11-02 09:00) 标记），按时间先后排列，每条带时间、文字、文档路径和行号。",
-      "tool.add_reminder": "在当前文档末尾添加一条提醒，写成带时间的任务行：- [ ] 文字 (@2026-11-02 09:00)；到时会弹出通知。"
+      "tool.list_reminders": "列出即将到来的提醒（打开的文件夹中各文档里的 (@2026-11-02 09:00) 标记），按时间先后排列，每条带时间、文字、文档路径和行号。 按截止日期列任务用 list_tasks。",
+      "tool.add_reminder": "在当前文档末尾添加一条提醒，写成带时间的任务行：- [ ] 文字 (@2026-11-02 09:00)；到时会弹出通知。 用户要在某个时间被提醒时用它；只有截止日期的待办用 add_task。"
     },
     "zh-Hant": {
       "name": "提醒",
@@ -135,8 +132,8 @@
       "typeTime": "日期和時間（2026-11-02 09:00）",
       "badTime": "請寫成 2026-11-02 09:00 這樣的日期和時間。",
       "none": "還沒有提醒。在一行裡寫上 (@2026-11-02 09:00) 就行。",
-      "tool.list_reminders": "列出即將到來的提醒（開啟的資料夾中各文件裡的 (@2026-11-02 09:00) 標記），依時間先後排列，每條附時間、文字、文件路徑和行號。",
-      "tool.add_reminder": "在目前文件末尾新增一條提醒，寫成附時間的任務行：- [ ] 文字 (@2026-11-02 09:00)；到時會跳出通知。"
+      "tool.list_reminders": "列出即將到來的提醒（開啟的資料夾中各文件裡的 (@2026-11-02 09:00) 標記），依時間先後排列，每條附時間、文字、文件路徑和行號。 依截止日期列任務用 list_tasks。",
+      "tool.add_reminder": "在目前文件末尾新增一條提醒，寫成附時間的任務行：- [ ] 文字 (@2026-11-02 09:00)；到時會跳出通知。 使用者要在某個時間被提醒時用它；只有截止日期的待辦用 add_task。"
     },
     "ja": {
       "name": "リマインダー",
@@ -151,8 +148,8 @@
       "typeTime": "日付と時刻（2026-11-02 09:00）",
       "badTime": "2026-11-02 09:00 のような日付と時刻にしてください。",
       "none": "まだリマインダーはありません。行に (@2026-11-02 09:00) と書いてください。",
-      "tool.list_reminders": "これからのリマインダー（開いているフォルダの文書にある (@2026-11-02 09:00) の印）を近い順に、時刻・本文・文書のパス・行番号とともに一覧にします。",
-      "tool.add_reminder": "前面の文書の末尾に、時刻付きのタスク行 - [ ] 本文 (@2026-11-02 09:00) としてリマインダーを追加します。その時刻に通知が届きます。"
+      "tool.list_reminders": "これからのリマインダー（開いているフォルダの文書にある (@2026-11-02 09:00) の印）を近い順に、時刻・本文・文書のパス・行番号とともに一覧にします。 期日ごとのタスクは list_tasks です。",
+      "tool.add_reminder": "前面の文書の末尾に、時刻付きのタスク行 - [ ] 本文 (@2026-11-02 09:00) としてリマインダーを追加します。その時刻に通知が届きます。 決まった時刻に知らせてほしいときに使います。期日だけの ToDo は add_task です。"
     },
     "ko": {
       "name": "알림",
@@ -167,8 +164,8 @@
       "typeTime": "날짜와 시간(2026-11-02 09:00)",
       "badTime": "2026-11-02 09:00 같은 날짜와 시간이 아닙니다.",
       "none": "아직 알림이 없습니다. 줄에 (@2026-11-02 09:00)을 쓰세요.",
-      "tool.list_reminders": "다가오는 알림(열린 폴더의 문서에 있는 (@2026-11-02 09:00) 표시)을 가까운 순서로, 시각·내용·문서 경로·줄 번호와 함께 나열합니다.",
-      "tool.add_reminder": "앞에 열린 문서 끝에 시각이 붙은 작업 줄 - [ ] 내용 (@2026-11-02 09:00) 로 알림을 추가합니다. 그 시각에 알림이 옵니다."
+      "tool.list_reminders": "다가오는 알림(열린 폴더의 문서에 있는 (@2026-11-02 09:00) 표시)을 가까운 순서로, 시각·내용·문서 경로·줄 번호와 함께 나열합니다. 마감일별 할 일은 list_tasks입니다.",
+      "tool.add_reminder": "앞에 열린 문서 끝에 시각이 붙은 작업 줄 - [ ] 내용 (@2026-11-02 09:00) 로 알림을 추가합니다. 그 시각에 알림이 옵니다. 정해진 시각에 알림을 받고 싶을 때 씁니다. 마감일만 있는 할 일은 add_task입니다."
     },
     "de": {
       "name": "Erinnerungen",
@@ -183,8 +180,8 @@
       "typeTime": "Datum und Uhrzeit (2026-11-02 09:00)",
       "badTime": "Das ist kein Datum mit Uhrzeit wie 2026-11-02 09:00.",
       "none": "Noch keine Erinnerungen. Schreiben Sie (@2026-11-02 09:00) in eine Zeile.",
-      "tool.list_reminders": "Listet die kommenden Erinnerungen - (@2026-11-02 09:00)-Marken in den Dokumenten des geöffneten Ordners - auf, die nächste zuerst, jede mit Zeit, Text, Dokumentpfad und Zeile.",
-      "tool.add_reminder": "Fügt am Ende des vorderen Dokuments eine Erinnerung als Aufgabenzeile mit Zeit hinzu, - [ ] Text (@2026-11-02 09:00); dann kommt eine Mitteilung."
+      "tool.list_reminders": "Listet die kommenden Erinnerungen - (@2026-11-02 09:00)-Marken in den Dokumenten des geöffneten Ordners - auf, die nächste zuerst, jede mit Zeit, Text, Dokumentpfad und Zeile. Aufgaben nach Fälligkeit: list_tasks.",
+      "tool.add_reminder": "Fügt am Ende des vorderen Dokuments eine Erinnerung als Aufgabenzeile mit Zeit hinzu, - [ ] Text (@2026-11-02 09:00); dann kommt eine Mitteilung. Wenn der Nutzer zu einer Uhrzeit erinnert werden will; eine Aufgabe nur mit Fälligkeitsdatum ist add_task."
     },
     "es": {
       "name": "Recordatorios",
@@ -199,8 +196,8 @@
       "typeTime": "Fecha y hora (2026-11-02 09:00)",
       "badTime": "Eso no es una fecha y hora como 2026-11-02 09:00.",
       "none": "Aún no hay recordatorios. Escribe (@2026-11-02 09:00) en una línea.",
-      "tool.list_reminders": "Enumera los próximos recordatorios - marcas (@2026-11-02 09:00) en los documentos de la carpeta abierta -, el más cercano primero, cada uno con su hora, texto, ruta del documento y línea.",
-      "tool.add_reminder": "Añade un recordatorio como línea de tarea con su hora, - [ ] texto (@2026-11-02 09:00), al final del documento al frente; a esa hora llega una notificación."
+      "tool.list_reminders": "Enumera los próximos recordatorios - marcas (@2026-11-02 09:00) en los documentos de la carpeta abierta -, el más cercano primero, cada uno con su hora, texto, ruta del documento y línea. Las tareas por fecha límite son list_tasks.",
+      "tool.add_reminder": "Añade un recordatorio como línea de tarea con su hora, - [ ] texto (@2026-11-02 09:00), al final del documento al frente; a esa hora llega una notificación. Úsalo cuando el usuario quiera un aviso a una hora; una tarea con solo fecha límite es add_task."
     },
     "fr": {
       "name": "Rappels",
@@ -215,8 +212,8 @@
       "typeTime": "Date et heure (2026-11-02 09:00)",
       "badTime": "Ce n’est pas une date et une heure comme 2026-11-02 09:00.",
       "none": "Pas encore de rappel. Écrivez (@2026-11-02 09:00) dans une ligne.",
-      "tool.list_reminders": "Liste les rappels à venir - les marques (@2026-11-02 09:00) des documents du dossier ouvert -, le plus proche d'abord, chacun avec son heure, son texte, le chemin du document et la ligne.",
-      "tool.add_reminder": "Ajoute un rappel sous forme de ligne de tâche avec son heure, - [ ] texte (@2026-11-02 09:00), à la fin du document au premier plan ; une notification arrive alors."
+      "tool.list_reminders": "Liste les rappels à venir - les marques (@2026-11-02 09:00) des documents du dossier ouvert -, le plus proche d'abord, chacun avec son heure, son texte, le chemin du document et la ligne. Les tâches par échéance, c’est list_tasks.",
+      "tool.add_reminder": "Ajoute un rappel sous forme de ligne de tâche avec son heure, - [ ] texte (@2026-11-02 09:00), à la fin du document au premier plan ; une notification arrive alors. À utiliser quand l’utilisateur veut être prévenu à une heure ; une tâche avec seulement une échéance, c’est add_task."
     },
     "pt": {
       "name": "Lembretes",
@@ -231,8 +228,8 @@
       "typeTime": "Data e hora (2026-11-02 09:00)",
       "badTime": "Isso não é uma data e hora como 2026-11-02 09:00.",
       "none": "Ainda não há lembretes. Escreva (@2026-11-02 09:00) numa linha.",
-      "tool.list_reminders": "Lista os próximos lembretes - marcas (@2026-11-02 09:00) nos documentos da pasta aberta -, o mais próximo primeiro, cada um com a hora, o texto, o caminho do documento e a linha.",
-      "tool.add_reminder": "Adiciona um lembrete como linha de tarefa com a hora, - [ ] texto (@2026-11-02 09:00), no fim do documento em primeiro plano; nessa hora chega uma notificação."
+      "tool.list_reminders": "Lista os próximos lembretes - marcas (@2026-11-02 09:00) nos documentos da pasta aberta -, o mais próximo primeiro, cada um com a hora, o texto, o caminho do documento e a linha. Tarefas por prazo são list_tasks.",
+      "tool.add_reminder": "Adiciona um lembrete como linha de tarefa com a hora, - [ ] texto (@2026-11-02 09:00), no fim do documento em primeiro plano; nessa hora chega uma notificação. Use quando o usuário quiser ser avisado num horário; uma tarefa só com prazo é add_task."
     },
     "ru": {
       "name": "Напоминания",
@@ -247,8 +244,8 @@
       "typeTime": "Дата и время (2026-11-02 09:00)",
       "badTime": "Это не дата и время вида 2026-11-02 09:00.",
       "none": "Напоминаний пока нет. Напишите в строке (@2026-11-02 09:00).",
-      "tool.list_reminders": "Перечисляет предстоящие напоминания - метки (@2026-11-02 09:00) в документах открытой папки - начиная с ближайшего, с временем, текстом, путём к документу и строкой.",
-      "tool.add_reminder": "Добавляет напоминание строкой задачи со временем, - [ ] текст (@2026-11-02 09:00), в конец документа на переднем плане; в это время придёт уведомление."
+      "tool.list_reminders": "Перечисляет предстоящие напоминания - метки (@2026-11-02 09:00) в документах открытой папки - начиная с ближайшего, с временем, текстом, путём к документу и строкой. Задачи по сроку — list_tasks.",
+      "tool.add_reminder": "Добавляет напоминание строкой задачи со временем, - [ ] текст (@2026-11-02 09:00), в конец документа на переднем плане; в это время придёт уведомление. Когда пользователь хочет напоминание в определённое время; задача только со сроком — add_task."
     }
   }
 }

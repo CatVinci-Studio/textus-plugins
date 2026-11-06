@@ -1,7 +1,7 @@
 {
   "id": "catvinci.database",
   "name": "%name%",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "publisher": "catvinci",
   "author": "CatVinci Studio",
   "description": "%description%",
@@ -12,11 +12,7 @@
     "textus": ">=1.3.2"
   },
   "platforms": ["desktop", "ios"],
-  "main": [
-    "lib/notion-csv.js",
-    "db.js",
-    "host.js"
-  ],
+  "main": ["lib/folder-paths.js", "db.js", "host.js"],
   "permissions": [
     "files.read",
     "files.write",
@@ -29,22 +25,12 @@
       {
         "command": "catvinci.database.new",
         "title": "%new%"
-      },
-      {
-        "command": "catvinci.database.importNotion",
-        "title": "%importNotion%"
       }
     ],
     "menus": {
       "editor/slash": [
         {
           "command": "catvinci.database.new"
-        }
-      ],
-      "file/context": [
-        {
-          "command": "catvinci.database.importNotion",
-          "when": "fileExtension == .csv"
         }
       ],
       "app/plugins": [
@@ -182,9 +168,8 @@
   "l10n": {
     "en": {
       "name": "Database Views",
-      "description": "A folder's documents as a table, a board, a calendar or a gallery, their front matter the columns - edit them in place. Imports Notion databases.",
+      "description": "A folder's documents as a table, a board, a calendar or a gallery, their front matter the columns - edit them in place.",
       "new": "New Database…",
-      "importNotion": "Import Notion Database…",
       "table": "Table",
       "board": "Board",
       "calendar": "Calendar",
@@ -205,9 +190,6 @@
       "needsSaved": "Save this document in the open folder first: the database's folder goes beside it.",
       "needsFolder": "Open a folder first.",
       "dbName": "Database name",
-      "importPick": "Choose a Notion export's .csv file in the sidebar (right-click it).",
-      "importing": "Importing {0}",
-      "imported": "{0} pages imported into {1}.",
       "aiNote": "Put the block where the user wants the database; its pages are made.",
       "toolDescription": "Makes a database: a folder of documents whose front matter holds each one's properties, and a ```database block that shows them as a table, board, calendar or gallery. Returns the block to insert.",
       "locale": "en",
@@ -248,13 +230,12 @@
       "deleteAsk": "Delete “{0}” from {1} pages?",
       "open": "Open",
       "tool.query_rows": "Reads a database's rows - the documents in its folder - each with its name, path and properties, filtered and sorted as a ```database block's filter and sort lines would.",
-      "tool.add_row": "Adds a row to a database: a document in its folder, named for the row, with its properties in its front matter. Every block showing that folder shows it."
+      "tool.add_row": "Adds a row to a database: a document in its folder, named for the row, with its properties in its front matter. Every block showing that folder shows it. Only for a database folder (create_database, query_rows); a plain to-do is add_task."
     },
     "zh": {
       "name": "数据库视图",
-      "description": "把一个文件夹里的文档显示成表格、看板、日历或画廊，文档开头的属性就是各列，可以直接编辑。可导入 Notion 数据库。",
+      "description": "把一个文件夹里的文档显示成表格、看板、日历或画廊，文档开头的属性就是各列，可以直接编辑。",
       "new": "新建数据库…",
-      "importNotion": "导入 Notion 数据库…",
       "table": "表格",
       "board": "看板",
       "calendar": "日历",
@@ -275,9 +256,6 @@
       "needsSaved": "请先把这篇文档保存在打开的文件夹里：数据库的文件夹会放在它旁边。",
       "needsFolder": "请先打开一个文件夹。",
       "dbName": "数据库名称",
-      "importPick": "在侧边栏右键 Notion 导出的 .csv 文件来导入。",
-      "importing": "正在导入 {0}",
-      "imported": "已把 {0} 个页面导入到 {1}。",
       "aiNote": "把这个块放到用户想要的位置；页面已经建好。",
       "toolDescription": "创建一个数据库：一个文件夹，里面每篇文档的开头属性就是它的各项属性；再加一个 ```database 块，用表格、看板、日历或画廊展示它们。返回要插入的块。",
       "locale": "zh-CN",
@@ -318,13 +296,12 @@
       "deleteAsk": "要从 {1} 个页面中删除“{0}”吗？",
       "open": "打开",
       "tool.query_rows": "读取数据库的行（即其文件夹里的文档），每行带名称、路径和各项属性；可以像 ```database 块的 filter 和 sort 行那样筛选和排序。",
-      "tool.add_row": "在数据库中添加一行：在其文件夹里新建一篇以该行命名的文档，各项属性写在开头属性中。展示该文件夹的每个块都会显示它。"
+      "tool.add_row": "在数据库中添加一行：在其文件夹里新建一篇以该行命名的文档，各项属性写在开头属性中。展示该文件夹的每个块都会显示它。 只用于数据库文件夹（create_database、query_rows）；普通待办用 add_task。"
     },
     "zh-Hant": {
       "name": "資料庫檢視",
-      "description": "把一個資料夾裡的文件顯示成表格、看板、日曆或畫廊，文件開頭的屬性就是各欄，可以直接編輯。可匯入 Notion 資料庫。",
+      "description": "把一個資料夾裡的文件顯示成表格、看板、日曆或畫廊，文件開頭的屬性就是各欄，可以直接編輯。",
       "new": "新增資料庫…",
-      "importNotion": "匯入 Notion 資料庫…",
       "table": "表格",
       "board": "看板",
       "calendar": "日曆",
@@ -345,9 +322,6 @@
       "needsSaved": "請先把這份文件儲存在打開的資料夾裡：資料庫的資料夾會放在它旁邊。",
       "needsFolder": "請先打開一個資料夾。",
       "dbName": "資料庫名稱",
-      "importPick": "在側邊欄右鍵 Notion 匯出的 .csv 檔來匯入。",
-      "importing": "正在匯入 {0}",
-      "imported": "已把 {0} 個頁面匯入到 {1}。",
       "aiNote": "Put the block where the user wants the database; its pages are made.",
       "toolDescription": "建立一個資料庫：一個資料夾，裡面每份文件的開頭屬性就是它的各項屬性；再加一個 ```database 區塊，以表格、看板、日曆或圖庫展示它們。回傳要插入的區塊。",
       "locale": "zh-TW",
@@ -388,13 +362,12 @@
       "deleteAsk": "要從 {1} 個頁面中刪除「{0}」嗎？",
       "open": "打開",
       "tool.query_rows": "讀取資料庫的列（即其資料夾裡的文件），每列附名稱、路徑和各項屬性；可以像 ```database 區塊的 filter 和 sort 行那樣篩選和排序。",
-      "tool.add_row": "在資料庫中新增一列：在其資料夾裡新建一份以該列命名的文件，各項屬性寫在開頭屬性中。展示該資料夾的每個區塊都會顯示它。"
+      "tool.add_row": "在資料庫中新增一列：在其資料夾裡新建一份以該列命名的文件，各項屬性寫在開頭屬性中。展示該資料夾的每個區塊都會顯示它。 只用於資料庫資料夾（create_database、query_rows）；一般待辦用 add_task。"
     },
     "ja": {
       "name": "データベースビュー",
-      "description": "フォルダ内の文書を表・ボード・カレンダー・ギャラリーで表示。フロントマターが各列で、その場で編集できます。Notion のデータベースも取り込めます。",
+      "description": "フォルダ内の文書を表・ボード・カレンダー・ギャラリーで表示。フロントマターが各列で、その場で編集できます。",
       "new": "新しいデータベース…",
-      "importNotion": "Notion のデータベースを取り込む…",
       "table": "表",
       "board": "ボード",
       "calendar": "カレンダー",
@@ -415,9 +388,6 @@
       "needsSaved": "先にこの文書を開いているフォルダに保存してください。データベースのフォルダはその隣に作られます。",
       "needsFolder": "先にフォルダを開いてください。",
       "dbName": "データベース名",
-      "importPick": "サイドバーで Notion から書き出した .csv を右クリックして取り込みます。",
-      "importing": "{0} を取り込み中",
-      "imported": "{0} ページを {1} に取り込みました。",
       "aiNote": "Put the block where the user wants the database; its pages are made.",
       "toolDescription": "データベースを作ります。各文書のフロントマターにそれぞれのプロパティを持つ文書のフォルダと、それらを表・ボード・カレンダー・ギャラリーで見せる ```database ブロックです。挿入するブロックを返します。",
       "locale": "ja",
@@ -458,13 +428,12 @@
       "deleteAsk": "{1} ページから「{0}」を削除しますか？",
       "open": "開く",
       "tool.query_rows": "データベースの行（そのフォルダにある文書）を、名前・パス・プロパティとともに読みます。```database ブロックの filter と sort の行と同じように絞り込み、並べ替えます。",
-      "tool.add_row": "データベースに行を追加します。そのフォルダに行の名前の文書を作り、プロパティをフロントマターに書きます。そのフォルダを表示するすべてのブロックに現れます。"
+      "tool.add_row": "データベースに行を追加します。そのフォルダに行の名前の文書を作り、プロパティをフロントマターに書きます。そのフォルダを表示するすべてのブロックに現れます。 データベースのフォルダ（create_database、query_rows）専用です。普通の ToDo は add_task です。"
     },
     "ko": {
       "name": "데이터베이스 보기",
-      "description": "폴더의 문서를 표·보드·캘린더·갤러리로 보여 줍니다. 프런트 매터가 각 열이며 바로 편집할 수 있습니다. Notion 데이터베이스도 가져옵니다.",
+      "description": "폴더의 문서를 표·보드·캘린더·갤러리로 보여 줍니다. 프런트 매터가 각 열이며 바로 편집할 수 있습니다.",
       "new": "새 데이터베이스…",
-      "importNotion": "Notion 데이터베이스 가져오기…",
       "table": "표",
       "board": "보드",
       "calendar": "캘린더",
@@ -485,9 +454,6 @@
       "needsSaved": "먼저 이 문서를 열린 폴더에 저장하세요. 데이터베이스 폴더는 그 옆에 만들어집니다.",
       "needsFolder": "먼저 폴더를 여세요.",
       "dbName": "데이터베이스 이름",
-      "importPick": "사이드바에서 Notion에서 내보낸 .csv를 오른쪽 클릭해 가져오세요.",
-      "importing": "{0} 가져오는 중",
-      "imported": "{0}개 페이지를 {1}에 가져왔습니다.",
       "aiNote": "Put the block where the user wants the database; its pages are made.",
       "toolDescription": "데이터베이스를 만듭니다. 각 문서의 프런트 매터에 그 속성을 담은 문서 폴더와, 그것들을 표·보드·달력·갤러리로 보여 주는 ```database 블록입니다. 넣을 블록을 돌려줍니다.",
       "locale": "ko",
@@ -528,13 +494,12 @@
       "deleteAsk": "{1}개 페이지에서 “{0}”을(를) 삭제할까요?",
       "open": "열기",
       "tool.query_rows": "데이터베이스의 행(그 폴더에 있는 문서)을 이름·경로·속성과 함께 읽습니다. ```database 블록의 filter와 sort 줄처럼 거르고 정렬합니다.",
-      "tool.add_row": "데이터베이스에 행을 추가합니다. 그 폴더에 행 이름의 문서를 만들고 속성을 프런트 매터에 적습니다. 그 폴더를 보여 주는 모든 블록에 나타납니다."
+      "tool.add_row": "데이터베이스에 행을 추가합니다. 그 폴더에 행 이름의 문서를 만들고 속성을 프런트 매터에 적습니다. 그 폴더를 보여 주는 모든 블록에 나타납니다. 데이터베이스 폴더(create_database, query_rows) 전용입니다. 일반 할 일은 add_task입니다."
     },
     "de": {
       "name": "Datenbankansichten",
-      "description": "Die Dokumente eines Ordners als Tabelle, Board, Kalender oder Galerie, ihr Front Matter als Spalten – direkt bearbeitbar. Importiert Notion-Datenbanken.",
+      "description": "Die Dokumente eines Ordners als Tabelle, Board, Kalender oder Galerie, ihr Front Matter als Spalten – direkt bearbeitbar.",
       "new": "Neue Datenbank …",
-      "importNotion": "Notion-Datenbank importieren …",
       "table": "Tabelle",
       "board": "Board",
       "calendar": "Kalender",
@@ -555,9 +520,6 @@
       "needsSaved": "Speichern Sie dieses Dokument zuerst im geöffneten Ordner: Der Ordner der Datenbank kommt daneben.",
       "needsFolder": "Öffnen Sie zuerst einen Ordner.",
       "dbName": "Name der Datenbank",
-      "importPick": "Klicken Sie in der Seitenleiste mit der rechten Maustaste auf die .csv eines Notion-Exports.",
-      "importing": "{0} wird importiert",
-      "imported": "{0} Seiten nach {1} importiert.",
       "aiNote": "Put the block where the user wants the database; its pages are made.",
       "toolDescription": "Legt eine Datenbank an: einen Ordner mit Dokumenten, deren Front Matter ihre Eigenschaften hält, und einen ```database-Block, der sie als Tabelle, Board, Kalender oder Galerie zeigt. Gibt den einzufügenden Block zurück.",
       "locale": "de",
@@ -598,13 +560,12 @@
       "deleteAsk": "„{0}“ aus {1} Seiten löschen?",
       "open": "Öffnen",
       "tool.query_rows": "Liest die Zeilen einer Datenbank - die Dokumente in ihrem Ordner -, jede mit Name, Pfad und Eigenschaften, gefiltert und sortiert wie mit den filter- und sort-Zeilen eines ```database-Blocks.",
-      "tool.add_row": "Fügt einer Datenbank eine Zeile hinzu: ein Dokument in ihrem Ordner, nach der Zeile benannt, mit ihren Eigenschaften im Front Matter. Jeder Block, der den Ordner zeigt, zeigt sie."
+      "tool.add_row": "Fügt einer Datenbank eine Zeile hinzu: ein Dokument in ihrem Ordner, nach der Zeile benannt, mit ihren Eigenschaften im Front Matter. Jeder Block, der den Ordner zeigt, zeigt sie. Nur für den Ordner einer Datenbank (create_database, query_rows); eine einfache Aufgabe ist add_task."
     },
     "es": {
       "name": "Vistas de base de datos",
-      "description": "Los documentos de una carpeta como tabla, tablero, calendario o galería; sus metadatos son las columnas y se editan ahí mismo. Importa bases de datos de Notion.",
+      "description": "Los documentos de una carpeta como tabla, tablero, calendario o galería; sus metadatos son las columnas y se editan ahí mismo.",
       "new": "Nueva base de datos…",
-      "importNotion": "Importar base de datos de Notion…",
       "table": "Tabla",
       "board": "Tablero",
       "calendar": "Calendario",
@@ -625,9 +586,6 @@
       "needsSaved": "Guarda primero este documento en la carpeta abierta: la carpeta de la base de datos va a su lado.",
       "needsFolder": "Abre primero una carpeta.",
       "dbName": "Nombre de la base de datos",
-      "importPick": "Haz clic derecho en la barra lateral sobre el .csv exportado de Notion.",
-      "importing": "Importando {0}",
-      "imported": "{0} páginas importadas en {1}.",
       "aiNote": "Put the block where the user wants the database; its pages are made.",
       "toolDescription": "Crea una base de datos: una carpeta de documentos cuyo front matter guarda las propiedades de cada uno, y un bloque ```database que los muestra como tabla, tablero, calendario o galería. Devuelve el bloque que hay que insertar.",
       "locale": "es",
@@ -668,13 +626,12 @@
       "deleteAsk": "¿Eliminar «{0}» de {1} páginas?",
       "open": "Abrir",
       "tool.query_rows": "Lee las filas de una base de datos - los documentos de su carpeta -, cada una con su nombre, ruta y propiedades, filtradas y ordenadas como lo harían las líneas filter y sort de un bloque ```database.",
-      "tool.add_row": "Añade una fila a una base de datos: un documento en su carpeta, con el nombre de la fila y sus propiedades en el front matter. Todo bloque que muestre esa carpeta la muestra."
+      "tool.add_row": "Añade una fila a una base de datos: un documento en su carpeta, con el nombre de la fila y sus propiedades en el front matter. Todo bloque que muestre esa carpeta la muestra. Solo para la carpeta de una base de datos (create_database, query_rows); una tarea simple es add_task."
     },
     "fr": {
       "name": "Vues de base de données",
-      "description": "Les documents d’un dossier en tableau, tableau Kanban, calendrier ou galerie ; leurs métadonnées sont les colonnes, modifiables sur place. Importe les bases Notion.",
+      "description": "Les documents d’un dossier en tableau, tableau Kanban, calendrier ou galerie ; leurs métadonnées sont les colonnes, modifiables sur place.",
       "new": "Nouvelle base de données…",
-      "importNotion": "Importer une base de données Notion…",
       "table": "Tableau",
       "board": "Kanban",
       "calendar": "Calendrier",
@@ -695,9 +652,6 @@
       "needsSaved": "Enregistrez d’abord ce document dans le dossier ouvert : le dossier de la base va à côté.",
       "needsFolder": "Ouvrez d’abord un dossier.",
       "dbName": "Nom de la base",
-      "importPick": "Faites un clic droit dans la barre latérale sur le .csv d’un export Notion.",
-      "importing": "Import de {0}",
-      "imported": "{0} pages importées dans {1}.",
       "aiNote": "Put the block where the user wants the database; its pages are made.",
       "toolDescription": "Crée une base de données : un dossier de documents dont le front matter porte les propriétés de chacun, et un bloc ```database qui les montre en tableau, tableau Kanban, calendrier ou galerie. Renvoie le bloc à insérer.",
       "locale": "fr",
@@ -738,13 +692,12 @@
       "deleteAsk": "Supprimer « {0} » de {1} pages ?",
       "open": "Ouvrir",
       "tool.query_rows": "Lit les lignes d'une base de données - les documents de son dossier -, chacune avec son nom, son chemin et ses propriétés, filtrées et triées comme le feraient les lignes filter et sort d'un bloc ```database.",
-      "tool.add_row": "Ajoute une ligne à une base de données : un document dans son dossier, au nom de la ligne, avec ses propriétés dans son front matter. Tout bloc qui montre ce dossier l'affiche."
+      "tool.add_row": "Ajoute une ligne à une base de données : un document dans son dossier, au nom de la ligne, avec ses propriétés dans son front matter. Tout bloc qui montre ce dossier l'affiche. Seulement pour le dossier d’une base (create_database, query_rows) ; une simple tâche, c’est add_task."
     },
     "pt": {
       "name": "Visualizações de banco de dados",
-      "description": "Os documentos de uma pasta como tabela, quadro, calendário ou galeria; os metadados são as colunas, editáveis ali mesmo. Importa bancos de dados do Notion.",
+      "description": "Os documentos de uma pasta como tabela, quadro, calendário ou galeria; os metadados são as colunas, editáveis ali mesmo.",
       "new": "Novo banco de dados…",
-      "importNotion": "Importar banco de dados do Notion…",
       "table": "Tabela",
       "board": "Quadro",
       "calendar": "Calendário",
@@ -765,9 +718,6 @@
       "needsSaved": "Salve este documento na pasta aberta primeiro: a pasta do banco fica ao lado.",
       "needsFolder": "Abra uma pasta primeiro.",
       "dbName": "Nome do banco de dados",
-      "importPick": "Clique com o botão direito na barra lateral no .csv exportado do Notion.",
-      "importing": "Importando {0}",
-      "imported": "{0} páginas importadas em {1}.",
       "aiNote": "Put the block where the user wants the database; its pages are made.",
       "toolDescription": "Cria uma base de dados: uma pasta de documentos cujo front matter guarda as propriedades de cada um, e um bloco ```database que os mostra como tabela, quadro, calendário ou galeria. Devolve o bloco a inserir.",
       "locale": "pt",
@@ -808,13 +758,12 @@
       "deleteAsk": "Excluir “{0}” de {1} páginas?",
       "open": "Abrir",
       "tool.query_rows": "Lê as linhas de uma base de dados - os documentos da sua pasta -, cada uma com o nome, o caminho e as propriedades, filtradas e ordenadas como fariam as linhas filter e sort de um bloco ```database.",
-      "tool.add_row": "Adiciona uma linha a uma base de dados: um documento na sua pasta, com o nome da linha e as propriedades no front matter. Todos os blocos que mostram essa pasta passam a mostrá-la."
+      "tool.add_row": "Adiciona uma linha a uma base de dados: um documento na sua pasta, com o nome da linha e as propriedades no front matter. Todos os blocos que mostram essa pasta passam a mostrá-la. Só para a pasta de um banco de dados (create_database, query_rows); uma tarefa simples é add_task."
     },
     "ru": {
       "name": "Представления базы данных",
-      "description": "Документы папки как таблица, доска, календарь или галерея; их метаданные — столбцы, правятся на месте. Импортирует базы Notion.",
+      "description": "Документы папки как таблица, доска, календарь или галерея; их метаданные — столбцы, правятся на месте.",
       "new": "Новая база данных…",
-      "importNotion": "Импорт базы данных Notion…",
       "table": "Таблица",
       "board": "Доска",
       "calendar": "Календарь",
@@ -835,9 +784,6 @@
       "needsSaved": "Сначала сохраните документ в открытой папке: папка базы будет рядом.",
       "needsFolder": "Сначала откройте папку.",
       "dbName": "Название базы",
-      "importPick": "Щёлкните правой кнопкой в боковой панели по .csv из экспорта Notion.",
-      "importing": "Импорт {0}",
-      "imported": "Импортировано страниц: {0} в {1}.",
       "aiNote": "Put the block where the user wants the database; its pages are made.",
       "toolDescription": "Создаёт базу данных: папку документов, во front matter каждого из которых хранятся его свойства, и блок ```database, показывающий их таблицей, доской, календарём или галереей. Возвращает блок для вставки.",
       "locale": "ru",
@@ -878,7 +824,7 @@
       "deleteAsk": "Удалить «{0}» из страниц ({1})?",
       "open": "Открыть",
       "tool.query_rows": "Читает строки базы данных - документы в её папке, - каждую с именем, путём и свойствами, с отбором и сортировкой, как строки filter и sort блока ```database.",
-      "tool.add_row": "Добавляет строку в базу данных: документ в её папке с именем строки и свойствами во front matter. Её покажет каждый блок, показывающий эту папку."
+      "tool.add_row": "Добавляет строку в базу данных: документ в её папке с именем строки и свойствами во front matter. Её покажет каждый блок, показывающий эту папку. Только для папки базы данных (create_database, query_rows); обычная задача — add_task."
     }
   }
 }

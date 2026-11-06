@@ -39,6 +39,13 @@ function fixture() {
         files.set(p, bytes(next));
         return next;
       }),
+      trash: vi.fn(async (p: string) => {
+        files.delete(p);
+      }),
+      rename: vi.fn(async (from: string, to: string) => {
+        files.set(to, files.get(from)!);
+        files.delete(from);
+      }),
     },
     layout: { tabs: async () => (open ? [{ path: "/notes/a.md" }] : []) },
   };
@@ -147,4 +154,44 @@ it("refuses stale reads and folder switches without writing", async () => {
     "rootChanged",
   );
   expect(f.api.files.process).not.toHaveBeenCalled();
+});
+it("trashes a deleted file only while it is closed and unchanged", async () => {
+  const f = fixture();
+  const before = await hash(bytes("before"));
+  f.open();
+  expect(await f.local.remove("a.md", before)).toBe("deferred");
+  const g = fixture();
+  expect(await g.local.remove("a.md", await hash(bytes("edited")))).toBe(false);
+  expect(await g.local.remove("a.md", before)).toBe(true);
+  expect(g.api.files.trash).toHaveBeenCalledWith("/notes/a.md");
+  expect(g.files.has("/notes/a.md")).toBe(false);
+  expect(f.api.files.trash).not.toHaveBeenCalled();
+});
+it("renames only an unchanged file onto a free name", async () => {
+  const f = fixture();
+  const before = await hash(bytes("before"));
+  f.files.set("/notes/taken.md", bytes("other"));
+  expect(await f.local.move("a.md", "taken.md", before)).toBe(false);
+  expect(await f.local.move("a.md", "b/c.md", await hash(bytes("x")))).toBe(
+    false,
+  );
+  expect(await f.local.move("a.md", "b/c.md", before)).toBe(true);
+  expect(f.api.files.rename).toHaveBeenCalledOnce();
+  expect(f.files.has("/notes/b/c.md")).toBe(true);
+});
+it("leaves a file open in a tab under its name instead of renaming it", async () => {
+  const f = fixture();
+  f.open();
+  expect(await f.local.move("a.md", "b.md", await hash(bytes("before")))).toBe(
+    false,
+  );
+  expect(f.api.files.rename).not.toHaveBeenCalled();
+  expect(f.files.has("/notes/a.md")).toBe(true);
+});
+it("remembers the paths it trashed and renamed", async () => {
+  const f = fixture();
+  const before = await hash(bytes("before"));
+  await f.local.move("a.md", "b.md", before);
+  await f.local.remove("b.md", before);
+  expect([...f.local.touched]).toEqual(["/notes/a.md", "/notes/b.md"]);
 });

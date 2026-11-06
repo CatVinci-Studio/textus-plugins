@@ -8,11 +8,11 @@ describe("link cards' tool", () => {
   it("fetches a page's card and its block", async () => {
     const fetch = async () => ({ ok: true, text: async () => PAGE });
     const { tools } = loadPlugin("catvinci.link-cards", { net: { fetch } });
-    expect(await tools.get("fetch_link_card")!({ url: "https://textus.catvinci.com" })).toMatchObject({
+    expect(await tools.get("fetch_link_card")!({ url: "https://textus.md" })).toMatchObject({
       title: "Textus",
       description: "A Markdown editor",
       fetched: true,
-      block: "```card\nurl: https://textus.catvinci.com\ntitle: Textus\ndescription: A Markdown editor\n```\n",
+      block: "```card\nurl: https://textus.md\ntitle: Textus\ndescription: A Markdown editor\n```\n",
     });
   });
 

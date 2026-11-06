@@ -1,10 +1,10 @@
 // Database: ```database blocks drawn as a table, a board, a calendar or a
 // gallery of the documents in a folder, their front matter the columns.
 // Edits in the view are written to those documents' front matter; New
-// makes one. Also: a Notion export's CSV as such a folder, and a tool for
-// Textus AI to make one.
+// makes one. Also: a tool for Textus AI to make one. Notion exports are
+// imported by the Notion Import plugin, the one place for that.
 
-/* global database, notionCsv */
+/* global database, folderPaths */
 const t = (key, ...args) => textus.l10n.t(key, ...args);
 const STRINGS = [
   "table", "board", "calendar", "gallery", "page", "add", "count", "empty",
@@ -20,13 +20,8 @@ let root = null;
 /** The blocks on screen, each sending itself again. */
 const live = new Set();
 
-const join = (dir, rel) => (rel ? dir.replace(/[\\/]+$/, "") + "/" + rel : dir);
-const relOf = (path) => {
-  if (!root || !path) return null;
-  const base = root.replace(/[\\/]+$/, "").replace(/\\/g, "/") + "/";
-  const p = path.replace(/\\/g, "/");
-  return p.startsWith(base) ? p.slice(base.length) : null;
-};
+const join = folderPaths.abs;
+const relOf = (path) => folderPaths.rel(root, path);
 const fileName = (title) => title.trim().replace(/[\\/:*?"<>|#^[\]]/g, "-");
 
 /** Front matter values as the page can show them: dates as their day. */
@@ -210,40 +205,6 @@ async function newDatabase() {
   await textus.editor.insertText("```database\nfrom: " + fileName(name) + "\nview: table\n```\n");
 }
 
-/** A Notion export's database (its CSV, with its pages in the folder of
- *  the same name) as documents with front matter, and a page showing them. */
-async function importNotion(path) {
-  root = await textus.files.root();
-  const csv = typeof path === "string" ? path : null;
-  if (!root || !csv || !relOf(csv)) return textus.ui.message(t("importPick"));
-  const rel = relOf(csv);
-  const dir = rel.includes("/") ? rel.slice(0, rel.lastIndexOf("/")) : "";
-  const exportName = rel.slice(dir.length ? dir.length + 1 : 0).replace(/\.csv$/i, "").replace(/_all$/, "");
-  const name = notionCsv.withoutId(exportName);
-  const rows = notionCsv.fromNotionCsv(await textus.files.readText(csv));
-  const folder = (dir ? dir + "/" : "") + fileName(name);
-  await textus.files.createFolder(join(root, folder)).catch(() => {});
-  const pages = await textus.files.list(join(root, (dir ? dir + "/" : "") + exportName)).catch(() => []);
-  let made = 0;
-  await textus.ui.withProgress(t("importing", name), async (report) => {
-    for (const [i, row] of rows.entries()) {
-      report({ fraction: i / rows.length, message: row.name });
-      const file = join(root, folder + "/" + fileName(row.name) + ".md");
-      if (await textus.files.stat(file)) continue;
-      const page = pages.find((p) => /\.md$/i.test(p.name) && notionCsv.withoutId(p.name.replace(/\.md$/i, "")) === row.name);
-      const body = page ? notionCsv.notionBody(await textus.files.readText(page.path)) : "";
-      await textus.files.create(file, "# " + row.name + "\n" + (body ? "\n" + body + "\n" : ""));
-      await textus.files.frontmatter.update(file, (fm) => Object.assign(fm, row.props));
-      made++;
-    }
-  });
-  const index = join(root, folder + ".md");
-  if (!(await textus.files.stat(index)))
-    await textus.files.create(index, "# " + name + "\n\n```database\nfrom: " + fileName(name) + "\nview: table\n```\n");
-  await textus.layout.open(index);
-  textus.ui.notice(t("imported", made, name));
-}
-
 /** A row: a document in `folder` named for it, its properties in its front
  *  matter. False when it has no name or one of that name is there. */
 async function makeRow(folder, row) {
@@ -261,8 +222,8 @@ async function makeRow(folder, row) {
 async function databaseFolder(name) {
   root = await textus.files.root();
   if (!root) return { error: t("needsFolder") };
-  const folder = String(name || "").trim().replace(/\\/g, "/").replace(/^\.?\/+|\/+$/g, "");
-  if (!folder || folder.split("/").includes("..")) return { error: "database must be its folder's path in the open folder." };
+  const folder = folderPaths.clean(root, name, false);
+  if (!folder) return { error: "database must be its folder's path in the open folder." };
   return { folder: folder };
 }
 
@@ -290,7 +251,7 @@ async function queryRows(input) {
 }
 
 /** Textus AI's tool: one more row in a database. */
-async function addRow(input) {
+async function addRowTool(input) {
   const where = await databaseFolder(input.database);
   if (where.error) return where;
   await textus.files.createFolder(join(root, where.folder)).catch(() => {});
@@ -334,10 +295,9 @@ exports.activate = function (ctx) {
   ctx.subscriptions.push(
     textus.views.registerCodeBlock("database", { render: (b, w) => render(b, w, ctx) }),
     textus.commands.register("catvinci.database.new", newDatabase),
-    textus.commands.register("catvinci.database.importNotion", importNotion),
     textus.ai.registerTool("create_database", createDatabase),
     textus.ai.registerTool("query_rows", queryRows),
-    textus.ai.registerTool("add_row", addRow),
+    textus.ai.registerTool("add_row", addRowTool),
     // A page edited here, or anywhere: every block on screen again.
     textus.files.onDidChangeRoot(again),
     textus.metadata.onDidChange(again),

@@ -2,11 +2,12 @@
 
 Uma nota para cada dia e um calendário para chegar a qualquer uma delas.
 
-- **Ctrl+Alt+D** (**⌘⌥D** no Mac), ou **Plugins › Abrir a nota de hoje**, abre a nota de hoje; na primeira vez ela é criada.
+- **Ctrl+Alt+J** (**⌘⌥J** no Mac), ou **Plugins › Abrir a nota de hoje**, abre a nota de hoje; na primeira vez ela é criada.
 - A aba **Calendário** da barra lateral mostra o mês; os dias com nota ficam marcados. Clique num dia para abri-lo.
 - As notas ficam numa pasta dentro da pasta aberta. O nome dela e o texto inicial de um dia novo estão nos ajustes do plugin; a semana começa como na sua região.
 - **Plugins › Abrir o dia anterior** e **Abrir o dia seguinte** passam da nota de um dia para as vizinhas.
 - O modelo aceita {{weekday}}, {{yesterday}}, {{tomorrow}} e {{time}} além de {{date}}; por exemplo, `[[{{yesterday}}]]` liga cada dia ao anterior.
+- O texto inicial também pode ser o nome de um modelo da pasta Templates (a do plugin Modelos), como `Daily`. Num cofre do Obsidian, valem os ajustes de notas diárias dele: pasta, formato do nome como `YYYY/MM/YYYY-MM-DD` e modelo; o Textus nunca os altera.
 
 <!-- ai-tools -->
 ## Ferramentas para o Textus AI
@@ -14,5 +15,5 @@ Uma nota para cada dia e um calendário para chegar a qualquer uma delas.
 Com o plugin instalado, o Textus AI pode usá-las numa conversa:
 
 - `read_daily_note`: Lê a nota diária de um dia - a de hoje se não houver data - da pasta de notas diárias: o caminho, se existe e o texto.
-- `append_to_daily_note`: Acrescenta Markdown ao fim da nota diária de um dia - a de hoje se não houver data -, criando-a antes a partir do modelo se não existir.
+- `append_to_daily_note`: Acrescenta Markdown ao fim da nota diária de um dia - a de hoje se não houver data -, criando-a antes a partir do modelo se não existir. Uma nota para guardar na barra lateral é add_note; uma tarefa com data, add_task.
 <!-- /ai-tools -->

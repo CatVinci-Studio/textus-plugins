@@ -4,6 +4,7 @@ Sublinha o Markdown que quebra regras de estilo comuns e corrige de uma vez o qu
 
 - O que quebra uma regra fica sublinhado; pare o ponteiro em cima para ver qual regra e por quê.
 - **Corrigir Markdown** (clique direito ou o menu Plugins) corrige o que for possível, num único passo de desfazer.
+- #tags, definições de referência ([d]: url), links para títulos e comentários %% não são marcados nem alterados.
 
 <!-- ai-tools -->
 ## Ferramentas para o Textus AI

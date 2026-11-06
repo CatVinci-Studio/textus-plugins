@@ -1,0 +1,138 @@
+{
+  "id": "catvinci.keenable",
+  "name": "%name%",
+  "version": "0.1.0",
+  "publisher": "catvinci",
+  "author": "CatVinci Studio",
+  "description": "%description%",
+  "icon": "icon.svg",
+  "license": "MIT",
+  "repository": "https://github.com/CatVinci-Studio/textus-plugins",
+  "engines": {
+    "textus": ">=1.3.0"
+  },
+  "platforms": ["desktop", "ios"],
+  "main": ["host.js"],
+  "permissions": ["ai.tools", "network:api.keenable.ai"],
+  "activationEvents": ["onStartupFinished"],
+  "contributes": {
+    "commands": [
+      {
+        "command": "catvinci.keenable.setKey",
+        "title": "%setKey%"
+      }
+    ],
+    "aiTools": [
+      {
+        "name": "keenable_search",
+        "description": "%tool.keenable_search%",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "query": {
+              "type": "string",
+              "description": "What to search the web for."
+            },
+            "count": {
+              "type": "integer",
+              "description": "How many results, 1 to 10 (default 5)."
+            }
+          },
+          "required": ["query"]
+        }
+      }
+    ]
+  },
+  "l10n": {
+    "en": {
+      "name": "Keenable Search",
+      "description": "Lets Textus AI search the web with Keenable, with no key needed; set a Keenable API key for its full search. Searches go to Keenable only while Textus AI uses this tool.",
+      "tool.keenable_search": "Searches the web with Keenable and returns each result's title, URL, a short text and its date. Use it when the user asks for Keenable, or when Textus AI's own web search isn't set up.",
+      "setKey": "Keenable: Set API Key…",
+      "keyPrompt": "Keenable API key (leave empty to use the public search)",
+      "keySaved": "Keenable API key saved.",
+      "keyRemoved": "Keenable API key removed: the public search is used."
+    },
+    "zh": {
+      "name": "Keenable 搜索",
+      "description": "让 Textus AI 用 Keenable 搜索网页，不需要密钥；填入 Keenable API 密钥可以使用完整搜索。只有 Textus AI 调用这个工具时，搜索内容才会发给 Keenable。",
+      "tool.keenable_search": "用 Keenable 搜索网页，返回每条结果的标题、网址、一段简短文字和日期。用户点名要用 Keenable，或者 Textus AI 自带的网页搜索没有设置时使用。",
+      "setKey": "Keenable：设置 API 密钥…",
+      "keyPrompt": "Keenable API 密钥（留空则使用公开搜索）",
+      "keySaved": "已保存 Keenable API 密钥。",
+      "keyRemoved": "已移除 Keenable API 密钥，改用公开搜索。"
+    },
+    "zh-Hant": {
+      "name": "Keenable 搜尋",
+      "description": "讓 Textus AI 用 Keenable 搜尋網頁，不需要金鑰；填入 Keenable API 金鑰可以使用完整搜尋。只有 Textus AI 呼叫這個工具時，搜尋內容才會傳給 Keenable。",
+      "tool.keenable_search": "用 Keenable 搜尋網頁，回傳每筆結果的標題、網址、一段簡短文字和日期。使用者指定要用 Keenable，或 Textus AI 內建的網頁搜尋沒有設定時使用。",
+      "setKey": "Keenable：設定 API 金鑰…",
+      "keyPrompt": "Keenable API 金鑰（留空則使用公開搜尋）",
+      "keySaved": "已儲存 Keenable API 金鑰。",
+      "keyRemoved": "已移除 Keenable API 金鑰，改用公開搜尋。"
+    },
+    "ja": {
+      "name": "Keenable 検索",
+      "description": "Textus AI が Keenable でウェブを検索できるようにします。キーは不要で、Keenable の API キーを設定すると完全な検索が使えます。検索内容が Keenable に送られるのは、Textus AI がこのツールを使うときだけです。",
+      "tool.keenable_search": "Keenable でウェブを検索し、各結果のタイトル、URL、短い本文、日付を返します。ユーザーが Keenable を指定したときや、Textus AI 自体のウェブ検索が設定されていないときに使います。",
+      "setKey": "Keenable：API キーを設定…",
+      "keyPrompt": "Keenable の API キー（空のままなら公開検索を使います）",
+      "keySaved": "Keenable の API キーを保存しました。",
+      "keyRemoved": "Keenable の API キーを削除しました。公開検索を使います。"
+    },
+    "ko": {
+      "name": "Keenable 검색",
+      "description": "Textus AI가 Keenable로 웹을 검색하게 합니다. 키가 필요 없고, Keenable API 키를 설정하면 전체 검색을 쓸 수 있습니다. 검색 내용은 Textus AI가 이 도구를 쓸 때만 Keenable로 갑니다.",
+      "tool.keenable_search": "Keenable로 웹을 검색해 각 결과의 제목, URL, 짧은 글, 날짜를 돌려줍니다. 사용자가 Keenable을 지정하거나 Textus AI 자체 웹 검색이 설정되지 않았을 때 씁니다.",
+      "setKey": "Keenable: API 키 설정…",
+      "keyPrompt": "Keenable API 키(비워 두면 공개 검색을 사용)",
+      "keySaved": "Keenable API 키를 저장했습니다.",
+      "keyRemoved": "Keenable API 키를 지웠습니다. 공개 검색을 사용합니다."
+    },
+    "es": {
+      "name": "Búsqueda Keenable",
+      "description": "Permite a Textus AI buscar en la web con Keenable, sin clave; pon una clave de API de Keenable para su búsqueda completa. Las búsquedas solo van a Keenable cuando Textus AI usa esta herramienta.",
+      "tool.keenable_search": "Busca en la web con Keenable y devuelve de cada resultado el título, la URL, un texto breve y la fecha. Úsala cuando el usuario pida Keenable o cuando la búsqueda web propia de Textus AI no esté configurada.",
+      "setKey": "Keenable: definir clave de API…",
+      "keyPrompt": "Clave de API de Keenable (vacía para usar la búsqueda pública)",
+      "keySaved": "Clave de API de Keenable guardada.",
+      "keyRemoved": "Clave de API de Keenable quitada: se usa la búsqueda pública."
+    },
+    "fr": {
+      "name": "Recherche Keenable",
+      "description": "Permet à Textus AI de chercher sur le web avec Keenable, sans clé ; indiquez une clé d'API Keenable pour sa recherche complète. Les recherches ne partent chez Keenable que lorsque Textus AI utilise cet outil.",
+      "tool.keenable_search": "Cherche sur le web avec Keenable et renvoie pour chaque résultat le titre, l'URL, un court texte et la date. À utiliser quand l'utilisateur demande Keenable, ou quand la recherche web de Textus AI n'est pas configurée.",
+      "setKey": "Keenable : définir la clé d'API…",
+      "keyPrompt": "Clé d'API Keenable (vide pour la recherche publique)",
+      "keySaved": "Clé d'API Keenable enregistrée.",
+      "keyRemoved": "Clé d'API Keenable retirée : la recherche publique est utilisée."
+    },
+    "de": {
+      "name": "Keenable-Suche",
+      "description": "Lässt Textus AI mit Keenable im Web suchen, ohne Schlüssel; mit einem Keenable-API-Schlüssel die volle Suche. Suchanfragen gehen nur an Keenable, wenn Textus AI dieses Werkzeug nutzt.",
+      "tool.keenable_search": "Sucht mit Keenable im Web und gibt zu jedem Treffer Titel, URL, einen kurzen Text und das Datum zurück. Nutze es, wenn der Nutzer Keenable möchte oder die eigene Websuche von Textus AI nicht eingerichtet ist.",
+      "setKey": "Keenable: API-Schlüssel festlegen…",
+      "keyPrompt": "Keenable-API-Schlüssel (leer lassen für die öffentliche Suche)",
+      "keySaved": "Keenable-API-Schlüssel gespeichert.",
+      "keyRemoved": "Keenable-API-Schlüssel entfernt: Die öffentliche Suche wird genutzt."
+    },
+    "pt": {
+      "name": "Pesquisa Keenable",
+      "description": "Permite ao Textus AI pesquisar na web com o Keenable, sem chave; defina uma chave de API do Keenable para a pesquisa completa. As pesquisas só vão para o Keenable quando o Textus AI usa esta ferramenta.",
+      "tool.keenable_search": "Pesquisa na web com o Keenable e devolve de cada resultado o título, o URL, um texto curto e a data. Use quando o utilizador pedir o Keenable, ou quando a pesquisa web do próprio Textus AI não estiver configurada.",
+      "setKey": "Keenable: definir chave de API…",
+      "keyPrompt": "Chave de API do Keenable (vazia para usar a pesquisa pública)",
+      "keySaved": "Chave de API do Keenable guardada.",
+      "keyRemoved": "Chave de API do Keenable removida: usa-se a pesquisa pública."
+    },
+    "ru": {
+      "name": "Поиск Keenable",
+      "description": "Позволяет Textus AI искать в интернете через Keenable без ключа; с API-ключом Keenable доступен полный поиск. Запросы уходят в Keenable только когда Textus AI пользуется этим инструментом.",
+      "tool.keenable_search": "Ищет в интернете через Keenable и возвращает для каждого результата заголовок, адрес, короткий текст и дату. Используй, когда пользователь просит Keenable или когда собственный веб-поиск Textus AI не настроен.",
+      "setKey": "Keenable: задать API-ключ…",
+      "keyPrompt": "API-ключ Keenable (оставьте пустым для открытого поиска)",
+      "keySaved": "API-ключ Keenable сохранён.",
+      "keyRemoved": "API-ключ Keenable удалён: используется открытый поиск."
+    }
+  }
+}

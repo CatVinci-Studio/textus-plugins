@@ -104,14 +104,6 @@ suite("workspace synchronization", () => {
     expect(text(b.files.get("a.png"))).toBe("base");
     expect(text(b.files.get(result.conflicts[0]))).toBe("new");
   });
-  it("does not turn a local deletion into remote data loss", async () => {
-    const remote = new MemoryStore(),
-      a = new MemoryLocal({ "a.md": "keep" });
-    await a.sync(remote);
-    a.files.delete("a.md");
-    await a.sync(remote);
-    expect(text(a.files.get("a.md"))).toBe("keep");
-  });
   it("publishes no partial manifest or baseline when a block upload fails, then resumes", async () => {
     const remote = new MemoryStore(),
       a = new MemoryLocal({ "a.md": "old" });

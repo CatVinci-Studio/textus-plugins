@@ -11,4 +11,4 @@ Ohne Auswahl fragt es, bevor es das ganze Dokument aufräumt.
 - **Vollbreite Buchstaben und Ziffern in ASCII**: ＡＢＣ１２３ wird zu ABC123.
 - **Ausgewählte Zeilen zusammenfügen** (auch per Rechtsklick): die ausgewählten Zeilen werden eine, ohne Leerzeichen zwischen Chinesisch und mit einem zwischen Wörtern.
 
-Code, Formeln, Linkadressen, HTML und Front Matter bleiben, wie sie sind.
+Code, Formeln, Links, #Tags, Erinnerungen (@…), %%-Kommentare, HTML und Front Matter bleiben, wie sie sind. Klammern ändern sich paarweise: 价格(USD) wird 价格（USD）.

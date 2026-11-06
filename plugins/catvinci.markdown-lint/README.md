@@ -4,6 +4,7 @@ Underlines Markdown that breaks common style rules, and fixes what it can in one
 
 - Words that break a rule are underlined; rest the pointer on one to see which rule and why.
 - **Fix Markdown** (right-click, or the Plugins menu) fixes what can be fixed, as one undo step.
+- #tags, reference definitions ([d]: url), links to headings and %% comments are not flagged or changed.
 
 <!-- ai-tools -->
 ## Tools for Textus AI

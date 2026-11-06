@@ -3,7 +3,7 @@
 // icons in front matter, and the pages above the one in front in the
 // status bar.
 
-/* global pages */
+/* global pages, folderPaths */
 const t = (key, ...args) => textus.l10n.t(key, ...args);
 const ICONS = ["📄", "📁", "📅", "🗓️", "✅", "📝", "📚", "💡", "🎯", "🚀", "⭐", "❤️", "🏠", "💼", "🎓", "🧪", "📊", "🔖"];
 
@@ -13,13 +13,8 @@ let roots = [];
 let list = null;
 let crumb = null;
 
-const join = (dir, rel) => dir.replace(/[\\/]+$/, "") + "/" + rel;
-const relOf = (path) => {
-  if (!root || !path) return null;
-  const base = root.replace(/[\\/]+$/, "").replace(/\\/g, "/") + "/";
-  const p = path.replace(/\\/g, "/");
-  return p.startsWith(base) ? p.slice(base.length) : null;
-};
+const join = folderPaths.abs;
+const relOf = (path) => folderPaths.rel(root, path);
 const label = (node) => (node.icon ? node.icon + " " : "") + node.name;
 
 /** The folder's documents again, and the tree, list and status bar from them. */
@@ -135,10 +130,9 @@ async function createPage(input) {
   if (!pages.fileName(title)) return { error: "The page has no title." };
   let parentRel = null;
   if (input.parent) {
-    parentRel = String(input.parent).trim().replace(/\\/g, "/").replace(/^\.?\/+/, "");
-    if (!/\.md$/i.test(parentRel)) parentRel += ".md";
-    if (parentRel.split("/").includes("..") || !(await textus.files.stat(join(root, parentRel))))
-      return { error: "No page " + parentRel + " in the folder." };
+    parentRel = folderPaths.clean(root, input.parent, true);
+    if (!parentRel || !(await textus.files.stat(join(root, parentRel))))
+      return { error: "No page " + (parentRel || input.parent) + " in the folder." };
   }
   const rel = parentRel ? pages.subpage(parentRel, title) : pages.fileName(title) + ".md";
   const file = join(root, rel);

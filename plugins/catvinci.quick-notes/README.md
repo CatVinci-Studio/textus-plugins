@@ -13,5 +13,5 @@ Jot something down without leaving the document.
 
 Once it is installed, Textus AI can use these in a conversation:
 
-- `add_note`: Adds a quick note to the top of the Quick Notes list in the sidebar, to be inserted into a document or opened as one later.
+- `add_note`: Adds a quick note to the top of the Quick Notes list in the sidebar, to be inserted into a document or opened as one later. Today's journal is append_to_daily_note; a to-do is add_task.
 <!-- /ai-tools -->

@@ -56,8 +56,8 @@ const BY_PROVIDER = {
 };
 
 
-/** Every pose is drawn looking right: on the right she turns to look in. */
-const turned = () => side === "right";
+/** Every pose is drawn looking left: on the left she turns to look in. */
+const turned = () => side === "left";
 
 /** After this long without typing she daydreams, then dozes. */
 const DAYDREAM_MS = 60 * 1000;
@@ -125,7 +125,8 @@ function page(character) {
   @keyframes breathe { 0%, 100% { transform: scale(1, 1); } 50% { transform: scale(1.012, 1.02); } }
   @keyframes hop { 0%, 100% { transform: translateY(0); } 40% { transform: translateY(-10px); } }
   body.paused img { animation-play-state: paused; }
-  .stage.turned img { left: auto; right: 0; scale: -1 1; }
+  .stage.turned img { scale: -1 1; }
+  .stage.end img { left: auto; right: 0; }
   .bubble { position: absolute; top: 0; left: 50%; max-width: 92%; transform: translateX(-50%);
     padding: var(--space-1) var(--space-2); border: 1px solid var(--ui-border); border-radius: var(--shape-m);
     background: var(--ui-surface); color: var(--ui-text); font-size: var(--text-secondary); line-height: 1.4; text-align: center;
@@ -149,6 +150,7 @@ function page(character) {
     if (m.pose) show(m.pose, m.hop);
     if (typeof m.paused === "boolean") document.body.classList.toggle("paused", m.paused);
     if (typeof m.turned === "boolean") document.querySelector(".stage").classList.toggle("turned", m.turned);
+    if (typeof m.end === "boolean") document.querySelector(".stage").classList.toggle("end", m.end);
     if (m.say) {
       bubble.textContent = m.say;
       bubble.classList.add("on");
@@ -158,6 +160,7 @@ function page(character) {
   });
   show(${JSON.stringify(pose)}, false);
   document.querySelector(".stage").classList.toggle("turned", ${JSON.stringify(turned())});
+  document.querySelector(".stage").classList.toggle("end", ${JSON.stringify(side === "right")});
 </script></body></html>`;
 }
 
@@ -172,7 +175,7 @@ async function refresh() {
 
 /** Still while folded or while Textus is away: nothing to draw for. */
 function stillness() {
-  webview?.postMessage({ paused: !visible || away, turned: turned() });
+  webview?.postMessage({ paused: !visible || away, turned: turned(), end: side === "right" });
 }
 
 function set(next, options = {}) {

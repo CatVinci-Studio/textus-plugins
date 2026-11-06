@@ -1,6 +1,7 @@
 // "@tomorrow", "@下周五", "@明日": the dates a phrase names, counted from
 // today, in English, Chinese and Japanese.
 
+/* global dates */
 (function (root) {
   const WEEK_EN = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"];
   const WEEK_ZH = ["日", "一", "二", "三", "四", "五", "六"];
@@ -44,8 +45,7 @@
     return out;
   }
 
-  const iso = (d) =>
-    d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+  const iso = (d) => dates.day(d);
 
   /** The phrases beginning with what was typed after "@", up to `limit`. */
   function suggest(typed, today, limit) {

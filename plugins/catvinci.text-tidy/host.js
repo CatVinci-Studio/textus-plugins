@@ -1,7 +1,6 @@
 // Text Tidy: one command per rule (tidy.js), on the selection when there is
 // one, else on the document in front, as one undo step.
-// "other" is the front matter.
-const SKIP = new Set(["code", "math", "html", "other"]);
+const SKIP = new Set(markdownKeep.SKIP_KINDS);
 const RULES = ["removeBlankLines", "trimTrailing", "fullPunctuation", "halfPunctuation", "halfLetters", "joinLines"];
 
 /** An empty paragraph as Markdown writes one. */

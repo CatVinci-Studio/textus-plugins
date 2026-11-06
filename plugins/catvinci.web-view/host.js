@@ -89,6 +89,8 @@ exports.activate = function (context) {
   textus.commands.register(
     "catvinci.web-view.openLink",
     async function (url) {
+      // Taking every clicked link is the user's choice, not the default.
+      if (!(await textus.settings.get("clickLinks"))) return textus.layout.openExternal(url);
       await openTyped(url);
     },
   );

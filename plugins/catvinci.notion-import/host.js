@@ -1,7 +1,7 @@
 // Notion Import: a Notion export in the open folder (its .zip, or the folder it unzips to) imported
 // into a new dated folder at the open folder's top, then a report page with the plugins that help.
 
-/* global notionImport, notionCsv, JSZip */
+/* global notionImport, notionCsv, JSZip, folderPaths, dates, freeName */
 // jszip, run before this file, takes the host's module.exports for itself,
 // as a CommonJS module does: given back here.
 const Zip = typeof module !== "undefined" && module.exports !== exports ? module.exports : JSZip;
@@ -15,18 +15,8 @@ let context = null;
 // Folders an import running now has picked but not yet made.
 const claimed = new Set();
 
-const trim = (path) => path.replace(/[\\/]+$/, "");
-const join = (dir, rel) => (rel ? trim(dir) + "/" + rel : trim(dir));
-const relOf = (root, path) => {
-  const base = trim(root).replace(/\\/g, "/") + "/";
-  const p = String(path).replace(/\\/g, "/");
-  return p.startsWith(base) ? p.slice(base.length) : null;
-};
-const today = () => {
-  const d = new Date();
-  const pad = (n) => String(n).padStart(2, "0");
-  return d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate());
-};
+const join = folderPaths.abs;
+const today = () => dates.day(new Date());
 
 async function filesUnder(dir, signal) {
   const out = [];
@@ -62,13 +52,14 @@ async function choices(root) {
 
 /** A folder name in `dir` nothing has yet: `name`, else `name 2`… */
 async function freeFolder(dir, name) {
-  for (let n = 1; ; n++) {
-    const path = join(dir, n === 1 ? name : name + " " + n);
-    if (!(await textus.files.stat(path)) && !claimed.has(path)) {
-      claimed.add(path);
-      return path;
-    }
-  }
+  // Claimed in the same step as it is found free, so two imports never share one.
+  const taken = async (candidate) => {
+    const path = join(dir, candidate);
+    if ((await textus.files.stat(path)) || claimed.has(path)) return true;
+    claimed.add(path);
+    return false;
+  };
+  return join(dir, await freeName(name, taken));
 }
 
 /** The export at `path` (a .zip or a folder) as importExport reads it. */
@@ -123,18 +114,11 @@ async function importNotion(arg) {
   if (!report) return textus.ui.message(t("notExport", name));
   const suggestions = await stillMissing(notionImport.recommend(report.stats));
   await context.storage.global.set(RECOMMENDED, suggestions.map((s) => s.id));
-  const page = join(target, (await freeName(target, t("reportName"))) + ".md");
+  const page = join(target, await freeName(t("reportName"), (name) => textus.files.stat(join(target, name)), { ext: ".md" }));
   await textus.files.create(page, notionImport.reportPage(report, suggestions, t, { source: name, date: today() }));
   await textus.layout.open(page);
-  const where = relOf(root, target) || target;
+  const where = folderPaths.rel(root, target) || target;
   textus.ui.notice(report.stopped ? t("cancelled", where) : t("done", report.pages + report.rows, report.databases, where));
-}
-
-async function freeName(dir, name) {
-  for (let n = 1; ; n++) {
-    const candidate = n === 1 ? name : name + " " + n;
-    if (!(await textus.files.stat(join(dir, candidate + ".md")))) return candidate;
-  }
 }
 
 async function stillMissing(suggestions) {

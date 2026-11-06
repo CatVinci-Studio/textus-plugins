@@ -11,6 +11,8 @@ const TASK = /^(\s*(?:[-*+]|\d+[.)])\s+\[)( |x|X)(\]\s+)(.*)$/;
 const DUE = /\s*(?:📅|due::?)\s*(\d{4}-\d{2}-\d{2})/u;
 /** How far ahead "Due soon" looks. */
 const SOON_DAYS = 7;
+// A Kanban board's cards are tasks in Markdown but live on the board.
+const isBoard = (doc) => /\.kanban\.md$/i.test(doc.path);
 
 const t = (key, ...args) => textus.l10n.t(key, ...args);
 
@@ -18,8 +20,7 @@ const t = (key, ...args) => textus.l10n.t(key, ...args);
 function day(offset) {
   const d = new Date();
   d.setDate(d.getDate() + offset);
-  const two = (n) => String(n).padStart(2, "0");
-  return d.getFullYear() + "-" + two(d.getMonth() + 1) + "-" + two(d.getDate());
+  return dates.day(d);
 }
 
 /** "3 open tasks", in the language's plural form ("open.few"…). */
@@ -78,7 +79,7 @@ async function items() {
   const soon = [];
   const rest = [];
   let open = 0;
-  for (const doc of docs)
+  for (const doc of docs.filter((d) => !isBoard(d)))
     for (const task of doc.tasks) {
       if (!task.done) open++;
       if (task.done && !showDone) continue;
@@ -94,21 +95,21 @@ async function items() {
 /** Ticks or unticks the task on `line` of `path`, if it is still there. */
 async function setDone(task, done) {
   await textus.files.process(task.path, function (text) {
-    const eol = text.includes("\r\n") ? "\r\n" : "\n";
-    const lines = text.split(/\r?\n/);
-    const m = TASK.exec(lines[task.line] || "");
+    const rows = textLines.split(text);
+    const row = rows[task.line];
+    const m = TASK.exec(row ? row.text : "");
     // The file changed since it was listed: nothing is written; the list
     // is drawn again from what is there now.
     if (!m || m[4].trim() !== task.text.trim()) return text;
-    lines[task.line] = m[1] + (done ? "x" : " ") + m[3] + m[4];
-    return lines.join(eol);
+    row.text = m[1] + (done ? "x" : " ") + m[3] + m[4];
+    return textLines.join(rows);
   });
 }
 
 // Textus AI's tools. Paths are the documents' paths in the folder, lines
 // count from 1.
 
-/* global folderPaths */
+/* global folderPaths, dates */
 const NO_FOLDER = { error: "No folder is open." };
 const DAY = /^\d{4}-\d{2}-\d{2}$/;
 const HEADING = /^(#{1,6})\s+(.*?)\s*#*\s*$/;
@@ -121,7 +122,7 @@ async function listTasks(input) {
   const tag = input.tag ? String(input.tag).replace(/^#/, "") : null;
   const query = String(input.query || "").toLowerCase();
   const found = [];
-  for (const doc of await textus.metadata.all())
+  for (const doc of (await textus.metadata.all()).filter((d) => !isBoard(d)))
     for (const task of doc.tasks) {
       if (status !== "all" && task.done !== (status === "done")) continue;
       if (path && doc.rel !== path) continue;
@@ -181,21 +182,22 @@ async function addTask(input) {
   }
   let line = 0;
   await textus.files.process(file, function (old) {
-    const eol = old.includes("\r\n") ? "\r\n" : "\n";
-    const lines = old.split(/\r?\n/);
+    const rows = textLines.split(old);
+    const lines = rows.map((r) => r.text);
     let at = placeFor(lines, input.heading);
+    const added = [];
     if (at < 0) {
       // A heading the document hasn't: added at its end, the task under it.
       at = placeFor(lines, null);
-      lines.splice(at, 0, "", "## " + String(input.heading).replace(/^#+\s*/, ""), "");
-      at += 3;
+      added.push("", "## " + String(input.heading).replace(/^#+\s*/, ""), "");
     }
     // After a paragraph or heading, a blank line first: a list of its own.
-    if (at > 0 && lines[at - 1].trim() && !/^\s*(?:[-*+]|\d+[.)])\s/.test(lines[at - 1]))
-      lines.splice(at++, 0, "");
-    lines.splice(at, 0, task);
-    line = at + 1;
-    return lines.join(eol);
+    const before = added.length ? added[added.length - 1] : at > 0 ? lines[at - 1] : "";
+    if (before.trim() && !/^\s*(?:[-*+]|\d+[.)])\s/.test(before)) added.push("");
+    added.push(task);
+    textLines.insert(rows, at, added);
+    line = at + added.length;
+    return textLines.join(rows);
   });
   return { path: rel, line: line, task: task };
 }
@@ -210,9 +212,8 @@ async function completeTask(input) {
   let problem = null;
   let text = null;
   await textus.files.process(folderPaths.abs(root, rel), function (old) {
-    const eol = old.includes("\r\n") ? "\r\n" : "\n";
-    const lines = old.split(/\r?\n/);
-    const m = TASK.exec(lines[index] || "");
+    const rows = textLines.split(old);
+    const m = TASK.exec(rows[index] ? rows[index].text : "");
     problem = !m
       ? "Line " + input.line + " of " + rel + " is not a task; list the tasks again."
       : input.text && !m[4].includes(String(input.text).trim())
@@ -220,8 +221,8 @@ async function completeTask(input) {
         : null;
     if (problem) return old;
     text = m[4].replace(DUE, "").trim();
-    lines[index] = m[1] + (done ? "x" : " ") + m[3] + m[4];
-    return lines.join(eol);
+    rows[index].text = m[1] + (done ? "x" : " ") + m[3] + m[4];
+    return textLines.join(rows);
   });
   return problem ? { error: problem } : { path: rel, line: index + 1, text: text, done: done };
 }

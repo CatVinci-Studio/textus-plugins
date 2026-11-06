@@ -33,7 +33,7 @@ sort: start
 
 All of it is kept in the block, in lines you can read and change: `columns: start, focus` (which, in what order), `sort: -rate` (`-` for descending), `filter: focus has Research` (`=`, `!=`, `has`, `!has`, `>`, `<`, `empty`, `!empty`, one per line), `group:`, `date:`, `end:`, `types: status=select` (a property's kind).
 
-**From Notion**: export the database as Markdown & CSV, unzip it into the open folder, right-click its `.csv` in the sidebar and choose **Import Notion Database…**. Its pages come in as documents with their properties as front matter, with a page showing them.
+**From Notion**: install the **Notion Import** plugin and use **Plugins › Import from Notion…** on the export. Each database comes in as documents with their properties as front matter, with a page showing them as a database.
 
 **With Textus AI**: ask for one - "make a 2026 weekly calendar with a focus and a rating" - and it makes the folder, its pages and the block.
 
@@ -44,5 +44,5 @@ Once it is installed, Textus AI can use these in a conversation:
 
 - `create_database`: Makes a database: a folder of documents whose front matter holds each one's properties, and a ```database block that shows them as a table, board, calendar or gallery. Returns the block to insert.
 - `query_rows`: Reads a database's rows - the documents in its folder - each with its name, path and properties, filtered and sorted as a ```database block's filter and sort lines would.
-- `add_row`: Adds a row to a database: a document in its folder, named for the row, with its properties in its front matter. Every block showing that folder shows it.
+- `add_row`: Adds a row to a database: a document in its folder, named for the row, with its properties in its front matter. Every block showing that folder shows it. Only for a database folder (create_database, query_rows); a plain to-do is add_task.
 <!-- /ai-tools -->

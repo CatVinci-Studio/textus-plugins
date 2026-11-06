@@ -1,7 +1,7 @@
 {
   "id": "catvinci.quick-notes",
   "name": "%name%",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "publisher": "catvinci",
   "author": "CatVinci Studio",
   "description": "%description%",
@@ -92,7 +92,7 @@
       "deleted": "Note deleted",
       "undo": "Undo",
       "actions": "Actions",
-      "tool.add_note": "Adds a quick note to the top of the Quick Notes list in the sidebar, to be inserted into a document or opened as one later."
+      "tool.add_note": "Adds a quick note to the top of the Quick Notes list in the sidebar, to be inserted into a document or opened as one later. Today's journal is append_to_daily_note; a to-do is add_task."
     },
     "zh": {
       "name": "快速笔记",
@@ -111,7 +111,7 @@
       "deleted": "已删除笔记",
       "undo": "撤销",
       "actions": "操作",
-      "tool.add_note": "在侧边栏的快速笔记列表顶部添加一条笔记，之后可以插入文档，或单独打开成一篇文档。"
+      "tool.add_note": "在侧边栏的快速笔记列表顶部添加一条笔记，之后可以插入文档，或单独打开成一篇文档。 写今天的日记用 append_to_daily_note；待办用 add_task。"
     },
     "zh-Hant": {
       "name": "快速筆記",
@@ -130,7 +130,7 @@
       "deleted": "已刪除筆記",
       "undo": "復原",
       "actions": "操作",
-      "tool.add_note": "在側邊欄的快速筆記列表頂端新增一則筆記，之後可以插入文件，或單獨開成一份文件。"
+      "tool.add_note": "在側邊欄的快速筆記列表頂端新增一則筆記，之後可以插入文件，或單獨開成一份文件。 寫今天的日記用 append_to_daily_note；待辦用 add_task。"
     },
     "ja": {
       "name": "クイックノート",
@@ -149,7 +149,7 @@
       "deleted": "ノートを削除しました",
       "undo": "元に戻す",
       "actions": "操作",
-      "tool.add_note": "サイドバーのクイックノートの一覧の先頭にメモを追加します。あとで文書に挿入したり、文書として開いたりできます。"
+      "tool.add_note": "サイドバーのクイックノートの一覧の先頭にメモを追加します。あとで文書に挿入したり、文書として開いたりできます。 今日の日記は append_to_daily_note、ToDo は add_task です。"
     },
     "ko": {
       "name": "빠른 메모",
@@ -168,7 +168,7 @@
       "deleted": "노트를 삭제했습니다",
       "undo": "실행 취소",
       "actions": "작업",
-      "tool.add_note": "사이드바의 빠른 메모 목록 맨 위에 메모를 추가합니다. 나중에 문서에 넣거나 문서로 열 수 있습니다."
+      "tool.add_note": "사이드바의 빠른 메모 목록 맨 위에 메모를 추가합니다. 나중에 문서에 넣거나 문서로 열 수 있습니다. 오늘 일지는 append_to_daily_note, 할 일은 add_task입니다."
     },
     "es": {
       "name": "Notas rápidas",
@@ -187,7 +187,7 @@
       "deleted": "Nota eliminada",
       "undo": "Deshacer",
       "actions": "Acciones",
-      "tool.add_note": "Añade una nota rápida al principio de la lista de Notas rápidas de la barra lateral, para insertarla luego en un documento o abrirla como uno."
+      "tool.add_note": "Añade una nota rápida al principio de la lista de Notas rápidas de la barra lateral, para insertarla luego en un documento o abrirla como uno. El diario de hoy es append_to_daily_note; una tarea, add_task."
     },
     "fr": {
       "name": "Notes rapides",
@@ -206,7 +206,7 @@
       "deleted": "Note supprimée",
       "undo": "Annuler",
       "actions": "Actions",
-      "tool.add_note": "Ajoute une note rapide en haut de la liste des Notes rapides de la barre latérale, à insérer plus tard dans un document ou à ouvrir comme document."
+      "tool.add_note": "Ajoute une note rapide en haut de la liste des Notes rapides de la barre latérale, à insérer plus tard dans un document ou à ouvrir comme document. Le journal du jour, c’est append_to_daily_note ; une tâche, add_task."
     },
     "de": {
       "name": "Schnellnotizen",
@@ -225,7 +225,7 @@
       "deleted": "Notiz gelöscht",
       "undo": "Rückgängig",
       "actions": "Aktionen",
-      "tool.add_note": "Fügt oben in der Liste der Schnellnotizen in der Seitenleiste eine Notiz hinzu, die sich später in ein Dokument einfügen oder als Dokument öffnen lässt."
+      "tool.add_note": "Fügt oben in der Liste der Schnellnotizen in der Seitenleiste eine Notiz hinzu, die sich später in ein Dokument einfügen oder als Dokument öffnen lässt. Das heutige Journal ist append_to_daily_note; eine Aufgabe add_task."
     },
     "ru": {
       "name": "Быстрые заметки",
@@ -244,7 +244,7 @@
       "deleted": "Заметка удалена",
       "undo": "Отменить",
       "actions": "Действия",
-      "tool.add_note": "Добавляет быструю заметку в начало списка быстрых заметок на боковой панели, чтобы потом вставить её в документ или открыть как документ."
+      "tool.add_note": "Добавляет быструю заметку в начало списка быстрых заметок на боковой панели, чтобы потом вставить её в документ или открыть как документ. Сегодняшний дневник — append_to_daily_note; задача — add_task."
     },
     "pt": {
       "name": "Notas rápidas",
@@ -263,7 +263,7 @@
       "deleted": "Nota excluída",
       "undo": "Desfazer",
       "actions": "Ações",
-      "tool.add_note": "Adiciona uma nota rápida no topo da lista de Notas rápidas da barra lateral, para inserir depois num documento ou abrir como um."
+      "tool.add_note": "Adiciona uma nota rápida no topo da lista de Notas rápidas da barra lateral, para inserir depois num documento ou abrir como um. O diário de hoje é append_to_daily_note; uma tarefa, add_task."
     }
   }
 }
