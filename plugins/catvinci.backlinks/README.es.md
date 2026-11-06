@@ -1,5 +1,7 @@
 # Enlaces entrantes
 
+> Los enlaces bidireccionales como `[[Nota]]` vienen con Textus: se escriben y se abren sin ningún plugin. Este plugin añade la otra mitad: quién enlaza al documento abierto.
+
 Qué enlaza al documento abierto y a dónde enlaza él, en la pestaña **Enlaces entrantes** de la barra lateral.
 
 - **Menciones enlazadas**: las líneas de otras notas que enlazan aquí, con [[enlaces wiki]] o enlaces a este archivo. Haz clic en una para ir allí.

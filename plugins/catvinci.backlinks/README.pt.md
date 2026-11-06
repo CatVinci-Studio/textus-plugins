@@ -1,5 +1,7 @@
 # Backlinks
 
+> Links bidirecionais como `[[Nota]]` já vêm no Textus: dá para escrever e abrir sem plugin. Este plugin acrescenta a outra metade: quem aponta para o documento aberto.
+
 O que aponta para o documento aberto e para onde ele aponta, na aba **Backlinks** da barra lateral.
 
 - **Menções com link**: as linhas de outras notas que apontam para cá, com [[links wiki]] ou links para este arquivo. Clique em uma para ir até lá.

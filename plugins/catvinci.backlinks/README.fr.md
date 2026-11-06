@@ -1,5 +1,7 @@
 # Rétroliens
 
+> Les liens bidirectionnels comme `[[Note]]` sont intégrés à Textus : on les écrit et on les suit sans aucun plugin. Ce plugin ajoute l'autre moitié : qui renvoie vers le document ouvert.
+
 Ce qui pointe vers le document ouvert, et ce vers quoi il pointe, dans l’onglet **Rétroliens** de la barre latérale.
 
 - **Mentions liées** : les lignes d’autres notes qui pointent ici, par des [[liens wiki]] ou des liens vers ce fichier. Cliquez sur l’une d’elles pour y aller.

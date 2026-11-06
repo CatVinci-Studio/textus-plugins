@@ -1,5 +1,7 @@
 # Backlinks
 
+> Two-way links like `[[Note]]` are built into Textus: you can write and follow them without any plugin. This plugin adds the other half: who links to the document in front.
+
 What links to the document in front, and where it links to - in the **Backlinks** tab of the sidebar.
 
 - **Linked mentions**: the lines of other notes that link here, with [[wiki links]] or links to this file. Click one to go there.
