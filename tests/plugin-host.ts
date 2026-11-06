@@ -105,6 +105,34 @@ export function loadPlugin(id: string, api: Any = {}, storage = memoryStorage())
 
 /** A folder of documents at /root, `files` by their path in it: enough of
  *  textus.files for the tools. */
+/** What Textus's files.conventions gives for an Obsidian vault's
+ *  templates and daily notes settings (src-tauri/src/conventions). */
+function conventionsOf(files: Record<string, string>, root: string) {
+  const json = (rel: string) => {
+    try {
+      return rel in files ? JSON.parse(files[rel]) : null;
+    } catch {
+      return null;
+    }
+  };
+  const at = <T>(value: T) => ({ value, app: "obsidian", root });
+  const full = (rel: string) => root + (rel.replace(/^\/+|\/+$/g, "") ? "/" + rel.replace(/^\/+|\/+$/g, "") : "");
+  const vault = Object.keys(files).some((f) => f.startsWith(".obsidian/"));
+  const templates = vault ? json(".obsidian/templates.json")?.folder : null;
+  const daily = vault ? json(".obsidian/daily-notes.json") : null;
+  return {
+    sources: vault ? [{ app: "obsidian", root }] : [],
+    templates: templates ? at(full(templates)) : null,
+    daily: daily
+      ? at({
+          folder: full(daily.folder || ""),
+          format: daily.format || "YYYY-MM-DD",
+          template: daily.template ? full(/\.md$/i.test(daily.template) ? daily.template : daily.template + ".md") : null,
+        })
+      : null,
+  };
+}
+
 export function folder(files: Record<string, string>) {
   const root = "/root";
   const rel = (path: string) => path.slice(root.length + 1);
@@ -146,5 +174,7 @@ export function folder(files: Record<string, string>) {
       return (files[rel(path)] = change(files[rel(path)]));
     },
     createFolder: async () => {},
+    // The core reads the folder's apps; this stands in for an Obsidian vault.
+    conventions: async () => conventionsOf(files, root),
   };
 }

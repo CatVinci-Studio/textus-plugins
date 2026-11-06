@@ -1,9 +1,9 @@
 // Templates: Markdown files in the open folder's templates folder -
-// Templates/, or the one an Obsidian vault names in .obsidian/templates.json
+// Templates/, or the one the folder's app names (an Obsidian vault, Foam...)
 // - filled in as they are used ({{date}}, {{time}}, {{title}},
 // {{date:YYYY-MM-DD}}) into a new document or at the caret. Templates kept
 // in the plugin's storage before 0.3 are copied there once.
-/* global obsidianVault, folderPaths, dates, freeName */
+/* global folderConventions, folderPaths, dates, freeName */
 let ctx;
 const t = (key, ...args) => textus.l10n.t(key, ...args);
 const MOVED = "movedToFolder";
@@ -14,7 +14,7 @@ const fill = (text, title) => dates.fill(text, { language: textus.env.language, 
 async function where() {
   const root = await textus.files.root();
   if (!root) return null;
-  const rel = await obsidianVault.templatesFolder(textus.files, root);
+  const rel = await folderConventions.templatesFolder(root);
   return { root: root, rel: rel, dir: folderPaths.abs(root, rel) };
 }
 

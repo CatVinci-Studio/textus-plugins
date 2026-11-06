@@ -1,29 +1,28 @@
 // Calendar & Daily Notes: a note per day, YYYY-MM-DD.md in a folder of
 // the open folder (Settings: "Daily" by default), made from a template the
 // first time a day is opened. The sidebar's calendar marks the days that
-// have one. In an Obsidian vault, .obsidian/daily-notes.json says the
-// folder, the name's format and the template (read, never written).
-/* global obsidianVault, folderPaths, dates */
+// have one. Where the folder's app sets daily notes (an Obsidian vault, a
+// Logseq graph, Foam...), its folder, name format and template win.
+/* global folderConventions, folderPaths, dates */
 /** What activate was given: the plugin's storage and own files. */
 let ctx;
 
 let panel = null;
 
-/** Where the notes go and how they are named and begun: the vault's
+/** Where the notes go and how they are named and begun: the folder's app's
  *  daily notes settings when it has them, else the plugin's. */
 async function folder() {
   const root = await textus.files.root();
   if (!root) return null;
-  const vault = await obsidianVault.config(textus.files, root, "daily-notes");
-  const rel = vault
-    ? obsidianVault.cleanFolder(vault.folder)
-    : obsidianVault.cleanFolder((await textus.settings.get("folder")) || "Daily");
+  const app = await folderConventions.daily(root);
+  const own = String((await textus.settings.get("folder")) || "Daily");
+  const rel = app ? app.folder : own.replace(/\\/g, "/").replace(/^[./]+|\/+$/g, "");
   return {
     root: root,
     rel: rel,
     dir: folderPaths.abs(root, rel),
-    format: (vault && vault.format) || "YYYY-MM-DD",
-    template: vault ? (vault.template ? { file: vault.template } : { text: "" }) : null,
+    format: (app && app.format) || "YYYY-MM-DD",
+    template: app ? (app.template ? { file: app.template } : { text: "" }) : null,
   };
 }
 
@@ -107,7 +106,7 @@ async function templateText(where) {
   if (where.template) return where.template.file ? (await read(where.template.file.replace(/(\.md)?$/i, ".md"))) || "" : "";
   const setting = String((await textus.settings.get("template")) || "# {{date}}\\n\\n");
   if (/[{}\n\\]/.test(setting)) return setting;
-  const templates = await obsidianVault.templatesFolder(textus.files, where.root);
+  const templates = await folderConventions.templatesFolder(where.root);
   return (await read(templates + "/" + setting.replace(/\.md$/i, "") + ".md")) || setting;
 }
 
