@@ -15,5 +15,5 @@ Une note par jour, et un calendrier pour accéder à chacune.
 Une fois le plugin installé, Textus AI peut s’en servir dans une conversation :
 
 - `read_daily_note`: Lit la note quotidienne d'un jour - celle d'aujourd'hui si aucune date n'est donnée - dans le dossier des notes quotidiennes : son chemin, si elle existe, et son texte.
-- `append_to_daily_note`: Ajoute du Markdown à la fin de la note quotidienne d'un jour - celle d'aujourd'hui si aucune date n'est donnée -, en la créant d'abord depuis son modèle si elle n'existe pas.
+- `append_to_daily_note`: Ajoute du Markdown à la fin de la note quotidienne d'un jour - celle d'aujourd'hui si aucune date n'est donnée -, en la créant d'abord depuis son modèle si elle n'existe pas. Une note à garder pour plus tard dans la barre latérale, c’est add_note ; une tâche datée, add_task.
 <!-- /ai-tools -->

@@ -15,5 +15,5 @@ A note for each day, and a calendar to get to any of them.
 Once it is installed, Textus AI can use these in a conversation:
 
 - `read_daily_note`: Reads the daily note of a day - today's unless a date is given - from the daily notes folder: its path, whether it exists, and its text.
-- `append_to_daily_note`: Adds Markdown to the end of a day's daily note - today's unless a date is given - making the note from its template first if there is none.
+- `append_to_daily_note`: Adds Markdown to the end of a day's daily note - today's unless a date is given - making the note from its template first if there is none. A note to keep for later in the sidebar is add_note; a to-do with a date is add_task.
 <!-- /ai-tools -->

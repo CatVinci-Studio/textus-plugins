@@ -24,7 +24,7 @@ Quadros de cartões em listas, guardados como um arquivo Markdown simples.
 Com o plugin instalado, o Textus AI pode usá-las numa conversa:
 
 - `list_boards`: Lista os quadros Kanban (arquivos name.kanban.md) da pasta aberta, cada um com as suas listas e quantos cartões cada uma tem.
-- `read_board`: Lê um quadro Kanban: as listas por ordem, cada uma com o texto dos cartões e se estão feitos.
-- `add_card`: Adiciona um cartão ao fim de uma lista de um quadro Kanban.
+- `read_board`: Lê um quadro Kanban: as listas por ordem, cada uma com o texto dos cartões e se estão feitos. Tarefas escritas em documentos comuns são list_tasks.
+- `add_card`: Adiciona um cartão ao fim de uma lista de um quadro Kanban. Só para um quadro (name.kanban.md); uma tarefa num documento é add_task.
 - `move_card`: Move um cartão de um quadro Kanban para outra lista, ou para outro lugar na sua.
 <!-- /ai-tools -->

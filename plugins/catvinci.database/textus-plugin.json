@@ -233,7 +233,7 @@
       "deleteAsk": "Delete “{0}” from {1} pages?",
       "open": "Open",
       "tool.query_rows": "Reads a database's rows - the documents in its folder - each with its name, path and properties, filtered and sorted as a ```database block's filter and sort lines would.",
-      "tool.add_row": "Adds a row to a database: a document in its folder, named for the row, with its properties in its front matter. Every block showing that folder shows it."
+      "tool.add_row": "Adds a row to a database: a document in its folder, named for the row, with its properties in its front matter. Every block showing that folder shows it. Only for a database folder (create_database, query_rows); a plain to-do is add_task."
     },
     "zh": {
       "name": "数据库视图",
@@ -299,7 +299,7 @@
       "deleteAsk": "要从 {1} 个页面中删除“{0}”吗？",
       "open": "打开",
       "tool.query_rows": "读取数据库的行（即其文件夹里的文档），每行带名称、路径和各项属性；可以像 ```database 块的 filter 和 sort 行那样筛选和排序。",
-      "tool.add_row": "在数据库中添加一行：在其文件夹里新建一篇以该行命名的文档，各项属性写在开头属性中。展示该文件夹的每个块都会显示它。"
+      "tool.add_row": "在数据库中添加一行：在其文件夹里新建一篇以该行命名的文档，各项属性写在开头属性中。展示该文件夹的每个块都会显示它。 只用于数据库文件夹（create_database、query_rows）；普通待办用 add_task。"
     },
     "zh-Hant": {
       "name": "資料庫檢視",
@@ -365,7 +365,7 @@
       "deleteAsk": "要從 {1} 個頁面中刪除「{0}」嗎？",
       "open": "打開",
       "tool.query_rows": "讀取資料庫的列（即其資料夾裡的文件），每列附名稱、路徑和各項屬性；可以像 ```database 區塊的 filter 和 sort 行那樣篩選和排序。",
-      "tool.add_row": "在資料庫中新增一列：在其資料夾裡新建一份以該列命名的文件，各項屬性寫在開頭屬性中。展示該資料夾的每個區塊都會顯示它。"
+      "tool.add_row": "在資料庫中新增一列：在其資料夾裡新建一份以該列命名的文件，各項屬性寫在開頭屬性中。展示該資料夾的每個區塊都會顯示它。 只用於資料庫資料夾（create_database、query_rows）；一般待辦用 add_task。"
     },
     "ja": {
       "name": "データベースビュー",
@@ -431,7 +431,7 @@
       "deleteAsk": "{1} ページから「{0}」を削除しますか？",
       "open": "開く",
       "tool.query_rows": "データベースの行（そのフォルダにある文書）を、名前・パス・プロパティとともに読みます。```database ブロックの filter と sort の行と同じように絞り込み、並べ替えます。",
-      "tool.add_row": "データベースに行を追加します。そのフォルダに行の名前の文書を作り、プロパティをフロントマターに書きます。そのフォルダを表示するすべてのブロックに現れます。"
+      "tool.add_row": "データベースに行を追加します。そのフォルダに行の名前の文書を作り、プロパティをフロントマターに書きます。そのフォルダを表示するすべてのブロックに現れます。 データベースのフォルダ（create_database、query_rows）専用です。普通の ToDo は add_task です。"
     },
     "ko": {
       "name": "데이터베이스 보기",
@@ -497,7 +497,7 @@
       "deleteAsk": "{1}개 페이지에서 “{0}”을(를) 삭제할까요?",
       "open": "열기",
       "tool.query_rows": "데이터베이스의 행(그 폴더에 있는 문서)을 이름·경로·속성과 함께 읽습니다. ```database 블록의 filter와 sort 줄처럼 거르고 정렬합니다.",
-      "tool.add_row": "데이터베이스에 행을 추가합니다. 그 폴더에 행 이름의 문서를 만들고 속성을 프런트 매터에 적습니다. 그 폴더를 보여 주는 모든 블록에 나타납니다."
+      "tool.add_row": "데이터베이스에 행을 추가합니다. 그 폴더에 행 이름의 문서를 만들고 속성을 프런트 매터에 적습니다. 그 폴더를 보여 주는 모든 블록에 나타납니다. 데이터베이스 폴더(create_database, query_rows) 전용입니다. 일반 할 일은 add_task입니다."
     },
     "de": {
       "name": "Datenbankansichten",
@@ -563,7 +563,7 @@
       "deleteAsk": "„{0}“ aus {1} Seiten löschen?",
       "open": "Öffnen",
       "tool.query_rows": "Liest die Zeilen einer Datenbank - die Dokumente in ihrem Ordner -, jede mit Name, Pfad und Eigenschaften, gefiltert und sortiert wie mit den filter- und sort-Zeilen eines ```database-Blocks.",
-      "tool.add_row": "Fügt einer Datenbank eine Zeile hinzu: ein Dokument in ihrem Ordner, nach der Zeile benannt, mit ihren Eigenschaften im Front Matter. Jeder Block, der den Ordner zeigt, zeigt sie."
+      "tool.add_row": "Fügt einer Datenbank eine Zeile hinzu: ein Dokument in ihrem Ordner, nach der Zeile benannt, mit ihren Eigenschaften im Front Matter. Jeder Block, der den Ordner zeigt, zeigt sie. Nur für den Ordner einer Datenbank (create_database, query_rows); eine einfache Aufgabe ist add_task."
     },
     "es": {
       "name": "Vistas de base de datos",
@@ -629,7 +629,7 @@
       "deleteAsk": "¿Eliminar «{0}» de {1} páginas?",
       "open": "Abrir",
       "tool.query_rows": "Lee las filas de una base de datos - los documentos de su carpeta -, cada una con su nombre, ruta y propiedades, filtradas y ordenadas como lo harían las líneas filter y sort de un bloque ```database.",
-      "tool.add_row": "Añade una fila a una base de datos: un documento en su carpeta, con el nombre de la fila y sus propiedades en el front matter. Todo bloque que muestre esa carpeta la muestra."
+      "tool.add_row": "Añade una fila a una base de datos: un documento en su carpeta, con el nombre de la fila y sus propiedades en el front matter. Todo bloque que muestre esa carpeta la muestra. Solo para la carpeta de una base de datos (create_database, query_rows); una tarea simple es add_task."
     },
     "fr": {
       "name": "Vues de base de données",
@@ -695,7 +695,7 @@
       "deleteAsk": "Supprimer « {0} » de {1} pages ?",
       "open": "Ouvrir",
       "tool.query_rows": "Lit les lignes d'une base de données - les documents de son dossier -, chacune avec son nom, son chemin et ses propriétés, filtrées et triées comme le feraient les lignes filter et sort d'un bloc ```database.",
-      "tool.add_row": "Ajoute une ligne à une base de données : un document dans son dossier, au nom de la ligne, avec ses propriétés dans son front matter. Tout bloc qui montre ce dossier l'affiche."
+      "tool.add_row": "Ajoute une ligne à une base de données : un document dans son dossier, au nom de la ligne, avec ses propriétés dans son front matter. Tout bloc qui montre ce dossier l'affiche. Seulement pour le dossier d’une base (create_database, query_rows) ; une simple tâche, c’est add_task."
     },
     "pt": {
       "name": "Visualizações de banco de dados",
@@ -761,7 +761,7 @@
       "deleteAsk": "Excluir “{0}” de {1} páginas?",
       "open": "Abrir",
       "tool.query_rows": "Lê as linhas de uma base de dados - os documentos da sua pasta -, cada uma com o nome, o caminho e as propriedades, filtradas e ordenadas como fariam as linhas filter e sort de um bloco ```database.",
-      "tool.add_row": "Adiciona uma linha a uma base de dados: um documento na sua pasta, com o nome da linha e as propriedades no front matter. Todos os blocos que mostram essa pasta passam a mostrá-la."
+      "tool.add_row": "Adiciona uma linha a uma base de dados: um documento na sua pasta, com o nome da linha e as propriedades no front matter. Todos os blocos que mostram essa pasta passam a mostrá-la. Só para a pasta de um banco de dados (create_database, query_rows); uma tarefa simples é add_task."
     },
     "ru": {
       "name": "Представления базы данных",
@@ -827,7 +827,7 @@
       "deleteAsk": "Удалить «{0}» из страниц ({1})?",
       "open": "Открыть",
       "tool.query_rows": "Читает строки базы данных - документы в её папке, - каждую с именем, путём и свойствами, с отбором и сортировкой, как строки filter и sort блока ```database.",
-      "tool.add_row": "Добавляет строку в базу данных: документ в её папке с именем строки и свойствами во front matter. Её покажет каждый блок, показывающий эту папку."
+      "tool.add_row": "Добавляет строку в базу данных: документ в её папке с именем строки и свойствами во front matter. Её покажет каждый блок, показывающий эту папку. Только для папки базы данных (create_database, query_rows); обычная задача — add_task."
     }
   }
 }

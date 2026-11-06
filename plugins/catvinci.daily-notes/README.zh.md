@@ -15,5 +15,5 @@
 装上这个插件后，Textus AI 在对话中可以使用：
 
 - `read_daily_note`：读取某一天的日记（默认今天）：从日记文件夹中给出它的路径、是否存在以及全文。
-- `append_to_daily_note`：在某一天的日记（默认今天）末尾追加 Markdown 内容；如果还没有这篇日记，先按模板新建。
+- `append_to_daily_note`：在某一天的日记（默认今天）末尾追加 Markdown 内容；如果还没有这篇日记，先按模板新建。 想先放在侧栏、以后再用的笔记用 add_note；带日期的待办用 add_task。
 <!-- /ai-tools -->

@@ -13,5 +13,5 @@ Anote algo sem sair do documento.
 
 Com o plugin instalado, o Textus AI pode usá-las numa conversa:
 
-- `add_note`: Adiciona uma nota rápida no topo da lista de Notas rápidas da barra lateral, para inserir depois num documento ou abrir como um.
+- `add_note`: Adiciona uma nota rápida no topo da lista de Notas rápidas da barra lateral, para inserir depois num documento ou abrir como um. O diário de hoje é append_to_daily_note; uma tarefa, add_task.
 <!-- /ai-tools -->

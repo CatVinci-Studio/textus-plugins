@@ -15,6 +15,6 @@ The marks are written as Obsidian's Reminder plugin writes them, so the same not
 
 Once it is installed, Textus AI can use these in a conversation:
 
-- `list_reminders`: Lists the coming reminders - (@2026-11-02 09:00) marks in the open folder's documents - soonest first, each with its time, text, document path and line.
-- `add_reminder`: Adds a reminder as a task line with its time, - [ ] text (@2026-11-02 09:00), at the end of the document in front; a notification comes then.
+- `list_reminders`: Lists the coming reminders - (@2026-11-02 09:00) marks in the open folder's documents - soonest first, each with its time, text, document path and line. Tasks by due date are list_tasks.
+- `add_reminder`: Adds a reminder as a task line with its time, - [ ] text (@2026-11-02 09:00), at the end of the document in front; a notification comes then. Use it when the user wants to be told at a time; a to-do with only a due date is add_task.
 <!-- /ai-tools -->

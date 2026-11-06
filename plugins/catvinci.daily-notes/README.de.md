@@ -15,5 +15,5 @@ Eine Notiz für jeden Tag und ein Kalender, um zu jeder zu gelangen.
 Ist das Plugin installiert, kann Textus AI sie im Gespräch nutzen:
 
 - `read_daily_note`: Liest die Tagesnotiz eines Tages - heute, wenn kein Datum angegeben ist - aus dem Ordner der Tagesnotizen: ihren Pfad, ob es sie gibt, und ihren Text.
-- `append_to_daily_note`: Fügt Markdown am Ende der Tagesnotiz eines Tages an - heute, wenn kein Datum angegeben ist - und legt die Notiz vorher aus ihrer Vorlage an, falls es sie nicht gibt.
+- `append_to_daily_note`: Fügt Markdown am Ende der Tagesnotiz eines Tages an - heute, wenn kein Datum angegeben ist - und legt die Notiz vorher aus ihrer Vorlage an, falls es sie nicht gibt. Eine Notiz für später in der Seitenleiste ist add_note; eine Aufgabe mit Datum add_task.
 <!-- /ai-tools -->

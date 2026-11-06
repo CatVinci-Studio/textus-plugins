@@ -15,5 +15,5 @@
 裝上這個外掛後，Textus AI 在對話中可以使用：
 
 - `read_daily_note`：讀取某一天的日記（預設今天）：從日記資料夾中給出它的路徑、是否存在以及全文。
-- `append_to_daily_note`：在某一天的日記（預設今天）末尾附加 Markdown 內容；如果還沒有這篇日記，先依範本新建。
+- `append_to_daily_note`：在某一天的日記（預設今天）末尾附加 Markdown 內容；如果還沒有這篇日記，先依範本新建。 想先放在側欄、之後再用的筆記用 add_note；帶日期的待辦用 add_task。
 <!-- /ai-tools -->

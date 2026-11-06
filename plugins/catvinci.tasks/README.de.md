@@ -15,7 +15,7 @@ Alle Aufgaben deines Ordners in einer Liste.
 
 Ist das Plugin installiert, kann Textus AI sie im Gespräch nutzen:
 
-- `list_tasks`: Listet die Markdown-Aufgaben (- [ ] ...) in den Dokumenten des geöffneten Ordners auf - standardmäßig nur offene -, jede mit Text, Fälligkeit, Dokumentpfad und Zeile. Filtert nach Status, Dokument, Tag, Fälligkeit und Wörtern.
-- `add_task`: Fügt einem Dokument im geöffneten Ordner eine Aufgabe (- [ ] ...) hinzu: am Ende oder am Ende des Abschnitts unter einer Überschrift, mit Fälligkeit, falls angegeben. Legt das Dokument an, wenn es fehlt. Gibt zurück, wo sie steht.
+- `list_tasks`: Listet die Markdown-Aufgaben (- [ ] ...) in den Dokumenten des geöffneten Ordners auf - standardmäßig nur offene -, jede mit Text, Fälligkeit, Dokumentpfad und Zeile. Filtert nach Status, Dokument, Tag, Fälligkeit und Wörtern. Ohne Kanban-Karten (read_board) und Erinnerungen mit Uhrzeit (list_reminders).
+- `add_task`: Fügt einem Dokument im geöffneten Ordner eine Aufgabe (- [ ] ...) hinzu: am Ende oder am Ende des Abschnitts unter einer Überschrift, mit Fälligkeit, falls angegeben. Legt das Dokument an, wenn es fehlt. Gibt zurück, wo sie steht. Für etwas, das zu einer Uhrzeit melden soll, add_reminder; eine Board-Karte ist add_card, eine Datenbankzeile add_row, eine Zeile im heutigen Journal append_to_daily_note.
 - `complete_task`: Hakt eine Aufgabe ab (- [x]) - oder öffnet sie mit done false wieder - anhand von Dokumentpfad und Zeile, wie list_tasks sie liefert.
 <!-- /ai-tools -->

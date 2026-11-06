@@ -44,5 +44,5 @@ Once it is installed, Textus AI can use these in a conversation:
 
 - `create_database`: Makes a database: a folder of documents whose front matter holds each one's properties, and a ```database block that shows them as a table, board, calendar or gallery. Returns the block to insert.
 - `query_rows`: Reads a database's rows - the documents in its folder - each with its name, path and properties, filtered and sorted as a ```database block's filter and sort lines would.
-- `add_row`: Adds a row to a database: a document in its folder, named for the row, with its properties in its front matter. Every block showing that folder shows it.
+- `add_row`: Adds a row to a database: a document in its folder, named for the row, with its properties in its front matter. Every block showing that folder shows it. Only for a database folder (create_database, query_rows); a plain to-do is add_task.
 <!-- /ai-tools -->

@@ -15,7 +15,7 @@ Toutes les tâches de votre dossier, dans une seule liste.
 
 Une fois le plugin installé, Textus AI peut s’en servir dans une conversation :
 
-- `list_tasks`: Liste les tâches Markdown (- [ ] ...) des documents du dossier ouvert - seulement celles à faire, sauf demande contraire -, chacune avec son texte, son échéance, le chemin du document et la ligne. Filtre par état, document, tag, échéance et mots.
-- `add_task`: Ajoute une tâche (- [ ] ...) à un document du dossier ouvert : à la fin, ou à la fin de la section sous un titre, avec une échéance si elle est donnée. Crée le document s'il n'existe pas. Renvoie où elle se trouve.
+- `list_tasks`: Liste les tâches Markdown (- [ ] ...) des documents du dossier ouvert - seulement celles à faire, sauf demande contraire -, chacune avec son texte, son échéance, le chemin du document et la ligne. Filtre par état, document, tag, échéance et mots. Sans les cartes Kanban (read_board) ni les rappels à heure fixe (list_reminders).
+- `add_task`: Ajoute une tâche (- [ ] ...) à un document du dossier ouvert : à la fin, ou à la fin de la section sous un titre, avec une échéance si elle est donnée. Crée le document s'il n'existe pas. Renvoie où elle se trouve. Pour ce qui doit notifier à une heure, utilisez add_reminder ; une carte de tableau, c’est add_card, une ligne de base add_row, une ligne du journal du jour append_to_daily_note.
 - `complete_task`: Coche une tâche (- [x]) - ou, avec done à false, la rouvre - d'après le chemin de son document et sa ligne, tels que list_tasks les donne.
 <!-- /ai-tools -->
