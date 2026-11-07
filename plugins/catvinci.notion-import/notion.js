@@ -14,8 +14,12 @@
   function cleanName(name) {
     const safe = N.withoutId(name).normalize("NFC").replace(/[\\/:*?"<>|\u0000-\u001f]/g, "-").trim();
     // By code points, so an emoji is never cut in half.
-    const chars = Array.from(safe).slice(0, NAME_MAX);
+    const all = Array.from(safe);
+    const chars = all.slice(0, NAME_MAX);
     while (utf8.encode(chars.join("")).length > NAME_BYTES) chars.pop();
+    // A name cut short ends at a word, not inside one.
+    const space = chars.lastIndexOf(" ");
+    if (chars.length < all.length && all[chars.length] !== " " && space > chars.length - 20) chars.length = space;
     return chars.join("").trim().replace(/[. ]+$/, "") || "Untitled";
   }
 
@@ -49,7 +53,7 @@
 
   /** Where each file goes: `Title <id>.md` and its folder become `Title.md` and `Title/`, as Pages
    *  has them; a database CSV becomes a page beside its rows' folder; `copies` are attachments. */
-  function plan(paths) {
+  function plan(paths, titles = new Map()) {
     const files = new Map();
     const copies = new Set();
     const byId = new Map();
@@ -78,10 +82,27 @@
         else if (/^\.md$/i.test(ext)) group(key).page = name;
         else group(key).csv.push(name);
       }
-      for (const name of here.dirs) group(name).dir = name;
+      for (const name of here.dirs) {
+        // Newer exports name a page's folder without its id: it is the folder of the one page or
+        // database here whose name it is.
+        // Two of one name tell their folders apart by the id's first and last four ("Notes b606-ff8f").
+        const short = /^(.*) ([0-9a-f]{4})-([0-9a-f]{4})$/i.exec(name);
+        const owns = (k) =>
+          !groups.get(k).dir &&
+          (short
+            ? N.withoutId(k) === short[1] && (N.idOf(k) || "").replace(/-/g, "").toLowerCase().startsWith(short[2].toLowerCase()) && (N.idOf(k) || "").replace(/-/g, "").toLowerCase().endsWith(short[3].toLowerCase())
+            : N.withoutId(k) === name);
+        const owners = groups.has(name) || N.idOf(name) ? [] : [...groups.keys()].filter(owns);
+        group(owners.length === 1 ? owners[0] : name).dir = name;
+      }
+      // Two that Notion named alike take their own titles ("Notes (Fall)", "Notes (Spring)").
+      const alike = new Map();
+      for (const key of groups.keys()) alike.set(cleanName(key), (alike.get(cleanName(key)) || 0) + 1);
       for (const key of [...groups.keys()].sort()) {
         const g = groups.get(key);
-        const stem = unique(used, cleanName(key), [".md", ""]);
+        const title = g.page && titles.get(joinPath(oldDir, g.page));
+        const base = alike.get(cleanName(key)) > 1 && title ? cleanName(title) : cleanName(key);
+        const stem = unique(used, base, [".md", ""]);
         const id = N.idOf(key);
         if (g.page) {
           files.set(joinPath(oldDir, g.page), joinPath(newDir, stem + ".md"));
@@ -97,6 +118,8 @@
             page,
             folder: joinPath(newDir, stem),
             from: g.dir ? joinPath(oldDir, g.dir) : null,
+            intro: g.page ? joinPath(oldDir, g.page) : null,
+            id,
           });
         }
         if (g.dir) walk(joinPath(oldDir, g.dir), joinPath(newDir, stem));
@@ -310,12 +333,52 @@
     return { text: out.join("\n"), group, date };
   }
 
+  const VIEW_LINK = /^\s*\[[^\]\n]*\]\(([^)\s]+?\.csv)\)\s*$/i;
+
+  /** Newer exports show a database where a page has it as a link to its CSV, then the view's
+   *  "filters:" (property names only) and "sort:" lines. Each becomes the link to the database's
+   *  page and a ```database block showing it, sorted as it was; the database's own page (`own`,
+   *  its folder) keeps only the link. */
+  function convertViews(text, from, to, layout, own) {
+    if (!layout.databases.length) return text;
+    const lines = text.split("\n");
+    const out = [];
+    for (let i = 0; i < lines.length; i++) {
+      const m = VIEW_LINK.exec(lines[i]);
+      const id = m && N.idOf(splitExt(baseOf(decode(m[1]))).stem.replace(/_all$/, ""));
+      const db = id && layout.databases.find((d) => d.id === id);
+      if (!db) {
+        out.push(lines[i]);
+        continue;
+      }
+      const sort = [];
+      let k = i + 1;
+      while (k < lines.length && !lines[k].trim()) k++;
+      if (k < lines.length && /^(filters|sort):\s*$/i.test(lines[k].trim())) {
+        let mode = null;
+        for (; k < lines.length && lines[k].trim(); k++) {
+          const t = lines[k].trim();
+          const head = /^(filters|sort):\s*$/i.exec(t);
+          if (head) mode = head[1].toLowerCase();
+          const by = mode === "sort" && /^(.+?):\s*(ascending|descending)$/i.exec(t);
+          if (by) sort.push((/^d/i.test(by[2]) ? "-" : "") + N.propertyName(by[1]));
+        }
+        i = k - 1;
+      }
+      if (db.folder === own) continue;
+      out.push(m[0].trim(), "", "```database", "from: " + relative(dirOf(to), db.folder), "view: table");
+      if (sort.length) out.push("sort: " + sort.join(", "));
+      out.push("```");
+    }
+    return out.join("\n").replace(/\n{3,}/g, "\n\n");
+  }
+
   const TODO = /^\s*[-*+] \[[ xX]\] /gm;
   const BOOKMARK = /^\s*(?:\[[^\]\n]*\]\((https?:[^)\s]+)\)|<?(https?:\/\/\S+?)>?)\s*$/gm;
   const TEMPLATE = /template|模板|範本|テンプレート|템플릿|plantilla|modèle|vorlage|шаблон|modelo/i;
 
-  function convertPage(body, title, props, from, to, layout, found) {
-    let text = convertCallouts(body, (kind) => found.block(kind, to));
+  function convertPage(body, title, props, from, to, layout, found, own) {
+    let text = convertCallouts(convertViews(body, from, to, layout, own), (kind) => found.block(kind, to));
     text = rewriteLinks(text, from, to, layout, (link) => found.link(link, to));
     found.todos((text.match(TODO) || []).length);
     for (const m of text.matchAll(BOOKMARK)) if (!NOTION_URL.test(m[1] || m[2])) found.url();
@@ -370,10 +433,55 @@
     return out;
   }
 
+  /** Newer exports keep every attachment at the top, in attachments/<id>/<name>. Each goes into an
+   *  assets folder beside the first page that shows or links it, as Textus keeps pictures; one no
+   *  page links stays in attachments/, without the id folders. */
+  async function placeAttachments(layout, paths, read) {
+    const pooled = paths.filter((p) => layout.copies.has(p) && /^attachments\/[^/]+\/[^/]+$/i.test(p));
+    if (!pooled.length) return;
+    const pool = new Set(pooled);
+    const home = new Map();
+    for (const page of paths) {
+      const to = layout.files.get(page);
+      if (!/\.md$/i.test(page) || layout.copies.has(page) || !to) continue;
+      // One that can't be read is reported when it is written.
+      const text = await Promise.resolve().then(() => read(page, "text")).catch(() => "");
+      for (const m of text.matchAll(/\]\((<[^>\n]+>|[^)\s]+)/g)) {
+        const raw = m[1].replace(/^<|>$/g, "");
+        if (SCHEME.test(raw)) continue;
+        const full = resolve(dirOf(page), decode(raw.split(/[#?]/)[0]));
+        if (pool.has(full) && !home.has(full)) home.set(full, to);
+      }
+    }
+    for (const path of pooled) {
+      const page = home.get(path);
+      const dir = page ? joinPath(dirOf(page), "assets") : "attachments";
+      const used = layout.taken.get(dir) || layout.taken.set(dir, new Set()).get(dir);
+      const { stem, ext } = splitExt(baseOf(path));
+      layout.files.set(path, joinPath(dir, unique(used, cleanName(stem), [ext]) + ext));
+    }
+  }
+
   /** Imports the export a file at a time, so a large one never sits in memory whole; `signal`
    *  stops it between files. A file that can't be read or written goes in `report.failed`. */
   async function importExport({ paths, read, write, progress, signal }) {
-    const layout = plan(paths);
+    // The titles of pages Notion named alike in one folder, to tell them apart.
+    const titles = new Map();
+    const stems = new Map();
+    for (const p of paths) {
+      if (!/\.md$/i.test(p) || !N.idOf(splitExt(baseOf(p)).stem)) continue;
+      const key = joinPath(dirOf(p), N.withoutId(splitExt(baseOf(p)).stem));
+      stems.set(key, (stems.get(key) || []).concat(p));
+    }
+    for (const same of stems.values())
+      if (same.length > 1)
+        for (const p of same) {
+          const text = await Promise.resolve().then(() => read(p, "text")).catch(() => "");
+          const title = N.pageParts(text).title;
+          if (title) titles.set(p, title);
+        }
+    const layout = plan(paths, titles);
+    await placeAttachments(layout, paths, read);
     const report = {
       pages: 0, databases: 0, rows: 0, files: 0, total: paths.length, done: 0, stopped: false,
       missing: [], failed: [], blocks: { callout: [], icon: [] },
@@ -424,20 +532,39 @@
     for (const p of paths) if (/\.md$/i.test(p) && !layout.copies.has(p)) (pagesIn.get(dirOf(p)) || pagesIn.set(dirOf(p), []).get(dirOf(p))).push(p);
     const rowPages = new Set();
 
-    // Databases: a document per row, its body from the row's page.
+    // Each database's rows and their pages first, so every link already knows the rows' names:
+    // Notion cuts a long page name to 50 characters, the row's whole title is in the CSV.
     for (const db of layout.databases) {
       if (stopped()) return report;
       let source = "";
       await attempt(db.csv, async () => (source = await read(db.csv, "text")));
-      const rows = N.fromNotionCsv(source, { relation: (item) => ({ relation: item }) });
-      const pages = await pagesOfRows(rows, N.parseCsv(source), (db.from && pagesIn.get(db.from)) || [], read);
-      const used = layout.taken.get(db.folder) || new Set();
-      layout.taken.set(db.folder, used);
+      db.rows = N.fromNotionCsv(source, { relation: (item) => ({ relation: item }) });
+      db.pages = await pagesOfRows(db.rows, N.parseCsv(source), (db.from && pagesIn.get(db.from)) || [], read);
+      const used = layout.taken.get(db.folder) || layout.taken.set(db.folder, new Set()).get(db.folder);
+      const targets = [...layout.files.values()];
+      for (const [i, page] of db.pages.entries()) {
+        const to = page && layout.files.get(page);
+        // As Notion names files: / : ? and the like dropped, not swapped.
+        const whole = cleanName(db.rows[i].name.replace(/[\\/:*?"<>|]+/g, " ").replace(/\s+/g, " "));
+        const stem = to && to.slice(0, -3);
+        // Cut names also drop the characters a file name can't hold: compared by letters and digits.
+        const bare = (x) => x.replace(/[^\p{L}\p{N}]+/gu, "").toLowerCase();
+        if (!to || baseOf(stem) === whole || !bare(whole).startsWith(bare(baseOf(stem).replace(/ \d+$/, ""))) || bare(whole).length <= bare(baseOf(stem).replace(/ \d+$/, "")).length || targets.some((t) => t.startsWith(stem + "/"))) continue;
+        const name = joinPath(dirOf(to), unique(used, whole, [".md", ""]) + ".md");
+        layout.files.set(page, name);
+        const id = N.idOf(splitExt(baseOf(page)).stem);
+        if (id) layout.byId.set(id, name);
+      }
+    }
+    // Databases: a document per row, its body from the row's page.
+    for (const db of layout.databases) {
+      if (stopped()) return report;
+      const { rows, pages } = db;
       for (const [i, row] of rows.entries()) {
         if (stopped()) return report;
         const page = pages[i];
         if (page) rowPages.add(page);
-        const to = page ? layout.files.get(page) : joinPath(db.folder, unique(used, cleanName(row.name), [".md", ""]) + ".md");
+        const to = page ? layout.files.get(page) : joinPath(db.folder, unique(layout.taken.get(db.folder), cleanName(row.name), [".md", ""]) + ".md");
         await attempt(page || to, async () => {
           const body = page ? N.pageParts(await read(page, "text")).body : "";
           await writeText(to, convertPage(body, row.name, row.props, page || db.csv, to, layout, found));
@@ -447,7 +574,12 @@
       }
       await attempt(db.page, async () => {
         const view = databasePage(db.name, baseOf(db.folder), rows.map((r) => ({ props: linkRelations(r.props, db.page, layout) })));
-        await writeText(db.page, view.text);
+        // A newer export's own page for the database: what else it says goes above the views.
+        const parts = db.intro ? N.pageParts(await read(db.intro, "text")) : { title: "", body: "" };
+        const intro = parts.body;
+        if (parts.title) view.text = view.text.replace(/^# [^\n]*/, "# " + parts.title);
+        const said = intro && convertPage(intro, "", {}, db.intro, db.page, layout, found, db.folder).replace(/^# \n+/, "").trim();
+        await writeText(db.page, said ? view.text.replace(/\n/, "\n\n" + said + "\n") : view.text);
         report.databases++;
         report.stats.databases++;
       });
@@ -455,6 +587,7 @@
     }
 
     const rowFolders = new Set(layout.databases.map((db) => db.from).filter(Boolean));
+    for (const db of layout.databases) if (db.intro) rowPages.add(db.intro);
     for (const path of paths) {
       const copy = layout.copies.has(path);
       if (rowPages.has(path) || (/\.csv$/i.test(path) && !copy)) continue;

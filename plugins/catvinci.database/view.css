@@ -151,8 +151,15 @@ body {
 }
 .record .prop,
 .tile .prop {
+  min-width: 0;
   color: var(--ui-muted);
   font-size: var(--text-secondary);
+  overflow-wrap: anywhere;
+}
+/* A card is narrow: its tags wrap instead of running out of it. */
+.record .tags,
+.tile .tags {
+  flex-wrap: wrap;
 }
 .lane .new {
   align-self: flex-start;
