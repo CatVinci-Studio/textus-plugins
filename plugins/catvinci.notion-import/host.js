@@ -85,7 +85,11 @@ async function importNotion(arg) {
   const name = String(source).replace(/\\/g, "/").split("/").pop();
   const stat = await textus.files.stat(source);
   if (stat && !stat.isDir && stat.size > MAX_READ) return textus.ui.message(t("tooBig", name));
-  const target = await freeFolder(root, t("folderName", today()));
+  // The import is a workspace of its own: named as the reader likes, "Notion" unless they say.
+  const asked = await textus.ui.input({ prompt: t("namePrompt"), value: t("folderName") });
+  if (asked === null || asked === undefined) return;
+  const named = notionImport.cleanName(String(asked).trim() || t("folderName"));
+  const target = await freeFolder(root, named);
   let report;
   try {
     report = await textus.ui.withProgress(t("importing"), async (progress, signal) => {
