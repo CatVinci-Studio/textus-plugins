@@ -461,7 +461,7 @@
       // Notion calls every pasted picture "image": those take their page's name instead, so a
       // folder of them says whose each is. A file's own name stays.
       const generic = page && /^(image|untitled|pasted image.*)$/i.test(stem.trim());
-      const words = Array.from(splitExt(baseOf(page)).stem);
+      const words = page ? Array.from(splitExt(baseOf(page)).stem) : [];
       const cut = words.length > 60 ? words.slice(0, 60).join("").replace(/\s+\S*$/, "") : words.join("");
       const base = generic ? cleanName(cut) : cleanName(stem);
       layout.files.set(path, joinPath(dir, unique(used, base, [ext]) + ext));
