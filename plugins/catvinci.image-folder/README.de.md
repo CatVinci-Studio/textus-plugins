@@ -1,4 +1,4 @@
-# Bilderordner pro Dokument
+# Bilder beim Dokument
 
 Legt die Bilder jedes Dokuments daneben in einen Ordner mit seinem Namen, wie Typora und VS Code: die von `Note.md` kommen nach `Note.assets/`.
 

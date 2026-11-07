@@ -1,4 +1,4 @@
-# Image Folder per Document
+# Images Follow Document
 
 Keeps each document's pictures beside it, in a folder named after it, as Typora and VS Code do: the pictures of `Note.md` go in `Note.assets/`.
 

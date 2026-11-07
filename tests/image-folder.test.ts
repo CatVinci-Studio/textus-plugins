@@ -1,7 +1,7 @@
 import { beforeAll, describe, expect, it } from "vitest";
 import { folder, loadPlugin } from "./plugin-host";
 
-/** Image Folder per Document (plugins/catvinci.image-folder). */
+/** Images Follow Document (plugins/catvinci.image-folder). */
 let rules: {
   relink: (text: string, forms: string[], to: string) => string;
   rebase: (text: string, from: string, to: string) => string;
