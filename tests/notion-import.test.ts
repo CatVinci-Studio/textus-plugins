@@ -97,7 +97,7 @@ describe("names", () => {
       [`Home ${H}/image.png`]: "Home/image 2.png",
     });
     expect(layout.databases).toEqual([
-      { name: "DB", csv: `Home ${H}/DB ${id("2")}_all.csv`, page: "Home/DB.md", folder: "Home/DB", from: `Home ${H}/DB ${id("2")}` },
+      { name: "DB", csv: `Home ${H}/DB ${id("2")}_all.csv`, page: "Home/DB.md", folder: "Home/DB", from: `Home ${H}/DB ${id("2")}`, intro: null, id: id("2") },
     ]);
     expect(layout.byId.get(id("3"))).toBe("Home/DB/Row.md");
     expect(layout.byId.get(id("2"))).toBe("Home/DB.md");
@@ -403,15 +403,15 @@ describe("an export's harder cases", () => {
   const D = id("d");
   const rowDocs = (out: Record<string, string>, dir: string) => Object.keys(out).filter((p) => p.startsWith(dir + "/")).sort();
 
-  it("finds a row's page when Notion cut its file name or swapped / : ? in it", async () => {
+  it("finds a row's page when Notion cut its file name or swapped / : ? in it, and gives it its whole title", async () => {
     const long = "How we migrated the billing service to the new event bus";
     const { out, report } = await importMemory({
       [`DB ${D}.csv`]: `Name,Status\n${long},Done\n"Q1/Q2: plan?",Doing\n`,
       [`DB ${D}/${long.slice(0, 50)} ${id("1")}.md`]: `# ${long}\n\nStatus: Done\n\nBody one.`,
       [`DB ${D}/Q1 Q2  plan  ${id("2")}.md`]: "# Q1/Q2: plan?\n\nStatus: Doing\n\nBody two.",
     });
-    expect(rowDocs(out, "DB")).toEqual([`DB/${long.slice(0, 50)}.md`, "DB/Q1 Q2  plan.md"]);
-    expect(out[`DB/${long.slice(0, 50)}.md`]).toBe(`---\nstatus: Done\n---\n# ${long}\n\nBody one.\n`);
+    expect(rowDocs(out, "DB")).toEqual([`DB/${long}.md`, "DB/Q1 Q2  plan.md"]);
+    expect(out[`DB/${long}.md`]).toBe(`---\nstatus: Done\n---\n# ${long}\n\nBody one.\n`);
     expect(out["DB/Q1 Q2  plan.md"]).toBe("---\nstatus: Doing\n---\n# Q1/Q2: plan?\n\nBody two.\n");
     expect(report).toMatchObject({ rows: 2, pages: 0 });
   });
@@ -538,5 +538,64 @@ describe("suggestions and the report", () => {
     for (const s of ni.recommend(stats)) expect(en).toEqual(expect.arrayContaining([s.why, "plugin." + s.id]));
     for (const [lang, strings] of Object.entries(manifest.l10n)) expect(Object.keys(strings as object), lang).toEqual(en);
     expect(Object.keys(manifest.l10n)).toHaveLength(10);
+  });
+});
+
+describe("Notion's newer export", () => {
+  // Folders without ids, a page of its own beside each database's CSV, views as links to the CSV
+  // with their filters and sorts, and every attachment in attachments/<id>/.
+  const P = id("a");
+  const DB = id("b");
+  const DB2 = "b6060000000000000000000000000ff8";
+  const att = "attachments/1826959b-650f-480d-8114-06720583c63e/image.png";
+  const files = {
+    [`Papers ${P}.md`]: `# Papers\n\n## By date\n\n[03/2026](Papers/03%202026%20${DB}_all.csv)\n\nfilters: \nAuthor\nsort: \nStatus: descending\nYear: ascending\n\nAfter.\n`,
+    [`Papers/03 2026 ${DB}.md`]: `# 03/2026\n\nOur reading list.\n\n[03/2026](03%202026%20${DB}_all.csv)\n\nfilters: \nAuthor\n`,
+    [`Papers/03 2026 ${DB}_all.csv`]: "Title,Status,Year\nA paper on time series forecasting with exogenous variables,Done,2026\nShort,Doing,2025\n",
+    [`Papers/03 2026 ${DB}.csv`]: "Title,Status,Year\nShort,Doing,2025\n",
+    [`Papers/03 2026/A paper on time series forecasting with exogenous ${id("1")}.md`]: `# A paper on time series forecasting with exogenous variables\n\nStatus: Done\n\n![](../../${att.replace(/\//g, "/")})\n`,
+    [`Papers/03 2026/Short ${id("2")}.md`]: "# Short\n\nStatus: Doing\n",
+    [`Papers/Notes ${id("3")}.md`]: "# Notes (Fall)\n",
+    [`Papers/Notes ${DB2}.md`]: "# Notes (Spring)\n",
+    [`Papers/Notes b606-0ff8/Week 1 ${id("4")}.md`]: "# Week 1\n",
+    [att]: "png",
+    ["attachments/2d5c7343-c11f-49a3-92cb-ff404c2bb9bc/slides.pptx"]: "pptx",
+  };
+
+  it("pairs each page with its folder, makes one database of its CSV, page and rows, and names them in full", async () => {
+    const { out } = await importMemory(files);
+    const names = Object.keys(out).sort();
+    expect(names).toEqual([
+      "Papers.md",
+      "Papers/03 2026.md",
+      "Papers/03 2026/A paper on time series forecasting with exogenous variables.md",
+      "Papers/03 2026/Short.md",
+      "Papers/03 2026/assets/image.png",
+      "Papers/Notes (Fall).md",
+      "Papers/Notes (Spring).md",
+      "Papers/Notes (Spring)/Week 1.md",
+      "attachments/slides.pptx",
+    ]);
+    // The database's own page: its title and words, then its views; no CSV link or filter lines.
+    expect(out["Papers/03 2026.md"]).toMatch(/^# 03\/2026\n\nOur reading list\.\n\n```database\nfrom: 03 2026\nview: table\n```/);
+    expect(out["Papers/03 2026.md"]).toContain("view: board\ngroup: status");
+    expect(out["Papers/03 2026.md"]).not.toMatch(/filters:|_all\.csv/);
+    // A view elsewhere: the link to the database's page, and the database shown, sorted as it was.
+    expect(out["Papers.md"]).toContain(
+      "[03/2026](Papers/03%202026.md)\n\n```database\nfrom: Papers/03 2026\nview: table\nsort: -status, year\n```\n\nAfter.",
+    );
+    // A picture beside the page that shows it.
+    expect(out["Papers/03 2026/A paper on time series forecasting with exogenous variables.md"]).toContain("![](assets/image.png)");
+  });
+
+  it("takes an export with subpages beside their pages, no folders, and the current view's CSV only", async () => {
+    const { out } = await importMemory({
+      [`Home ${P}.md`]: `# Home\n\n[Child](Child%20${id("5")}.md)\n\n[Tasks](Tasks%20${DB}.csv)\n`,
+      [`Child ${id("5")}.md`]: "# Child\n",
+      [`Tasks ${DB}.csv`]: "Name,Status\nWrite,Doing\n",
+    });
+    expect(Object.keys(out).sort()).toEqual(["Child.md", "Home.md", "Tasks.md", "Tasks/Write.md"]);
+    expect(out["Home.md"]).toContain("[Child](Child.md)");
+    expect(out["Home.md"]).toContain("[Tasks](Tasks.md)\n\n```database\nfrom: Tasks\nview: table\n```");
   });
 });
