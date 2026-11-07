@@ -1,4 +1,4 @@
-# Carpeta de imágenes por documento
+# Imágenes junto al documento
 
 Guarda las imágenes de cada documento a su lado, en una carpeta con su nombre, como Typora y VS Code: las de `Note.md` van en `Note.assets/`.
 

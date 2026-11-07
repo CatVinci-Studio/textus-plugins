@@ -1,4 +1,4 @@
-# Dossier d’images par document
+# Images avec le document
 
 Range les images de chaque document à côté de lui, dans un dossier à son nom, comme Typora et VS Code : celles de `Note.md` vont dans `Note.assets/`.
 
