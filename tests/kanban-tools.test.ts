@@ -21,6 +21,21 @@ describe("kanban's tools", () => {
     expect(await call("read_board", { board: "Nope" })).toHaveProperty("error");
   });
 
+  it("find a plain .md board by its front matter, as Obsidian's Kanban writes it, beside the older name.kanban.md", async () => {
+    const files: Record<string, string> = {
+      "Work/Launch.kanban.md": BOARD,
+      "Plan.md": "---\nkanban-plugin: board\n---\n\n## Next\n\n- [ ] Ship\n",
+      "Notes.md": "# Notes\n\n## Not a board\n\n- [ ] a task in a note\n",
+    };
+    const { tools } = loadPlugin("catvinci.kanban", { files: folder(files) });
+    const call = (name: string, args: Record<string, unknown> = {}) => tools.get(name)!(args);
+    const listed = (await call("list_boards")).boards.map((b: { path: string }) => b.path).sort();
+    expect(listed).toEqual(["Plan.md", "Work/Launch.kanban.md"]);
+    // Named without .md: the plain board, else the older kind.
+    expect((await call("read_board", { board: "Plan" })).lists[0].title).toBe("Next");
+    expect((await call("read_board", { board: "Work/Launch" })).lists[0].title).toBe("Todo");
+  });
+
   it("add a card to a list, named in any case", async () => {
     const { call, files } = setup();
     expect(await call("add_card", { board: "Work/Launch.kanban.md", list: "done", text: "Plan", done: true })).toMatchObject({
