@@ -570,7 +570,7 @@ describe("Notion's newer export", () => {
       "Papers/03 2026.md",
       "Papers/03 2026/A paper on time series forecasting with exogenous variables.md",
       "Papers/03 2026/Short.md",
-      "Papers/03 2026/assets/image.png",
+      "Papers/03 2026/assets/A paper on time series forecasting with exogenous variables.png",
       "Papers/Notes (Fall).md",
       "Papers/Notes (Spring).md",
       "Papers/Notes (Spring)/Week 1.md",
@@ -585,7 +585,7 @@ describe("Notion's newer export", () => {
       "[03/2026](Papers/03%202026.md)\n\n```database\nfrom: Papers/03 2026\nview: table\nsort: -status, year\n```\n\nAfter.",
     );
     // A picture beside the page that shows it.
-    expect(out["Papers/03 2026/A paper on time series forecasting with exogenous variables.md"]).toContain("![](assets/image.png)");
+    expect(out["Papers/03 2026/A paper on time series forecasting with exogenous variables.md"]).toContain("![](assets/A%20paper%20on%20time%20series%20forecasting%20with%20exogenous%20variables.png)");
   });
 
   it("takes an export with subpages beside their pages, no folders, and the current view's CSV only", async () => {

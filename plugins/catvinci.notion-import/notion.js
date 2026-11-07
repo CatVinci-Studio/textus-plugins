@@ -458,7 +458,13 @@
       const dir = page ? joinPath(dirOf(page), "assets") : "attachments";
       const used = layout.taken.get(dir) || layout.taken.set(dir, new Set()).get(dir);
       const { stem, ext } = splitExt(baseOf(path));
-      layout.files.set(path, joinPath(dir, unique(used, cleanName(stem), [ext]) + ext));
+      // Notion calls every pasted picture "image": those take their page's name instead, so a
+      // folder of them says whose each is. A file's own name stays.
+      const generic = page && /^(image|untitled|pasted image.*)$/i.test(stem.trim());
+      const words = page ? Array.from(splitExt(baseOf(page)).stem) : [];
+      const cut = words.length > 60 ? words.slice(0, 60).join("").replace(/\s+\S*$/, "") : words.join("");
+      const base = generic ? cleanName(cut) : cleanName(stem);
+      layout.files.set(path, joinPath(dir, unique(used, base, [ext]) + ext));
     }
   }
 
@@ -481,7 +487,6 @@
           if (title) titles.set(p, title);
         }
     const layout = plan(paths, titles);
-    await placeAttachments(layout, paths, read);
     const report = {
       pages: 0, databases: 0, rows: 0, files: 0, total: paths.length, done: 0, stopped: false,
       missing: [], failed: [], blocks: { callout: [], icon: [] },
@@ -556,6 +561,8 @@
         if (id) layout.byId.set(id, name);
       }
     }
+    // Pictures after the rows have their names: one takes its page's name.
+    await placeAttachments(layout, paths, read);
     // Databases: a document per row, its body from the row's page.
     for (const db of layout.databases) {
       if (stopped()) return report;

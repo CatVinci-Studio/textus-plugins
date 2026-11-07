@@ -115,7 +115,7 @@ async function fixtureZip() {
 /** The plugin loaded over `folder`; `run(arg)` is the import command. */
 function host(
   folder: ReturnType<typeof disk>,
-  options: { installed?: string[]; offer?: (args: unknown) => Promise<unknown>; signal?: AbortSignal } = {},
+  options: { installed?: string[]; offer?: (args: unknown) => Promise<unknown>; signal?: AbortSignal; name?: string | null } = {},
 ) {
   const commands = new Map<string, (...args: unknown[]) => Promise<unknown>>();
   const messages: string[] = [];
@@ -135,6 +135,7 @@ function host(
         execute: async (id: string, args: unknown) => (id === "textus.offerPlugin" && options.offer ? options.offer(args) : null),
       },
       ui: {
+        input: async ({ value }: { value?: string }) => (options.name === undefined ? value : options.name),
         pick: async (items: { value: unknown }[]) => {
           picks.push(items);
           return items[0].value;
@@ -157,13 +158,13 @@ function host(
 const targets = (folder: ReturnType<typeof disk>) => [...folder.dirs].filter((d) => !d.includes("/")).sort();
 
 describe("the import command", () => {
-  it("imports the zip it picked into a new dated folder and opens the report", async () => {
+  it("imports the zip it picked into a new folder, named as asked, and opens the report", async () => {
     const folder = disk({ "Inbox/Export-x.zip": await fixtureZip() });
     const { messages, opened, picks, run } = host(folder, { installed: ["catvinci.pages"] });
     await run();
     expect(picks[0]).toEqual([{ label: "Export-x.zip", description: "Inbox/Export-x.zip", value: "/root/Inbox/Export-x.zip" }]);
     const [target] = targets(folder);
-    expect(target).toMatch(/^folderName\|\d{4}-\d{2}-\d{2}$/);
+    expect(target).toBe("folderName");
     expect(folder.files[target + "/Home/Projects/Launch.md"]).toContain("# Launch");
     expect(folder.files[target + "/Home/logo.png"]).toBeInstanceOf(Uint8Array);
     expect(opened).toEqual(["/root/" + target + "/reportName.md"]);
@@ -171,6 +172,15 @@ describe("the import command", () => {
     expect(report).toContain("- **plugin.catvinci.database**: why.catvinci.database");
     expect(report).not.toContain("plugin.catvinci.pages");
     expect(messages).toEqual(["done|13|2|" + target]);
+  });
+
+  it("names the folder as the reader typed, and makes nothing when they cancel", async () => {
+    const named = disk({ "Inbox/Export-x.zip": await fixtureZip() });
+    await host(named, { name: "My Notes/2026" }).run();
+    expect(targets(named)).toEqual(["My Notes-2026"]);
+    const cancelled = disk({ "Inbox/Export-x.zip": await fixtureZip() });
+    await host(cancelled, { name: null }).run();
+    expect(targets(cancelled)).toEqual([]);
   });
 
   it("imports an unzipped folder: the one folder all is in, and decomposed names, as a Mac unzips them", async () => {
