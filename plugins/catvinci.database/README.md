@@ -38,6 +38,7 @@ views:
 - **Board**: drag a card between lists to change its value, drag a list's head to put the lists in the order you want (`groupOrder`).
 - **Filter**, **Sort** and each column's menu are kept in the view as Bases writes them: `status == "Read"`, `tags.contains("ml")`, `due.isEmpty()`. Filters Textus can't read yet are left as they are and said so under the bar.
 - **Long databases** show their first 25 rows (or the view's `limit`); **Show more** under them lets the rest in. The arrow at the bar's left folds a database to its bar, on this computer only.
+- **Formulas** (`formulas:` in the base) are worked out for each row and can be columns, filters and sorts: `(price / pages).toFixed(2)`. Summaries are not drawn yet.
 - **Property types** are Obsidian's, in `.obsidian/types.json`, when the folder is a vault.
 - **In an embedded note** (`![[page]]`) a database is one line; click it to draw it.
 

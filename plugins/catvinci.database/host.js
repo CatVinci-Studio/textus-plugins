@@ -75,7 +75,7 @@ async function snapshot(target, index) {
     props: Object.fromEntries(Object.entries(r.props).map(([k, v]) => [k, plain(v)])),
   }));
   const types = database.typesOf(rows, await obsidianTypes(), spec.kinds);
-  const shown = database.viewRows(rows, spec, self);
+  const shown = database.viewRows(rows, spec, self, database.formulasOf(base));
   const keys = [...new Set([...Object.keys(types), ...(spec.columns || [])])].filter((k) => k !== "icon" && k !== "cover" && k !== "name");
   const options = {};
   for (const k of keys) if (types[k] === "select" || types[k] === "tags") options[k] = database.options(rows, k);

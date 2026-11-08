@@ -41,7 +41,9 @@
   const s = (key) => (data && data.strings && data.strings[key]) || key;
   const icon = (name) => el("span", { class: "tx-icon", "data-icon": name });
   const typeOf = (key) => (key === "name" ? "text" : data.types[key] || "text");
-  const label = (key) => (key === "name" ? s("page") : key);
+  const label = (key) => (key === "name" ? s("page") : key.replace(/^formula\./, "ƒ "));
+  /** A formula's column: worked out by the base, not typed in. */
+  const isFormula = (key) => key.startsWith("formula.");
   const allKeys = () => ["name"].concat(data.keys);
   /** What the block says, changed: filters, sorts, columns or types. */
   const setSpec = (change) => post({ type: "spec", spec: change });
@@ -292,6 +294,7 @@
     const value = row.props[key];
     const td = el("td", { class: "cell cell-" + type, "data-key": key, tabindex: "0" }, shown(value, type, key));
     const set = (next) => post({ type: "set", rel: row.rel, key, value: next });
+    if (isFormula(key)) return td;
     if (type === "checkbox") td.addEventListener("click", () => set(value !== true));
     else if (type === "select" || type === "tags") td.addEventListener("click", () => optionsMenu(td, row, key));
     else

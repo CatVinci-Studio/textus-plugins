@@ -249,16 +249,27 @@
    *  each `{ rel, name, props, file }`, and the statements it couldn't read. */
   function rowsOf(base, docs, thisRel) {
     const self = thisRel ? bexpr.fileOf({ rel: thisRel }) : null;
+    const formulas = formulasOf(base);
     const { test, skipped } = bexpr.filterOf(base.filters);
     const rows = [];
     for (const d of docs) {
       if (!/\.md$/i.test(d.rel)) continue;
       const file = bexpr.fileOf(d);
-      if (!test({ file, this: self })) continue;
-      rows.push({ rel: d.rel, name: file.basename, props: file.properties, file });
+      const ctx = { file, this: self, formulas };
+      if (!test(ctx)) continue;
+      // Each formula's value beside the note's own properties, as formula.<name>.
+      const props = { ...file.properties };
+      for (const name of Object.keys(formulas)) props["formula." + name] = bexpr.formulaValue(name, ctx);
+      rows.push({ rel: d.rel, name: file.basename, props, file });
     }
     return { rows, skipped };
   }
+
+  /** The base's formulas by name, as text. */
+  const formulasOf = (base) =>
+    base.formulas && typeof base.formulas === "object" && !Array.isArray(base.formulas)
+      ? Object.fromEntries(Object.entries(base.formulas).map(([k, v]) => [k, String(v)]))
+      : {};
 
   /** Where a new row of `base` goes: the folder its filters keep it to
    *  (this note's for a unit's database), else beside this note. */
@@ -372,11 +383,13 @@
   const valueAt = (row, key) => (key === "name" ? row.name : key.startsWith("file.") ? row.file && row.file[key.slice(5)] : row.props[key]);
 
   /** The rows a view shows: through its filters, sorted (by name at the last). */
-  function viewRows(rows, spec, thisRel) {
+  function viewRows(rows, spec, thisRel, formulas) {
     const self = thisRel ? bexpr.fileOf({ rel: thisRel }) : null;
     const filters = spec.filters.map((f) => (f.raw !== undefined ? f.raw : filterText(f)));
     const { test } = bexpr.filterOf({ and: filters });
-    const kept = rows.filter((row) => test({ file: row.file || bexpr.fileOf({ rel: row.rel, frontmatter: row.props }), this: self }));
+    const kept = rows.filter((row) =>
+      test({ file: row.file || bexpr.fileOf({ rel: row.rel, frontmatter: row.props }), this: self, formulas: formulas || {} }),
+    );
     return kept.sort((a, b) => {
       for (const s of spec.sort) {
         const x = text(valueAt(a, s.key));
@@ -463,6 +476,7 @@
     options,
     columnsOf,
     viewRows,
+    formulasOf,
     groupKey,
     groups,
     regroup,

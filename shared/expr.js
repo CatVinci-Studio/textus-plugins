@@ -233,6 +233,16 @@
 
   function method(value, name, args) {
     if (value && value.__file) return fileCall(value, name, args);
+    if (typeof value === "number") {
+      if (name === "toFixed") return value.toFixed(Math.max(0, Math.min(20, Number(args[0]) || 0)));
+      if (name === "round") {
+        const k = 10 ** (Number(args[0]) || 0);
+        return Math.round(value * k) / k;
+      }
+      if (name === "abs") return Math.abs(value);
+      if (name === "ceil") return Math.ceil(value);
+      if (name === "floor") return Math.floor(value);
+    }
     if (name === "isEmpty") return empty(value);
     if (name === "toString") return str(value);
     if (Array.isArray(value)) {
@@ -290,10 +300,14 @@
         if (node.name === "file") return ctx.file;
         if (node.name === "this") return { __this: true, file: ctx.this };
         if (node.name === "note") return { __note: true, props: ctx.file.properties || {} };
-        if (node.name === "formula") throw new Unsupported("formula");
+        if (node.name === "formula") {
+          if (!ctx.formulas) throw new Unsupported("formula");
+          return { __formula: true };
+        }
         return (ctx.file.properties || {})[node.name];
       case "get": {
         const on = run(node.on, ctx);
+        if (on && on.__formula) return formula(node.name, ctx);
         if (on && on.__this) {
           if (node.name !== "file" || !on.file) throw new Unsupported("this." + node.name);
           return on.file;
@@ -360,6 +374,16 @@
       default:
         throw new Unsupported(node.t);
     }
+  }
+
+  /** A base's formula by name, worked out for this file: one formula may use
+   *  another, never itself. */
+  function formula(name, ctx) {
+    const source = ctx.formulas[name];
+    if (source === undefined) throw new Unsupported("formula." + name);
+    const busy = ctx.busy || [];
+    if (busy.includes(name)) throw new Unsupported("formula." + name + " uses itself");
+    return compile(String(source))({ ...ctx, busy: busy.concat([name]) });
   }
 
   const cache = new Map();
@@ -437,5 +461,14 @@
     };
   }
 
-  root.bexpr = { compile, filterOf, fileOf, Unsupported, str, truthy, asDate };
+  /** Formula `name` for `ctx`, null when it can't be worked out. */
+  function formulaValue(name, ctx) {
+    try {
+      return formula(name, ctx);
+    } catch {
+      return null;
+    }
+  }
+
+  root.bexpr = { compile, filterOf, fileOf, formulaValue, Unsupported, str, truthy, asDate };
 })(typeof window !== "undefined" ? window : globalThis);

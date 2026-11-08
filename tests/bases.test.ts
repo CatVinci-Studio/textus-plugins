@@ -213,3 +213,26 @@ describe("a base's rows", () => {
     });
   });
 });
+
+describe("a base's formulas", () => {
+  it("are worked out for each row, used by filters and sorts, one using another", () => {
+    const base = {
+      filters: 'file.inFolder("Books")',
+      formulas: { ppu: "(price / pages).toFixed(2)", cheap: "formula.ppu < 0.1", loop: "formula.loop + 1" },
+      views: [{ type: "table" }],
+    };
+    const docs = [
+      { rel: "Books/A.md", frontmatter: { price: 30, pages: 300 } },
+      { rel: "Books/B.md", frontmatter: { price: 30, pages: 100 } },
+    ];
+    const { rows } = db.rowsOf(base, docs, "Books/Books.md");
+    expect(rows.map((r: Row) => [r.name, r.props["formula.ppu"], r.props["formula.cheap"], r.props["formula.loop"]])).toEqual([
+      ["A", "0.10", false, null],
+      ["B", "0.30", false, null],
+    ]);
+    const spec = { filters: [{ raw: "formula.ppu > 0.2" }], sort: [] };
+    expect(db.viewRows(rows, spec, "Books/Books.md", db.formulasOf(base)).map((r: Row) => r.name)).toEqual(["B"]);
+    const sorted = db.viewRows(rows, { filters: [], sort: [{ key: "formula.ppu", desc: true }] }, "Books/Books.md");
+    expect(sorted.map((r: Row) => r.name)).toEqual(["B", "A"]);
+  });
+});
