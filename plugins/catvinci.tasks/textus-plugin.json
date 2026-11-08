@@ -1,7 +1,7 @@
 {
   "id": "catvinci.tasks",
   "name": "%name%",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "publisher": "catvinci",
   "author": "CatVinci Studio",
   "description": "%description%",
@@ -9,10 +9,10 @@
   "license": "MIT",
   "repository": "https://github.com/CatVinci-Studio/textus-plugins",
   "engines": {
-    "textus": ">=1.3.0-beta.2"
+    "textus": ">=1.3.2"
   },
   "platforms": ["desktop", "ios"],
-  "main": ["lib/dates.js", "lib/folder-paths.js", "lib/text-lines.js", "host.js"],
+  "main": ["lib/dates.js", "lib/folder-paths.js", "lib/text-lines.js", "obsidian-tasks.js", "query.js", "host.js"],
   "permissions": [
     "files.read",
     "files.write",
@@ -25,6 +25,12 @@
         "title": "%name%",
         "icon": "tab.svg",
         "type": "list"
+      }
+    ],
+    "codeBlocks": [
+      {
+        "language": "tasks",
+        "title": "%query.title%"
       }
     ],
     "settings": [
@@ -147,7 +153,20 @@
       "dueSoon": "Due soon",
       "tool.list_tasks": "Lists the Markdown tasks (- [ ] ...) in the open folder's documents - open ones unless asked otherwise - each with its text, due date, document path and line. Filters by status, document, tag, due date and words. Not a Kanban board's cards (read_board) or timed reminders (list_reminders).",
       "tool.add_task": "Adds a task (- [ ] ...) to a document in the open folder: at its end, or at the end of the section under a heading, with a due date if given. Makes the document if there is none. Returns where it went. For something that should notify at a time, use add_reminder; a card on a board is add_card, a database row add_row, a line in today's journal append_to_daily_note.",
-      "tool.complete_task": "Ticks off a task (- [x]) - or, with done false, opens it again - by its document's path and line, as list_tasks gives them."
+      "tool.complete_task": "Ticks off a task (- [x]) - or, with done false, opens it again - by its document's path and line, as list_tasks gives them. Writes the done date (✅ YYYY-MM-DD) as Obsidian Tasks does, and for a recurring task (🔁 every …) adds its next occurrence on the line above.",
+      "query.title": "Tasks query",
+      "query.count.one": "{0} task",
+      "query.count.other": "{0} tasks",
+      "query.shown": "{0} shown",
+      "query.none": "No tasks match.",
+      "query.unsupported": "Left out, not understood here: {0}",
+      "query.noDate": "No date",
+      "query.noHeading": "No heading",
+      "query.noPriority": "No priority",
+      "status.todo": "To do",
+      "status.in_progress": "In progress",
+      "status.done": "Done",
+      "status.cancelled": "Cancelled"
     },
     "zh": {
       "name": "任务",
@@ -160,7 +179,19 @@
       "dueSoon": "即将到期",
       "tool.list_tasks": "列出打开的文件夹中各文档里的 Markdown 任务（- [ ] ...），默认只列未完成的；每项带文字、截止日期、文档路径和行号。可按状态、文档、标签、截止日期和关键词筛选。 不含看板卡片（用 read_board）和定时提醒（用 list_reminders）。",
       "tool.add_task": "在打开的文件夹中的某个文档里添加一条任务（- [ ] ...）：加在文末，或某个标题下那一节的末尾；可带截止日期。文档不存在时会新建。返回任务所在位置。 要到点通知的用 add_reminder；看板上的卡片用 add_card，数据库的一行用 add_row，写进今天日记的用 append_to_daily_note。",
-      "tool.complete_task": "按 list_tasks 给出的文档路径和行号，把一条任务勾为完成（- [x]）；done 为 false 时则改回未完成。"
+      "tool.complete_task": "按 list_tasks 给出的文档路径和行号，把一条任务勾为完成（- [x]）；done 为 false 时则改回未完成。会像 Obsidian Tasks 一样写上完成日期（✅ YYYY-MM-DD）；重复任务（🔁 every …）会在上一行加上下一次。",
+      "query.title": "任务查询",
+      "query.count.other": "{0} 项任务",
+      "query.shown": "显示 {0} 项",
+      "query.none": "没有符合条件的任务。",
+      "query.unsupported": "这些行暂不支持，已略过：{0}",
+      "query.noDate": "无日期",
+      "query.noHeading": "无标题",
+      "query.noPriority": "无优先级",
+      "status.todo": "待办",
+      "status.in_progress": "进行中",
+      "status.done": "已完成",
+      "status.cancelled": "已取消"
     },
     "zh-Hant": {
       "name": "任務",
@@ -173,7 +204,19 @@
       "dueSoon": "即將到期",
       "tool.list_tasks": "列出開啟的資料夾中各文件裡的 Markdown 任務（- [ ] ...），預設只列未完成的；每項附文字、截止日期、文件路徑和行號。可依狀態、文件、標籤、截止日期和關鍵字篩選。 不含看板卡片（用 read_board）和定時提醒（用 list_reminders）。",
       "tool.add_task": "在開啟的資料夾中的某份文件裡新增一條任務（- [ ] ...）：加在文末，或某個標題下那一節的末尾；可附截止日期。文件不存在時會新建。回傳任務所在位置。 要到點通知的用 add_reminder；看板上的卡片用 add_card，資料庫的一列用 add_row，寫進今天日記的用 append_to_daily_note。",
-      "tool.complete_task": "依 list_tasks 給出的文件路徑和行號，把一條任務勾為完成（- [x]）；done 為 false 時則改回未完成。"
+      "tool.complete_task": "依 list_tasks 給出的文件路徑和行號，把一條任務勾為完成（- [x]）；done 為 false 時則改回未完成。會像 Obsidian Tasks 一樣寫上完成日期（✅ YYYY-MM-DD）；重複任務（🔁 every …）會在上一行加上下一次。",
+      "query.title": "任務查詢",
+      "query.count.other": "{0} 項任務",
+      "query.shown": "顯示 {0} 項",
+      "query.none": "沒有符合條件的任務。",
+      "query.unsupported": "這些行暫不支援，已略過：{0}",
+      "query.noDate": "無日期",
+      "query.noHeading": "無標題",
+      "query.noPriority": "無優先順序",
+      "status.todo": "待辦",
+      "status.in_progress": "進行中",
+      "status.done": "已完成",
+      "status.cancelled": "已取消"
     },
     "ja": {
       "name": "タスク",
@@ -186,7 +229,19 @@
       "dueSoon": "期限が近い",
       "tool.list_tasks": "開いているフォルダの文書にある Markdown のタスク（- [ ] ...）を一覧にします。既定では未完了のものだけで、それぞれ本文・期限・文書のパス・行番号付き。状態・文書・タグ・期限・語句で絞り込めます。 カンバンのカード（read_board）や時刻付きリマインダー（list_reminders）は含みません。",
       "tool.add_task": "開いているフォルダの文書にタスク（- [ ] ...）を追加します。末尾か、見出しの下の節の終わりに置き、期限があれば付けます。文書がなければ作ります。置いた場所を返します。 時刻に通知したいものは add_reminder、ボードのカードは add_card、データベースの行は add_row、今日の日記への追記は append_to_daily_note を使います。",
-      "tool.complete_task": "list_tasks が返す文書のパスと行番号で、タスクを完了（- [x]）にします。done を false にすると未完了に戻します。"
+      "tool.complete_task": "list_tasks が返す文書のパスと行番号で、タスクを完了（- [x]）にします。done を false にすると未完了に戻します。 Obsidian Tasks と同じく完了日（✅ YYYY-MM-DD）を書き、繰り返しタスク（🔁 every …）は次の回を上の行に加えます。",
+      "query.title": "タスクのクエリ",
+      "query.count.other": "タスク {0} 件",
+      "query.shown": "{0} 件を表示",
+      "query.none": "条件に合うタスクはありません。",
+      "query.unsupported": "ここでは使えないため省いた行：{0}",
+      "query.noDate": "日付なし",
+      "query.noHeading": "見出しなし",
+      "query.noPriority": "優先度なし",
+      "status.todo": "未着手",
+      "status.in_progress": "進行中",
+      "status.done": "完了",
+      "status.cancelled": "キャンセル"
     },
     "ko": {
       "name": "할 일",
@@ -199,7 +254,19 @@
       "dueSoon": "곧 마감",
       "tool.list_tasks": "열린 폴더의 문서에 있는 Markdown 작업(- [ ] ...)을 나열합니다. 기본으로 미완료 작업만 보여 주며, 각각 내용·마감일·문서 경로·줄 번호가 붙습니다. 상태·문서·태그·마감일·단어로 거를 수 있습니다. 칸반 카드(read_board)와 시각 알림(list_reminders)은 포함하지 않습니다.",
       "tool.add_task": "열린 폴더의 문서에 작업(- [ ] ...)을 추가합니다. 문서 끝이나 제목 아래 구역의 끝에 넣고, 마감일이 있으면 붙입니다. 문서가 없으면 만듭니다. 추가된 위치를 돌려줍니다. 정해진 시각에 알려야 하면 add_reminder, 보드 카드는 add_card, 데이터베이스 행은 add_row, 오늘 일지에 쓰려면 append_to_daily_note를 쓰세요.",
-      "tool.complete_task": "list_tasks가 알려 준 문서 경로와 줄 번호로 작업을 완료(- [x])로 표시합니다. done을 false로 하면 다시 미완료로 돌립니다."
+      "tool.complete_task": "list_tasks가 알려 준 문서 경로와 줄 번호로 작업을 완료(- [x])로 표시합니다. done을 false로 하면 다시 미완료로 돌립니다. Obsidian Tasks처럼 완료 날짜(✅ YYYY-MM-DD)를 쓰고, 반복 작업(🔁 every …)은 다음 차례를 윗줄에 추가합니다.",
+      "query.title": "할 일 쿼리",
+      "query.count.other": "할 일 {0}개",
+      "query.shown": "{0}개 표시",
+      "query.none": "조건에 맞는 할 일이 없습니다.",
+      "query.unsupported": "여기서 지원하지 않아 뺀 줄: {0}",
+      "query.noDate": "날짜 없음",
+      "query.noHeading": "제목 없음",
+      "query.noPriority": "우선순위 없음",
+      "status.todo": "할 일",
+      "status.in_progress": "진행 중",
+      "status.done": "완료",
+      "status.cancelled": "취소됨"
     },
     "es": {
       "name": "Tareas",
@@ -213,7 +280,20 @@
       "dueSoon": "Vencen pronto",
       "tool.list_tasks": "Enumera las tareas de Markdown (- [ ] ...) de los documentos de la carpeta abierta - solo las pendientes, salvo que se pida otra cosa -, cada una con su texto, fecha límite, ruta del documento y línea. Filtra por estado, documento, etiqueta, fecha y palabras. No incluye tarjetas de Kanban (read_board) ni recordatorios con hora (list_reminders).",
       "tool.add_task": "Añade una tarea (- [ ] ...) a un documento de la carpeta abierta: al final, o al final de la sección bajo un encabezado, con fecha límite si se da. Crea el documento si no existe. Devuelve dónde quedó. Para algo que deba avisar a una hora, usa add_reminder; una tarjeta de tablero es add_card, una fila de base de datos add_row y una línea del diario de hoy append_to_daily_note.",
-      "tool.complete_task": "Marca una tarea como hecha (- [x]) - o, con done en false, la reabre - por la ruta de su documento y su línea, como las da list_tasks."
+      "tool.complete_task": "Marca una tarea como hecha (- [x]) - o, con done en false, la reabre - por la ruta de su documento y su línea, como las da list_tasks. Escribe la fecha de finalización (✅ AAAA-MM-DD) como Obsidian Tasks y, en una tarea recurrente (🔁 every …), añade la siguiente en la línea de arriba.",
+      "query.title": "Consulta de tareas",
+      "query.count.one": "{0} tarea",
+      "query.count.other": "{0} tareas",
+      "query.shown": "{0} mostradas",
+      "query.none": "Ninguna tarea coincide.",
+      "query.unsupported": "Omitido, no se entiende aquí: {0}",
+      "query.noDate": "Sin fecha",
+      "query.noHeading": "Sin encabezado",
+      "query.noPriority": "Sin prioridad",
+      "status.todo": "Por hacer",
+      "status.in_progress": "En curso",
+      "status.done": "Hecha",
+      "status.cancelled": "Cancelada"
     },
     "fr": {
       "name": "Tâches",
@@ -227,7 +307,20 @@
       "dueSoon": "Bientôt dues",
       "tool.list_tasks": "Liste les tâches Markdown (- [ ] ...) des documents du dossier ouvert - seulement celles à faire, sauf demande contraire -, chacune avec son texte, son échéance, le chemin du document et la ligne. Filtre par état, document, tag, échéance et mots. Sans les cartes Kanban (read_board) ni les rappels à heure fixe (list_reminders).",
       "tool.add_task": "Ajoute une tâche (- [ ] ...) à un document du dossier ouvert : à la fin, ou à la fin de la section sous un titre, avec une échéance si elle est donnée. Crée le document s'il n'existe pas. Renvoie où elle se trouve. Pour ce qui doit notifier à une heure, utilisez add_reminder ; une carte de tableau, c’est add_card, une ligne de base add_row, une ligne du journal du jour append_to_daily_note.",
-      "tool.complete_task": "Coche une tâche (- [x]) - ou, avec done à false, la rouvre - d'après le chemin de son document et sa ligne, tels que list_tasks les donne."
+      "tool.complete_task": "Coche une tâche (- [x]) - ou, avec done à false, la rouvre - d'après le chemin de son document et sa ligne, tels que list_tasks les donne. Écrit la date de fin (✅ AAAA-MM-JJ) comme Obsidian Tasks et, pour une tâche récurrente (🔁 every …), ajoute la suivante sur la ligne au-dessus.",
+      "query.title": "Requête de tâches",
+      "query.count.one": "{0} tâche",
+      "query.count.other": "{0} tâches",
+      "query.shown": "{0} affichées",
+      "query.none": "Aucune tâche ne correspond.",
+      "query.unsupported": "Ignoré, non pris en charge ici : {0}",
+      "query.noDate": "Sans date",
+      "query.noHeading": "Sans titre",
+      "query.noPriority": "Sans priorité",
+      "status.todo": "À faire",
+      "status.in_progress": "En cours",
+      "status.done": "Terminée",
+      "status.cancelled": "Annulée"
     },
     "de": {
       "name": "Aufgaben",
@@ -241,7 +334,20 @@
       "dueSoon": "Bald fällig",
       "tool.list_tasks": "Listet die Markdown-Aufgaben (- [ ] ...) in den Dokumenten des geöffneten Ordners auf - standardmäßig nur offene -, jede mit Text, Fälligkeit, Dokumentpfad und Zeile. Filtert nach Status, Dokument, Tag, Fälligkeit und Wörtern. Ohne Kanban-Karten (read_board) und Erinnerungen mit Uhrzeit (list_reminders).",
       "tool.add_task": "Fügt einem Dokument im geöffneten Ordner eine Aufgabe (- [ ] ...) hinzu: am Ende oder am Ende des Abschnitts unter einer Überschrift, mit Fälligkeit, falls angegeben. Legt das Dokument an, wenn es fehlt. Gibt zurück, wo sie steht. Für etwas, das zu einer Uhrzeit melden soll, add_reminder; eine Board-Karte ist add_card, eine Datenbankzeile add_row, eine Zeile im heutigen Journal append_to_daily_note.",
-      "tool.complete_task": "Hakt eine Aufgabe ab (- [x]) - oder öffnet sie mit done false wieder - anhand von Dokumentpfad und Zeile, wie list_tasks sie liefert."
+      "tool.complete_task": "Hakt eine Aufgabe ab (- [x]) - oder öffnet sie mit done false wieder - anhand von Dokumentpfad und Zeile, wie list_tasks sie liefert. Schreibt das Erledigt-Datum (✅ JJJJ-MM-TT) wie Obsidian Tasks und fügt bei einer wiederkehrenden Aufgabe (🔁 every …) die nächste in der Zeile darüber ein.",
+      "query.title": "Aufgabenabfrage",
+      "query.count.one": "{0} Aufgabe",
+      "query.count.other": "{0} Aufgaben",
+      "query.shown": "{0} angezeigt",
+      "query.none": "Keine Aufgabe passt.",
+      "query.unsupported": "Ausgelassen, hier nicht unterstützt: {0}",
+      "query.noDate": "Ohne Datum",
+      "query.noHeading": "Ohne Überschrift",
+      "query.noPriority": "Ohne Priorität",
+      "status.todo": "Offen",
+      "status.in_progress": "In Arbeit",
+      "status.done": "Erledigt",
+      "status.cancelled": "Abgebrochen"
     },
     "ru": {
       "name": "Задачи",
@@ -257,7 +363,22 @@
       "dueSoon": "Скоро срок",
       "tool.list_tasks": "Перечисляет задачи Markdown (- [ ] ...) в документах открытой папки - по умолчанию только незавершённые - с текстом, сроком, путём к документу и номером строки. Фильтрует по состоянию, документу, тегу, сроку и словам. Без карточек канбана (read_board) и напоминаний со временем (list_reminders).",
       "tool.add_task": "Добавляет задачу (- [ ] ...) в документ открытой папки: в конец или в конец раздела под заголовком, со сроком, если он задан. Создаёт документ, если его нет. Возвращает, куда она попала. Для того, что должно напомнить в определённое время, — add_reminder; карточка на доске — add_card, строка базы — add_row, строка в сегодняшнем дневнике — append_to_daily_note.",
-      "tool.complete_task": "Отмечает задачу выполненной (- [x]) - или, при done false, снова открывает её - по пути документа и строке, как их даёт list_tasks."
+      "tool.complete_task": "Отмечает задачу выполненной (- [x]) - или, при done false, снова открывает её - по пути документа и строке, как их даёт list_tasks. Записывает дату выполнения (✅ ГГГГ-ММ-ДД), как Obsidian Tasks, а для повторяющейся задачи (🔁 every …) добавляет следующую строкой выше.",
+      "query.title": "Запрос задач",
+      "query.count.one": "{0} задача",
+      "query.count.few": "{0} задачи",
+      "query.count.many": "{0} задач",
+      "query.count.other": "{0} задачи",
+      "query.shown": "показано {0}",
+      "query.none": "Подходящих задач нет.",
+      "query.unsupported": "Пропущено, здесь не поддерживается: {0}",
+      "query.noDate": "Без даты",
+      "query.noHeading": "Без заголовка",
+      "query.noPriority": "Без приоритета",
+      "status.todo": "К выполнению",
+      "status.in_progress": "В работе",
+      "status.done": "Выполнена",
+      "status.cancelled": "Отменена"
     },
     "pt": {
       "name": "Tarefas",
@@ -271,7 +392,20 @@
       "dueSoon": "Vencem em breve",
       "tool.list_tasks": "Lista as tarefas Markdown (- [ ] ...) dos documentos da pasta aberta - só as pendentes, a menos que se peça outra coisa -, cada uma com o texto, o prazo, o caminho do documento e a linha. Filtra por estado, documento, tag, prazo e palavras. Sem cartões de Kanban (read_board) nem lembretes com hora (list_reminders).",
       "tool.add_task": "Adiciona uma tarefa (- [ ] ...) a um documento da pasta aberta: no fim, ou no fim da seção sob um título, com prazo se for dado. Cria o documento se ele não existir. Devolve onde ela ficou. Para algo que deve avisar num horário, use add_reminder; um cartão de quadro é add_card, uma linha de banco de dados add_row e uma linha no diário de hoje append_to_daily_note.",
-      "tool.complete_task": "Marca uma tarefa como feita (- [x]) - ou, com done false, reabre-a - pelo caminho do documento e pela linha, como list_tasks os dá."
+      "tool.complete_task": "Marca uma tarefa como feita (- [x]) - ou, com done false, reabre-a - pelo caminho do documento e pela linha, como list_tasks os dá. Escreve a data de conclusão (✅ AAAA-MM-DD) como o Obsidian Tasks e, numa tarefa recorrente (🔁 every …), acrescenta a próxima na linha acima.",
+      "query.title": "Consulta de tarefas",
+      "query.count.one": "{0} tarefa",
+      "query.count.other": "{0} tarefas",
+      "query.shown": "{0} mostradas",
+      "query.none": "Nenhuma tarefa corresponde.",
+      "query.unsupported": "Deixado de fora, não suportado aqui: {0}",
+      "query.noDate": "Sem data",
+      "query.noHeading": "Sem título",
+      "query.noPriority": "Sem prioridade",
+      "status.todo": "A fazer",
+      "status.in_progress": "Em andamento",
+      "status.done": "Concluída",
+      "status.cancelled": "Cancelada"
     }
   }
 }

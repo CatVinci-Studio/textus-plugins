@@ -1,18 +1,19 @@
-// Tasks: every Markdown task in the open folder's documents - "- [ ] …" and
-// "- [x] …" - in a list in the sidebar that Textus draws (views.registerList):
-// the ones due soon first, then by document, each under the heading it
-// sits beneath. What Textus knows of the folder (textus.metadata) says
-// where they are; ticking one changes that one line of its file - in its
-// tab if it is open - after checking the line still says what was listed.
+// Tasks: every Markdown task in the open folder's documents - "- [ ] …",
+// "- [x] …" and Obsidian Tasks' "[/]" and "[-]" - in a list in the sidebar
+// that Textus draws (views.registerList): the ones due soon first, then by
+// document, each under the heading it sits beneath; and ```tasks blocks,
+// Obsidian Tasks' queries, drawn as a list (block.html). What Textus knows
+// of the folder (textus.metadata) says where they are; ticking one changes
+// that line of its file - in its tab if it is open - after checking the
+// line still says what was listed, the way Obsidian Tasks writes it
+// (obsidian-tasks.js): a done date, and a recurring task's next one.
 
-const TASK = /^(\s*(?:[-*+]|\d+[.)])\s+\[)( |x|X)(\]\s+)(.*)$/;
-// A due date written after a task, as Obsidian's Tasks writes it
-// ("📅 2026-10-30") or plainly ("due:2026-10-30").
-const DUE = /\s*(?:📅|due::?)\s*(\d{4}-\d{2}-\d{2})/u;
+/* global obsidianTasks, tasksQuery, folderPaths, dates */
 /** How far ahead "Due soon" looks. */
 const SOON_DAYS = 7;
 // A Kanban board's cards are tasks in Markdown but live on the board.
-const isBoard = (doc) => /\.kanban\.md$/i.test(doc.path);
+const isBoard = (doc) =>
+  /\.kanban\.md$/i.test(doc.path) || !!(doc.frontmatter && "kanban-plugin" in doc.frontmatter);
 
 const t = (key, ...args) => textus.l10n.t(key, ...args);
 
@@ -33,38 +34,82 @@ function count(key, n) {
 /** The heading a line sits beneath, from the document's headings. */
 function headingAt(headings, line) {
   let found = null;
-  for (const h of headings) {
+  for (const h of headings || []) {
     if (h.line > line) break;
     found = h.text;
   }
   return found;
 }
 
+// Textus's index says only whether a task's box is empty; what is in a
+// ticked one ([x], [-], [/]) is read from its file, again only once the
+// file has changed.
+const symbols = new Map();
+async function symbolsOf(doc) {
+  if (!doc.tasks.some((task) => task.done)) return {};
+  const known = symbols.get(doc.path);
+  if (known && doc.modifiedMs != null && known.modifiedMs === doc.modifiedMs) return known.byLine;
+  let rows = [];
+  try {
+    rows = textLines.split(await textus.files.readText(doc.path));
+  } catch {
+    // Gone since it was indexed: its tasks read as ticked.
+  }
+  const byLine = {};
+  for (const task of doc.tasks) {
+    const m = obsidianTasks.LINE.exec(rows[task.line] ? rows[task.line].text : "");
+    if (m) byLine[task.line] = m[2];
+  }
+  symbols.set(doc.path, { modifiedMs: doc.modifiedMs, byLine: byLine });
+  return byLine;
+}
+
+/** Every task in the folder, read as Obsidian Tasks reads it, with its
+ *  document; a board's cards only when `boards`. */
+async function collect(boards) {
+  const found = [];
+  for (const doc of await textus.metadata.all()) {
+    if (!boards && isBoard(doc)) continue;
+    const byLine = await symbolsOf(doc);
+    for (const meta of doc.tasks) {
+      const symbol = byLine[meta.line] || (meta.done ? "x" : " ");
+      const task = obsidianTasks.parse("- [" + symbol + "] " + meta.text);
+      if (!task) continue;
+      if (!task.due && meta.due) task.due = meta.due;
+      found.push(
+        Object.assign(task, {
+          path: doc.path,
+          rel: doc.rel,
+          line: meta.line,
+          heading: headingAt(doc.headings, meta.line),
+        }),
+      );
+    }
+  }
+  return found;
+}
+
+/** A task's due date as a badge's tone. */
+function dueTone(task) {
+  if (!task.open) return "muted";
+  if (task.due < day(0)) return "danger";
+  return task.due <= day(SOON_DAYS) ? "warning" : "muted";
+}
+
 /** A task as the list shows it. */
-function itemOf(doc, task, group) {
-  const today = day(0);
+function itemOf(task, group) {
+  const where = { path: task.path, line: task.line, text: task.text };
   return {
     // Listed twice - due soon, and in its document - under two ids.
-    id: group + ":" + doc.path + ":" + task.line,
-    label: task.text.replace(DUE, "").trim(),
-    description: headingAt(doc.headings, task.line) || undefined,
-    detail: group === "soon" ? doc.rel : undefined,
-    group: group === "soon" ? t("dueSoon") : doc.rel,
-    checkbox: task.done,
-    badge: task.due
-      ? {
-          text: task.due,
-          tone: task.done
-            ? "muted"
-            : task.due < today
-              ? "danger"
-              : task.due <= day(SOON_DAYS)
-                ? "warning"
-                : "muted",
-        }
-      : undefined,
-    location: { path: doc.path, line: task.line, text: task.text },
-    data: { path: doc.path, line: task.line, text: task.text },
+    id: group + ":" + task.path + ":" + task.line,
+    label: task.description,
+    description: task.heading || undefined,
+    detail: group === "soon" ? task.rel : undefined,
+    group: group === "soon" ? t("dueSoon") : task.rel,
+    checkbox: !task.open,
+    badge: task.due ? { text: task.due, tone: dueTone(task) } : undefined,
+    location: where,
+    data: where,
   };
 }
 
@@ -74,69 +119,150 @@ async function items() {
     return [];
   }
   const showDone = await textus.settings.get("showDone");
-  const docs = await textus.metadata.all();
   const soonUntil = day(SOON_DAYS);
   const soon = [];
   const rest = [];
   let open = 0;
-  for (const doc of docs.filter((d) => !isBoard(d)))
-    for (const task of doc.tasks) {
-      if (!task.done) open++;
-      if (task.done && !showDone) continue;
-      if (!task.done && task.due && task.due <= soonUntil)
-        soon.push(itemOf(doc, task, "soon"));
-      rest.push(itemOf(doc, task, "doc"));
-    }
+  for (const task of await collect(false)) {
+    if (task.open) open++;
+    else if (!showDone) continue;
+    if (task.open && task.due && task.due <= soonUntil) soon.push(itemOf(task, "soon"));
+    rest.push(itemOf(task, "doc"));
+  }
   soon.sort((a, b) => (a.badge.text < b.badge.text ? -1 : 1));
   list.setMessage(count("open", open));
   return soon.concat(rest);
 }
 
-/** Ticks or unticks the task on `line` of `path`, if it is still there. */
+/** Ticks or opens again the task on `line` of `path` (lines from 0), if
+ *  it still says `text`: the problem when it doesn't, or what was done. */
 async function setDone(task, done) {
+  let result = { problem: "gone" };
   await textus.files.process(task.path, function (text) {
     const rows = textLines.split(text);
     const row = rows[task.line];
-    const m = TASK.exec(row ? row.text : "");
+    const m = obsidianTasks.LINE.exec(row ? row.text : "");
     // The file changed since it was listed: nothing is written; the list
     // is drawn again from what is there now.
-    if (!m || m[4].trim() !== task.text.trim()) return text;
-    row.text = m[1] + (done ? "x" : " ") + m[3] + m[4];
+    if (!m) return text;
+    if (task.text !== undefined && !m[4].includes(String(task.text).trim())) {
+      result = { problem: "changed", now: m[4] };
+      return text;
+    }
+    const changed = obsidianTasks.setDone(row.text, done, day(0));
+    row.text = changed.lines[changed.lines.length - 1];
+    textLines.insert(rows, task.line, changed.lines.slice(0, -1));
+    result = { next: changed.next, line: task.line + changed.lines.length - 1, text: m[4] };
     return textLines.join(rows);
   });
+  return result;
+}
+
+// ```tasks blocks: the query run on every task in the folder, its result
+// sent to the block's page; a box ticked there ticks the task in its file.
+
+const PRIORITY_MARK = { highest: "🔺", high: "⏫", medium: "🔼", low: "🔽", lowest: "⏬" };
+const DATE_KEYS = ["due", "scheduled", "start", "done", "created"];
+
+/** A group's name as the block shows it. */
+function groupName(key, name) {
+  if (key === "status") return t("status." + name);
+  if (key === "priority") return name ? PRIORITY_MARK[name] : t("query.noPriority");
+  if (name) return name;
+  return t(DATE_KEYS.includes(key) ? "query.noDate" : "query.noHeading");
+}
+
+/** What a block's page draws for `source`. */
+async function queryResult(source) {
+  if (!(await textus.files.root())) return { message: t("nofolder") };
+  const today = day(0);
+  const query = tasksQuery.parse(source, today);
+  const result = tasksQuery.run(query, await collect(true));
+  const shown = result.groups.reduce((n, g) => n + g.tasks.length, 0);
+  return {
+    count: count("query.count", result.total) + (shown < result.total ? " · " + t("query.shown", shown) : ""),
+    unsupported: query.unsupported.length ? t("query.unsupported", query.unsupported.join(" · ")) : "",
+    empty: t("query.none"),
+    groups: result.groups.map((g) => ({
+      names: g.names.map((name, i) => groupName(query.groups[i].key, name)),
+      tasks: g.tasks.map((task) => ({
+        path: task.path,
+        rel: task.rel,
+        file: task.rel.split("/").pop().replace(/\.md$/i, ""),
+        line: task.line,
+        text: task.text,
+        description: task.description,
+        status: task.status,
+        open: task.open,
+        priority: PRIORITY_MARK[task.priority] || "",
+        recurring: !!task.recurrence,
+        due: task.due,
+        tone: task.due ? dueTone(task) : null,
+      })),
+    })),
+  };
+}
+
+const queryPages = new Set();
+function renderQuery(ctx) {
+  return async function (block, webview) {
+    webview.html = await ctx.plugin.readText("block.html");
+    let sent = 0;
+    const send = async function () {
+      const mine = ++sent;
+      const result = await queryResult(block.source);
+      // A slower answer for older text: the newer one is on its way.
+      if (mine === sent) webview.postMessage({ type: "result", result: result });
+    };
+    queryPages.add(send);
+    webview.onDidDispose(() => queryPages.delete(send));
+    block.onDidChange(send);
+    webview.onDidReceiveMessage(async function (m) {
+      if (!m) return;
+      if (m.type === "ready") await send();
+      if (m.type === "open") textus.layout.open({ path: m.path, line: m.line });
+      if (m.type === "check") {
+        await setDone({ path: m.path, line: m.line, text: m.text }, m.done);
+        await send();
+      }
+    });
+  };
 }
 
 // Textus AI's tools. Paths are the documents' paths in the folder, lines
 // count from 1.
 
-/* global folderPaths, dates */
 const NO_FOLDER = { error: "No folder is open." };
 const DAY = /^\d{4}-\d{2}-\d{2}$/;
 const HEADING = /^(#{1,6})\s+(.*?)\s*#*\s*$/;
+// What a tool gives of a task beyond its text: only the fields it has.
+const EXTRA = ["scheduled", "start", "priority", "recurrence"];
 
 async function listTasks(input) {
   const root = await textus.files.root();
   if (!root) return NO_FOLDER;
   const status = input.status || "open";
   const path = input.path ? folderPaths.clean(root, input.path, true) : null;
-  const tag = input.tag ? String(input.tag).replace(/^#/, "") : null;
+  const tag = input.tag ? String(input.tag).replace(/^#/, "").toLowerCase() : null;
   const query = String(input.query || "").toLowerCase();
   const found = [];
-  for (const doc of (await textus.metadata.all()).filter((d) => !isBoard(d)))
-    for (const task of doc.tasks) {
-      if (status !== "all" && task.done !== (status === "done")) continue;
-      if (path && doc.rel !== path) continue;
-      if (tag && !(task.tags || []).some((name) => name.replace(/^#/, "") === tag)) continue;
-      if (input.due_before && !(task.due && task.due <= input.due_before)) continue;
-      if (query && !task.text.toLowerCase().includes(query)) continue;
-      found.push({
-        text: task.text.replace(DUE, "").trim(),
-        done: task.done,
-        due: task.due || null,
-        path: doc.rel,
-        line: task.line + 1,
-      });
-    }
+  for (const task of await collect(false)) {
+    if (status !== "all" && task.open === (status === "done")) continue;
+    if (path && task.rel !== path) continue;
+    if (tag && !task.tags.some((name) => name.replace(/^#/, "").toLowerCase() === tag)) continue;
+    if (input.due_before && !(task.due && task.due <= input.due_before)) continue;
+    if (query && !task.text.toLowerCase().includes(query)) continue;
+    const item = {
+      text: task.description,
+      done: !task.open,
+      status: task.status,
+      due: task.due || null,
+      path: task.rel,
+      line: task.line + 1,
+    };
+    for (const key of EXTRA) if (task[key]) item[key] = task[key];
+    found.push(item);
+  }
   const limit = Math.max(1, Number(input.limit) || 100);
   return { tasks: found.slice(0, limit), total: found.length };
 }
@@ -209,22 +335,18 @@ async function completeTask(input) {
   const index = Number(input.line) - 1;
   if (!rel || !(index >= 0)) return { error: "Give the task's path and line, as list_tasks gives them." };
   const done = input.done !== false;
-  let problem = null;
-  let text = null;
-  await textus.files.process(folderPaths.abs(root, rel), function (old) {
-    const rows = textLines.split(old);
-    const m = TASK.exec(rows[index] ? rows[index].text : "");
-    problem = !m
-      ? "Line " + input.line + " of " + rel + " is not a task; list the tasks again."
-      : input.text && !m[4].includes(String(input.text).trim())
-        ? "Line " + input.line + " of " + rel + " is now another task: " + m[4]
-        : null;
-    if (problem) return old;
-    text = m[4].replace(DUE, "").trim();
-    rows[index].text = m[1] + (done ? "x" : " ") + m[3] + m[4];
-    return textLines.join(rows);
-  });
-  return problem ? { error: problem } : { path: rel, line: index + 1, text: text, done: done };
+  const result = await setDone({ path: folderPaths.abs(root, rel), line: index, text: input.text }, done);
+  if (result.problem === "gone") return { error: "Line " + input.line + " of " + rel + " is not a task; list the tasks again." };
+  if (result.problem) return { error: "Line " + input.line + " of " + rel + " is now another task: " + result.now };
+  const out = {
+    path: rel,
+    line: result.line + 1,
+    text: obsidianTasks.parse("- [ ] " + result.text).description,
+    done: done,
+  };
+  // A recurring task's next one went in above it.
+  if (result.next) out.next = { line: index + 1, text: result.next };
+  return out;
 }
 
 let list = null;
@@ -238,9 +360,13 @@ exports.activate = function (ctx) {
     filterPlaceholder: t("filter"),
     emptyText: t("none"),
   });
-  const refresh = () => list.refresh();
+  const refresh = () => {
+    list.refresh();
+    for (const send of queryPages) send();
+  };
   ctx.subscriptions.push(
     list,
+    textus.views.registerCodeBlock("tasks", { render: renderQuery(ctx) }),
     textus.metadata.onDidChange(refresh),
     textus.files.onDidChangeRoot(refresh),
     textus.settings.onDidChange(refresh),
