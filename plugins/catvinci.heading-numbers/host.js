@@ -1,6 +1,7 @@
 // Heading Numbers: each heading's number (1, 1.1, 1.2...) drawn before it
 // while writing - the text stays as it is - and, in an HTML or PDF export,
-// the same numbers from CSS counters.
+// the same numbers from CSS counters. None for a document numbered by
+// hand, or one Obsidian's Number Headings is told to leave alone.
 function headingLevel(block) {
   return block.kind === "heading"
     ? (/^#+/.exec(block.markdown) || [""])[0].length
@@ -71,6 +72,32 @@ function withoutNumber(words, mine) {
   return words.replace(OLD_NUMBER, "");
 }
 
+/** A number written before a heading's words: 1. 1.2 一、 第一章 (一) */
+const HAND_NUMBER =
+  /^(?:\d+(?:\.\d+)+\.?|\d+\.)(?:\s|$)|^(?:[一二三四五六七八九十百零〇]+[、.．]|第[一二三四五六七八九十百零〇\d]+[章节節部篇]|[(（][一二三四五六七八九十\d]+[)）])/;
+
+/** `number headings: off` in the front matter, for Obsidian's Number
+ *  Headings plugin. */
+function turnedOff(text) {
+  const front = /^---\r?\n([\s\S]*?)\r?\n(?:---|\.\.\.)[ \t]*(?:\r?\n|$)/.exec(text || "");
+  const line = front && /^number headings[ \t]*:(.*)$/im.exec(front[1]);
+  if (!line) return false;
+  const value = line[1].trim().replace(/^(["'])(.*)\1$/, "$2");
+  return value.split(",").some((part) => part.trim().toLowerCase() === "off");
+}
+
+/** The numbers to draw: none when the front matter turns them off, or
+ *  when most headings at the top numbered level already have one. */
+function drawn(text, blocks) {
+  if (turnedOff(text)) return {};
+  const start = startOf(blocks);
+  const all = numbers(blocks, start);
+  const top = blocks.filter((b) => headingLevel(b) === start);
+  const words = (b) => b.markdown.replace(/^#+\s*/, "");
+  const hand = top.filter((b) => HAND_NUMBER.test(words(b)) || words(b).startsWith(all[b.id] + " "));
+  return top.length && hand.length * 2 >= top.length ? {} : all;
+}
+
 /** Textus AI's tool: the headings of some Markdown numbered in their text,
  *  as the editor draws them; or, with `remove`, their numbers taken out. */
 function numberHeadings(input) {
@@ -100,7 +127,7 @@ exports.activate = function () {
   textus.editor.registerDecorations({
     decorate: async function (inSight) {
       const blocks = (await textus.editor.getBlocks()) || [];
-      const all = numbers(blocks, startOf(blocks));
+      const all = drawn(await textus.editor.getText(), blocks);
       return inSight
         .filter((block) => all[block.id])
         .map((block) => ({
@@ -113,8 +140,8 @@ exports.activate = function () {
   });
   textus.export.onWillExport(async function () {
     if (!(await textus.settings.get("inExports"))) return;
-    return {
-      css: exportCss(startOf((await textus.editor.getBlocks()) || [])),
-    };
+    const blocks = (await textus.editor.getBlocks()) || [];
+    if (!Object.keys(drawn(await textus.editor.getText(), blocks)).length) return;
+    return { css: exportCss(startOf(blocks)) };
   });
 };
