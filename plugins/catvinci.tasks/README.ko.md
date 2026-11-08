@@ -1,27 +1,27 @@
 # 할 일
 
-폴더 안의 모든 할 일을 한 목록에 모읍니다.
+폴더의 모든 할 일을 한 목록에 모아 거기서 끝내고, Obsidian Tasks처럼 쿼리로 찾아봅니다.
 
-- 어디서든 `- [ ] 할 일`이라고 쓰면 할 일이 됩니다.
-- 사이드바의 **할 일** 탭에 연 폴더 안 모든 문서의 할 일이 나옵니다.
-- 거기서 바로 체크해 끝내거나, 클릭해서 그 문서의 해당 위치로 이동합니다.
-- 끝난 할 일을 보일지는 플러그인 설정에서 바꿀 수 있습니다.
-- 할 일에 날짜(`📅 2026-11-01` 또는 `due:2026-11-01`)를 적으면 배지로 표시되고, 기한이 지났거나 일주일 안에 다가온 할 일은 맨 위의 **곧 마감**에 먼저 나옵니다.
-- 맨 위의 입력란으로 단어, 문서 이름, 제목에 따라 목록을 걸러 낼 수 있습니다.
-- 칸반 보드(front matter에 `kanban-plugin`이 있는 문서, 또는 `이름.kanban.md`)의 카드는 보드에 맡기고 목록에 넣지 않습니다.
+- 어디에든 `- [ ] 할 일`이라고 쓰면 할 일이 됩니다.
+- 사이드바의 **할 일** 탭에 연 폴더의 모든 문서에 있는 할 일이 문서별로, 각자 속한 제목과 함께 나옵니다.
+- 거기서 체크해 끝내거나, 클릭해서 그 문서의 해당 위치로 갑니다.
+- 할 일에 날짜(`📅 2026-11-01`, `due:2026-11-01`, `[due:: 2026-11-01]`)를 쓰면 배지로 보입니다. 기한이 지났거나 일주일 안에 다가온 할 일은 맨 위 **곧 마감**에 먼저 나옵니다.
+- 위쪽 입력란으로 낱말, 문서 이름, 제목으로 목록을 거릅니다.
+- 끝난 할 일은 기본적으로 숨겨집니다. **설정 › 확장 › 플러그인 › 할 일**에서 **끝난 할 일도 보기**를 켜면 보입니다.
+- 칸반 보드(머리말에 `kanban-plugin`이 있는 문서나 `이름.kanban.md`)의 카드는 보드의 것이라 사이드바 목록에 넣지 않습니다.
 
 ## Obsidian에서 쓴 할 일
 
 Obsidian의 Tasks 플러그인으로 쓴 할 일도 여기서 똑같이 다룹니다.
 
-- `[/]`는 진행 중으로 아직 남은 일, `[-]`는 취소로 끝난 일입니다.
+- `[/]`는 진행 중으로 아직 열린 것이고, `[-]`는 취소로 끝난 것입니다.
 - 할 일 끝의 필드(📅 마감, ⏳ 예정, 🛫 시작, ➕ 생성, ✅ 완료, ❌ 취소, 우선순위 🔺 ⏫ 🔼 🔽 ⏬, 🔁 반복)는 파일에 그대로 두고 목록에는 보이지 않습니다.
-- 체크하면 ✅와 그날 날짜를 쓰고, 체크를 풀면 지웁니다.
-- 반복하는 할 일(`🔁 every day`, `every 2 weeks`, `every weekday`, `every Monday`, `every month on the 15th`, `every year`, `… when done`)을 체크하면 날짜를 옮긴 다음 차례를 윗줄에 추가합니다.
+- 체크하면 ✅와 그날 날짜를 쓰고, 체크를 풀면 완료일이나 취소일을 지웁니다.
+- 반복하는 할 일을 체크하면 날짜를 넘긴 다음 회차를 바로 윗줄에 넣습니다. `🔁 every day`, `every 2 weeks`, `every weekday`, `every weekend`, `every Monday`, `every month on the 15th`, `every month on the last`, `every year`, `… when done` 등을 알아듣습니다.
 
 ## 할 일 쿼리
 
-`tasks` 코드 블록은 한 줄에 조건 하나씩, Obsidian과 같은 방식으로 할 일을 나열합니다.
+`tasks` 코드 블록은 한 줄에 규칙 하나씩, Obsidian과 같은 방식으로 원하는 할 일을 보여 줍니다.
 
 ````markdown
 ```tasks
@@ -32,7 +32,28 @@ sort by due
 ```
 ````
 
-읽을 수 있는 조건: `not done`과 `done`, `due`·`scheduled`·`starts`·`done`·`created`에 `before`·`after`·`on`·`on or before`·`on or after`와 날짜(2026-11-01, today, tomorrow, yesterday, this/next/last week·month·year), `no due date`와 `has due date`, `path`·`filename`·`description`·`heading`의 `includes`와 `does not include`, `tag includes`, `priority is`, `is recurring`, `sort by`, `group by`(path, folder, filename, heading, due, priority, status), `limit`. 보이는 방식에 관한 줄(`hide …`, `show …`)은 건너뛰고, 그 밖에 읽지 못한 줄은 개수 아래에 알려 줍니다. 블록에서 체크하면 파일의 할 일이 체크되고, 클릭하면 그 자리로 갑니다.
+- **상태**: `done`, `not done`, `status.type is`(`todo`, `in_progress`, `done`, `cancelled`).
+- **날짜**: `due`, `scheduled`, `starts`, `done`, `created`, `cancelled`, `happens`에 `before`, `after`, `on`, `in`, `on or before`, `on or after`와 날짜(2026-11-01, today, tomorrow, yesterday, 또는 this/next/last와 week, month, year). `no due date`와 `has due date`도 됩니다(다른 날짜도 마찬가지).
+- **텍스트**: `path`, `folder`, `filename`, `description`, `heading`에 `includes`나 `does not include`. `tag includes`, `tag does not include`, `has tags`, `no tags`.
+- **기타**: `priority is`(`above`, `below`, `not`도 가능), `is recurring`, `is not recurring`.
+- **순서**: `sort by`와 `group by`(status, due, scheduled, start, done, created, priority, path, folder, filename, heading, description. `reverse`를 붙일 수 있음), `limit`. `sort by`가 없으면 Obsidian Tasks처럼 상태, 마감일, 우선순위, 경로 순입니다.
+
+보이는 방식에 관한 줄(`hide …`, `show …`)은 건너뛰고, 그 밖에 읽지 못한 줄은 개수 아래에 적어 줍니다. 쿼리 블록에는 보드의 카드도 나옵니다. 블록에서 체크하면 파일의 할 일이 체크되고, 클릭하면 그 자리로 갑니다.
+
+## 권한
+
+이 플러그인은 할 일을 찾으려고 폴더의 문서를 읽고, 할 일을 체크하거나 추가할 때만 문서에 씁니다. 아래 도구를 Textus AI에도 줍니다. 데스크톱과 iPhone, iPad에서 쓸 수 있습니다.
+
+## 변경 내역
+
+- **0.4.0** - Textus 1.3.10에 들어 있는 날짜 기능을 씁니다. 그래서 Textus 1.3.10이 필요합니다.
+- **0.3.1** - 업데이트된 공용 날짜 코드를 함께 담음. 다른 변경은 없습니다.
+- **0.3.0** - Obsidian Tasks 지원: `[/]`와 `[-]`, 할 일 필드, 완료일, 반복 할 일, `tasks` 쿼리 블록. `kanban-plugin`이 붙은 보드는 목록에서 뺍니다.
+- **0.2.1** - 칸반 보드(`이름.kanban.md`)의 카드를 더는 목록에 넣지 않습니다.
+- **0.2.0** - Textus AI가 할 일을 나열하고, 추가하고, 체크할 수 있습니다.
+- **0.1.3** - 인터페이스 언어가 바뀌면 목록도 따라 바뀝니다.
+- **0.1.2** - 마감일을 현지 시간으로 다루고, 개수를 각 언어의 복수형으로 보여 줍니다.
+- **0.1.0-0.1.1** - 첫 버전들: 폴더의 모든 할 일을 사이드바 목록에 보여 주고 거기서 체크하거나 이동, 필터, 마감일, '곧 마감'.
 
 <!-- ai-tools -->
 ## Textus AI 도구
