@@ -3,6 +3,7 @@
 // later on this computer (http://localhost:23119/api/), which Zotero serves
 // once "Allow other applications on this computer to communicate with
 // Zotero" is on - nothing leaves the computer.
+/* global folderConventions, folderPaths, dates */
 /** What activate was given: the plugin's storage and own files. */
 let ctx;
 
@@ -42,10 +43,9 @@ function citation(item, style) {
       ")"
     );
   if (style === "text") return "(" + who + ", " + year(item) + ")";
-  const key =
-    item.data.citationKey ||
-    (/Citation Key:\s*(\S+)/.exec(item.data.extra || "") || [])[1];
-  return key ? "[@" + key + "]" : "(" + who + ", " + year(item) + ")";
+  const key = citationKey(item);
+  if (!key) return "(" + who + ", " + year(item) + ")";
+  return style === "wiki" ? "[[@" + key + "]]" : "[@" + key + "]";
 }
 
 async function search(query, mode) {
@@ -181,6 +181,200 @@ function reference(item) {
   );
 }
 
+/** A Zotero note's HTML as plain Markdown. */
+function noteMarkdown(html) {
+  const entities = { amp: "&", lt: "<", gt: ">", quot: '"', "#39": "'", nbsp: " " };
+  return String(html || "")
+    .replace(/<br\s*\/?>/gi, "\n")
+    .replace(/<li[^>]*>/gi, "- ")
+    .replace(/<\/li>/gi, "\n")
+    .replace(/<\/(p|div|h[1-6]|blockquote|ul|ol)>/gi, "\n\n")
+    .replace(/<[^>]+>/g, "")
+    .replace(/&(amp|lt|gt|quot|#39|nbsp);/g, (all, name) => entities[name])
+    .replace(/\n{3,}/g, "\n\n")
+    .trim();
+}
+
+/** An item's notes and its attachments' annotations; none when Zotero
+ *  doesn't give them. */
+async function childrenOf(item) {
+  const children = (key) =>
+    get(API.replace(/\/top$/, "/") + key + "/children?format=json").catch(() => []);
+  const kids = await children(item.key);
+  const files = kids.filter((k) => k.data.itemType === "attachment");
+  const marks = (await Promise.all(files.map((f) => children(f.key)))).flat();
+  return kids.concat(marks);
+}
+
+/** What a literature note's template is filled with, under the names
+ *  Obsidian's Citations plugin uses too. */
+function noteValues(item, children) {
+  const d = item.data;
+  const people = (d.creators || [])
+    .filter((c) => c.creatorType === "author" || !c.creatorType)
+    .map((c) => [c.firstName, c.lastName].filter(Boolean).join(" ") || c.name)
+    .filter(Boolean);
+  const key = citationKey(item) || item.key;
+  const highlights = children
+    .filter((c) => c.data.itemType === "annotation")
+    .map((c) => {
+      const a = c.data;
+      const page = a.annotationPageLabel ? " (p. " + a.annotationPageLabel + ")" : "";
+      const text = (a.annotationText || "").trim();
+      const comment = (a.annotationComment || "").trim();
+      if (!text) return comment ? "- " + comment + page : "";
+      return "- " + text + page + (comment ? "\n  - " + comment : "");
+    })
+    .filter(Boolean);
+  const notes = children
+    .filter((c) => c.data.itemType === "note")
+    .map((c) => noteMarkdown(c.data.note))
+    .filter(Boolean);
+  const where = d.publicationTitle || d.bookTitle || "";
+  return {
+    citekey: key,
+    title: d.title || key,
+    authors: people,
+    authorString: people.join(", "),
+    byline: [people.join(", "), year(item) === "n.d." ? "" : year(item)].filter(Boolean).join(" · "),
+    year: year(item) === "n.d." ? "" : year(item),
+    published: d.date || "",
+    abstract: (d.abstractNote || "").trim(),
+    publication: where,
+    containerTitle: where,
+    publisher: d.publisher || "",
+    itemType: d.itemType || "",
+    DOI: d.DOI || "",
+    doi: d.DOI || "",
+    URL: d.url || "",
+    url: d.url || "",
+    zoteroSelectURI: "zotero://select/library/items/" + item.key,
+    highlights: highlights.join("\n"),
+    notes: notes.join("\n\n"),
+  };
+}
+
+/** The note made when no template is set: front matter, then the
+ *  abstract, the highlights and the notes under their headings. */
+function defaultTemplate() {
+  return [
+    "---",
+    "title: {{title}}",
+    "authors: {{authors}}",
+    "year: {{year}}",
+    "citekey: {{citekey}}",
+    "doi: {{DOI}}",
+    "url: {{URL}}",
+    "zotero: {{zoteroSelectURI}}",
+    "---",
+    "",
+    "# {{title}}",
+    "",
+    "{{byline}}",
+    "",
+    "## " + t("abstract"),
+    "",
+    "{{abstract}}",
+    "",
+    "## " + t("highlights"),
+    "",
+    "{{highlights}}",
+    "",
+    "## " + t("notes"),
+    "",
+    "{{notes}}",
+    "",
+  ].join("\n");
+}
+
+/** A front matter value: a list as a flow list, text quoted. */
+function yamlValue(value) {
+  if (Array.isArray(value)) return value.length ? JSON.stringify(value) : "";
+  const s = String(value === null || value === undefined ? "" : value);
+  return s === "" || /^\d+$/.test(s) ? s : JSON.stringify(s);
+}
+
+/** A literature note: `template` filled with `values`, a front matter
+ *  line that is one {{key}} written as YAML. The default template drops
+ *  what the item has none of. */
+function noteText(template, values, language) {
+  const fill = (text) => dates.fill(text, { values: values, language: language });
+  const front = /^---\r?\n[^]*?\r?\n---\r?\n/.exec(template);
+  let head = front
+    ? fill(
+        front[0].replace(
+          /^([ \t]*[\w-]+:[ \t]*)\{\{\s*([\w.-]+)\s*\}\}[ \t]*$/gm,
+          (all, lead, key) => (key in values ? lead + yamlValue(values[key]) : all),
+        ),
+      )
+    : "";
+  let body = fill(template.slice(front ? front[0].length : 0));
+  if (template !== defaultTemplate()) return head + body;
+  head = head.replace(/^[\w-]+:[ \t]*\n/gm, "");
+  body = body
+    .replace(/\n## [^\n]+\s*(?=\n## |$)/g, "")
+    .replace(/\n{3,}/g, "\n\n");
+  return head + body.replace(/\s*$/, "\n");
+}
+
+/** Where literature notes go and what they are made from: the vault's
+ *  Zotero Integration or Citations settings when it has them, else the
+ *  plugin's. The template is a file in the folder, or its text. */
+async function noteSettings(root) {
+  const own = {
+    folder: String((await textus.settings.get("notesFolder")) ?? "References"),
+    file: String((await textus.settings.get("noteTemplate")) || ""),
+  };
+  // Read only; a Textus without files.conventions reads none.
+  const vault = (file) =>
+    folderConventions.obsidianSettings(root, "plugins/" + file + "/data.json").catch(() => ({}));
+  const integration = await vault("obsidian-zotero-desktop-connector");
+  const format = (integration.exportFormats || [])[0] || {};
+  const citations = await vault("obsidian-citation-plugin");
+  const output = String(format.outputPathTemplate || "");
+  const vaultFolder = output.includes("/")
+    ? output.replace(/\/[^/]*$/, "")
+    : citations.literatureNoteFolder;
+  const folder = typeof vaultFolder === "string" && !vaultFolder.includes("{") ? vaultFolder : own.folder;
+  return {
+    folder: folder.replace(/\\/g, "/").replace(/^[./]+|\/+$/g, ""),
+    file: own.file || format.templatePath || "",
+    text: citations.literatureNoteContentTemplate || "",
+  };
+}
+
+/** The template a note is made from; the default when the one set can't
+ *  be read, or is written for a template language this doesn't run. */
+async function templateFor(root, where) {
+  let text = where.text;
+  if (where.file) {
+    const rel = where.file.replace(/^[./]+/, "").replace(/(\.md)?$/i, ".md");
+    text = await textus.files.readText(folderPaths.abs(root, rel)).catch(() => "");
+  }
+  return text && !/\{%|\{\{[#/]/.test(text) ? text : defaultTemplate();
+}
+
+/** Where the literature note of `item` is: @citekey.md, as [[@citekey]]
+ *  links, in the notes' folder. */
+function notePath(root, where, item) {
+  const name = "@" + (citationKey(item) || item.key).replace(/[\\/:*?"<>|]/g, "-") + ".md";
+  return folderPaths.abs(root, (where.folder ? where.folder + "/" : "") + name);
+}
+
+/** The literature note of `item`, @citekey.md: opened when there is one,
+ *  else made from the template first. */
+async function openNote(root, item) {
+  const where = await noteSettings(root);
+  const path = notePath(root, where, item);
+  if (!(await textus.files.stat(path).catch(() => null))) {
+    const values = noteValues(item, await childrenOf(item).catch(() => []));
+    const text = noteText(await templateFor(root, where), values, textus.env.language);
+    if (where.folder) await textus.files.createFolder(folderPaths.abs(root, where.folder)).catch(() => {});
+    await textus.files.create(path, text);
+  }
+  await textus.layout.open(path);
+}
+
 /** Textus AI's tool: the library's items for `query`, each with the
  *  citation the user's style writes for it. */
 async function searchLibrary(input) {
@@ -208,6 +402,56 @@ async function searchLibrary(input) {
   };
 }
 
+/** The item the user picks: from the selection's words, else a recent
+ *  item or a search; null when they pick none. */
+async function chooseItem() {
+  const selection = await textus.editor.getSelection();
+  let query = selection && selection.text && selection.text.trim();
+  if (!query) {
+    const recent = (await ctx.storage.global.get(RECENT)) || [];
+    if (recent.length) {
+      const picked = await textus.ui.pick(
+        [
+          { label: t("searchMore"), value: "" },
+          ...recent.map((r) => ({
+            label: r.title,
+            description: r.byline,
+            value: r.key,
+          })),
+        ],
+        { placeholder: t("choose") },
+      );
+      if (picked === null || picked === undefined) return null;
+      if (picked) {
+        const item = await itemByKey(picked).catch(() => null);
+        if (item) return item;
+      }
+    }
+    query = await textus.ui.input({ prompt: t("search"), value: "" });
+    if (!query || !query.trim()) return null;
+  }
+  let items;
+  try {
+    items = await search(query.trim());
+  } catch (err) {
+    await textus.ui.message(err.message, { tone: "warning" });
+    return null;
+  }
+  if (!items.length) {
+    await textus.ui.message(t("nothing"));
+    return null;
+  }
+  const picked = await textus.ui.pick(
+    items.map((item) => ({
+      label: item.data.title || item.key,
+      description: [authors(item), year(item)].filter(Boolean).join(" · "),
+      value: item.key,
+    })),
+    { placeholder: t("choose") },
+  );
+  return items.find((i) => i.key === picked) || null;
+}
+
 exports.activate = function (context) {
   ctx = context;
   textus.ai.registerTool("search_library", searchLibrary);
@@ -227,53 +471,28 @@ exports.activate = function (context) {
 
   textus.commands.register("catvinci.zotero.cite", async function () {
     const style = await textus.settings.get("style");
-    // The selection is what to look for; else a recent item, or a search.
-    const selection = await textus.editor.getSelection();
-    let query = selection && selection.text && selection.text.trim();
-    if (!query) {
-      const recent = (await ctx.storage.global.get(RECENT)) || [];
-      if (recent.length) {
-        const picked = await textus.ui.pick(
-          [
-            { label: t("searchMore"), value: "" },
-            ...recent.map((r) => ({
-              label: r.title,
-              description: r.byline,
-              value: r.key,
-            })),
-          ],
-          { placeholder: t("choose") },
-        );
-        if (picked === null || picked === undefined) return;
-        if (picked) {
-          const item = await itemByKey(picked).catch(() => null);
-          if (item) return insert(item, style);
-        }
-      }
-      query = await textus.ui.input({ prompt: t("search"), value: "" });
-      if (!query || !query.trim()) return;
-    }
-    let items;
-    try {
-      items = await search(query.trim());
-    } catch (err) {
-      await textus.ui.message(err.message, { tone: "warning" });
+    const item = await chooseItem();
+    if (!item) return;
+    await insert(item, style);
+    // A [[@key]] link leads nowhere until its note is there: offer it.
+    const key = citationKey(item);
+    const root = await textus.files.root().catch(() => null);
+    if (style !== "wiki" || !key || !root) return;
+    const where = await noteSettings(root);
+    const path = notePath(root, where, item);
+    if (await textus.files.stat(path).catch(() => null)) return;
+    if (await textus.ui.confirm(t("offerNote", "@" + key), { okLabel: t("makeNote") }))
+      await openNote(root, item);
+  });
+
+  textus.commands.register("catvinci.zotero.note", async function () {
+    const root = await textus.files.root();
+    if (!root) {
+      await textus.ui.message(t("needsFolder"));
       return;
     }
-    if (!items.length) {
-      await textus.ui.message(t("nothing"));
-      return;
-    }
-    const picked = await textus.ui.pick(
-      items.map((item) => ({
-        label: item.data.title || item.key,
-        description: [authors(item), year(item)].filter(Boolean).join(" · "),
-        value: item.key,
-      })),
-      { placeholder: t("choose") },
-    );
-    const item = items.find((i) => i.key === picked);
-    if (item) await insert(item, style);
+    const item = await chooseItem();
+    if (item) await openNote(root, item);
   });
 
   textus.commands.register(
@@ -302,7 +521,7 @@ exports.activate = function (context) {
       const entries = items
         .filter((item) => !seen.has(item.key) && seen.add(item.key))
         .sort((a, b) =>
-          (authors(a) + year(a)).localeCompare(authors(b) + year(b)),
+          nameOrder.compareNames(authors(a) + year(a), authors(b) + year(b)),
         )
         .map(reference);
       const list = "## " + t("references") + "\n\n" + entries.join("\n");

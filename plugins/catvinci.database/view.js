@@ -49,14 +49,15 @@
   const setSpec = (change) => post({ type: "spec", spec: change });
 
   // ------------------------------------------------------------ values
-  /** An option's tone: its place among its property's options. */
-  function tone(word, key) {
-    const options = (key && data.options[key]) || [];
-    const i = options.indexOf(String(word));
-    return TONES[(i >= 0 ? i : 0) % TONES.length];
+  /** An option's tone, from its words: the same word keeps its colour
+   *  whatever the rows, their order or the base. */
+  function tone(word) {
+    let h = 0;
+    for (const ch of String(word)) h = (h * 31 + ch.codePointAt(0)) >>> 0;
+    return TONES[h % TONES.length];
   }
   const tag = (word, key, status) =>
-    el("span", { class: "tx-tag" + (status ? " status" : ""), "data-tone": tone(word, key) }, String(word));
+    el("span", { class: "tx-tag" + (status ? " status" : ""), "data-tone": tone(word) }, String(word));
   /** A select that reads as a state - status, stage - gets the dot. */
   const isStatus = (key) => /^(status|state|stage|phase|进度|状态)$/i.test(key || "");
 
@@ -244,20 +245,82 @@
       const x = data.spec.sort.find((r) => r.key === key);
       return x ? icon(x.desc ? "chevron" : "sort") : null;
     };
-    const th = (key) =>
-      el("th", { tabindex: "0", onclick: (e) => columnMenu(e.currentTarget, key) }, icon(TYPE_ICONS[typeOf(key)]), label(key), sorted(key));
+    const widths = data.spec.widths || {};
+    const th = (key) => {
+      const node = el("th", { tabindex: "0", "data-key": key, onclick: (e) => columnMenu(e.currentTarget, key) },
+        icon(TYPE_ICONS[typeOf(key)]), label(key), sorted(key), resizer(key));
+      // A column but the title is dragged along the head to a new place.
+      if (key !== "name") node.addEventListener("pointerdown", (e) => moveColumn(e, node, key));
+      return node;
+    };
     const head = el("tr", null, th("name"), data.columns.map(th),
       el("th", { class: "plus", tabindex: "0", "aria-label": s("newProperty"), onclick: (e) => addColumnMenu(e.currentTarget) }, icon("plus")));
     const rows = capped(data.rows).map((row) => el("tr", null, titleCell(row), data.columns.map((key) => cell(row, key)), el("td", { class: "plus" })));
-    const add = el("tr", { class: "new-row" }, el("td", { colspan: String(data.columns.length + 2) }, newButton({})));
-    return el("div", null,
-      el("div", { class: "tx-table-frame" }, el("table", { class: "tx-table" }, el("thead", null, head), el("tbody", null, rows, add))),
-      moreButton(data.rows.length));
+    const span = String(data.columns.length + 2);
+    const more = moreButton(data.rows.length);
+    const tail = [
+      more && el("tr", { class: "more-row" }, el("td", { colspan: span }, more)),
+      el("tr", { class: "new-row" }, el("td", { colspan: span }, newButton({}))),
+    ];
+    const frame = el("div", { class: "tx-table-frame" }, el("table", { class: "tx-table" }, el("thead", null, head), el("tbody", null, rows, tail)));
+    for (const [key, px] of Object.entries(widths)) sizeColumn(frame, key, px);
+    return el("div", null, frame);
+  }
+
+  /** Every cell of column `key` `px` wide, its text cut short to fit. */
+  function sizeColumn(frame, key, px) {
+    const cells = frame.querySelectorAll('[data-key="' + CSS.escape(key) + '"]');
+    for (const c of cells) {
+      c.style.width = c.style.minWidth = c.style.maxWidth = px ? px + "px" : "";
+      c.classList.toggle("sized", !!px);
+    }
+  }
+
+  /** The handle at a column head's right edge: dragged, the column's width,
+   *  kept in the base (columnSize); a double click goes back to fitting. */
+  function resizer(key) {
+    const handle = el("span", { class: "col-resize", "aria-hidden": "true" });
+    handle.addEventListener("click", (e) => e.stopPropagation());
+    handle.addEventListener("dblclick", (e) => {
+      e.stopPropagation();
+      setSpec({ width: { key: key, px: 0 } });
+    });
+    handle.addEventListener("pointerdown", (e) => {
+      e.stopPropagation();
+      const frame = handle.closest(".tx-table-frame");
+      const from = handle.parentElement.getBoundingClientRect().width;
+      let px = from;
+      drag.track(e, {
+        move: (x) => sizeColumn(frame, key, (px = Math.max(MIN_COLUMN, Math.round(from + x - e.clientX)))),
+        end: (_x, _y, dropped) => (dropped ? setSpec({ width: { key: key, px: px } }) : sizeColumn(frame, key, widthsOf(key))),
+      });
+    });
+    return handle;
+  }
+  const MIN_COLUMN = 64;
+  const widthsOf = (key) => (data.spec.widths || {})[key] || 0;
+
+  /** A column's head dragged among the others: the view's column order. */
+  function moveColumn(e, node, key) {
+    if (e.target.closest(".col-resize")) return;
+    const row = node.parentElement;
+    drag.sortable(e, {
+      item: node,
+      axis: "x",
+      lists: () => [row],
+      itemsOf: (r) => [...r.children].filter((c) => c.dataset.key && c.dataset.key !== "name"),
+      onDrop: (_row, index) => {
+        const columns = data.columns.filter((c) => c !== key);
+        columns.splice(index, 0, key);
+        if (columns.join("\n") !== data.columns.join("\n")) setSpec({ columns: columns });
+        else render();
+      },
+    });
   }
 
   /** A page's title: click to rename it, the arrow beside it to open it. */
   function titleCell(row) {
-    const td = el("td", { class: "title" },
+    const td = el("td", { class: "title", "data-key": "name" },
       el("span", { class: "name" }, (typeof row.props.icon === "string" ? row.props.icon + " " : "") + row.name),
       el("button", { type: "button", class: "tx-icon-button open", "aria-label": s("open"), onclick: (e) => { e.stopPropagation(); post({ type: "open", rel: row.rel }); } }, icon("open")));
     td.addEventListener("click", () => {
@@ -343,34 +406,29 @@
     if (!key) return el("div", { class: "tx-empty" }, s("noGroup"));
     const byRel = new Map(data.rows.map((r) => [r.rel, r]));
     const lanes = data.groups.map((g) => {
-      const head = el("div", { class: "lane-head", draggable: "true", title: s("dragLane") },
+      const head = el("div", { class: "lane-head", title: s("dragLane") },
         g.value ? tag(g.value, key, isStatus(key)) : el("span", { class: "tx-tag" }, s("noValue")),
         el("span", { class: "count" }, String(g.rels.length)));
-      // A list's head dragged onto another list: the board's order, kept in the base.
-      head.addEventListener("dragstart", (e) => {
-        e.stopPropagation();
-        e.dataTransfer.setData("text/plain", JSON.stringify({ lane: g.value }));
-      });
       const lane = el("div", { class: "lane", "data-value": g.value },
         head,
         capped(g.rels).map((rel) => card(byRel.get(rel), key, g.value)),
         moreButton(g.rels.length),
         newButton(groupProps(key, g.value)));
-      lane.addEventListener("dragover", (e) => {
-        e.preventDefault();
-        lane.classList.add("drop");
-      });
-      lane.addEventListener("dragleave", () => lane.classList.remove("drop"));
-      lane.addEventListener("drop", (e) => {
-        e.preventDefault();
-        lane.classList.remove("drop");
-        const moved = JSON.parse(e.dataTransfer.getData("text/plain") || "{}");
-        if (moved.lane !== undefined) {
-          const order = data.groups.map((x) => x.value).filter((v) => v !== moved.lane);
-          order.splice(order.indexOf(g.value), 0, moved.lane);
-          if (order.join("\n") !== data.groups.map((x) => x.value).join("\n")) setSpec({ groupOrder: order });
-        } else if (moved.rel && moved.from !== g.value) post({ type: "move", rel: moved.rel, key, from: moved.from, to: g.value });
-      });
+      // A list moved by its head, the others making way: the board's order,
+      // kept in the base (groupOrder).
+      head.addEventListener("pointerdown", (e) =>
+        drag.sortable(e, {
+          item: lane,
+          axis: "x",
+          lists: () => [lane.parentElement],
+          itemsOf: (b) => [...b.children],
+          onDrop: (_board, index) => {
+            const order = data.groups.map((x) => x.value).filter((v) => v !== g.value);
+            order.splice(index, 0, g.value);
+            if (order.join("\n") !== data.groups.map((x) => x.value).join("\n")) setSpec({ groupOrder: order });
+            else render();
+          },
+        }));
       return lane;
     });
     return el("div", { class: "board" }, lanes);
@@ -383,10 +441,24 @@
 
   function card(row, key, lane) {
     const others = data.columns.filter((c) => c !== key && row.props[c] !== undefined && row.props[c] !== "").slice(0, 3);
-    const node = el("div", { class: "tx-card record", draggable: "true" },
+    const node = el("div", { class: "tx-card record" },
       pageLink(row),
       others.map((c) => el("div", { class: "prop" }, shown(row.props[c], data.types[c], c))));
-    node.addEventListener("dragstart", (e) => e.dataTransfer.setData("text/plain", JSON.stringify({ rel: row.rel, from: lane })));
+    // Dragged to another list: the row takes that list's value. Within a
+    // list the view's sort decides the order.
+    node.addEventListener("pointerdown", (e) => {
+      if (e.target.closest("button, input, textarea")) return;
+      drag.sortable(e, {
+        item: node,
+        lists: () => [...document.querySelectorAll(".lane")],
+        itemsOf: (l) => [...l.children].filter((n) => n.classList.contains("record")),
+        after: (l) => l.querySelector(":scope > .more, :scope > .new"),
+        onDrop: (to) => {
+          if (to.dataset.value !== lane) post({ type: "move", rel: row.rel, key, from: lane, to: to.dataset.value });
+          else render();
+        },
+      });
+    });
     return node;
   }
 
@@ -499,8 +571,16 @@
         class: "tx-segment",
         role: "tab",
         "aria-selected": String(v.index === data.index),
+        "aria-haspopup": v.index === data.index ? "menu" : null,
         onclick: (e) => (v.index === data.index ? viewMenu(e.currentTarget, v) : choose(v.index)),
-      }, icon(VIEW_ICONS[v.view] || "table"), v.name || s(v.view)));
+        // Any view's menu, without showing it first.
+        oncontextmenu: (e) => {
+          e.preventDefault();
+          viewMenu(e.currentTarget, v);
+        },
+      }, icon(VIEW_ICONS[v.view] || "table"), v.name || s(v.view),
+      // The one in front says it opens a menu.
+      v.index === data.index ? el("span", { class: "tx-icon view-menu", "data-icon": "chevron" }) : null));
     const add = el("button", { type: "button", class: "tx-icon-button", "aria-label": s("addView"), onclick: (e) => addViewMenu(e.currentTarget) }, icon("plus"));
     return tabs.concat([add]);
   }
@@ -519,9 +599,9 @@
     if (data.views.length > 1) items.push("separator", { label: s("deleteView"), value: "delete", danger: true });
     const choice = await api.menu(items, at);
     if (choice === null) return;
-    if (choice === "rename") post({ type: "renameView", name: v.name });
-    else if (choice === "delete") post({ type: "deleteView" });
-    else if (String(choice).startsWith("as:")) post({ type: "view", view: String(choice).slice(3) });
+    if (choice === "rename") post({ type: "renameView", name: v.name, index: v.index });
+    else if (choice === "delete") post({ type: "deleteView", index: v.index });
+    else if (String(choice).startsWith("as:")) post({ type: "view", view: String(choice).slice(3), index: v.index });
   }
   async function addViewMenu(at) {
     const choice = await api.menu(VIEWS.map((k) => ({ label: s(k), value: k })), at);

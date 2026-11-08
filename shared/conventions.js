@@ -61,5 +61,36 @@
     };
   }
 
-  root.folderConventions = { templatesFolder: templatesFolder, daily: daily, obsidianSettings: obsidianSettings };
+  /** A vault's weekly or monthly notes (`period`), as the Periodic Notes
+   *  plugin sets them: on or off, folder (in `base`), name format and
+   *  template file; null when it sets none. */
+  async function periodic(base, period) {
+    var vault = obsidian(await of(base));
+    if (!vault) return null;
+    var p;
+    try {
+      p = JSON.parse(await textus.files.readText(folderPaths.abs(vault.root, ".obsidian/plugins/periodic-notes/data.json")))[period];
+    } catch {
+      return null;
+    }
+    if (!p || typeof p !== "object") return null;
+    var inVault = (rel) => inFolder(base, folderPaths.abs(vault.root, String(rel).replace(/^\/+|\/+$/g, "")));
+    return {
+      enabled: !!p.enabled,
+      folder: (p.folder && inVault(p.folder)) || "",
+      format: p.format || null,
+      template: p.template ? inVault(p.template) : null,
+    };
+  }
+
+  /** Calendar & Daily Notes' own settings, where no app says. */
+  var DAILY = { folder: "Daily", format: "YYYY-MM-DD", template: "# {{date}}\\n\\n" };
+
+  root.folderConventions = {
+    templatesFolder: templatesFolder,
+    daily: daily,
+    periodic: periodic,
+    obsidianSettings: obsidianSettings,
+    DAILY: DAILY,
+  };
 })(globalThis);

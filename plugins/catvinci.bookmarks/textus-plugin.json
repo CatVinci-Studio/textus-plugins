@@ -1,7 +1,7 @@
 {
   "id": "catvinci.bookmarks",
   "name": "%name%",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "publisher": "catvinci",
   "author": "CatVinci Studio",
   "description": "%description%",
@@ -17,11 +17,14 @@
   ],
   "main": [
     "lib/folder-paths.js",
+    "obsidian.js",
     "host.js"
   ],
   "permissions": [
     "editor.read",
+    "editor.write",
     "files.read",
+    "files.write",
     "ai.tools"
   ],
   "activationEvents": [

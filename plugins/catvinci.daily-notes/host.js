@@ -4,35 +4,73 @@
 // have one. Where the folder's app sets daily notes (an Obsidian vault, a
 // Logseq graph, Foam...), its folder, name format and template win; an
 // Obsidian vault that sets none keeps them at its top, as Obsidian does.
+// Weekly and monthly notes, when turned on, work the same way, a vault's
+// Periodic Notes settings winning.
 /* global folderConventions, folderPaths, dates */
 /** What activate was given: the plugin's storage and own files. */
 let ctx;
 
 let panel = null;
 
-/** Where the notes go and how they are named and begun: the folder's app's
- *  daily notes settings when it has them, else the plugin's. */
-async function folder() {
+/** Each kind of note: the settings it is kept by, and their defaults. */
+const PERIODS = {
+  daily: {
+    on: null,
+    folderKey: "folder",
+    formatKey: null,
+    templateKey: "template",
+    folder: "Daily",
+    format: "YYYY-MM-DD",
+  },
+  weekly: {
+    on: "weekly",
+    folderKey: "weeklyFolder",
+    formatKey: "weeklyFormat",
+    templateKey: "weeklyTemplate",
+    folder: "Weekly",
+    format: "gggg-[W]ww",
+  },
+  monthly: {
+    on: "monthly",
+    folderKey: "monthlyFolder",
+    formatKey: "monthlyFormat",
+    templateKey: "monthlyTemplate",
+    folder: "Monthly",
+    format: "YYYY-MM",
+  },
+};
+
+/** Where `period`'s notes go and how they are named and begun: the
+ *  folder's app's settings when it has them (Periodic Notes for weeks and
+ *  months), else the plugin's. */
+async function folder(period = "daily") {
   const root = await textus.files.root();
   if (!root) return null;
-  const app = await folderConventions.daily(root);
-  const own = String((await textus.settings.get("folder")) || "Daily");
+  const kind = PERIODS[period];
+  const setting = (key) => (key ? textus.settings.get(key) : null);
+  const app = period === "daily" ? await folderConventions.daily(root) : await folderConventions.periodic(root, period);
+  const own = String((await setting(kind.folderKey)) || kind.folder);
   const rel = app ? app.folder : own.replace(/\\/g, "/").replace(/^[./]+|\/+$/g, "");
   return {
     root: root,
     rel: rel,
     dir: folderPaths.abs(root, rel),
-    format: (app && app.format) || "YYYY-MM-DD",
+    format: (app ? app.format : await setting(kind.formatKey)) || kind.format,
     template: app ? (app.template ? { file: app.template } : { text: "" }) : null,
+    templateKey: kind.templateKey,
+    enabled: !kind.on || (app ? app.enabled : !!(await setting(kind.on))),
   };
 }
 
 /** The note of `date` (YYYY-MM-DD) and its path in the folder. */
 function noteFor(where, date) {
-  const [y, m, d] = date.split("-").map(Number);
-  const name = dates.format(new Date(y, m - 1, d), where.format, textus.env.language);
-  const rel = (where.rel ? where.rel + "/" : "") + name + ".md";
+  const rel = dates.notePath(where.rel, where.format, dayOf(date), textus.env.language);
   return { rel: rel, path: folderPaths.abs(where.root, rel) };
+}
+
+function dayOf(date) {
+  const [y, m, d] = date.split("-").map(Number);
+  return new Date(y, m - 1, d);
 }
 
 /** The date a document is the note of, from its path; null for none. */
@@ -64,12 +102,22 @@ function weekStart() {
   }
 }
 
+/** The week number a weekly note's name format counts: ISO's (W) or the
+ *  language's (w). */
+function weekToken(format) {
+  return /W|GGGG/.test(String(format).replace(/\[[^\]]*\]/g, "")) ? "W" : "w";
+}
+
 async function refresh() {
   if (!panel) return;
+  const weekly = await folder("weekly");
+  const monthly = await folder("monthly");
   panel.postMessage({
     type: "dates",
     dates: await noteDates(),
     weekStart: weekStart(),
+    week: weekly && weekly.enabled ? weekToken(weekly.format) : null,
+    month: !!(monthly && monthly.enabled),
   });
 }
 
@@ -77,23 +125,6 @@ async function refresh() {
 function shift(date, days) {
   const [y, m, d] = date.split("-").map(Number);
   return dates.day(new Date(y, m - 1, d + days));
-}
-
-/** A new day's note: the template with its {{…}} filled in for `date` as
- *  Obsidian fills a daily note's - {{date}}, {{yesterday}} and {{tomorrow}}
- *  in the notes' name format `form`; {{date:FORMAT}}, {{date+1d}}. */
-function fill(template, date, title, form) {
-  const [y, m, d] = date.split("-").map(Number);
-  const day = new Date(y, m - 1, d);
-  const name = (days) => dates.format(new Date(y, m - 1, d + days), form, textus.env.language);
-  const values = {
-    title: title,
-    weekday: day.toLocaleDateString(textus.env.language, { weekday: "long" }),
-    yesterday: name(-1),
-    tomorrow: name(1),
-  };
-  const options = { day: day, dateFormat: form, language: textus.env.language, values: values };
-  return dates.fill(template, options).replace(/\\n/g, "\n");
 }
 
 /** The day of the note in front - a daily note's name - else today. */
@@ -108,7 +139,7 @@ async function dayInFront() {
 async function templateText(where) {
   const read = (rel) => textus.files.readText(folderPaths.abs(where.root, rel)).catch(() => null);
   if (where.template) return where.template.file ? (await read(where.template.file.replace(/(\.md)?$/i, ".md"))) || "" : "";
-  const setting = String((await textus.settings.get("template")) || "# {{date}}\\n\\n");
+  const setting = String((await textus.settings.get(where.templateKey)) || folderConventions.DAILY.template);
   if (/[{}\n\\]/.test(setting)) return setting;
   const templates = await folderConventions.templatesFolder(where.root);
   return (await read(templates + "/" + setting.replace(/\.md$/i, "") + ".md")) || setting;
@@ -121,13 +152,19 @@ async function ensureNote(where, note, date) {
   const title = note.rel.split("/").pop().replace(/\.md$/, "");
   const parent = note.path.replace(/[\\/][^\\/]*$/, "");
   await textus.files.createFolder(parent).catch(() => {});
-  await textus.files.create(note.path, fill(await templateText(where), date, title, where.format)).catch(() => {});
+  const text = dates.fillNote(await templateText(where), dayOf(date), {
+    format: where.format,
+    language: textus.env.language,
+    title: title,
+  });
+  await textus.files.create(note.path, text).catch(() => {});
 }
 
-async function openDay(date) {
-  const where = await folder();
-  if (!where) {
-    await textus.ui.message(textus.l10n.t("needsFolder"));
+/** The note of `date`'s day, week or month (`period`), made if new. */
+async function openDay(date, period) {
+  const where = await folder(period);
+  if (!where || !where.enabled) {
+    await textus.ui.message(textus.l10n.t(where ? period + "Off" : "needsFolder"));
     return;
   }
   const note = noteFor(where, date);
@@ -190,6 +227,12 @@ exports.activate = function (context) {
   textus.commands.register("catvinci.daily-notes.next", async function () {
     return openDay(shift(await dayInFront(), 1));
   });
+  textus.commands.register("catvinci.daily-notes.week", function () {
+    return openDay(dates.day(new Date()), "weekly");
+  });
+  textus.commands.register("catvinci.daily-notes.month", function () {
+    return openDay(dates.day(new Date()), "monthly");
+  });
   textus.ai.registerTool("read_daily_note", readDailyNote);
   textus.ai.registerTool("append_to_daily_note", appendToDailyNote);
   textus.files.onDidChangeRoot(refresh);
@@ -206,7 +249,7 @@ exports.activate = function (context) {
       });
       webview.onDidReceiveMessage(async function (message) {
         if (message.type === "ready") await refresh();
-        if (message.type === "open") await openDay(message.date);
+        if (message.type === "open") await openDay(message.date, message.period);
       });
       const html = await ctx.plugin.readText("panel.html");
       webview.html = html.replace("{{lang}}", textus.env.language);

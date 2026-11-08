@@ -192,7 +192,7 @@
     const na = Number(a);
     const nb = Number(b);
     if (str(a) !== "" && str(b) !== "" && !isNaN(na) && !isNaN(nb)) return na - nb;
-    return str(a).localeCompare(str(b));
+    return str(a).localeCompare(str(b), undefined, { numeric: true });
   }
   function equal(a, b) {
     if (empty(a) && empty(b)) return true;

@@ -92,6 +92,7 @@ export function loadPlugin(
   const textus = fake({
     ...merged,
     ai: {
+      ...merged.ai,
       registerTool(name: string, run: Tool) {
         tools.set(name, async (args) => run(args));
         return { dispose() {} };

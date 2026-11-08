@@ -8,6 +8,7 @@
 - **插件 › 打开前一天的笔记** 和 **打开后一天的笔记**，可以从某天的笔记跳到前后一天。
 - 模板里除了 {{date}}，还能用 {{weekday}}、{{yesterday}}、{{tomorrow}} 和 {{time}}；比如写 `[[{{yesterday}}]]`，每天的笔记就会链接到前一天。
 - 开头文字也可以写 Templates 文件夹（模板插件用的那个）里某个模板的名字，比如 `Daily`。在 Obsidian 库里，按库自己的日记设置来：文件夹、`YYYY/MM/YYYY-MM-DD` 这样的命名格式和模板；Textus 不会改这些设置。库里没有日记设置时，日记放在库的最上层，和 Obsidian 一样；`{{date}}`、`{{yesterday}}`、`{{tomorrow}}` 按日记的命名格式写，`MMMM Do, YYYY` 这类 Moment 格式也认。
+- **每周和每月笔记**：在设置里打开后，用 **插件 › 打开本周笔记** 和 **打开本月笔记**，或点日历里的周数、上方的月份。各有自己的文件夹、命名格式（默认 `gggg-[W]ww` 和 `YYYY-MM`）和模板；每周模板可以用 `{{monday:YYYY-MM-DD}}` … `{{sunday}}`。库里装了 Obsidian 的 Periodic Notes 插件时，按它的每周、每月设置来。
 
 <!-- ai-tools -->
 ## Textus AI 工具

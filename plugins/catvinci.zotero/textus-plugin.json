@@ -1,7 +1,7 @@
 {
   "id": "catvinci.zotero",
   "name": "Zotero",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "publisher": "catvinci",
   "author": "CatVinci Studio",
   "description": "%description%",
@@ -12,7 +12,7 @@
     "textus": ">=1.3.0-beta.2"
   },
   "platforms": ["desktop"],
-  "main": "host.js",
+  "main": ["lib/folder-paths.js", "lib/conventions.js", "lib/dates.js", "lib/name-order.js", "host.js"],
   "activationEvents": [
     "onHover"
   ],
@@ -20,6 +20,8 @@
     "network:localhost:23119",
     "editor.write",
     "editor.read",
+    "files.read",
+    "files.write",
     "ai.tools"
   ],
   "contributes": {
@@ -31,6 +33,10 @@
       {
         "command": "catvinci.zotero.bibliography",
         "title": "%bibliography%"
+      },
+      {
+        "command": "catvinci.zotero.note",
+        "title": "%newNote%"
       }
     ],
     "keybindings": [
@@ -46,6 +52,9 @@
         },
         {
           "command": "catvinci.zotero.bibliography"
+        },
+        {
+          "command": "catvinci.zotero.note"
         }
       ],
       "editor/context": [
@@ -71,10 +80,28 @@
             "label": "%text%"
           },
           {
+            "value": "wiki",
+            "label": "%wiki%"
+          },
+          {
             "value": "link",
             "label": "%link%"
           }
         ]
+      },
+      {
+        "key": "notesFolder",
+        "type": "string",
+        "default": "References",
+        "title": "%notesFolder%",
+        "description": "%notesFolderHelp%"
+      },
+      {
+        "key": "noteTemplate",
+        "type": "string",
+        "default": "",
+        "title": "%noteTemplate%",
+        "description": "%noteTemplateHelp%"
       }
     ],
     "aiTools": [
@@ -118,7 +145,19 @@
       "bibliography": "Insert References List",
       "references": "References",
       "noCitations": "This document cites nothing from Zotero yet.",
-      "tool.search_library": "Searches the user's Zotero library on this computer (Zotero 7 or later must be running): each item's key, title, authors, year, type, where it appeared, citation key, and the citation to insert in the user's chosen style. Fails with what to do when Zotero can't be reached."
+      "tool.search_library": "Searches the user's Zotero library on this computer (Zotero 7 or later must be running): each item's key, title, authors, year, type, where it appeared, citation key, and the citation to insert in the user's chosen style. Fails with what to do when Zotero can't be reached.",
+      "wiki": "An Obsidian note link: [[@key]]",
+      "newNote": "New Literature Note from Zotero…",
+      "notesFolder": "Literature notes folder",
+      "notesFolderHelp": "Where @citekey.md notes are made. An Obsidian vault's Zotero Integration or Citations settings win.",
+      "noteTemplate": "Literature note template",
+      "noteTemplateHelp": "A Markdown file in the open folder, such as Templates/Literature.md, with {{title}}, {{authors}}, {{year}}, {{abstract}}, {{citekey}}, {{DOI}}, {{URL}}, {{highlights}}, {{notes}} and {{date:YYYY-MM-DD}}. Empty: a plain note with front matter.",
+      "offerNote": "Make the literature note {0} too?",
+      "makeNote": "Make Note",
+      "needsFolder": "Open a folder first: literature notes are made in it.",
+      "abstract": "Abstract",
+      "highlights": "Highlights",
+      "notes": "Notes"
     },
     "zh": {
       "description": "写作时直接从 Zotero 文献库插入引用。需要 Zotero 正在运行，并在设置 › 高级 中打开“允许此计算机上的其他应用程序与 Zotero 通信”。",
@@ -137,7 +176,19 @@
       "bibliography": "插入参考文献列表",
       "references": "参考文献",
       "noCitations": "这篇文档还没有引用 Zotero 里的文献。",
-      "tool.search_library": "搜索这台电脑上用户的 Zotero 文献库（需要 Zotero 7 或更新版本正在运行）：给出每个条目的 key、标题、作者、年份、类型、出处、引用键，以及按用户所选格式要插入的引文。连不上 Zotero 时会失败并说明该怎么做。"
+      "tool.search_library": "搜索这台电脑上用户的 Zotero 文献库（需要 Zotero 7 或更新版本正在运行）：给出每个条目的 key、标题、作者、年份、类型、出处、引用键，以及按用户所选格式要插入的引文。连不上 Zotero 时会失败并说明该怎么做。",
+      "wiki": "Obsidian 笔记链接：[[@key]]",
+      "newNote": "从 Zotero 新建文献笔记…",
+      "notesFolder": "文献笔记文件夹",
+      "notesFolderHelp": "@citekey.md 笔记建在这里。Obsidian 库里有 Zotero Integration 或 Citations 插件的设置时，以它们为准。",
+      "noteTemplate": "文献笔记模板",
+      "noteTemplateHelp": "打开的文件夹里的一个 Markdown 文件，比如 Templates/Literature.md，可以写 {{title}}、{{authors}}、{{year}}、{{abstract}}、{{citekey}}、{{DOI}}、{{URL}}、{{highlights}}、{{notes}} 和 {{date:YYYY-MM-DD}}。留空：一篇带 front matter 的普通笔记。",
+      "offerNote": "同时新建文献笔记 {0} 吗？",
+      "makeNote": "新建笔记",
+      "needsFolder": "请先打开一个文件夹：文献笔记会建在里面。",
+      "abstract": "摘要",
+      "highlights": "标注",
+      "notes": "笔记"
     },
     "zh-Hant": {
       "description": "寫作時從 Zotero 文獻庫引用。需要開著 Zotero，並在 設定 › 進階 中開啟「允許此電腦上的其他應用程式與 Zotero 通訊」。",
@@ -156,7 +207,19 @@
       "bibliography": "插入參考文獻列表",
       "references": "參考文獻",
       "noCitations": "這篇文件還沒有引用 Zotero 裡的文獻。",
-      "tool.search_library": "搜尋這台電腦上使用者的 Zotero 文獻庫（需要 Zotero 7 或更新版本正在執行）：給出每個項目的 key、標題、作者、年份、類型、出處、引用鍵，以及依使用者所選格式要插入的引文。連不上 Zotero 時會失敗並說明該怎麼做。"
+      "tool.search_library": "搜尋這台電腦上使用者的 Zotero 文獻庫（需要 Zotero 7 或更新版本正在執行）：給出每個項目的 key、標題、作者、年份、類型、出處、引用鍵，以及依使用者所選格式要插入的引文。連不上 Zotero 時會失敗並說明該怎麼做。",
+      "wiki": "Obsidian 筆記連結：[[@key]]",
+      "newNote": "從 Zotero 新增文獻筆記…",
+      "notesFolder": "文獻筆記資料夾",
+      "notesFolderHelp": "@citekey.md 筆記建立在這裡。Obsidian 儲存庫裡有 Zotero Integration 或 Citations 外掛的設定時，以它們為準。",
+      "noteTemplate": "文獻筆記範本",
+      "noteTemplateHelp": "開啟的資料夾裡的一個 Markdown 檔案，例如 Templates/Literature.md，可以寫 {{title}}、{{authors}}、{{year}}、{{abstract}}、{{citekey}}、{{DOI}}、{{URL}}、{{highlights}}、{{notes}} 和 {{date:YYYY-MM-DD}}。留空：一篇帶 front matter 的一般筆記。",
+      "offerNote": "同時建立文獻筆記 {0} 嗎？",
+      "makeNote": "建立筆記",
+      "needsFolder": "請先開啟一個資料夾：文獻筆記會建立在裡面。",
+      "abstract": "摘要",
+      "highlights": "標註",
+      "notes": "筆記"
     },
     "ja": {
       "description": "書きながら Zotero のライブラリから引用します。Zotero を起動し、設定 › 詳細 で「このコンピュータ上の他のアプリケーションが Zotero と通信することを許可する」をオンにしてください。",
@@ -175,7 +238,19 @@
       "bibliography": "参考文献リストを挿入",
       "references": "参考文献",
       "noCitations": "この文書はまだ Zotero の文献を引用していません。",
-      "tool.search_library": "このコンピュータにあるユーザーの Zotero ライブラリを検索します（Zotero 7 以降が起動している必要があります）。各アイテムのキー・タイトル・著者・年・種類・掲載先・引用キーと、ユーザーが選んだ形式で挿入する引用を返します。Zotero に接続できないときは、どうすればよいかを添えて失敗します。"
+      "tool.search_library": "このコンピュータにあるユーザーの Zotero ライブラリを検索します（Zotero 7 以降が起動している必要があります）。各アイテムのキー・タイトル・著者・年・種類・掲載先・引用キーと、ユーザーが選んだ形式で挿入する引用を返します。Zotero に接続できないときは、どうすればよいかを添えて失敗します。",
+      "wiki": "Obsidian のノートリンク：[[@key]]",
+      "newNote": "Zotero から文献ノートを作成…",
+      "notesFolder": "文献ノートのフォルダ",
+      "notesFolderHelp": "@citekey.md のノートを作る場所です。Obsidian の保管庫に Zotero Integration や Citations の設定があれば、そちらに従います。",
+      "noteTemplate": "文献ノートのテンプレート",
+      "noteTemplateHelp": "開いているフォルダ内の Markdown ファイル（例：Templates/Literature.md）。{{title}}、{{authors}}、{{year}}、{{abstract}}、{{citekey}}、{{DOI}}、{{URL}}、{{highlights}}、{{notes}}、{{date:YYYY-MM-DD}} が使えます。空欄なら front matter 付きのシンプルなノートです。",
+      "offerNote": "文献ノート {0} も作りますか？",
+      "makeNote": "ノートを作成",
+      "needsFolder": "先にフォルダを開いてください。文献ノートはその中に作られます。",
+      "abstract": "要旨",
+      "highlights": "ハイライト",
+      "notes": "メモ"
     },
     "ko": {
       "description": "글을 쓰면서 Zotero 라이브러리에서 인용합니다. Zotero를 켜 두고, 설정 › 고급에서 '이 컴퓨터의 다른 응용 프로그램이 Zotero와 통신하도록 허용'을 켜야 합니다.",
@@ -194,7 +269,19 @@
       "bibliography": "참고문헌 목록 넣기",
       "references": "참고문헌",
       "noCitations": "이 문서는 아직 Zotero 문헌을 인용하지 않았습니다.",
-      "tool.search_library": "이 컴퓨터에 있는 사용자의 Zotero 라이브러리를 검색합니다(Zotero 7 이상이 실행 중이어야 합니다). 각 항목의 키·제목·저자·연도·유형·게재처·인용 키와, 사용자가 고른 형식으로 넣을 인용을 돌려줍니다. Zotero에 연결할 수 없으면 해야 할 일을 알려 주며 실패합니다."
+      "tool.search_library": "이 컴퓨터에 있는 사용자의 Zotero 라이브러리를 검색합니다(Zotero 7 이상이 실행 중이어야 합니다). 각 항목의 키·제목·저자·연도·유형·게재처·인용 키와, 사용자가 고른 형식으로 넣을 인용을 돌려줍니다. Zotero에 연결할 수 없으면 해야 할 일을 알려 주며 실패합니다.",
+      "wiki": "Obsidian 노트 링크: [[@key]]",
+      "newNote": "Zotero에서 문헌 노트 만들기…",
+      "notesFolder": "문헌 노트 폴더",
+      "notesFolderHelp": "@citekey.md 노트를 만드는 곳입니다. Obsidian 보관소에 Zotero Integration이나 Citations 설정이 있으면 그 설정을 따릅니다.",
+      "noteTemplate": "문헌 노트 템플릿",
+      "noteTemplateHelp": "열린 폴더 안의 Markdown 파일(예: Templates/Literature.md)로, {{title}}, {{authors}}, {{year}}, {{abstract}}, {{citekey}}, {{DOI}}, {{URL}}, {{highlights}}, {{notes}}, {{date:YYYY-MM-DD}}를 쓸 수 있습니다. 비워 두면 front matter가 있는 기본 노트를 만듭니다.",
+      "offerNote": "문헌 노트 {0}도 만들까요?",
+      "makeNote": "노트 만들기",
+      "needsFolder": "먼저 폴더를 여세요. 문헌 노트는 그 안에 만들어집니다.",
+      "abstract": "초록",
+      "highlights": "하이라이트",
+      "notes": "메모"
     },
     "es": {
       "description": "Cita desde tu biblioteca de Zotero mientras escribes. Necesita Zotero abierto, con Ajustes › Avanzado › Permitir que otras aplicaciones de este equipo se comuniquen con Zotero activado.",
@@ -213,7 +300,19 @@
       "bibliography": "Insertar lista de referencias",
       "references": "Referencias",
       "noCitations": "Este documento aún no cita nada de Zotero.",
-      "tool.search_library": "Busca en la biblioteca de Zotero del usuario en este ordenador (Zotero 7 o posterior debe estar abierto): la clave, el título, los autores, el año, el tipo, dónde se publicó y la clave de cita de cada elemento, y la cita para insertar en el estilo elegido. Falla indicando qué hacer si no se puede llegar a Zotero."
+      "tool.search_library": "Busca en la biblioteca de Zotero del usuario en este ordenador (Zotero 7 o posterior debe estar abierto): la clave, el título, los autores, el año, el tipo, dónde se publicó y la clave de cita de cada elemento, y la cita para insertar en el estilo elegido. Falla indicando qué hacer si no se puede llegar a Zotero.",
+      "wiki": "Un enlace a nota de Obsidian: [[@key]]",
+      "newNote": "Nueva nota de lectura desde Zotero…",
+      "notesFolder": "Carpeta de notas de lectura",
+      "notesFolderHelp": "Dónde se crean las notas @citekey.md. Mandan los ajustes de Zotero Integration o Citations de una bóveda de Obsidian.",
+      "noteTemplate": "Plantilla de nota de lectura",
+      "noteTemplateHelp": "Un archivo Markdown de la carpeta abierta, como Templates/Literature.md, con {{title}}, {{authors}}, {{year}}, {{abstract}}, {{citekey}}, {{DOI}}, {{URL}}, {{highlights}}, {{notes}} y {{date:YYYY-MM-DD}}. Vacío: una nota sencilla con front matter.",
+      "offerNote": "¿Crear también la nota de lectura {0}?",
+      "makeNote": "Crear nota",
+      "needsFolder": "Abre primero una carpeta: las notas de lectura se crean en ella.",
+      "abstract": "Resumen",
+      "highlights": "Subrayados",
+      "notes": "Notas"
     },
     "fr": {
       "description": "Citez depuis votre bibliothèque Zotero en écrivant. Zotero doit être ouvert, avec Paramètres › Avancé › Autoriser les autres applications de cet ordinateur à communiquer avec Zotero activé.",
@@ -232,7 +331,19 @@
       "bibliography": "Insérer la liste des références",
       "references": "Références",
       "noCitations": "Ce document ne cite encore rien de Zotero.",
-      "tool.search_library": "Cherche dans la bibliothèque Zotero de l'utilisateur sur cet ordinateur (Zotero 7 ou plus récent doit être ouvert) : la clé, le titre, les auteurs, l'année, le type, la source et la clé de citation de chaque élément, et la citation à insérer dans le style choisi. Échoue en disant quoi faire quand Zotero est injoignable."
+      "tool.search_library": "Cherche dans la bibliothèque Zotero de l'utilisateur sur cet ordinateur (Zotero 7 ou plus récent doit être ouvert) : la clé, le titre, les auteurs, l'année, le type, la source et la clé de citation de chaque élément, et la citation à insérer dans le style choisi. Échoue en disant quoi faire quand Zotero est injoignable.",
+      "wiki": "Un lien de note Obsidian : [[@key]]",
+      "newNote": "Nouvelle note de lecture depuis Zotero…",
+      "notesFolder": "Dossier des notes de lecture",
+      "notesFolderHelp": "Où les notes @citekey.md sont créées. Les réglages Zotero Integration ou Citations d’un coffre Obsidian l’emportent.",
+      "noteTemplate": "Modèle de note de lecture",
+      "noteTemplateHelp": "Un fichier Markdown du dossier ouvert, comme Templates/Literature.md, avec {{title}}, {{authors}}, {{year}}, {{abstract}}, {{citekey}}, {{DOI}}, {{URL}}, {{highlights}}, {{notes}} et {{date:YYYY-MM-DD}}. Vide : une note simple avec front matter.",
+      "offerNote": "Créer aussi la note de lecture {0} ?",
+      "makeNote": "Créer la note",
+      "needsFolder": "Ouvrez d’abord un dossier : les notes de lecture y sont créées.",
+      "abstract": "Résumé",
+      "highlights": "Surlignages",
+      "notes": "Notes"
     },
     "de": {
       "description": "Zitiere beim Schreiben aus deiner Zotero-Bibliothek. Zotero muss laufen, mit Einstellungen › Erweitert › „Anderen Anwendungen auf diesem Computer erlauben, mit Zotero zu kommunizieren“ eingeschaltet.",
@@ -251,7 +362,19 @@
       "bibliography": "Literaturverzeichnis einfügen",
       "references": "Literatur",
       "noCitations": "Dieses Dokument zitiert noch nichts aus Zotero.",
-      "tool.search_library": "Durchsucht die Zotero-Bibliothek des Nutzers auf diesem Computer (Zotero 7 oder neuer muss laufen): Schlüssel, Titel, Autoren, Jahr, Art, Erscheinungsort und Zitierschlüssel jedes Eintrags sowie das Zitat zum Einfügen im gewählten Stil. Schlägt mit einem Hinweis fehl, wenn Zotero nicht erreichbar ist."
+      "tool.search_library": "Durchsucht die Zotero-Bibliothek des Nutzers auf diesem Computer (Zotero 7 oder neuer muss laufen): Schlüssel, Titel, Autoren, Jahr, Art, Erscheinungsort und Zitierschlüssel jedes Eintrags sowie das Zitat zum Einfügen im gewählten Stil. Schlägt mit einem Hinweis fehl, wenn Zotero nicht erreichbar ist.",
+      "wiki": "Ein Obsidian-Notizlink: [[@key]]",
+      "newNote": "Neue Literaturnotiz aus Zotero…",
+      "notesFolder": "Ordner für Literaturnotizen",
+      "notesFolderHelp": "Wo @citekey.md-Notizen angelegt werden. Einstellungen von Zotero Integration oder Citations in einem Obsidian-Vault haben Vorrang.",
+      "noteTemplate": "Vorlage für Literaturnotizen",
+      "noteTemplateHelp": "Eine Markdown-Datei im geöffneten Ordner, etwa Templates/Literature.md, mit {{title}}, {{authors}}, {{year}}, {{abstract}}, {{citekey}}, {{DOI}}, {{URL}}, {{highlights}}, {{notes}} und {{date:YYYY-MM-DD}}. Leer: eine schlichte Notiz mit Front Matter.",
+      "offerNote": "Auch die Literaturnotiz {0} anlegen?",
+      "makeNote": "Notiz anlegen",
+      "needsFolder": "Öffne zuerst einen Ordner: Literaturnotizen werden darin angelegt.",
+      "abstract": "Abstract",
+      "highlights": "Markierungen",
+      "notes": "Notizen"
     },
     "ru": {
       "description": "Цитируйте из библиотеки Zotero прямо во время письма. Нужен запущенный Zotero, в котором включено «Настройки › Дополнительно › Разрешить другим приложениям на этом компьютере обмениваться данными с Zotero».",
@@ -270,7 +393,19 @@
       "bibliography": "Вставить список литературы",
       "references": "Литература",
       "noCitations": "Этот документ пока ничего не цитирует из Zotero.",
-      "tool.search_library": "Ищет в библиотеке Zotero пользователя на этом компьютере (должен быть запущен Zotero 7 или новее): ключ, название, авторов, год, тип, источник и ключ цитирования каждой записи, а также ссылку для вставки в выбранном стиле. Если до Zotero не достучаться, сообщает, что сделать."
+      "tool.search_library": "Ищет в библиотеке Zotero пользователя на этом компьютере (должен быть запущен Zotero 7 или новее): ключ, название, авторов, год, тип, источник и ключ цитирования каждой записи, а также ссылку для вставки в выбранном стиле. Если до Zotero не достучаться, сообщает, что сделать.",
+      "wiki": "Ссылка на заметку Obsidian: [[@key]]",
+      "newNote": "Новая заметка о литературе из Zotero…",
+      "notesFolder": "Папка заметок о литературе",
+      "notesFolderHelp": "Где создаются заметки @citekey.md. Если в хранилище Obsidian есть настройки Zotero Integration или Citations, действуют они.",
+      "noteTemplate": "Шаблон заметки о литературе",
+      "noteTemplateHelp": "Файл Markdown в открытой папке, например Templates/Literature.md, с {{title}}, {{authors}}, {{year}}, {{abstract}}, {{citekey}}, {{DOI}}, {{URL}}, {{highlights}}, {{notes}} и {{date:YYYY-MM-DD}}. Пусто: простая заметка с front matter.",
+      "offerNote": "Создать и заметку о литературе {0}?",
+      "makeNote": "Создать заметку",
+      "needsFolder": "Сначала откройте папку: заметки о литературе создаются в ней.",
+      "abstract": "Аннотация",
+      "highlights": "Выделения",
+      "notes": "Заметки"
     },
     "pt": {
       "description": "Cite da sua biblioteca do Zotero enquanto escreve. Precisa do Zotero aberto, com Configurações › Avançado › Permitir que outros aplicativos deste computador se comuniquem com o Zotero ligado.",
@@ -289,7 +424,19 @@
       "bibliography": "Inserir lista de referências",
       "references": "Referências",
       "noCitations": "Este documento ainda não cita nada do Zotero.",
-      "tool.search_library": "Pesquisa a biblioteca do Zotero do utilizador neste computador (o Zotero 7 ou posterior tem de estar aberto): a chave, o título, os autores, o ano, o tipo, onde saiu e a chave de citação de cada item, e a citação a inserir no estilo escolhido. Falha dizendo o que fazer quando o Zotero não responde."
+      "tool.search_library": "Pesquisa a biblioteca do Zotero do utilizador neste computador (o Zotero 7 ou posterior tem de estar aberto): a chave, o título, os autores, o ano, o tipo, onde saiu e a chave de citação de cada item, e a citação a inserir no estilo escolhido. Falha dizendo o que fazer quando o Zotero não responde.",
+      "wiki": "Um link de nota do Obsidian: [[@key]]",
+      "newNote": "Nova nota de leitura do Zotero…",
+      "notesFolder": "Pasta das notas de leitura",
+      "notesFolderHelp": "Onde as notas @citekey.md são criadas. Valem os ajustes do Zotero Integration ou do Citations de um cofre do Obsidian.",
+      "noteTemplate": "Modelo de nota de leitura",
+      "noteTemplateHelp": "Um arquivo Markdown da pasta aberta, como Templates/Literature.md, com {{title}}, {{authors}}, {{year}}, {{abstract}}, {{citekey}}, {{DOI}}, {{URL}}, {{highlights}}, {{notes}} e {{date:YYYY-MM-DD}}. Vazio: uma nota simples com front matter.",
+      "offerNote": "Criar também a nota de leitura {0}?",
+      "makeNote": "Criar nota",
+      "needsFolder": "Abra uma pasta primeiro: as notas de leitura são criadas nela.",
+      "abstract": "Resumo",
+      "highlights": "Destaques",
+      "notes": "Notas"
     }
   }
 }

@@ -41,6 +41,7 @@ views:
 - **公式**（base 里的 `formulas:`）会为每一行算出结果，可以当列显示，也能用来筛选和排序，例如 `(price / pages).toFixed(2)`。汇总（summaries）暂时还不显示。
 - **属性类型**在 Obsidian 库里使用 Obsidian 自己的 `.obsidian/types.json`。
 - **在嵌入的笔记里**（`![[页面]]`），数据库只占一行，点一下才画出来。
+- **从 Dataview 转过来**：把光标放进 ` ```dataview ` 代码块，运行「把 Dataview 查询转成 Base」。带 `FROM`、`WHERE`、`SORT`、`LIMIT` 的 `TABLE`/`LIST` 会变成同样的 base；`TASK`、`GROUP BY`、`FLATTEN` 和 `dataviewjs` 不转换，会说明原因，原文不变。
 
 Notion 的导出包请用「Notion 导入」插件导入，它写出的页面和数据库就由这个插件显示。
 

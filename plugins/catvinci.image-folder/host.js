@@ -2,6 +2,7 @@
 // "<document>.assets/" beside it, and the link with it; renaming the
 // document in its folder renames that folder and its links. Textus saves
 // the picture first (Settings › Images), so this follows its file events.
+// Where an Obsidian or Logseq setting says where pictures go, they stay.
 /* global imageFolder, folderPaths, freeName */
 const WAIT_MS = 3000;
 const STEP_MS = 150;
@@ -30,6 +31,23 @@ async function freePath(dir, name, like) {
   return dir + "/" + (await freeName(name.slice(0, dot), taken, { ext: name.slice(dot), sep: "-", first: 1 }));
 }
 
+/** The folder's attachment rule, when its app places pictures itself. */
+async function appPlaces(doc) {
+  let rule;
+  try {
+    rule = (await textus.files.conventions(imageFolder.dirOf(doc))).attachments;
+  } catch {
+    return false;
+  }
+  if (!rule || rule.app !== "obsidian") return imageFolder.appPlaces(rule, null);
+  try {
+    const app = JSON.parse(await textus.files.readText(folderPaths.abs(rule.root, ".obsidian/app.json")));
+    return imageFolder.appPlaces(rule, app);
+  } catch {
+    return false;
+  }
+}
+
 const moving = new Set();
 
 async function onCreate(event) {
@@ -37,6 +55,7 @@ async function onCreate(event) {
   const picture = slash(event.path);
   const doc = slash(await textus.editor.getPath());
   if (!imageFolder.shouldMove(doc, picture) || moving.has(picture)) return;
+  if (await appPlaces(native(doc, like))) return;
   moving.add(picture);
   try {
     const forms = imageFolder.srcForms(doc, picture);

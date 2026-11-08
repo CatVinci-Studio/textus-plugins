@@ -1,7 +1,7 @@
 {
   "id": "catvinci.slides",
   "name": "%name%",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "publisher": "catvinci",
   "author": "CatVinci Studio",
   "description": "%description%",
@@ -14,10 +14,13 @@
   "platforms": ["desktop", "ios"],
   "main": [
     "lib/marp-core.js",
+    "lib/folder-paths.js",
+    "embeds.js",
     "host.js"
   ],
   "permissions": [
     "editor.read",
+    "files.read",
     "files.write",
     "ai.tools"
   ],

@@ -74,6 +74,9 @@
   "catvinci.templates/lib/free-name.js": "./shared/free-name.js",
   "catvinci.daily-notes/lib/folder-paths.js": "./shared/folder-paths.js",
   "catvinci.daily-notes/lib/dates.js": "./shared/dates.js",
+  "catvinci.quick-notes/lib/folder-paths.js": "./shared/folder-paths.js",
+  "catvinci.quick-notes/lib/dates.js": "./shared/dates.js",
+  "catvinci.quick-notes/lib/conventions.js": "./shared/conventions.js",
   "catvinci.image-folder/lib/folder-paths.js": "./shared/folder-paths.js",
   "catvinci.image-folder/lib/free-name.js": "./shared/free-name.js",
   "catvinci.bookmarks/lib/folder-paths.js": "./shared/folder-paths.js",
@@ -94,5 +97,16 @@
   "catvinci.notion-import/lib/jszip.min.js": "jszip/dist/jszip.min.js",
   "catvinci.notion-import/lib/yaml.js": "./shared/yaml.js",
   "catvinci.notion-import/lib/bases.js": "./shared/bases.js",
-  "catvinci.canvas/lib/folder-paths.js": "./shared/folder-paths.js"
+  "catvinci.canvas/lib/folder-paths.js": "./shared/folder-paths.js",
+  "catvinci.zotero/lib/folder-paths.js": "./shared/folder-paths.js",
+  "catvinci.zotero/lib/conventions.js": "./shared/conventions.js",
+  "catvinci.zotero/lib/dates.js": "./shared/dates.js",
+  "catvinci.database/lib/name-order.js": "./shared/name-order.js",
+  "catvinci.templates/lib/name-order.js": "./shared/name-order.js",
+  "catvinci.tags/lib/name-order.js": "./shared/name-order.js",
+  "catvinci.graph/lib/name-order.js": "./shared/name-order.js",
+  "catvinci.zotero/lib/name-order.js": "./shared/name-order.js",
+  "catvinci.slides/lib/folder-paths.js": "./shared/folder-paths.js",
+  "catvinci.kanban/lib/drag.js": "./shared/drag.js",
+  "catvinci.database/lib/drag.js": "./shared/drag.js"
 }

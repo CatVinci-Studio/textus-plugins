@@ -82,6 +82,17 @@ async function importNotion(arg) {
     source = await textus.ui.pick(items, { placeholder: t("pickSource") });
     if (!source) return;
   }
+  // Notion's Markdown export has no page icons; its HTML export does.
+  let iconSource = null;
+  // Asked only when the export was picked here, not named by a caller.
+  if (!arg) {
+    const others = (await choices(root)).filter((c) => c.value !== source);
+    if (others.length) {
+      const picked = await textus.ui.pick([{ label: t("noIcons"), value: "" }].concat(others), { placeholder: t("pickIcons") });
+      if (picked === null || picked === undefined) return;
+      iconSource = picked || null;
+    }
+  }
   const name = String(source).replace(/\\/g, "/").split("/").pop();
   const stat = await textus.files.stat(source);
   if (stat && !stat.isDir && stat.size > MAX_READ) return textus.ui.message(t("tooBig", name));
@@ -116,6 +127,7 @@ async function importNotion(arg) {
   }
   if (report === false) return;
   if (!report) return textus.ui.message(t("notExport", name));
+  if (iconSource && !report.stopped) report.icons = await addIcons(iconSource, target, report.byId);
   const suggestions = await stillMissing(notionImport.recommend(report.stats));
   await context.storage.global.set(RECOMMENDED, suggestions.map((s) => s.id));
   const page = join(target, await freeName(t("reportName"), (name) => textus.files.stat(join(target, name)), { ext: ".md" }));
@@ -130,6 +142,30 @@ async function importNotion(arg) {
       ? t("cancelled", where)
       : t(workspace ? "donePages" : "done", report.pages + report.rows, report.databases, where),
   );
+}
+
+/** Each imported page given its icon from the HTML export at `path`,
+ *  unless it has one: how many were. */
+async function addIcons(path, target, byId) {
+  try {
+    const from = await sourceOf(path, await textus.files.stat(path));
+    const icons = await notionImport.iconsOf(from);
+    let added = 0;
+    for (const [id, icon] of Object.entries(icons)) {
+      const rel = byId && byId[id];
+      if (!rel || !/\.md$/i.test(rel)) continue;
+      await textus.files.frontmatter
+        .update(join(target, rel), (fm) => {
+          if (fm.icon) return;
+          fm.icon = icon;
+          added++;
+        })
+        .catch(() => {});
+    }
+    return added;
+  } catch {
+    return 0;
+  }
 }
 
 async function stillMissing(suggestions) {

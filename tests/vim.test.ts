@@ -55,3 +55,42 @@ describe("Vim's key mappings", () => {
     expect(maps.v).toEqual([{ lhs: ["<"], rhs: ["<", "g", "v"] }]);
   });
 });
+
+describe("an Obsidian vault's .obsidian.vimrc", () => {
+  it("lets a later line map the same keys again", () => {
+    const maps = parseMappings("nnoremap L x\nnmap L dd");
+    expect(maps.n).toEqual([{ lhs: ["L"], rhs: ["d", "d"] }]);
+  });
+
+  it("is read after the plugin's own lines, its mappings applied", async () => {
+    const { folder, loadPlugin } = await import("./plugin-host");
+    let key: ((k: string) => void) | null = null;
+    const ops: { op: string }[] = [];
+    loadPlugin("catvinci.vim", {
+      files: folder({
+        ".obsidian/app.json": "{}",
+        ".obsidian.vimrc": '" Obsidian\nnmap L dd\nunmap <Space>\nexmap x obcommand y\nnnoremap K x',
+      }),
+      settings: {
+        get: async (k: string) => (k === "mappings" ? "nnoremap L x\nnnoremap H x" : undefined),
+      },
+      editor: {
+        keys: {
+          onKey: (fn: typeof key) => ((key = fn), { dispose() {} }),
+          capture: async () => {},
+          exec: async (op: { op: string }) => (ops.push(op), { empty: false }),
+        },
+      },
+    });
+    const press = async (k: string) => {
+      key!(k);
+      await new Promise((r) => setTimeout(r, 20));
+    };
+    await new Promise((r) => setTimeout(r, 20));
+    await press("L");
+    await press("H");
+    await press("K");
+    const done = ops.map((o) => o.op).filter((op) => /^delete/.test(op));
+    expect(done).toEqual(["deleteLines", "deleteChars", "deleteChars"]);
+  });
+});

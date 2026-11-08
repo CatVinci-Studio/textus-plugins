@@ -10,7 +10,8 @@
 
   let board = null;
   let timer = 0;
-  let dragged = null;
+  const cardLists = () => [...document.querySelectorAll(".cards")];
+  const cardsOf = (ul) => [...ul.children].filter((n) => n.classList.contains("card"));
 
   function save() {
     $("state").textContent = t("saving");
@@ -90,7 +91,6 @@
   function cardNode(list, card) {
     const li = document.createElement("li");
     li.className = "tx-card card" + (card.done ? " done" : "");
-    li.draggable = true;
     const box = document.createElement("input");
     box.type = "checkbox";
     box.className = "ui-check";
@@ -116,15 +116,20 @@
         changed();
       }),
     );
-    li.addEventListener("dragstart", (e) => {
-      dragged = { list: list, card: card };
-      li.classList.add("dragging");
-      e.dataTransfer.effectAllowed = "move";
-      e.dataTransfer.setData("text/plain", card.text);
-    });
-    li.addEventListener("dragend", () => {
-      dragged = null;
-      li.classList.remove("dragging");
+    // Dragged into a list, at the place it is let go.
+    li.addEventListener("pointerdown", (e) => {
+      if (e.target.closest("input, button, textarea, [contenteditable]")) return;
+      drag.sortable(e, {
+        item: li,
+        lists: cardLists,
+        itemsOf: cardsOf,
+        onDrop: (ul, index) => {
+          const to = board.lists[cardLists().indexOf(ul)];
+          list.cards.splice(list.cards.indexOf(card), 1);
+          to.cards.splice(index, 0, card);
+          changed();
+        },
+      });
     });
     return li;
   }
@@ -134,34 +139,20 @@
     section.className = "list";
     const head = document.createElement("div");
     head.className = "list-head";
-    // A list moves by its head: dropped on another list, it goes before it.
-    head.draggable = true;
-    head.addEventListener("dragstart", (e) => {
-      dragged = { list: list, card: null };
-      section.classList.add("dragging");
-      e.dataTransfer.effectAllowed = "move";
-      e.dataTransfer.setData("text/plain", list.title);
-    });
-    head.addEventListener("dragend", () => {
-      dragged = null;
-      section.classList.remove("dragging");
-    });
-    section.addEventListener("dragover", (e) => {
-      if (!dragged || dragged.card || dragged.list === list) return;
-      e.preventDefault();
-      section.classList.add("list-drop");
-    });
-    section.addEventListener("dragleave", () =>
-      section.classList.remove("list-drop"),
-    );
-    section.addEventListener("drop", (e) => {
-      section.classList.remove("list-drop");
-      if (!dragged || dragged.card || dragged.list === list) return;
-      e.preventDefault();
-      const moved = dragged.list;
-      board.lists.splice(board.lists.indexOf(moved), 1);
-      board.lists.splice(board.lists.indexOf(list), 0, moved);
-      changed();
+    // A list moves by its head, the others making way.
+    head.addEventListener("pointerdown", (e) => {
+      if (e.target.closest("button, textarea, [contenteditable]")) return;
+      drag.sortable(e, {
+        item: section,
+        axis: "x",
+        lists: () => [$("board")],
+        itemsOf: (b) => [...b.children].filter((n) => n.classList.contains("list")),
+        onDrop: (_board, index) => {
+          board.lists.splice(board.lists.indexOf(list), 1);
+          board.lists.splice(index, 0, list);
+          changed();
+        },
+      });
     });
     const title = document.createElement("span");
     title.className = "list-title";
@@ -185,33 +176,6 @@
     const cards = document.createElement("ul");
     cards.className = "cards";
     for (const card of list.cards) cards.append(cardNode(list, card));
-    // Dropped where the pointer is: before the card under it, or last.
-    cards.addEventListener("dragover", (e) => {
-      if (!dragged || !dragged.card) return;
-      e.preventDefault();
-      cards.classList.add("drop-target");
-    });
-    cards.addEventListener("dragleave", () =>
-      cards.classList.remove("drop-target"),
-    );
-    cards.addEventListener("drop", (e) => {
-      e.preventDefault();
-      cards.classList.remove("drop-target");
-      if (!dragged || !dragged.card) return;
-      e.stopPropagation();
-      const from = dragged;
-      const nodes = [...cards.children];
-      const before = nodes.findIndex((n) => {
-        const r = n.getBoundingClientRect();
-        return e.clientY < r.top + r.height / 2;
-      });
-      from.list.cards.splice(from.list.cards.indexOf(from.card), 1);
-      let at = before < 0 ? list.cards.length : before;
-      if (from.list === list && before > from.list.cards.length)
-        at = list.cards.length;
-      list.cards.splice(Math.min(at, list.cards.length), 0, from.card);
-      changed();
-    });
     const add = document.createElement("button");
     add.className = "tx-button small add-card";
     const plus = document.createElement("span");
