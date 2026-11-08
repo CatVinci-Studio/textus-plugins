@@ -7,6 +7,8 @@ Cite from your Zotero library while you write.
 - With words selected, they are what is searched for.
 - Pick an item and the citation goes in at the caret.
 - **Plugins › Insert References List** adds a list of every work the document cites at its end.
+- **Plugins › New Literature Note from Zotero…** makes `@citekey.md` in References (or opens it if it is there) with the item's title, authors, year, abstract, DOI or URL, and its highlights and notes from Zotero. A template file can be set; in an Obsidian vault, Zotero Integration's or Citations' folder and template are followed.
+- Citations can also be written Obsidian's way, `[[@citekey]]`: a link to that literature note, which is offered once you cite.
 - How a citation is written is in the plugin's settings.
 
 <!-- ai-tools -->

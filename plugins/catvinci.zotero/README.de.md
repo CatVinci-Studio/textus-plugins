@@ -7,6 +7,8 @@ Zitiere beim Schreiben aus deiner Zotero-Bibliothek.
 - Sind Wörter markiert, wird nach ihnen gesucht.
 - Wähle einen Eintrag, und das Zitat wird an der Einfügemarke eingefügt.
 - **Plugins › Literaturverzeichnis einfügen** setzt ans Ende des Dokuments eine Liste aller Werke, die es zitiert.
+- **Plugins › Neue Literaturnotiz aus Zotero…** legt `@citekey.md` in References an (oder öffnet sie, wenn es sie gibt) – mit Titel, Autoren, Jahr, Abstract, DOI oder URL sowie den Markierungen und Notizen aus Zotero. Eine Vorlagendatei lässt sich festlegen; in einem Obsidian-Vault gelten Ordner und Vorlage von Zotero Integration oder Citations.
+- Zitate lassen sich auch wie in Obsidian schreiben, `[[@citekey]]`: ein Link auf diese Literaturnotiz, die beim Zitieren angeboten wird.
 - Wie ein Zitat geschrieben wird, steht in den Einstellungen des Plugins.
 
 <!-- ai-tools -->
