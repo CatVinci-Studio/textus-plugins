@@ -42,7 +42,7 @@ views:
 - **Board**: drag a card to another list to change its value. Drag a list by its head to put the lists in the order you want (`groupOrder`).
 - **Calendar**: rows are placed by a date property; click a day to make a row on that date.
 - **Filter**, **Sort** and the column menus are kept in the view as Bases writes them: `status == "Read"`, `tags.contains("ml")`, `due.isEmpty()`. Filters Textus can't read yet are left as they are and said so under the bar.
-- **Long databases** show their first 25 rows (or the view's `limit`); scrolling down loads the rest, the table's head staying in view. The arrow at the bar's left folds a database to its bar; the fold and the view you leave it on are kept on this device only.
+- **Long databases** show their first 25 rows (or the view's `limit`); scrolling down loads the rest, the table's head staying in view. The caret on a block's left, on hover, folds it to one line; the fold and the view you leave it on are kept on this device only.
 - **Formulas** (`formulas:` in the base) are worked out for each row and can be columns, filters and sorts: `(price / pages).toFixed(2)`. Summaries are not drawn yet.
 - **Property types** are Obsidian's, from `.obsidian/types.json`, when the folder is a vault.
 - **In an embedded note** (`![[page]]`) a database is one line; click it to draw it.
@@ -58,7 +58,7 @@ Notion exports come in through the **Notion Import** plugin, which writes pages 
 
 ## Changes
 
-- **0.7.4** - a table's head stays in view while its rows scroll; more rows load as you scroll down, no Show more; a view's menu is on right-click only; columns start at widths in proportion to the block; the view and fold you leave a block in are kept on this device, not in the note; a column is dragged by its head as the sidebar's tabs are, the others sliding aside; a rating column shows the same way all down; a filter added twice is kept once, and one that contradicts another (status is Done, then status is Doing) takes its place; its board, fields and stars are Textus's own controls; needs Textus 1.3.12
+- **0.7.4** - a table's head stays in view while its rows scroll; more rows load as you scroll down, no Show more; a view's menu is on right-click only; columns start at widths in proportion to the block; the view you leave a block in is kept on this device, not in the note; a block folds with Textus's own caret on its left, no fold arrow of its own; a column is dragged by its head as the sidebar's tabs are, the others sliding aside; a rating column shows the same way all down; a filter added twice is kept once, and one that contradicts another (status is Done, then status is Doing) takes its place; its board, fields and stars are Textus's own controls; needs Textus 1.3.12
 - **0.7.3** - Shares Two-way Links' fix for working out how a note links.
 - **0.7.2** - a dragged column stays under the pointer in a zoomed document, and dragging selects no text; a date is edited as it is shown, 2026-11-08, not in the system's order; new pages and databases are linked with standard links, [Week 1](Week%201.md), unless the folder or the page already uses [[wiki links]]
 - **0.7.1** - new databases and sub-pages are linked the way the folder writes links; needs Textus 1.3.10

@@ -312,18 +312,6 @@ body {
   color: var(--ui-danger);
 }
 
-/* Folding: the bar stays, the rest goes; the chevron points down when open. */
-#fold .tx-icon {
-  transition: transform var(--dur-fast) var(--ease-out);
-}
-body.folded #fold .tx-icon {
-  transform: rotate(-90deg);
-}
-body.folded #rules,
-body.folded #notes,
-body.folded #body {
-  display: none;
-}
 #bar .tx-segmented {
   overflow-x: auto;
 }
@@ -349,10 +337,7 @@ body.folded #body {
   padding: 0;
   border: none;
 }
-/* Folded, the bar is all there is: no room left under it. */
-body.folded #bar {
-  margin-bottom: 0;
-}
+
 
 /* List */
 .rows-list {

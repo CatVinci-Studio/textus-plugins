@@ -12,8 +12,7 @@ const STRINGS = [
   "filter", "sort", "addFilter", "addSort", "ascending", "descending", "remove",
   "is", "isNot", "contains", "notContains", "isEmpty", "notEmpty", "greater", "less",
   "value", "search", "create", "clear", "untitled", "newProperty", "propertyName",
-  "type", "rename", "hide", "deleteProperty", "showAll", "open", "fold",
-  "unfold", "addView", "renameView", "deleteView", "skipped", "notBase", "unknownView",
+  "type", "rename", "hide", "deleteProperty", "showAll", "open", "addView", "renameView", "deleteView", "skipped", "notBase", "unknownView",
   "type.text", "type.number", "type.select", "type.tags", "type.date", "type.checkbox", "type.url",
 ];
 
@@ -201,7 +200,7 @@ function draw(target, webview, context) {
       const data = await snapshot(target, index).catch((err) => ({ error: String((err && err.message) || err), strings: strings() }));
       if (mine === sent) webview.postMessage({ type: "data", data });
     };
-    // Each reader's view and fold, on this device only: not in the file.
+    // Each reader's view, on this device only: not in the file.
     const store = context.storage.global;
     const remembered = () => store.get("view:" + target.key()).then((v) => v || {}, () => ({}));
     const remember = async (change) =>
@@ -222,15 +221,13 @@ function draw(target, webview, context) {
         case "ready": {
           const kept = await remembered();
           index = typeof kept.index === "number" ? kept.index : m.index | 0;
-          webview.postMessage({ type: "selected", index, folded: !!kept.folded });
+          webview.postMessage({ type: "selected", index });
           return send();
         }
         case "select":
           index = m.index | 0;
           void remember({ index });
           return send();
-        case "fold":
-          return remember({ folded: !!m.folded });
         // A row opens in a tab, as a file does.
         case "open":
           return textus.layout.open(join(root, m.rel));

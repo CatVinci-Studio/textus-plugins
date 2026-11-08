@@ -3,9 +3,9 @@ import { loadPlugin, memoryStorage } from "./plugin-host";
 
 type Any = any; // eslint-disable-line @typescript-eslint/no-explicit-any
 
-/** A base block's view and fold, kept per block on this device
+/** A base block's view, kept per block on this device
  *  (plugins/catvinci.database/host.js), never in the note. */
-it("remembers each block's view and fold on this device", async () => {
+it("remembers each block's view on this device", async () => {
   let render: (block: Any, webview: Any) => Promise<void> = async () => {};
   const storage = memoryStorage();
   loadPlugin(
@@ -35,13 +35,12 @@ it("remembers each block's view and fold on this device", async () => {
   };
   const first = await open(0);
   await first.send({ type: "select", index: 1 });
-  await first.send({ type: "fold", folded: true });
   const again = await open(0);
   await again.send({ type: "ready", index: 0 });
   await vi.waitFor(() =>
-    expect(again.posted).toContainEqual({ type: "selected", index: 1, folded: true }),
+    expect(again.posted).toContainEqual({ type: "selected", index: 1 }),
   );
   const other = await open(1);
   await other.send({ type: "ready", index: 0 });
-  expect(other.posted).toContainEqual({ type: "selected", index: 0, folded: false });
+  expect(other.posted).toContainEqual({ type: "selected", index: 0 });
 });

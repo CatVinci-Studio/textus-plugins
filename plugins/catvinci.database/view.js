@@ -18,8 +18,8 @@
   const TONES = ["blue", "green", "orange", "purple", "red", "teal", "yellow", "pink", "gray"];
   let data = null;
   let month = null;
-  // Each reader's own: the view in front and whether the base is folded.
-  const state = Object.assign({ index: 0, folded: false }, api.getState() || {});
+  // Each reader's own: the view in front. Folding the block is Textus's.
+  const state = Object.assign({ index: 0 }, api.getState() || {});
   const keep = () => api.setState(state);
   /** How many rows scrolling has let through, past the first page. */
   let more = 0;
@@ -705,9 +705,6 @@
     if (data.error) return body.replaceChildren(el("div", { class: "tx-empty problem" }, data.error, data.detail ? el("div", { class: "detail" }, data.detail) : null));
     if (data.missing) return body.replaceChildren(el("div", { class: "tx-empty" }, s("missing")));
     const view = data.spec.view;
-    $("fold").setAttribute("aria-label", s(state.folded ? "unfold" : "fold"));
-    $("fold").setAttribute("aria-expanded", String(!state.folded));
-    document.body.classList.toggle("folded", state.folded);
     $("views").replaceChildren(...viewTabs());
     $("filter").setAttribute("aria-label", s("filter"));
     $("sort").setAttribute("aria-label", s("sort"));
@@ -718,7 +715,6 @@
     if (data.skipped && data.skipped.length) notes.push(el("div", { class: "tx-footnote skipped", title: data.skipped.join("\n") }, s("skipped").replace("{0}", String(data.skipped.length))));
     if (data.spec.unknownView) notes.push(el("div", { class: "tx-footnote" }, s("unknownView").replace("{0}", data.spec.unknownView)));
     $("notes").replaceChildren(...notes);
-    if (state.folded) return body.replaceChildren();
     if (!data.rows.length && view !== "calendar" && view !== "table") return body.replaceChildren(el("div", { class: "tx-empty" }, s("empty")));
     nearEnd.disconnect();
     body.replaceChildren(view === "board" ? board() : view === "calendar" ? calendar() : view === "gallery" ? gallery() : view === "list" ? list() : table());
@@ -731,17 +727,10 @@
     else post({ type: "add", folder: data.folder, props: {} });
   });
   $("filter").addEventListener("click", (e) => data && filterMenu(e.currentTarget));
-  $("fold").addEventListener("click", () => {
-    state.folded = !state.folded;
-    keep();
-    post({ type: "fold", folded: state.folded });
-    render();
-  });
   $("sort").addEventListener("click", (e) => data && sortMenu(e.currentTarget));
   api.onMessage((m) => {
     if (m && m.type === "selected") {
       state.index = m.index;
-      if (typeof m.folded === "boolean") state.folded = m.folded;
       more = 0;
       keep();
       return;
