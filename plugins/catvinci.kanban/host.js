@@ -5,10 +5,11 @@
 /** What activate was given: the plugin's storage and own files. */
 let ctx;
 
+// A plain .md, known by its front matter as Obsidian's Kanban knows it.
 const TEMPLATE = function () {
   const lists = ["todo", "doing", "done"].map((key) => textus.l10n.t(key));
   return (
-    "---\nkanban-plugin: basic\n---\n\n" +
+    "---\nkanban-plugin: board\n---\n\n" +
     lists.map((l) => "## " + l + "\n").join("\n")
   );
 };
@@ -26,7 +27,12 @@ async function boardFile(name) {
   if (!root) return null;
   let rel = folderPaths.clean(root, name, false);
   if (!rel) return { error: "board must be a board's path in the open folder." };
-  if (!/\.md$/i.test(rel)) rel += ".kanban.md";
+  // A name without .md: the plain board, else one kept as name.kanban.md.
+  if (!/\.md$/i.test(rel)) {
+    const plain = rel + ".md";
+    const old = rel + ".kanban.md";
+    rel = (await textus.files.stat(folderPaths.abs(root, old))) && !(await textus.files.stat(folderPaths.abs(root, plain))) ? old : plain;
+  }
   return { rel: rel, path: folderPaths.abs(root, rel) };
 }
 
@@ -64,11 +70,20 @@ async function changeBoard(name, change) {
   return Object.assign({ board: file.rel }, answer);
 }
 
+/** Whether `text` is a board: kanban-plugin in its front matter. */
+const isBoard = (text) => /^---\r?\n(?:[^\n]*\n)*?kanban-plugin\s*:/.test(String(text).split(/\r?\n---/)[0] + "\n");
+
+/** How many documents listBoards reads at most, looking for boards. */
+const MAX_SCAN = 3000;
+
 async function listBoards() {
   if (!(await textus.files.root())) return NO_FOLDER;
   const boards = [];
-  for (const file of await textus.files.find("**/*.kanban.md")) {
-    const board = kanbanMarkdown.parse(await textus.files.readText(file.path));
+  const files = (await textus.files.find("**/*.md")).slice(0, MAX_SCAN);
+  for (const file of files) {
+    const text = await textus.files.readText(file.path).catch(() => "");
+    if (!/\.kanban\.md$/i.test(file.rel) && !isBoard(text)) continue;
+    const board = kanbanMarkdown.parse(text);
     boards.push({
       path: file.rel,
       lists: board.lists.map((l) => ({ title: l.title, cards: l.cards.length })),
@@ -129,7 +144,7 @@ exports.activate = function (context) {
     if (!name || !name.trim()) return;
     const path = join(
       root,
-      name.trim().replace(/[\\/:*?"<>|]/g, "-") + ".kanban.md",
+      name.trim().replace(/[\\/:*?"<>|]/g, "-") + ".md",
     );
     // A board of that name opens as it is - matched without regard to
     // case, as macOS and Windows name files - and is never written over.

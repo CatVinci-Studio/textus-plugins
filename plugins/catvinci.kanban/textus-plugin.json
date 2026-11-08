@@ -1,7 +1,7 @@
 {
   "id": "catvinci.kanban",
   "name": "%name%",
-  "version": "0.3.1",
+  "version": "0.4.0",
   "publisher": "catvinci",
   "author": "CatVinci Studio",
   "description": "%description%",
@@ -9,7 +9,7 @@
   "license": "MIT",
   "repository": "https://github.com/CatVinci-Studio/textus-plugins",
   "engines": {
-    "textus": ">=1.3.2"
+    "textus": ">=1.3.10-rc.3"
   },
   "platforms": ["desktop", "ios"],
   "main": [
@@ -42,6 +42,9 @@
         "displayName": "%name%",
         "filenamePatterns": [
           "*.kanban.md"
+        ],
+        "frontMatter": [
+          "kanban-plugin"
         ]
       }
     ],
@@ -134,9 +137,9 @@
   },
   "l10n": {
     "en": {
-      "name": "Kanban",
-      "description": "Boards of cards in lists, kept as a Markdown file (name.kanban.md) - a list per heading, a card per task.",
-      "new": "New Kanban Board…",
+      "name": "Task Board",
+      "description": "Boards of cards in lists, kept as a Markdown file (a .md with kanban-plugin in its front matter, as Obsidian's Kanban writes it) - a list per heading, a card per task.",
+      "new": "New Task Board…",
       "needsFolder": "Open a folder first: the board is kept in it.",
       "boardName": "Board name",
       "board": "Board",
@@ -151,15 +154,15 @@
       "saving": "Saving…",
       "remove": "Remove",
       "noNote": "No note is named “{0}”.",
-      "tool.list_boards": "Lists the Kanban boards (name.kanban.md files) in the open folder, each with its lists and how many cards each holds.",
+      "tool.list_boards": "Lists the Kanban boards (kanban-plugin .md files) in the open folder, each with its lists and how many cards each holds.",
       "tool.read_board": "Reads a Kanban board: its lists in order, each with its cards' text and whether each is done. Tasks written in ordinary documents are list_tasks.",
-      "tool.add_card": "Adds a card to the end of a list on a Kanban board. Only for a board (name.kanban.md); a to-do in a document is add_task.",
+      "tool.add_card": "Adds a card to the end of a list on a Kanban board. Only for a board (kanban-plugin .md); a to-do in a document is add_task.",
       "tool.move_card": "Moves a card on a Kanban board to another list, or to another place in its own."
     },
     "zh": {
-      "name": "看板",
-      "description": "把卡片按列表排成看板，保存为一个 Markdown 文件（名称.kanban.md）：每个标题是一列，每个任务是一张卡片。",
-      "new": "新建看板…",
+      "name": "任务看板",
+      "description": "把卡片按列表排成看板，保存为一个 Markdown 文件（开头属性里带 kanban-plugin 的 .md，和 Obsidian 的看板插件通用）：每个标题是一列，每个任务是一张卡片。",
+      "new": "新建任务看板…",
       "needsFolder": "先打开一个文件夹，看板会存在里面。",
       "boardName": "看板名称",
       "board": "看板",
@@ -174,15 +177,15 @@
       "saving": "正在保存…",
       "remove": "删除",
       "noNote": "没有名为“{0}”的笔记。",
-      "tool.list_boards": "列出打开的文件夹中的看板（name.kanban.md 文件），以及每个看板的各个列表和其中的卡片数。",
+      "tool.list_boards": "列出打开的文件夹中的看板（kanban-plugin .md 文件），以及每个看板的各个列表和其中的卡片数。",
       "tool.read_board": "读取一个看板：按顺序给出各个列表，以及每个列表里卡片的文字和是否已完成。 普通文档里的任务用 list_tasks。",
-      "tool.add_card": "在看板某个列表的末尾添加一张卡片。 只用于看板（name.kanban.md）；文档里的待办用 add_task。",
+      "tool.add_card": "在看板某个列表的末尾添加一张卡片。 只用于看板（kanban-plugin .md）；文档里的待办用 add_task。",
       "tool.move_card": "把看板上的一张卡片移到另一个列表，或移到所在列表的另一个位置。"
     },
     "zh-Hant": {
-      "name": "看板",
-      "description": "把卡片按清單排成看板，儲存為一個 Markdown 檔案（名稱.kanban.md）：每個標題是一欄，每個任務是一張卡片。",
-      "new": "新增看板…",
+      "name": "任務看板",
+      "description": "把卡片按清單排成看板，儲存為一個 Markdown 檔案（開頭屬性裡帶 kanban-plugin 的 .md，與 Obsidian 的看板外掛通用）：每個標題是一欄，每個任務是一張卡片。",
+      "new": "新增任務看板…",
       "needsFolder": "請先開啟一個資料夾，看板會存在裡面。",
       "boardName": "看板名稱",
       "board": "看板",
@@ -197,15 +200,15 @@
       "saving": "正在儲存…",
       "remove": "刪除",
       "noNote": "沒有名為「{0}」的筆記。",
-      "tool.list_boards": "列出開啟的資料夾中的看板（name.kanban.md 檔案），以及每個看板的各個列表和其中的卡片數。",
+      "tool.list_boards": "列出開啟的資料夾中的看板（kanban-plugin .md 檔案），以及每個看板的各個列表和其中的卡片數。",
       "tool.read_board": "讀取一個看板：依順序給出各個列表，以及每個列表裡卡片的文字和是否已完成。 一般文件裡的任務用 list_tasks。",
-      "tool.add_card": "在看板某個列表的末尾新增一張卡片。 只用於看板（name.kanban.md）；文件裡的待辦用 add_task。",
+      "tool.add_card": "在看板某個列表的末尾新增一張卡片。 只用於看板（kanban-plugin .md）；文件裡的待辦用 add_task。",
       "tool.move_card": "把看板上的一張卡片移到另一個列表，或移到所在列表的另一個位置。"
     },
     "ja": {
-      "name": "カンバン",
-      "description": "リストに並んだカードのボード。Markdown ファイル（名前.kanban.md）として保存され、見出しごとにリスト、タスクごとにカードになります。",
-      "new": "新しいカンバンボード…",
+      "name": "タスクボード",
+      "description": "リストに並んだカードのボード。Markdown ファイル（フロントマターに kanban-plugin がある .md。Obsidian の Kanban と同じ形式）として保存され、見出しごとにリスト、タスクごとにカードになります。",
+      "new": "新しいタスクボード…",
       "needsFolder": "先にフォルダを開いてください。ボードはその中に保存されます。",
       "boardName": "ボード名",
       "board": "ボード",
@@ -220,15 +223,15 @@
       "saving": "保存しています…",
       "remove": "削除",
       "noNote": "「{0}」という名前のノートはありません。",
-      "tool.list_boards": "開いているフォルダにあるカンバンボード（name.kanban.md ファイル）を、それぞれのリストと各リストのカード数とともに一覧にします。",
+      "tool.list_boards": "開いているフォルダにあるカンバンボード（kanban-plugin .md ファイル）を、それぞれのリストと各リストのカード数とともに一覧にします。",
       "tool.read_board": "カンバンボードを読みます。リストを順に、各カードの本文と完了かどうかとともに返します。 普通の文書に書かれたタスクは list_tasks です。",
-      "tool.add_card": "カンバンボードのリストの末尾にカードを追加します。 ボード（name.kanban.md）専用です。文書の ToDo は add_task です。",
+      "tool.add_card": "カンバンボードのリストの末尾にカードを追加します。 ボード（kanban-plugin .md）専用です。文書の ToDo は add_task です。",
       "tool.move_card": "カンバンボードのカードを別のリストへ、または同じリストの別の位置へ移します。"
     },
     "ko": {
-      "name": "칸반",
-      "description": "목록별로 카드를 놓은 보드를 Markdown 파일(이름.kanban.md)로 보관합니다. 제목 하나가 목록 하나, 할 일 하나가 카드 하나입니다.",
-      "new": "새 칸반 보드…",
+      "name": "작업 보드",
+      "description": "목록별로 카드를 놓은 보드를 Markdown 파일 (머리말에 kanban-plugin이 있는 .md, Obsidian Kanban과 같은 형식)로 보관합니다. 제목 하나가 목록 하나, 할 일 하나가 카드 하나입니다.",
+      "new": "새 작업 보드…",
       "needsFolder": "먼저 폴더를 여세요. 보드는 그 안에 보관됩니다.",
       "boardName": "보드 이름",
       "board": "보드",
@@ -243,15 +246,15 @@
       "saving": "저장 중…",
       "remove": "삭제",
       "noNote": "‘{0}’라는 노트가 없습니다.",
-      "tool.list_boards": "열린 폴더에 있는 칸반 보드(name.kanban.md 파일)를 각 보드의 목록과 목록마다의 카드 수와 함께 나열합니다.",
+      "tool.list_boards": "열린 폴더에 있는 칸반 보드(kanban-plugin .md 파일)를 각 보드의 목록과 목록마다의 카드 수와 함께 나열합니다.",
       "tool.read_board": "칸반 보드를 읽습니다. 목록을 순서대로, 각 카드의 내용과 완료 여부와 함께 돌려줍니다. 일반 문서에 쓴 할 일은 list_tasks입니다.",
-      "tool.add_card": "칸반 보드의 목록 끝에 카드를 추가합니다. 보드(name.kanban.md) 전용입니다. 문서의 할 일은 add_task입니다.",
+      "tool.add_card": "칸반 보드의 목록 끝에 카드를 추가합니다. 보드(kanban-plugin .md) 전용입니다. 문서의 할 일은 add_task입니다.",
       "tool.move_card": "칸반 보드의 카드를 다른 목록으로, 또는 같은 목록의 다른 위치로 옮깁니다."
     },
     "es": {
-      "name": "Kanban",
-      "description": "Tableros de tarjetas en listas, guardados como un archivo Markdown (nombre.kanban.md): una lista por encabezado, una tarjeta por tarea.",
-      "new": "Nuevo tablero kanban…",
+      "name": "Tablero de tareas",
+      "description": "Tableros de tarjetas en listas, guardados como un archivo Markdown (un .md con kanban-plugin en su front matter, como el Kanban de Obsidian): una lista por encabezado, una tarjeta por tarea.",
+      "new": "Nuevo tablero de tareas…",
       "needsFolder": "Abre primero una carpeta: el tablero se guarda en ella.",
       "boardName": "Nombre del tablero",
       "board": "Tablero",
@@ -266,15 +269,15 @@
       "saving": "Guardando…",
       "remove": "Eliminar",
       "noNote": "No hay ninguna nota llamada «{0}».",
-      "tool.list_boards": "Enumera los tableros Kanban (archivos name.kanban.md) de la carpeta abierta, cada uno con sus listas y cuántas tarjetas tiene cada una.",
+      "tool.list_boards": "Enumera los tableros Kanban (archivos kanban-plugin .md) de la carpeta abierta, cada uno con sus listas y cuántas tarjetas tiene cada una.",
       "tool.read_board": "Lee un tablero Kanban: sus listas en orden, cada una con el texto de sus tarjetas y si están hechas. Las tareas escritas en documentos normales son list_tasks.",
-      "tool.add_card": "Añade una tarjeta al final de una lista de un tablero Kanban. Solo para un tablero (name.kanban.md); una tarea en un documento es add_task.",
+      "tool.add_card": "Añade una tarjeta al final de una lista de un tablero Kanban. Solo para un tablero (kanban-plugin .md); una tarea en un documento es add_task.",
       "tool.move_card": "Mueve una tarjeta de un tablero Kanban a otra lista, o a otro lugar de la suya."
     },
     "fr": {
-      "name": "Kanban",
-      "description": "Des tableaux de cartes en listes, enregistrés dans un fichier Markdown (nom.kanban.md) : une liste par titre, une carte par tâche.",
-      "new": "Nouveau tableau kanban…",
+      "name": "Tableau de tâches",
+      "description": "Des tableaux de cartes en listes, enregistrés dans un fichier Markdown (un .md avec kanban-plugin dans son front matter, comme le Kanban d'Obsidian) : une liste par titre, une carte par tâche.",
+      "new": "Nouveau tableau de tâches…",
       "needsFolder": "Ouvrez d’abord un dossier : le tableau y est enregistré.",
       "boardName": "Nom du tableau",
       "board": "Tableau",
@@ -289,15 +292,15 @@
       "saving": "Enregistrement…",
       "remove": "Supprimer",
       "noNote": "Aucune note ne s’appelle « {0} ».",
-      "tool.list_boards": "Liste les tableaux Kanban (fichiers name.kanban.md) du dossier ouvert, chacun avec ses listes et le nombre de cartes de chacune.",
+      "tool.list_boards": "Liste les tableaux Kanban (fichiers kanban-plugin .md) du dossier ouvert, chacun avec ses listes et le nombre de cartes de chacune.",
       "tool.read_board": "Lit un tableau Kanban : ses listes dans l'ordre, chacune avec le texte de ses cartes et si elles sont faites. Les tâches écrites dans des documents ordinaires, c’est list_tasks.",
-      "tool.add_card": "Ajoute une carte à la fin d'une liste d'un tableau Kanban. Seulement pour un tableau (name.kanban.md) ; une tâche dans un document, c’est add_task.",
+      "tool.add_card": "Ajoute une carte à la fin d'une liste d'un tableau Kanban. Seulement pour un tableau (kanban-plugin .md) ; une tâche dans un document, c’est add_task.",
       "tool.move_card": "Déplace une carte d'un tableau Kanban vers une autre liste, ou à une autre place dans la sienne."
     },
     "de": {
-      "name": "Kanban",
-      "description": "Boards aus Karten in Listen, gespeichert als Markdown-Datei (name.kanban.md) – eine Liste pro Überschrift, eine Karte pro Aufgabe.",
-      "new": "Neues Kanban-Board…",
+      "name": "Aufgaben-Board",
+      "description": "Boards aus Karten in Listen, gespeichert als Markdown-Datei (eine .md mit kanban-plugin im Front Matter, wie Obsidians Kanban) – eine Liste pro Überschrift, eine Karte pro Aufgabe.",
+      "new": "Neues Aufgaben-Board…",
       "needsFolder": "Öffne zuerst einen Ordner: Das Board wird darin abgelegt.",
       "boardName": "Name des Boards",
       "board": "Board",
@@ -312,15 +315,15 @@
       "saving": "Wird gespeichert…",
       "remove": "Entfernen",
       "noNote": "Keine Notiz heißt „{0}“.",
-      "tool.list_boards": "Listet die Kanban-Boards (Dateien name.kanban.md) im geöffneten Ordner auf, jedes mit seinen Listen und deren Kartenzahl.",
+      "tool.list_boards": "Listet die Kanban-Boards (Dateien kanban-plugin .md) im geöffneten Ordner auf, jedes mit seinen Listen und deren Kartenzahl.",
       "tool.read_board": "Liest ein Kanban-Board: seine Listen der Reihe nach, jede mit dem Text ihrer Karten und ob sie erledigt sind. Aufgaben in gewöhnlichen Dokumenten: list_tasks.",
-      "tool.add_card": "Fügt am Ende einer Liste eines Kanban-Boards eine Karte hinzu. Nur für ein Board (name.kanban.md); eine Aufgabe in einem Dokument ist add_task.",
+      "tool.add_card": "Fügt am Ende einer Liste eines Kanban-Boards eine Karte hinzu. Nur für ein Board (kanban-plugin .md); eine Aufgabe in einem Dokument ist add_task.",
       "tool.move_card": "Verschiebt eine Karte eines Kanban-Boards in eine andere Liste oder an eine andere Stelle ihrer eigenen."
     },
     "ru": {
-      "name": "Канбан",
-      "description": "Доски с карточками в списках, сохранённые как файл Markdown (имя.kanban.md): список на каждый заголовок, карточка на каждую задачу.",
-      "new": "Новая канбан-доска…",
+      "name": "Доска задач",
+      "description": "Доски с карточками в списках, сохранённые как файл Markdown (.md с kanban-plugin во front matter, как у Kanban в Obsidian): список на каждый заголовок, карточка на каждую задачу.",
+      "new": "Новая доска задач…",
       "needsFolder": "Сначала откройте папку: доска хранится в ней.",
       "boardName": "Название доски",
       "board": "Доска",
@@ -335,15 +338,15 @@
       "saving": "Сохранение…",
       "remove": "Удалить",
       "noNote": "Нет заметки с именем «{0}».",
-      "tool.list_boards": "Перечисляет канбан-доски (файлы name.kanban.md) в открытой папке, каждую с её списками и числом карточек в них.",
+      "tool.list_boards": "Перечисляет канбан-доски (файлы kanban-plugin .md) в открытой папке, каждую с её списками и числом карточек в них.",
       "tool.read_board": "Читает канбан-доску: её списки по порядку, в каждом текст карточек и отметку, выполнены ли они. Задачи в обычных документах — list_tasks.",
-      "tool.add_card": "Добавляет карточку в конец списка на канбан-доске. Только для доски (name.kanban.md); задача в документе — add_task.",
+      "tool.add_card": "Добавляет карточку в конец списка на канбан-доске. Только для доски (kanban-plugin .md); задача в документе — add_task.",
       "tool.move_card": "Перемещает карточку на канбан-доске в другой список или на другое место в её собственном."
     },
     "pt": {
-      "name": "Kanban",
-      "description": "Quadros de cartões em listas, guardados como um arquivo Markdown (nome.kanban.md): uma lista por título, um cartão por tarefa.",
-      "new": "Novo quadro kanban…",
+      "name": "Quadro de tarefas",
+      "description": "Quadros de cartões em listas, guardados como um arquivo Markdown (um .md com kanban-plugin no front matter, como o Kanban do Obsidian): uma lista por título, um cartão por tarefa.",
+      "new": "Novo quadro de tarefas…",
       "needsFolder": "Abra uma pasta primeiro: o quadro fica guardado nela.",
       "boardName": "Nome do quadro",
       "board": "Quadro",
@@ -358,9 +361,9 @@
       "saving": "Salvando…",
       "remove": "Remover",
       "noNote": "Nenhuma nota se chama “{0}”.",
-      "tool.list_boards": "Lista os quadros Kanban (arquivos name.kanban.md) da pasta aberta, cada um com as suas listas e quantos cartões cada uma tem.",
+      "tool.list_boards": "Lista os quadros Kanban (arquivos kanban-plugin .md) da pasta aberta, cada um com as suas listas e quantos cartões cada uma tem.",
       "tool.read_board": "Lê um quadro Kanban: as listas por ordem, cada uma com o texto dos cartões e se estão feitos. Tarefas escritas em documentos comuns são list_tasks.",
-      "tool.add_card": "Adiciona um cartão ao fim de uma lista de um quadro Kanban. Só para um quadro (name.kanban.md); uma tarefa num documento é add_task.",
+      "tool.add_card": "Adiciona um cartão ao fim de uma lista de um quadro Kanban. Só para um quadro (kanban-plugin .md); uma tarefa num documento é add_task.",
       "tool.move_card": "Move um cartão de um quadro Kanban para outra lista, ou para outro lugar na sua."
     }
   }
