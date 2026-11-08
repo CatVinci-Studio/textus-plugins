@@ -1,10 +1,11 @@
 // Quick Insert: the / menu's blocks are Textus's own Format commands, run
 // straight from the manifest (`runs`), so they land before the next key;
-// here are the rest: a callout, Turn into… and emoji. Dates are Natural
-// Dates' (@today).
+// here are the rest: a callout, Turn into…, emoji after :, and dates after
+// @ (@tomorrow, @下周五), written as a date or a link to the day's note.
 
-/* global quickEmoji */
+/* global quickEmoji, naturalDates, folderConventions, dates */
 const t = (key, ...args) => textus.l10n.t(key, ...args);
+const DAY = /^(\d{4})-(\d{2})-(\d{2})$/;
 
 /** Turn into…'s blocks, as textus.insertBlock names them. */
 const BLOCKS = {
@@ -27,12 +28,69 @@ async function turnInto() {
   if (name) await textus.commands.execute("textus.insertBlock", BLOCKS[name]);
 }
 
+const dateOf = (day) => {
+  const m = DAY.exec(day);
+  return m && new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3]));
+};
+
+/** The folder's daily notes, as its app keeps them (an Obsidian vault's
+ *  folder and name format); YYYY-MM-DD names elsewhere. Asked once per
+ *  folder and its settings. */
+let dailyNotes = null;
+function daily() {
+  dailyNotes =
+    dailyNotes ||
+    (async () => {
+      const root = await textus.files.root().catch(() => null);
+      return (root && (await folderConventions.daily(root))) || { folder: "", format: "YYYY-MM-DD" };
+    })();
+  return dailyNotes;
+}
+
+/** The link to `day`'s note (YYYY-MM-DD): its name, or its path from the
+ *  folder when the name format makes folders (YYYY/MM/YYYY-MM-DD). */
+async function dayLink(day) {
+  const notes = await daily();
+  const name = dates.format(dateOf(day), notes.format, textus.env.language);
+  return "[[" + (name.includes("/") && notes.folder ? notes.folder + "/" : "") + name + "]]";
+}
+
+/** Textus AI's tool: the date a phrase names, from today or `today`. */
+function parseDate(input) {
+  const today = dateOf(String(input.today || "")) || new Date();
+  const date = naturalDates.parse(input.phrase || "", today);
+  if (date) return { phrase: String(input.phrase).trim(), date: date };
+  const words = String(input.phrase || "").trim().replace(/^@/, "").slice(0, 3);
+  return {
+    error: "Not a phrase this knows: today, tomorrow, next friday, in 3 days, 下周五, 明後日 and the like.",
+    suggestions: words ? naturalDates.suggest(words, today, 8) : [],
+  };
+}
+
+/** What a picked date writes: after "(" a reminder's @date, else the date
+ *  or, as set, a link to its note. */
+async function dateCompletions(context) {
+  const reminder = /[(（]$/.test(context.text.slice(0, -context.match.length));
+  const asLink = !reminder && (await textus.settings.get("insert")) === "link";
+  const found = naturalDates.suggest(context.match.slice(1), new Date(), 8);
+  const out = [];
+  for (const s of found)
+    out.push({
+      label: "@" + s.phrase,
+      detail: s.date,
+      insert: reminder ? "@" + s.date : asLink ? await dayLink(s.date) : s.date,
+    });
+  return out;
+}
+
 exports.activate = function (ctx) {
   const command = (name, run) =>
     textus.commands.register("catvinci.quick-insert." + name, run);
+  const forget = () => void (dailyNotes = null);
   ctx.subscriptions.push(
     command("callout", () => textus.editor.insertText("> [!NOTE]\n> ")),
     command("turnInto", turnInto),
+    textus.ai.registerTool("parse_date", parseDate),
     textus.editor.registerCompletion("catvinci.quick-insert.emoji", {
       provideCompletions(context) {
         return quickEmoji.search(context.match.slice(1), 8).map((e) => ({
@@ -41,5 +99,8 @@ exports.activate = function (ctx) {
         }));
       },
     }),
+    textus.editor.registerCompletion("catvinci.quick-insert.at", { provideCompletions: dateCompletions }),
+    textus.files.onDidChangeRoot(forget),
+    textus.files.onDidChangeConventions(forget),
   );
 };

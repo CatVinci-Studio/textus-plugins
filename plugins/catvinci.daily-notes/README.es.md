@@ -7,7 +7,7 @@ Una nota para cada día y un calendario para llegar a cualquiera de ellas.
 - Las notas se guardan en una carpeta dentro de la carpeta abierta. Su nombre y el texto con el que empieza un día nuevo se cambian en los ajustes del complemento; la semana empieza como en tu región.
 - **Complementos › Abrir el día anterior** y **Abrir el día siguiente** pasan de la nota de un día a las vecinas.
 - La plantilla admite {{weekday}}, {{yesterday}}, {{tomorrow}} y {{time}} además de {{date}}; por ejemplo, `[[{{yesterday}}]]` enlaza cada día con el anterior.
-- El texto inicial también puede ser el nombre de una plantilla de la carpeta Templates (la del complemento Plantillas), como `Daily`. En una bóveda de Obsidian se siguen sus propios ajustes de notas diarias: carpeta, formato del nombre como `YYYY/MM/YYYY-MM-DD` y plantilla; Textus nunca los cambia.
+- El texto inicial también puede ser el nombre de una plantilla de la carpeta Templates (la del complemento Plantillas), como `Daily`. En una bóveda de Obsidian se siguen sus propios ajustes de notas diarias: carpeta, formato del nombre como `YYYY/MM/YYYY-MM-DD` y plantilla; Textus nunca los cambia. Una bóveda sin ajustes de notas diarias las guarda en su raíz, como Obsidian, y ahí `{{date}}`, `{{yesterday}}` y `{{tomorrow}}` se escriben en el formato del nombre de las notas, incluidos formatos de Moment como `MMMM Do, YYYY`.
 
 <!-- ai-tools -->
 ## Herramientas para Textus AI

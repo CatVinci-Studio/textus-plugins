@@ -29,6 +29,6 @@ it("has one place to tidy text and fix Markdown: Tidy", () => {
   ]);
 });
 
-it("has one way to write today's date: Natural Dates' @today", () => {
+it("has one way to write today's date: Quick Insert's @today", () => {
   expect(titles(/today's date/i)).toEqual([]);
 });

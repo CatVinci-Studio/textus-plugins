@@ -99,3 +99,47 @@ describe("templates", () => {
     expect(notices).toHaveLength(1);
   });
 });
+
+describe("templates written for Obsidian", () => {
+  it("write {{date}} and {{time}} in the vault's Templates formats", async () => {
+    const files: Record<string, string> = {
+      ".obsidian/templates.json": '{"folder":"Tpl","dateFormat":"DD.MM.YYYY","timeFormat":"h A"}',
+      "Tpl/Day.md": "{{date}} {{time}} {{date:YYYY}}",
+    };
+    await setup(files).tools.get("create_from_template")!({ template: "Day", title: "D" });
+    expect(files["D.md"]).toMatch(/^\d{2}\.\d{2}\.\d{4} \d{1,2} [AP]M \d{4}$/);
+  });
+
+  it("fill in Templater's tags, and name the ones left as written", async () => {
+    const files: Record<string, string> = {
+      "Templates/Note.md": '# <% tp.file.title %>\nIn <% tp.file.folder(true) %>, <% tp.date.now("YYYY") %>\n<% tp.system.prompt("x") %>',
+    };
+    const made = await setup(files).tools.get("create_from_template")!({ template: "Note", title: "Idea", folder: "Inbox" });
+    expect(made.notRun).toEqual(['<% tp.system.prompt("x") %>']);
+    expect(files["Inbox/Idea.md"]).toMatch(/^# Idea\nIn Inbox, \d{4}\n<% tp\.system\.prompt\("x"\) %>$/);
+  });
+
+  it("puts the caret at tp.file.cursor() in a new document, with one notice for what wasn't run", async () => {
+    const files: Record<string, string> = {
+      "Templates/Log.md": "# <% tp.file.title %>\n\n<% tp.file.cursor() %>Entry\n<%* run() %> <% tp.web.random_picture() %> <%* run() %>",
+    };
+    const commands = new Map<string, () => Promise<void>>();
+    const notices: string[] = [];
+    const revealed: unknown[] = [];
+    loadPlugin("catvinci.templates", {
+      files: folder(files),
+      commands: { register: (id: string, run: () => Promise<void>) => (commands.set(id, run), { dispose() {} }) },
+      ui: {
+        pick: async (items: { value: string }[]) => items[0].value,
+        input: async () => "Monday",
+        notice: (text: string) => void notices.push(text),
+      },
+      layout: { open: async () => {} },
+      editor: { getText: async () => files["Monday.md"], reveal: async (place: unknown) => void revealed.push(place) },
+    });
+    await commands.get("catvinci.templates.new")!();
+    expect(files["Monday.md"]).toBe("# Monday\n\nEntry\n<%* run() %> <% tp.web.random_picture() %> <%* run() %>");
+    expect(revealed).toEqual([{ line: 2, text: "Entry" }]);
+    expect(notices).toEqual(["notRun <%* run() %>  <% tp.web.random_picture() %>"]);
+  });
+});

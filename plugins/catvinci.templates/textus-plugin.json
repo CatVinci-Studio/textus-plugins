@@ -1,7 +1,7 @@
 {
   "id": "catvinci.templates",
   "name": "%name%",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "publisher": "catvinci",
   "author": "CatVinci Studio",
   "description": "%description%",
@@ -12,7 +12,7 @@
     "textus": ">=1.3.9"
   },
   "platforms": ["desktop", "ios"],
-  "main": ["lib/folder-paths.js", "lib/dates.js", "lib/free-name.js", "lib/conventions.js", "host.js"],
+  "main": ["lib/folder-paths.js", "lib/dates.js", "templater.js", "lib/free-name.js", "lib/conventions.js", "host.js"],
   "permissions": ["files.read", "files.write", "editor.read", "editor.write", "ai.tools"],
   "contributes": {
     "commands": [
@@ -91,7 +91,7 @@
   "l10n": {
     "en": {
       "name": "Templates",
-      "description": "New documents and snippets from templates of your own, with the date, time and title filled in.",
+      "description": "New documents and snippets from templates of your own, with the date, time and title filled in, as Obsidian and Templater fill them.",
       "new": "New from Template…",
       "insert": "Insert Template…",
       "save": "Save as Template…",
@@ -106,12 +106,13 @@
       "attendees": "Attendees",
       "agenda": "Agenda",
       "actions": "Actions",
-      "tool.list_templates": "Lists the user's document templates, each with its name and its Markdown, where {{date}}, {{time}} and {{title}} are filled in when it is used.",
-      "tool.create_from_template": "Makes a new document in the open folder from one of the user's templates, its {{date}}, {{time}} and {{title}} filled in. Returns its path."
+      "tool.list_templates": "Lists the user's document templates, each with its name and its Markdown, where {{date}}, {{time}}, {{title}} and Templater's tp.date and tp.file tags are filled in when it is used.",
+      "tool.create_from_template": "Makes a new document in the open folder from one of the user's templates, its {{date}}, {{time}}, {{title}} and Templater's tp.date and tp.file tags filled in. Returns its path, and in notRun the tags left as written.",
+      "notRun": "Left as written - Templates fills in dates and the file's name, and runs nothing else: {0}"
     },
     "zh": {
       "name": "模板",
-      "description": "用自己的模板新建文档或插入片段，自动填好日期、时间和标题。",
+      "description": "用自己的模板新建文档或插入片段，自动填好日期、时间和标题，和 Obsidian、Templater 填的一样。",
       "new": "从模板新建…",
       "insert": "插入模板…",
       "save": "存为模板…",
@@ -126,12 +127,13 @@
       "attendees": "参加者",
       "agenda": "议程",
       "actions": "待办",
-      "tool.list_templates": "列出用户的文档模板，每个带名称和 Markdown 内容；使用时其中的 {{date}}、{{time}} 和 {{title}} 会被填入。",
-      "tool.create_from_template": "用用户的某个模板在打开的文件夹中新建一篇文档，并填入 {{date}}、{{time}} 和 {{title}}。返回它的路径。"
+      "tool.list_templates": "列出用户的文档模板，每个带名称和 Markdown 内容；使用时其中的 {{date}}、{{time}}、{{title}} 以及 Templater 的 tp.date、tp.file 标签会被填入。",
+      "tool.create_from_template": "用用户的某个模板在打开的文件夹中新建一篇文档，并填入 {{date}}、{{time}}、{{title}} 以及 Templater 的 tp.date、tp.file 标签。返回它的路径；notRun 列出保持原样的标签。",
+      "notRun": "以下内容保持原样——模板只填日期和文件名，不运行其他内容：{0}"
     },
     "zh-Hant": {
       "name": "範本",
-      "description": "用自己的範本新增文件或插入片段，自動填好日期、時間和標題。",
+      "description": "用自己的範本新增文件或插入片段，自動填好日期、時間和標題，和 Obsidian、Templater 填的一樣。",
       "new": "從範本新增…",
       "insert": "插入範本…",
       "save": "存為範本…",
@@ -146,12 +148,13 @@
       "attendees": "參加者",
       "agenda": "議程",
       "actions": "待辦",
-      "tool.list_templates": "列出使用者的文件範本，每個附名稱和 Markdown 內容；使用時其中的 {{date}}、{{time}} 和 {{title}} 會被填入。",
-      "tool.create_from_template": "用使用者的某個範本在開啟的資料夾中新建一份文件，並填入 {{date}}、{{time}} 和 {{title}}。回傳它的路徑。"
+      "tool.list_templates": "列出使用者的文件範本，每個附名稱和 Markdown 內容；使用時其中的 {{date}}、{{time}}、{{title}} 以及 Templater 的 tp.date、tp.file 標籤會被填入。",
+      "tool.create_from_template": "用使用者的某個範本在開啟的資料夾中新建一份文件，並填入 {{date}}、{{time}}、{{title}} 以及 Templater 的 tp.date、tp.file 標籤。回傳它的路徑；notRun 列出保持原樣的標籤。",
+      "notRun": "以下內容保持原樣——範本只填日期和檔案名稱，不執行其他內容：{0}"
     },
     "ja": {
       "name": "テンプレート",
-      "description": "自分のテンプレートから文書や断片を作ります。日付・時刻・表題は自動で入ります。",
+      "description": "自分のテンプレートから文書や断片を作ります。日付・時刻・表題は Obsidian や Templater と同じように入ります。",
       "new": "テンプレートから新規作成…",
       "insert": "テンプレートを挿入…",
       "save": "テンプレートとして保存…",
@@ -166,12 +169,13 @@
       "attendees": "出席者",
       "agenda": "議題",
       "actions": "アクション",
-      "tool.list_templates": "ユーザーの文書テンプレートを、名前と Markdown とともに一覧にします。使うときに {{date}}・{{time}}・{{title}} が埋められます。",
-      "tool.create_from_template": "ユーザーのテンプレートから、開いているフォルダに新しい文書を作り、{{date}}・{{time}}・{{title}} を埋めます。パスを返します。"
+      "tool.list_templates": "ユーザーの文書テンプレートを、名前と Markdown とともに一覧にします。使うときに {{date}}・{{time}}・{{title}} と Templater の tp.date・tp.file タグが埋められます。",
+      "tool.create_from_template": "ユーザーのテンプレートから、開いているフォルダに新しい文書を作り、{{date}}・{{time}}・{{title}} と Templater の tp.date・tp.file タグを埋めます。パスと、そのまま残したタグ（notRun）を返します。",
+      "notRun": "次はそのまま残しました。テンプレートは日付とファイル名だけを入れ、ほかは実行しません：{0}"
     },
     "ko": {
       "name": "템플릿",
-      "description": "내 템플릿으로 새 문서나 조각을 만들고, 날짜·시간·제목을 채워 넣습니다.",
+      "description": "내 템플릿으로 새 문서나 조각을 만들고, 날짜·시간·제목을 Obsidian과 Templater처럼 채워 넣습니다.",
       "new": "템플릿으로 새로 만들기…",
       "insert": "템플릿 넣기…",
       "save": "템플릿으로 저장…",
@@ -186,12 +190,13 @@
       "attendees": "참석자",
       "agenda": "안건",
       "actions": "할 일",
-      "tool.list_templates": "사용자의 문서 템플릿을 이름과 Markdown과 함께 나열합니다. 쓸 때 {{date}}, {{time}}, {{title}}이 채워집니다.",
-      "tool.create_from_template": "사용자의 템플릿으로 열린 폴더에 새 문서를 만들고 {{date}}, {{time}}, {{title}}을 채웁니다. 경로를 돌려줍니다."
+      "tool.list_templates": "사용자의 문서 템플릿을 이름과 Markdown과 함께 나열합니다. 쓸 때 {{date}}, {{time}}, {{title}}과 Templater의 tp.date, tp.file 태그가 채워집니다.",
+      "tool.create_from_template": "사용자의 템플릿으로 열린 폴더에 새 문서를 만들고 {{date}}, {{time}}, {{title}}과 Templater의 tp.date, tp.file 태그를 채웁니다. 경로와, 그대로 둔 태그(notRun)를 돌려줍니다.",
+      "notRun": "다음은 그대로 두었습니다. 템플릿은 날짜와 파일 이름만 채우고 다른 것은 실행하지 않습니다: {0}"
     },
     "es": {
       "name": "Plantillas",
-      "description": "Documentos y fragmentos nuevos a partir de tus plantillas, con fecha, hora y título rellenados.",
+      "description": "Documentos y fragmentos nuevos a partir de tus plantillas, con fecha, hora y título rellenados como lo hacen Obsidian y Templater.",
       "new": "Nuevo desde plantilla…",
       "insert": "Insertar plantilla…",
       "save": "Guardar como plantilla…",
@@ -206,12 +211,13 @@
       "attendees": "Asistentes",
       "agenda": "Orden del día",
       "actions": "Acciones",
-      "tool.list_templates": "Enumera las plantillas de documento del usuario, cada una con su nombre y su Markdown, donde {{date}}, {{time}} y {{title}} se rellenan al usarla.",
-      "tool.create_from_template": "Crea un documento nuevo en la carpeta abierta a partir de una plantilla del usuario, con {{date}}, {{time}} y {{title}} rellenados. Devuelve su ruta."
+      "tool.list_templates": "Enumera las plantillas de documento del usuario, cada una con su nombre y su Markdown, donde {{date}}, {{time}}, {{title}} y las etiquetas tp.date y tp.file de Templater se rellenan al usarla.",
+      "tool.create_from_template": "Crea un documento nuevo en la carpeta abierta a partir de una plantilla del usuario, con {{date}}, {{time}}, {{title}} y las etiquetas tp.date y tp.file de Templater rellenados. Devuelve su ruta y, en notRun, las etiquetas dejadas tal cual.",
+      "notRun": "Se dejó tal cual: Plantillas rellena fechas y el nombre del archivo, y no ejecuta nada más: {0}"
     },
     "fr": {
       "name": "Modèles",
-      "description": "De nouveaux documents et extraits à partir de vos modèles, avec la date, l’heure et le titre remplis.",
+      "description": "De nouveaux documents et extraits à partir de vos modèles, avec la date, l’heure et le titre remplis comme le font Obsidian et Templater.",
       "new": "Nouveau depuis un modèle…",
       "insert": "Insérer un modèle…",
       "save": "Enregistrer comme modèle…",
@@ -226,12 +232,13 @@
       "attendees": "Participants",
       "agenda": "Ordre du jour",
       "actions": "Actions",
-      "tool.list_templates": "Liste les modèles de document de l'utilisateur, chacun avec son nom et son Markdown, où {{date}}, {{time}} et {{title}} sont remplis à l'usage.",
-      "tool.create_from_template": "Crée un nouveau document dans le dossier ouvert à partir d'un modèle de l'utilisateur, avec {{date}}, {{time}} et {{title}} remplis. Renvoie son chemin."
+      "tool.list_templates": "Liste les modèles de document de l'utilisateur, chacun avec son nom et son Markdown, où {{date}}, {{time}}, {{title}} et les balises tp.date et tp.file de Templater sont remplis à l'usage.",
+      "tool.create_from_template": "Crée un nouveau document dans le dossier ouvert à partir d'un modèle de l'utilisateur, avec {{date}}, {{time}}, {{title}} et les balises tp.date et tp.file de Templater remplis. Renvoie son chemin et, dans notRun, les balises laissées telles quelles.",
+      "notRun": "Laissé tel quel : Modèles remplit les dates et le nom du fichier, et n’exécute rien d’autre : {0}"
     },
     "de": {
       "name": "Vorlagen",
-      "description": "Neue Dokumente und Bausteine aus eigenen Vorlagen, mit Datum, Uhrzeit und Titel ausgefüllt.",
+      "description": "Neue Dokumente und Bausteine aus eigenen Vorlagen, mit Datum, Uhrzeit und Titel so ausgefüllt wie in Obsidian und Templater.",
       "new": "Neu aus Vorlage …",
       "insert": "Vorlage einfügen …",
       "save": "Als Vorlage speichern …",
@@ -246,12 +253,13 @@
       "attendees": "Teilnehmende",
       "agenda": "Tagesordnung",
       "actions": "Aufgaben",
-      "tool.list_templates": "Listet die Dokumentvorlagen des Nutzers auf, jede mit Name und Markdown, in dem {{date}}, {{time}} und {{title}} beim Verwenden ausgefüllt werden.",
-      "tool.create_from_template": "Legt aus einer Vorlage des Nutzers ein neues Dokument im geöffneten Ordner an, mit ausgefüllten {{date}}, {{time}} und {{title}}. Gibt seinen Pfad zurück."
+      "tool.list_templates": "Listet die Dokumentvorlagen des Nutzers auf, jede mit Name und Markdown, in dem {{date}}, {{time}}, {{title}} und Templaters tp.date- und tp.file-Tags beim Verwenden ausgefüllt werden.",
+      "tool.create_from_template": "Legt aus einer Vorlage des Nutzers ein neues Dokument im geöffneten Ordner an, mit ausgefüllten {{date}}, {{time}}, {{title}} und Templaters tp.date- und tp.file-Tags. Gibt seinen Pfad zurück und in notRun die unverändert gelassenen Tags.",
+      "notRun": "Unverändert gelassen – Vorlagen füllt Daten und den Dateinamen aus und führt sonst nichts aus: {0}"
     },
     "ru": {
       "name": "Шаблоны",
-      "description": "Новые документы и фрагменты из ваших шаблонов — с датой, временем и названием.",
+      "description": "Новые документы и фрагменты из ваших шаблонов — с датой, временем и названием, как их заполняют Obsidian и Templater.",
       "new": "Создать из шаблона…",
       "insert": "Вставить шаблон…",
       "save": "Сохранить как шаблон…",
@@ -266,12 +274,13 @@
       "attendees": "Участники",
       "agenda": "Повестка",
       "actions": "Действия",
-      "tool.list_templates": "Перечисляет шаблоны документов пользователя, каждый с именем и Markdown, где {{date}}, {{time}} и {{title}} заполняются при использовании.",
-      "tool.create_from_template": "Создаёт новый документ в открытой папке по шаблону пользователя, заполняя {{date}}, {{time}} и {{title}}. Возвращает его путь."
+      "tool.list_templates": "Перечисляет шаблоны документов пользователя, каждый с именем и Markdown, где {{date}}, {{time}}, {{title}} и теги tp.date и tp.file из Templater заполняются при использовании.",
+      "tool.create_from_template": "Создаёт новый документ в открытой папке по шаблону пользователя, заполняя {{date}}, {{time}}, {{title}} и теги tp.date и tp.file из Templater. Возвращает его путь, а в notRun — теги, оставленные как есть.",
+      "notRun": "Оставлено как есть: Шаблоны подставляют только даты и имя файла и ничего не выполняют: {0}"
     },
     "pt": {
       "name": "Modelos",
-      "description": "Novos documentos e trechos a partir dos seus modelos, com data, hora e título preenchidos.",
+      "description": "Novos documentos e trechos a partir dos seus modelos, com data, hora e título preenchidos como o Obsidian e o Templater fazem.",
       "new": "Novo a partir de modelo…",
       "insert": "Inserir modelo…",
       "save": "Salvar como modelo…",
@@ -286,8 +295,9 @@
       "attendees": "Participantes",
       "agenda": "Pauta",
       "actions": "Ações",
-      "tool.list_templates": "Lista os modelos de documento do utilizador, cada um com o nome e o Markdown, onde {{date}}, {{time}} e {{title}} são preenchidos ao usá-lo.",
-      "tool.create_from_template": "Cria um novo documento na pasta aberta a partir de um modelo do utilizador, com {{date}}, {{time}} e {{title}} preenchidos. Devolve o caminho."
+      "tool.list_templates": "Lista os modelos de documento do utilizador, cada um com o nome e o Markdown, onde {{date}}, {{time}}, {{title}} e as etiquetas tp.date e tp.file do Templater são preenchidos ao usá-lo.",
+      "tool.create_from_template": "Cria um novo documento na pasta aberta a partir de um modelo do utilizador, com {{date}}, {{time}}, {{title}} e as etiquetas tp.date e tp.file do Templater preenchidos. Devolve o caminho e, em notRun, as etiquetas deixadas como estão.",
+      "notRun": "Deixado como está: Modelos preenche datas e o nome do arquivo, e não executa mais nada: {0}"
     }
   }
 }

@@ -86,6 +86,25 @@ describe("daily notes in an Obsidian vault, and from Templates", () => {
     });
   });
 
+  it("keeps a vault's notes at its top when it has no daily notes settings, as Obsidian does", async () => {
+    const files: Record<string, string> = { ".obsidian/app.json": "{}", "Templates/Daily.md": "unused" };
+    const tools = load(files, { folder: "Daily", template: "Daily" });
+    await tools.get("append_to_daily_note")!({ date: "2026-11-02", text: "Rain." });
+    expect(files["2026-11-02.md"]).toBe("Rain.\n");
+    expect(Object.keys(files).some((f) => f.startsWith("Daily/"))).toBe(false);
+  });
+
+  it("writes {{date}}, {{yesterday}} and {{tomorrow}} in the vault's name format, and reads its names back", async () => {
+    const files: Record<string, string> = {
+      ".obsidian/daily-notes.json": '{"format":"MMMM Do, YYYY","template":"Day"}',
+      "Day.md": "[[{{yesterday}}]] {{date}} [[{{tomorrow}}]] {{date+1w:YYYY-MM-DD}}",
+    };
+    const tools = load(files);
+    await tools.get("append_to_daily_note")!({ date: "2026-11-02", text: "Rain." });
+    expect(files["November 2nd, 2026.md"]).toBe("[[November 1st, 2026]] November 2nd, 2026 [[November 3rd, 2026]] 2026-11-09\n\nRain.\n");
+    expect(await tools.get("read_daily_note")!({ date: "2026-11-02" })).toMatchObject({ exists: true });
+  });
+
   it("uses a template of the Templates folder the setting names", async () => {
     const files: Record<string, string> = {
       "Templates/Daily.md": "## {{date}}\n\n- [ ] \n",

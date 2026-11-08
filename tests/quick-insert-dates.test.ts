@@ -1,6 +1,6 @@
 import { beforeAll, describe, expect, it } from "vitest";
 
-/** Natural Dates' phrases (plugins/catvinci.natural-dates/dates.js). */
+/** Quick Insert's @ dates (plugins/catvinci.quick-insert/dates.js). */
 let nd: {
   suggest: (
     typed: string,
@@ -11,7 +11,7 @@ let nd: {
 
 beforeAll(async () => {
   await import("../shared/dates.js");
-  const script = "../plugins/catvinci.natural-dates/dates.js";
+  const script = "../plugins/catvinci.quick-insert/dates.js";
   await import(/* @vite-ignore */ script);
   nd = (globalThis as unknown as { naturalDates: typeof nd }).naturalDates;
 });
@@ -21,7 +21,7 @@ const wed = new Date(2026, 9, 28);
 const date = (typed: string) =>
   nd.suggest(typed, wed).find((s) => s.phrase === typed)?.date;
 
-describe("natural dates", () => {
+describe("@ dates", () => {
   it("counts days from today", () => {
     expect(date("tomorrow")).toBe("2026-10-29");
     expect(date("后天")).toBe("2026-10-30");
