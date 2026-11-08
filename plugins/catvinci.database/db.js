@@ -13,8 +13,15 @@
    *  date and end (a calendar's), types (a property's kind, when it isn't
    *  the one its values suggest) and any number of filter lines. */
   function parseSpec(source) {
-    const spec = { from: null, view: "table", columns: null, sort: [], filters: [], group: null, date: null, end: null, types: {} };
-    for (const raw of String(source).split("\n")) {
+    const spec = { from: null, view: "table", columns: null, sort: [], filters: [], group: null, date: null, end: null, types: {}, table: [], folders: null };
+    const all = String(source).split("\n");
+    for (let i = 0; i < all.length; i++) {
+      const raw = all[i];
+      // "rows:" and the Markdown table under it: the rows with no page of their own.
+      if (raw.trim() === "rows:") {
+        spec.table = parseTable(all.slice(i + 1));
+        break;
+      }
       const line = raw.replace(/\s+#.*$/, "").trim();
       const m = /^([A-Za-z]+)\s*:\s*(.*)$/.exec(line);
       if (!m) continue;
@@ -30,6 +37,11 @@
       else if (key === "group") spec.group = value || null;
       else if (key === "date") spec.date = value || null;
       else if (key === "end") spec.end = value || null;
+      // folders: status, or folders: due:year - the rows' files kept in a subfolder per value.
+      else if (key === "folders") {
+        const [k, by] = value.split(":").map((x) => x.trim());
+        spec.folders = k ? { key: k, by: by === "year" ? "year" : "value" } : null;
+      }
       else if (key === "types")
         for (const pair of splitList(value)) {
           const [k, kind] = pair.split("=").map((x) => x.trim());
@@ -54,9 +66,78 @@
     if (spec.group) lines.push("group: " + spec.group);
     if (spec.date) lines.push("date: " + spec.date);
     if (spec.end) lines.push("end: " + spec.end);
+    if (spec.folders) lines.push("folders: " + spec.folders.key + (spec.folders.by === "year" ? ":year" : ""));
     const types = Object.entries(spec.types || {});
     if (types.length) lines.push("types: " + types.map(([k, kind]) => k + "=" + kind).join(", "));
+    if (spec.table && spec.table.length) lines.push("rows:", writeTable(spec.table));
     return lines.join("\n");
+  }
+
+  // Rows without a page of their own live in the block, a Markdown table under "rows:" -
+  // readable in any editor. Its first column is the row's name; a list is written [a, b].
+  const NAME = "Name";
+
+  function cellOf(value) {
+    if (value === null || value === undefined) return "";
+    const text = Array.isArray(value) ? "[" + value.map(String).join(", ") + "]" : String(value);
+    return text.replace(/\|/g, "\\|").replace(/\n/g, " ");
+  }
+
+  function valueOf(cell) {
+    const text = cell.replace(/\\\|/g, "|").trim();
+    if (!text) return undefined;
+    // [a, b] is a list; [text](link), one link, is not.
+    if (/^\[.*\]$/.test(text) && !/^\[[^\]]*\]\([^)]*\)$/.test(text))
+      return text.slice(1, -1).split(/,\s*/).map((x) => x.trim()).filter(Boolean);
+    if (text === "true" || text === "false") return text === "true";
+    if (/^-?\d+(\.\d+)?$/.test(text)) return Number(text);
+    return text;
+  }
+
+  /** A table's cells: split on | not escaped, the outer bars left out. */
+  function cells(line) {
+    const inner = line.trim().replace(/^\|/, "").replace(/(^|[^\\])\|$/, "$1");
+    return inner.split(/(?<!\\)\|/).map((c) => c.trim());
+  }
+
+  function parseTable(lines) {
+    const rows = lines.filter((l) => l.trim().startsWith("|"));
+    if (rows.length < 2) return [];
+    const head = cells(rows[0]);
+    return rows.slice(2).map((line) => {
+      const c = cells(line);
+      const props = {};
+      head.slice(1).forEach((key, i) => {
+        const value = valueOf(c[i + 1] || "");
+        if (key && value !== undefined) props[key] = value;
+      });
+      return { name: (c[0] || "").replace(/\\\|/g, "|"), props };
+    });
+  }
+
+  function writeTable(table) {
+    const keys = [];
+    for (const row of table) for (const k of Object.keys(row.props)) if (!keys.includes(k)) keys.push(k);
+    const line = (values) => "| " + values.join(" | ") + " |";
+    return [line([NAME].concat(keys)), line([NAME].concat(keys).map(() => "---"))]
+      .concat(table.map((row) => line([cellOf(row.name)].concat(keys.map((k) => cellOf(row.props[k]))))))
+      .join("\n");
+  }
+
+  /** The subfolder a row's file belongs in, by `folders`: its value (a year, for :year), or "" at
+   *  the database's top when it has none. */
+  function subfolderOf(spec, props) {
+    if (!spec.folders) return "";
+    const value = props[spec.folders.key];
+    const one = Array.isArray(value) ? value[0] : value;
+    if (one === undefined || one === null || one === "") return "";
+    const text = spec.folders.by === "year" ? String(one).slice(0, 4) : String(one);
+    return text.trim().replace(/[\\/:*?"<>|#^[\]]/g, "-");
+  }
+
+  /** The block's own rows as the view's rows: "#0", "#1"… for their place in the table. */
+  function tableRows(spec) {
+    return (spec.table || []).map((row, i) => ({ rel: "#" + i, name: row.name, props: row.props, inline: true }));
   }
 
   /** `spec` with property `from` called `to` wherever it names it. */
@@ -107,8 +188,16 @@
   /** The folder a block in `docRel` means by `from`: from the document's
    *  folder, from the open folder's top when it starts with "/", and the
    *  document's own sub-page folder when there is none. */
+  /** Whether `rel` is a folder unit's own page: Papers/Papers.md. */
+  function isUnitPage(rel) {
+    const dir = dirOf(rel);
+    return dir !== "" && stem(rel).slice(stem(rel).lastIndexOf("/") + 1) === dir.slice(dir.lastIndexOf("/") + 1);
+  }
+
   function folderOf(from, docRel) {
-    if (!from) return docRel ? stem(docRel) : "";
+    // Without from: a folder unit's own folder (Papers/Papers.md shows Papers/), else the
+    // folder beside the document named as it.
+    if (!from) return docRel ? (isUnitPage(docRel) ? dirOf(docRel) : stem(docRel)) : "";
     if (from.startsWith("/")) return from.replace(/^\/+|\/+$/g, "");
     const base = docRel ? dirOf(docRel) : "";
     const parts = (base ? base.split("/") : []).concat(from.replace(/\/+$/, "").split("/"));
@@ -121,9 +210,13 @@
   }
 
   /** The rows: the documents right in `folder`, each `{ rel, name, props }`. */
-  function rowsOf(docs, folder) {
+  function rowsOf(docs, folder, deep) {
+    // A folder unit's own page (Papers/Papers.md) holds the database; it isn't a row.
+    const own = folder ? folder + "/" + folder.slice(folder.lastIndexOf("/") + 1) + ".md" : null;
+    // With folders: the rows in the subfolders too, one level down.
+    const inside = (rel) => dirOf(rel) === folder || (deep && dirOf(dirOf(rel)) === folder && dirOf(rel) !== "");
     return docs
-      .filter((d) => /\.md$/i.test(d.rel) && dirOf(d.rel) === folder)
+      .filter((d) => /\.md$/i.test(d.rel) && inside(d.rel) && d.rel !== own)
       .map((d) => ({
         rel: d.rel,
         name: stem(d.rel).slice(stem(d.rel).lastIndexOf("/") + 1),
@@ -300,6 +393,8 @@
     TYPES,
     parseSpec,
     writeSpec,
+    tableRows,
+    subfolderOf,
     renameKey,
     dropKey,
     options,

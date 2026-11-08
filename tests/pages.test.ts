@@ -1,16 +1,18 @@
 import { beforeAll, describe, expect, it } from "vitest";
 
-/** Pages' tree (plugins/catvinci.pages/pages.js). */
+/** Pages' tree (plugins/catvinci.database/pages.js). */
 type Node = { name: string; rel: string | null; dir: string | null; icon: string | null; children: Node[] };
 let p: {
   tree: (docs: { rel: string; icon?: unknown }[]) => Node[];
   ancestors: (rel: string, rels: string[]) => string[];
   subpage: (parent: string, title: string) => string;
   link: (rel: string, rels: string[]) => string;
+  unitOf: (rel: string) => string | null;
+  oldUnits: (rels: string[]) => { from: string; to: string }[];
 };
 
 beforeAll(async () => {
-  const script = "../plugins/catvinci.pages/pages.js";
+  const script = "../plugins/catvinci.database/pages.js";
   await import(/* @vite-ignore */ script);
   p = (globalThis as unknown as { pages: typeof p }).pages;
 });
@@ -51,5 +53,28 @@ describe("pages", () => {
     expect(p.link("Life/Plans/Trip.md", ["Life/Plans/Trip.md", "Work/Trip.md"])).toBe(
       "[[Life/Plans/Trip|Trip]]",
     );
+  });
+
+  it("reads a folder unit - Plans/Plans.md and its sub-pages beside it - as the page and its children", () => {
+    const docs = [
+      { rel: "Plans/Plans.md", icon: "🎯" },
+      { rel: "Plans/Q1.md" },
+      { rel: "Plans/Q2/Q2.md" },
+      { rel: "Plans/Q2/April.md" },
+      { rel: "Life.md" },
+      { rel: "Life/Week1.md" },
+    ];
+    const tree = p.tree(docs);
+    expect(shape(tree)).toEqual([{ Life: ["Week1"] }, { Plans: ["Q1", { Q2: ["April"] }] }]);
+    expect(tree.find((n) => n.name === "Plans")).toMatchObject({ rel: "Plans/Plans.md", dir: "Plans", icon: "🎯" });
+    const rels = docs.map((d) => d.rel);
+    expect(p.ancestors("Plans/Q2/April.md", rels)).toEqual(["Plans/Plans.md", "Plans/Q2/Q2.md"]);
+    expect(p.ancestors("Plans/Q2/Q2.md", rels)).toEqual(["Plans/Plans.md"]);
+    // A unit's sub-page goes in its own folder; an older page's in the folder beside it.
+    expect(p.subpage("Plans/Plans.md", "Q3")).toBe("Plans/Q3.md");
+    expect(p.subpage("Life.md", "Week2")).toBe("Life/Week2.md");
+    // The older pages that have sub-pages, and where each goes as a unit.
+    expect(p.oldUnits(rels)).toEqual([{ from: "Life.md", to: "Life/Life.md" }]);
+    expect(p.unitOf("Plans/Plans.md")).toBeNull();
   });
 });

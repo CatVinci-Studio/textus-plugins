@@ -12,7 +12,8 @@ let ni: any;
 
 beforeAll(async () => {
   await import(/* @vite-ignore */ "../shared/notion-csv.js");
-  await import(/* @vite-ignore */ "../plugins/catvinci.notion-import/notion.js");
+  await import(/* @vite-ignore */ "../plugins/catvinci.database/db.js");
+  await import(/* @vite-ignore */ "../plugins/catvinci.database/notion.js");
   ni = (globalThis as unknown as { notionImport: unknown }).notionImport;
 });
 
@@ -49,10 +50,12 @@ describe("zips", () => {
 });
 
 describe("the plugin", () => {
-  it("loads with jszip before its scripts and asks only to read and write files", () => {
-    const { manifest } = loadPlugin("catvinci.notion-import");
-    expect(manifest.permissions).toEqual(["files.read", "files.write"]);
-    expect(manifest.main.slice(-3)).toEqual(["lib/jszip.min.js", "notion.js", "host.js"]);
+  it("is part of Workspace, jszip loaded before the import's scripts", () => {
+    const { manifest } = loadPlugin("catvinci.database");
+    const main: string[] = manifest.main;
+    expect(main.indexOf("lib/jszip.min.js")).toBeLessThan(main.indexOf("import-host.js"));
+    expect(main.indexOf("notion.js")).toBeLessThan(main.indexOf("import-host.js"));
+    expect(main.at(-1)).toBe("host.js");
   });
 });
 
@@ -121,9 +124,10 @@ function host(
   const messages: string[] = [];
   const opened: string[] = [];
   const picks: unknown[][] = [];
-  const t = (key: string, ...args: unknown[]) => [key, ...args].join("|");
+  // The import's strings are its own in Workspace's: "import.<key>".
+  const t = (key: string, ...args: unknown[]) => [key.replace(/^import\./, ""), ...args].join("|");
   loadPlugin(
-    "catvinci.notion-import",
+    "catvinci.database",
     {
       l10n: { t },
       files: folder.api,
@@ -150,7 +154,7 @@ function host(
     },
     memoryStorage(),
   );
-  const run = (arg?: unknown) => commands.get("catvinci.notion-import.import")!(arg);
+  const run = (arg?: unknown) => commands.get("catvinci.database.importNotion")!(arg);
   return { commands, messages, opened, picks, run };
 }
 
@@ -160,17 +164,19 @@ const targets = (folder: ReturnType<typeof disk>) => [...folder.dirs].filter((d)
 describe("the import command", () => {
   it("imports the zip it picked into a new folder, named as asked, and opens the report", async () => {
     const folder = disk({ "Inbox/Export-x.zip": await fixtureZip() });
-    const { messages, opened, picks, run } = host(folder, { installed: ["catvinci.pages"] });
+    const { messages, opened, picks, run } = host(folder, { installed: [] });
     await run();
     expect(picks[0]).toEqual([{ label: "Export-x.zip", description: "Inbox/Export-x.zip", value: "/root/Inbox/Export-x.zip" }]);
     const [target] = targets(folder);
     expect(target).toBe("folderName");
-    expect(folder.files[target + "/Home/Projects/Launch.md"]).toContain("# Launch");
+    expect(folder.files[target + "/Home/Projects/Projects.md"]).toContain("| Launch | In progress |");
     expect(folder.files[target + "/Home/logo.png"]).toBeInstanceOf(Uint8Array);
     expect(opened).toEqual(["/root/" + target + "/reportName.md"]);
     const report = String(folder.files[target + "/reportName.md"]);
-    expect(report).toContain("- **plugin.catvinci.database**: why.catvinci.database");
+    // Pages and databases are Workspace's own: the report suggests only others.
+    expect(report).toContain("- **plugin.catvinci.backlinks**: why.catvinci.backlinks");
     expect(report).not.toContain("plugin.catvinci.pages");
+    expect(report).not.toContain("plugin.catvinci.database");
     expect(messages).toEqual(["done|13|2|" + target]);
   });
 
@@ -199,7 +205,7 @@ describe("the import command", () => {
     const { messages, run } = host(folder);
     await run({ path: "/root/Imports" });
     const [target] = targets(folder);
-    expect(folder.files[target + "/Café.md"]).toBe("# Café\n\n![photo](Café/photo.png)\n");
+    expect(folder.files[target + "/Café/Café.md"]).toBe("# Café\n\n![photo](photo.png)\n");
     expect(folder.files[target + "/DB/Crème brûlée.md"]).toBe("---\nstatus: Done\n---\n# Crème brûlée\n\nSweet.\n");
     expect(Object.keys(folder.files).filter((p) => p.includes("brûlée 2"))).toEqual([]);
     expect(String(folder.files[target + "/reportName.md"])).not.toContain("missingTitle");
@@ -243,15 +249,15 @@ describe("the import command", () => {
     const offers: unknown[] = [];
     const ok = host(disk({ "Inbox/Export-x.zip": await fixtureZip() }), { offer: async (args) => (offers.push(args), true) });
     await ok.run();
-    await ok.commands.get("catvinci.notion-import.recommend")!();
-    expect(offers).toEqual([{ id: "catvinci.pages", reason: "why.catvinci.pages" }]);
+    await ok.commands.get("catvinci.database.importTips")!();
+    expect(offers).toEqual([{ id: "catvinci.backlinks", reason: "why.catvinci.backlinks" }]);
     expect(ok.messages.join("\n")).not.toContain("offerFallback");
 
     // Declined, muted or offline: Textus says no without a word.
     const no = host(disk({ "Inbox/Export-x.zip": await fixtureZip() }), { offer: async () => false });
     await no.run();
-    await no.commands.get("catvinci.notion-import.recommend")!();
-    expect(no.messages.at(-1)).toBe("offerFallback|plugin.catvinci.pages");
+    await no.commands.get("catvinci.database.importTips")!();
+    expect(no.messages.at(-1)).toBe("offerFallback|plugin.catvinci.backlinks");
 
     const old = host(disk({ "Inbox/Export-x.zip": await fixtureZip() }), {
       offer: async () => {
@@ -259,7 +265,7 @@ describe("the import command", () => {
       },
     });
     await old.run();
-    await old.commands.get("catvinci.notion-import.recommend")!();
-    expect(old.messages.at(-1)).toBe("offerFallback|plugin.catvinci.pages");
+    await old.commands.get("catvinci.database.importTips")!();
+    expect(old.messages.at(-1)).toBe("offerFallback|plugin.catvinci.backlinks");
   });
 });

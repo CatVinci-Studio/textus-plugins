@@ -38,6 +38,11 @@ describe("database", () => {
     expect(db.folderOf("/Archive", "Life/Plans.md")).toBe("Archive");
     expect(db.folderOf("../Work", "Life/Plans.md")).toBe("Work");
     expect(db.folderOf(null, "Life/2026 Calendar.md")).toBe("Life/2026 Calendar");
+    // A folder unit's own page shows its own folder, without itself as a row.
+    expect(db.folderOf(null, "Papers/Papers.md")).toBe("Papers");
+    expect(db.folderOf(".", "Papers/Papers.md")).toBe("Papers");
+    const unit = [{ rel: "Papers/Papers.md", frontmatter: {} }, { rel: "Papers/DINOv3.md", frontmatter: { year: 2025 } }];
+    expect(db.rowsOf(unit, "Papers").map((r: Row) => r.rel)).toEqual(["Papers/DINOv3.md"]);
   });
 
   it("takes the documents right in the folder as rows, with each property's kind", () => {
@@ -100,5 +105,27 @@ describe("database", () => {
       "view: table\ncolumns: area, rate\nsort: -area\nfilter: area has Work\ngroup: area\ntypes: area=tags",
     );
     expect(db.writeSpec(db.dropKey(spec, "focus"))).toBe("view: table\ncolumns: rate");
+  });
+
+  it("keeps rows with no page of their own in the block, as a Markdown table, and writes them back as they were", () => {
+    const source =
+      "view: board\ngroup: status\nrows:\n| Name | status | year | authors |\n| --- | --- | --- | --- |\n" +
+      "| Segment Anything | Completed | 2023 | [A Kirillov, E Mintun] |\n| a \\| b | Doing |  | [[Garden](Garden.md)] |\n| Link | Done |  | [Spec](Spec.md) |";
+    const spec = db.parseSpec(source);
+    expect(spec).toMatchObject({ view: "board", group: "status" });
+    expect(spec.table).toEqual([
+      { name: "Segment Anything", props: { status: "Completed", year: 2023, authors: ["A Kirillov", "E Mintun"] } },
+      { name: "a | b", props: { status: "Doing", authors: ["[Garden](Garden.md)"] } },
+      // One link is a value, not a list.
+      { name: "Link", props: { status: "Done", authors: "[Spec](Spec.md)" } },
+    ]);
+    expect(db.parseSpec(db.writeSpec(spec)).table).toEqual(spec.table);
+    expect(db.tableRows(spec).map((r: Row & { inline: boolean }) => [r.rel, r.name, r.inline])).toEqual([
+      ["#0", "Segment Anything", true],
+      ["#1", "a | b", true],
+      ["#2", "Link", true],
+    ]);
+    // No rows: no "rows:" line.
+    expect(db.writeSpec({ ...spec, table: [] })).not.toContain("rows:");
   });
 });

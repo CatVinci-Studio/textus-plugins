@@ -10,12 +10,13 @@ let ni: any;
 
 beforeAll(async () => {
   await import(/* @vite-ignore */ "../shared/notion-csv.js");
-  await import(/* @vite-ignore */ "../plugins/catvinci.notion-import/notion.js");
+  await import(/* @vite-ignore */ "../plugins/catvinci.database/db.js");
+  await import(/* @vite-ignore */ "../plugins/catvinci.database/notion.js");
   ni = (globalThis as unknown as { notionImport: unknown }).notionImport;
 });
 
 /** An import into memory: the files written (bytes as their size) and the report. */
-async function importOf(paths: string[], read: (path: string, kind: string) => Promise<unknown>, abortAfter = 0) {
+async function importOf(paths: string[], read: (path: string, kind: string) => Promise<unknown>, abortAfter = 0, byYear = false) {
   const out: Record<string, string> = {};
   const folders: string[] = [];
   const controller = new AbortController();
@@ -34,6 +35,7 @@ async function importOf(paths: string[], read: (path: string, kind: string) => P
       if (abortAfter && done >= abortAfter) controller.abort();
     },
     signal: controller.signal,
+    byYear,
   });
   return { out, folders, report };
 }
@@ -87,20 +89,20 @@ describe("names", () => {
     ]);
     expect(Object.fromEntries(layout.files)).toEqual({
       [`Notes ${id("9")}.md`]: "Notes.md",
-      [`Notes ${id("a")}.md`]: "Notes 2.md",
+      [`Notes ${id("a")}.md`]: "Notes 2/Notes 2.md",
       [`Notes ${id("a")}/pic.png`]: "Notes 2/pic.png",
-      [`Home ${H}.md`]: "Home.md",
-      [`Home ${H}/DB ${id("2")}.csv`]: "Home/DB.md",
-      [`Home ${H}/DB ${id("2")}_all.csv`]: "Home/DB.md",
+      [`Home ${H}.md`]: "Home/Home.md",
+      [`Home ${H}/DB ${id("2")}.csv`]: "Home/DB/DB.md",
+      [`Home ${H}/DB ${id("2")}_all.csv`]: "Home/DB/DB.md",
       [`Home ${H}/DB ${id("2")}/Row ${id("3")}.md`]: "Home/DB/Row.md",
       [`Home ${H}/image ${id("5")}.png`]: "Home/image.png",
       [`Home ${H}/image.png`]: "Home/image 2.png",
     });
     expect(layout.databases).toEqual([
-      { name: "DB", csv: `Home ${H}/DB ${id("2")}_all.csv`, page: "Home/DB.md", folder: "Home/DB", from: `Home ${H}/DB ${id("2")}`, intro: null, id: id("2") },
+      { name: "DB", csv: `Home ${H}/DB ${id("2")}_all.csv`, page: "Home/DB/DB.md", folder: "Home/DB", from: `Home ${H}/DB ${id("2")}`, intro: null, id: id("2") },
     ]);
     expect(layout.byId.get(id("3"))).toBe("Home/DB/Row.md");
-    expect(layout.byId.get(id("2"))).toBe("Home/DB.md");
+    expect(layout.byId.get(id("2"))).toBe("Home/DB/DB.md");
   });
 
   it("gives names that differ only by case a number too", () => {
@@ -139,17 +141,16 @@ describe("links", () => {
       `[DB](Home%20${H}/DB%20${id("2")}.csv)`,
       `[Again](<Home ${H}/Sub ${id("1")}.md#heading>)`,
     ].join("\n");
-    expect(ni.rewriteLinks(text, `Home ${H}.md`, "Home.md", layout(), (l: never) => found.push(l))).toBe(
-      ["[Sub](Home/Sub.md)", '![pic](Home/Sub/a%20b.png "A title")', "[DB](Home/DB.md)", "[Again](Home/Sub.md#heading)"].join(
-        "\n",
-      ),
+    // Home and Sub have sub-pages or files, DB is a database: folder units.
+    expect(ni.rewriteLinks(text, `Home ${H}.md`, "Home/Home.md", layout(), (l: never) => found.push(l))).toBe(
+      ["[Sub](Sub/Sub.md)", '![pic](Sub/a%20b.png "A title")', "[DB](DB/DB.md)", "[Again](Sub/Sub.md#heading)"].join("\n"),
     );
     expect(found.map((l) => l.kind)).toEqual(["page", "file", "page", "page"]);
   });
 
   it("go up from a sub-page and follow notion.so addresses the export has", () => {
     const text = `[Home](../Home%20${H}.md) [Sub](https://www.notion.so/Sub-${id("1")}?pvs=4)`;
-    expect(ni.rewriteLinks(text, `Home ${H}/Sub ${id("1")}.md`, "Home/Sub.md", layout())).toBe("[Home](../Home.md) [Sub](Sub.md)");
+    expect(ni.rewriteLinks(text, `Home ${H}/Sub ${id("1")}.md`, "Home/Sub/Sub.md", layout())).toBe("[Home](../Home.md) [Sub](Sub.md)");
   });
 
   it("leave the web, anchors, code and missing pages alone, and say which were missing", () => {
@@ -279,24 +280,21 @@ describe("the fixture's import", () => {
     const { out } = await importFixture();
     expect(Object.keys(out).sort()).toEqual(
       [
-        "Home.md",
+        "Home/Home.md",
         "Home/Meeting Template.md",
-        "Home/Projects.md",
+        "Home/Projects/Projects.md",
         "Home/Projects/Garden.md",
-        "Home/Projects/Launch.md",
         "Home/Projects/Website Redesign.md",
         "Home/Projects/Website Redesign/mockup.png",
-        "Home/Reading List.md",
+        "Home/Reading List/Reading List.md",
         "Home/Reading List/cover.png",
         "Home/Spec.pdf",
         "Home/logo.png",
         "Notes 2.md",
         "Notes.md",
-        "读书笔记.md",
+        "读书笔记/读书笔记.md",
         "读书笔记/三体.md",
-        "读书笔记/任务.md",
-        "读书笔记/任务/写读后感.md",
-        "读书笔记/任务/整理笔记.md",
+        "读书笔记/任务/任务.md",
         "读书笔记/任务/读第一章.md",
       ].sort(),
     );
@@ -306,21 +304,22 @@ describe("the fixture's import", () => {
 
   it("rewrites the home page's links, callouts and attachments", async () => {
     const { out } = await importFixture();
-    const home = out["Home.md"];
-    expect(home).toContain("> [!NOTE]\n> Welcome to the workspace.\n>\n> Read the [Reading List](Home/Reading%20List.md) first.");
+    // A folder unit now: Home/Home.md, its links from inside Home/.
+    const home = out["Home/Home.md"];
+    expect(home).toContain("> [!NOTE]\n> Welcome to the workspace.\n>\n> Read the [Reading List](Reading%20List/Reading%20List.md) first.");
     expect(home).toContain("> [!NOTE]\n> 💡 Remember to export every week.");
-    expect(home).toContain("[Projects](Home/Projects.md)");
-    expect(home).toContain("[Website Redesign](Home/Projects/Website%20Redesign.md)");
-    expect(home).toContain("![Logo](Home/logo.png)");
-    expect(home).toContain("[Spec](Home/Spec.pdf)");
+    expect(home).toContain("[Projects](Projects/Projects.md)");
+    expect(home).toContain("[Website Redesign](Projects/Website%20Redesign.md)");
+    expect(home).toContain("![Logo](logo.png)");
+    expect(home).toContain("[Spec](Spec.pdf)");
     expect(home).toContain(`[Old page](Home%20${H}/Deleted%20Page%20${id("b")}.md)`);
     expect(home).not.toContain("<aside>");
   });
 
   it("keeps code as it was in a sub-page", async () => {
     const { out } = await importFixture();
-    expect(out["Home/Reading List.md"]).toBe(
-      "# Reading List\n\nBack to [Home](../Home.md).\n\n![Cover](Reading%20List/cover.png)\n\n" +
+    expect(out["Home/Reading List/Reading List.md"]).toBe(
+      "# Reading List\n\nBack to [Home](../Home.md).\n\n![Cover](cover.png)\n\n" +
         "```md\n[raw](Keep%20" + id("1") + ".md)\n```\n\nInline code stays: `[code](Keep%20" + id("1") + ".md)`.\n",
     );
   });
@@ -330,16 +329,18 @@ describe("the fixture's import", () => {
     expect(out["Home/Projects/Website Redesign.md"]).toBe(
       "---\nstatus: In progress\ndue: 2026-01-04\ntags:\n  - Design\n  - Web\ndone: false\nbudget: 1200\n" +
         'related:\n  - "[Garden](Garden.md)"\n---\n# Website Redesign\n\n' +
-        "The new site. See [Garden](Garden.md) and the [home page](../../Home.md).\n\n![Mockup](Website%20Redesign/mockup.png)\n",
+        "The new site. See [Garden](Garden.md) and the [home page](../Home.md).\n\n![Mockup](Website%20Redesign/mockup.png)\n",
     );
     expect(out["Home/Projects/Garden.md"]).toContain("due: 2026-02-10\ndue_end: 2026-02-12\n");
-    // A row without a page of its own is made from the CSV alone.
-    expect(out["Home/Projects/Launch.md"]).toBe(
-      "---\nstatus: In progress\ndue: 2026-03-01\ntags:\n  - Web\ndone: false\nrelated:\n" +
-        '  - "[Website Redesign](Website%20Redesign.md)"\n  - "[Garden](Garden.md)"\n---\n# Launch\n',
+    // A row with nothing written in it - here, no page at all - is a line of the database's table.
+    expect(out["Home/Projects/Projects.md"]).toContain(
+      "rows:\n| Name | status | due | tags | done | related |\n| --- | --- | --- | --- | --- | --- |\n" +
+        "| Launch | In progress | 2026-03-01 | [Web] | false | [[Website Redesign](Website%20Redesign.md), [Garden](Garden.md)] |\n```",
     );
-    expect(out["Home/Projects.md"]).toContain("```database\nfrom: Projects\nview: board\ngroup: status\ndate: due\nend: due_end\n```");
-    expect(out["Home/Projects.md"].match(/```database/g)).toHaveLength(1);
+    expect(out).not.toHaveProperty("Home/Projects/Launch.md");
+    // The database is a folder unit; its block shows its own folder, no from: needed.
+    expect(out["Home/Projects/Projects.md"]).toContain("```database\nview: board\ngroup: status\ndate: due\nend: due_end\nrows:\n");
+    expect(out["Home/Projects/Projects.md"].match(/```database/g)).toHaveLength(1);
   });
 
   it("reads the Chinese database: its dates, its status and a relation", async () => {
@@ -347,19 +348,18 @@ describe("the fixture's import", () => {
     expect(out["读书笔记/任务/读第一章.md"]).toBe(
       '---\n状态: 进行中\n日期: 2026-01-04\n书:\n  - "[三体](../三体.md)"\n---\n# 读第一章\n\n先读到“科学边界”。\n',
     );
-    expect(out["读书笔记/任务/写读后感.md"]).toBe("---\n状态: 未开始\n日期: 2026-02-01\n---\n# 写读后感\n");
-    expect(out["读书笔记/任务/整理笔记.md"]).toContain("日期: 2026-03-05");
-    expect(out["读书笔记/任务.md"]).toContain("view: board\ngroup: 状态\ndate: 日期");
+    expect(out["读书笔记/任务/任务.md"]).toContain("| 写读后感 | 未开始 | 2026-02-01 |\n| 整理笔记 | 进行中 | 2026-03-05 |");
+    expect(out["读书笔记/任务/任务.md"]).toContain("view: board\ngroup: 状态\ndate: 日期");
   });
 
   it("keeps the opening Key: value lines of a page that isn't a row, and links CJK names", async () => {
     const { out } = await importFixture();
-    const page = out["读书笔记.md"];
+    const page = out["读书笔记/读书笔记.md"];
     expect(page.startsWith("# 读书笔记\n\n创建时间: 2026年1月4日\n标签: 科幻\n已读: Yes\n\n我的读书笔记。")).toBe(true);
-    expect(page).toContain("[三体](读书笔记/三体.md)");
-    expect(page).toContain("[任务](读书笔记/任务.md)");
+    expect(page).toContain("[三体](三体.md)");
+    expect(page).toContain("[任务](任务/任务.md)");
     expect(page).toContain("<details>\n<summary>折叠内容</summary>");
-    expect(out["读书笔记/三体.md"]).toContain("> [!NOTE]\n> 📌 刘慈欣著。\n\n回到[读书笔记](../读书笔记.md)。");
+    expect(out["读书笔记/三体.md"]).toContain("> [!NOTE]\n> 📌 刘慈欣著。\n\n回到[读书笔记](读书笔记.md)。");
   });
 
   it("makes each folder once, a parent before its child", async () => {
@@ -371,8 +371,8 @@ describe("the fixture's import", () => {
   it("reports the counts, the links not found and the blocks changed", async () => {
     const { report } = await importFixture();
     expect(report).toMatchObject({ pages: 7, databases: 2, rows: 6, files: 4, total: 18, done: 18, stopped: false });
-    expect(report.missing).toEqual([{ page: "Home.md", target: `Home ${H}/Deleted Page ${id("b")}.md` }]);
-    expect(report.blocks).toEqual({ callout: ["Home.md", "Home.md", "读书笔记/三体.md"], icon: ["Home.md"] });
+    expect(report.missing).toEqual([{ page: "Home/Home.md", target: `Home ${H}/Deleted Page ${id("b")}.md` }]);
+    expect(report.blocks).toEqual({ callout: ["Home/Home.md", "Home/Home.md", "读书笔记/三体.md"], icon: ["Home/Home.md"] });
     expect(report.stats).toEqual({ subpages: 3, databases: 2, links: report.stats.links, todos: 10, urls: 2, pdfs: 1, templates: 1 });
     expect(report.stats.links).toBeGreaterThan(5);
   });
@@ -382,7 +382,7 @@ describe("the fixture's import", () => {
     expect(report.failed).toEqual([{ path: `Home ${H}/Spec.pdf`, error: TOO_BIG }]);
     expect(report).toMatchObject({ done: 18, total: 18, files: 3, stopped: false });
     expect(out).not.toHaveProperty("Home/Spec.pdf");
-    expect(out["Home.md"]).toContain("[Spec](Home/Spec.pdf)");
+    expect(out["Home/Home.md"]).toContain("[Spec](Spec.pdf)");
     const t = (key: string, ...args: unknown[]) => [key, ...args].join("|");
     expect(ni.reportPage(report, [], t, { source: "x", date: "d" })).toContain(
       `## failedTitle\n\nfailedIntro\n\n- \`Home ${H}/Spec.pdf\`: ${TOO_BIG}\n`,
@@ -400,7 +400,11 @@ describe("the fixture's import", () => {
 
 describe("an export's harder cases", () => {
   const D = id("d");
-  const rowDocs = (out: Record<string, string>, dir: string) => Object.keys(out).filter((p) => p.startsWith(dir + "/")).sort();
+  // A database's rows: the documents in its folder, not its own page (DB/DB.md).
+  const rowDocs = (out: Record<string, string>, dir: string) =>
+    Object.keys(out)
+      .filter((p) => p.startsWith(dir + "/") && p !== `${dir}/${dir.split("/").pop()}.md`)
+      .sort();
 
   it("finds a row's page when Notion cut its file name or swapped / : ? in it, and gives it its whole title", async () => {
     const long = "How we migrated the billing service to the new event bus";
@@ -418,7 +422,8 @@ describe("an export's harder cases", () => {
   it("goes on when a row's page can't be read while it looks for it", async () => {
     const page = `DB ${D}/Q1 Q2  plan  ${id("2")}.md`;
     const { out, report } = await importMemory({ [`DB ${D}.csv`]: 'Name,Status\n"Q1/Q2: plan?",Doing\n', [page]: "# Q1/Q2: plan?" }, page);
-    expect(out["DB/Q1-Q2- plan-.md"]).toBe("---\nstatus: Doing\n---\n# Q1/Q2: plan?\n");
+    // Nothing could be read of it: the row is a line of the database's table, and the page a failure.
+    expect(out["DB/DB.md"]).toContain("| Q1/Q2: plan? | Doing |");
     expect(report.failed).toEqual([{ path: page, error: TOO_BIG }]);
   });
 
@@ -453,7 +458,7 @@ describe("an export's harder cases", () => {
       [`Home ${H}/notes.md`]: notes,
     });
     expect(out).toEqual({
-      "Home.md": "# Home\n\n[sales.csv](Home/sales.csv) [notes](Home/notes.md)\n",
+      "Home/Home.md": "# Home\n\n[sales.csv](sales.csv) [notes](notes.md)\n",
       "Home/sales.csv": `<${sales.length} bytes>`,
       "Home/notes.md": `<${notes.length} bytes>`,
     });
@@ -466,7 +471,7 @@ describe("an export's harder cases", () => {
       [`DB ${D}.csv`]: "Name,Status\nA,Done\n",
       [`DB ${D}/B ${id("2")}.md`]: "# B\n\nStatus: Doing\n\nA row the CSV doesn't have.",
     });
-    expect(out["Home.md"]).toBe("# Home\n\nSource: [Guide](Home/Guide.md)\n\nMore text.\n");
+    expect(out["Home/Home.md"]).toBe("# Home\n\nSource: [Guide](Guide.md)\n\nMore text.\n");
     expect(out["Home/Guide.md"]).toBe("# Guide\n\nDate: Mar 3, 2026 retro\n\nAgenda\n");
     expect(out["DB/B.md"]).toBe("---\nstatus: Doing\n---\n# B\n\nA row the CSV doesn't have.\n");
   });
@@ -478,7 +483,8 @@ describe("an export's harder cases", () => {
       [`Projects ${P}/Plan (v2) ${id("3")}.md`]: "# Plan (v2)\n\nBody",
       [`Tasks ${D}.csv`]: `Name,Project\nA,Plan (v2) (Projects%20${P}/Plan%20(v2)%20${id("3")}.md)\n`,
     });
-    expect(out["Tasks/A.md"]).toContain('project:\n  - "[Plan (v2)](../Projects/Plan%20%28v2%29.md)"');
+    // A, with nothing written in it, is a line of Tasks' table; its relation a link all the same.
+    expect(out["Tasks/Tasks.md"]).toContain("| A | [[Plan (v2)](../Projects/Plan%20%28v2%29.md)] |");
   });
 });
 
@@ -488,9 +494,8 @@ describe("suggestions and the report", () => {
 
   // Only plugins that work on what the import writes: Kanban, Reminders and Daily Notes read files of their own.
   it("suggests a plugin for each thing the export holds, in order", () => {
+    // Pages and databases are Workspace's own, the plugin this import is part of.
     expect(ni.recommend(stats).map((s: { id: string }) => s.id)).toEqual([
-      "catvinci.pages",
-      "catvinci.database",
       "catvinci.backlinks",
       "catvinci.quick-preview",
       "catvinci.tasks",
@@ -498,7 +503,7 @@ describe("suggestions and the report", () => {
       "catvinci.pdf-viewer",
       "catvinci.templates",
     ]);
-    expect(ni.recommend(stats)[0]).toEqual({ id: "catvinci.pages", why: "why.catvinci.pages" });
+    expect(ni.recommend(stats)[0]).toEqual({ id: "catvinci.backlinks", why: "why.catvinci.backlinks" });
   });
 
   it("leaves out what is installed, what the export doesn't use and a few to-dos", () => {
@@ -512,16 +517,16 @@ describe("suggestions and the report", () => {
   it("has a line for each suggestion, the missing links and the blocks", async () => {
     const { report } = await importFixture();
     const t = (key: string, ...args: unknown[]) => [key, ...args].join("|");
-    const page = ni.reportPage(report, ni.recommend(report.stats, new Set(["catvinci.pages"])), t, {
+    const page = ni.reportPage(report, ni.recommend(report.stats, new Set(["catvinci.quick-preview"])), t, {
       source: "Export.zip",
       date: "2026-11-05",
     });
     expect(page.startsWith("# reportTitle\n\nreportFrom|Export.zip|2026-11-05\n\n- countPages|7\n- countDatabases|2|6\n- countFiles|4\n")).toBe(true);
-    expect(page).toContain("## helpTitle\n\nhelpIntro\n\n- **plugin.catvinci.database**: why.catvinci.database\n");
-    expect(page).not.toContain("plugin.catvinci.pages");
-    expect(page).toContain(`## missingTitle\n\nmissingIntro\n\n- [Home](Home.md): \`Home ${H}/Deleted Page ${id("b")}.md\``);
-    expect(page).toContain("- callouts|3 ([Home](Home.md), [三体](读书笔记/三体.md))");
-    expect(page).toContain("- icons|1 ([Home](Home.md))");
+    expect(page).toContain("## helpTitle\n\nhelpIntro\n\n- **plugin.catvinci.backlinks**: why.catvinci.backlinks\n");
+    expect(page).not.toContain("plugin.catvinci.quick-preview");
+    expect(page).toContain(`## missingTitle\n\nmissingIntro\n\n- [Home](Home/Home.md): \`Home ${H}/Deleted Page ${id("b")}.md\``);
+    expect(page).toContain("- callouts|3 ([Home](Home/Home.md), [三体](读书笔记/三体.md))");
+    expect(page).toContain("- icons|1 ([Home](Home/Home.md))");
   });
 
   it("says when it was cancelled, and leaves out empty sections", () => {
@@ -532,9 +537,9 @@ describe("suggestions and the report", () => {
   });
 
   it("has every string it uses in every language", () => {
-    const manifest = JSON.parse(readFileSync(new URL("../plugins/catvinci.notion-import/textus-plugin.json", import.meta.url), "utf8"));
+    const manifest = JSON.parse(readFileSync(new URL("../plugins/catvinci.database/textus-plugin.json", import.meta.url), "utf8"));
     const en = Object.keys(manifest.l10n.en);
-    for (const s of ni.recommend(stats)) expect(en).toEqual(expect.arrayContaining([s.why, "plugin." + s.id]));
+    for (const s of ni.recommend(stats)) expect(en).toEqual(expect.arrayContaining(["import." + s.why, "import.plugin." + s.id]));
     for (const [lang, strings] of Object.entries(manifest.l10n)) expect(Object.keys(strings as object), lang).toEqual(en);
     expect(Object.keys(manifest.l10n)).toHaveLength(10);
   });
@@ -564,23 +569,25 @@ describe("Notion's newer export", () => {
   it("pairs each page with its folder, makes one database of its CSV, page and rows, and names them in full", async () => {
     const { out } = await importMemory(files);
     const names = Object.keys(out).sort();
+    // Pages with sub-pages and databases are folder units (X/X.md).
     expect(names).toEqual([
-      "Papers.md",
-      "Papers/03 2026.md",
+      "Papers/03 2026/03 2026.md",
       "Papers/03 2026/A paper on time series forecasting with exogenous variables.md",
-      "Papers/03 2026/Short.md",
       "Papers/03 2026/assets/A paper on time series forecasting with exogenous variables.png",
       "Papers/Notes (Fall).md",
-      "Papers/Notes (Spring).md",
+      "Papers/Notes (Spring)/Notes (Spring).md",
       "Papers/Notes (Spring)/Week 1.md",
+      "Papers/Papers.md",
       "attachments/slides.pptx",
     ]);
     // The database's own page: its title and words, then its views; no CSV link or filter lines.
-    expect(out["Papers/03 2026.md"]).toMatch(/^# 03\/2026\n\nOur reading list\.\n\n```database\nfrom: 03 2026\nview: board\ngroup: status\n```\n$/);
-    expect(out["Papers/03 2026.md"]).not.toMatch(/filters:|_all\.csv/);
+    expect(out["Papers/03 2026/03 2026.md"]).toMatch(/^# 03\/2026\n\nOur reading list\.\n\n```database\nview: board\ngroup: status\nrows:\n/);
+    // Short has nothing written in it: a line of the table, not a file.
+    expect(out["Papers/03 2026/03 2026.md"]).toContain("| Short | Doing | 2025 |\n```\n");
+    expect(out["Papers/03 2026/03 2026.md"]).not.toMatch(/filters:|_all\.csv/);
     // A view elsewhere: the link to the database's page, and the database shown, sorted as it was.
-    expect(out["Papers.md"]).toContain(
-      "[03/2026](Papers/03%202026.md)\n\n```database\nfrom: Papers/03 2026\nview: table\nsort: -status, year\n```\n\nAfter.",
+    expect(out["Papers/Papers.md"]).toContain(
+      "[03/2026](03%202026/03%202026.md)\n\n```database\nfrom: 03 2026\nview: table\nsort: -status, year\n```\n\nAfter.",
     );
     // A picture beside the page that shows it.
     expect(out["Papers/03 2026/A paper on time series forecasting with exogenous variables.md"]).toContain("![](assets/A%20paper%20on%20time%20series%20forecasting%20with%20exogenous%20variables.png)");
@@ -592,8 +599,29 @@ describe("Notion's newer export", () => {
       [`Child ${id("5")}.md`]: "# Child\n",
       [`Tasks ${DB}.csv`]: "Name,Status\nWrite,Doing\n",
     });
-    expect(Object.keys(out).sort()).toEqual(["Child.md", "Home.md", "Tasks.md", "Tasks/Write.md"]);
+    expect(Object.keys(out).sort()).toEqual(["Child.md", "Home.md", "Tasks/Tasks.md"]);
+    expect(out["Tasks/Tasks.md"]).toContain("| Write | Doing |");
     expect(out["Home.md"]).toContain("[Child](Child.md)");
-    expect(out["Home.md"]).toContain("[Tasks](Tasks.md)\n\n```database\nfrom: Tasks\nview: table\n```");
+    expect(out["Home.md"]).toContain("[Tasks](Tasks/Tasks.md)\n\n```database\nfrom: Tasks\nview: table\n```");
+  });
+
+  it("files a big database's pages in a folder per year when asked, and says so in its block", async () => {
+    const DBID = id("9");
+    const files: Record<string, string> = {};
+    let csv = "Name,Date\n";
+    for (let i = 0; i < 201; i++) {
+      const year = i % 2 ? 2025 : 2026;
+      csv += `Note ${i},"January ${(i % 27) + 1}, ${year}"\n`;
+      files[`Log ${DBID}/Note ${i} ${(i + 1).toString(16).padStart(32, "0")}.md`] = `# Note ${i}\n\nDate: January ${(i % 27) + 1}, ${year}\n\nWritten.`;
+    }
+    files[`Log ${DBID}.csv`] = csv;
+    const filed = await importOf(Object.keys(files), async (path) => files[path], 0, true);
+    expect(filed.out["Log/Log.md"]).toContain("folders: date:year");
+    expect(filed.out).toHaveProperty("Log/2026/Note 0.md");
+    expect(filed.out).toHaveProperty("Log/2025/Note 1.md");
+    // Not asked: the pages stay together.
+    const together = await importOf(Object.keys(files), async (path) => files[path]);
+    expect(together.out).toHaveProperty("Log/Note 0.md");
+    expect(together.out["Log/Log.md"]).not.toContain("folders:");
   });
 });
