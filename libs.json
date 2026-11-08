@@ -95,9 +95,10 @@
   "catvinci.notion-import/lib/yaml.js": "./shared/yaml.js",
   "catvinci.notion-import/lib/bases.js": "./shared/bases.js",
   "catvinci.canvas/lib/folder-paths.js": "./shared/folder-paths.js",
-  "catvinci.slides/lib/folder-paths.js": "./shared/folder-paths.js",
   "catvinci.database/lib/name-order.js": "./shared/name-order.js",
   "catvinci.templates/lib/name-order.js": "./shared/name-order.js",
   "catvinci.tags/lib/name-order.js": "./shared/name-order.js",
-  "catvinci.zotero/lib/name-order.js": "./shared/name-order.js"
+  "catvinci.graph/lib/name-order.js": "./shared/name-order.js",
+  "catvinci.zotero/lib/name-order.js": "./shared/name-order.js",
+  "catvinci.slides/lib/folder-paths.js": "./shared/folder-paths.js"
 }

@@ -142,6 +142,15 @@
     };
   }
 
+  /** Obsidian's colour groups (.obsidian/graph.json `colorGroups`) as the
+   *  panel's: the same search, a "#rrggbb" colour. */
+  function obsidianGroups(saved) {
+    const groups = saved && Array.isArray(saved.colorGroups) ? saved.colorGroups : [];
+    return groups
+      .filter((g) => g && typeof g.query === "string" && g.query.trim() && g.color && Number.isFinite(g.color.rgb))
+      .map((g) => ({ query: g.query, color: "#" + (g.color.rgb & 0xffffff).toString(16).padStart(6, "0") }));
+  }
+
   /** The part of `graph` within `depth` links of `focus`, either way. */
   function neighbourhood(graph, focus, depth) {
     const near = new Set([focus]);
@@ -171,6 +180,7 @@
     graphFromMetadata: graphFromMetadata,
     compile: compile,
     filterGraph: filterGraph,
+    obsidianGroups: obsidianGroups,
     neighbourhood: neighbourhood,
   };
 })(typeof window !== "undefined" ? window : globalThis);

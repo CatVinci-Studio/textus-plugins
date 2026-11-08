@@ -3,11 +3,12 @@
 // the graph), drawn in a tab of its own and around the document in front
 // in the sidebar. Each has a small settings panel - filters and colour
 // groups - kept in the plugin's storage; how it looks adapts by itself.
+// In an Obsidian vault, its own colour groups colour the notes too.
 // Drawn again, a moment after, whenever the folder's documents change.
 /** What activate was given: the plugin's storage and own files. */
 let ctx;
 
-/* global graphLinks, folderPaths */
+/* global graphLinks, folderPaths, nameOrder */
 let graph = null;
 let building = null;
 let stale = true;
@@ -39,6 +40,20 @@ const LOCAL_DEFAULTS = Object.assign({}, DEFAULTS, { depth: 1 });
 async function settingsOf(isLocal) {
   const saved = await ctx.storage.global.get(isLocal ? "local" : "global");
   return Object.assign({}, isLocal ? LOCAL_DEFAULTS : DEFAULTS, saved);
+}
+
+/** `settings` with the vault's own colour groups after the panel's. */
+async function withVaultGroups(settings) {
+  const root = await textus.files.root();
+  if (!root) return settings;
+  let saved;
+  try {
+    saved = JSON.parse(await textus.files.readText(folderPaths.abs(root, ".obsidian/graph.json")));
+  } catch {
+    return settings;
+  }
+  const groups = graphLinks.obsidianGroups(saved);
+  return groups.length ? Object.assign({}, settings, { groups: (settings.groups || []).concat(groups) }) : settings;
 }
 
 /** The folder's documents, each link to no file marked with the note a
@@ -83,7 +98,7 @@ async function sendGlobal(view) {
   const focus = await focusPath();
   view.postMessage({
     type: "graph",
-    graph: g && graphLinks.filterGraph(g, settings),
+    graph: g && graphLinks.filterGraph(g, await withVaultGroups(settings)),
     focus: focus,
     settings: settings,
   });
@@ -104,7 +119,7 @@ async function sendLocal() {
         : graphLinks.neighbourhood(
             graphLinks.filterGraph(
               g,
-              Object.assign({}, settings, { keep: focus }),
+              Object.assign({}, await withVaultGroups(settings), { keep: focus }),
             ),
             focus,
             Math.min(5, Math.max(1, Number(settings.depth) || 1)),
@@ -191,7 +206,7 @@ async function listNeighbours(input) {
     notes: near.nodes
       .filter((n) => n.id !== focus)
       .map((n) => ({ name: n.name, path: n.rel, kind: n.kind, distance: away.get(n.id) }))
-      .sort((a, b) => a.distance - b.distance || a.name.localeCompare(b.name)),
+      .sort((a, b) => a.distance - b.distance || nameOrder.compareNames(a.name, b.name)),
     links: near.edges.map((e) => ({ from: label.get(e.source), to: label.get(e.target), both: e.both })),
   };
 }
@@ -201,6 +216,9 @@ exports.activate = function (context) {
   textus.ai.registerTool("list_neighbours", listNeighbours);
   textus.metadata.onDidChange(changed);
   textus.files.onDidChangeRoot(changed);
+  textus.files.onDidChange(function (event) {
+    if (/[\\/]\.obsidian[\\/]graph\.json$/.test(event.path)) changed();
+  });
   textus.editor.onDidChangeActive(sendAll);
   textus.commands.register("catvinci.graph.open", function () {
     return textus.layout.openView("catvinci.graph.global");
