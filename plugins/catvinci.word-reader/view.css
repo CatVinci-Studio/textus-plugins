@@ -10,20 +10,20 @@ body {
 #bar,
 #find-bar {
   flex: none;
-  min-height: 36px;
+  min-height: var(--bar-height);
   padding: 0 var(--space-3);
   border-bottom: 1px solid var(--ui-border);
 }
 #bar .tx-input[type="number"] {
   flex: none;
-  width: 56px;
+  width: 4em;
   min-height: var(--control-height-sm);
   text-align: right;
 }
 #bar #find,
 #find-bar .tx-input {
   flex: none;
-  width: 180px;
+  width: var(--find-field-width);
   min-height: var(--control-height-sm);
 }
 #count,
@@ -56,21 +56,7 @@ body {
   box-shadow: 0 0 0 1px var(--ui-border);
   margin-bottom: var(--space-5);
 }
-#find-input {
-  flex: 1;
-  max-width: 320px;
-}
-#zoom {
-  min-width: 3.5em;
-}
 #page:empty {
   display: none;
 }
-/* A match, and the one Enter is on. */
-#pages mark.hit {
-  background: color-mix(in srgb, var(--ui-accent) 25%, transparent);
-  color: inherit;
-}
-#pages mark.hit.current {
-  background: color-mix(in srgb, var(--ui-accent) 55%, transparent);
-}
+

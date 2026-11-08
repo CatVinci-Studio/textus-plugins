@@ -21,7 +21,7 @@ canvas {
   touch-action: none;
 }
 #bar {
-  min-height: 36px;
+  min-height: var(--bar-height);
   padding: 0 var(--space-3);
   border-bottom: 1px solid var(--ui-border);
 }
@@ -66,32 +66,15 @@ canvas {
   border-top: 1px solid var(--ui-border);
 }
 #panel summary {
-  display: flex;
-  align-items: center;
-  gap: var(--space-1);
   padding: var(--space-1) var(--space-2);
   border-radius: var(--shape-s);
   color: var(--ui-muted);
   font-size: var(--text-footnote);
   font-weight: 600;
-  list-style: none;
-  cursor: pointer;
   user-select: none;
-}
-#panel summary::-webkit-details-marker {
-  display: none;
 }
 #panel summary:hover {
   background: var(--ui-hover);
-}
-#panel summary .tx-icon {
-  width: 12px;
-  height: 12px;
-  transform: rotate(-90deg);
-  transition: transform var(--dur-fast) var(--ease-standard);
-}
-#panel details[open] summary .tx-icon {
-  transform: none;
 }
 #panel label,
 #panel .group {
@@ -104,22 +87,20 @@ canvas {
 #panel label > span {
   flex: 1;
 }
-#panel input[type="range"] {
-  width: 104px;
-  padding: 0;
-  accent-color: var(--ui-accent);
-}
 #panel .tx-input {
   flex: 1;
   min-width: 0;
 }
-#panel input[type="color"] {
-  width: 24px;
-  height: 24px;
+/* A group's colour: a swatch that opens Textus's colour picker. */
+#panel .color-swatch {
+  flex: none;
+  width: var(--control-height-sm);
+  min-height: 0;
+  height: var(--control-height-sm);
   padding: 0;
-  border: none;
+  border: 1px solid var(--ui-border);
   border-radius: 50%;
-  background: none;
+  corner-shape: round;
 }
 #panel .actions {
   display: flex;

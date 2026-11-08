@@ -32,10 +32,9 @@ body {
 #month:enabled:hover {
   color: var(--ui-accent);
 }
+/* The month is Textus's calendar (tx-calendar); a week number may go
+   first in each row. */
 #grid {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  gap: 2px;
   padding: var(--space-2) var(--space-3) var(--space-3);
 }
 #grid.weeks {
@@ -54,48 +53,4 @@ body {
 }
 .week:hover {
   color: var(--ui-accent);
-}
-.weekday {
-  padding-bottom: var(--space-1);
-  color: var(--ui-muted);
-  font-size: var(--text-caption);
-  text-align: center;
-}
-.day {
-  position: relative;
-  aspect-ratio: 1;
-  min-height: 0;
-  padding: 0;
-  border: none;
-  border-radius: 50%;
-  background: transparent;
-  color: var(--ui-text);
-  font: inherit;
-  font-size: var(--text-footnote);
-  cursor: pointer;
-}
-.day:hover {
-  background: var(--ui-hover);
-}
-.day.outside {
-  color: var(--ui-muted);
-}
-.day.today {
-  background: var(--ui-accent-fill, var(--ui-accent));
-  color: var(--ui-on-fill, var(--ui-bg));
-  font-weight: 600;
-}
-.day.has-note::after {
-  content: "";
-  position: absolute;
-  bottom: 12%;
-  left: 50%;
-  width: 4px;
-  height: 4px;
-  margin-left: -2px;
-  border-radius: 50%;
-  background: var(--ui-accent);
-}
-.day.today.has-note::after {
-  background: var(--ui-on-fill, var(--ui-bg));
 }

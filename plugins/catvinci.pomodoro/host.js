@@ -72,7 +72,7 @@ function page() {
   return `<!doctype html><html><head><style>
   body { margin: 0; height: 100vh; display: grid; place-items: center; overflow: hidden; user-select: none;
     -webkit-user-select: none; font-family: var(--font-sans); color: var(--ui-text); }
-  button { all: unset; position: relative; width: 112px; height: 112px; border-radius: 50%; cursor: pointer;
+  button { all: unset; position: relative; width: min(100vw, 100vh); height: min(100vw, 100vh); border-radius: 50%; cursor: pointer;
     display: grid; place-items: center; background: var(--ui-surface); box-shadow: var(--shadow-popover); }
   button:focus-visible { outline: 2px solid var(--ui-accent); outline-offset: 2px; }
   svg { position: absolute; inset: 0; transform: rotate(-90deg); }

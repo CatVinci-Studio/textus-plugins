@@ -85,8 +85,8 @@
     if (type === "select") return tag(value, key, isStatus(key));
     if (type === "number" && isRating(key))
       return starsFit(key)
-        ? el("span", { class: "stars" }, "★".repeat(Math.round(value)) + "☆".repeat(5 - Math.round(value)))
-        : el("span", { class: "stars" }, "★ ", el("span", { class: "rating-number" }, String(value)));
+        ? el("span", { class: "tx-rating" }, "★".repeat(Math.round(value)) + "☆".repeat(5 - Math.round(value)))
+        : el("span", { class: "tx-rating" }, "★ ", el("span", { class: "tx-value" }, String(value)));
     if (type === "url") return el("a", { href: value, target: "_blank", onclick: (e) => e.stopPropagation() }, String(value));
     return String(value);
   }
@@ -135,8 +135,8 @@
     $("rules").append(holder);
     const input =
       type === "date"
-        ? dateInput({ class: "cell-input", "aria-label": s("value") })
-        : el("input", { type: type === "number" ? "number" : "text", class: "cell-input", "aria-label": s("value") });
+        ? dateInput({ class: "tx-inline-input cell-input", "aria-label": s("value") })
+        : el("input", { type: type === "number" ? "number" : "text", class: "tx-inline-input cell-input", "aria-label": s("value") });
     holder.append(input);
     editing = true;
     let done = false;
@@ -411,7 +411,7 @@
 
   function editInline(td, value, kind, commit) {
     const text = value === undefined || value === null ? "" : String(value);
-    const input = kind === "date" ? dateInput({ class: "cell-input", value: text }) : el("input", { type: kind, class: "cell-input", value: text });
+    const input = kind === "date" ? dateInput({ class: "tx-inline-input cell-input", value: text }) : el("input", { type: kind, class: "tx-inline-input cell-input", value: text });
     let done = false;
     editing = true;
     const finish = (keep) => {
@@ -489,10 +489,10 @@
     if (!key) return el("div", { class: "tx-empty" }, s("noGroup"));
     const byRel = new Map(data.rows.map((r) => [r.rel, r]));
     const lanes = data.groups.map((g) => {
-      const head = el("div", { class: "lane-head", title: s("dragLane") },
+      const head = el("div", { class: "tx-lane-head lane-head", title: s("dragLane") },
         g.value ? tag(g.value, key, isStatus(key)) : el("span", { class: "tx-tag" }, s("noValue")),
         el("span", { class: "count" }, String(g.rels.length)));
-      const lane = el("div", { class: "lane", "data-value": g.value },
+      const lane = el("div", { class: "tx-lane lane", "data-value": g.value },
         head,
         capped(g.rels).map((rel) => card(byRel.get(rel), key, g.value)),
         moreMark(g.rels.length),
@@ -514,7 +514,7 @@
         }));
       return lane;
     });
-    return el("div", { class: "board" }, lanes);
+    return el("div", { class: "tx-board board" }, lanes);
   }
 
   function groupProps(key, value) {

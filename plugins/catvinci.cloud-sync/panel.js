@@ -166,11 +166,8 @@
     element("cancel").hidden = !busy;
     const progress = element("progress");
     progress.hidden = !busy;
-    if (m.progress == null) progress.removeAttribute("value");
-    else {
-      progress.max = 1;
-      progress.value = m.progress;
-    }
+    progress.classList.toggle("is-indeterminate", m.progress == null);
+    progress.style.setProperty("--value", String(m.progress ?? 0));
     element("credentials-state").textContent = api.t(
       configured ? "credentialsSaved" : "credentialsMissing"
     );

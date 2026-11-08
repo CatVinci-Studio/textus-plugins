@@ -15,6 +15,7 @@ No pide permisos: Textus le pasa el PDF que abres.
 
 ## Cambios
 
+- **0.2.2** - Sus barras, listas y controles son ahora los de Textus, crecen con la interfaz y siguen cada tema; necesita Textus 1.3.12.
 - **0.2.1** - Su página dice ahora en una frase qué hace, qué puede hacer y qué cambió en cada versión.
 - **0.2.0** - Controles propios de Textus. Requiere Textus 1.3.2.
 - **0.1.3** - El aspecto de Textus 1.3; los botones siguen el idioma de la interfaz cuando cambia.

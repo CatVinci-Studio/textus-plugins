@@ -28,6 +28,7 @@ Läuft auf dem Desktop.
 
 ## Änderungen
 
+- **0.5.1** - Leisten, Listen und Steuerelemente sind jetzt die von Textus, wachsen mit der Oberfläche und folgen jedem Theme; braucht Textus 1.3.12.
 - **0.5.0** - Datumsangaben und die Vorlage der Tagesnotiz füllt Textus selbst aus, wie bei Kalender und Tagesnotizen und bei Vorlagen. Benötigt Textus 1.3.10.
 - **0.4.0** - Notizen stehen in einem Dokument des Ordners: `Inbox.md` oder der heutigen Tagesnotiz. Notizen älterer Versionen wandern einmal dorthin.
 - **0.3.1** - Textus AI unterscheidet Schnellnotizen vom Tagebuch und von Aufgaben.

@@ -25,6 +25,7 @@ In an Obsidian vault, the colour groups saved in Obsidian's `graph.json` colour 
 
 ## Changes
 
+- **0.5.3** - Its bars, lists and controls are Textus's own, grow with the interface and follow every theme; needs Textus 1.3.12.
 - **0.5.2** - Obsidian's colour groups come from the nearest vault, even one above the open folder. Needs Textus 1.3.10.
 - **0.5.1** - In an Obsidian vault, the colour groups in `.obsidian/graph.json` colour the notes too.
 - **0.5.0** - [[Links]] are matched to notes the same way Textus matches them when you click one.

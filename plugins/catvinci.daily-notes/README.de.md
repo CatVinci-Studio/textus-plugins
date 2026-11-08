@@ -23,6 +23,7 @@ Das Plugin liest und schreibt Dateien im geöffneten Ordner, um die Notizen zu f
 
 ## Änderungen
 
+- **0.7.1** - Leisten, Listen und Steuerelemente sind jetzt die von Textus, wachsen mit der Oberfläche und folgen jedem Theme; braucht Textus 1.3.12.
 - **0.7.0** - Daten und Vorlagen füllt Textus selbst aus, genauso wie im Vorlagen-Plugin; braucht Textus 1.3.10.
 - **0.6.0** - Wochen- und Monatsnotizen mit eigenen Einstellungen, Wochennummern und Monatsname im Kalender und den Periodic-Notes-Einstellungen eines Vaults.
 - **0.5.0** - Ein Vault ohne Einstellungen für Tagesnotizen legt sie ganz oben ab; `{{date}}`, `{{yesterday}}` und `{{tomorrow}}` folgen dem Namensformat, auch `MMMM Do, YYYY`.

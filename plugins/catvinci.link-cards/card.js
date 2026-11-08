@@ -30,7 +30,7 @@
       box.append(frame);
       return root.replaceChildren(box);
     }
-    const link = el("button", "link");
+    const link = el("button", "tx-card link");
     link.type = "button";
     const text = el("div", "text");
     text.append(el("div", "title", card.title || card.url || ""));

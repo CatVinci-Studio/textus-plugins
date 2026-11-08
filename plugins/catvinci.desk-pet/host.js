@@ -131,13 +131,12 @@ function page(character) {
   .stage.turned img { scale: -1 1; }
   .stage.end img { left: auto; right: 0; }
   .bubble { position: absolute; top: 0; left: 50%; max-width: 92%; transform: translateX(-50%);
-    padding: var(--space-1) var(--space-2); border: 1px solid var(--ui-border); border-radius: var(--shape-m);
-    background: var(--ui-surface); color: var(--ui-text); font-size: var(--text-secondary); line-height: 1.4; text-align: center;
-    opacity: 0; transition: opacity var(--dur-normal, 0.2s) var(--ease-standard); pointer-events: none; }
+    line-height: 1.4; text-align: center;
+    opacity: 0; transition: opacity var(--dur-base) var(--ease-standard); pointer-events: none; }
   .bubble.on { opacity: 1; }
   @media (prefers-reduced-motion: reduce) { img.on, img.hop { animation: none; } }
 </style></head><body>
-<div class="stage">${imgs}</div><div class="bubble" id="bubble"></div>
+<div class="stage">${imgs}</div><div class="tx-bubble bubble" id="bubble"></div>
 <script>
   const api = acquireTextusApi();
   const bubble = document.getElementById("bubble");

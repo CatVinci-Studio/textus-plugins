@@ -45,7 +45,7 @@
   let hits = [];
   let current = -1;
   function clearHits() {
-    for (const mark of pages.querySelectorAll("mark.hit")) {
+    for (const mark of pages.querySelectorAll("mark.tx-hit")) {
       mark.replaceWith(document.createTextNode(mark.textContent));
     }
     pages.normalize();
@@ -73,7 +73,7 @@
           const match = rest.splitText(at);
           rest = match.splitText(q.length);
           const mark = document.createElement("mark");
-          mark.className = "hit";
+          mark.className = "tx-hit";
           mark.textContent = match.nodeValue;
           match.replaceWith(mark);
           hits.push(mark);
@@ -91,9 +91,9 @@
   }
   function step(by) {
     if (!hits.length) return;
-    hits[current]?.classList.remove("current");
+    hits[current]?.classList.remove("is-current");
     current = (current + by + hits.length) % hits.length;
-    hits[current].classList.add("current");
+    hits[current].classList.add("is-current");
     hits[current].scrollIntoView({ block: "center" });
     $("find-count").textContent = t("findCount", current + 1, hits.length);
   }

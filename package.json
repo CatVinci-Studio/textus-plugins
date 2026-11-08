@@ -7,7 +7,7 @@
   "type": "module",
   "scripts": {
     "build": "node scripts/build.mjs",
-    "check": "npm run typecheck:cloud-sync && node scripts/cloud-sync.mjs --check && node scripts/build.mjs --check && node scripts/readme-tools.mjs --check && node scripts/plugin-table.mjs --check && vitest run",
+    "check": "node scripts/check-ui.mjs && npm run typecheck:cloud-sync && node scripts/cloud-sync.mjs --check && node scripts/build.mjs --check && node scripts/readme-tools.mjs --check && node scripts/plugin-table.mjs --check && vitest run",
     "vendor": "node scripts/vendor.mjs",
     "typecheck:cloud-sync": "tsc --noEmit -p development/cloud-sync/tsconfig.json",
     "build:cloud-sync": "node scripts/cloud-sync.mjs",

@@ -46,6 +46,7 @@ The plugin reads the folder's documents to find their tasks, and writes to a doc
 
 ## Changes
 
+- **0.4.1** - Its bars, lists and controls are Textus's own, grow with the interface and follow every theme; needs Textus 1.3.12.
 - **0.4.0** - Uses the dates built into Textus 1.3.10, which it now needs.
 - **0.3.1** - Ships the updated shared date code; nothing else changed.
 - **0.3.0** - Obsidian Tasks: `[/]` and `[-]`, the task fields, done dates, repeating tasks and `tasks` query blocks; boards marked with `kanban-plugin` are left out of the list.

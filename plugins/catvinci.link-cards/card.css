@@ -10,12 +10,9 @@ body {
 .link {
   display: flex;
   width: 100%;
-  min-height: 96px;
+  min-height: 6em;
   padding: 0;
   overflow: hidden;
-  border: 1px solid var(--ui-border);
-  border-radius: var(--shape-m);
-  background: var(--ui-bg);
   color: inherit;
   font: inherit;
   text-align: left;
@@ -36,7 +33,7 @@ body {
   white-space: nowrap;
 }
 .description {
-  margin-top: 4px;
+  margin-top: var(--space-1);
   color: var(--ui-muted);
   font-size: var(--text-footnote);
   display: -webkit-box;
@@ -48,7 +45,7 @@ body {
   display: flex;
   align-items: center;
   gap: var(--space-1);
-  margin-top: 8px;
+  margin-top: var(--space-2);
   color: var(--ui-muted);
   font-size: var(--text-caption);
 }
@@ -60,7 +57,7 @@ body {
 .picture {
   flex: none;
   width: 30%;
-  max-width: 220px;
+  max-width: 14em;
   background: var(--ui-subtle) center / cover no-repeat;
 }
 .video {

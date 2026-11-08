@@ -29,20 +29,12 @@ body {
 #notes > li {
   padding: var(--space-3) var(--space-3) var(--space-1);
 }
+/* A note is written where it is shown (tx-inline-input). */
 #notes textarea {
   display: block;
-  width: 100%;
   min-height: 3.6em;
-  padding: 0;
-  border: none;
-  background: transparent;
-  color: var(--ui-text);
-  font: inherit;
   line-height: 1.5;
   resize: vertical;
-}
-#notes textarea:focus {
-  outline: none;
 }
 .note-foot {
   display: flex;
@@ -54,34 +46,4 @@ body {
   color: var(--ui-muted);
   font-size: var(--text-caption);
   white-space: nowrap;
-}
-/* Deleted, with Undo, at the foot of the panel for a few seconds. */
-.undo-bar {
-  position: fixed;
-  right: var(--space-3);
-  bottom: var(--space-3);
-  left: var(--space-3);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--space-2);
-  padding: var(--space-2) var(--space-3);
-  border-radius: var(--shape-m);
-  background: var(--ui-primary);
-  color: var(--ui-on-primary);
-  font-size: var(--text-footnote);
-  --enter-y: var(--motion-distance-sm, 6px);
-  animation: motion-enter var(--dur-base) var(--ease-out) backwards;
-}
-.undo-bar[hidden] {
-  display: none;
-}
-.undo-bar button {
-  padding: 0;
-  border: none;
-  background: none;
-  color: inherit;
-  font: inherit;
-  font-weight: 600;
-  text-decoration: underline;
 }

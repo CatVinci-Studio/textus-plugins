@@ -11,7 +11,7 @@
         <h1 data-t="name"></h1>
         <p class="muted" data-t="intro"></p>
       </header>
-      <section class="card sync-status" aria-label="Sync status">
+      <section class="tx-card sync-status" aria-label="Sync status">
         <div class="status-row">
           <div class="status-text">
             <p
@@ -23,38 +23,41 @@
             <p id="last-run" class="muted small" hidden></p>
           </div>
           <div class="actions">
-            <button type="button" id="cancel" data-t="cancel" hidden></button>
+            <button type="button" class="tx-button" id="cancel" data-t="cancel" hidden></button>
             <button
               type="button"
-              class="primary"
+              class="tx-button primary"
               id="sync"
               data-t="sync"
               disabled
             ></button>
           </div>
         </div>
-        <progress id="progress" hidden></progress>
+        <div id="progress" class="tx-progress" role="progressbar" hidden></div>
         <div id="results"></div>
       </section>
       <form id="connection" autocomplete="off">
         <fieldset id="fields" disabled>
           <h2 data-t="connectionTitle"></h2>
-          <div class="card">
-            <div class="segmented" role="radiogroup" id="provider-tabs">
+          <div class="tx-card">
+            <div class="tx-segmented" role="radiogroup" id="provider-tabs">
               <button
                 type="button"
+                class="tx-segment"
                 role="radio"
                 data-provider="s3"
                 data-t="s3"
               ></button>
               <button
                 type="button"
+                class="tx-segment"
                 role="radio"
                 data-provider="webdav"
                 data-t="webdav"
               ></button>
               <button
                 type="button"
+                class="tx-segment"
                 role="radio"
                 data-provider="nutstore"
                 data-t="nutstore"
@@ -99,7 +102,7 @@
               />
               <p id="prefix-help" class="hint" data-t="prefixHelp"></p>
             </div>
-            <details id="s3-more">
+            <details id="s3-more" class="tx-disclosure">
               <summary data-t="moreOptions"></summary>
               <div class="columns">
                 <div class="field">
@@ -116,14 +119,14 @@
                 </div>
               </div>
               <label class="check"
-                ><input id="pathStyle" type="checkbox" /><span
+                ><input id="pathStyle" type="checkbox" class="ui-check" /><span
                   data-t="pathStyle"
                 ></span
               ></label>
             </details>
           </div>
           <h2 data-t="encryptionTitle"></h2>
-          <div class="card">
+          <div class="tx-card">
             <p class="hint" id="encryption-help" data-t="encryptionHelp"></p>
             <div class="columns">
               <div class="field">
@@ -149,10 +152,10 @@
             </div>
             <p class="hint" data-t="passwordRecovery"></p>
           </div>
-          <div class="card switch-row">
+          <div class="tx-card switch-row">
             <label class="switch"
               ><span data-t="automatic"></span
-              ><input id="automatic" type="checkbox" role="switch"
+              ><input id="automatic" type="checkbox" role="switch" class="tx-switch"
             /></label>
             <div class="field inline" id="interval-field">
               <label for="interval" data-t="interval"></label
@@ -168,20 +171,20 @@
           </div>
           <p id="credentials-state" class="hint"></p>
           <div class="actions">
-            <button type="button" id="test" data-t="test" disabled></button
+            <button type="button" class="tx-button" id="test" data-t="test" disabled></button
             ><button
               type="button"
-              class="primary"
+              class="tx-button primary"
               id="save"
               data-t="save"
             ></button>
           </div>
         </fieldset>
       </form>
-      <details class="trouble">
+      <details class="trouble tx-disclosure">
         <summary data-t="advanced"></summary>
         <p class="hint" data-t="unlockHelp"></p>
-        <button type="button" id="unlock" data-t="unlock" disabled></button>
+        <button type="button" class="tx-button" id="unlock" data-t="unlock" disabled></button>
       </details>
     </main>
     <script src="textus-resource:panel.js"></script>

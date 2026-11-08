@@ -16,6 +16,7 @@
 
 ## 更新紀錄
 
+- **0.3.3** - Its bars, lists and controls are Textus's own, grow with the interface and follow every theme; needs Textus 1.3.12.
 - **0.3.2** - 介紹頁重寫：一句話說明它做什麼，再講它能做的事，並列出每個版本的更新。
 - **0.3.1** - 只更新了與其他外掛共用的路徑程式碼，使用上沒有變化。
 - **0.3.0** - Textus AI 可以列出文件的版本並比較（`list_versions`、`diff_versions`）。

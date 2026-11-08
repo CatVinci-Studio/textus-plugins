@@ -46,6 +46,7 @@ sort by due
 
 ## 更新紀錄
 
+- **0.4.1** - Its bars, lists and controls are Textus's own, grow with the interface and follow every theme; needs Textus 1.3.12.
 - **0.4.0** - 使用 Textus 1.3.10 內建的日期功能，因此需要 Textus 1.3.10。
 - **0.3.1** - 打包更新後的共用日期程式碼，其他沒有變動。
 - **0.3.0** - 支援 Obsidian Tasks：`[/]` 和 `[-]`、任務欄位、完成日期、重複任務和 `tasks` 查詢區塊；開頭屬性標了 `kanban-plugin` 的看板不列入清單。

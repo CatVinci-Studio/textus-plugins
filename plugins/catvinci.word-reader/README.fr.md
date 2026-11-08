@@ -13,6 +13,7 @@ Le plugin ne demande aucune permission : il lit seulement le fichier que vous ou
 
 ## Changements
 
+- **0.2.2** - Ses barres, listes et contrôles sont désormais ceux de Textus, grandissent avec l’interface et suivent chaque thème ; nécessite Textus 1.3.12.
 - **0.2.1** - Sa page dit maintenant en une phrase ce qu'il fait, ce qu'il permet et ce qui a changé à chaque version.
 - **0.2.0** - Dessiné avec les contrôles de Textus et les tons du thème ; l’onglet suit la langue de l’interface quand elle change. Nécessite Textus 1.3.2.
 - **0.1.3** - Utilise les variables de design de Textus 1.3.

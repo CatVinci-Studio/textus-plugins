@@ -28,6 +28,7 @@ Runs on the desktop.
 
 ## Changes
 
+- **0.5.1** - Its bars, lists and controls are Textus's own, grow with the interface and follow every theme; needs Textus 1.3.12.
 - **0.5.0** - Dates and the daily note's template are filled by Textus itself, the same way as in Calendar & Daily Notes and Templates. Needs Textus 1.3.10.
 - **0.4.0** - Notes are kept in a document of the folder: `Inbox.md` or today's daily note. Notes from older versions move in once.
 - **0.3.1** - Textus AI tells quick notes apart from the daily journal and to-dos.

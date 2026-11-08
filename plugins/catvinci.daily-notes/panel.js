@@ -43,7 +43,7 @@
     for (let i = 0; i < 7; i++) {
       const day = new Date(2024, 0, 7 + first + i); // 2024-01-07 is a Sunday
       const cell = document.createElement("div");
-      cell.className = "weekday";
+      cell.className = "tx-calendar-weekday";
       cell.textContent = day.toLocaleDateString(api.language, {
         weekday: "narrow",
       });
@@ -62,10 +62,10 @@
       if (week && i % 7 === 0) grid.append(weekButton(day));
       const date = dateOf(day);
       const button = document.createElement("button");
-      button.className = "day";
-      if (day.getMonth() !== shown.getMonth()) button.classList.add("outside");
-      if (date === today) button.classList.add("today");
-      if (noted.has(date)) button.classList.add("has-note");
+      button.className = "tx-calendar-day";
+      if (day.getMonth() !== shown.getMonth()) button.classList.add("is-other");
+      if (date === today) button.classList.add("is-today");
+      if (noted.has(date)) button.classList.add("is-marked");
       button.textContent = String(day.getDate());
       button.dataset.date = date;
       button.setAttribute(

@@ -25,6 +25,7 @@ En una bóveda de Obsidian, los grupos de color guardados en el `graph.json` de 
 
 ## Cambios
 
+- **0.5.3** - Sus barras, listas y controles son ahora los de Textus, crecen con la interfaz y siguen cada tema; necesita Textus 1.3.12.
 - **0.5.2** - Los grupos de color de Obsidian se leen de la bóveda más cercana, aunque esté por encima de la carpeta abierta. Requiere Textus 1.3.10.
 - **0.5.1** - En una bóveda de Obsidian, los grupos de color de `.obsidian/graph.json` también colorean las notas.
 - **0.5.0** - Los [[enlaces]] se asocian a las notas igual que cuando haces clic en uno en Textus.

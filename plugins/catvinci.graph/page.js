@@ -47,8 +47,7 @@
   const TONES = ["blue", "green", "orange", "purple", "red", "teal", "yellow", "pink"];
   const ink = document.createElement("canvas").getContext("2d");
   const toneHex = (name) => {
-    ink.fillStyle = "#808080";
-    ink.fillStyle = getComputedStyle(document.documentElement).getPropertyValue("--tone-" + name).trim() || "#808080";
+    ink.fillStyle = getComputedStyle(document.documentElement).getPropertyValue("--tone-" + name).trim();
     return ink.fillStyle;
   };
 
@@ -93,13 +92,14 @@
       return el("label", {}, [input]);
     }
     if (kind === "toggle") {
-      const input = el("input", { type: "checkbox", className: "ui-check", checked: !!settings[key] });
+      const input = el("input", { type: "checkbox", className: "tx-switch", role: "switch", checked: !!settings[key] });
       input.addEventListener("change", () => change(key, input.checked));
       return el("label", {}, [el("span", { textContent: label }), input]);
     }
     const [min, max, step] = range;
     const input = el("input", {
       type: "range",
+      className: "tx-slider",
       min: String(min),
       max: String(max),
       step: String(step),
@@ -113,8 +113,11 @@
 
   function groupRows() {
     const rows = settings.groups.map((group, i) => {
-      const color = el("input", { type: "color", value: group.color });
+      // Its colour, picked in Textus's colour picker (textus.ui.pickColor).
+      const color = el("button", { type: "button", className: "color-swatch" });
+      color.style.background = group.color;
       color.setAttribute("aria-label", t("set.color"));
+      color.onclick = () => api.postMessage({ type: "pickColor", index: i, value: group.color });
       const query = el("input", {
         type: "text",
         className: "tx-input",
@@ -131,7 +134,6 @@
           "groups",
           settings.groups.map((g, j) => (j === i ? Object.assign({}, g, patch) : g)),
         );
-      color.addEventListener("input", () => update({ color: color.value }));
       query.addEventListener("input", () => update({ query: query.value }));
       remove.onclick = () => {
         change(
@@ -160,11 +162,8 @@
 
   function render() {
     const sections = SECTIONS.map(([name, rows]) => {
-      const details = el("details", { open: open.has(name) }, [
-        el("summary", {}, [
-          icon("chevron"),
-          el("span", { textContent: t("set." + name) }),
-        ]),
+      const details = el("details", { className: "tx-disclosure", open: open.has(name) }, [
+        el("summary", {}, [el("span", { textContent: t("set." + name) })]),
       ]);
       details.addEventListener("toggle", () =>
         details.open ? open.add(name) : open.delete(name),
@@ -199,6 +198,13 @@
 
   let first = true;
   api.onMessage((message) => {
+    if (message.type === "color") {
+      change(
+        "groups",
+        settings.groups.map((g, j) => (j === message.index ? Object.assign({}, g, { color: message.hex }) : g)),
+      );
+      return render();
+    }
     if (message.type !== "graph") return;
     const graph = message.graph;
     // While the panel is being typed in, what it holds is newer.

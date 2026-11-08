@@ -35,13 +35,13 @@
 
     function readColors() {
       colors = {
-        bg: cssVar("--ui-bg", "#fff"),
-        text: cssVar("--ui-text", "#24272e"),
-        muted: cssVar("--ui-muted", "#646b77"),
-        line: cssVar("--ui-border", "#e1e4ea"),
-        accent: cssVar("--ui-accent", "#315ed1"),
-        tag: cssVar("--tone-green", "#3f8f6a"),
-        node: cssVar("--ui-text", "#505866"),
+        bg: cssVar("--ui-bg"),
+        text: cssVar("--ui-text"),
+        muted: cssVar("--ui-muted"),
+        line: cssVar("--ui-border"),
+        accent: cssVar("--ui-accent"),
+        tag: cssVar("--tone-green"),
+        node: cssVar("--ui-text"),
         font: cssVar("--font-sans", "sans-serif"),
       };
     }

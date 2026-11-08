@@ -13,6 +13,7 @@ O plugin não pede permissões: só lê o arquivo que você abre com ele. Funcio
 
 ## Alterações
 
+- **0.2.2** - Suas barras, listas e controles agora são os do Textus, crescem com a interface e seguem cada tema; requer Textus 1.3.12.
 - **0.2.1** - Sua página agora diz numa frase o que ele faz, o que pode fazer e o que mudou em cada versão.
 - **0.2.0** - Desenhado com os controles do próprio Textus e os tons do tema; a aba acompanha o idioma da interface quando ele muda. Requer Textus 1.3.2.
 - **0.1.3** - Usa as variáveis de design do Textus 1.3.

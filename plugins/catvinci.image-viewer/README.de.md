@@ -19,6 +19,7 @@ Keine. Es liest nur die Datei, die du öffnest, auf dem Desktop und unter iOS.
 
 ## Änderungen
 
+- **0.2.2** - Leisten, Listen und Steuerelemente sind jetzt die von Textus, wachsen mit der Oberfläche und folgen jedem Theme; braucht Textus 1.3.12.
 - **0.2.1** - Seine Seite sagt jetzt in einem Satz, was es tut, was es kann und was sich in jeder Version geändert hat.
 - **0.2.0** - die Schaltflächen und Tab-Leiste von Textus; Beschriftungen folgen einem Wechsel der Oberflächensprache
 - **0.1.3** - die Farben der Themes von Textus 1.3
