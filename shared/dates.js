@@ -103,6 +103,18 @@
     });
   }
 
+  /** The days of `date`'s week by name (sunday … saturday), the week
+   *  starting where `language`'s weeks do, as Moment's weekday() counts. */
+  function weekDays(date, language) {
+    var dow = (WEEKS[base(language)] || ISO)[0];
+    var back = (date.getDay() - dow + 7) % 7;
+    var out = {};
+    ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"].forEach(function (name, i) {
+      out[name] = new Date(date.getFullYear(), date.getMonth(), date.getDate() - back + ((i - dow + 7) % 7));
+    });
+    return out;
+  }
+
   /** `date`'s local day as YYYY-MM-DD. */
   function day(date) {
     return format(date, "YYYY-MM-DD");
@@ -193,7 +205,8 @@
    * ({{date:FORMAT}}, {{time:FORMAT}}, {{date+1d}}): the date is
    * `options.day`'s, the time `options.now`'s (both now when not given),
    * in `options.dateFormat` and `options.timeFormat` unless the tag names
-   * one. Every other {{name}} found in `options.values` is filled in too;
+   * one. Every other {{name}} found in `options.values` is filled in too,
+   * a Date as YYYY-MM-DD unless the tag names a format ({{monday:D MMM}});
    * the rest stay as written.
    */
   function fill(text, options) {
@@ -209,11 +222,48 @@
           if (offset) UNITS[unit](at, Number(offset));
           return format(at, form || defaults[key], options.language);
         }
-        var plain = offset === undefined && form === undefined;
-        return plain && Object.prototype.hasOwnProperty.call(values, key) ? values[key] : all;
+        var known = offset === undefined && Object.prototype.hasOwnProperty.call(values, key);
+        if (known && values[key] instanceof Date) return format(values[key], form || "YYYY-MM-DD", options.language);
+        return known && form === undefined ? values[key] : all;
       },
     );
   }
 
-  root.dates = { format: format, day: day, parse: parse, fill: fill };
+  /**
+   * A new periodic note's template filled in as Obsidian fills a daily
+   * note's (and Periodic Notes a week's): {{date}}, {{yesterday}} and
+   * {{tomorrow}} in the notes' name format `form`, {{title}}, {{weekday}},
+   * {{sunday:FORMAT}} … {{saturday}} for the days of its week, and
+   * {{date:FORMAT}}, {{date+1d}}; a written \n starts a line.
+   */
+  function fillNote(template, day, options) {
+    var form = options.format;
+    var language = options.language;
+    var name = function (days) {
+      return format(new Date(day.getFullYear(), day.getMonth(), day.getDate() + days), form, language);
+    };
+    var values = Object.assign(weekDays(day, language), {
+      title: options.title,
+      weekday: day.toLocaleDateString(language, { weekday: "long" }),
+      yesterday: name(-1),
+      tomorrow: name(1),
+    });
+    return fill(template, { day: day, now: options.now, dateFormat: form, language: language, values: values }).replace(/\\n/g, "\n");
+  }
+
+  /** The note of `date` named in `form` in the folder `folder` ("" for the
+   *  top), as a "/"-separated path. */
+  function notePath(folder, form, date, language) {
+    return (folder ? folder + "/" : "") + format(date, form, language) + ".md";
+  }
+
+  root.dates = {
+    format: format,
+    day: day,
+    parse: parse,
+    fill: fill,
+    fillNote: fillNote,
+    notePath: notePath,
+    weekDays: weekDays,
+  };
 })(globalThis);

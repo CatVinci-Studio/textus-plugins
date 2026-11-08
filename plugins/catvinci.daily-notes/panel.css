@@ -12,16 +12,48 @@ body {
   flex: 1;
   min-width: 0;
   overflow: hidden;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: var(--ui-text);
+  font: inherit;
   font-size: var(--text-body);
   font-weight: 600;
+  text-align: left;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+#month:enabled {
+  cursor: pointer;
+}
+#month:disabled {
+  opacity: 1;
+}
+#month:enabled:hover {
+  color: var(--ui-accent);
 }
 #grid {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   gap: 2px;
   padding: var(--space-2) var(--space-3) var(--space-3);
+}
+#grid.weeks {
+  grid-template-columns: auto repeat(7, 1fr);
+}
+/* A week number: its weekly note. */
+.week {
+  min-width: 0;
+  padding: 0 var(--space-1) 0 0;
+  border: none;
+  background: transparent;
+  color: var(--ui-muted);
+  font: inherit;
+  font-size: var(--text-caption);
+  cursor: pointer;
+}
+.week:hover {
+  color: var(--ui-accent);
 }
 .weekday {
   padding-bottom: var(--space-1);

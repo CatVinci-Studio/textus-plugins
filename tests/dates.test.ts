@@ -126,3 +126,40 @@ describe("a free name", () => {
     ).toBe("a-2.png");
   });
 });
+
+describe("weekly and monthly notes' names and templates", () => {
+  const d = () =>
+    (globalThis as unknown as {
+      dates: {
+        notePath: (folder: string, format: string, date: Date, language?: string) => string;
+        weekDays: (date: Date, language?: string) => Record<string, Date>;
+        fillNote: (template: string, day: Date, options: Record<string, unknown>) => string;
+      };
+    }).dates;
+
+  it("names a note in its folder", () => {
+    expect(d().notePath("Weekly", "gggg-[W]ww", new Date(2026, 10, 5), "en")).toBe("Weekly/2026-W45.md");
+    expect(d().notePath("", "YYYY-MM", new Date(2026, 10, 5))).toBe("2026-11.md");
+  });
+
+  it("gives a week's days from where the language starts its weeks", () => {
+    const day = (x: Date) => dates.day(x);
+    const en = d().weekDays(new Date(2026, 10, 5), "en");
+    expect([day(en.sunday), day(en.monday), day(en.saturday)]).toEqual(["2026-11-01", "2026-11-02", "2026-11-07"]);
+    const de = d().weekDays(new Date(2026, 10, 1), "de");
+    expect([day(de.monday), day(de.sunday)]).toEqual(["2026-10-26", "2026-11-01"]);
+  });
+
+  it("fills a week's note as Periodic Notes does", () => {
+    const text = "{{title}} {{date}} {{monday:ddd D}} {{friday}} {{monday:}}\\n";
+    expect(
+      d().fillNote(text, new Date(2026, 10, 5), { format: "gggg-[W]ww", language: "en", title: "W45" }),
+    ).toBe("W45 2026-W45 Mon 2 2026-11-06 2026-11-02\n");
+  });
+
+  it("writes a Date it is given like {{date}}", () => {
+    expect(dates.fill("{{start:YYYY/MM/DD}} {{start}}", { values: { start: new Date(2026, 0, 2) } as never })).toBe(
+      "2026/01/02 2026-01-02",
+    );
+  });
+});
