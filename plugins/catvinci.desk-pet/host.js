@@ -176,6 +176,15 @@ async function refresh() {
   webview.html = page(character);
 }
 
+/** Her half and whether she's folded, as Textus has her now. */
+async function placed() {
+  const open = await textus.layout.floatingViews?.().catch(() => []);
+  const here = open?.find((v) => v.view === VIEW);
+  if (!here) return;
+  if (here.side) side = here.side;
+  visible = here.visible;
+}
+
 /** Still while folded or while Textus is away: nothing to draw for. */
 function stillness() {
   webview?.postMessage({ paused: !visible || away, turned: turned(), end: side === "right" });
@@ -344,6 +353,8 @@ exports.activate = function (ctx) {
       resolve: async (view) => {
         webview = view;
         shownFor = null;
+        // Where she was left: the page starts facing the right side.
+        await placed();
         await refresh();
         view.onDidDispose(() => {
           if (webview === view) webview = null;

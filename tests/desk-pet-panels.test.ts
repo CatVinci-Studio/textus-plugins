@@ -35,3 +35,32 @@ it("sends the AI's guest home when the AI panel closes", async () => {
   panels({ sidebar: { open: true, tab: "files" }, ai: { open: true } });
   await vi.waitFor(() => expect(page.html).toContain("pets/claude/"));
 });
+
+/** Opened on the left half, she faces the middle from her first frame. */
+it("faces the middle when she opens on the left", async () => {
+  const page = { html: "" };
+  loadPlugin("catvinci.desk-pet", {
+    ai: {
+      state: async () => ({ state: "idle", model: null }),
+      onDidChangeState: () => ({ dispose() {} }),
+    },
+    layout: {
+      panels: async () => ({ sidebar: { open: true, tab: "files" }, ai: { open: true } }),
+      onDidChangePanels: () => ({ dispose() {} }),
+      floatingViews: async () => [
+        { view: "catvinci.desk-pet.pet", open: true, visible: true, side: "left" },
+      ],
+    },
+    views: {
+      registerWebview: (_id: string, view: { resolve: (w: unknown) => Promise<void> }) =>
+        view.resolve(
+          Object.assign(page, {
+            postMessage() {},
+            onDidDispose: () => ({ dispose() {} }),
+            onDidReceiveMessage: () => ({ dispose() {} }),
+          }),
+        ),
+    },
+  });
+  await vi.waitFor(() => expect(page.html).toContain('toggle("turned", true)'));
+});
