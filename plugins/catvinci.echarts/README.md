@@ -25,6 +25,7 @@ The plugin asks for one permission, to give Textus AI the `check_echarts` tool l
 
 ## Changes
 
+- **0.3.1** - Its description no longer lists maps, which a block can't load.
 - **0.3.0** - Textus AI can check an `echarts` block before it writes one.
 - **0.2.0** - Series colors come from the theme's tones. Needs Textus 1.3.2.
 - **0.1.3** - Uses the theme's document text color and footnote size under their Textus 1.3 names.

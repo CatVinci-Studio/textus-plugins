@@ -1,7 +1,7 @@
 {
   "id": "catvinci.echarts",
   "name": "%name%",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "publisher": "catvinci",
   "author": "CatVinci Studio",
   "description": "%description%",
@@ -43,7 +43,7 @@
   "l10n": {
     "en": {
       "name": "ECharts",
-      "description": "Charts from an ECharts option - bars, lines, pies, maps and more.",
+      "description": "Charts from an ECharts option - bars, lines, pies and more.",
       "tool.check_echarts": "Checks the source of a ```echarts block - an ECharts option as JSON: series with their types, and the axes or components they are drawn on - before it goes into a document, without drawing it. Returns ok, or the problems to fix first. Pass the source without its fence."
     },
     "zh": {

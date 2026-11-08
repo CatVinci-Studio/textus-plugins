@@ -25,6 +25,7 @@ Le plugin demande une seule permission, pour donner à Textus AI l’outil `chec
 
 ## Changements
 
+- **0.3.1** - Sa description ne cite plus les cartes, qu'un bloc ne peut pas charger.
 - **0.3.0** - Textus AI peut vérifier un bloc `echarts` avant de l’écrire.
 - **0.2.0** - Les couleurs des séries viennent des tons du thème. Nécessite Textus 1.3.2.
 - **0.1.3** - Utilise la couleur du texte du document et la taille des notes de bas de page du thème sous leurs noms de Textus 1.3.
