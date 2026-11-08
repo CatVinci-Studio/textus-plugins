@@ -17,6 +17,6 @@ it("has one Notion import, in Workspace", () => {
   expect(titles(/^import.*notion/i)).toEqual(["catvinci.database: Import from Notion…"]);
 });
 
-it("has one way to write today's date: Natural Dates' @today", () => {
+it("has one way to write today's date: Quick Insert's @today", () => {
   expect(titles(/today's date/i)).toEqual([]);
 });

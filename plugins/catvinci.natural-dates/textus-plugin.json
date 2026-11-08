@@ -1,7 +1,7 @@
 {
   "id": "catvinci.natural-dates",
   "name": "%name%",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "publisher": "catvinci",
   "author": "CatVinci Studio",
   "description": "%description%",
@@ -11,144 +11,68 @@
   "engines": {
     "textus": ">=1.3.0-beta.6"
   },
-  "platforms": ["desktop", "ios"],
-  "main": ["lib/dates.js", "dates.js", "host.js"],
-  "permissions": [
-    "editor.read",
-    "ai.tools"
+  "platforms": [
+    "desktop",
+    "ios"
   ],
+  "main": [
+    "host.js"
+  ],
+  "permissions": [],
   "activationEvents": [
-    "onEditor"
+    "onStartupFinished"
   ],
-  "contributes": {
-    "completions": [
-      {
-        "id": "catvinci.natural-dates.at",
-        "where": "text",
-        "pattern": "(?<=^|[\\s(（])@[^\\s@]{0,20}"
-      }
-    ],
-    "settings": [
-      {
-        "key": "insert",
-        "type": "enum",
-        "default": "date",
-        "title": "%insert%",
-        "options": [
-          {
-            "value": "date",
-            "label": "%asDate%"
-          },
-          {
-            "value": "link",
-            "label": "%asLink%"
-          }
-        ]
-      }
-    ],
-    "aiTools": [
-      {
-        "name": "parse_date",
-        "description": "%tool.parse_date%",
-        "parameters": {
-          "type": "object",
-          "required": [
-            "phrase"
-          ],
-          "properties": {
-            "phrase": {
-              "type": "string",
-              "description": "A day in words: today, tomorrow, friday, next wednesday, in 10 days, 下周五, 3天后, 来週月曜日..."
-            },
-            "today": {
-              "type": "string",
-              "description": "The day to count from, YYYY-MM-DD; today when left out."
-            }
-          }
-        }
-      }
-    ]
-  },
+  "contributes": {},
   "l10n": {
     "en": {
       "name": "Natural Dates",
-      "description": "Type @ and a day - @tomorrow, @next friday, @下周五, @明日 - and pick the date it names, written as 2026-11-06 or as a link to that day's note.",
-      "insert": "Insert as",
-      "asDate": "A date",
-      "asLink": "A link to the day's note",
-      "tool.parse_date": "Turns a day in words - English, Chinese or Japanese, as the plugin's @ completion knows them (tomorrow, next wednesday, in 3 days, 下周五, 明後日) - into its date, YYYY-MM-DD, counted from today. Weeks start on Monday; a weekday alone is the next one."
+      "description": "Now part of Quick Insert: type @ and a day there - @tomorrow, @下周五 - as before. Install Quick Insert and uninstall this one.",
+      "merged": "Now part of Quick Insert: type @ and a day there - @tomorrow, @下周五 - as before. Install Quick Insert and uninstall this one."
     },
     "zh": {
       "name": "自然语言日期",
-      "description": "输入 @ 加上一个日子（@明天、@下周五、@tomorrow、@明日），选中后写入它对应的日期，可以是 2026-11-06 这样的日期，也可以是那天每日笔记的链接。",
-      "insert": "插入为",
-      "asDate": "日期",
-      "asLink": "那天每日笔记的链接",
-      "tool.parse_date": "把用文字说的日子（英文、中文或日文，与插件的 @ 补全认得的一样：tomorrow、next wednesday、in 3 days、下周五、明後日）换算成日期 YYYY-MM-DD，从今天算起。每周从周一开始；只说星期几指下一个。"
+      "description": "已并入「快速插入」：在那里照样输入 @ 加日子，如 @明天、@下周五。请安装「快速插入」，然后卸载本插件。",
+      "merged": "已并入「快速插入」：在那里照样输入 @ 加日子，如 @明天、@下周五。请安装「快速插入」，然后卸载本插件。"
     },
     "zh-Hant": {
       "name": "自然語言日期",
-      "description": "輸入 @ 加上一個日子（@明天、@下週五、@tomorrow、@明日），選中後寫入它對應的日期，可以是 2026-11-06 這樣的日期，也可以是那天每日筆記的連結。",
-      "insert": "插入為",
-      "asDate": "日期",
-      "asLink": "那天每日筆記的連結",
-      "tool.parse_date": "把用文字說的日子（英文、中文或日文，與外掛的 @ 補全認得的一樣：tomorrow、next wednesday、in 3 days、下周五、明後日）換算成日期 YYYY-MM-DD，從今天算起。每週從週一開始；只說星期幾指下一個。"
+      "description": "已併入「快速插入」：在那裡照樣輸入 @ 加日子，如 @明天、@下週五。請安裝「快速插入」，然後解除安裝本外掛。",
+      "merged": "已併入「快速插入」：在那裡照樣輸入 @ 加日子，如 @明天、@下週五。請安裝「快速插入」，然後解除安裝本外掛。"
     },
     "ja": {
       "name": "日付の自然入力",
-      "description": "@ と日を入力（@明日、@来週金曜日、@tomorrow、@下周五）して選ぶと、その日付を 2026-11-06 の形か、その日のデイリーノートへのリンクとして書き込みます。",
-      "insert": "挿入する形",
-      "asDate": "日付",
-      "asLink": "その日のノートへのリンク",
-      "tool.parse_date": "言葉で書いた日（英語・中国語・日本語。プラグインの @ 補完が分かるもの：tomorrow、next wednesday、in 3 days、下周五、明後日）を、今日から数えた日付 YYYY-MM-DD にします。週は月曜始まりで、曜日だけなら次のその曜日です。"
+      "description": "「クイック挿入」に統合されました：これまでどおり @ と日付（@明日、@来週金曜日）を入力できます。「クイック挿入」を入れて、これはアンインストールしてください。",
+      "merged": "「クイック挿入」に統合されました：これまでどおり @ と日付（@明日、@来週金曜日）を入力できます。「クイック挿入」を入れて、これはアンインストールしてください。"
     },
     "ko": {
       "name": "자연어 날짜",
-      "description": "@와 날짜 표현(@tomorrow, @next friday, @明日, @下周五)을 입력해 고르면 그 날짜를 2026-11-06 형식이나 그날 데일리 노트 링크로 씁니다.",
-      "insert": "넣을 형식",
-      "asDate": "날짜",
-      "asLink": "그날 노트 링크",
-      "tool.parse_date": "말로 쓴 날(영어·중국어·일본어, 플러그인의 @ 자동 완성이 아는 것: tomorrow, next wednesday, in 3 days, 下周五, 明後日)을 오늘부터 센 날짜 YYYY-MM-DD로 바꿉니다. 한 주는 월요일에 시작하고, 요일만 쓰면 다음 그 요일입니다."
+      "description": "「빠른 삽입」에 합쳐졌습니다. 그곳에서 전처럼 @와 날짜(@tomorrow, @下周五)를 입력하세요. 「빠른 삽입」을 설치하고 이 플러그인은 제거하세요.",
+      "merged": "「빠른 삽입」에 합쳐졌습니다. 그곳에서 전처럼 @와 날짜(@tomorrow, @下周五)를 입력하세요. 「빠른 삽입」을 설치하고 이 플러그인은 제거하세요."
     },
     "de": {
       "name": "Natürliche Daten",
-      "description": "Tippe @ und einen Tag - @tomorrow, @next friday, @下周五, @明日 - und wähle das Datum, das er meint, als 2026-11-06 oder als Link zur Notiz dieses Tages.",
-      "insert": "Einfügen als",
-      "asDate": "Datum",
-      "asLink": "Link zur Tagesnotiz",
-      "tool.parse_date": "Macht aus einem Tag in Worten - Englisch, Chinesisch oder Japanisch, wie die @-Vervollständigung des Plugins sie kennt (tomorrow, next wednesday, in 3 days, 下周五, 明後日) - sein Datum, YYYY-MM-DD, von heute an gezählt. Wochen beginnen montags; ein Wochentag allein ist der nächste."
+      "description": "Jetzt Teil von Schnelleinfügen: Dort wie bisher @ und einen Tag tippen – @tomorrow, @下周五. Installiere Schnelleinfügen und deinstalliere dieses.",
+      "merged": "Jetzt Teil von Schnelleinfügen: Dort wie bisher @ und einen Tag tippen – @tomorrow, @下周五. Installiere Schnelleinfügen und deinstalliere dieses."
     },
     "fr": {
       "name": "Dates naturelles",
-      "description": "Tapez @ et un jour - @tomorrow, @next friday, @下周五, @明日 - et choisissez la date qu'il désigne, écrite 2026-11-06 ou en lien vers la note de ce jour.",
-      "insert": "Insérer comme",
-      "asDate": "Une date",
-      "asLink": "Un lien vers la note du jour",
-      "tool.parse_date": "Transforme un jour dit en mots - anglais, chinois ou japonais, comme les connaît la complétion @ de l'extension (tomorrow, next wednesday, in 3 days, 下周五, 明後日) - en sa date, YYYY-MM-DD, comptée depuis aujourd'hui. Les semaines commencent le lundi ; un jour de la semaine seul est le prochain."
+      "description": "Fait maintenant partie d'Insertion rapide : tapez-y @ et un jour - @tomorrow, @下周五 - comme avant. Installez Insertion rapide et désinstallez celle-ci.",
+      "merged": "Fait maintenant partie d'Insertion rapide : tapez-y @ et un jour - @tomorrow, @下周五 - comme avant. Installez Insertion rapide et désinstallez celle-ci."
     },
     "es": {
       "name": "Fechas naturales",
-      "description": "Escribe @ y un día - @tomorrow, @next friday, @下周五, @明日 - y elige la fecha que nombra, escrita como 2026-11-06 o como enlace a la nota de ese día.",
-      "insert": "Insertar como",
-      "asDate": "Una fecha",
-      "asLink": "Un enlace a la nota del día",
-      "tool.parse_date": "Convierte un día dicho con palabras - en inglés, chino o japonés, como los conoce el autocompletado @ del complemento (tomorrow, next wednesday, in 3 days, 下周五, 明後日) - en su fecha, YYYY-MM-DD, contada desde hoy. Las semanas empiezan el lunes; un día de la semana solo es el próximo."
+      "description": "Ahora forma parte de Inserción rápida: escribe allí @ y un día - @tomorrow, @下周五 - como antes. Instala Inserción rápida y desinstala este.",
+      "merged": "Ahora forma parte de Inserción rápida: escribe allí @ y un día - @tomorrow, @下周五 - como antes. Instala Inserción rápida y desinstala este."
     },
     "pt": {
       "name": "Datas naturais",
-      "description": "Digite @ e um dia - @tomorrow, @next friday, @下周五, @明日 - e escolha a data que ele indica, escrita como 2026-11-06 ou como link para a nota daquele dia.",
-      "insert": "Inserir como",
-      "asDate": "Uma data",
-      "asLink": "Um link para a nota do dia",
-      "tool.parse_date": "Transforma um dia dito por palavras - em inglês, chinês ou japonês, como os conhece o preenchimento @ do plugin (tomorrow, next wednesday, in 3 days, 下周五, 明後日) - na sua data, YYYY-MM-DD, contada a partir de hoje. As semanas começam à segunda; um dia da semana sozinho é o próximo."
+      "description": "Agora faz parte de Inserção rápida: escreva lá @ e um dia - @tomorrow, @下周五 - como antes. Instale Inserção rápida e desinstale este.",
+      "merged": "Agora faz parte de Inserção rápida: escreva lá @ e um dia - @tomorrow, @下周五 - como antes. Instale Inserção rápida e desinstale este."
     },
     "ru": {
       "name": "Естественные даты",
-      "description": "Введите @ и день - @tomorrow, @next friday, @下周五, @明日 - и выберите дату, которую он означает: в виде 2026-11-06 или ссылкой на заметку этого дня.",
-      "insert": "Вставлять как",
-      "asDate": "Дату",
-      "asLink": "Ссылку на заметку дня",
-      "tool.parse_date": "Превращает день, названный словами, - по-английски, по-китайски или по-японски, как их знает @-подсказка плагина (tomorrow, next wednesday, in 3 days, 下周五, 明後日), - в дату YYYY-MM-DD, считая от сегодня. Неделя начинается с понедельника; день недели сам по себе - ближайший следующий."
+      "description": "Теперь часть «Быстрой вставки»: там, как и прежде, введите @ и день — @tomorrow, @下周五. Установите «Быструю вставку» и удалите этот плагин.",
+      "merged": "Теперь часть «Быстрой вставки»: там, как и прежде, введите @ и день — @tomorrow, @下周五. Установите «Быструю вставку» и удалите этот плагин."
     }
   }
 }

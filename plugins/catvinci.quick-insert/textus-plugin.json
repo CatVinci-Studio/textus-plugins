@@ -1,7 +1,7 @@
 {
   "id": "catvinci.quick-insert",
   "name": "%name%",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "publisher": "catvinci",
   "author": "CatVinci Studio",
   "description": "%description%",
@@ -9,16 +9,22 @@
   "license": "MIT",
   "repository": "https://github.com/CatVinci-Studio/textus-plugins",
   "engines": {
-    "textus": ">=1.3.0-beta.8"
+    "textus": ">=1.3.9"
   },
   "platforms": ["desktop", "ios"],
   "main": [
+    "lib/folder-paths.js",
+    "lib/dates.js",
+    "lib/conventions.js",
+    "dates.js",
     "emoji.js",
     "host.js"
   ],
   "permissions": [
+    "files.read",
     "editor.read",
-    "editor.write"
+    "editor.write",
+    "ai.tools"
   ],
   "activationEvents": [
     "onEditor"
@@ -205,13 +211,58 @@
         "id": "catvinci.quick-insert.emoji",
         "where": "text",
         "pattern": "(?<=^|\\s):[\\p{L}\\p{N}_+-]{2,30}"
+      },
+      {
+        "id": "catvinci.quick-insert.at",
+        "where": "text",
+        "pattern": "(?<=^|[\\s(（])@[^\\s@]{0,20}"
+      }
+    ],
+    "settings": [
+      {
+        "key": "insert",
+        "type": "enum",
+        "default": "date",
+        "title": "%insert%",
+        "options": [
+          {
+            "value": "date",
+            "label": "%asDate%"
+          },
+          {
+            "value": "link",
+            "label": "%asLink%"
+          }
+        ]
+      }
+    ],
+    "aiTools": [
+      {
+        "name": "parse_date",
+        "description": "%tool.parse_date%",
+        "parameters": {
+          "type": "object",
+          "required": [
+            "phrase"
+          ],
+          "properties": {
+            "phrase": {
+              "type": "string",
+              "description": "A day in words: today, tomorrow, friday, next wednesday, in 10 days, 下周五, 3天后, 来週月曜日..."
+            },
+            "today": {
+              "type": "string",
+              "description": "The day to count from, YYYY-MM-DD; today when left out."
+            }
+          }
+        }
       }
     ]
   },
   "l10n": {
     "en": {
       "name": "Quick Insert",
-      "description": "Type / for headings, lists, tables, formulas and more, : for emoji, and turn a paragraph into another kind of block.",
+      "description": "Type / for headings, lists, tables, formulas and more, : for emoji, @ for a date (@tomorrow, @next friday), and turn a paragraph into another kind of block.",
       "turnPlaceholder": "Turn this paragraph into",
       "h1": "Heading 1",
       "h2": "Heading 2",
@@ -226,11 +277,15 @@
       "table": "Table",
       "divider": "Divider",
       "callout": "Callout",
-      "turnInto": "Turn into…"
+      "turnInto": "Turn into…",
+      "insert": "Insert as",
+      "asDate": "A date",
+      "asLink": "A link to the day's note",
+      "tool.parse_date": "Turns a day in words - English, Chinese or Japanese, as the plugin's @ completion knows them (tomorrow, next wednesday, in 3 days, 下周五, 明後日) - into its date, YYYY-MM-DD, counted from today. Weeks start on Monday; a weekday alone is the next one."
     },
     "zh": {
       "name": "快速插入",
-      "description": "输入 / 插入标题、列表、表格、公式等，输入 : 插入表情，还能把段落转换成别的块。",
+      "description": "输入 / 插入标题、列表、表格、公式等，输入 : 插入表情，输入 @ 插入日期（@明天、@下周五），还能把段落转换成别的块。",
       "turnPlaceholder": "把这一段转换为",
       "h1": "标题 1",
       "h2": "标题 2",
@@ -245,11 +300,15 @@
       "table": "表格",
       "divider": "分隔线",
       "callout": "提示框",
-      "turnInto": "转换为…"
+      "turnInto": "转换为…",
+      "insert": "插入为",
+      "asDate": "日期",
+      "asLink": "那天每日笔记的链接",
+      "tool.parse_date": "把用文字说的日子（英文、中文或日文，与插件的 @ 补全认得的一样：tomorrow、next wednesday、in 3 days、下周五、明後日）换算成日期 YYYY-MM-DD，从今天算起。每周从周一开始；只说星期几指下一个。"
     },
     "zh-Hant": {
       "name": "快速插入",
-      "description": "輸入 / 插入標題、清單、表格、公式等，輸入 : 插入表情符號，還能把段落轉換成別的區塊。",
+      "description": "輸入 / 插入標題、清單、表格、公式等，輸入 : 插入表情符號，輸入 @ 插入日期（@明天、@下週五），還能把段落轉換成別的區塊。",
       "turnPlaceholder": "把這一段轉換為",
       "h1": "標題 1",
       "h2": "標題 2",
@@ -264,11 +323,15 @@
       "table": "表格",
       "divider": "分隔線",
       "callout": "提示框",
-      "turnInto": "轉換為…"
+      "turnInto": "轉換為…",
+      "insert": "插入為",
+      "asDate": "日期",
+      "asLink": "那天每日筆記的連結",
+      "tool.parse_date": "把用文字說的日子（英文、中文或日文，與外掛的 @ 補全認得的一樣：tomorrow、next wednesday、in 3 days、下周五、明後日）換算成日期 YYYY-MM-DD，從今天算起。每週從週一開始；只說星期幾指下一個。"
     },
     "ja": {
       "name": "クイック挿入",
-      "description": "/ で見出し・リスト・表・数式などを、: で絵文字を挿入。段落を別の種類のブロックに変換することもできます。",
+      "description": "/ で見出し・リスト・表・数式などを、: で絵文字を、@ で日付（@明日、@来週金曜日）を挿入。段落を別の種類のブロックに変換することもできます。",
       "turnPlaceholder": "この段落を変換",
       "h1": "見出し 1",
       "h2": "見出し 2",
@@ -283,11 +346,15 @@
       "table": "表",
       "divider": "区切り線",
       "callout": "コールアウト",
-      "turnInto": "変換…"
+      "turnInto": "変換…",
+      "insert": "挿入する形",
+      "asDate": "日付",
+      "asLink": "その日のノートへのリンク",
+      "tool.parse_date": "言葉で書いた日（英語・中国語・日本語。プラグインの @ 補完が分かるもの：tomorrow、next wednesday、in 3 days、下周五、明後日）を、今日から数えた日付 YYYY-MM-DD にします。週は月曜始まりで、曜日だけなら次のその曜日です。"
     },
     "ko": {
       "name": "빠른 삽입",
-      "description": "/ 로 제목·목록·표·수식 등을, : 로 이모지를 넣고, 문단을 다른 종류의 블록으로 바꿉니다.",
+      "description": "/ 로 제목·목록·표·수식 등을, : 로 이모지를, @ 로 날짜(@tomorrow, @next friday)를 넣고, 문단을 다른 종류의 블록으로 바꿉니다.",
       "turnPlaceholder": "이 문단을 다음으로 변환",
       "h1": "제목 1",
       "h2": "제목 2",
@@ -302,11 +369,15 @@
       "table": "표",
       "divider": "구분선",
       "callout": "콜아웃",
-      "turnInto": "변환…"
+      "turnInto": "변환…",
+      "insert": "넣을 형식",
+      "asDate": "날짜",
+      "asLink": "그날 노트 링크",
+      "tool.parse_date": "말로 쓴 날(영어·중국어·일본어, 플러그인의 @ 자동 완성이 아는 것: tomorrow, next wednesday, in 3 days, 下周五, 明後日)을 오늘부터 센 날짜 YYYY-MM-DD로 바꿉니다. 한 주는 월요일에 시작하고, 요일만 쓰면 다음 그 요일입니다."
     },
     "de": {
       "name": "Schnelleinfügen",
-      "description": "Mit / Überschriften, Listen, Tabellen, Formeln und mehr einfügen, mit : Emojis – und einen Absatz in eine andere Blockart umwandeln.",
+      "description": "Mit / Überschriften, Listen, Tabellen, Formeln und mehr einfügen, mit : Emojis, mit @ ein Datum (@tomorrow, @next friday) – und einen Absatz in eine andere Blockart umwandeln.",
       "turnPlaceholder": "Diesen Absatz umwandeln in",
       "h1": "Überschrift 1",
       "h2": "Überschrift 2",
@@ -321,11 +392,15 @@
       "table": "Tabelle",
       "divider": "Trennlinie",
       "callout": "Hinweis",
-      "turnInto": "Umwandeln in …"
+      "turnInto": "Umwandeln in …",
+      "insert": "Einfügen als",
+      "asDate": "Datum",
+      "asLink": "Link zur Tagesnotiz",
+      "tool.parse_date": "Macht aus einem Tag in Worten - Englisch, Chinesisch oder Japanisch, wie die @-Vervollständigung des Plugins sie kennt (tomorrow, next wednesday, in 3 days, 下周五, 明後日) - sein Datum, YYYY-MM-DD, von heute an gezählt. Wochen beginnen montags; ein Wochentag allein ist der nächste."
     },
     "es": {
       "name": "Inserción rápida",
-      "description": "Escribe / para títulos, listas, tablas, fórmulas y más, : para emojis, y convierte un párrafo en otro tipo de bloque.",
+      "description": "Escribe / para títulos, listas, tablas, fórmulas y más, : para emojis, @ para una fecha (@tomorrow, @next friday), y convierte un párrafo en otro tipo de bloque.",
       "turnPlaceholder": "Convertir este párrafo en",
       "h1": "Título 1",
       "h2": "Título 2",
@@ -340,11 +415,15 @@
       "table": "Tabla",
       "divider": "Separador",
       "callout": "Aviso",
-      "turnInto": "Convertir en…"
+      "turnInto": "Convertir en…",
+      "insert": "Insertar como",
+      "asDate": "Una fecha",
+      "asLink": "Un enlace a la nota del día",
+      "tool.parse_date": "Convierte un día dicho con palabras - en inglés, chino o japonés, como los conoce el autocompletado @ del complemento (tomorrow, next wednesday, in 3 days, 下周五, 明後日) - en su fecha, YYYY-MM-DD, contada desde hoy. Las semanas empiezan el lunes; un día de la semana solo es el próximo."
     },
     "fr": {
       "name": "Insertion rapide",
-      "description": "Tapez / pour les titres, listes, tableaux, formules et plus, : pour les emoji, et transformez un paragraphe en un autre type de bloc.",
+      "description": "Tapez / pour les titres, listes, tableaux, formules et plus, : pour les emoji, @ pour une date (@tomorrow, @next friday), et transformez un paragraphe en un autre type de bloc.",
       "turnPlaceholder": "Transformer ce paragraphe en",
       "h1": "Titre 1",
       "h2": "Titre 2",
@@ -359,11 +438,15 @@
       "table": "Tableau",
       "divider": "Séparateur",
       "callout": "Encadré",
-      "turnInto": "Transformer en…"
+      "turnInto": "Transformer en…",
+      "insert": "Insérer comme",
+      "asDate": "Une date",
+      "asLink": "Un lien vers la note du jour",
+      "tool.parse_date": "Transforme un jour dit en mots - anglais, chinois ou japonais, comme les connaît la complétion @ de l'extension (tomorrow, next wednesday, in 3 days, 下周五, 明後日) - en sa date, YYYY-MM-DD, comptée depuis aujourd'hui. Les semaines commencent le lundi ; un jour de la semaine seul est le prochain."
     },
     "pt": {
       "name": "Inserção rápida",
-      "description": "Digite / para títulos, listas, tabelas, fórmulas e mais, : para emojis, e transforme um parágrafo em outro tipo de bloco.",
+      "description": "Digite / para títulos, listas, tabelas, fórmulas e mais, : para emojis, @ para uma data (@tomorrow, @next friday), e transforme um parágrafo em outro tipo de bloco.",
       "turnPlaceholder": "Transformar este parágrafo em",
       "h1": "Título 1",
       "h2": "Título 2",
@@ -378,11 +461,15 @@
       "table": "Tabela",
       "divider": "Divisor",
       "callout": "Destaque",
-      "turnInto": "Transformar em…"
+      "turnInto": "Transformar em…",
+      "insert": "Inserir como",
+      "asDate": "Uma data",
+      "asLink": "Um link para a nota do dia",
+      "tool.parse_date": "Transforma um dia dito por palavras - em inglês, chinês ou japonês, como os conhece o preenchimento @ do plugin (tomorrow, next wednesday, in 3 days, 下周五, 明後日) - na sua data, YYYY-MM-DD, contada a partir de hoje. As semanas começam à segunda; um dia da semana sozinho é o próximo."
     },
     "ru": {
       "name": "Быстрая вставка",
-      "description": "Введите / для заголовков, списков, таблиц, формул и другого, : для эмодзи — и превращайте абзац в блок другого вида.",
+      "description": "Введите / для заголовков, списков, таблиц, формул и другого, : для эмодзи, @ для даты (@tomorrow, @next friday) — и превращайте абзац в блок другого вида.",
       "turnPlaceholder": "Превратить этот абзац в",
       "h1": "Заголовок 1",
       "h2": "Заголовок 2",
@@ -397,7 +484,11 @@
       "table": "Таблица",
       "divider": "Разделитель",
       "callout": "Выноска",
-      "turnInto": "Преобразовать в…"
+      "turnInto": "Преобразовать в…",
+      "insert": "Вставлять как",
+      "asDate": "Дату",
+      "asLink": "Ссылку на заметку дня",
+      "tool.parse_date": "Превращает день, названный словами, - по-английски, по-китайски или по-японски, как их знает @-подсказка плагина (tomorrow, next wednesday, in 3 days, 下周五, 明後日), - в дату YYYY-MM-DD, считая от сегодня. Неделя начинается с понедельника; день недели сам по себе - ближайший следующий."
     }
   }
 }
