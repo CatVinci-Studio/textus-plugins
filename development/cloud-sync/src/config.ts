@@ -114,7 +114,8 @@ export function identity(c: Config): string {
   ]);
 }
 
-const documents = /\.(md|markdown|mdown|mkd|txt|csv)$/i;
+// Obsidian's bases and canvases are text too.
+const documents = /\.(md|markdown|mdown|mkd|txt|csv|base|canvas)$/i;
 const attachments =
   /\.(png|jpe?g|gif|webp|svg|avif|bmp|ico|heic|pdf|docx?|xlsx?|pptx?|odt|ods|odp|mp3|wav|m4a|ogg|mp4|mov|webm)$/i;
 const ignored = new Set(["node_modules", "dist", "build", "target", "vendor"]);

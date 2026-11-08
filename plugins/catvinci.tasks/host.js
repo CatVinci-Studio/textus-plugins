@@ -12,7 +12,10 @@ const DUE = /\s*(?:📅|due::?)\s*(\d{4}-\d{2}-\d{2})/u;
 /** How far ahead "Due soon" looks. */
 const SOON_DAYS = 7;
 // A Kanban board's cards are tasks in Markdown but live on the board.
-const isBoard = (doc) => /\.kanban\.md$/i.test(doc.path);
+// A board: an older .kanban.md, or a note whose front matter says
+// kanban-plugin (Obsidian's Kanban and Task Board): its cards aren't tasks.
+const isBoard = (doc) =>
+  /\.kanban\.md$/i.test(doc.path) || !!(doc.frontmatter && doc.frontmatter["kanban-plugin"]);
 
 const t = (key, ...args) => textus.l10n.t(key, ...args);
 

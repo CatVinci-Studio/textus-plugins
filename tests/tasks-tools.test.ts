@@ -147,6 +147,14 @@ it("leaves a Kanban board's cards to the board, in the panel and the tools", asy
         headings: [],
         tasks: [task("Card", 2)],
       },
+      // A board named as any note, known by its front matter.
+      {
+        path: "/root/Sprint.md",
+        rel: "Sprint.md",
+        headings: [],
+        frontmatter: { "kanban-plugin": "board" },
+        tasks: [task("Other card", 3)],
+      },
     ],
   };
   let panel: { items: () => Promise<{ label: string }[]> } | null = null;
