@@ -9,7 +9,9 @@ let ctx;
 
 let panel = null;
 
-const HEADING = "Quick notes";
+/** The daily note's section: the language's name for it, or the English
+ *  one written before. */
+const headings = () => [textus.l10n.t("heading"), "Quick notes"];
 const ITEM = /^([-*+]) (.*)$/;
 const STAMP = /^(?:(\d{4}-\d{2}-\d{2}) )?(\d{1,2}):(\d{2})(?: |$)/;
 
@@ -31,7 +33,8 @@ function itemLines(text, stamp, bullet = "-") {
  *  `heading` up to the next heading; null when it has no such section. */
 function sectionOf(lines, heading) {
   if (!heading) return { from: 0, to: lines.length, heading: -1 };
-  const at = lines.findIndex((l) => new RegExp("^##\\s+" + heading + "\\s*$", "i").test(l));
+  const names = [].concat(heading).map((h) => h.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"));
+  const at = lines.findIndex((l) => new RegExp("^##\\s+(?:" + names.join("|") + ")\\s*$", "i").test(l));
   if (at < 0) return null;
   let to = at + 1;
   while (to < lines.length && !/^#{1,6}\s/.test(lines[to])) to++;
@@ -48,7 +51,8 @@ function parseNotes(text, heading, day) {
   if (!section) return { lines: lines, section: null, notes: notes };
   for (let i = section.from; i < section.to; i++) {
     const m = ITEM.exec(lines[i]);
-    if (!m) continue;
+    // In a file of its own, a list item is a note only with its stamp.
+    if (!m || (!heading && !STAMP.test(m[2]))) continue;
     let end = i + 1;
     for (let j = i + 1; j < section.to && !ITEM.test(lines[j]); j++) {
       if (/^\s+\S/.test(lines[j])) end = j + 1;
@@ -77,7 +81,7 @@ function appendItem(text, heading, item) {
   const { lines, section } = parseNotes(text, heading, null);
   while (lines.length && !lines[lines.length - 1].trim()) lines.pop();
   if (!section) {
-    const head = heading ? ["## " + heading, ""] : [];
+    const head = heading ? ["## " + [].concat(heading)[0], ""] : [];
     return lines.concat(lines.length ? [""] : [], head, item).join(eol) + eol;
   }
   let last = Math.min(section.to, lines.length) - 1;
@@ -111,7 +115,7 @@ async function target() {
         language: textus.env.language,
         title: rel.split("/").pop().replace(/\.md$/, ""),
       });
-    return { path: folderPaths.abs(root, rel), heading: HEADING, day: dates.day(today), begin: begin };
+    return { path: folderPaths.abs(root, rel), heading: headings(), day: dates.day(today), begin: begin };
   }
   const own = String((await textus.settings.get("inbox")) || "Inbox.md");
   const rel = folderPaths.clean(root, own, true) || "Inbox.md";
@@ -150,6 +154,11 @@ function fileNotes(file) {
   return {
     list: async () =>
       (await read()).map((n, i) => ({ id: String(i), text: n.text, at: n.at })).reverse(),
+    /** Where note `id` is: its document and line. */
+    place: async (id) => {
+      const note = (await read())[Number(id)];
+      return note ? { path: file.path, line: note.start } : null;
+    },
     add: async (text) => {
       const at = Date.now();
       await change((t) => appendItem(t, file.heading, itemLines(text, stampOf(at, file.day))));
@@ -291,7 +300,13 @@ async function handle(webview, message) {
   const note = (await notes.list()).find((n) => n.id === message.id);
   // Asked for by a click: written at the caret at once, one undo away.
   if (message.type === "insert" && note) await textus.editor.insertText(note.text);
-  if (message.type === "open" && note) await textus.layout.openUntitled(note.text);
+  if (message.type === "open" && note) {
+    // A note in a document opens there, at its line.
+    const notes = await store();
+    const place = notes.place && (await notes.place(note.id));
+    if (place) await textus.layout.open(place);
+    else await textus.layout.openUntitled(note.text);
+  }
   if (message.type !== "insert" && message.type !== "open") await show();
 }
 
