@@ -29,11 +29,6 @@ body {
 .tx-segment .tx-icon {
   margin-right: var(--space-1);
 }
-/* The view in front opens its menu: a small chevron says so. */
-.tx-segment .tx-icon.view-menu {
-  margin: 0 0 0 var(--space-1);
-  transform: rotate(90deg) scale(0.75);
-}
 
 /* Table */
 .tx-table th {
@@ -56,7 +51,6 @@ body {
   overflow: hidden;
   text-overflow: ellipsis;
 }
-.tx-table tr.more-row td,
 .tx-table tr.new-row td {
   padding: var(--space-1) var(--space-2);
 }
@@ -69,7 +63,8 @@ body {
   text-align: center;
 }
 .tx-table td.cell {
-  min-width: 96px;
+  /* Proportional to the block, within a readable range. */
+  min-width: clamp(calc(72px * var(--chrome-scale, 1)), 10vw, calc(160px * var(--chrome-scale, 1)));
   cursor: default;
 }
 .tx-table td.cell-text,
@@ -80,7 +75,7 @@ body {
 }
 .tx-table td.title {
   position: relative;
-  min-width: 160px;
+  min-width: clamp(calc(120px * var(--chrome-scale, 1)), 18vw, calc(280px * var(--chrome-scale, 1)));
   padding-right: 36px;
   font-weight: 500;
   cursor: text;
@@ -320,11 +315,23 @@ body.folded #body {
 .tx-chip.editing .cell-input {
   width: 10em;
 }
+/* Where a list cut short ends: seen, the next rows come. */
 .more {
-  margin-top: var(--space-2);
+  height: 1px;
 }
-.more-row .more {
-  margin-top: 0;
+.tx-table tr.more-row td {
+  height: 0;
+  padding: 0;
+  border: none;
+}
+/* The head moved along as the rows scroll under it: opaque over them. */
+.tx-table thead.pinned th {
+  position: relative;
+  z-index: 2;
+  background:
+    linear-gradient(var(--doc-code-bg, var(--ui-subtle)), var(--doc-code-bg, var(--ui-subtle))),
+    var(--ui-bg);
+  box-shadow: 0 1px 0 var(--doc-border, var(--ui-border));
 }
 /* Folded, the bar is all there is: no room left under it. */
 body.folded #bar {

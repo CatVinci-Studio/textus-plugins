@@ -12,7 +12,7 @@ const STRINGS = [
   "filter", "sort", "addFilter", "addSort", "ascending", "descending", "remove",
   "is", "isNot", "contains", "notContains", "isEmpty", "notEmpty", "greater", "less",
   "value", "search", "create", "clear", "untitled", "newProperty", "propertyName",
-  "type", "rename", "hide", "deleteProperty", "showAll", "open", "showMore", "fold",
+  "type", "rename", "hide", "deleteProperty", "showAll", "open", "fold",
   "unfold", "addView", "renameView", "deleteView", "skipped", "notBase", "unknownView",
   "type.text", "type.number", "type.select", "type.tags", "type.date", "type.checkbox", "type.url",
 ];
@@ -201,8 +201,14 @@ function draw(target, webview, context) {
       const data = await snapshot(target, index).catch((err) => ({ error: String((err && err.message) || err), strings: strings() }));
       if (mine === sent) webview.postMessage({ type: "data", data });
     };
+    // Each reader's view and fold, on this device only: not in the file.
+    const store = context.storage.global;
+    const remembered = () => store.get("view:" + target.key()).then((v) => v || {}, () => ({}));
+    const remember = async (change) =>
+      store.set("view:" + target.key(), Object.assign(await remembered(), change)).catch(() => {});
     const select = (i) => {
       index = i;
+      void remember({ index });
       webview.postMessage({ type: "selected", index });
     };
     live.add(send);
@@ -213,10 +219,18 @@ function draw(target, webview, context) {
       // View `at` (the one in front unless a menu named another) set to `spec`.
       const set = (spec, at = index) => changeBase(target, (base) => database.setView(base, Math.min(at, base.views.length - 1), spec));
       switch (m.type) {
-        case "ready":
+        case "ready": {
+          const kept = await remembered();
+          index = typeof kept.index === "number" ? kept.index : m.index | 0;
+          webview.postMessage({ type: "selected", index, folded: !!kept.folded });
+          return send();
+        }
         case "select":
           index = m.index | 0;
+          void remember({ index });
           return send();
+        case "fold":
+          return remember({ folded: !!m.folded });
         // A row opens in a tab, as a file does.
         case "open":
           return textus.layout.open(join(root, m.rel));
@@ -296,6 +310,8 @@ function draw(target, webview, context) {
 function blockTarget(block) {
   return {
     path: block.path,
+    // Its place among the note's blocks: a reader's view is kept by it.
+    key: () => block.path + "#" + (block.block ?? 0),
     source: () => block.source,
     setSource: (text) => block.setSource(text.replace(/\n$/, "")),
     onDidChange: (fn) => block.onDidChange(fn),
@@ -312,6 +328,7 @@ function fileTarget(file) {
   };
   return {
     path: file.path,
+    key: () => file.path,
     ready: reload(),
     source: () => text,
     setSource: async (next) => {

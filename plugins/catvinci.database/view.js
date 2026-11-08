@@ -9,7 +9,8 @@
   const api = acquireTextusApi();
   const VIEWS = ["table", "board", "calendar", "gallery", "list"];
   const VIEW_ICONS = { table: "table", board: "board", calendar: "calendar", gallery: "gallery", list: "list" };
-  /** Rows shown before "Show more", when the view sets no limit of its own. */
+  /** Rows drawn at first, and again each time the list is scrolled to its
+   *  end, when the view sets no limit of its own. */
   const PAGE = 25;
   const TYPES = ["text", "number", "select", "tags", "date", "checkbox", "url"];
   const TYPE_ICONS = { text: "text", number: "number", select: "select", tags: "multi", date: "date", checkbox: "checkbox", url: "url" };
@@ -20,7 +21,7 @@
   // Each reader's own: the view in front and whether the base is folded.
   const state = Object.assign({ index: 0, folded: false }, api.getState() || {});
   const keep = () => api.setState(state);
-  /** How many rows "Show more" has let through, past the first page. */
+  /** How many rows scrolling has let through, past the first page. */
   let more = 0;
   /** A field being typed in: the view waits for it before drawing again. */
   let editing = false;
@@ -260,7 +261,7 @@
       el("th", { class: "plus", tabindex: "0", "aria-label": s("newProperty"), onclick: (e) => addColumnMenu(e.currentTarget) }, icon("plus")));
     const rows = capped(data.rows).map((row) => el("tr", null, titleCell(row), data.columns.map((key) => cell(row, key)), el("td", { class: "plus" })));
     const span = String(data.columns.length + 2);
-    const more = moreButton(data.rows.length);
+    const more = moreMark(data.rows.length);
     const tail = [
       more && el("tr", { class: "more-row" }, el("td", { colspan: span }, more)),
       el("tr", { class: "new-row" }, el("td", { colspan: span }, newButton({}))),
@@ -268,6 +269,19 @@
     const frame = el("div", { class: "tx-table-frame" }, el("table", { class: "tx-table" }, el("thead", null, head), el("tbody", null, rows, tail)));
     for (const [key, px] of Object.entries(widths)) sizeColumn(frame, key, px);
     return el("div", null, frame);
+  }
+
+  /** The table's head kept in view while its rows scroll by: the page
+   *  scrolls (in a tab, or in a block's own height) and the frame scrolls
+   *  sideways, so a sticky head has nothing to stick to; it is moved. */
+  function pinHead() {
+    const head = document.querySelector(".tx-table thead");
+    if (!head) return;
+    const table = head.closest("table").getBoundingClientRect();
+    const height = head.getBoundingClientRect().height;
+    const by = Math.max(0, Math.min(-table.top, table.height - height * 2));
+    head.classList.toggle("pinned", by > 0);
+    for (const th of head.querySelectorAll("th")) th.style.transform = by ? "translateY(" + by + "px)" : "";
   }
 
   /** Every cell of column `key` `px` wide, its text cut short to fit. */
@@ -427,7 +441,7 @@
       const lane = el("div", { class: "lane", "data-value": g.value },
         head,
         capped(g.rels).map((rel) => card(byRel.get(rel), key, g.value)),
-        moreButton(g.rels.length),
+        moreMark(g.rels.length),
         newButton(groupProps(key, g.value)));
       // A list moved by its head, the others making way: the board's order,
       // kept in the base (groupOrder).
@@ -555,7 +569,7 @@
           (cover || glyph) && el("div", { class: "cover", style: cover ? "background-image:url(" + JSON.stringify(cover) + ")" : null }, cover ? "" : glyph),
           el("div", { class: "text" }, pageLink(row),
             data.columns.filter((c) => c !== "cover" && row.props[c] !== undefined).slice(0, 3).map((c) => el("div", { class: "prop" }, shown(row.props[c], data.types[c], c)))));
-      })), moreButton(data.rows.length));
+      })), moreMark(data.rows.length));
   }
 
   // ----------------------------------------------------------------- list
@@ -564,21 +578,30 @@
       capped(data.rows).map((row) => el("li", null, pageLink(row),
         data.columns.filter((c) => row.props[c] !== undefined && row.props[c] !== "").slice(0, 3)
           .map((c) => el("span", { class: "prop" }, shown(row.props[c], data.types[c], c)))))),
-      moreButton(data.rows.length));
+      moreMark(data.rows.length));
   }
 
   // ------------------------------------------------------ how many shown
   const cap = () => (data.spec.limit || PAGE) + more;
   const capped = (list) => list.slice(0, cap());
-  /** "Show more" under a list cut at the view's limit. */
-  function moreButton(total) {
+  /** The end of a list cut short: scrolled into view, the next rows come. */
+  function moreMark(total) {
     if (total <= cap()) return null;
-    return el("button", { type: "button", class: "tx-button small more", onclick: () => { more += PAGE; render(); } },
-      s("showMore").replace("{0}", String(total - cap())));
+    const mark = el("div", { class: "more", "aria-hidden": "true" });
+    nearEnd.observe(mark);
+    return mark;
   }
+  const nearEnd = new IntersectionObserver(
+    (seen) => {
+      if (!seen.some((x) => x.isIntersecting) || editing) return;
+      more += PAGE;
+      render();
+    },
+    { rootMargin: "0px 0px 200px 0px" },
+  );
 
   // ---------------------------------------------------------------- views
-  /** The base's views, one tab each; the one in front has its menu. */
+  /** The base's views, one tab each. */
   function viewTabs() {
     const tabs = data.views.map((v) =>
       el("button", {
@@ -586,16 +609,13 @@
         class: "tx-segment",
         role: "tab",
         "aria-selected": String(v.index === data.index),
-        "aria-haspopup": v.index === data.index ? "menu" : null,
-        onclick: (e) => (v.index === data.index ? viewMenu(e.currentTarget, v) : choose(v.index)),
-        // Any view's menu, without showing it first.
+        onclick: () => v.index !== data.index && choose(v.index),
+        // A view's type, name or removal: its right-click menu.
         oncontextmenu: (e) => {
           e.preventDefault();
           viewMenu(e.currentTarget, v);
         },
-      }, icon(VIEW_ICONS[v.view] || "table"), v.name || s(v.view),
-      // The one in front says it opens a menu.
-      v.index === data.index ? el("span", { class: "tx-icon view-menu", "data-icon": "chevron" }) : null));
+      }, icon(VIEW_ICONS[v.view] || "table"), v.name || s(v.view)));
     const add = el("button", { type: "button", class: "tx-icon-button", "aria-label": s("addView"), onclick: (e) => addViewMenu(e.currentTarget) }, icon("plus"));
     return tabs.concat([add]);
   }
@@ -646,8 +666,11 @@
     $("notes").replaceChildren(...notes);
     if (state.folded) return body.replaceChildren();
     if (!data.rows.length && view !== "calendar" && view !== "table") return body.replaceChildren(el("div", { class: "tx-empty" }, s("empty")));
+    nearEnd.disconnect();
     body.replaceChildren(view === "board" ? board() : view === "calendar" ? calendar() : view === "gallery" ? gallery() : view === "list" ? list() : table());
+    pinHead();
   }
+  window.addEventListener("scroll", pinHead, { passive: true });
 
   $("add").addEventListener("click", () => {
     if (!data) return;
@@ -659,12 +682,14 @@
   $("fold").addEventListener("click", () => {
     state.folded = !state.folded;
     keep();
+    post({ type: "fold", folded: state.folded });
     render();
   });
   $("sort").addEventListener("click", (e) => data && sortMenu(e.currentTarget));
   api.onMessage((m) => {
     if (m && m.type === "selected") {
       state.index = m.index;
+      if (typeof m.folded === "boolean") state.folded = m.folded;
       more = 0;
       keep();
       return;
