@@ -24,6 +24,7 @@ Läuft auf dem Desktop.
 
 ## Änderungen
 
+- **0.2.1** - Seine Seite sagt jetzt in einem Satz, was es tut, was es kann und was sich in jeder Version geändert hat.
 - **0.2.0** - Mit Strg/⌘ angeklickte Weblinks öffnen sich nur dann in einem Tab, wenn Sie das in den Einstellungen einschalten; sonst im Browser.
 - **0.1.2** - Nur Desktop.
 - **0.1.0-0.1.1** - Erste Versionen: eine Adresse oder Suche im Tab, letzte Seiten, die Auswahl öffnen oder suchen, mit Strg/⌘ angeklickte Links, Wahl der Suchmaschine.

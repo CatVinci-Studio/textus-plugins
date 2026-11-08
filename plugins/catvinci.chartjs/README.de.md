@@ -27,6 +27,7 @@ Läuft auf dem Desktop und auf dem iPhone und braucht Textus 1.3.2 oder neuer. E
 
 ## Änderungen
 
+- **0.3.1** - Seine Seite sagt jetzt in einem Satz, was es tut, was es kann und was sich in jeder Version geändert hat.
 - **0.3.0** - Textus AI kann einen `chartjs`-Block prüfen, bevor es ihn schreibt (`check_chartjs`).
 - **0.2.0** - Datenreihen bekommen die Farben des Themes; braucht Textus 1.3.2.
 - **0.1.3** - Nutzt die umbenannten Dokumentfarben von Textus.

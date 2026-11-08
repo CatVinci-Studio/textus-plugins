@@ -36,6 +36,7 @@ kanban-plugin: board
 
 ## Alterações
 
+- **0.4.3** - Sua página agora diz numa frase o que ele faz, o que pode fazer e o que mudou em cada versão.
 - **0.4.2** - Cartões e listas seguem o ponteiro ao serem arrastados, e os outros abrem espaço. Requer Textus 1.3.10.
 - **0.4.1** - Mantém a marca que o Kanban do Obsidian põe numa lista de concluídos.
 - **0.4.0** - Agora se chama Quadro de tarefas (antes Kanban). Os quadros novos são arquivos .md comuns com `kanban-plugin` no front matter, como o Obsidian escreve; quadros .kanban.md continuam abrindo.

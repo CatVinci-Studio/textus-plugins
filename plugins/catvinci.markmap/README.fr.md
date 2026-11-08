@@ -25,6 +25,7 @@ Le plugin utilise [markmap](https://markmap.js.org). Il demande une seule permis
 
 ## Changements
 
+- **0.3.2** - Sa page dit maintenant en une phrase ce qu'il fait, ce qu'il permet et ce qui a changé à chaque version.
 - **0.3.1** - Une carte mentale hors de vue s’exporte en image et non plus en source.
 - **0.3.0** - Textus AI peut vérifier un bloc `markmap` avant de l’écrire.
 - **0.2.0** - Les couleurs des branches viennent des tons du thème. Nécessite Textus 1.3.2.

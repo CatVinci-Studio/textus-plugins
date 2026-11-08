@@ -39,6 +39,7 @@ Espaciado CJK, el complemento que pone espacios entre texto chino y latino, tamb
 
 ## Cambios
 
+- **0.3.1** - Su página dice ahora en una frase qué hace, qué puede hacer y qué cambió en cada versión.
 - **0.3.0** - Ahora se llama Ordenar (antes Revisión de Markdown): los seis comandos de texto de «Ordenar texto» pasan aquí; ajustes para quitar el subrayado o reglas sueltas; la sintaxis propia de Obsidian queda como está.
 - **0.2.1** - Etiquetas, enlaces, recordatorios y definiciones de referencia nunca se marcan: la misma lista que respeta Espaciado CJK.
 - **0.2.0** - Textus AI puede revisar Markdown (`lint_markdown`).

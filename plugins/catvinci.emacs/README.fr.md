@@ -16,6 +16,7 @@ Fonctionne sur ordinateur et sur iPhone. Demande une seule permission, les touch
 
 ## Changements
 
+- **0.1.4** - Sa page dit maintenant en une phrase ce qu'il fait, ce qu'il permet et ce qui a changé à chaque version.
 - **0.1.3** - Indique où elle fonctionne : ordinateur et iPhone.
 - **0.1.2** - C-x ne reste plus bloqué ; C-d et C-y ne touchent plus au presse-papiers ni à la région.
 - **0.1.0-0.1.1** - Premières versions : déplacements, marque et région, kill ring avec C-y et M-y, M-u M-l M-c, annulation et touches C-x ; page dans la boutique et icône.

@@ -15,6 +15,7 @@ Lists every `#tag` in the open folder in the sidebar, with how many notes use it
 
 ## Changes
 
+- **0.3.2** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
 - **0.3.1** - Tags used equally often are listed in natural name order ("Week2" before "Week10").
 - **0.3.0** - Nested tags form a tree, each counting the notes of the tags under it; Textus AI finds a tag's nested tags too.
 - **0.2.0** - Textus AI can list your tags and the notes with a tag (`list_tags`, `notes_with_tag`).

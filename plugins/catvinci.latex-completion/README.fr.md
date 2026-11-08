@@ -11,5 +11,6 @@ Elle fonctionne sur ordinateur et sur iPhone et demande Textus 1.3.0 ou plus ré
 
 ## Changements
 
+- **0.1.3** - Sa page dit maintenant en une phrase ce qu'il fait, ce qu'il permet et ce qui a changé à chaque version.
 - **0.1.2** - Indique où elle fonctionne : ordinateur et iPhone.
 - **0.1.0-0.1.1** - Premières versions : plus de 200 commandes avec ce que chacune dessine, recherche par lettres dans l'ordre, accolades et curseur en place, paires de délimiteurs extensibles ; page dans la boutique et icône.

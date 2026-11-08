@@ -25,6 +25,7 @@ Das Plugin nutzt [markmap](https://markmap.js.org). Es fragt nur nach einer Bere
 
 ## Änderungen
 
+- **0.3.2** - Seine Seite sagt jetzt in einem Satz, was es tut, was es kann und was sich in jeder Version geändert hat.
 - **0.3.1** - Eine Mindmap außerhalb des sichtbaren Bereichs wird als Bild exportiert statt als Quelltext.
 - **0.3.0** - Textus AI kann einen `markmap`-Block prüfen, bevor es ihn schreibt.
 - **0.2.0** - Die Farben der Äste kommen aus den Tönen des Themes. Benötigt Textus 1.3.2.

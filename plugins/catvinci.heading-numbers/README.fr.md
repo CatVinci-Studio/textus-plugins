@@ -12,6 +12,7 @@ Le plugin lit les titres du document ouvert (permission de lire l’éditeur) et
 
 ## Changements
 
+- **0.2.2** - Sa page dit maintenant en une phrase ce qu'il fait, ce qu'il permet et ce qui a changé à chaque version.
 - **0.2.1** - Pas de numéros sur un document numéroté à la main, ni sur un document dont les propriétés disent `number headings: off`.
 - **0.2.0** - Textus AI peut écrire les numéros dans les titres d’un Markdown, ou les retirer.
 - **0.1.3** - Indique où il fonctionne : ordinateur, iPhone et iPad.

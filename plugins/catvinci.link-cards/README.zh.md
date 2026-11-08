@@ -35,6 +35,7 @@ image: https://textus.md/og.png
 
 ## 更新日志
 
+- **0.4.1** - 介绍页重写：一句话说明它做什么，再讲它能做的事，并列出每个版本的更新。
 - **0.4.0** - Obsidian 的 `cardlink`（Auto Card Link）和 `embed`（Link Embed）块也画成卡片
 - **0.3.1** - 说明里的示例链接改为 textus.md
 - **0.3.0** - 新增 Textus AI 工具 `fetch_link_card`

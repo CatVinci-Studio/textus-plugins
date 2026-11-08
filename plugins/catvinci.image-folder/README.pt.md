@@ -13,6 +13,7 @@ Trabalha com imagens PNG, JPEG, GIF, WebP, AVIF, BMP, SVG, ICO, HEIC e TIFF. Fun
 
 ## Alterações
 
+- **0.1.3** - Sua página agora diz numa frase o que ele faz, o que pode fazer e o que mudou em cada versão.
 - **0.1.2** - Deixa as imagens onde as põe a pasta de anexos de um cofre do Obsidian ou um grafo do Logseq.
 - **0.1.1** - Um nome mais curto: Imagens junto ao documento.
 - **0.1.0** - Primeira versão: as imagens coladas e largadas vão para `Note.assets/`, e a pasta segue o documento com novo nome.

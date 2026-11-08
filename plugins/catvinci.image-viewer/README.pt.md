@@ -19,6 +19,7 @@ Não pede nenhuma. Só lê o arquivo que você abre, no computador e no iOS.
 
 ## Alterações
 
+- **0.2.1** - Sua página agora diz numa frase o que ele faz, o que pode fazer e o que mudou em cada versão.
 - **0.2.0** - os botões e a barra de aba do próprio Textus; os rótulos seguem a troca de idioma da interface
 - **0.1.3** - as cores dos temas do Textus 1.3
 - **0.1.2** - a porcentagem alterna entre ajustada e tamanho real

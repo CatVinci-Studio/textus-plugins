@@ -16,6 +16,7 @@ It works on desktop and iPhone. It asks for one permission, editor keys, to take
 
 ## Changes
 
+- **0.1.4** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
 - **0.1.3** - Says where it runs: desktop and iPhone.
 - **0.1.2** - C-x no longer sticks; C-d and C-y leave the clipboard and the region alone.
 - **0.1.0-0.1.1** - First versions: moves, the mark and region, a kill ring with C-y and M-y, M-u M-l M-c, undo and C-x keys; store page and icon.

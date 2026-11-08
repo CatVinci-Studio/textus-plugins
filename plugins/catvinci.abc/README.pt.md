@@ -23,6 +23,7 @@ C D E F | G A B c |
 
 ## Alterações
 
+- **0.3.1** - Sua página agora diz numa frase o que ele faz, o que pode fazer e o que mudou em cada versão.
 - **0.3.0** - O Textus AI pode verificar um bloco `abc` antes de o escrever (`check_abc`).
 - **0.2.0** - As notas seguem a cor do texto do tema; precisa do Textus 1.3.2.
 - **0.1.3** - Usa as cores do documento com os novos nomes do Textus.

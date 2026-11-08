@@ -22,6 +22,7 @@ When the open folder is an Obsidian vault (it has a `.obsidian` folder):
 
 ## Changes
 
+- **0.4.1** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
 - **0.4.0** - In an Obsidian vault, new bookmarks are written to Obsidian's `bookmarks.json` too, and removed and renamed there.
 - **0.3.0** - Lists the vault's own Obsidian bookmarks of notes, headings and blocks.
 - **0.2.1** - Paths handled by code shared with other plugins; nothing changes in use.

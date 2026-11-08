@@ -26,6 +26,7 @@ Il ne demande que **Outils pour Textus AI**, pour que Textus AI puisse vérifier
 
 ## Changements
 
+- **0.3.1** - Sa page dit maintenant en une phrase ce qu'il fait, ce qu'il permet et ce qui a changé à chaque version.
 - **0.3.0** - un outil pour Textus AI, `check_function_plot`
 - **0.2.0** - courbes et axes aux couleurs du thème, redessinés quand le thème change
 - **0.1.3** - le texte aux couleurs du thème sous Textus 1.3

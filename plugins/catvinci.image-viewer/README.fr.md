@@ -19,6 +19,7 @@ Elle n’en demande aucune. Elle lit seulement le fichier que vous ouvrez, sur o
 
 ## Changements
 
+- **0.2.1** - Sa page dit maintenant en une phrase ce qu'il fait, ce qu'il permet et ce qui a changé à chaque version.
 - **0.2.0** - les boutons et la barre d’onglet de Textus ; les libellés suivent la langue de l’interface quand elle change
 - **0.1.3** - les couleurs des thèmes de Textus 1.3
 - **0.1.2** - le pourcentage bascule entre ajusté et taille réelle

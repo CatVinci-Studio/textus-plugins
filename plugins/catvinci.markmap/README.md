@@ -25,6 +25,7 @@ The plugin uses [markmap](https://markmap.js.org). It asks for one permission, t
 
 ## Changes
 
+- **0.3.2** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
 - **0.3.1** - A mind map scrolled out of sight exports as its picture instead of its source.
 - **0.3.0** - Textus AI can check a `markmap` block before it writes one.
 - **0.2.0** - Branch colors come from the theme's tones. Needs Textus 1.3.2.

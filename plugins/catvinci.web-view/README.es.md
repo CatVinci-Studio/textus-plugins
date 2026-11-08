@@ -24,6 +24,7 @@ Funciona en escritorio.
 
 ## Cambios
 
+- **0.2.1** - Su página dice ahora en una frase qué hace, qué puede hacer y qué cambió en cada versión.
 - **0.2.0** - Los enlaces web con Ctrl/⌘+clic se abren en una pestaña solo si lo activas en los ajustes; si no, en tu navegador.
 - **0.1.2** - Solo escritorio.
 - **0.1.0-0.1.1** - Primeras versiones: una dirección o una búsqueda en una pestaña, páginas recientes, abrir o buscar la selección, enlaces con Ctrl/⌘+clic, elección de buscador.

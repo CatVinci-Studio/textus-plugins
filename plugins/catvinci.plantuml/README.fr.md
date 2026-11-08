@@ -28,6 +28,7 @@ Bob --> Alice : Hi!
 
 ## Changements
 
+- **0.2.2** - Sa page dit maintenant en une phrase ce qu'il fait, ce qu'il permet et ce qui a changé à chaque version.
 - **0.2.1** - Contient la page de graphiques partagée mise à jour ; les diagrammes sont dessinés comme avant.
 - **0.2.0** - Contient la page de graphiques partagée qui prend ses couleurs dans le thème. Nécessite Textus 1.3.2.
 - **0.1.3** - Utilise la couleur du texte du document et la taille des notes de bas de page du thème sous leurs noms de Textus 1.3.

@@ -36,6 +36,7 @@ kanban-plugin: board
 
 ## Cambios
 
+- **0.4.3** - Su página dice ahora en una frase qué hace, qué puede hacer y qué cambió en cada versión.
 - **0.4.2** - Tarjetas y listas siguen al puntero al arrastrarlas, y las demás se apartan. Requiere Textus 1.3.10.
 - **0.4.1** - Conserva la marca que el Kanban de Obsidian pone en una lista de terminadas.
 - **0.4.0** - Ahora se llama Tablero de tareas (antes Kanban). Los tableros nuevos son archivos .md normales con `kanban-plugin` en su front matter, como los escribe Obsidian; los .kanban.md siguen abriéndose.

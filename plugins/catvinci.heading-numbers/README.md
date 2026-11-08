@@ -12,6 +12,7 @@ The plugin reads the open document's headings (permission to read the editor) an
 
 ## Changes
 
+- **0.2.2** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
 - **0.2.1** - No numbers on a document numbered by hand, or one whose front matter says `number headings: off`.
 - **0.2.0** - Textus AI can write heading numbers into Markdown, or take them out.
 - **0.1.3** - Says where it runs: the desktop, iPhone and iPad.

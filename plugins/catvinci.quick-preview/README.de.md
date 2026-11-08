@@ -11,6 +11,7 @@ Das Plugin fragt nach Lesezugriff auf den Editor (um zu sehen, auf welchen Link 
 
 ## Änderungen
 
+- **0.2.1** - Seine Seite sagt jetzt in einem Satz, was es tut, was es kann und was sich in jeder Version geändert hat.
 - **0.2.0** - Ein Link auf einen Block (`#^id`) zeigt diesen Block. Benötigt Textus 1.3.9.
 - **0.1.3** - Nennt, wo es läuft: Desktop, iPhone und iPad.
 - **0.1.2** - Die Länge der Karte ist fest statt einer Einstellung.

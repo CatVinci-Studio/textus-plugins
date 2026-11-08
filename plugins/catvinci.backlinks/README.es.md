@@ -34,6 +34,7 @@ La pestaña **Enlaces bidireccionales** de la barra lateral muestra qué enlaza 
 
 ## Cambios
 
+- **0.3.1** - Su página dice ahora en una frase qué hace, qué puede hacer y qué cambió en cada versión.
 - **0.3.0** - completado de notas, encabezados y bloques con `[[`; incrustaciones con `![[`; el nombre pasa de Enlaces entrantes a Enlaces bidireccionales
 - **0.2.1** - la descripción dice "enlaces bidireccionales", para que la búsqueda de la tienda lo encuentre
 - **0.2.0** - una herramienta para Textus AI, `list_backlinks`
