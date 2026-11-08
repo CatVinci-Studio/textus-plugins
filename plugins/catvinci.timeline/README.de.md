@@ -1,18 +1,35 @@
 # Zeitleiste
 
-Ereignisse der Reihe nach, eines pro Zeile: wann | was | mehr.
+Zeichnet Ereignisse als Zeitleiste, eines pro Zeile: wann | was | mehr.
 
-- Schreiben Sie einen Codeblock in `timeline`: Er wird darunter gezeichnet, und seine Quelle erscheint wieder, wenn Sie hineinklicken.
+## Eine Zeitleiste zeichnen
+
+- Schreibe einen Codeblock in `timeline` mit einem Ereignis pro Zeile: wann, was, und auf Wunsch eine Notiz, getrennt durch `|`. Die Zeitleiste erscheint darunter, und die Quelle zeigt sich wieder, wenn du in den Block klickst.
+- Die Ereignisse stehen in der Reihenfolge, in der du sie schreibst, an einer Linie mit je einem Punkt. „Wann“ kann beliebiger Text sein: ein Datum, ein Jahr, „Tag 3“.
+- Leere Zeilen werden übersprungen. Was nach einem dritten `|` steht, wird nicht gezeigt.
 - `height=400` nach der Sprache legt die Höhe der Zeichnung fest.
-- Beim Export nach HTML, PDF oder Word kommt die Zeichnung als Bild mit.
+- Sie nimmt die Farben des Themes und wird beim Themewechsel neu gezeichnet.
+- Beim Export nach HTML, PDF oder Word kommt die Zeitleiste als Bild mit.
 
 ## Beispiel
 
 ```timeline
-2024-03 | First draft | The outline and two chapters
-2024-09 | Review | Notes from three readers
-2025-01 | Published
+2024-03 | Erster Entwurf | Gliederung und zwei Kapitel
+2024-09 | Durchsicht | Anmerkungen von drei Lesern
+2025-01 | Erschienen
 ```
+
+## Berechtigungen
+
+Es braucht nur **Werkzeuge für Textus AI**, damit Textus AI einen Block prüfen kann, bevor es ihn schreibt. Es liest keine Dateien und zeichnet alles auf deinem Gerät, auf dem Desktop und unter iOS.
+
+## Änderungen
+
+- **0.3.0** - ein Werkzeug für Textus AI, `check_timeline`
+- **0.2.0** - die Farben des Themes, neu gezeichnet beim Themewechsel
+- **0.1.3** - Text in den Farben des Themes unter Textus 1.3
+- **0.1.2** - hält mit schnellem Tippen Schritt: eine ältere Zeichnung ersetzt keine neuere mehr
+- **0.1.0-0.1.1** - erste Versionen: Ereignisse als Zeitleiste, Höhe einstellbar, Bilder im Export
 
 <!-- ai-tools -->
 ## Werkzeuge für Textus AI

@@ -1,28 +1,43 @@
 # Two-way Links
 
-> Links like `[[Note]]` are built into Textus: you can write and follow them without any plugin. This plugin helps you write them, shows what they point to in place, and lists who links to the document in front.
+Link notes, headings and blocks as you type `[[`, embed them with `![[`, and see in the sidebar what links to the document in front.
+
+Links like `[[Note]]` are built into Textus: you can write and follow them without any plugin. This plugin helps you write them, shows what they point to in place, and lists the links around the document you are reading. It works on the desktop and on iOS.
 
 ## Linking as you type
 
-- Type `[[` and pick a note in the panel that opens - by its name, its first heading or an `aliases` entry of its front matter. An alias is written as `[[Note|alias]]`.
-- After `#`, the note's headings: `[[Note#Heading]]`. `[[#` lists the document's own.
-- After `#^`, its blocks: paragraphs, list items, tables, quotes. One without an id gets one at its end in that note (`^1a2b3c`), as Obsidian writes them.
+- Type `[[` and pick a note in the panel that opens - by its file name, its first heading or an `aliases` entry of its front matter. An alias is written as `[[Note|alias]]`.
+- After `#`, the note's headings: `[[Note#Heading]]`. `[[#` lists the document's own headings.
+- After `#^`, its blocks: paragraphs, list items, tables, quotes. A block without an id gets one at its end in that note (`^1a2b3c`), the way Obsidian writes them.
 - Select some words and type `[[` to make them a link.
-- Links are written the way the folder writes them: in an Obsidian vault, with the vault's link format.
+- Links are written the way the folder writes them: in an Obsidian vault, in the vault's link format.
 
 ## Embeds
 
-- `![[Note]]` shows the note in place, `![[Note#Heading]]` that section and `![[Note#^id]]` that block - read-only, and up to date when the note changes.
+- `![[Note]]` shows the note in place, `![[Note#Heading]]` that section and `![[Note#^id]]` that block. Embeds are read-only and update when the note changes.
 - Put the caret on the line to edit the link itself.
 
-## Backlinks in the sidebar
+## Links in the sidebar
 
-What links to the document in front, and where it links to - in the **Two-way Links** tab of the sidebar.
+The **Two-way Links** tab of the sidebar shows what links to the document in front, and where it links to.
 
 - **Linked mentions**: the lines of other notes that link here, with [[wiki links]] or links to this file. Click one to go there.
-- **Unlinked mentions**: lines that name this note - by its file name, first heading or `aliases` in its front matter - without a link. Right-click one and choose **Link** to make it a [[link]].
-- **Outgoing links**: the notes this one links to, and the ones it links to that don't exist yet.
+- **Unlinked mentions**: lines that name this note - by its file name, first heading or `aliases` - without a link. Right-click one and choose **Link** to turn it into a link. If the line uses an alias, the alias stays as the link's text.
+- **Outgoing links**: the notes this one links to, including the ones that don't exist yet.
 - The field at the top filters the list.
+
+## Permissions
+
+- **Read and edit the document**: to complete links as you type and turn a selection into a link.
+- **Read and write files in the open folder**: to find links and mentions, add a link to an unlinked mention, and give a block its `^id`.
+- **Tools for Textus AI**: so Textus AI can list a document's links.
+
+## Changes
+
+- **0.3.0** - `[[` completion for notes, headings and blocks; `![[` embeds; renamed from Backlinks to Two-way Links
+- **0.2.1** - the description says "two-way links", so a store search finds it
+- **0.2.0** - a tool for Textus AI, `list_backlinks`
+- **0.1.0-0.1.1** - first versions: linked and unlinked mentions with **Link**, outgoing links and a filter; suggested for documents with wiki links
 
 <!-- ai-tools -->
 ## Tools for Textus AI

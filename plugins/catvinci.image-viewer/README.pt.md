@@ -1,10 +1,25 @@
 # Visualizador de imagens
 
-Imagens e arquivos SVG abrem numa aba.
+Abre imagens e arquivos SVG numa aba, onde você pode dar zoom, girá-los e ler o código de um SVG.
 
-- Abra uma imagem pela barra lateral ou arraste uma para a janela.
-- Dê zoom com os botões ou com **Ctrl+rolagem** (**⌘+rolagem** no Mac); clique na porcentagem para ver a imagem inteira de novo.
-- Com zoom, arraste a imagem para percorrê-la; um clique duplo alterna entre ajustada e o tamanho real.
-- **⟳** gira a imagem um quarto de volta por vez. Só a visualização muda; o arquivo continua igual.
+## Ver uma imagem
+
+- Abra um arquivo PNG, JPEG, GIF, WebP, AVIF, BMP, ICO ou SVG pela barra lateral, ou arraste-o para a janela. Ele abre numa aba própria, ajustado a ela.
+- A barra mostra as dimensões da imagem em pixels e o tamanho do arquivo.
+- Dê zoom com os botões **−** e **+** ou com **Ctrl+rolagem** (**⌘+rolagem** no Mac). Clique na porcentagem para alternar entre ajustada e tamanho real.
+- Com zoom, arraste a imagem para percorrê-la. Um clique duplo alterna entre ajustada e tamanho real, no ponto clicado.
+- O botão **Girar** gira um quarto de volta por vez. Só a visualização gira; o arquivo não muda.
 - Teclas: **+** e **-** dão zoom, **0** mostra o tamanho real, **F** ajusta e **R** gira.
-- Um SVG pode mostrar o código, para ler ou copiar.
+- Num SVG, **Código** mostra a marcação para ler ou copiar, e **Imagem** volta. O SVG é mostrado como imagem, então seus scripts nunca rodam.
+- Se o arquivo não existe ou não é uma imagem, isso é dito no lugar de uma aba vazia.
+
+## Permissões
+
+Não pede nenhuma. Só lê o arquivo que você abre, no computador e no iOS.
+
+## Alterações
+
+- **0.2.0** - os botões e a barra de aba do próprio Textus; os rótulos seguem a troca de idioma da interface
+- **0.1.3** - as cores dos temas do Textus 1.3
+- **0.1.2** - a porcentagem alterna entre ajustada e tamanho real
+- **0.1.0-0.1.1** - primeiras versões: zoom, ajuste, arrastar, girar, teclas, o código de um SVG e um aviso para arquivo que não abre
