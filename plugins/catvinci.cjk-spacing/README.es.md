@@ -21,6 +21,7 @@ Pone un espacio entre texto chino o japonés y letras latinas o números.
 
 ## Cambios
 
+- **0.2.3** - La herramienta para Textus AI dice lo que hace: chino y japonés, no coreano.
 - **0.2.2** - deja como están los ids de bloque, los campos de Dataview, los resaltados y los campos de Tasks de Obsidian
 - **0.2.1** - deja como están las #etiquetas, los recordatorios y los comentarios %%; al guardar solo cambian los bloques de prosa
 - **0.2.0** - una herramienta para Textus AI, `fix_cjk_spacing`

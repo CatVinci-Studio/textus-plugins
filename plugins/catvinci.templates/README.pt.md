@@ -19,6 +19,7 @@ Funciona no computador e no iPhone e precisa do Textus 1.3.10 ou mais recente. P
 
 ## Alterações
 
+- **0.5.1** - **Novo a partir de modelo…** no menu de contexto de um arquivo ou pasta cria o documento nessa pasta.
 - **0.5.0** - Os modelos são preenchidos pelo próprio Textus, tal como as notas diárias; precisa do Textus 1.3.10.
 - **0.4.1** - Os modelos aparecem por ordem natural: 2 antes de 10.
 - **0.4.0** - As etiquetas comuns `tp.date` e `tp.file` do Templater e os formatos de data e hora dos Modelos de um cofre do Obsidian; um aviso indica as etiquetas não executadas.

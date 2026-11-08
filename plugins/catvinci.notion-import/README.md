@@ -30,6 +30,7 @@ Everything happens on your device: the plugin reads and writes files in the open
 
 ## Changes
 
+- **0.6.1** - Calls Workspace by its name in the import report and in the suggested plugins.
 - **0.6.0** - Dates written by Textus itself; needs Textus 1.3.10.
 - **0.5.0** - Page emoji icons, from Notion's HTML export of the same pages.
 - **0.4.0** - Its own plugin again: pages with sub-pages as folders, databases as Obsidian bases, empty "Untitled" pages left out, and the import opened in Workspace's pages tree.

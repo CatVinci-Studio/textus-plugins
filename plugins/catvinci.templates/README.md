@@ -19,6 +19,7 @@ It works on desktop and iPhone and needs Textus 1.3.10 or later. It asks to read
 
 ## Changes
 
+- **0.5.1** - **New from Template…** from a file's or folder's right-click menu makes the document in that folder.
 - **0.5.0** - Templates are filled in by Textus itself, the same way as daily notes; needs Textus 1.3.10.
 - **0.4.1** - Templates are listed in natural order: 2 before 10.
 - **0.4.0** - Templater's common `tp.date` and `tp.file` tags, and an Obsidian vault's Templates date and time formats; tags that aren't run are named in a notice.

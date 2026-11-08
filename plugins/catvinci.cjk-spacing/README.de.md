@@ -21,6 +21,7 @@ Setzt ein Leerzeichen zwischen chinesischen oder japanischen Text und lateinisch
 
 ## Änderungen
 
+- **0.2.3** - Das Werkzeug für Textus AI sagt, was es tut: Chinesisch und Japanisch, nicht Koreanisch.
 - **0.2.2** - lässt Obsidians Block-IDs, Dataview-Felder, Hervorhebungen und Tasks-Felder, wie sie sind
 - **0.2.1** - lässt #Tags, Erinnerungen und %%-Kommentare, wie sie sind; beim Speichern ändern sich nur Textblöcke
 - **0.2.0** - ein Werkzeug für Textus AI, `fix_cjk_spacing`

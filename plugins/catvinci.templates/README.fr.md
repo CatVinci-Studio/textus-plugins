@@ -19,6 +19,7 @@ Fonctionne sur ordinateur et sur iPhone et demande Textus 1.3.10 ou plus récent
 
 ## Changements
 
+- **0.5.1** - **Nouveau depuis un modèle…** depuis le menu contextuel d'un fichier ou d'un dossier crée le document dans ce dossier.
 - **0.5.0** - Les modèles sont remplis par Textus lui-même, comme les notes du jour ; demande Textus 1.3.10.
 - **0.4.1** - Les modèles sont listés dans l'ordre naturel : 2 avant 10.
 - **0.4.0** - Les balises courantes `tp.date` et `tp.file` de Templater, et les formats de date et d'heure des modèles d'un coffre Obsidian ; une notification nomme les balises non exécutées.
