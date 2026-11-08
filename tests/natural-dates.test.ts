@@ -2,7 +2,11 @@ import { beforeAll, describe, expect, it } from "vitest";
 
 /** Natural Dates' phrases (plugins/catvinci.natural-dates/dates.js). */
 let nd: {
-  suggest: (typed: string, today: Date, limit?: number) => { phrase: string; date: string }[];
+  suggest: (
+    typed: string,
+    today: Date,
+    limit?: number,
+  ) => { phrase: string; date: string }[];
 };
 
 beforeAll(async () => {
@@ -14,7 +18,8 @@ beforeAll(async () => {
 
 // Wednesday, 2026-10-28.
 const wed = new Date(2026, 9, 28);
-const date = (typed: string) => nd.suggest(typed, wed).find((s) => s.phrase === typed)?.date;
+const date = (typed: string) =>
+  nd.suggest(typed, wed).find((s) => s.phrase === typed)?.date;
 
 describe("natural dates", () => {
   it("counts days from today", () => {
@@ -34,6 +39,8 @@ describe("natural dates", () => {
 
   it("suggests the phrases that begin with what was typed", () => {
     expect(nd.suggest("下周", wed).map((s) => s.phrase)).toContain("下周五");
-    expect(nd.suggest("tom", wed)).toEqual([{ phrase: "tomorrow", date: "2026-10-29" }]);
+    expect(nd.suggest("tom", wed)).toEqual([
+      { phrase: "tomorrow", date: "2026-10-29" },
+    ]);
   });
 });

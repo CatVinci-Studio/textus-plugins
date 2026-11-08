@@ -24,8 +24,12 @@ describe("WakaTime heartbeats", () => {
   it("sends on another file or kind of work, every two minutes on the same one, and on every save", () => {
     const last = { entity: "/n/a.md", at: 0, category: "writing docs" };
     expect(wb.due(null, "/n/a.md", 1000, false, "writing docs")).toBe(true);
-    expect(wb.due(last, "/n/a.md", wb.EVERY_MS - 1, false, "writing docs")).toBe(false);
-    expect(wb.due(last, "/n/a.md", wb.EVERY_MS, false, "writing docs")).toBe(true);
+    expect(
+      wb.due(last, "/n/a.md", wb.EVERY_MS - 1, false, "writing docs"),
+    ).toBe(false);
+    expect(wb.due(last, "/n/a.md", wb.EVERY_MS, false, "writing docs")).toBe(
+      true,
+    );
     expect(wb.due(last, "/n/b.md", 10, false, "writing docs")).toBe(true);
     expect(wb.due(last, "/n/a.md", 10, false, "ai coding")).toBe(true);
     expect(wb.due(last, "/n/a.md", 10, true, "writing docs")).toBe(true);

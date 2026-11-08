@@ -34,7 +34,7 @@ describe("Vim's key mappings", () => {
   it("knows the leader, special keys and Ctrl chords", () => {
     const maps = parseMappings(
       [
-        "let mapleader = \",\"",
+        'let mapleader = ","',
         "nnoremap <silent> <leader>w :w<CR>",
         "nnoremap <C-s> :w<CR>",
         "nnoremap <Space> <C-d>",
@@ -49,9 +49,7 @@ describe("Vim's key mappings", () => {
 
   it("passes over comments, set lines and what it doesn't know", () => {
     const maps = parseMappings(
-      ['" comment', "set number", "syntax on", "", "xnoremap < <gv"].join(
-        "\n",
-      ),
+      ['" comment', "set number", "syntax on", "", "xnoremap < <gv"].join("\n"),
     );
     expect(maps.n).toEqual([]);
     expect(maps.v).toEqual([{ lhs: ["<"], rhs: ["<", "g", "v"] }]);

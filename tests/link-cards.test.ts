@@ -24,20 +24,35 @@ describe("link cards", () => {
       image: "https://textus.md/og.png",
       site: "CatVinci",
     });
-    expect(lc.fromHtml("<title> Plain </title>", "https://x.org").title).toBe("Plain");
+    expect(lc.fromHtml("<title> Plain </title>", "https://x.org").title).toBe(
+      "Plain",
+    );
   });
 
   it("keeps a card as one line per field, and reads it back", () => {
-    const card = { url: "https://x.org", title: "Two\nlines", description: null };
+    const card = {
+      url: "https://x.org",
+      title: "Two\nlines",
+      description: null,
+    };
     const source = lc.write(card);
     expect(source).toBe("url: https://x.org\ntitle: Two lines");
-    expect(lc.parse(source)).toEqual({ url: "https://x.org", title: "Two lines" });
+    expect(lc.parse(source)).toEqual({
+      url: "https://x.org",
+      title: "Two lines",
+    });
   });
 
   it("plays YouTube and Bilibili videos, and nothing else", () => {
-    expect(lc.videoEmbed("https://www.youtube.com/watch?v=abc123")).toBe("https://www.youtube.com/embed/abc123");
-    expect(lc.videoEmbed("https://youtu.be/abc123")).toBe("https://www.youtube.com/embed/abc123");
-    expect(lc.videoEmbed("https://www.bilibili.com/video/BV1xx411c7mD/")).toContain("bvid=BV1xx411c7mD");
+    expect(lc.videoEmbed("https://www.youtube.com/watch?v=abc123")).toBe(
+      "https://www.youtube.com/embed/abc123",
+    );
+    expect(lc.videoEmbed("https://youtu.be/abc123")).toBe(
+      "https://www.youtube.com/embed/abc123",
+    );
+    expect(
+      lc.videoEmbed("https://www.bilibili.com/video/BV1xx411c7mD/"),
+    ).toContain("bvid=BV1xx411c7mD");
     expect(lc.videoEmbed("https://example.com/video/1")).toBeNull();
   });
 });

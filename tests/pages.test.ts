@@ -1,7 +1,13 @@
 import { beforeAll, describe, expect, it } from "vitest";
 
 /** Pages' tree (plugins/catvinci.database/pages.js). */
-type Node = { name: string; rel: string | null; dir: string | null; icon: string | null; children: Node[] };
+type Node = {
+  name: string;
+  rel: string | null;
+  dir: string | null;
+  icon: string | null;
+  children: Node[];
+};
 let p: {
   tree: (docs: { rel: string; icon?: unknown }[]) => Node[];
   ancestors: (rel: string, rels: string[]) => string[];
@@ -18,7 +24,9 @@ beforeAll(async () => {
 });
 
 const shape = (nodes: Node[]): unknown =>
-  nodes.map((n) => (n.children.length ? { [n.name]: shape(n.children) } : n.name));
+  nodes.map((n) =>
+    n.children.length ? { [n.name]: shape(n.children) } : n.name,
+  );
 
 describe("pages", () => {
   it("puts a page's folder under the page, and a folder without one on its own", () => {
@@ -38,21 +46,35 @@ describe("pages", () => {
     ]);
     const life = tree.find((n) => n.name === "Life")!;
     expect(life).toMatchObject({ rel: "Life.md", dir: "Life", icon: "☀️" });
-    expect(tree.find((n) => n.name === "Archive")).toMatchObject({ rel: null, dir: "Archive" });
+    expect(tree.find((n) => n.name === "Archive")).toMatchObject({
+      rel: null,
+      dir: "Archive",
+    });
   });
 
   it("finds the pages above a sub-page, the outermost first", () => {
-    const rels = ["Life.md", "Life/2026 Calendar.md", "Life/2026 Calendar/Week1.md"];
-    expect(p.ancestors("Life/2026 Calendar/Week1.md", rels)).toEqual(["Life.md", "Life/2026 Calendar.md"]);
+    const rels = [
+      "Life.md",
+      "Life/2026 Calendar.md",
+      "Life/2026 Calendar/Week1.md",
+    ];
+    expect(p.ancestors("Life/2026 Calendar/Week1.md", rels)).toEqual([
+      "Life.md",
+      "Life/2026 Calendar.md",
+    ]);
     expect(p.ancestors("Life.md", rels)).toEqual([]);
   });
 
   it("makes a sub-page beside its page, and links it by name unless the name is taken", () => {
-    expect(p.subpage("Life/Plans.md", "Trip: Japan")).toBe("Life/Plans/Trip- Japan.md");
-    expect(p.link("Life/Plans/Trip.md", ["Life/Plans/Trip.md"])).toBe("[[Trip]]");
-    expect(p.link("Life/Plans/Trip.md", ["Life/Plans/Trip.md", "Work/Trip.md"])).toBe(
-      "[[Life/Plans/Trip|Trip]]",
+    expect(p.subpage("Life/Plans.md", "Trip: Japan")).toBe(
+      "Life/Plans/Trip- Japan.md",
     );
+    expect(p.link("Life/Plans/Trip.md", ["Life/Plans/Trip.md"])).toBe(
+      "[[Trip]]",
+    );
+    expect(
+      p.link("Life/Plans/Trip.md", ["Life/Plans/Trip.md", "Work/Trip.md"]),
+    ).toBe("[[Life/Plans/Trip|Trip]]");
   });
 
   it("reads a folder unit - Plans/Plans.md and its sub-pages beside it - as the page and its children", () => {
@@ -65,10 +87,20 @@ describe("pages", () => {
       { rel: "Life/Week1.md" },
     ];
     const tree = p.tree(docs);
-    expect(shape(tree)).toEqual([{ Life: ["Week1"] }, { Plans: ["Q1", { Q2: ["April"] }] }]);
-    expect(tree.find((n) => n.name === "Plans")).toMatchObject({ rel: "Plans/Plans.md", dir: "Plans", icon: "🎯" });
+    expect(shape(tree)).toEqual([
+      { Life: ["Week1"] },
+      { Plans: ["Q1", { Q2: ["April"] }] },
+    ]);
+    expect(tree.find((n) => n.name === "Plans")).toMatchObject({
+      rel: "Plans/Plans.md",
+      dir: "Plans",
+      icon: "🎯",
+    });
     const rels = docs.map((d) => d.rel);
-    expect(p.ancestors("Plans/Q2/April.md", rels)).toEqual(["Plans/Plans.md", "Plans/Q2/Q2.md"]);
+    expect(p.ancestors("Plans/Q2/April.md", rels)).toEqual([
+      "Plans/Plans.md",
+      "Plans/Q2/Q2.md",
+    ]);
     expect(p.ancestors("Plans/Q2/Q2.md", rels)).toEqual(["Plans/Plans.md"]);
     // A unit's sub-page goes in its own folder; an older page's in the folder beside it.
     expect(p.subpage("Plans/Plans.md", "Q3")).toBe("Plans/Q3.md");

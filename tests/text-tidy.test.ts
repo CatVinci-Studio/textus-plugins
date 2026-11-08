@@ -31,9 +31,7 @@ describe("punctuation in Chinese text", () => {
 
   it("leaves decimals, English, ellipses, links and code alone", () => {
     expect(tidy.fullPunctuation("版本1.3.8发布")).toBe("版本1.3.8发布");
-    expect(tidy.fullPunctuation("Hello, world. OK?")).toBe(
-      "Hello, world. OK?",
-    );
+    expect(tidy.fullPunctuation("Hello, world. OK?")).toBe("Hello, world. OK?");
     expect(tidy.fullPunctuation("等等...好")).toBe("等等...好");
     expect(tidy.fullPunctuation("见[文档](https://a.com/x,y)和`a,b`")).toBe(
       "见[文档](https://a.com/x,y)和`a,b`",
@@ -98,7 +96,8 @@ describe("joining lines", () => {
 
 describe("a whole document", () => {
   it("leaves front matter, fenced code and display math alone", () => {
-    const doc = "---\ntitle: a,b\n---\n\n你好,世界\n\n```\n你好,code\n```\n\n$$\na,b\n$$\n";
+    const doc =
+      "---\ntitle: a,b\n---\n\n你好,世界\n\n```\n你好,code\n```\n\n$$\na,b\n$$\n";
     expect(tidy.tidy(doc, "fullPunctuation")).toBe(
       "---\ntitle: a,b\n---\n\n你好，世界\n\n```\n你好,code\n```\n\n$$\na,b\n$$\n",
     );
@@ -110,7 +109,12 @@ describe("the command on a whole document", () => {
     const commands = new Map<string, (editor: unknown) => Promise<void>>();
     let edits: unknown[] = [];
     loadPlugin("catvinci.text-tidy", {
-      commands: { registerEditorCommand: (id: string, run: (editor: unknown) => Promise<void>) => void commands.set(id, run) },
+      commands: {
+        registerEditorCommand: (
+          id: string,
+          run: (editor: unknown) => Promise<void>,
+        ) => void commands.set(id, run),
+      },
       ui: { confirm: async () => true, notice: async () => {} },
     });
     // The title on a line of its own: the rules alone would change it.
@@ -123,6 +127,8 @@ describe("the command on a whole document", () => {
       ],
       edit: async (changes: unknown[]) => void (edits = changes),
     });
-    expect(edits).toEqual([{ action: "replace", block: "b", text: "你好，世界" }]);
+    expect(edits).toEqual([
+      { action: "replace", block: "b", text: "你好，世界" },
+    ]);
   });
 });

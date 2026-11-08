@@ -69,11 +69,12 @@ describe("a base's YAML", () => {
     expect(y.parse(text)).toEqual(value);
     // As Obsidian writes it: two spaces, lists under their key.
     expect(text).toContain("views:\n  - type: table\n    name: My table\n");
-    expect(text).toContain("  or:\n    - file.hasTag(\"tag\")\n");
+    expect(text).toContain('  or:\n    - file.hasTag("tag")\n');
   });
 
   it("keeps lists at their key's indent, block text, and values that look like numbers", () => {
-    const text = "views:\n- type: kanban\n  name: Board\n  groupOrder:\n  - Not Started\n  - '2025'\n  - 2026\nnote: |\n  one\n  two\n";
+    const text =
+      "views:\n- type: kanban\n  name: Board\n  groupOrder:\n  - Not Started\n  - '2025'\n  - 2026\nnote: |\n  one\n  two\n";
     expect(y.parse(text)).toEqual(load(text));
     const back = y.stringify(y.parse(text));
     expect(load(back)).toEqual(load(text));

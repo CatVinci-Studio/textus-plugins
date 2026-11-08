@@ -7,14 +7,24 @@ let keep: {
   mask: (line: string) => string;
   eachProseLine: (text: string, change: (line: string) => string) => string;
 };
-let spacing: { spaceDocument: (text: string) => string; spaceOut: (text: string) => string };
-let tidy: { fullPunctuation: (line: string) => string; tidy: (text: string, rule: string) => string };
+let spacing: {
+  spaceDocument: (text: string) => string;
+  spaceOut: (text: string) => string;
+};
+let tidy: {
+  fullPunctuation: (line: string) => string;
+  tidy: (text: string, rule: string) => string;
+};
 
 beforeAll(async () => {
   await import("../shared/markdown-keep.js");
   await import(/* @vite-ignore */ "../plugins/catvinci.cjk-spacing/spacing.js");
   await import(/* @vite-ignore */ "../plugins/catvinci.text-tidy/tidy.js");
-  const g = globalThis as unknown as { markdownKeep: typeof keep; cjkSpacing: typeof spacing; textTidy: typeof tidy };
+  const g = globalThis as unknown as {
+    markdownKeep: typeof keep;
+    cjkSpacing: typeof spacing;
+    textTidy: typeof tidy;
+  };
   keep = g.markdownKeep;
   spacing = g.cjkSpacing;
   tidy = g.textTidy;
@@ -24,7 +34,8 @@ const upper = (line: string) => line.toUpperCase();
 
 describe("the shared list", () => {
   it("passes over indented code, HTML blocks and %% comment blocks", () => {
-    const doc = "a\n\n    code a\n\n<div>\nhtml a\n</div>\n\n%%\nnote a\n%%\n\nb";
+    const doc =
+      "a\n\n    code a\n\n<div>\nhtml a\n</div>\n\n%%\nnote a\n%%\n\nb";
     expect(keep.eachProseLine(doc, upper)).toBe(
       "A\n\n    code a\n\n<div>\nhtml a\n</div>\n\n%%\nnote a\n%%\n\nB",
     );
@@ -45,7 +56,8 @@ describe("the shared list", () => {
 
 describe("CJK Spacing", () => {
   it("leaves indented code, HTML blocks and %% comments alone on save", () => {
-    const doc = "用Textus\n\n    中文abc code\n\n<div>\n中文abc\n</div>\n\n%%私人批注abc%%";
+    const doc =
+      "用Textus\n\n    中文abc code\n\n<div>\n中文abc\n</div>\n\n%%私人批注abc%%";
     expect(spacing.spaceDocument(doc)).toBe(
       "用 Textus\n\n    中文abc code\n\n<div>\n中文abc\n</div>\n\n%%私人批注abc%%",
     );
@@ -55,23 +67,38 @@ describe("CJK Spacing", () => {
     let willSave: (e: unknown) => Promise<unknown> = async () => undefined;
     loadPlugin("catvinci.cjk-spacing", {
       settings: { get: async () => true },
-      files: { onWillSave: (fn: typeof willSave) => ((willSave = fn), { dispose() {} }) },
+      files: {
+        onWillSave: (fn: typeof willSave) => (
+          (willSave = fn),
+          { dispose() {} }
+        ),
+      },
     });
     const text = "用Textus\r\n\r\n```\n用Textus\n```\n";
     const blocks = [
       { id: "b1", kind: "paragraph", markdown: "用Textus", from: 0, to: 7 },
-      { id: "b2", kind: "code", markdown: "```\n用Textus\n```", from: 11, to: 26 },
+      {
+        id: "b2",
+        kind: "code",
+        markdown: "```\n用Textus\n```",
+        from: 11,
+        to: 26,
+      },
     ];
-    expect(await willSave({ path: "/a.md", text, trigger: "auto", blocks })).toEqual([
-      { block: "b1", markdown: "用 Textus" },
-    ]);
-    expect(await willSave({ path: "/a.md", text: "用 Textus", blocks: [blocks[0]] })).toBeUndefined();
+    expect(
+      await willSave({ path: "/a.md", text, trigger: "auto", blocks }),
+    ).toEqual([{ block: "b1", markdown: "用 Textus" }]);
+    expect(
+      await willSave({ path: "/a.md", text: "用 Textus", blocks: [blocks[0]] }),
+    ).toBeUndefined();
   });
 });
 
 describe("Text Tidy", () => {
   it("keeps a reminder's (@…) as written", () => {
-    expect(tidy.fullPunctuation("- [ ] 交报告(@2026-11-06 09:00)")).toBe("- [ ] 交报告(@2026-11-06 09:00)");
+    expect(tidy.fullPunctuation("- [ ] 交报告(@2026-11-06 09:00)")).toBe(
+      "- [ ] 交报告(@2026-11-06 09:00)",
+    );
   });
 
   it("turns brackets in pairs, and leaves an unpaired one", () => {
@@ -82,13 +109,18 @@ describe("Text Tidy", () => {
   });
 
   it("leaves %% comments and tags alone", () => {
-    expect(tidy.fullPunctuation("好,%%a,b%% #标签,x")).toBe("好，%%a,b%% #标签,x");
+    expect(tidy.fullPunctuation("好,%%a,b%% #标签,x")).toBe(
+      "好，%%a,b%% #标签,x",
+    );
   });
 });
 
 describe("Markdown Lint", () => {
   const lint = async (text: string, fix = false) =>
-    loadPlugin("catvinci.markdown-lint").tools.get("lint_markdown")!({ text, fix });
+    loadPlugin("catvinci.markdown-lint").tools.get("lint_markdown")!({
+      text,
+      fix,
+    });
 
   it("takes #tag for a tag, never a heading", async () => {
     const result = await lint("#project 下周 review\n", true);
@@ -97,7 +129,9 @@ describe("Markdown Lint", () => {
   });
 
   it("keeps reference definitions and anchor links", async () => {
-    expect((await lint("[d]: https://example.com/docs\n", true)).fixed).toBe("[d]: https://example.com/docs\n");
+    expect((await lint("[d]: https://example.com/docs\n", true)).fixed).toBe(
+      "[d]: https://example.com/docs\n",
+    );
     expect((await lint("See [setup](#setup) below.\n")).issues).toEqual([]);
   });
 

@@ -46,9 +46,9 @@ describe("renaming a tag", () => {
   });
 
   it("renames a tag listed under tags:", () => {
-    expect(tagEdit.renameTag("---\ntags:\n  - draft\n  - b\n---\n", "draft", "写作")).toBe(
-      "---\ntags:\n  - 写作\n  - b\n---\n",
-    );
+    expect(
+      tagEdit.renameTag("---\ntags:\n  - draft\n  - b\n---\n", "draft", "写作"),
+    ).toBe("---\ntags:\n  - 写作\n  - b\n---\n");
   });
 
   it("takes letters of any script, and not digits alone", () => {

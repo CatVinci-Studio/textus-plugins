@@ -2,7 +2,11 @@ import { beforeAll, describe, expect, it } from "vitest";
 
 /** Writing Stats' counting (plugins/catvinci.writing-stats/count.js). */
 let wc: {
-  count: (markdown: string) => { words: number; characters: number; cjk: number };
+  count: (markdown: string) => {
+    words: number;
+    characters: number;
+    cjk: number;
+  };
   readingMinutes: (c: { words: number; cjk: number }) => number;
 };
 
@@ -14,7 +18,9 @@ beforeAll(async () => {
 
 describe("counting", () => {
   it("counts words in Latin scripts and characters in CJK, without Markdown's marks", () => {
-    const c = wc.count("---\ntitle: x\n---\n# Hello, world\n\n- [x] It's **done** [here](https://a.b/c)\n\n你好世界");
+    const c = wc.count(
+      "---\ntitle: x\n---\n# Hello, world\n\n- [x] It's **done** [here](https://a.b/c)\n\n你好世界",
+    );
     // Hello, world, It's, done, here + 4 CJK characters.
     expect(c.words).toBe(9);
     expect(c.cjk).toBe(4);

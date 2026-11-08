@@ -7,7 +7,8 @@ let parseLoose: (source: string) => unknown;
 beforeAll(async () => {
   const script = "../shared/parse-loose.js";
   await import(/* @vite-ignore */ script);
-  parseLoose = (globalThis as Record<string, unknown>).parseLoose as typeof parseLoose;
+  parseLoose = (globalThis as Record<string, unknown>)
+    .parseLoose as typeof parseLoose;
 });
 
 describe("parseLoose", () => {

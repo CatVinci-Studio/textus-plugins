@@ -28,7 +28,10 @@ describe("quick insert", () => {
   });
 
   it("opens emoji only after a space or at the line's start, not in 10:30 or a URL", () => {
-    const pattern = new RegExp(`(?:${manifest.contributes.completions[0].pattern})$`, "u");
+    const pattern = new RegExp(
+      `(?:${manifest.contributes.completions[0].pattern})$`,
+      "u",
+    );
     expect(pattern.exec("I am :sm")?.[0]).toBe(":sm");
     expect(pattern.exec(":tada")?.[0]).toBe(":tada");
     expect(pattern.exec("at 10:30")).toBeNull();
@@ -38,6 +41,10 @@ describe("quick insert", () => {
   it("names every command in every language it speaks", () => {
     const keys = manifest.contributes.commands.map((c) => c.title.slice(1, -1));
     for (const [lang, strings] of Object.entries(manifest.l10n))
-      for (const key of keys) expect(strings[key as keyof typeof strings], `${lang}.${key}`).toBeTruthy();
+      for (const key of keys)
+        expect(
+          strings[key as keyof typeof strings],
+          `${lang}.${key}`,
+        ).toBeTruthy();
   });
 });

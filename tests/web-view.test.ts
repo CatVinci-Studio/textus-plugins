@@ -35,13 +35,22 @@ describe("what Web View opens", () => {
 describe("Ctrl/Cmd+clicked web links", () => {
   it("go to the browser unless the setting says a tab", async () => {
     const { loadPlugin } = await import("./plugin-host");
-    for (const [setting, where] of [[undefined, "browser"], [true, "tab"]] as const) {
+    for (const [setting, where] of [
+      [undefined, "browser"],
+      [true, "tab"],
+    ] as const) {
       const opened: string[] = [];
       let openLink: ((url: string) => Promise<void>) | null = null;
       loadPlugin("catvinci.web-view", {
-        settings: { get: async (key: string) => (key === "clickLinks" ? setting : undefined) },
+        settings: {
+          get: async (key: string) =>
+            key === "clickLinks" ? setting : undefined,
+        },
         commands: {
-          register: (id: string, fn: typeof openLink) => (id.endsWith("openLink") && (openLink = fn), { dispose() {} }),
+          register: (id: string, fn: typeof openLink) => (
+            id.endsWith("openLink") && (openLink = fn),
+            { dispose() {} }
+          ),
         },
         layout: {
           openExternal: async () => void opened.push("browser"),

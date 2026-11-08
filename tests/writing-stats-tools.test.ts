@@ -8,21 +8,40 @@ const files = {
   "Notes.md": "Just two.\n",
 };
 const metadata = {
-  all: async () => Object.keys(files).map((rel) => ({ path: "/root/" + rel, rel })),
+  all: async () =>
+    Object.keys(files).map((rel) => ({ path: "/root/" + rel, rel })),
 };
 
 describe("writing stats' tool", () => {
   const { tools } = loadPlugin("catvinci.writing-stats", {
     files: folder(files),
     metadata,
-    editor: { getText: async () => "Three words here", getPath: async () => "/root/Draft.md" },
+    editor: {
+      getText: async () => "Three words here",
+      getPath: async () => "/root/Draft.md",
+    },
   });
-  const count = (args: Record<string, unknown>) => tools.get("count_words")!(args);
+  const count = (args: Record<string, unknown>) =>
+    tools.get("count_words")!(args);
 
   it("counts a document, a folder, or the whole folder", async () => {
-    expect(await count({ path: "Notes" })).toEqual({ path: "Notes.md", documents: 1, words: 2, characters: 8, reading_minutes: 1 });
-    expect(await count({ path: "Book" })).toMatchObject({ path: "Book", documents: 2, words: 8 });
-    expect(await count({ path: "" })).toMatchObject({ path: "/", documents: 3, words: 10 });
+    expect(await count({ path: "Notes" })).toEqual({
+      path: "Notes.md",
+      documents: 1,
+      words: 2,
+      characters: 8,
+      reading_minutes: 1,
+    });
+    expect(await count({ path: "Book" })).toMatchObject({
+      path: "Book",
+      documents: 2,
+      words: 8,
+    });
+    expect(await count({ path: "" })).toMatchObject({
+      path: "/",
+      documents: 3,
+      words: 10,
+    });
     expect(await count({ path: "Nowhere" })).toHaveProperty("error");
   });
 

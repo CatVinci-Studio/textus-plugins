@@ -1,6 +1,13 @@
 import { spawnSync } from "node:child_process";
 import { createHash } from "node:crypto";
-import { copyFileSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import {
+  copyFileSync,
+  mkdirSync,
+  mkdtempSync,
+  readFileSync,
+  rmSync,
+  writeFileSync,
+} from "node:fs";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 import JSZip from "jszip";
@@ -11,12 +18,17 @@ it("checks and packages the first community listing using its release filename",
   // Keep the fixture beneath the repository so the copied script resolves its dependencies.
   const fixture = mkdtempSync(join(root, ".community-build-"));
   try {
-    for (const dir of ["scripts", "plugins", "skills", "community"]) mkdirSync(join(fixture, dir));
+    for (const dir of ["scripts", "plugins", "skills", "community"])
+      mkdirSync(join(fixture, dir));
     for (const file of ["build.mjs", "community.mjs"])
       copyFileSync(join(root, "scripts", file), join(fixture, "scripts", file));
     writeFileSync(join(fixture, "libs.json"), "{}");
     writeFileSync(join(fixture, "removed.json"), '{"plugins":[]}');
-    const entry = { id: "jane.word-count", repo: "jane/textus-word-count", version: "0.2.0" };
+    const entry = {
+      id: "jane.word-count",
+      repo: "jane/textus-word-count",
+      version: "0.2.0",
+    };
     const asset = `${entry.id}-${entry.version}.zip`;
     const url = `https://github.com/${entry.repo}/releases/download/v${entry.version}/${asset}`;
     const manifest = { id: entry.id, version: entry.version, main: "host.js" };
@@ -42,15 +54,23 @@ it("checks and packages the first community listing using its release filename",
     `,
     );
     const script = join(fixture, "scripts", "build.mjs");
-    const checked = spawnSync(process.execPath, ["--import", preload, script, "--check"], {
-      encoding: "utf8",
-    });
+    const checked = spawnSync(
+      process.execPath,
+      ["--import", preload, script, "--check"],
+      {
+        encoding: "utf8",
+      },
+    );
     expect(checked.status, checked.stderr).toBe(0);
     expect(checked.stdout).toContain("1 community listings");
-    const built = spawnSync(process.execPath, ["--import", preload, script], { encoding: "utf8" });
+    const built = spawnSync(process.execPath, ["--import", preload, script], {
+      encoding: "utf8",
+    });
     expect(built.status, built.stderr).toBe(0);
     expect(readFileSync(join(fixture, "dist", asset))).toEqual(zip);
-    const catalog = JSON.parse(readFileSync(join(fixture, "dist", "index.json"), "utf8"));
+    const catalog = JSON.parse(
+      readFileSync(join(fixture, "dist", "index.json"), "utf8"),
+    );
     expect(catalog.plugins).toEqual([
       expect.objectContaining({
         id: entry.id,

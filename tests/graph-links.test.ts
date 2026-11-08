@@ -9,16 +9,18 @@ type Doc = {
   path: string;
   rel: string;
   tags: string[];
-  links: { target: string; resolved: string | null; missing?: string; line: number; text: string }[];
+  links: {
+    target: string;
+    resolved: string | null;
+    missing?: string;
+    line: number;
+    text: string;
+  }[];
 };
 let links: {
   graphFromMetadata: (docs: Doc[], options?: { tags?: boolean }) => Graph;
   filterGraph: (graph: Graph, settings: Record<string, unknown>) => Graph;
-  neighbourhood: (
-    graph: Graph,
-    focus: string,
-    depth: number,
-  ) => Graph;
+  neighbourhood: (graph: Graph, focus: string, depth: number) => Graph;
 };
 
 beforeAll(async () => {
@@ -58,7 +60,9 @@ describe("the graph of a folder's links", () => {
   });
 
   it("makes a missing note of a wiki link to nothing, but not of a web link", () => {
-    const g = links.graphFromMetadata([doc("a.md", ["Someday", "https://x.org"])]);
+    const g = links.graphFromMetadata([
+      doc("a.md", ["Someday", "https://x.org"]),
+    ]);
     expect(g.nodes.map((n) => [n.name, n.kind])).toEqual([
       ["a", "note"],
       ["Someday", "missing"],
@@ -69,7 +73,9 @@ describe("the graph of a folder's links", () => {
     const docs = [doc("a.md", [], ["draft"]), doc("b.md", [], ["#Draft"])];
     expect(links.graphFromMetadata(docs).nodes).toHaveLength(2);
     const g = links.graphFromMetadata(docs, { tags: true });
-    expect(g.nodes.filter((n) => n.kind === "tag").map((n) => n.name)).toEqual(["#draft"]);
+    expect(g.nodes.filter((n) => n.kind === "tag").map((n) => n.name)).toEqual([
+      "#draft",
+    ]);
     expect(g.edges).toHaveLength(2);
   });
 });
@@ -93,8 +99,14 @@ describe("the settings panel's filters", () => {
       "/n/two.md",
       "missing:/n/later.md",
     ]);
-    expect(ids(links.filterGraph(folder(), { ...base, tags: true }))).toContain("tag:#draft");
-    const strict = links.filterGraph(folder(), { ...base, existingOnly: true, orphans: false });
+    expect(ids(links.filterGraph(folder(), { ...base, tags: true }))).toContain(
+      "tag:#draft",
+    );
+    const strict = links.filterGraph(folder(), {
+      ...base,
+      existingOnly: true,
+      orphans: false,
+    });
     expect(ids(strict)).toEqual(["/n/ideas/one.md", "/n/two.md"]);
   });
 
@@ -134,7 +146,10 @@ describe("the local graph", () => {
     ]);
 
   it("reaches as far as the depth, either way", () => {
-    expect(ids(links.neighbourhood(g(), "/n/a.md", 1))).toEqual(["/n/a.md", "/n/b.md"]);
+    expect(ids(links.neighbourhood(g(), "/n/a.md", 1))).toEqual([
+      "/n/a.md",
+      "/n/b.md",
+    ]);
     expect(ids(links.neighbourhood(g(), "/n/a.md", 2))).toHaveLength(5);
   });
 });

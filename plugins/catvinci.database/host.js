@@ -323,6 +323,25 @@ function fileTarget(file) {
   };
 }
 
+/** A folder renamed or moved: bases that name it by its path - written by
+ *  hand or in Obsidian - name it by its new one. */
+async function followFolder(change) {
+  root = await textus.files.root();
+  const from = relOf(change.from);
+  const to = relOf(change.to);
+  if (!root || !from || !to || /\.[a-z0-9]+$/i.test(from)) return;
+  const old = (q) => 'file.inFolder("' + from + q;
+  for (const doc of await textus.metadata.all()) {
+    if (!/\.(md|base)$/i.test(doc.rel)) continue;
+    const path = join(root, doc.rel);
+    const text = await textus.files.readText(path).catch(() => "");
+    if (!text.includes(old('"')) && !text.includes(old("/"))) continue;
+    await textus.files.process(path, (t) =>
+      t.split(old('"')).join('file.inFolder("' + to + '"').split(old("/")).join('file.inFolder("' + to + "/"),
+    );
+  }
+}
+
 /** A database at the caret: a folder unit for it beside the note, its
  *  page holding the base, and a link to it here. */
 async function newDatabase() {
@@ -458,6 +477,7 @@ exports.activate = function (ctx) {
     textus.files.onDidCreate(again),
     textus.files.onDidDelete(again),
     textus.files.onDidRename(again),
+    textus.files.onDidRename((change) => void followFolder(change)),
   );
   // Its pages tree, a module of its own (pages-host.js).
   activatePages(ctx);

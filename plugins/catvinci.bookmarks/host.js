@@ -1,7 +1,8 @@
 // Bookmarks: words of a document, kept with the plugin's global data
 // (ctx.storage.global, "bookmarks") and listed in the sidebar by document;
 // a click opens the document at those words. A renamed document's
-// bookmarks follow it (files.onDidRename).
+// bookmarks follow it (files.onDidRename). In an Obsidian vault, Obsidian's
+// own bookmarks (.obsidian/bookmarks.json) are listed too.
 /* global folderPaths */
 let ctx;
 let list;
@@ -28,6 +29,34 @@ async function listBookmarks() {
   };
 }
 
+/** Obsidian's bookmarks of notes, headings and blocks, groups flattened
+ *  into "Obsidian › group". Searches, folders and the like are left out. */
+async function obsidianMarks() {
+  const root = await textus.files.root();
+  if (!root) return [];
+  let saved;
+  try {
+    saved = JSON.parse(await textus.files.readText(folderPaths.abs(root, ".obsidian/bookmarks.json")));
+  } catch {
+    return [];
+  }
+  const out = [];
+  const walk = (items, group) => {
+    for (const item of Array.isArray(items) ? items : []) {
+      if (!item || typeof item !== "object") continue;
+      if (item.type === "group") walk(item.items, group + " › " + (item.title || ""));
+      if (!["file", "heading", "block"].includes(item.type) || typeof item.path !== "string") continue;
+      const sub = typeof item.subpath === "string" ? item.subpath.replace(/^#/, "") : "";
+      const location = { path: folderPaths.abs(root, item.path) };
+      if (item.type === "heading" && sub) location.heading = sub;
+      if (item.type === "block" && sub) location.block = sub.replace(/^\^/, "");
+      out.push({ label: item.title || fileName(item.path).replace(/\.md$/i, "") + (sub ? " › " + sub : ""), group, path: item.path, location });
+    }
+  };
+  walk(saved && saved.items, t("obsidian"));
+  return out;
+}
+
 exports.activate = function (context) {
   ctx = context;
   textus.ai.registerTool("list_bookmarks", listBookmarks);
@@ -49,7 +78,16 @@ exports.activate = function (context) {
           },
         ],
         data: i,
-      }));
+      })).concat(
+        (await obsidianMarks()).map((mark, i) => ({
+          id: "obsidian:" + i + ":" + mark.path,
+          label: mark.label,
+          group: mark.group,
+          detail: mark.path,
+          icon: "star",
+          location: mark.location,
+        })),
+      );
     },
   });
   textus.commands.registerEditorCommand(

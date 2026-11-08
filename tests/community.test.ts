@@ -1,7 +1,15 @@
 import { describe, expect, it } from "vitest";
-import { communityEntry, newerRelease, releaseZipUrl } from "../scripts/community.mjs";
+import {
+  communityEntry,
+  newerRelease,
+  releaseZipUrl,
+} from "../scripts/community.mjs";
 
-const good = { id: "jane.word-count", repo: "jane/textus-word-count", version: "0.2.0" };
+const good = {
+  id: "jane.word-count",
+  repo: "jane/textus-word-count",
+  version: "0.2.0",
+};
 
 describe("communityEntry", () => {
   it("reads a listing and where its zip is", () => {
@@ -15,13 +23,17 @@ describe("communityEntry", () => {
   it("refuses a listing that is wrong", () => {
     const bad: [Record<string, unknown>, string][] = [
       [good, "community/other.json"],
-      [{ ...good, id: "catvinci.word-count" }, "community/catvinci.word-count.json"],
+      [
+        { ...good, id: "catvinci.word-count" },
+        "community/catvinci.word-count.json",
+      ],
       [{ ...good, repo: "not a repo" }, ""],
       [{ ...good, version: "2" }, ""],
       [{ ...good, sha256: "abc" }, ""],
       [{ ...good, libs: ["x"] }, ""],
     ];
-    for (const [json, path] of bad) expect(() => communityEntry(json, path)).toThrow();
+    for (const [json, path] of bad)
+      expect(() => communityEntry(json, path)).toThrow();
   });
 });
 
@@ -35,12 +47,19 @@ describe("newerRelease", () => {
   });
 
   it("finds the newest released version with its zip", () => {
-    const releases = [release("v0.1.0"), release("v0.10.0"), release("v0.3.0"), release("v0.2.0")];
+    const releases = [
+      release("v0.1.0"),
+      release("v0.10.0"),
+      release("v0.3.0"),
+      release("v0.2.0"),
+    ];
     expect(newerRelease(good, releases)).toBe("0.10.0");
   });
 
   it("finds nothing when only the listed version, older ones or unfinished releases exist", () => {
-    expect(newerRelease(good, [release("v0.2.0"), release("v0.1.9")])).toBeNull();
+    expect(
+      newerRelease(good, [release("v0.2.0"), release("v0.1.9")]),
+    ).toBeNull();
     expect(
       newerRelease(good, [
         release("v0.3.0", { draft: true }),

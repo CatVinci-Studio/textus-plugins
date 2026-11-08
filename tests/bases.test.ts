@@ -7,7 +7,8 @@ type Row = { rel: string; name: string; props: Record<string, unknown> };
 let db: any;
 
 beforeAll(async () => {
-  for (const f of ["yaml", "expr", "bases"]) await import(/* @vite-ignore */ `../shared/${f}.js`);
+  for (const f of ["yaml", "expr", "bases"])
+    await import(/* @vite-ignore */ `../shared/${f}.js`);
   db = (globalThis as unknown as { database: unknown }).database;
 });
 
@@ -61,8 +62,13 @@ describe("a base", () => {
         { raw: "formula.x > 1" },
       ],
     });
-    expect(db.viewSpec(base, 1)).toMatchObject({ view: "table", unknownView: "map" });
-    expect(db.viewSpec(base, 0).views.map((v: { name: string }) => v.name)).toEqual(["Board", "Places"]);
+    expect(db.viewSpec(base, 1)).toMatchObject({
+      view: "table",
+      unknownView: "map",
+    });
+    expect(
+      db.viewSpec(base, 0).views.map((v: { name: string }) => v.name),
+    ).toEqual(["Board", "Places"]);
   });
 
   it("writes a view's change back and keeps what it doesn't know", () => {
@@ -70,17 +76,25 @@ describe("a base", () => {
     const next = db.setView(base, 0, {
       groupOrder: ["Done", "Doing", ""],
       sort: [{ key: "name", desc: false }],
-      filters: [{ key: "due date", op: "<", value: "2026-02-01" }, { raw: "formula.x > 1" }],
+      filters: [
+        { key: "due date", op: "<", value: "2026-02-01" },
+        { raw: "formula.x > 1" },
+      ],
       columns: ["status", "due"],
     });
     const text = db.writeBase(next);
-    const back = load(text) as { views: Record<string, unknown>[]; properties: unknown };
+    const back = load(text) as {
+      views: Record<string, unknown>[];
+      properties: unknown;
+    };
     expect(back.views[0]).toMatchObject({
       type: "kanban",
       myPluginKey: "kept",
       groupOrder: ["Done", "Doing", null],
       sort: [{ property: "file.name", direction: "ASC" }],
-      filters: { and: ['note["due date"] < date("2026-02-01")', "formula.x > 1"] },
+      filters: {
+        and: ['note["due date"] < date("2026-02-01")', "formula.x > 1"],
+      },
       order: ["file.name", "status", "due"],
     });
     expect(back.views[1]).toEqual({ type: "map", name: "Places" });
@@ -101,7 +115,10 @@ describe("a base's rows", () => {
   const docs = [
     { rel: "Life/Cal/Cal.md", frontmatter: {} },
     { rel: "Life/Cal/Week2.md", frontmatter: { status: "Done", rate: 4 } },
-    { rel: "Life/Cal/Week1/Week1.md", frontmatter: { status: "Doing", rate: 2 } },
+    {
+      rel: "Life/Cal/Week1/Week1.md",
+      frontmatter: { status: "Doing", rate: 2 },
+    },
     { rel: "Life/Cal/Week1/Jan 1.md", frontmatter: {} },
     { rel: "Life/Other.md", frontmatter: { status: "Done" } },
   ];
@@ -111,35 +128,82 @@ describe("a base's rows", () => {
     const { rows, skipped } = db.rowsOf(base, docs, "Life/Cal/Cal.md");
     expect(skipped).toEqual([]);
     // With the unit itself the vault's top, too.
-    const top = docs.filter((d) => d.rel.startsWith("Life/Cal/")).map((d) => ({ ...d, rel: d.rel.slice(9) }));
-    expect(db.rowsOf(base, top, "Cal.md").rows.map((r: Row) => r.rel)).toEqual(["Week2.md", "Week1/Week1.md"]);
-    expect(rows.map((r: Row) => r.rel)).toEqual(["Life/Cal/Week2.md", "Life/Cal/Week1/Week1.md"]);
+    const top = docs
+      .filter((d) => d.rel.startsWith("Life/Cal/"))
+      .map((d) => ({ ...d, rel: d.rel.slice(9) }));
+    expect(db.rowsOf(base, top, "Cal.md").rows.map((r: Row) => r.rel)).toEqual([
+      "Week2.md",
+      "Week1/Week1.md",
+    ]);
+    expect(rows.map((r: Row) => r.rel)).toEqual([
+      "Life/Cal/Week2.md",
+      "Life/Cal/Week1/Week1.md",
+    ]);
     expect(db.folderOf(base, "Life/Cal/Cal.md")).toBe("Life/Cal");
     // The same rows seen from another page, found from that page's folder: they hold
     // when the vault's top is a folder further in, as long as both notes are in it.
-    for (const [from, top] of [["Work/Plans.md", ""], ["Life/Home.md", ""], ["Life/Home.md", "Life/"], ["Home.md", ""]] as const) {
-      const there = { filters: { and: db.folderRows(from.includes("/") ? from.slice(0, from.lastIndexOf("/")) : "", "Life/Cal") }, views: [{ type: "table" }] };
-      const inside = docs.filter((d) => d.rel.startsWith(top)).map((d) => ({ ...d, rel: d.rel.slice(top.length) }));
+    for (const [from, top] of [
+      ["Work/Plans.md", ""],
+      ["Life/Home.md", ""],
+      ["Life/Home.md", "Life/"],
+      ["Home.md", ""],
+    ] as const) {
+      const there = {
+        filters: {
+          and: db.folderRows(
+            from.includes("/") ? from.slice(0, from.lastIndexOf("/")) : "",
+            "Life/Cal",
+          ),
+        },
+        views: [{ type: "table" }],
+      };
+      const inside = docs
+        .filter((d) => d.rel.startsWith(top))
+        .map((d) => ({ ...d, rel: d.rel.slice(top.length) }));
       if (!from.startsWith(top)) continue;
-      expect(db.rowsOf(there, inside, from.slice(top.length)).rows.map((r: Row) => r.rel), from + " in " + top).toEqual(
-        ["Life/Cal/Week2.md", "Life/Cal/Week1/Week1.md"].map((r) => r.slice(top.length)),
+      expect(
+        db
+          .rowsOf(there, inside, from.slice(top.length))
+          .rows.map((r: Row) => r.rel),
+        from + " in " + top,
+      ).toEqual(
+        ["Life/Cal/Week2.md", "Life/Cal/Week1/Week1.md"].map((r) =>
+          r.slice(top.length),
+        ),
       );
-      expect(db.folderOf(there, from.slice(top.length))).toBe("Life/Cal".slice(top.length));
+      expect(db.folderOf(there, from.slice(top.length))).toBe(
+        "Life/Cal".slice(top.length),
+      );
     }
   });
 
   it("go through a view's filters and sort, and into a board's lists in its order", () => {
     const { rows } = db.rowsOf(db.unitBase("board"), docs, "Life/Cal/Cal.md");
-    const spec = { filters: [{ key: "rate", op: ">=", value: "1" }], sort: [{ key: "rate", desc: true }] };
-    expect(db.viewRows(rows, spec, "Life/Cal/Cal.md").map((r: Row) => r.name)).toEqual(["Week2", "Week1"]);
-    const lists = db.groups(rows, "status", ["Doing"]).map((g: { value: string }) => g.value);
+    const spec = {
+      filters: [{ key: "rate", op: ">=", value: "1" }],
+      sort: [{ key: "rate", desc: true }],
+    };
+    expect(
+      db.viewRows(rows, spec, "Life/Cal/Cal.md").map((r: Row) => r.name),
+    ).toEqual(["Week2", "Week1"]);
+    const lists = db
+      .groups(rows, "status", ["Doing"])
+      .map((g: { value: string }) => g.value);
     expect(lists).toEqual(["Doing", "Done"]);
   });
 
   it("take their kinds from Obsidian's types file, then from their values", () => {
     const rows = [
-      { rel: "a.md", name: "a", props: { due: "2026-01-01", tags: ["x"], n: "3", status: "A" } },
-      { rel: "b.md", name: "b", props: { due: "2026-01-02", tags: ["y"], n: "4", status: "A" } },
+      {
+        rel: "a.md",
+        name: "a",
+        props: { due: "2026-01-01", tags: ["x"], n: "3", status: "A" },
+      },
+      {
+        rel: "b.md",
+        name: "b",
+        props: { due: "2026-01-02", tags: ["y"], n: "4", status: "A" },
+      },
     ];
     expect(db.typesOf(rows, { n: "number" }, { status: "select" })).toEqual({
       due: "date",

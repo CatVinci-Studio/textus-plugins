@@ -7,36 +7,56 @@ const t = (key, ...args) => textus.l10n.t(key, ...args);
 
 let list = null;
 
+/** A tag's node: nested tags (#project/alpha) are a tree, as in Obsidian. */
+function tagNode(tag, count, nested) {
+  return {
+    id: "tag:" + tag,
+    label: "#" + (tag.includes("/") ? tag.slice(tag.lastIndexOf("/") + 1) : tag),
+    description: String(count),
+    detail: tag.includes("/") ? "#" + tag : undefined,
+    icon: "tag",
+    children: true,
+    data: { tag, nested },
+    actions: [{ label: t("rename"), command: "catvinci.tags.rename", args: [tag] }],
+  };
+}
+
+/** The tags one level under `prefix` ("" for the top), each counting the
+ *  notes of its sub-tags too. */
+function level(tags, prefix) {
+  const counts = new Map();
+  const nested = new Set();
+  for (const { tag, count } of tags) {
+    if (prefix && !tag.startsWith(prefix + "/")) continue;
+    const rest = prefix ? tag.slice(prefix.length + 1) : tag;
+    const name = (prefix ? prefix + "/" : "") + rest.split("/")[0];
+    counts.set(name, (counts.get(name) || 0) + count);
+    if (rest.includes("/")) nested.add(name);
+  }
+  return [...counts.entries()]
+    .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
+    .map(([tag, count]) => tagNode(tag, count, nested.has(tag)));
+}
+
 async function items(parent) {
   if (!(await textus.files.root())) {
     list.setMessage(t("nofolder"));
     return [];
   }
   list.setMessage("");
-  if (parent) {
-    const docs = await textus.metadata.all();
-    return docs
-      .filter((d) => d.tags.includes(parent.data))
-      .map((d) => ({
-        id: "note:" + parent.data + ":" + d.path,
-        label: d.title,
-        detail: d.rel,
-        icon: "file",
-        location: { path: d.path },
-      }));
-  }
   const tags = await textus.metadata.tags();
-  return tags
-    .sort((a, b) => b.count - a.count || a.tag.localeCompare(b.tag))
-    .map((tag) => ({
-      id: "tag:" + tag.tag,
-      label: "#" + tag.tag,
-      description: String(tag.count),
-      icon: "tag",
-      children: true,
-      data: tag.tag,
-      actions: [{ label: t("rename"), command: "catvinci.tags.rename", args: [tag.tag] }],
+  if (!parent) return level(tags, "");
+  const { tag, nested } = parent.data;
+  const docs = (await textus.metadata.all())
+    .filter((d) => d.tags.includes(tag))
+    .map((d) => ({
+      id: "note:" + tag + ":" + d.path,
+      label: d.title,
+      detail: d.rel,
+      icon: "file",
+      location: { path: d.path },
     }));
+  return (nested ? level(tags, tag) : []).concat(docs);
 }
 
 /** Renames `from` in every note of the folder that has it. */

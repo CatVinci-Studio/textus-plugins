@@ -8,13 +8,17 @@ const titles = (match: RegExp) =>
     const m = manifestOf(id);
     const l10n = m.l10n?.en ?? {};
     return (m.contributes?.commands ?? [])
-      .map((c: { title: string }) => c.title.replace(/^%(.*)%$/, (_: string, k: string) => l10n[k] ?? k))
+      .map((c: { title: string }) =>
+        c.title.replace(/^%(.*)%$/, (_: string, k: string) => l10n[k] ?? k),
+      )
       .filter((title: string) => match.test(title))
       .map((title: string) => `${id}: ${title}`);
   });
 
 it("has one Notion import, its own plugin's", () => {
-  expect(titles(/^import.*notion/i)).toEqual(["catvinci.notion-import: Import from Notion…"]);
+  expect(titles(/^import.*notion/i)).toEqual([
+    "catvinci.notion-import: Import from Notion…",
+  ]);
 });
 
 it("has one way to write today's date: Natural Dates' @today", () => {
