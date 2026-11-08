@@ -43,8 +43,8 @@ What it becomes: pages and sub-pages as above, Notion's ids gone from names and 
 
 Once it is installed, Textus AI can use these in a conversation:
 
-- `create_database`: Makes a database: a folder of documents whose front matter holds each one's properties, and a ```database block that shows them as a table, board, calendar or gallery. Returns the block to insert.
-- `query_rows`: Reads a database's rows - the documents in its folder - each with its name, path and properties, filtered and sorted as a ```database block's filter and sort lines would.
+- `create_database`: Makes a database in Obsidian's Bases format: a folder of notes whose front matter holds each one's properties, and a page in it with a ```base block showing them as a table, board, calendar, gallery or list. Returns a link to that page to put where the user wants it.
+- `query_rows`: Reads a database's rows - the notes its base chooses, by default those in its folder - each with its name, path and properties, filtered and sorted.
 - `add_row`: Adds a row to a database: a document in its folder, named for the row, with its properties in its front matter. Every block showing that folder shows it. Only for a database folder (create_database, query_rows); a plain to-do is add_task.
 - `create_page`: Makes a page: a document titled as given at the top of the open folder, or a sub-page in the folder beside its parent page, with an icon if given. Returns its path and the [[link]] to put in the parent.
 <!-- /ai-tools -->

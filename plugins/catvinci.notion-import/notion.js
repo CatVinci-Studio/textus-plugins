@@ -66,9 +66,7 @@
       for (let d = dirOf(path); d; d = dirOf(d)) child(dirOf(d)).dirs.add(baseOf(d));
     }
 
-    // `rows`: the folder holds a database's rows, which stay files in it - a row with a folder of
-    // its own keeps the older layout (Row.md beside Row/), or it would leave the database.
-    function walk(oldDir, newDir, rows) {
+    function walk(oldDir, newDir) {
       const here = children.get(oldDir) || { files: [], dirs: new Set() };
       const used = new Set();
       taken.set(newDir, used);
@@ -106,9 +104,9 @@
         const base = alike.get(cleanName(key)) > 1 && title ? cleanName(title) : cleanName(key);
         const stem = unique(used, base, [".md", ""]);
         const id = N.idOf(key);
-        // A page with sub-pages, and every database, is a folder unit: Plans/Plans.md beside what
-        // it holds. A page without is a file on its own.
-        const unit = !!(g.csv.length || (g.dir && !rows));
+        // A page with sub-pages - a database's row too - and every database is a folder unit:
+        // Plans/Plans.md beside what it holds. A page without is a file on its own.
+        const unit = !!(g.csv.length || g.dir);
         const own = unit ? joinPath(joinPath(newDir, stem), stem + ".md") : joinPath(newDir, stem + ".md");
         if (unit) units.push({ folder: joinPath(newDir, stem), name: stem + ".md" });
         if (g.page) {
@@ -129,7 +127,7 @@
             id,
           });
         }
-        if (g.dir) walk(joinPath(oldDir, g.dir), joinPath(newDir, stem), g.csv.length > 0);
+        if (g.dir) walk(joinPath(oldDir, g.dir), joinPath(newDir, stem));
       }
       for (const name of attachments.sort()) {
         const { stem, ext } = splitExt(name);
@@ -337,20 +335,23 @@
     );
   }
 
-  /** A database's page: one block, its views a click apart in it, opening on a board when the
-   *  rows have a status, else a table; the board's grouping and the calendar's dates set. */
-  function databasePage(name, folderName, rows, table, foldersBy) {
+  /** A database's page: its base, the views a click apart - a board first when the rows have a
+   *  status, then the table, and a calendar when they have dates. */
+  function databasePage(name, rows) {
+    const B = root.database;
     const group = boardKey(rows);
     const date = dateKey(rows);
-    // Without from, a database in its folder unit's own page shows that folder.
-    const lines = (folderName ? ["from: " + folderName] : []).concat("view: " + (group ? "board" : "table"));
-    if (group) lines.push("group: " + group);
-    if (date) lines.push("date: " + date);
-    if (date && rows.some((r) => r.props[date + "_end"])) lines.push("end: " + date + "_end");
-    if (foldersBy) lines.push("folders: " + foldersBy + ":year");
-    // The rows with nothing written in them, as the Database view keeps them: a table under "rows:".
-    if (table && table.length) lines.push("rows:", root.database.writeSpec({ view: "table", sort: [], filters: [], types: {}, table }).split("\nrows:\n")[1]);
-    return { text: "# " + name + "\n\n```database\n" + lines.join("\n") + "\n```\n", group, date };
+    let base = B.unitBase(group ? "board" : "table");
+    if (group) {
+      base = B.setView(base, 0, { group });
+      base = B.addView(base, "table", B.viewName("table"));
+    }
+    if (date) {
+      base = B.addView(base, "calendar", B.viewName("calendar"));
+      const end = rows.some((r) => r.props[date + "_end"]) ? date + "_end" : null;
+      base = B.setView(base, base.views.length - 1, { date, end });
+    }
+    return { text: "# " + name + "\n\n```base\n" + B.writeBase(base) + "```\n", group, date };
   }
 
   const VIEW_LINK = /^\s*\[[^\]\n]*\]\(([^)\s]+?\.csv)\)\s*$/i;
@@ -359,7 +360,7 @@
    *  "filters:" (property names only) and "sort:" lines. Each becomes the link to the database's
    *  page and a ```database block showing it, sorted as it was; the database's own page (`own`,
    *  its folder) keeps only the link. */
-  function convertViews(text, from, to, layout, own) {
+  function convertViews(text, from, to, layout, own, prefix) {
     if (!layout.databases.length) return text;
     const lines = text.split("\n");
     const out = [];
@@ -386,9 +387,11 @@
         i = k - 1;
       }
       if (db.folder === own) continue;
-      out.push(m[0].trim(), "", "```database", "from: " + relative(dirOf(to), db.folder), "view: table");
-      if (sort.length) out.push("sort: " + sort.join(", "));
-      out.push("```");
+      // Another page's view of the database: its rows by the folder's path in the open folder.
+      const B = root.database;
+      let base = { filters: { and: B.folderRows(joinPath(prefix || "", db.folder)) }, views: [{ type: "table", name: B.viewName("table") }] };
+      if (sort.length) base = B.setView(base, 0, { sort: sort.map((k) => (k.startsWith("-") ? { key: k.slice(1), desc: true } : { key: k, desc: false })) });
+      out.push(m[0].trim(), "", "```base", B.writeBase(base).replace(/\n$/, ""), "```");
     }
     return out.join("\n").replace(/\n{3,}/g, "\n\n");
   }
@@ -398,7 +401,7 @@
   const TEMPLATE = /template|模板|範本|テンプレート|템플릿|plantilla|modèle|vorlage|шаблон|modelo/i;
 
   function convertPage(body, title, props, from, to, layout, found, own) {
-    let text = convertCallouts(convertViews(body, from, to, layout, own), (kind) => found.block(kind, to));
+    let text = convertCallouts(convertViews(body, from, to, layout, own, layout.prefix), (kind) => found.block(kind, to));
     text = rewriteLinks(text, from, to, layout, (link) => found.link(link, to));
     found.todos((text.match(TODO) || []).length);
     for (const m of text.matchAll(BOOKMARK)) if (!NOTION_URL.test(m[1] || m[2])) found.url();
@@ -499,10 +502,7 @@
 
   /** Imports the export a file at a time, so a large one never sits in memory whole; `signal`
    *  stops it between files. A file that can't be read or written goes in `report.failed`. */
-  /** How many rows with pages of their own make a database big enough to file by year. */
-  const BIG = 200;
-
-  async function importExport({ paths, read, write, progress, signal, byYear }) {
+  async function importExport({ paths, read, write, progress, signal, prefix }) {
     // The titles of pages Notion named alike in one folder, to tell them apart.
     const titles = new Map();
     const stems = new Map();
@@ -519,6 +519,7 @@
           if (title) titles.set(p, title);
         }
     const layout = plan(paths, titles);
+    layout.prefix = prefix || "";
     const report = {
       pages: 0, databases: 0, rows: 0, files: 0, total: paths.length, done: 0, stopped: false,
       missing: [], failed: [], blocks: { callout: [], icon: [] },
@@ -596,31 +597,21 @@
         const id = N.idOf(splitExt(baseOf(page)).stem);
         if (id) layout.byId.set(id, name);
       }
-      // A row with nothing written in it is a line of the database's own table, not a file: one
-      // place for each row. Links to its page go to the database's page.
-      db.inline = [];
+      // A row with no title, no properties and nothing written in it isn't brought in: Notion's
+      // empty "Untitled". Links to its page go to the database's page.
+      db.skip = [];
       for (const [i, page] of db.pages.entries()) {
+        const row = db.rows[i];
+        const untitled = !row.name.trim() || /^untitled$/i.test(cleanName(row.name));
+        const said = Object.values(row.props).some((v) => v !== null && v !== undefined && v !== "" && !(Array.isArray(v) && !v.length));
+        if (!untitled || said || (page && hasSubfolder(layout, page))) continue;
         const text = page ? await Promise.resolve().then(() => read(page, "text")).catch(() => null) : "";
-        if (text === null || (page && N.pageParts(text).body.trim()) || (page && hasSubfolder(layout, page))) continue;
-        db.inline[i] = true;
+        if (text === null || (page && N.pageParts(text).body.trim())) continue;
+        db.skip[i] = true;
         if (!page) continue;
         layout.files.set(page, db.page);
         const id = N.idOf(splitExt(baseOf(page)).stem);
         if (id) layout.byId.set(id, db.page);
-      }
-      // Asked for, a big database's pages go in a folder per year of their date (folders: date:year).
-      const filed = db.pages.filter((p, i) => p && !db.inline[i]);
-      const date = byYear && filed.length > BIG ? dateKey(db.rows) : null;
-      if (date) {
-        db.folders = date;
-        for (const [i, page] of db.pages.entries()) {
-          const year = page && !db.inline[i] && String(db.rows[i].props[date] || "").slice(0, 4);
-          if (!year || !/^\d{4}$/.test(year) || hasSubfolder(layout, page)) continue;
-          const to = joinPath(joinPath(db.folder, year), baseOf(layout.files.get(page)));
-          layout.files.set(page, to);
-          const id = N.idOf(splitExt(baseOf(page)).stem);
-          if (id) layout.byId.set(id, to);
-        }
       }
     }
     // Pictures after the rows have their names: one takes its page's name.
@@ -629,27 +620,27 @@
     for (const db of layout.databases) {
       if (stopped()) return report;
       const { rows, pages } = db;
-      const table = [];
       for (const [i, row] of rows.entries()) {
         if (stopped()) return report;
         const page = pages[i];
         if (page) rowPages.add(page);
-        if (db.inline[i]) {
-          // Its page, mapped to the database's page, is counted with that below.
-          table.push({ name: row.name, props: linkRelations(row.props, db.page, layout) });
-          report.rows++;
+        if (db.skip[i]) {
+          report.skipped = (report.skipped || 0) + 1;
+          if (page) step(page);
           continue;
         }
         const to = page ? layout.files.get(page) : joinPath(db.folder, unique(layout.taken.get(db.folder), cleanName(row.name), [".md", ""]) + ".md");
-        await attempt(page || to, async () => {
-          const body = page ? N.pageParts(await read(page, "text")).body : "";
+        // A page that can't be read is a failure; its row is kept with the CSV's properties.
+        let body = "";
+        if (page) await attempt(page, async () => (body = N.pageParts(await read(page, "text")).body));
+        await attempt(to, async () => {
           await writeText(to, convertPage(body, row.name, row.props, page || db.csv, to, layout, found));
           report.rows++;
         });
         if (page) step(page);
       }
       await attempt(db.page, async () => {
-        const view = databasePage(db.name, null, rows.map((r) => ({ props: linkRelations(r.props, db.page, layout) })), table, db.folders);
+        const view = databasePage(db.name, rows.filter((r, i) => !db.skip[i]).map((r) => ({ props: linkRelations(r.props, db.page, layout) })));
         // A newer export's own page for the database: what else it says goes above the views.
         const parts = db.intro ? N.pageParts(await read(db.intro, "text")) : { title: "", body: "" };
         const intro = parts.body;
@@ -695,8 +686,8 @@
   /** The official plugins that help with what the import holds, `installed` ones left out. */
   function recommend(stats, installed) {
     const has = installed || new Set();
-    // Pages and databases are this plugin's own (Workspace): only the others.
     const all = [
+      ["catvinci.database", stats.subpages > 0 || stats.databases > 0],
       ["catvinci.backlinks", stats.links > 0],
       ["catvinci.quick-preview", stats.links > 0],
       ["catvinci.tasks", stats.todos >= 10],

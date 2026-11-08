@@ -1,6 +1,7 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { beforeAll, describe, expect, it } from "vitest";
+import { load } from "js-yaml";
 import { FIXTURE, H, exportFiles, id } from "./notion-fixture";
 
 /** Notion Import's conversion (plugins/catvinci.notion-import/notion.js),
@@ -10,13 +11,14 @@ let ni: any;
 
 beforeAll(async () => {
   await import(/* @vite-ignore */ "../shared/notion-csv.js");
-  await import(/* @vite-ignore */ "../plugins/catvinci.database/db.js");
-  await import(/* @vite-ignore */ "../plugins/catvinci.database/notion.js");
+  await import(/* @vite-ignore */ "../shared/yaml.js");
+  await import(/* @vite-ignore */ "../shared/bases.js");
+  await import(/* @vite-ignore */ "../plugins/catvinci.notion-import/notion.js");
   ni = (globalThis as unknown as { notionImport: unknown }).notionImport;
 });
 
 /** An import into memory: the files written (bytes as their size) and the report. */
-async function importOf(paths: string[], read: (path: string, kind: string) => Promise<unknown>, abortAfter = 0, byYear = false) {
+async function importOf(paths: string[], read: (path: string, kind: string) => Promise<unknown>, abortAfter = 0) {
   const out: Record<string, string> = {};
   const folders: string[] = [];
   const controller = new AbortController();
@@ -35,7 +37,6 @@ async function importOf(paths: string[], read: (path: string, kind: string) => P
       if (abortAfter && done >= abortAfter) controller.abort();
     },
     signal: controller.signal,
-    byYear,
   });
   return { out, folders, report };
 }
@@ -253,10 +254,17 @@ describe("databases", () => {
     ];
     expect(ni.boardKey(rows)).toBe("status");
     expect(ni.dateKey(rows)).toBe("due");
-    // One block, on its board, its views a click apart: the calendar's dates already set.
-    expect(ni.databasePage("Tasks", "Tasks", rows).text).toBe(
-      "# Tasks\n\n```database\nfrom: Tasks\nview: board\ngroup: status\ndate: due\nend: due_end\n```\n",
-    );
+    // One base, on its board, its views a click apart: the calendar's dates already set.
+    const page = ni.databasePage("Tasks", rows).text;
+    expect(page.startsWith("# Tasks\n\n```base\n")).toBe(true);
+    expect(load(page.slice(page.indexOf("```base\n") + 8, page.lastIndexOf("```")))).toMatchObject({
+      filters: { and: expect.arrayContaining(["file.inFolder(this.file.folder)"]) },
+      views: [
+        { type: "kanban", name: "Board", groupBy: { property: "status" } },
+        { type: "table", name: "Table" },
+        { type: "calendar", name: "Calendar", date: "due", end: "due_end" },
+      ],
+    });
   });
 
   it("add a board for a status column even when every row's status differs", () => {
@@ -267,11 +275,9 @@ describe("databases", () => {
 
   it("is a table alone without a status or a date", () => {
     const rows = [{ props: { owner: "Ann" } }, { props: { owner: "Bo" } }];
-    expect(ni.databasePage("People", "People", rows)).toEqual({
-      text: "# People\n\n```database\nfrom: People\nview: table\n```\n",
-      group: null,
-      date: null,
-    });
+    const { text, group, date } = ni.databasePage("People", rows);
+    expect([group, date]).toEqual([null, null]);
+    expect((load(text.slice(text.indexOf("```base\n") + 8, text.lastIndexOf("```"))) as { views: unknown }).views).toEqual([{ type: "table", name: "Table" }]);
   });
 });
 
@@ -284,7 +290,8 @@ describe("the fixture's import", () => {
         "Home/Meeting Template.md",
         "Home/Projects/Projects.md",
         "Home/Projects/Garden.md",
-        "Home/Projects/Website Redesign.md",
+        "Home/Projects/Launch.md",
+        "Home/Projects/Website Redesign/Website Redesign.md",
         "Home/Projects/Website Redesign/mockup.png",
         "Home/Reading List/Reading List.md",
         "Home/Reading List/cover.png",
@@ -295,6 +302,8 @@ describe("the fixture's import", () => {
         "读书笔记/读书笔记.md",
         "读书笔记/三体.md",
         "读书笔记/任务/任务.md",
+        "读书笔记/任务/写读后感.md",
+        "读书笔记/任务/整理笔记.md",
         "读书笔记/任务/读第一章.md",
       ].sort(),
     );
@@ -309,7 +318,9 @@ describe("the fixture's import", () => {
     expect(home).toContain("> [!NOTE]\n> Welcome to the workspace.\n>\n> Read the [Reading List](Reading%20List/Reading%20List.md) first.");
     expect(home).toContain("> [!NOTE]\n> 💡 Remember to export every week.");
     expect(home).toContain("[Projects](Projects/Projects.md)");
-    expect(home).toContain("[Website Redesign](Projects/Website%20Redesign.md)");
+    expect(home).toContain("[Website Redesign](Projects/Website%20Redesign/Website%20Redesign.md)");
+    // The database shown here as well: its rows by its folder's path in the open folder.
+    expect(home).toContain('```base\nfilters:\n  and:\n    - file.inFolder("Home/Projects")\n');
     expect(home).toContain("![Logo](logo.png)");
     expect(home).toContain("[Spec](Spec.pdf)");
     expect(home).toContain(`[Old page](Home%20${H}/Deleted%20Page%20${id("b")}.md)`);
@@ -326,21 +337,22 @@ describe("the fixture's import", () => {
 
   it("makes a document per row with the CSV's properties, relations as links", async () => {
     const { out } = await importFixture();
-    expect(out["Home/Projects/Website Redesign.md"]).toBe(
+    // A row with a picture of its own is a folder unit, its picture beside it.
+    expect(out["Home/Projects/Website Redesign/Website Redesign.md"]).toBe(
       "---\nstatus: In progress\ndue: 2026-01-04\ntags:\n  - Design\n  - Web\ndone: false\nbudget: 1200\n" +
-        'related:\n  - "[Garden](Garden.md)"\n---\n# Website Redesign\n\n' +
-        "The new site. See [Garden](Garden.md) and the [home page](../Home.md).\n\n![Mockup](Website%20Redesign/mockup.png)\n",
+        'related:\n  - "[Garden](../Garden.md)"\n---\n# Website Redesign\n\n' +
+        "The new site. See [Garden](../Garden.md) and the [home page](../../Home.md).\n\n![Mockup](mockup.png)\n",
     );
     expect(out["Home/Projects/Garden.md"]).toContain("due: 2026-02-10\ndue_end: 2026-02-12\n");
-    // A row with nothing written in it - here, no page at all - is a line of the database's table.
-    expect(out["Home/Projects/Projects.md"]).toContain(
-      "rows:\n| Name | status | due | tags | done | related |\n| --- | --- | --- | --- | --- | --- |\n" +
-        "| Launch | In progress | 2026-03-01 | [Web] | false | [[Website Redesign](Website%20Redesign.md), [Garden](Garden.md)] |\n```",
+    // Every row is a note, one with no page of its own too.
+    expect(out["Home/Projects/Launch.md"]).toBe(
+      "---\nstatus: In progress\ndue: 2026-03-01\ntags:\n  - Web\ndone: false\nrelated:\n" +
+        '  - "[Website Redesign](Website%20Redesign/Website%20Redesign.md)"\n  - "[Garden](Garden.md)"\n---\n# Launch\n',
     );
-    expect(out).not.toHaveProperty("Home/Projects/Launch.md");
-    // The database is a folder unit; its block shows its own folder, no from: needed.
-    expect(out["Home/Projects/Projects.md"]).toContain("```database\nview: board\ngroup: status\ndate: due\nend: due_end\nrows:\n");
-    expect(out["Home/Projects/Projects.md"].match(/```database/g)).toHaveLength(1);
+    // The database is a folder unit; its base chooses the unit's rows.
+    expect(out["Home/Projects/Projects.md"]).toContain("```base\nfilters:\n  and:\n    - file.inFolder(this.file.folder)\n");
+    expect(out["Home/Projects/Projects.md"]).toContain("  - type: kanban\n    name: Board\n    groupBy:\n      property: status\n");
+    expect(out["Home/Projects/Projects.md"].match(/```base/g)).toHaveLength(1);
   });
 
   it("reads the Chinese database: its dates, its status and a relation", async () => {
@@ -348,8 +360,9 @@ describe("the fixture's import", () => {
     expect(out["读书笔记/任务/读第一章.md"]).toBe(
       '---\n状态: 进行中\n日期: 2026-01-04\n书:\n  - "[三体](../三体.md)"\n---\n# 读第一章\n\n先读到“科学边界”。\n',
     );
-    expect(out["读书笔记/任务/任务.md"]).toContain("| 写读后感 | 未开始 | 2026-02-01 |\n| 整理笔记 | 进行中 | 2026-03-05 |");
-    expect(out["读书笔记/任务/任务.md"]).toContain("view: board\ngroup: 状态\ndate: 日期");
+    expect(out["读书笔记/任务/写读后感.md"]).toBe("---\n状态: 未开始\n日期: 2026-02-01\n---\n# 写读后感\n");
+    expect(out["读书笔记/任务/任务.md"]).toContain("groupBy:\n      property: 状态");
+    expect(out["读书笔记/任务/任务.md"]).toContain("date: 日期");
   });
 
   it("keeps the opening Key: value lines of a page that isn't a row, and links CJK names", async () => {
@@ -422,8 +435,8 @@ describe("an export's harder cases", () => {
   it("goes on when a row's page can't be read while it looks for it", async () => {
     const page = `DB ${D}/Q1 Q2  plan  ${id("2")}.md`;
     const { out, report } = await importMemory({ [`DB ${D}.csv`]: 'Name,Status\n"Q1/Q2: plan?",Doing\n', [page]: "# Q1/Q2: plan?" }, page);
-    // Nothing could be read of it: the row is a line of the database's table, and the page a failure.
-    expect(out["DB/DB.md"]).toContain("| Q1/Q2: plan? | Doing |");
+    // Nothing could be read of it: the row keeps the CSV's properties, and the page is a failure.
+    expect(Object.values(out).some((text) => text.startsWith("---\nstatus: Doing\n---\n# Q1/Q2: plan?\n"))).toBe(true);
     expect(report.failed).toEqual([{ path: page, error: TOO_BIG }]);
   });
 
@@ -483,8 +496,8 @@ describe("an export's harder cases", () => {
       [`Projects ${P}/Plan (v2) ${id("3")}.md`]: "# Plan (v2)\n\nBody",
       [`Tasks ${D}.csv`]: `Name,Project\nA,Plan (v2) (Projects%20${P}/Plan%20(v2)%20${id("3")}.md)\n`,
     });
-    // A, with nothing written in it, is a line of Tasks' table; its relation a link all the same.
-    expect(out["Tasks/Tasks.md"]).toContain("| A | [[Plan (v2)](../Projects/Plan%20%28v2%29.md)] |");
+    // A has nothing written in it and is a note all the same; its relation a link.
+    expect(out["Tasks/A.md"]).toContain('  - "[Plan (v2)](../Projects/Plan%20%28v2%29.md)"');
   });
 });
 
@@ -494,8 +507,9 @@ describe("suggestions and the report", () => {
 
   // Only plugins that work on what the import writes: Kanban, Reminders and Daily Notes read files of their own.
   it("suggests a plugin for each thing the export holds, in order", () => {
-    // Pages and databases are Workspace's own, the plugin this import is part of.
+    // Workspace first: it shows the pages tree and the databases.
     expect(ni.recommend(stats).map((s: { id: string }) => s.id)).toEqual([
+      "catvinci.database",
       "catvinci.backlinks",
       "catvinci.quick-preview",
       "catvinci.tasks",
@@ -503,7 +517,7 @@ describe("suggestions and the report", () => {
       "catvinci.pdf-viewer",
       "catvinci.templates",
     ]);
-    expect(ni.recommend(stats)[0]).toEqual({ id: "catvinci.backlinks", why: "why.catvinci.backlinks" });
+    expect(ni.recommend(stats)[1]).toEqual({ id: "catvinci.backlinks", why: "why.catvinci.backlinks" });
   });
 
   it("leaves out what is installed, what the export doesn't use and a few to-dos", () => {
@@ -522,7 +536,7 @@ describe("suggestions and the report", () => {
       date: "2026-11-05",
     });
     expect(page.startsWith("# reportTitle\n\nreportFrom|Export.zip|2026-11-05\n\n- countPages|7\n- countDatabases|2|6\n- countFiles|4\n")).toBe(true);
-    expect(page).toContain("## helpTitle\n\nhelpIntro\n\n- **plugin.catvinci.backlinks**: why.catvinci.backlinks\n");
+    expect(page).toContain("## helpTitle\n\nhelpIntro\n\n- **plugin.catvinci.database**: why.catvinci.database\n- **plugin.catvinci.backlinks**: why.catvinci.backlinks\n");
     expect(page).not.toContain("plugin.catvinci.quick-preview");
     expect(page).toContain(`## missingTitle\n\nmissingIntro\n\n- [Home](Home/Home.md): \`Home ${H}/Deleted Page ${id("b")}.md\``);
     expect(page).toContain("- callouts|3 ([Home](Home/Home.md), [三体](读书笔记/三体.md))");
@@ -537,9 +551,9 @@ describe("suggestions and the report", () => {
   });
 
   it("has every string it uses in every language", () => {
-    const manifest = JSON.parse(readFileSync(new URL("../plugins/catvinci.database/textus-plugin.json", import.meta.url), "utf8"));
+    const manifest = JSON.parse(readFileSync(new URL("../plugins/catvinci.notion-import/textus-plugin.json", import.meta.url), "utf8"));
     const en = Object.keys(manifest.l10n.en);
-    for (const s of ni.recommend(stats)) expect(en).toEqual(expect.arrayContaining(["import." + s.why, "import.plugin." + s.id]));
+    for (const s of ni.recommend(stats)) expect(en).toEqual(expect.arrayContaining([s.why, "plugin." + s.id]));
     for (const [lang, strings] of Object.entries(manifest.l10n)) expect(Object.keys(strings as object), lang).toEqual(en);
     expect(Object.keys(manifest.l10n)).toHaveLength(10);
   });
@@ -573,6 +587,7 @@ describe("Notion's newer export", () => {
     expect(names).toEqual([
       "Papers/03 2026/03 2026.md",
       "Papers/03 2026/A paper on time series forecasting with exogenous variables.md",
+      "Papers/03 2026/Short.md",
       "Papers/03 2026/assets/A paper on time series forecasting with exogenous variables.png",
       "Papers/Notes (Fall).md",
       "Papers/Notes (Spring)/Notes (Spring).md",
@@ -581,13 +596,13 @@ describe("Notion's newer export", () => {
       "attachments/slides.pptx",
     ]);
     // The database's own page: its title and words, then its views; no CSV link or filter lines.
-    expect(out["Papers/03 2026/03 2026.md"]).toMatch(/^# 03\/2026\n\nOur reading list\.\n\n```database\nview: board\ngroup: status\nrows:\n/);
-    // Short has nothing written in it: a line of the table, not a file.
-    expect(out["Papers/03 2026/03 2026.md"]).toContain("| Short | Doing | 2025 |\n```\n");
-    expect(out["Papers/03 2026/03 2026.md"]).not.toMatch(/filters:|_all\.csv/);
+    expect(out["Papers/03 2026/03 2026.md"]).toMatch(/^# 03\/2026\n\nOur reading list\.\n\n```base\nfilters:\n/);
+    expect(out["Papers/03 2026/03 2026.md"]).toContain("groupBy:\n      property: status");
+    expect(out["Papers/03 2026/03 2026.md"]).not.toMatch(/_all\.csv|\nAuthor\n/);
     // A view elsewhere: the link to the database's page, and the database shown, sorted as it was.
+    expect(out["Papers/Papers.md"]).toContain('[03/2026](03%202026/03%202026.md)\n\n```base\nfilters:\n  and:\n    - file.inFolder("Papers/03 2026")\n');
     expect(out["Papers/Papers.md"]).toContain(
-      "[03/2026](03%202026/03%202026.md)\n\n```database\nfrom: 03 2026\nview: table\nsort: -status, year\n```\n\nAfter.",
+      "    sort:\n      - property: status\n        direction: DESC\n      - property: year\n        direction: ASC\n```\n\nAfter.",
     );
     // A picture beside the page that shows it.
     expect(out["Papers/03 2026/A paper on time series forecasting with exogenous variables.md"]).toContain("![](assets/A%20paper%20on%20time%20series%20forecasting%20with%20exogenous%20variables.png)");
@@ -599,29 +614,19 @@ describe("Notion's newer export", () => {
       [`Child ${id("5")}.md`]: "# Child\n",
       [`Tasks ${DB}.csv`]: "Name,Status\nWrite,Doing\n",
     });
-    expect(Object.keys(out).sort()).toEqual(["Child.md", "Home.md", "Tasks/Tasks.md"]);
-    expect(out["Tasks/Tasks.md"]).toContain("| Write | Doing |");
+    expect(Object.keys(out).sort()).toEqual(["Child.md", "Home.md", "Tasks/Tasks.md", "Tasks/Write.md"]);
+    expect(out["Tasks/Write.md"]).toBe("---\nstatus: Doing\n---\n# Write\n");
     expect(out["Home.md"]).toContain("[Child](Child.md)");
-    expect(out["Home.md"]).toContain("[Tasks](Tasks/Tasks.md)\n\n```database\nfrom: Tasks\nview: table\n```");
+    expect(out["Home.md"]).toContain('[Tasks](Tasks/Tasks.md)\n\n```base\nfilters:\n  and:\n    - file.inFolder("Tasks")\n');
   });
 
-  it("files a big database's pages in a folder per year when asked, and says so in its block", async () => {
-    const DBID = id("9");
-    const files: Record<string, string> = {};
-    let csv = "Name,Date\n";
-    for (let i = 0; i < 201; i++) {
-      const year = i % 2 ? 2025 : 2026;
-      csv += `Note ${i},"January ${(i % 27) + 1}, ${year}"\n`;
-      files[`Log ${DBID}/Note ${i} ${(i + 1).toString(16).padStart(32, "0")}.md`] = `# Note ${i}\n\nDate: January ${(i % 27) + 1}, ${year}\n\nWritten.`;
-    }
-    files[`Log ${DBID}.csv`] = csv;
-    const filed = await importOf(Object.keys(files), async (path) => files[path], 0, true);
-    expect(filed.out["Log/Log.md"]).toContain("folders: date:year");
-    expect(filed.out).toHaveProperty("Log/2026/Note 0.md");
-    expect(filed.out).toHaveProperty("Log/2025/Note 1.md");
-    // Not asked: the pages stay together.
-    const together = await importOf(Object.keys(files), async (path) => files[path]);
-    expect(together.out).toHaveProperty("Log/Note 0.md");
-    expect(together.out["Log/Log.md"]).not.toContain("folders:");
+  it("leaves out Notion's empty Untitled rows", async () => {
+    const T = id("8");
+    const { out, report } = await importMemory({
+      [`Log ${T}.csv`]: "Name,Status\nUntitled,\nUntitled,\nKept,Doing\nUntitled,Done\n",
+    });
+    expect(Object.keys(out).sort()).toEqual(["Log/Kept.md", "Log/Log.md", "Log/Untitled.md"]);
+    expect(out["Log/Untitled.md"]).toBe("---\nstatus: Done\n---\n# Untitled\n");
+    expect(report).toMatchObject({ rows: 2, skipped: 2 });
   });
 });

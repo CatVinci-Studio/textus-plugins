@@ -1,28 +1,30 @@
-// Database: ```database blocks drawn as a table, a board, a calendar or a
-// gallery of the documents in a folder, their front matter the columns.
-// Edits in the view are written to those documents' front matter; New
-// makes one. Also: a tool for Textus AI to make one. Notion exports are
-// imported by the Notion Import plugin, the one place for that.
+// Workspace's databases: Obsidian bases - ```base blocks in a note and
+// .base files - drawn as a table, a board, a calendar, a gallery or a list
+// of the notes their filters choose, front matter the columns. Edits in a
+// view go to those notes' front matter, or to the base's own views; New
+// makes a note. Also Textus AI's tools for databases.
 
-/* global database, folderPaths, activatePages, activateImport */
+/* global database, folderPaths, activatePages */
 const t = (key, ...args) => textus.l10n.t(key, ...args);
 const STRINGS = [
-  "table", "board", "calendar", "gallery", "page", "add", "count", "empty",
+  "table", "board", "calendar", "gallery", "list", "page", "add", "count", "empty",
   "noValue", "noGroup", "noDate", "today", "prev", "next", "missing", "locale",
   "filter", "sort", "addFilter", "addSort", "ascending", "descending", "remove",
   "is", "isNot", "contains", "notContains", "isEmpty", "notEmpty", "greater", "less",
   "value", "search", "create", "clear", "untitled", "newProperty", "propertyName",
-  "type", "rename", "hide", "deleteProperty", "showAll", "open",
+  "type", "rename", "hide", "deleteProperty", "showAll", "open", "showMore", "fold",
+  "unfold", "addView", "renameView", "deleteView", "skipped", "notBase", "unknownView",
   "type.text", "type.number", "type.select", "type.tags", "type.date", "type.checkbox", "type.url",
 ];
 
 let root = null;
-/** The blocks on screen, each sending itself again. */
+/** The bases on screen, each sending itself again. */
 const live = new Set();
 
 const join = folderPaths.abs;
 const relOf = (path) => folderPaths.rel(root, path);
 const fileName = (title) => title.trim().replace(/[\\/:*?"<>|#^[\]]/g, "-");
+const empty = (v) => v === null || v === undefined || v === "" || (Array.isArray(v) && !v.length);
 
 /** Front matter values as the page can show them: dates as their day. */
 function plain(value) {
@@ -31,41 +33,68 @@ function plain(value) {
   return value;
 }
 
-/** What the block's page draws. */
-async function snapshot(block) {
+// Obsidian's property types, .obsidian/types.json, when the folder is a vault.
+const TYPES_FILE = ".obsidian/types.json";
+async function obsidianTypes() {
+  try {
+    const parsed = JSON.parse(await textus.files.readText(join(root, TYPES_FILE)));
+    return parsed && parsed.types && typeof parsed.types === "object" ? parsed.types : {};
+  } catch {
+    return {};
+  }
+}
+/** A property's type kept where Obsidian keeps it; false when the folder isn't a vault. */
+async function setObsidianType(key, kind) {
+  if (!(await textus.files.stat(join(root, ".obsidian")))) return false;
+  let parsed = {};
+  try {
+    parsed = JSON.parse(await textus.files.readText(join(root, TYPES_FILE)));
+  } catch {
+    parsed = {};
+  }
+  parsed.types = { ...(parsed.types || {}), [key]: database.TO_OBSIDIAN[kind] || "text" };
+  await textus.files.writeText(join(root, TYPES_FILE), JSON.stringify(parsed, null, 2) + "\n");
+  return true;
+}
+
+/** What a base's page draws: view `index` of `target`'s base. */
+async function snapshot(target, index) {
   root = await textus.files.root();
-  const spec = database.parseSpec(block.source);
-  if (!root) return { spec, missing: true, strings: strings() };
-  const folder = blockFolder(spec, block.path);
-  const all = await textus.metadata.all();
-  // The folder's pages and the block's own table rows ("#0"…), one list.
-  const self = relOf(block.path);
-  const unit = folder && folder + "/" + folder.slice(folder.lastIndexOf("/") + 1) + ".md";
-  const linked = unit && unit !== self ? (await unitTableRows(folder)).map((r) => ({ ...r, rel: unit + r.rel })) : [];
-  const rows = database.rowsOf(all, folder, !!spec.folders).filter((r) => r.rel !== self).concat(database.tableRows(spec), linked).map((r) => ({
+  const parsed = database.parseBase(target.source());
+  if (parsed.error) return { error: t("notBase"), detail: parsed.error, strings: strings() };
+  if (!root) return { missing: true, strings: strings() };
+  const base = parsed.base;
+  const i = Math.min(Math.max(0, index | 0), base.views.length - 1);
+  const spec = database.viewSpec(base, i);
+  const self = relOf(target.path);
+  const { rows: chosen, skipped } = database.rowsOf(base, await textus.metadata.all(), self);
+  const rows = chosen.map((r) => ({
     rel: r.rel,
     name: r.name,
-    inline: !!r.inline,
+    file: r.file,
     props: Object.fromEntries(Object.entries(r.props).map(([k, v]) => [k, plain(v)])),
   }));
-  const types = database.typesOf(rows, spec.types);
-  const shown = database.viewRows(rows, spec);
-  const keys = [...new Set([...Object.keys(types), ...(spec.columns || [])])].filter((k) => k !== "icon" && k !== "cover");
+  const types = database.typesOf(rows, await obsidianTypes(), spec.kinds);
+  const shown = database.viewRows(rows, spec, self);
+  const keys = [...new Set([...Object.keys(types), ...(spec.columns || [])])].filter((k) => k !== "icon" && k !== "cover" && k !== "name");
   const options = {};
   for (const k of keys) if (types[k] === "select" || types[k] === "tags") options[k] = database.options(rows, k);
   const group = database.groupKey(spec, rows, types);
   return {
     spec,
-    folder,
-    rows: shown,
-    columns: database.columnsOf(spec, rows),
+    index: i,
+    views: spec.views,
+    folder: database.folderOf(base, self),
+    rows: shown.map((r) => ({ rel: r.rel, name: r.name, props: r.props })),
+    columns: database.columnsOf(spec, rows).filter((k) => k !== "name"),
     keys,
     types,
     options,
     group,
-    groups: database.groups(shown, group).map((g) => ({ value: g.value, rels: g.rows.map((r) => r.rel) })),
+    groups: database.groups(shown, group, spec.groupOrder).map((g) => ({ value: g.value, rels: g.rows.map((r) => r.rel) })),
     date: database.dateKey(spec, types),
     end: spec.end || Object.keys(types).find((k) => types[k] === "date" && /end|until|due/i.test(k)) || null,
+    skipped: skipped.concat(spec.filters.filter((f) => f.raw !== undefined).map((f) => f.raw)),
     strings: strings(),
   };
 }
@@ -74,8 +103,8 @@ function strings() {
   return Object.fromEntries(STRINGS.map((k) => [k, t(k)]));
 }
 
-/** A new document in the view's folder, its front matter `props`; its
- *  title typed in the view, or asked for. */
+/** A new note in `folder`, its front matter `props`; its title typed in
+ *  the view, or asked for. */
 async function addRow(folder, props, typed) {
   const title = typed || (await textus.ui.input({ prompt: t("newTitle") }));
   if (!title || !title.trim()) return;
@@ -83,153 +112,50 @@ async function addRow(folder, props, typed) {
   if (await textus.files.stat(file)) return textus.ui.message(t("exists", title.trim()));
   if (folder) await textus.files.createFolder(join(root, folder)).catch(() => {});
   await textus.files.create(file, "# " + title.trim() + "\n");
-  if (props && Object.keys(props).length)
-    await textus.files.frontmatter.update(file, (fm) => Object.assign(fm, props));
+  const set = Object.fromEntries(Object.entries(props || {}).filter(([, v]) => !empty(v)));
+  if (Object.keys(set).length) await textus.files.frontmatter.update(file, (fm) => Object.assign(fm, set));
 }
 
 async function setProp(rel, key, value) {
   await textus.files.frontmatter.update(join(root, rel), (fm) => {
-    if (value === null || value === "" || (Array.isArray(value) && !value.length)) delete fm[key];
+    if (empty(value)) delete fm[key];
     else fm[key] = value;
   });
 }
 
-/** The folder a block shows. A folder unit's own page opened with its folder as the open
- *  folder (Papers/Papers.md, the folder Papers) shows that folder: the top. */
-function blockFolder(spec, path) {
-  const rel = relOf(path);
-  const name = rel.replace(/\.md$/i, "");
-  if (!spec.from && !rel.includes("/") && root && root.replace(/\/+$/, "").split("/").pop() === name) return "";
-  return database.folderOf(spec.from, rel);
+/** Every note the base chooses, view filters aside. */
+async function rowsOfBase(target) {
+  const parsed = database.parseBase(target.source());
+  if (parsed.error) return { base: null, rows: [] };
+  return { base: parsed.base, rows: database.rowsOf(parsed.base, await textus.metadata.all(), relOf(target.path)).rows };
 }
 
-/** A row of a database block's table, by its place: "#2" in this block, "Papers/Papers.md#2"
- *  in the folder unit's own page that a linked view shows; -1 for a page. */
-const tableIndex = (rel) => (typeof rel === "string" && /^[^#]*#\d+$/.test(rel) ? Number(rel.slice(rel.lastIndexOf("#") + 1)) : -1);
-
-const DB_BLOCK = /^```database[^\n]*\n([\s\S]*?)^```/m;
-
-/** The block whose table holds `rel`: this one, or the unit page's, edited in its file. */
-async function tableOwner(block, rel) {
-  const page = rel.slice(0, rel.lastIndexOf("#"));
-  if (!page) return block;
-  const path = join(root, page);
-  const text = await textus.files.readText(path).catch(() => "");
-  const m = DB_BLOCK.exec(text);
-  if (!m) return null;
-  const at = m.index + m[0].indexOf(m[1]);
-  return {
-    path,
-    source: m[1],
-    setSource: (source) => textus.files.writeText(path, text.slice(0, at) + source.replace(/\n?$/, "\n") + text.slice(at + m[1].length)),
-  };
-}
-
-/** The block's table changed through `change(table)` (false: left as it was). */
-async function changeTable(block, change) {
-  const spec = database.parseSpec(block.source);
-  const table = spec.table.map((r) => ({ name: r.name, props: { ...r.props } }));
-  if (change(table) === false) return;
-  spec.table = table;
-  await block.setSource(database.writeSpec(spec));
-}
-
-/** A row's file moved to the subfolder its `folders` property now says (links follow). */
-async function refile(block, rel) {
-  const spec = database.parseSpec(block.source);
-  if (!spec.folders) return;
-  const folder = blockFolder(spec, block.path);
-  const fm = (await textus.files.frontmatter.get(join(root, rel))) || {};
-  const sub = database.subfolderOf(spec, fm);
-  const dir = folder + (sub ? (folder ? "/" : "") + sub : "");
-  const now = rel.includes("/") ? rel.slice(0, rel.lastIndexOf("/")) : "";
-  if (dir === now) return;
-  const to = join(root, (dir ? dir + "/" : "") + rel.slice(rel.lastIndexOf("/") + 1));
-  if (await textus.files.stat(to)) return;
-  if (dir) await textus.files.createFolder(join(root, dir)).catch(() => {});
-  await textus.files.rename(join(root, rel), to, { updateLinks: true });
-}
-
-/** A table row's property set, or taken out when empty. */
-function setTableProp(block, index, key, value) {
-  return changeTable(block, (table) => {
-    const row = table[index];
-    if (!row) return false;
-    if (value === null || value === "" || (Array.isArray(value) && !value.length)) delete row.props[key];
-    else row.props[key] = value;
-  });
-}
-
-/** A new row: in the block's table, until something is written in it. */
-async function addTableRow(block, props, typed) {
-  const title = typed || (await textus.ui.input({ prompt: t("newTitle") }));
-  if (!title || !title.trim()) return;
-  await changeTable(block, (table) => void table.push({ name: title.trim(), props: { ...(props || {}) } }));
-}
-
-/** A table row opened to be written in: a page of its own in the folder, its properties in
- *  its front matter, and out of the table - one place for each row. */
-async function promote(block, index) {
-  const spec = database.parseSpec(block.source);
-  const row = spec.table[index];
-  if (!row) return;
-  const top = blockFolder(spec, block.path);
-  const sub = database.subfolderOf(spec, row.props);
-  const folder = top + (sub ? (top ? "/" : "") + sub : "");
-  const file = join(root, (folder ? folder + "/" : "") + fileName(row.name) + ".md");
-  if (await textus.files.stat(file)) return textus.ui.message(t("exists", row.name));
-  if (folder) await textus.files.createFolder(join(root, folder)).catch(() => {});
-  await textus.files.create(file, "# " + row.name.trim() + "\n");
-  if (Object.keys(row.props).length) await textus.files.frontmatter.update(file, (fm) => Object.assign(fm, row.props));
-  spec.table.splice(index, 1);
-  await block.setSource(database.writeSpec(spec));
-  await textus.layout.open(file);
-}
-
-/** The documents of the block's folder, every one, filters aside. */
-async function pagesOf(block) {
-  const spec = database.parseSpec(block.source);
-  const folder = blockFolder(spec, block.path);
-  const self = relOf(block.path);
-  return { spec, rows: database.rowsOf(await textus.metadata.all(), folder, !!spec.folders).filter((r) => r.rel !== self) };
-}
-
-/** Property `from` called `to` in every page, in the same place. */
-async function renameProp(block, from, to) {
+/** Property `from` called `to` in every row, in the same place, and in the base's views. */
+async function renameProp(target, from, to) {
   if (to === undefined) to = (await textus.ui.input({ prompt: t("rename"), value: from })) || "";
   to = to.trim();
   if (!to || to === from) return;
-  const { spec, rows } = await pagesOf(block);
+  const { base, rows } = await rowsOfBase(target);
+  if (!base) return;
   for (const row of rows)
     if (from in row.props)
       await textus.files.frontmatter.update(join(root, row.rel), (fm) =>
         Object.fromEntries(Object.entries(fm).map(([k, v]) => [k === from ? to : k, v])),
       );
-  const renamed = database.renameKey(spec, from, to);
-  renamed.table = spec.table.map((r) => ({
-    name: r.name,
-    props: Object.fromEntries(Object.entries(r.props).map(([k, v]) => [k === from ? to : k, v])),
-  }));
-  await block.setSource(database.writeSpec(renamed));
+  await target.setSource(database.writeBase(database.renameKey(base, from, to)));
 }
 
-async function deleteProp(block, key) {
-  const { spec, rows } = await pagesOf(block);
+async function deleteProp(target, key) {
+  const { base, rows } = await rowsOfBase(target);
+  if (!base) return;
   const using = rows.filter((r) => key in r.props);
-  const inTable = spec.table.filter((r) => key in r.props).length;
-  if ((using.length || inTable) && !(await textus.ui.confirm(t("deleteAsk", key, using.length + inTable), { okLabel: t("deleteProperty"), danger: true }))) return;
+  if (using.length && !(await textus.ui.confirm(t("deleteAsk", key, using.length), { okLabel: t("deleteProperty"), danger: true }))) return;
   for (const row of using)
     await textus.files.frontmatter.update(join(root, row.rel), (fm) => {
       delete fm[key];
       return fm;
     });
-  const dropped = database.dropKey(spec, key);
-  dropped.table = spec.table.map((r) => {
-    const props = { ...r.props };
-    delete props[key];
-    return { name: r.name, props };
-  });
-  await block.setSource(database.writeSpec(dropped));
+  await target.setSource(database.writeBase(database.dropKey(base, key)));
 }
 
 /** A page renamed in the view: its file, the links to it, and its title. */
@@ -244,83 +170,161 @@ async function renamePage(rel, title) {
   await textus.files.process(to, (text) => text.replace(/^(---\n[\s\S]*?\n---\n+)?# .*$/m, (line, fm) => (fm || "") + "# " + title));
 }
 
-function render(block, webview, context) {
+/** The base changed by `change(base)`, written back. */
+async function changeBase(target, change) {
+  const parsed = database.parseBase(target.source());
+  if (parsed.error) return;
+  await target.setSource(database.writeBase(change(parsed.base)));
+}
+
+/** A view's kinds of property: those Obsidian keeps in its types file go
+ *  there when the folder is a vault, the rest (select, url) in the base. */
+async function kindsOf(types) {
+  const kinds = {};
+  for (const [key, kind] of Object.entries(types))
+    kinds[key] = kind === "select" || kind === "url" || !(await setObsidianType(key, kind)) ? kind : null;
+  return kinds;
+}
+
+/**
+ * Draws `target` - a ```base block, or a .base file - in `webview`.
+ * `target`: { path, source(), setSource(text), onDidChange(fn) }.
+ */
+function draw(target, webview, context) {
   return context.plugin.readText("view.html").then((html) => {
     webview.html = html;
+    // The view in front: the page keeps it (each reader's own), and says.
+    let index = 0;
     let sent = 0;
     const send = async () => {
       const mine = ++sent;
-      const data = await snapshot(block).catch((err) => ({ error: String((err && err.message) || err) }));
+      const data = await snapshot(target, index).catch((err) => ({ error: String((err && err.message) || err), strings: strings() }));
       if (mine === sent) webview.postMessage({ type: "data", data });
+    };
+    const select = (i) => {
+      index = i;
+      webview.postMessage({ type: "selected", index });
     };
     live.add(send);
     webview.onDidDispose(() => live.delete(send));
-    block.onDidChange(send);
+    target.onDidChange(send);
     webview.onDidReceiveMessage(async (m) => {
       if (!m) return;
-      if (m.type === "ready") return send();
-      const inTable = tableIndex(m.rel);
-      const owner = inTable >= 0 ? await tableOwner(block, m.rel) : null;
-      if (inTable >= 0 && !owner) return;
-      if (m.type === "open") return inTable >= 0 ? promote(owner, inTable) : textus.layout.open(join(root, m.rel));
-      if (m.type === "set") {
-        if (inTable >= 0) return setTableProp(owner, inTable, m.key, m.value);
-        await setProp(m.rel, m.key, m.value);
-        return refile(block, m.rel);
-      }
-      if (m.type === "add") return addTableRow(block, m.props, m.title);
-      if (m.type === "view") {
-        const spec = database.parseSpec(block.source);
-        spec.view = m.view;
-        return block.setSource(database.writeSpec(spec));
-      }
-      // Filters, sorts, columns and types, as the view's menus set them.
-      if (m.type === "spec") return block.setSource(database.writeSpec({ ...database.parseSpec(block.source), ...m.spec }));
-      if (m.type === "renameProp") return renameProp(block, m.from, m.to);
-      if (m.type === "deleteProp") return deleteProp(block, m.key);
-      if (m.type === "renamePage")
-        return inTable >= 0
-          ? changeTable(owner, (table) => (table[inTable] && m.title.trim() ? void (table[inTable].name = m.title.trim()) : false))
-          : renamePage(m.rel, m.title);
-      // What a menu can't hold - a name, a value - asked in Textus's own field.
-      if (m.type === "addProp") {
-        const name = ((await textus.ui.input({ prompt: t("propertyName") })) || "").trim();
-        if (!name) return;
-        const spec = database.parseSpec(block.source);
-        const columns = m.columns.includes(name) ? m.columns : m.columns.concat([name]);
-        const types = m.kind === "text" ? spec.types : { ...spec.types, [name]: m.kind };
-        return block.setSource(database.writeSpec({ ...spec, columns, types }));
-      }
-      if (m.type === "addFilter") {
-        const value = m.value !== undefined ? m.value : await textus.ui.input({ prompt: t("value") });
-        if (value === null || value === undefined) return;
-        const spec = database.parseSpec(block.source);
-        spec.filters = spec.filters.filter((f, i) => i !== m.replace);
-        spec.filters.push({ key: m.key, op: m.op, value: String(value).trim() });
-        return block.setSource(database.writeSpec(spec));
-      }
-      if (m.type === "newOption") {
-        const value = ((await textus.ui.input({ prompt: t("create") })) || "").trim();
-        if (!value) return;
-        const next = m.multi ? (m.current || []).concat([value]) : value;
-        if (inTable >= 0) return setTableProp(owner, inTable, m.key, next);
-        await setProp(m.rel, m.key, next);
-        return refile(block, m.rel);
-      }
-      if (m.type === "move") {
-        if (inTable >= 0) {
-          const row = database.parseSpec(owner.source).table[inTable];
-          return row && setTableProp(owner, inTable, m.key, database.regroup(row.props[m.key], m.from, m.to));
+      const set = (spec) => changeBase(target, (base) => database.setView(base, Math.min(index, base.views.length - 1), spec));
+      switch (m.type) {
+        case "ready":
+        case "select":
+          index = m.index | 0;
+          return send();
+        // A row opens beside the base, to read and write in.
+        case "open":
+          return textus.layout.open(join(root, m.rel), { where: "beside" });
+        case "set":
+          return setProp(m.rel, m.key, m.value);
+        case "add":
+          return addRow(m.folder, m.props, m.title);
+        case "view":
+          return set({ view: m.view });
+        case "addView":
+          return changeBase(target, (base) => {
+            select(base.views.length);
+            return database.addView(base, m.view, database.viewName(m.view));
+          });
+        case "renameView": {
+          const name = ((await textus.ui.input({ prompt: t("renameView"), value: m.name || "" })) || "").trim();
+          return name && set({ name });
         }
-        const fm = await textus.files.frontmatter.get(join(root, m.rel));
-        await setProp(m.rel, m.key, database.regroup(fm[m.key], m.from, m.to));
-        return refile(block, m.rel);
+        case "deleteView":
+          return changeBase(target, (base) => {
+            if (base.views.length < 2) return base;
+            const gone = Math.min(index, base.views.length - 1);
+            select(Math.max(0, gone - 1));
+            return { ...base, views: base.views.filter((_, n) => n !== gone) };
+          });
+        // Filters, sorts, columns, grouping, the board's order, as the view's menus set them.
+        case "spec": {
+          const spec = { ...m.spec };
+          if (spec.types) {
+            spec.kinds = await kindsOf(spec.types);
+            delete spec.types;
+          }
+          return set(spec);
+        }
+        case "renameProp":
+          return renameProp(target, m.from, m.to);
+        case "deleteProp":
+          return deleteProp(target, m.key);
+        case "renamePage":
+          return renamePage(m.rel, m.title);
+        // What a menu can't hold - a name, a value - asked in Textus's own field.
+        case "addProp": {
+          const name = ((await textus.ui.input({ prompt: t("propertyName") })) || "").trim();
+          if (!name) return;
+          const columns = m.columns.includes(name) ? m.columns : m.columns.concat([name]);
+          const spec = { columns };
+          if (m.kind !== "text") spec.kinds = await kindsOf({ [name]: m.kind });
+          return set(spec);
+        }
+        case "addFilter": {
+          const value = m.value !== undefined ? m.value : await textus.ui.input({ prompt: t("value") });
+          if (value === null || value === undefined) return;
+          const parsed = database.parseBase(target.source());
+          if (parsed.error) return;
+          const spec = database.viewSpec(parsed.base, Math.min(index, parsed.base.views.length - 1));
+          const filters = spec.filters.filter((f, i) => i !== m.replace);
+          filters.push({ key: m.key, op: m.op, value: String(value).trim() });
+          return set({ filters });
+        }
+        case "newOption": {
+          const value = ((await textus.ui.input({ prompt: t("create") })) || "").trim();
+          if (!value) return;
+          return setProp(m.rel, m.key, m.multi ? (m.current || []).concat([value]) : value);
+        }
+        case "move": {
+          const fm = (await textus.files.frontmatter.get(join(root, m.rel))) || {};
+          return setProp(m.rel, m.key, database.regroup(fm[m.key], m.from, m.to));
+        }
+        default:
+          return undefined;
       }
     });
   });
 }
 
-/** A database block at the caret, its folder beside the document. */
+/** A ```base block as a target. */
+function blockTarget(block) {
+  return {
+    path: block.path,
+    source: () => block.source,
+    setSource: (text) => block.setSource(text.replace(/\n$/, "")),
+    onDidChange: (fn) => block.onDidChange(fn),
+  };
+}
+
+/** A .base file as a target: `this` is the file itself, as in Obsidian. */
+function fileTarget(file) {
+  let text = "";
+  const listeners = [];
+  const reload = async () => {
+    text = await file.readText();
+    listeners.forEach((fn) => fn());
+  };
+  return {
+    path: file.path,
+    ready: reload(),
+    source: () => text,
+    setSource: async (next) => {
+      text = next;
+      await file.writeText(next);
+      listeners.forEach((fn) => fn());
+    },
+    onDidChange: (fn) => listeners.push(fn),
+    reload,
+  };
+}
+
+/** A database at the caret: a folder unit for it beside the note, its
+ *  page holding the base, and a link to it here. */
 async function newDatabase() {
   root = await textus.files.root();
   const doc = await textus.editor.getPath();
@@ -329,16 +333,19 @@ async function newDatabase() {
   if (!name || !name.trim()) return;
   const docRel = relOf(doc);
   const dir = docRel.includes("/") ? docRel.slice(0, docRel.lastIndexOf("/")) : "";
-  await textus.files.createFolder(join(root, (dir ? dir + "/" : "") + fileName(name))).catch(() => {});
-  await textus.editor.insertText("```database\nfrom: " + fileName(name) + "\nview: table\n```\n");
+  const folder = (dir ? dir + "/" : "") + fileName(name);
+  const page = folder + "/" + fileName(name) + ".md";
+  await textus.files.createFolder(join(root, folder)).catch(() => {});
+  if (!(await textus.files.stat(join(root, page))))
+    await textus.files.create(join(root, page), "# " + name.trim() + "\n\n```base\n" + database.writeBase(database.unitBase("table")) + "```\n");
+  await textus.editor.insertText("[[" + page.replace(/\.md$/, "") + "|" + name.trim() + "]]\n");
 }
 
-/** A row: a document in `folder` named for it, its properties in its front
- *  matter. False when it has no name or one of that name is there. */
+/** A row: a note in `folder` named for it, its properties in its front matter. */
 async function makeRow(folder, row) {
   const title = fileName(String(row.name || ""));
   if (!title) return false;
-  const file = join(root, folder + "/" + title + ".md");
+  const file = join(root, (folder ? folder + "/" : "") + title + ".md");
   if (await textus.files.stat(file)) return false;
   await textus.files.create(file, "# " + String(row.name).trim() + "\n" + (row.body ? "\n" + row.body + "\n" : ""));
   if (row.properties && typeof row.properties === "object")
@@ -346,38 +353,36 @@ async function makeRow(folder, row) {
   return true;
 }
 
-/** The database folder a tool names, by its path in the open folder. */
-async function databaseFolder(name) {
+/** The database a tool names - a folder in the open folder - and its unit page's base. */
+async function databaseOf(name) {
   root = await textus.files.root();
   if (!root) return { error: t("needsFolder") };
   const folder = folderPaths.clean(root, name, false);
   if (!folder) return { error: "database must be its folder's path in the open folder." };
-  return { folder: folder };
+  const page = folder + "/" + folder.slice(folder.lastIndexOf("/") + 1) + ".md";
+  const text = await textus.files.readText(join(root, page)).catch(() => "");
+  const m = /^```base[^\n]*\n([\s\S]*?)^```/m.exec(text);
+  const parsed = m ? database.parseBase(m[1]) : { error: "none" };
+  if (parsed.error) return { folder, page: folder + "/_.md", base: { filters: { and: ["file.inFolder(this.file.folder)"] }, views: [{ type: "table" }] } };
+  return { folder, page, base: parsed.base };
 }
 
-/** Textus AI's tool: a database's rows, filtered and sorted as a block's
- *  lines would. */
-/** The rows a folder unit's own page keeps in its database block's table. */
-async function unitTableRows(folder) {
-  if (!folder) return [];
-  const page = join(root, folder + "/" + folder.slice(folder.lastIndexOf("/") + 1) + ".md");
-  const text = await textus.files.readText(page).catch(() => "");
-  const m = DB_BLOCK.exec(text);
-  return m ? database.tableRows(database.parseSpec(m[1])) : [];
-}
-
+/** Textus AI's tool: a database's rows, filtered and sorted. */
 async function queryRows(input) {
-  const where = await databaseFolder(input.database);
-  if (where.error) return where;
-  const lines = [].concat(input.filter || []).map((f) => "filter: " + f);
-  if (input.sort) lines.push("sort: " + input.sort);
-  const spec = database.parseSpec(lines.join("\n"));
-  const rows = database.rowsOf(await textus.metadata.all(), where.folder).concat(await unitTableRows(where.folder));
-  if (!rows.length) return { error: "No documents in " + where.folder + "." };
-  const shown = database.viewRows(rows, spec);
+  const db = await databaseOf(input.database);
+  if (db.error) return db;
+  const { rows } = database.rowsOf(db.base, await textus.metadata.all(), db.page);
+  if (!rows.length) return { error: "No notes in " + db.folder + "." };
+  const filters = [].concat(input.filter || []).map((f) => ({ raw: String(f) }));
+  const sort = String(input.sort || "")
+    .split(",")
+    .map((s) => s.trim())
+    .filter(Boolean)
+    .map((s) => (s.startsWith("-") ? { key: s.slice(1), desc: true } : { key: s, desc: false }));
+  const shown = database.viewRows(rows, { filters, sort }, db.page);
   const limit = Math.max(1, Number(input.limit) || 100);
   return {
-    database: where.folder,
+    database: db.folder,
     total: shown.length,
     rows: shown.slice(0, limit).map((r) => ({
       name: r.name,
@@ -389,38 +394,42 @@ async function queryRows(input) {
 
 /** Textus AI's tool: one more row in a database. */
 async function addRowTool(input) {
-  const where = await databaseFolder(input.database);
-  if (where.error) return where;
-  await textus.files.createFolder(join(root, where.folder)).catch(() => {});
-  if (!(await makeRow(where.folder, input)))
+  const db = await databaseOf(input.database);
+  if (db.error) return db;
+  await textus.files.createFolder(join(root, db.folder)).catch(() => {});
+  if (!(await makeRow(db.folder, input)))
     return { error: input.name ? "A row named " + input.name + " is there already." : "The row has no name." };
-  return { database: where.folder, path: where.folder + "/" + fileName(String(input.name)) + ".md" };
+  return { database: db.folder, path: db.folder + "/" + fileName(String(input.name)) + ".md" };
 }
 
-/** Textus AI's tool: a folder of documents with these properties, and the
- *  block to show them, for the AI to put where the user wants it. */
+/** Textus AI's tool: a folder unit of notes with these properties, its
+ *  page holding the base, and a link to it for the AI to put where the user wants. */
 async function createDatabase(input) {
   root = await textus.files.root();
   if (!root) return { error: t("needsFolder") };
   const doc = await textus.editor.getPath();
   const docRel = relOf(doc);
   const dir = docRel && docRel.includes("/") ? docRel.slice(0, docRel.lastIndexOf("/")) : "";
-  const name = fileName(String(input.name || "Database"));
+  const title = String(input.name || "Database").trim();
+  const name = fileName(title);
   const folder = (dir ? dir + "/" : "") + name;
   await textus.files.createFolder(join(root, folder)).catch(() => {});
   let made = 0;
-  for (const row of Array.isArray(input.rows) ? input.rows.slice(0, 400) : [])
-    if (await makeRow(folder, row)) made++;
+  for (const row of Array.isArray(input.rows) ? input.rows.slice(0, 400) : []) if (await makeRow(folder, row)) made++;
   const view = database.VIEWS.includes(input.view) ? input.view : "table";
-  const lines = ["from: " + name, "view: " + view];
-  if (input.sort) lines.push("sort: " + input.sort);
-  if (input.group) lines.push("group: " + input.group);
-  return {
-    folder: folder,
-    documents: made,
-    block: "```database\n" + lines.join("\n") + "\n```",
-    note: t("aiNote"),
-  };
+  const spec = {};
+  if (input.sort)
+    spec.sort = String(input.sort)
+      .split(",")
+      .map((s) => s.trim())
+      .filter(Boolean)
+      .map((s) => (s.startsWith("-") ? { key: s.slice(1), desc: true } : { key: s, desc: false }));
+  if (input.group) spec.group = String(input.group);
+  const base = database.setView(database.unitBase(view), 0, spec);
+  const page = folder + "/" + name + ".md";
+  if (!(await textus.files.stat(join(root, page))))
+    await textus.files.create(join(root, page), "# " + title + "\n\n```base\n" + database.writeBase(base) + "```\n");
+  return { folder, page, documents: made, link: "[[" + page.replace(/\.md$/, "") + "|" + title + "]]", note: t("aiNote") };
 }
 
 exports.activate = function (ctx) {
@@ -430,12 +439,19 @@ exports.activate = function (ctx) {
     pending = setTimeout(() => live.forEach((send) => send()), 150);
   };
   ctx.subscriptions.push(
-    textus.views.registerCodeBlock("database", { render: (b, w) => render(b, w, ctx) }),
+    textus.views.registerCodeBlock("base", { render: (b, w) => draw(blockTarget(b), w, ctx) }),
+    textus.views.registerFileEditor("catvinci.database.base", {
+      resolve: async (file, webview) => {
+        const target = fileTarget(file);
+        await target.ready;
+        return draw(target, webview, ctx);
+      },
+    }),
     textus.commands.register("catvinci.database.new", newDatabase),
     textus.ai.registerTool("create_database", createDatabase),
     textus.ai.registerTool("query_rows", queryRows),
     textus.ai.registerTool("add_row", addRowTool),
-    // A page edited here, or anywhere: every block on screen again.
+    // A note edited here, or anywhere: every base on screen again.
     textus.files.onDidChangeRoot(again),
     textus.metadata.onDidChange(again),
     textus.files.onDidChange(again),
@@ -443,7 +459,6 @@ exports.activate = function (ctx) {
     textus.files.onDidDelete(again),
     textus.files.onDidRename(again),
   );
-  // Its pages tree and its import, modules of their own (pages-host.js, import-host.js).
+  // Its pages tree, a module of its own (pages-host.js).
   activatePages(ctx);
-  activateImport(ctx);
 };

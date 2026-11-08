@@ -12,8 +12,9 @@ let ni: any;
 
 beforeAll(async () => {
   await import(/* @vite-ignore */ "../shared/notion-csv.js");
-  await import(/* @vite-ignore */ "../plugins/catvinci.database/db.js");
-  await import(/* @vite-ignore */ "../plugins/catvinci.database/notion.js");
+  await import(/* @vite-ignore */ "../shared/yaml.js");
+  await import(/* @vite-ignore */ "../shared/bases.js");
+  await import(/* @vite-ignore */ "../plugins/catvinci.notion-import/notion.js");
   ni = (globalThis as unknown as { notionImport: unknown }).notionImport;
 });
 
@@ -51,10 +52,10 @@ describe("zips", () => {
 
 describe("the plugin", () => {
   it("is part of Workspace, jszip loaded before the import's scripts", () => {
-    const { manifest } = loadPlugin("catvinci.database");
+    const { manifest } = loadPlugin("catvinci.notion-import");
     const main: string[] = manifest.main;
-    expect(main.indexOf("lib/jszip.min.js")).toBeLessThan(main.indexOf("import-host.js"));
-    expect(main.indexOf("notion.js")).toBeLessThan(main.indexOf("import-host.js"));
+    expect(main.indexOf("lib/jszip.min.js")).toBeLessThan(main.indexOf("host.js"));
+    expect(main.indexOf("notion.js")).toBeLessThan(main.indexOf("host.js"));
     expect(main.at(-1)).toBe("host.js");
   });
 });
@@ -124,10 +125,9 @@ function host(
   const messages: string[] = [];
   const opened: string[] = [];
   const picks: unknown[][] = [];
-  // The import's strings are its own in Workspace's: "import.<key>".
-  const t = (key: string, ...args: unknown[]) => [key.replace(/^import\./, ""), ...args].join("|");
+  const t = (key: string, ...args: unknown[]) => [key, ...args].join("|");
   loadPlugin(
-    "catvinci.database",
+    "catvinci.notion-import",
     {
       l10n: { t },
       files: folder.api,
@@ -154,7 +154,7 @@ function host(
     },
     memoryStorage(),
   );
-  const run = (arg?: unknown) => commands.get("catvinci.database.importNotion")!(arg);
+  const run = (arg?: unknown) => commands.get("catvinci.notion-import.import")!(arg);
   return { commands, messages, opened, picks, run };
 }
 
@@ -169,14 +169,16 @@ describe("the import command", () => {
     expect(picks[0]).toEqual([{ label: "Export-x.zip", description: "Inbox/Export-x.zip", value: "/root/Inbox/Export-x.zip" }]);
     const [target] = targets(folder);
     expect(target).toBe("folderName");
-    expect(folder.files[target + "/Home/Projects/Projects.md"]).toContain("| Launch | In progress |");
+    expect(folder.files[target + "/Home/Projects/Projects.md"]).toContain("```base\n");
+    expect(folder.files[target + "/Home/Projects/Launch.md"]).toContain("status: In progress");
+    // Another page's view names the database's folder from the open folder's top.
+    expect(folder.files[target + "/Home/Home.md"]).toContain(`file.inFolder("${target}/Home/Projects")`);
     expect(folder.files[target + "/Home/logo.png"]).toBeInstanceOf(Uint8Array);
     expect(opened).toEqual(["/root/" + target + "/reportName.md"]);
     const report = String(folder.files[target + "/reportName.md"]);
-    // Pages and databases are Workspace's own: the report suggests only others.
-    expect(report).toContain("- **plugin.catvinci.backlinks**: why.catvinci.backlinks");
+    // Workspace first, for the pages tree and the databases; Pages is part of it now.
+    expect(report).toContain("- **plugin.catvinci.database**: why.catvinci.database\n- **plugin.catvinci.backlinks**: why.catvinci.backlinks");
     expect(report).not.toContain("plugin.catvinci.pages");
-    expect(report).not.toContain("plugin.catvinci.database");
     expect(messages).toEqual(["done|13|2|" + target]);
   });
 
@@ -249,15 +251,15 @@ describe("the import command", () => {
     const offers: unknown[] = [];
     const ok = host(disk({ "Inbox/Export-x.zip": await fixtureZip() }), { offer: async (args) => (offers.push(args), true) });
     await ok.run();
-    await ok.commands.get("catvinci.database.importTips")!();
-    expect(offers).toEqual([{ id: "catvinci.backlinks", reason: "why.catvinci.backlinks" }]);
+    await ok.commands.get("catvinci.notion-import.recommend")!();
+    expect(offers).toEqual([{ id: "catvinci.database", reason: "why.catvinci.database" }]);
     expect(ok.messages.join("\n")).not.toContain("offerFallback");
 
     // Declined, muted or offline: Textus says no without a word.
     const no = host(disk({ "Inbox/Export-x.zip": await fixtureZip() }), { offer: async () => false });
     await no.run();
-    await no.commands.get("catvinci.database.importTips")!();
-    expect(no.messages.at(-1)).toBe("offerFallback|plugin.catvinci.backlinks");
+    await no.commands.get("catvinci.notion-import.recommend")!();
+    expect(no.messages.at(-1)).toBe("offerFallback|plugin.catvinci.database");
 
     const old = host(disk({ "Inbox/Export-x.zip": await fixtureZip() }), {
       offer: async () => {
@@ -265,7 +267,7 @@ describe("the import command", () => {
       },
     });
     await old.run();
-    await old.commands.get("catvinci.database.importTips")!();
-    expect(old.messages.at(-1)).toBe("offerFallback|plugin.catvinci.backlinks");
+    await old.commands.get("catvinci.notion-import.recommend")!();
+    expect(old.messages.at(-1)).toBe("offerFallback|plugin.catvinci.database");
   });
 });
