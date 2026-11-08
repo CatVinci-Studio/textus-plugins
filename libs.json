@@ -101,5 +101,11 @@
   "catvinci.zotero/lib/folder-paths.js": "./shared/folder-paths.js",
   "catvinci.zotero/lib/conventions.js": "./shared/conventions.js",
   "catvinci.zotero/lib/dates.js": "./shared/dates.js",
-  "catvinci.zotero/lib/fill-template.js": "./shared/fill-template.js"
+  "catvinci.zotero/lib/fill-template.js": "./shared/fill-template.js",
+  "catvinci.database/lib/name-order.js": "./shared/name-order.js",
+  "catvinci.templates/lib/name-order.js": "./shared/name-order.js",
+  "catvinci.tags/lib/name-order.js": "./shared/name-order.js",
+  "catvinci.graph/lib/name-order.js": "./shared/name-order.js",
+  "catvinci.zotero/lib/name-order.js": "./shared/name-order.js",
+  "catvinci.slides/lib/folder-paths.js": "./shared/folder-paths.js"
 }

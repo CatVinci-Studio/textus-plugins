@@ -4,7 +4,7 @@
 // {{date:YYYY-MM-DD}}, and Templater's common <% tp.… %> tags) into a new
 // document or at the caret. Templates kept in the plugin's storage before
 // 0.3 are copied there once.
-/* global folderConventions, folderPaths, dates, freeName, templater */
+/* global folderConventions, folderPaths, dates, freeName, templater, nameOrder */
 let ctx;
 const t = (key, ...args) => textus.l10n.t(key, ...args);
 const MOVED = "movedToFolder";
@@ -89,7 +89,7 @@ async function templates(place) {
   return (await textus.files.find(place.rel + "/**/*.md").catch(() => []))
     .filter((f) => f.rel.startsWith(prefix))
     .map((f) => ({ name: f.rel.slice(prefix.length).replace(/\.md$/i, ""), path: f.path }))
-    .sort((a, b) => a.name.localeCompare(b.name));
+    .sort((a, b) => nameOrder.compareNames(a.name, b.name));
 }
 
 /** The templates; a first one is written when there are none. */

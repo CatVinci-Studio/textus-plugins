@@ -67,7 +67,7 @@
     const settle = (n) => {
       n.children = n.children.filter((c) => !(c.rel === null && pages.has(c.dir + ".md")));
       n.children.sort(
-        (a, b) => (a.rel ? 0 : 1) - (b.rel ? 0 : 1) || a.name.localeCompare(b.name),
+        (a, b) => (a.rel ? 0 : 1) - (b.rel ? 0 : 1) || nameOrder.compareNames(a.name, b.name),
       );
       n.children.forEach(settle);
     };

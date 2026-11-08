@@ -521,7 +521,7 @@ exports.activate = function (context) {
       const entries = items
         .filter((item) => !seen.has(item.key) && seen.add(item.key))
         .sort((a, b) =>
-          (authors(a) + year(a)).localeCompare(authors(b) + year(b)),
+          nameOrder.compareNames(authors(a) + year(a), authors(b) + year(b)),
         )
         .map(reference);
       const list = "## " + t("references") + "\n\n" + entries.join("\n");

@@ -1,8 +1,9 @@
 // Slides: the document in front as a Marp deck - slides apart at each
 // "---" - shown in a tab that follows the writing, and saved as one HTML
-// file to present from any browser.
+// file to present from any browser. Obsidian's ![[picture.png]] shows as
+// a picture; the tab shows pictures from the folder as data it is sent.
 
-/* global Marp */
+/* global Marp, slideEmbeds, folderPaths */
 const t = (key, ...args) => textus.l10n.t(key, ...args);
 let ctxRef = null;
 const views = new Set();
@@ -12,12 +13,84 @@ function render(markdown) {
   return marp.render(markdown || "");
 }
 
+const { slash, native } = folderPaths;
+const dirOf = (path) => path.slice(0, path.lastIndexOf("/"));
+
+/** Where `target`, a picture embedded in `doc`, is: as Textus resolves
+ *  the link, else beside the document, from the folder's top, or the
+ *  shortest path ending in it - Obsidian's ways. Null for none. */
+async function pictureAt(target, doc) {
+  const linked = await textus.metadata.resolveLink("[[" + target + "]]", doc).catch(() => null);
+  if (linked) return linked;
+  const root = await textus.files.root().catch(() => null);
+  const tries = [slideEmbeds.join(dirOf(slash(doc)), target)];
+  if (root) tries.push(slideEmbeds.join(slash(root).replace(/\/+$/, ""), target));
+  for (const path of tries)
+    if (await textus.files.stat(native(path, doc)).catch(() => null)) return native(path, doc);
+  if (!root) return null;
+  const found = (await textus.files.find("**/" + target.split("/").pop()).catch(() => []))
+    .filter((f) => f.rel === target || f.rel.endsWith("/" + target))
+    .sort((a, b) => a.rel.length - b.rel.length);
+  return found.length ? found[0].path : null;
+}
+
+/** `text` with its picture embeds as Markdown images, by their path from
+ *  the document `doc`. */
+async function withPictures(text, doc) {
+  const targets = slideEmbeds.targets(text);
+  if (!doc || !targets.length) return text;
+  const hrefs = {};
+  for (const target of targets) {
+    const found = await pictureAt(target, doc);
+    hrefs[target] = found ? slideEmbeds.relative(slash(doc), slash(found)) : target;
+  }
+  return slideEmbeds.rewrite(text, hrefs);
+}
+
+const MIME = { jpg: "image/jpeg", jpeg: "image/jpeg", svg: "image/svg+xml", ico: "image/x-icon" };
+const pictures = new Map();
+
+/** The deck's `html` with its pictures from the folder as data: the tab
+ *  shows nothing else. Kept until a picture changes. */
+async function inlinePictures(html, doc) {
+  if (!doc) return html;
+  const urls = {};
+  for (const src of slideEmbeds.localSources(html)) {
+    let rel;
+    try {
+      rel = decodeURI(src);
+    } catch {
+      continue;
+    }
+    if (!slideEmbeds.PICTURE.test(rel)) continue;
+    const path = native(slideEmbeds.join(dirOf(slash(doc)), rel), doc);
+    const stat = await textus.files.stat(path).catch(() => null);
+    if (!stat || stat.isDir) continue;
+    let kept = pictures.get(path);
+    if (!kept || kept.modifiedMs !== stat.modifiedMs) {
+      const bytes = new Uint8Array(await textus.files.read(path));
+      let binary = "";
+      for (let i = 0; i < bytes.length; i += 0x8000)
+        binary += String.fromCharCode.apply(null, bytes.subarray(i, i + 0x8000));
+      const ext = rel.split(".").pop().toLowerCase();
+      kept = { modifiedMs: stat.modifiedMs, url: "data:" + (MIME[ext] || "image/" + ext) + ";base64," + btoa(binary) };
+      pictures.set(path, kept);
+    }
+    urls[src] = kept.url;
+  }
+  return slideEmbeds.inline(html, urls);
+}
+
 /** The last deck, kept while the slides' own tab is in front. */
 let deck = null;
 
 async function update() {
   const text = await textus.editor.getText();
-  if (text !== null) deck = render(text);
+  if (text !== null) {
+    const doc = await textus.editor.getPath();
+    const shown = render(await withPictures(text, doc));
+    deck = { html: await inlinePictures(shown.html, doc), css: shown.css };
+  }
   if (deck) for (const view of views) void view.postMessage(deck);
 }
 
@@ -47,7 +120,7 @@ async function writeDeck() {
   const path = await textus.editor.getPath();
   const text = await textus.editor.getText();
   if (!path || text === null) return null;
-  const { html, css } = render(text);
+  const { html, css } = render(await withPictures(text, path));
   const target = path.replace(/\.(md|markdown)$/i, "") + ".slides.html";
   const name = path.split(/[\\/]/).pop();
   await textus.files.writeText(target, standalone(name, html, css));

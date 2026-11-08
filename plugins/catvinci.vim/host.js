@@ -2,7 +2,8 @@
 // counts, motions, operators, a register, dot repeat, flash (s and a
 // character, then a label, jumps anywhere on screen), the command line in
 // the command palette (:w, :q, :wq, :12) and key mappings written as in a
-// vimrc (inoremap jj <Esc>). Keys come from the editor while this plugin holds the keyboard
+// vimrc (inoremap jj <Esc>), and those of an Obsidian vault's
+// .obsidian.vimrc after them. Keys come from the editor while this plugin holds the keyboard
 // (textus.editor.captureKeys); every change is an editor action
 // (textus.editor.exec), done as typing is and undone with u. A Markdown
 // document is not a plain file: a "line" here is a paragraph, a heading,
@@ -23,7 +24,7 @@ var flash = null; // { query, letters, op } while s is collecting
 var cmdline = null; // the command line's text while a mapping's : runs
 var feeding = 0; // above 0 while a mapping's keys are fed
 var note = ""; // a line for the status until the next key (an unknown command)
-var settings = { flash: true, escape: "", mappings: "" };
+var settings = { flash: true, escape: "", mappings: "", vimrc: "" };
 
 // Dot repeat: the keys of the last change made in normal mode, from its
 // count to the key that finished it.
@@ -247,7 +248,11 @@ function parseMappings(text) {
       if (rest.length < 2) return;
       var lhs = parseKeys(rest[0], leader);
       var rhs = parseKeys(rest.slice(1).join(" "), leader);
+      // As in Vim, mapping the same keys again replaces the mapping.
       modes.split("").forEach(function (m) {
+        found[m] = found[m].filter(function (old) {
+          return !same(old.lhs, lhs);
+        });
         found[m].push({ lhs: lhs, rhs: rhs });
       });
     });
@@ -255,7 +260,7 @@ function parseMappings(text) {
 }
 
 function readMappings() {
-  maps = parseMappings(settings.mappings);
+  maps = parseMappings(settings.mappings + "\n" + settings.vimrc);
   // The older setting: two letters that leave insert mode.
   var esc = settings.escape;
   if (esc && esc.length === 2)
@@ -995,15 +1000,42 @@ async function readSettings() {
   settings.flash = (await textus.settings.get("flash")) !== false;
   settings.escape = String((await textus.settings.get("escape")) || "");
   settings.mappings = String((await textus.settings.get("mappings")) || "");
+  settings.vimrc = await vaultVimrc();
   readMappings();
+}
+
+/** The open vault's .obsidian.vimrc (Obsidian's Vimrc Support); "" for
+ *  none. */
+async function vaultVimrc() {
+  try {
+    var root = await textus.files.root();
+    if (!root) return "";
+    var found = await textus.files.conventions().catch(function () {
+      return null;
+    });
+    var vault = found && (found.sources || []).find(function (s) {
+      return s.app === "obsidian";
+    });
+    if (vault && typeof vault.root === "string") root = vault.root;
+    var sep = root.includes("\\") && !root.includes("/") ? "\\" : "/";
+    return String(await textus.files.readText(root.replace(/[\\/]+$/, "") + sep + ".obsidian.vimrc"));
+  } catch {
+    return "";
+  }
+}
+
+function settingsChanged() {
+  readSettings().then(function () {
+    captureFor(mode);
+  });
 }
 
 exports.activate = async function () {
   await readSettings();
-  textus.settings.onDidChange(function () {
-    readSettings().then(function () {
-      captureFor(mode);
-    });
+  textus.settings.onDidChange(settingsChanged);
+  textus.files.onDidChangeRoot(settingsChanged);
+  textus.files.onDidChange(function (event) {
+    if (/[\\/]\.obsidian\.vimrc$/.test(event.path)) settingsChanged();
   });
   textus.editor.keys.onKey(handle);
   textus.commands.register("catvinci.vim.toggle", function () {
