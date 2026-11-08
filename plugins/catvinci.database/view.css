@@ -59,23 +59,38 @@ body {
   user-select: none;
   -webkit-user-select: none;
 }
-/* A column being dragged rides over the others, which slide aside. */
+/* A column being dragged rides over the others, which slide aside. It keeps
+   its own colours - only its shadow says it is lifted - and where it will
+   land is a dashed outline, as anything dragged leaves. */
+.col-moving {
+  position: relative;
+}
 .col-moving :is(th, td)[data-key] {
   transition: transform var(--dur-fast) var(--ease-standard);
 }
-.col-moving td.col-lifted {
-  position: relative;
-}
 .col-moving :is(th, td).col-lifted {
+  position: relative;
   z-index: 3;
   transition: none;
-  background: var(--ui-surface);
-  box-shadow:
-    inset 1px 0 var(--ui-border-strong, var(--ui-border)),
-    inset -1px 0 var(--ui-border-strong, var(--ui-border));
+}
+/* Cells are see-through; lifted, they hide what slides under them. */
+.col-moving td.col-lifted {
+  background: var(--doc-bg, var(--ui-bg));
 }
 .col-moving th.col-lifted {
+  position: sticky;
+  z-index: 4;
   box-shadow: var(--shadow-popover);
+}
+.col-slot {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  z-index: 1;
+  box-sizing: border-box;
+  border: 1px dashed var(--ui-muted);
+  border-radius: var(--shape-xs);
+  pointer-events: none;
 }
 /* A column's width: its head's right edge, dragged. */
 .col-resize {
