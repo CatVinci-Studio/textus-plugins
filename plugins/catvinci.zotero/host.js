@@ -3,7 +3,7 @@
 // later on this computer (http://localhost:23119/api/), which Zotero serves
 // once "Allow other applications on this computer to communicate with
 // Zotero" is on - nothing leaves the computer.
-/* global folderConventions, folderPaths, fillTemplate */
+/* global folderConventions, folderPaths, dates */
 /** What activate was given: the plugin's storage and own files. */
 let ctx;
 
@@ -298,7 +298,7 @@ function yamlValue(value) {
  *  line that is one {{key}} written as YAML. The default template drops
  *  what the item has none of. */
 function noteText(template, values, language) {
-  const fill = (text) => fillTemplate(text, values, { language: language });
+  const fill = (text) => dates.fill(text, { values: values, language: language });
   const front = /^---\r?\n[^]*?\r?\n---\r?\n/.exec(template);
   let head = front
     ? fill(

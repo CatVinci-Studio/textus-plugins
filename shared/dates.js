@@ -200,14 +200,38 @@
     s: (d, n) => d.setSeconds(d.getSeconds() + n),
   };
 
+  /** `value` as a Date: a Date, or text that starts with YYYY, YYYY-MM or
+   *  YYYY-MM-DD (a time after it read too); null otherwise. */
+  function asDate(value) {
+    if (value instanceof Date) return isNaN(value) ? null : value;
+    var text = String(value);
+    if (/^\d{4}-\d{2}-\d{2}T/.test(text)) {
+      var at = new Date(text);
+      return isNaN(at) ? null : at;
+    }
+    var m = /^(\d{4})(?:-(\d{1,2}))?(?:-(\d{1,2}))?/.exec(text);
+    return m ? new Date(Number(m[1]), Number(m[2] || 1) - 1, Number(m[3] || 1)) : null;
+  }
+
+  /** A value as a template writes it: a list joined with ", ", nothing for
+   *  null, a date (or text starting with one, under a format) formatted;
+   *  null for a format on what isn't a date. */
+  function valueText(value, form, language) {
+    var date = value instanceof Date || form !== undefined ? asDate(value) : null;
+    if (date) return format(date, form || "YYYY-MM-DD", language);
+    if (form !== undefined) return null;
+    if (value === null || value === undefined) return "";
+    return Array.isArray(value) ? value.join(", ") : String(value);
+  }
+
   /**
    * A template's {{date}} and {{time}} filled in, as Obsidian writes them
    * ({{date:FORMAT}}, {{time:FORMAT}}, {{date+1d}}): the date is
    * `options.day`'s, the time `options.now`'s (both now when not given),
    * in `options.dateFormat` and `options.timeFormat` unless the tag names
-   * one. Every other {{name}} found in `options.values` is filled in too,
-   * a Date as YYYY-MM-DD unless the tag names a format ({{monday:D MMM}});
-   * the rest stay as written.
+   * one. Every other {{name}} found in `options.values` is filled in too
+   * (valueText), and a value there wins over the clock's {{date}}; the
+   * rest stay as written.
    */
   function fill(text, options) {
     var now = options.now || new Date();
@@ -215,16 +239,17 @@
     var values = options.values || {};
     var defaults = { date: options.dateFormat || "YYYY-MM-DD", time: options.timeFormat || "HH:mm" };
     return String(text).replace(
-      /\{\{(\w+)(?:([+-]\d+)([yqMmwdhs]))?(?::([^}]*))?\}\}/g,
+      /\{\{\s*(\w+)(?:([+-]\d+)([yqMmwdhs]))?\s*(?::([^}]*))?\}\}/g,
       function (all, key, offset, unit, form) {
-        if (key === "date" || key === "time") {
+        var known = offset === undefined && Object.prototype.hasOwnProperty.call(values, key);
+        var shown = known ? valueText(values[key], form, options.language) : null;
+        if (shown !== null) return shown;
+        if (!known && (key === "date" || key === "time")) {
           var at = new Date(date.getFullYear(), date.getMonth(), date.getDate(), now.getHours(), now.getMinutes(), now.getSeconds());
           if (offset) UNITS[unit](at, Number(offset));
           return format(at, form || defaults[key], options.language);
         }
-        var known = offset === undefined && Object.prototype.hasOwnProperty.call(values, key);
-        if (known && values[key] instanceof Date) return format(values[key], form || "YYYY-MM-DD", options.language);
-        return known && form === undefined ? values[key] : all;
+        return all;
       },
     );
   }

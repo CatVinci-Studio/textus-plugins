@@ -1,17 +1,18 @@
 import { beforeAll, describe, expect, it } from "vitest";
 
-/** {{key}} and {{key:FORMAT}} filled in (shared/fill-template.js). */
+/** {{key}} and {{key:FORMAT}} filled in from values (shared/dates.js). */
 let fillTemplate: (
   text: string,
   values: Record<string, unknown>,
   options?: { now?: Date; language?: string; dateFormat?: string },
 ) => string;
 
+type Fill = (text: string, options: Record<string, unknown>) => string;
+
 beforeAll(async () => {
   await import("../shared/dates.js");
-  await import("../shared/fill-template.js");
-  fillTemplate = (globalThis as unknown as { fillTemplate: typeof fillTemplate })
-    .fillTemplate;
+  const { fill } = (globalThis as unknown as { dates: { fill: Fill } }).dates;
+  fillTemplate = (text, values, options) => fill(text, { ...options, values });
 });
 
 describe("a filled template", () => {
@@ -39,8 +40,8 @@ describe("a filled template", () => {
     );
   });
 
-  it("leaves text that isn't a date as it is under a format", () => {
-    expect(fillTemplate("{{title:YYYY}}", { title: "Attention" })).toBe("Attention");
+  it("leaves a format on text that isn't a date as written", () => {
+    expect(fillTemplate("{{title:YYYY}}", { title: "Attention" })).toBe("{{title:YYYY}}");
   });
 
   it("gives {{date}} and {{time}} from now unless the values have them", () => {
