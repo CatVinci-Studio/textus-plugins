@@ -1,10 +1,21 @@
 # Visor de PDF
 
-Los PDF se abren en una pestaña junto a tus notas.
+Abre PDF en una pestaña junto a tus notas, para leer, buscar y copiar texto.
 
-- Abre un PDF desde la barra lateral o arrástralo a la ventana.
-- Desplázate por las páginas; amplía con los botones o con **Ctrl+rueda** (**⌘+rueda** en Mac).
+- Abre un PDF desde la barra lateral o arrástralo a la ventana. Un enlace a una página de un PDF lo abre en esa página.
+- Desplázate por las páginas o usa los botones de flecha para ir a la anterior y la siguiente.
+- Haz zoom con los botones, **Ctrl+rueda** (**⌘+rueda** en un Mac) o pellizcando. Las páginas se estiran al momento alrededor del puntero y se vuelven nítidas al parar.
+- Un PDF se abre al ancho de la ventana y lo mantiene al cambiar su tamaño. Haz clic en el porcentaje para alternar entre eso y el tamaño real.
 - Selecciona texto para copiarlo a tus notas.
-- Un PDF se abre al ancho de la ventana; haz clic en el porcentaje para pasar del ancho de la ventana al tamaño real.
-- **Ctrl+F** (**⌘F** en Mac), o la lupa, busca palabras en el PDF: **Enter** salta a la siguiente página que las contiene y **Shift+Enter** a la anterior.
-- Un PDF vuelve a abrirse en la página y con el zoom en los que lo dejaste.
+- **Ctrl+F** (**⌘F** en un Mac), o la lupa, busca palabras en el PDF y las marca: **Intro** va a la siguiente página donde aparecen, **Mayús+Intro** vuelve atrás y **Esc** cierra.
+- Un PDF vuelve a abrirse en la página y el zoom en que lo dejaste. Se recuerdan los últimos 200 PDF.
+- Los PDF en chino, japonés y coreano sin fuentes incrustadas muestran igualmente su texto, y las páginas escaneadas muestran sus imágenes. Un archivo que no se puede abrir dice por qué.
+
+No pide permisos: Textus le pasa el PDF que abres.
+
+## Cambios
+
+- **0.2.0** - Controles propios de Textus. Requiere Textus 1.3.2.
+- **0.1.3** - El aspecto de Textus 1.3; los botones siguen el idioma de la interfaz cuando cambia.
+- **0.1.2** - Las páginas escaneadas muestran sus imágenes, funcionan los enlaces a una página, las páginas fuera de la vista liberan memoria y los archivos ilegibles lo dicen; se abre al ancho de la ventana; el zoom estira alrededor del puntero y luego se vuelve nítido.
+- **0.1.0-0.1.1** - Primeras versiones: páginas, zoom, texto para seleccionar y copiar, búsqueda, reapertura donde lo dejaste, texto chino, japonés y coreano sin fuentes incrustadas.

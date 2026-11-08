@@ -1,8 +1,20 @@
 # Zwischenablage-Verlauf
 
-Was Sie in Ihren Dokumenten kopiert oder ausgeschnitten haben, das Neueste zuerst, in der Seitenleiste: ein Klick fügt es wieder ein.
+Behält in der Seitenleiste, was Sie in Ihren Dokumenten kopieren oder ausschneiden, damit Sie es wieder einfügen können.
 
-- Kopieren oder schneiden Sie Text in einem Dokument aus, und er erscheint im Tab **Zwischenablage-Verlauf** der Seitenleiste, das Neueste zuerst (die letzten 30).
+Kopieren oder schneiden Sie Text in einem Dokument aus, erscheint er im Reiter **Zwischenablage-Verlauf** der Seitenleiste, das Neueste oben. Die letzten 30 bleiben erhalten, auch nach einem Neustart von Textus. Kopieren Sie denselben Text noch einmal, rückt er wieder nach oben; sehr lange Kopien (über 50.000 Zeichen) werden nicht behalten.
+
 - Ein Klick auf einen Eintrag fügt ihn an der Einfügemarke ein.
-- Per Rechtsklick kopieren Sie ihn erneut oder entfernen ihn; **Zwischenablage-Verlauf leeren** (Rechtsklick oder Plugins-Menü) leert die Liste.
-- Nur was Sie in Ihren Dokumenten kopieren, wird behalten, nie was Sie in den Einstellungen oder anderen Apps kopieren.
+- Per Rechtsklick können Sie einen Eintrag erneut **Kopieren** oder **Entfernen**.
+- **Zwischenablage-Verlauf leeren** (Rechtsklick auf einen Eintrag oder **Plugins › Zwischenablage-Verlauf leeren**) leert die Liste.
+
+Behalten wird nur, was Sie in Ihren Dokumenten kopieren, nie, was Sie in den Einstellungen oder in anderen Apps kopieren. Die Liste bleibt in Textus.
+
+## Berechtigungen
+
+- Zwischenablage: um zu sehen, was Sie in einem Dokument kopieren, und einen Eintrag erneut zu kopieren.
+- Dokument bearbeiten: um einen Eintrag an der Einfügemarke einzufügen.
+
+## Änderungen
+
+- **0.1.0** - Erste Version: die letzten 30 Kopien in der Seitenleiste, per Klick eingefügt, per Rechtsklick erneut kopiert oder entfernt. Benötigt Textus 1.3.10.
