@@ -62,14 +62,31 @@
   /** A select that reads as a state - status, stage - gets the dot. */
   const isStatus = (key) => /^(status|state|stage|phase|进度|状态)$/i.test(key || "");
 
+  /** A rating column: five stars when every row's value fits them, else
+   *  each as a star and its number - one look down the whole column. */
+  const isRating = (key) => /^(rate|rating|stars?)$/i.test(key || "");
+  const fits = new WeakMap();
+  function starsFit(key) {
+    if (!fits.has(data)) fits.set(data, new Map());
+    const known = fits.get(data);
+    if (!known.has(key))
+      known.set(key, data.rows.every((r) => {
+        const v = r.props[key];
+        return v === null || v === undefined || v === "" || (typeof v === "number" && v >= 0 && v <= 5);
+      }));
+    return known.get(key);
+  }
+
   function shown(value, type, key) {
     if (type === "checkbox")
       return el("input", { type: "checkbox", class: "ui-check", checked: value === true, tabindex: "-1", "aria-label": key });
     if (value === null || value === undefined || value === "") return "";
     if (Array.isArray(value)) return el("span", { class: "tags" }, value.map((v) => tag(v, key)));
     if (type === "select") return tag(value, key, isStatus(key));
-    if (type === "number" && /^(rate|rating|stars?)$/i.test(key) && value >= 0 && value <= 5)
-      return el("span", { class: "stars" }, "★".repeat(Math.round(value)) + "☆".repeat(5 - Math.round(value)));
+    if (type === "number" && isRating(key))
+      return starsFit(key)
+        ? el("span", { class: "stars" }, "★".repeat(Math.round(value)) + "☆".repeat(5 - Math.round(value)))
+        : el("span", { class: "stars" }, "★ ", el("span", { class: "rating-number" }, String(value)));
     if (type === "url") return el("a", { href: value, target: "_blank", onclick: (e) => e.stopPropagation() }, String(value));
     return String(value);
   }
@@ -271,19 +288,6 @@
     return el("div", null, frame);
   }
 
-  /** The table's head kept in view while its rows scroll by: the page
-   *  scrolls (in a tab, or in a block's own height) and the frame scrolls
-   *  sideways, so a sticky head has nothing to stick to; it is moved. */
-  function pinHead() {
-    const head = document.querySelector(".tx-table thead");
-    if (!head) return;
-    const table = head.closest("table").getBoundingClientRect();
-    const height = head.getBoundingClientRect().height;
-    const by = Math.max(0, Math.min(-table.top, table.height - height * 2));
-    head.classList.toggle("pinned", by > 0);
-    for (const th of head.querySelectorAll("th")) th.style.transform = by ? "translateY(" + by + "px)" : "";
-  }
-
   /** Every cell of column `key` `px` wide, its text cut short to fit. */
   function sizeColumn(frame, key, px) {
     const cells = frame.querySelectorAll('[data-key="' + CSS.escape(key) + '"]');
@@ -317,20 +321,60 @@
   const MIN_COLUMN = 64;
   const widthsOf = (key) => (data.spec.widths || {})[key] || 0;
 
-  /** A column's head dragged among the others: the view's column order. */
+  /** A column dragged by its head among the others, as the sidebar's tabs
+   *  are: the column itself lifts and follows the pointer, the ones it
+   *  passes slide aside; letting go keeps the order in the view. */
   function moveColumn(e, node, key) {
     if (e.target.closest(".col-resize")) return;
-    const row = node.parentElement;
-    drag.sortable(e, {
-      item: node,
-      axis: "x",
-      lists: () => [row],
-      itemsOf: (r) => [...r.children].filter((c) => c.dataset.key && c.dataset.key !== "name"),
-      onDrop: (_row, index) => {
-        const columns = data.columns.filter((c) => c !== key);
-        columns.splice(index, 0, key);
-        if (columns.join("\n") !== data.columns.join("\n")) setSpec({ columns: columns });
-        else render();
+    const frame = node.closest(".tx-table-frame");
+    const cells = (k) => frame.querySelectorAll('[data-key="' + CSS.escape(k) + '"]');
+    const order = data.columns.slice();
+    let slots = [];
+    let at = order.indexOf(key);
+    // A page drawn in a zoomed document: the pointer moves in screen
+    // pixels, the cells in the page's.
+    let zoom = 1;
+    const place = (k, dx, lifted) => {
+      for (const c of cells(k)) {
+        c.style.transform = dx ? "translateX(" + dx + "px)" : "";
+        c.classList.toggle("col-lifted", lifted);
+      }
+    };
+    drag.track(e, {
+      start: () => {
+        // Where each column sits before anything moves.
+        slots = order.map((k) => {
+          const r = cells(k)[0].getBoundingClientRect();
+          return { key: k, middle: r.left + r.width / 2, width: r.width };
+        });
+        zoom = node.getBoundingClientRect().width / node.offsetWidth || 1;
+        frame.classList.add("col-moving");
+      },
+      move: (x) => {
+        const from = order.indexOf(key);
+        const me = slots[from];
+        const dx = (x - e.clientX) / zoom;
+        const middle = me.middle + x - e.clientX;
+        at = from;
+        slots.forEach((s, i) => {
+          if (i < from && middle < s.middle) at = Math.min(at, i);
+          if (i > from && middle > s.middle) at = Math.max(at, i);
+        });
+        slots.forEach((s, i) => {
+          if (i === from) return place(s.key, dx, true);
+          const room = me.width / zoom;
+          const shift = i >= at && i < from ? room : i <= at && i > from ? -room : 0;
+          place(s.key, shift, false);
+        });
+      },
+      end: (_x, _y, dropped) => {
+        frame.classList.remove("col-moving");
+        for (const k of order) place(k, 0, false);
+        const from = order.indexOf(key);
+        if (!dropped || at === from) return render();
+        const next = order.filter((c) => c !== key);
+        next.splice(at, 0, key);
+        setSpec({ columns: next });
       },
     });
   }
@@ -668,9 +712,7 @@
     if (!data.rows.length && view !== "calendar" && view !== "table") return body.replaceChildren(el("div", { class: "tx-empty" }, s("empty")));
     nearEnd.disconnect();
     body.replaceChildren(view === "board" ? board() : view === "calendar" ? calendar() : view === "gallery" ? gallery() : view === "list" ? list() : table());
-    pinHead();
   }
-  window.addEventListener("scroll", pinHead, { passive: true });
 
   $("add").addEventListener("click", () => {
     if (!data) return;

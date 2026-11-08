@@ -30,12 +30,52 @@ body {
   margin-right: var(--space-1);
 }
 
-/* Table */
+/* Table. The page scrolls both ways, not the table's frame: so its head
+   sticks to the top as the rows go by, as the browser draws it, and the bar
+   stays where it is when a wide table is scrolled sideways. */
+.tx-table-frame {
+  overflow: clip;
+  width: max-content;
+  min-width: 100%;
+  box-sizing: border-box;
+}
+#bar,
+#rules,
+#notes {
+  position: sticky;
+  left: 0;
+  max-width: 100vw;
+  box-sizing: border-box;
+}
 .tx-table th {
-  position: relative;
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  /* Opaque over the rows going under it. */
+  background:
+    linear-gradient(var(--doc-code-bg, var(--ui-subtle)), var(--doc-code-bg, var(--ui-subtle))),
+    var(--ui-bg);
   cursor: pointer;
   user-select: none;
   -webkit-user-select: none;
+}
+/* A column being dragged rides over the others, which slide aside. */
+.col-moving :is(th, td)[data-key] {
+  transition: transform var(--dur-fast) var(--ease-standard);
+}
+.col-moving td.col-lifted {
+  position: relative;
+}
+.col-moving :is(th, td).col-lifted {
+  z-index: 3;
+  transition: none;
+  background: var(--ui-surface);
+  box-shadow:
+    inset 1px 0 var(--ui-border-strong, var(--ui-border)),
+    inset -1px 0 var(--ui-border-strong, var(--ui-border));
+}
+.col-moving th.col-lifted {
+  box-shadow: var(--shadow-popover);
 }
 /* A column's width: its head's right edge, dragged. */
 .col-resize {
@@ -100,6 +140,10 @@ body {
 .stars {
   color: var(--tone-yellow);
   letter-spacing: 1px;
+}
+.stars .rating-number {
+  color: var(--ui-text);
+  font-variant-numeric: tabular-nums;
 }
 .cell-input {
   width: 100%;
@@ -323,15 +367,6 @@ body.folded #body {
   height: 0;
   padding: 0;
   border: none;
-}
-/* The head moved along as the rows scroll under it: opaque over them. */
-.tx-table thead.pinned th {
-  position: relative;
-  z-index: 2;
-  background:
-    linear-gradient(var(--doc-code-bg, var(--ui-subtle)), var(--doc-code-bg, var(--ui-subtle))),
-    var(--ui-bg);
-  box-shadow: 0 1px 0 var(--doc-border, var(--ui-border));
 }
 /* Folded, the bar is all there is: no room left under it. */
 body.folded #bar {
