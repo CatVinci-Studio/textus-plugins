@@ -44,14 +44,9 @@ async function settingsOf(isLocal) {
 
 /** `settings` with the vault's own colour groups after the panel's. */
 async function withVaultGroups(settings) {
-  const root = await textus.files.root();
-  if (!root) return settings;
-  let saved;
-  try {
-    saved = JSON.parse(await textus.files.readText(folderPaths.abs(root, ".obsidian/graph.json")));
-  } catch {
-    return settings;
-  }
+  // The nearest vault's, even one above the open folder.
+  const saved = await textus.files.appSettings("obsidian", "graph.json").catch(() => null);
+  if (!saved) return settings;
   const groups = graphLinks.obsidianGroups(saved);
   return groups.length ? Object.assign({}, settings, { groups: (settings.groups || []).concat(groups) }) : settings;
 }
