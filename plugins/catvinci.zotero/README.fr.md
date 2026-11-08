@@ -7,6 +7,8 @@ Citez depuis votre bibliothèque Zotero pendant que vous écrivez.
 - Si des mots sont sélectionnés, ce sont eux qui sont recherchés.
 - Choisissez un élément et la citation s’insère au curseur.
 - **Extensions › Insérer la liste des références** ajoute à la fin du document la liste de tous les ouvrages qu’il cite.
+- **Extensions › Nouvelle note de lecture depuis Zotero…** crée `@citekey.md` dans References (ou l’ouvre si elle existe) avec le titre, les auteurs, l’année, le résumé, le DOI ou l’URL, et les surlignages et notes de Zotero. Un fichier modèle peut être choisi ; dans un coffre Obsidian, le dossier et le modèle de Zotero Integration ou Citations sont suivis.
+- Les citations peuvent aussi s’écrire à la manière d’Obsidian, `[[@citekey]]` : un lien vers cette note de lecture, proposée quand vous citez.
 - La façon d’écrire une citation se règle dans les réglages de l’extension.
 
 <!-- ai-tools -->

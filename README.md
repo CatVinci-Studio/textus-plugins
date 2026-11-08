@@ -23,7 +23,7 @@ The plugins for [Textus](https://textus.md), the Markdown editor. None of them c
 | Vim | Vim's modes and keys in the editor: normal, insert and visual, motions, operators, counts, registers and dot repeat, and flash jumps with s. |
 | Web View | Open web pages in a tab beside your notes. |
 | Word Reader | Read Word documents as they look in Word, in a tab. Edit as Markdown turns one into a document of yours. |
-| Zotero | Cite from your Zotero library while you write, and rest the pointer on a citation to see what it cites. Needs Zotero 7 running, with Settings › Advanced › Allow other applications on this computer to communicate with Zotero on. |
+| Zotero | Cite from your Zotero library while you write (Pandoc `[@key]` or Obsidian `[[@key]]`), make `@citekey.md` literature notes with highlights and notes, and rest the pointer on a citation to see what it cites. Needs Zotero 7 running, with Settings › Advanced › Allow other applications on this computer to communicate with Zotero on. |
 
 Quick Notes can also start a note from the tray or menu bar with every window closed, once **Keep running in the background** is on - it offers to turn it on.
 
