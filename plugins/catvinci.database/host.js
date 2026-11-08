@@ -358,7 +358,8 @@ async function newDatabase() {
   await textus.files.createFolder(join(root, folder)).catch(() => {});
   if (!(await textus.files.stat(join(root, page))))
     await textus.files.create(join(root, page), "# " + name.trim() + "\n\n```base\n" + database.writeBase(database.unitBase("table")) + "```\n");
-  await textus.editor.insertText("[[" + page.replace(/\.md$/, "") + "|" + name.trim() + "]]\n");
+  // The link the folder writes (its style and path rules), named as asked.
+  await textus.editor.insertText((await textus.metadata.linkTo(join(root, page), doc, { alias: name.trim() })) + "\n");
 }
 
 /** The ```dataview block holding the selection - else the only one, or one
@@ -472,7 +473,9 @@ async function createDatabase(input) {
   const page = folder + "/" + name + ".md";
   if (!(await textus.files.stat(join(root, page))))
     await textus.files.create(join(root, page), "# " + title + "\n\n```base\n" + database.writeBase(base) + "```\n");
-  return { folder, page, documents: made, link: "[[" + page.replace(/\.md$/, "") + "|" + title + "]]", note: t("aiNote") };
+  const from = (await textus.editor.getPath().catch(() => null)) || join(root, page);
+  const link = await textus.metadata.linkTo(join(root, page), from, { alias: title });
+  return { folder, page, documents: made, link, note: t("aiNote") };
 }
 
 exports.activate = function (ctx) {

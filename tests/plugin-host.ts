@@ -65,6 +65,77 @@ export function memoryStorage(files: Record<string, string> = {}) {
   };
 }
 
+/** Textus's textus.dates and textus.templates (the app's runtime/text.js),
+ *  stood in for by the same code kept here: shared/dates.js and the
+ *  Templater subset. */
+function textApi(conventions: () => Promise<Any>): Any {
+  const box: Any = {};
+  const run = (file: URL) =>
+    new Function("globalThis", "dates", readFileSync(file, "utf8"))(
+      box,
+      box.dates,
+    );
+  run(new URL("../shared/dates.js", import.meta.url));
+  run(new URL("../shared/templater.js", import.meta.url));
+  const asDate = (v: unknown) =>
+    v instanceof Date
+      ? v
+      : typeof v === "string" && /^\d{4}-\d{2}-\d{2}$/.test(v)
+        ? new Date(`${v}T00:00:00`)
+        : new Date((v as number) ?? Date.now());
+  return {
+    dates: {
+      format: (d: unknown, f?: string, o?: Any) =>
+        box.dates.format(asDate(d), f || "YYYY-MM-DD", o?.language ?? "en"),
+      parse: (t: string, f?: string, o?: Any) =>
+        box.dates.parse(t, f || "YYYY-MM-DD", o?.language ?? "en"),
+    },
+    templates: {
+      fill: async (text: string, o: Any = {}) => {
+        const now = o.now ? asDate(o.now) : new Date();
+        const day = o.date === undefined ? now : asDate(o.date);
+        const values = { ...o.values };
+        if (o.title !== undefined && !("title" in values))
+          values.title = o.title;
+        const language = o.language ?? "en";
+        // As the app: the folder's Templates formats, when given none.
+        let formats: Any = {};
+        if (!o.format && (!o.dateFormat || !o.timeFormat)) {
+          const found = await conventions().catch(() => null);
+          formats = found?.templateFormats?.value ?? {};
+        }
+        o = {
+          ...o,
+          dateFormat: o.dateFormat || formats.date || undefined,
+          timeFormat: o.timeFormat || formats.time || undefined,
+        };
+        const body = o.format
+          ? box.dates.fillNote(text, day, {
+              format: o.format,
+              language,
+              title: o.title,
+              now,
+              values,
+            })
+          : box.dates.fill(text, {
+              day,
+              now,
+              language,
+              dateFormat: o.dateFormat,
+              timeFormat: o.timeFormat,
+              values,
+            });
+        return box.templater.fill(body, {
+          title: o.title === undefined ? "" : String(o.title),
+          folder: o.folder || "",
+          now: day,
+          language,
+        });
+      },
+    },
+  };
+}
+
 export function loadPlugin(
   id: string,
   api: Any = {},
@@ -75,6 +146,7 @@ export function loadPlugin(
   const tools = new Map<string, Tool>();
   // Nothing open unless the test says so.
   const defaults: Any = {
+    ...textApi(async () => merged.files.conventions?.()),
     l10n: { t: (key: string, ...args: unknown[]) => [key, ...args].join(" ") },
     env: { language: "en" },
     files: { root: async () => null },
@@ -84,7 +156,15 @@ export function loadPlugin(
       getBlocks: async () => null,
     },
     settings: { get: async () => undefined },
-    metadata: { all: async () => [] },
+    // Textus's linkTo where no vault says otherwise: [[shortest name]].
+    metadata: {
+      all: async () => [],
+      linkTo: async (to: string, _from: string, o: Any = {}) =>
+        "[[" +
+        to.split("/").pop()!.replace(/\.md$/i, "") +
+        (o.alias ? "|" + o.alias : "") +
+        "]]",
+    },
   };
   const merged: Any = { ...defaults, ...api };
   for (const key of Object.keys(defaults))
@@ -144,24 +224,34 @@ function conventionsOf(files: Record<string, string>, root: string) {
     root +
     (rel.replace(/^\/+|\/+$/g, "") ? "/" + rel.replace(/^\/+|\/+$/g, "") : "");
   const vault = Object.keys(files).some((f) => f.startsWith(".obsidian/"));
-  const templates = vault ? json(".obsidian/templates.json")?.folder : null;
-  const daily = vault ? json(".obsidian/daily-notes.json") : null;
+  const tpl = vault ? json(".obsidian/templates.json") : null;
+  const periodic = vault
+    ? json(".obsidian/plugins/periodic-notes/data.json")
+    : null;
+  const on = (kind: string) =>
+    periodic?.[kind]?.enabled === true ? periodic[kind] : null;
+  // As the app reads a vault: no daily notes settings keep them at its top.
+  const daily = vault
+    ? (json(".obsidian/daily-notes.json") ?? on("daily") ?? {})
+    : null;
+  const notes = (n: Any, format: string) =>
+    at({
+      folder: full(n.folder || ""),
+      format: n.format || format,
+      template: n.template
+        ? full(/\.md$/i.test(n.template) ? n.template : n.template + ".md")
+        : null,
+    });
   return {
     sources: vault ? [{ app: "obsidian", root }] : [],
-    templates: templates ? at(full(templates)) : null,
-    daily: daily
-      ? at({
-          folder: full(daily.folder || ""),
-          format: daily.format || "YYYY-MM-DD",
-          template: daily.template
-            ? full(
-                /\.md$/i.test(daily.template)
-                  ? daily.template
-                  : daily.template + ".md",
-              )
-            : null,
-        })
-      : null,
+    templates: tpl?.folder ? at(full(tpl.folder)) : null,
+    templateFormats:
+      tpl && (tpl.dateFormat || tpl.timeFormat)
+        ? at({ date: tpl.dateFormat || null, time: tpl.timeFormat || null })
+        : null,
+    daily: daily ? notes(daily, "YYYY-MM-DD") : null,
+    weekly: on("weekly") ? notes(on("weekly"), "gggg-[W]ww") : null,
+    monthly: on("monthly") ? notes(on("monthly"), "YYYY-MM") : null,
   };
 }
 
@@ -179,6 +269,14 @@ export function folder(files: Record<string, string>) {
   return {
     files,
     root: async () => root,
+    // As the app: the vault's own file, parsed; null for none.
+    appSettings: async (_app: string, name: string) => {
+      try {
+        return JSON.parse(files[`.obsidian/${name}`] ?? "null");
+      } catch {
+        return null;
+      }
+    },
     find: async (glob = "**/*.md") => {
       const re = new RegExp(
         "^" +

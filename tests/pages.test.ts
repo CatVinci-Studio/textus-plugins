@@ -66,16 +66,10 @@ describe("pages", () => {
     expect(p.ancestors("Life.md", rels)).toEqual([]);
   });
 
-  it("makes a sub-page beside its page, and links it by name unless the name is taken", () => {
+  it("makes a sub-page beside its page", () => {
     expect(p.subpage("Life/Plans.md", "Trip: Japan")).toBe(
       "Life/Plans/Trip- Japan.md",
     );
-    expect(p.link("Life/Plans/Trip.md", ["Life/Plans/Trip.md"])).toBe(
-      "[[Trip]]",
-    );
-    expect(
-      p.link("Life/Plans/Trip.md", ["Life/Plans/Trip.md", "Work/Trip.md"]),
-    ).toBe("[[Life/Plans/Trip|Trip]]");
   });
 
   it("reads a folder unit - Plans/Plans.md and its sub-pages beside it - as the page and its children", () => {

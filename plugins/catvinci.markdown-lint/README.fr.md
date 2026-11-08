@@ -1,11 +1,14 @@
 # Mise au propre
 
-Met au propre texte et Markdown en un seul endroit, comme le Linter d’Obsidian. Chaque changement s’annule d’un coup.
+Souligne le Markdown qui enfreint les règles courantes et le corrige, et met au propre lignes vides, espaces, ponctuation et retours à la ligne.
+
+Il fonctionne comme le Linter d’Obsidian, et chaque changement s’annule d’un coup.
 
 ## Markdown
 
 - Ce qui enfreint une règle Markdown courante est souligné ; laissez le pointeur dessus pour voir quelle règle et pourquoi.
 - **Corriger le Markdown** (clic droit ou le menu Plugins) corrige ce qui peut l’être.
+- Chaque bloc est vérifié à part : les règles qui portent sur le document entier (niveaux de titre, première ligne, lignes vides entre blocs) sont laissées de côté.
 
 ## Texte
 
@@ -28,6 +31,18 @@ Chaque commande agit sur la sélection ou, après confirmation, sur tout le docu
 Le code, les formules, le front matter, les liens, les #tags, les rappels (@…), les commentaires %%, le HTML et les définitions de référence ([d]: url) ne sont jamais signalés ni modifiés, pas plus que ce qu’écrit Obsidian : identifiants de bloc (^1a2b3c), champs Dataview (key:: value, [key:: value]), ==surlignages== et champs d’Obsidian Tasks (📅 2026-11-07, 🔁 every week, 🆔 abc123). En réunissant des lignes, un champ garde sa propre ligne. Les parenthèses changent par paires : 价格(USD) devient 价格（USD）.
 
 Espacement CJK, l’extension qui met des espaces entre texte chinois et latin, laisse aussi tout cela tel quel.
+
+## Autorisations
+
+- Lire et modifier le document : pour le vérifier et faire les corrections.
+- Outils pour Textus AI : pour que Textus AI vérifie du Markdown avec les mêmes règles.
+
+## Changements
+
+- **0.3.0** - Renommé Mise au propre (avant : Vérification Markdown) : les six commandes de texte de « Nettoyage du texte » y sont réunies ; réglages pour couper le soulignement ou certaines règles ; la syntaxe propre à Obsidian reste telle quelle.
+- **0.2.1** - Tags, liens, rappels et définitions de référence ne sont jamais signalés : la même liste qu’Espacement CJK laisse intacte.
+- **0.2.0** - Textus AI peut vérifier du Markdown (`lint_markdown`).
+- **0.1.0-0.1.2** - Premières versions : soulignements qui expliquent la règle, et Corriger le Markdown ; page de la boutique et icône ; fonctionne sur ordinateur et iOS.
 
 <!-- ai-tools -->
 ## Outils pour Textus AI

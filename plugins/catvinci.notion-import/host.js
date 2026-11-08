@@ -1,7 +1,7 @@
 // Notion Import: a Notion export in the open folder (its .zip, or the folder it unzips to) imported
 // into a new dated folder at the open folder's top, then a report page with the plugins that help.
 
-/* global notionImport, notionCsv, JSZip, folderPaths, dates, freeName */
+/* global notionImport, notionCsv, JSZip, folderPaths, freeName */
 // jszip, run before this file, takes the host's module.exports for itself,
 // as a CommonJS module does: given back here.
 const Zip = typeof module !== "undefined" && module.exports !== exports ? module.exports : JSZip;
@@ -16,7 +16,7 @@ let context = null;
 const claimed = new Set();
 
 const join = folderPaths.abs;
-const today = () => dates.day(new Date());
+const today = () => textus.dates.format(new Date());
 
 async function filesUnder(dir, signal) {
   const out = [];

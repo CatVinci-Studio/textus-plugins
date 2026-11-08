@@ -1,10 +1,15 @@
 # Mapa mental
 
-Desenha um esboço em Markdown (títulos e listas) como mapa mental.
+Desenha um esboço em Markdown, com títulos e listas, como mapa mental dentro de um bloco de código.
 
-- Escreva um bloco de código em `markmap`: ele é desenhado abaixo, e o código volta a aparecer ao clicar nele.
-- `height=400` depois da linguagem define a altura do desenho.
-- Ao exportar para HTML, PDF ou Word, o desenho vai como imagem.
+Escreva um bloco de código com a linguagem `markmap` e coloque nele um esboço: os títulos (`#`, `##`) e os itens de lista são os ramos do mapa. O mapa é desenhado abaixo do bloco; clique no bloco para ver e editar o código de novo.
+
+- Arraste o mapa para movê-lo e aproxime ou afaste com o zoom. Clique no ponto de um ramo para recolhê-lo ou expandi-lo.
+- Escreva `height=400` depois da linguagem para definir a altura do mapa em pixels (360 por padrão).
+- Os ramos usam as cores do seu tema, e o mapa é desenhado de novo quando você troca de tema.
+- Ao exportar para HTML, PDF ou Word, o mapa vai como imagem, mesmo fora da área visível.
+
+O plugin usa o [markmap](https://markmap.js.org). Pede uma única permissão, para dar ao Textus AI a ferramenta `check_markmap` listada abaixo: ela verifica um bloco antes de o Textus AI escrevê-lo num documento. Funciona no computador, no iPhone e no iPad.
 
 ## Exemplo
 
@@ -17,6 +22,14 @@ Desenha um esboço em Markdown (títulos e listas) como mapa mental.
 - Writers
 - Reviewers
 ```
+
+## Alterações
+
+- **0.3.1** - Um mapa mental fora da área visível é exportado como imagem e não como código.
+- **0.3.0** - O Textus AI pode verificar um bloco `markmap` antes de escrevê-lo.
+- **0.2.0** - As cores dos ramos vêm dos tons do tema. Requer Textus 1.3.2.
+- **0.1.3** - Usa a cor do texto do documento e o tamanho das notas de rodapé do tema pelos nomes do Textus 1.3.
+- **0.1.0-0.1.2** - Primeiras versões: blocos `markmap` desenhados no documento, `height=` e exportação como imagem nas cores da exportação.
 
 <!-- ai-tools -->
 ## Ferramentas para o Textus AI

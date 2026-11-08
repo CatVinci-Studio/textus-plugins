@@ -3,7 +3,7 @@
 // here are the rest: a callout, Turn into…, emoji after :, and dates after
 // @ (@tomorrow, @下周五), written as a date or a link to the day's note.
 
-/* global quickEmoji, naturalDates, folderConventions, dates */
+/* global quickEmoji, naturalDates, folderConventions */
 const t = (key, ...args) => textus.l10n.t(key, ...args);
 const DAY = /^(\d{4})-(\d{2})-(\d{2})$/;
 
@@ -42,17 +42,28 @@ function daily() {
     dailyNotes ||
     (async () => {
       const root = await textus.files.root().catch(() => null);
-      return (root && (await folderConventions.daily(root))) || { folder: "", format: "YYYY-MM-DD" };
+      // Where Calendar & Daily Notes puts them when no app says.
+      const own = {
+        folder: folderConventions.DAILY.folder,
+        format: folderConventions.DAILY.format,
+      };
+      return {
+        root: root,
+        ...((root && (await folderConventions.daily(root))) || own),
+      };
     })();
   return dailyNotes;
 }
 
-/** The link to `day`'s note (YYYY-MM-DD): its name, or its path from the
- *  folder when the name format makes folders (YYYY/MM/YYYY-MM-DD). */
+/** The link to `day`'s note (YYYY-MM-DD), as the folder writes links. */
 async function dayLink(day) {
   const notes = await daily();
-  const name = dates.format(dateOf(day), notes.format, textus.env.language);
-  return "[[" + (name.includes("/") && notes.folder ? notes.folder + "/" : "") + name + "]]";
+  const name = textus.dates.format(dateOf(day), notes.format);
+  if (!notes.root) return "[[" + name + "]]";
+  const note =
+    notes.root + "/" + (notes.folder ? notes.folder + "/" : "") + name + ".md";
+  const from = (await textus.editor.getPath().catch(() => null)) || note;
+  return textus.metadata.linkTo(note, from);
 }
 
 /** Textus AI's tool: the date a phrase names, from today or `today`. */
@@ -60,9 +71,13 @@ function parseDate(input) {
   const today = dateOf(String(input.today || "")) || new Date();
   const date = naturalDates.parse(input.phrase || "", today);
   if (date) return { phrase: String(input.phrase).trim(), date: date };
-  const words = String(input.phrase || "").trim().replace(/^@/, "").slice(0, 3);
+  const words = String(input.phrase || "")
+    .trim()
+    .replace(/^@/, "")
+    .slice(0, 3);
   return {
-    error: "Not a phrase this knows: today, tomorrow, next friday, in 3 days, 下周五, 明後日 and the like.",
+    error:
+      "Not a phrase this knows: today, tomorrow, next friday, in 3 days, 下周五, 明後日 and the like.",
     suggestions: words ? naturalDates.suggest(words, today, 8) : [],
   };
 }
@@ -99,7 +114,9 @@ exports.activate = function (ctx) {
         }));
       },
     }),
-    textus.editor.registerCompletion("catvinci.quick-insert.at", { provideCompletions: dateCompletions }),
+    textus.editor.registerCompletion("catvinci.quick-insert.at", {
+      provideCompletions: dateCompletions,
+    }),
     textus.files.onDidChangeRoot(forget),
     textus.files.onDidChangeConventions(forget),
   );

@@ -3,7 +3,7 @@
 // as list items stamped with the time ("- 14:05 Call Anna"). With no
 // folder open they stay in the plugin's storage. A note goes into the
 // document at the caret, or opens as a new document of its own.
-/* global folderConventions, folderPaths, dates */
+/* global folderConventions, folderPaths */
 /** What activate was given: the plugin's storage and own files. */
 let ctx;
 
@@ -19,7 +19,8 @@ const STAMP = /^(?:(\d{4}-\d{2}-\d{2}) )?(\d{1,2}):(\d{2})(?: |$)/;
  *  (YYYY-MM-DD; null for a file of no day). */
 function stampOf(at, day) {
   const date = new Date(at);
-  return (dates.day(date) === day ? "" : dates.day(date) + " ") + dates.format(date, "HH:mm");
+  const on = textus.dates.format(date);
+  return (on === day ? "" : on + " ") + textus.dates.format(date, "HH:mm");
 }
 
 /** A note as the lines of a list item; lines after the first indented. */
@@ -102,7 +103,7 @@ async function target() {
     const app = await folderConventions.daily(root);
     const daily = app || { folder: folderConventions.DAILY.folder, format: folderConventions.DAILY.format, template: null };
     const today = new Date();
-    const rel = dates.notePath(daily.folder, daily.format, today, textus.env.language);
+    const rel = (daily.folder ? daily.folder + "/" : "") + textus.dates.format(today, daily.format) + ".md";
     const template = async () => {
       if (!app) return folderConventions.DAILY.template;
       if (!daily.template) return "";
@@ -110,12 +111,14 @@ async function target() {
       return (await textus.files.readText(file).catch(() => null)) || "";
     };
     const begin = async () =>
-      dates.fillNote(await template(), today, {
-        format: daily.format,
-        language: textus.env.language,
-        title: rel.split("/").pop().replace(/\.md$/, ""),
-      });
-    return { path: folderPaths.abs(root, rel), heading: headings(), day: dates.day(today), begin: begin };
+      (
+        await textus.templates.fill(await template(), {
+          date: today,
+          format: daily.format,
+          title: rel.split("/").pop().replace(/\.md$/, ""),
+        })
+      ).text;
+    return { path: folderPaths.abs(root, rel), heading: headings(), day: textus.dates.format(today), begin: begin };
   }
   const own = String((await textus.settings.get("inbox")) || "Inbox.md");
   const rel = folderPaths.clean(root, own, true) || "Inbox.md";

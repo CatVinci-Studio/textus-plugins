@@ -1,10 +1,17 @@
 # ECharts
 
-Des graphiques à partir d’une option ECharts : barres, courbes, camemberts…
+Dessine un graphique dans votre document à partir d’une option ECharts écrite dans un bloc de code.
 
-- Écrivez un bloc de code en `echarts` : il est dessiné en dessous, et sa source réapparaît quand vous cliquez dedans.
-- `height=400` après le langage fixe la hauteur du dessin.
-- À l’export en HTML, PDF ou Word, le dessin devient une image.
+Écrivez un bloc de code avec le langage `echarts` et mettez-y une option ECharts. Le graphique est dessiné sous le bloc ; cliquez dans le bloc pour revoir et modifier sa source.
+
+- L’option est du JSON, que l’on peut écrire librement : clés sans guillemets, apostrophes, virgules finales et commentaires sont acceptés. Les fonctions (une fonction `formatter`, par exemple) ne le sont pas, car rien dans le bloc n’est exécuté.
+- Barres, courbes, camemberts, nuages de points, radars, jauges, entonnoirs, arbres, treemaps, sunbursts, diagrammes de Sankey, cartes de chaleur, chandeliers et les autres séries ECharts sont dessinés. Les séries de carte ne le sont pas : elles demandent des données cartographiques qu’un bloc ne peut pas charger.
+- Écrivez `height=400` après le langage pour fixer la hauteur du graphique en pixels (320 par défaut).
+- Le graphique prend les couleurs de votre thème et se redessine quand vous changez de thème.
+- Si l’option ne peut pas être dessinée, le bloc indique ce qui ne va pas.
+- Un export en HTML, PDF ou Word contient le graphique sous forme d’image.
+
+Le plugin demande une seule permission, pour donner à Textus AI l’outil `check_echarts` listé plus bas : il vérifie un bloc avant que Textus AI ne l’écrive dans un document. Il fonctionne sur ordinateur, iPhone et iPad.
 
 ## Exemple
 
@@ -15,6 +22,14 @@ Des graphiques à partir d’une option ECharts : barres, courbes, camemberts…
   series: [{ type: "bar", data: [120, 200, 150] }]
 }
 ```
+
+## Changements
+
+- **0.3.1** - Sa description ne cite plus les cartes, qu'un bloc ne peut pas charger.
+- **0.3.0** - Textus AI peut vérifier un bloc `echarts` avant de l’écrire.
+- **0.2.0** - Les couleurs des séries viennent des tons du thème. Nécessite Textus 1.3.2.
+- **0.1.3** - Utilise la couleur du texte du document et la taille des notes de bas de page du thème sous leurs noms de Textus 1.3.
+- **0.1.0-0.1.2** - Premières versions : blocs `echarts` dessinés dans le document, `height=` et export en image.
 
 <!-- ai-tools -->
 ## Outils pour Textus AI

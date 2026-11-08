@@ -1,28 +1,43 @@
 # Bidirektionale Links
 
-> Links wie `[[Notiz]]` sind in Textus eingebaut: Sie schreiben und öffnen sie ohne Plugin. Dieses Plugin hilft beim Schreiben, zeigt an Ort und Stelle, worauf sie zeigen, und listet, wer auf das geöffnete Dokument verlinkt.
+Verlinke Notizen, Überschriften und Blöcke beim Tippen von `[[`, bette sie mit `![[` ein und sieh in der Seitenleiste, was auf das geöffnete Dokument verlinkt.
 
-## Verlinken beim Schreiben
+Links wie `[[Notiz]]` sind in Textus eingebaut: Du kannst sie ohne Plugin schreiben und öffnen. Dieses Plugin hilft beim Schreiben, zeigt an Ort und Stelle, worauf ein Link zeigt, und sammelt die Links rund um das Dokument, das du liest. Es läuft auf dem Desktop und unter iOS.
 
-- Tippe `[[` und wähle im Panel, das sich öffnet, eine Notiz – nach Namen, erster Überschrift oder einem `aliases`-Eintrag im Front Matter. Ein Alias wird als `[[Notiz|Alias]]` geschrieben.
-- Nach `#` die Überschriften der Notiz: `[[Notiz#Überschrift]]`. `[[#` listet die des Dokuments selbst.
-- Nach `#^` ihre Blöcke: Absätze, Listeneinträge, Tabellen, Zitate. Einer ohne ID bekommt in dieser Notiz eine an seinem Ende (`^1a2b3c`), so wie Obsidian sie schreibt.
-- Markiere ein paar Wörter und tippe `[[`, um sie zu einem Link zu machen.
+## Beim Tippen verlinken
+
+- Tippe `[[` und wähle im Feld, das sich öffnet, eine Notiz – nach Dateiname, erster Überschrift oder einem `aliases`-Eintrag im Front Matter. Ein Alias wird als `[[Notiz|Alias]]` geschrieben.
+- Nach `#` die Überschriften der Notiz: `[[Notiz#Überschrift]]`. `[[#` zeigt die des eigenen Dokuments.
+- Nach `#^` ihre Blöcke: Absätze, Listenpunkte, Tabellen, Zitate. Ein Block ohne ID bekommt in dieser Notiz eine an seinem Ende (`^1a2b3c`), so wie Obsidian sie schreibt.
+- Markiere ein paar Wörter und tippe `[[`, um daraus einen Link zu machen.
 - Links werden so geschrieben, wie der Ordner sie schreibt: in einem Obsidian-Vault im Linkformat des Vaults.
 
 ## Einbettungen
 
-- `![[Notiz]]` zeigt die Notiz an Ort und Stelle, `![[Notiz#Überschrift]]` diesen Abschnitt und `![[Notiz#^id]]` diesen Block – schreibgeschützt und aktuell, wenn sich die Notiz ändert.
+- `![[Notiz]]` zeigt die Notiz an Ort und Stelle, `![[Notiz#Überschrift]]` diesen Abschnitt und `![[Notiz#^id]]` diesen Block. Einbettungen sind schreibgeschützt und folgen Änderungen an der Notiz.
 - Setze den Cursor in die Zeile, um den Link selbst zu bearbeiten.
 
-## Rückverweise in der Seitenleiste
+## Links in der Seitenleiste
 
-Was auf das geöffnete Dokument verlinkt und wohin es verlinkt – im Tab **Bidirektionale Links** der Seitenleiste.
+Der Tab **Bidirektionale Links** in der Seitenleiste zeigt, was auf das geöffnete Dokument verlinkt und wohin es verlinkt.
 
-- **Verlinkte Erwähnungen**: die Zeilen anderer Notizen, die mit [[Wiki-Links]] oder Links auf diese Datei hierher führen. Ein Klick springt dorthin.
-- **Unverlinkte Erwähnungen**: Zeilen, die diese Notiz – nach Dateiname, erster Überschrift oder `aliases` im Front Matter – ohne Link nennen. Rechtsklick und **Verlinken** macht daraus einen [[Link]].
+- **Verlinkte Erwähnungen**: die Zeilen anderer Notizen, die hierher verlinken – mit [[Wiki-Links]] oder Links auf diese Datei. Ein Klick führt dorthin.
+- **Unverlinkte Erwähnungen**: Zeilen, die diese Notiz nennen (nach Dateiname, erster Überschrift oder `aliases`), ohne zu verlinken. Rechtsklick und **Verlinken** macht daraus einen Link. Steht in der Zeile ein Alias, bleibt er der Text des Links.
 - **Ausgehende Links**: die Notizen, auf die diese verlinkt, auch solche, die es noch nicht gibt.
 - Das Feld oben filtert die Liste.
+
+## Berechtigungen
+
+- **Dokument lesen und bearbeiten**: um Links beim Tippen zu vervollständigen und eine Auswahl zum Link zu machen.
+- **Dateien im geöffneten Ordner lesen und schreiben**: um Links und Erwähnungen zu finden, eine unverlinkte Erwähnung zu verlinken und einem Block seine `^id` zu geben.
+- **Werkzeuge für Textus AI**: damit Textus AI die Links eines Dokuments auflisten kann.
+
+## Änderungen
+
+- **0.3.0** - Vervollständigung von Notizen, Überschriften und Blöcken mit `[[`; Einbettungen mit `![[`; der Name wechselt von „Rückverweise“ zu „Bidirektionale Links“
+- **0.2.1** - die Beschreibung sagt „bidirektionale Links“, damit die Suche im Store es findet
+- **0.2.0** - ein Werkzeug für Textus AI, `list_backlinks`
+- **0.1.0-0.1.1** - erste Versionen: verlinkte und unverlinkte Erwähnungen mit **Verlinken**, ausgehende Links und ein Filter; vorgeschlagen für Dokumente mit Wiki-Links
 
 <!-- ai-tools -->
 ## Werkzeuge für Textus AI

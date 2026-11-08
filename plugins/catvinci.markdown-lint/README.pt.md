@@ -1,11 +1,14 @@
 # Arrumar
 
-Arruma texto e Markdown num só lugar, como o Linter do Obsidian. Cada mudança se desfaz de uma vez.
+Sublinha o Markdown que quebra regras comuns e o corrige, e arruma linhas em branco, espaços, pontuação e quebras de linha.
+
+Funciona como o Linter do Obsidian, e cada mudança se desfaz de uma vez.
 
 ## Markdown
 
 - O que quebra uma regra comum de Markdown fica sublinhado; pare o ponteiro em cima para ver qual regra e por quê.
 - **Corrigir Markdown** (clique direito ou o menu Plugins) corrige o que for possível.
+- Cada bloco é verificado separadamente, então as regras sobre o documento inteiro (níveis de título, a primeira linha, linhas em branco entre blocos) ficam de fora.
 
 ## Texto
 
@@ -28,6 +31,18 @@ Cada comando age na seleção ou, depois de perguntar, no documento inteiro. Est
 Código, fórmulas, front matter, links, #tags, lembretes (@…), comentários %%, HTML e definições de referência ([d]: url) nunca são marcados nem alterados, e o mesmo vale para o que o Obsidian escreve: ids de bloco (^1a2b3c), campos do Dataview (key:: value, [key:: value]), ==destaques== e os campos do Obsidian Tasks (📅 2026-11-07, 🔁 every week, 🆔 abc123). Ao juntar linhas, um campo continua na sua própria linha. Os parênteses mudam aos pares: 价格(USD) vira 价格（USD）.
 
 Espaçamento CJK, o plugin que põe espaços entre texto chinês e latino, também deixa tudo isso como está.
+
+## Permissões
+
+- Ler e editar o documento: para verificá-lo e fazer as correções.
+- Ferramentas para o Textus AI: para o Textus AI verificar Markdown com as mesmas regras.
+
+## Alterações
+
+- **0.3.0** - Agora se chama Arrumar (antes Verificação de Markdown): os seis comandos de texto do “Arrumar texto” vieram para cá; ajustes para desligar o sublinhado ou regras específicas; a sintaxe própria do Obsidian fica como está.
+- **0.2.1** - Tags, links, lembretes e definições de referência nunca são marcados: a mesma lista que o Espaçamento CJK deixa em paz.
+- **0.2.0** - O Textus AI pode verificar Markdown (`lint_markdown`).
+- **0.1.0-0.1.2** - Primeiras versões: sublinhados que explicam a regra, e Corrigir Markdown; página na loja e ícone; funciona no desktop e no iOS.
 
 <!-- ai-tools -->
 ## Ferramentas para o Textus AI

@@ -1,11 +1,14 @@
 # Tidy
 
-Tidies text and Markdown in one place, like Obsidian's Linter. Every change is one undo step.
+Underlines Markdown that breaks common rules and fixes it, and tidies blank lines, spaces, punctuation and line breaks.
+
+It works like Obsidian's Linter, and every change is one undo step.
 
 ## Markdown
 
 - Words that break a common Markdown rule are underlined; rest the pointer on one to see which rule and why.
 - **Fix Markdown** (right-click, or the Plugins menu) fixes what can be fixed.
+- Each block is checked on its own, so rules about the document as a whole (heading levels, the first line, blank lines between blocks) are left out.
 
 ## Text
 
@@ -28,6 +31,18 @@ Each command works on the selection, or - after asking - on the whole document. 
 Code, formulas, front matter, links, #tags, reminders (@…), %% comments, HTML and reference definitions ([d]: url) are never flagged or changed - nor is what Obsidian writes: block ids (^1a2b3c), Dataview fields (key:: value, [key:: value]), ==highlights== and the fields of Obsidian Tasks (📅 2026-11-07, 🔁 every week, 🆔 abc123). Joining lines keeps a field on a line of its own. Brackets change in pairs: 价格(USD) becomes 价格（USD）.
 
 CJK Spacing, the plugin that puts spaces between Chinese and Latin text, leaves the same things alone.
+
+## Permissions
+
+- Read and edit the document: to check it and make the fixes.
+- Tools for Textus AI: so Textus AI can check Markdown with the same rules.
+
+## Changes
+
+- **0.3.0** - Renamed Tidy (was Markdown Lint): Text Tidy's six text commands moved in; settings to turn off underlines or single rules; Obsidian's own syntax left as written.
+- **0.2.1** - Tags, links, reminders and reference definitions are never flagged: the same list CJK Spacing leaves alone.
+- **0.2.0** - Textus AI can check Markdown (`lint_markdown`).
+- **0.1.0-0.1.2** - First versions: underlines that explain the rule, and Fix Markdown; store page and icon; runs on desktop and iOS.
 
 <!-- ai-tools -->
 ## Tools for Textus AI

@@ -112,13 +112,5 @@
       .map((rel) => ({ from: rel, to: unitOf(rel) }));
   }
 
-  /** A wiki link to `rel`: its name alone when no other document has it,
-   *  else its path. */
-  function link(rel, rels) {
-    const name = nameOf(rel);
-    const same = rels.filter((r) => nameOf(r).toLowerCase() === name.toLowerCase());
-    return same.length > 1 ? "[[" + stem(rel) + "|" + name + "]]" : "[[" + name + "]]";
-  }
-
-  root.pages = { tree, ancestors, subpage, link, nameOf, fileName, isUnit, unitOf, oldUnits };
+  root.pages = { tree, ancestors, subpage, nameOf, fileName, isUnit, unitOf, oldUnits };
 })(typeof window !== "undefined" ? window : globalThis);

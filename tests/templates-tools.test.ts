@@ -142,4 +142,18 @@ describe("templates written for Obsidian", () => {
     expect(revealed).toEqual([{ line: 2, text: "Entry" }]);
     expect(notices).toEqual(["notRun <%* run() %>  <% tp.web.random_picture() %>"]);
   });
+
+  it("makes the document in the folder its menu was opened on", async () => {
+    const files: Record<string, string> = { "Templates/Note.md": "# {{title}}", "Work/a.md": "# A" };
+    const commands = new Map<string, (path?: string) => Promise<void>>();
+    loadPlugin("catvinci.templates", {
+      files: folder(files),
+      commands: { register: (id: string, run: () => Promise<void>) => (commands.set(id, run), { dispose() {} }) },
+      ui: { pick: async (items: { value: string }[]) => items[0].value, input: async () => "Plan" },
+      layout: { open: async () => {} },
+      editor: { getText: async () => "", reveal: async () => {} },
+    });
+    await commands.get("catvinci.templates.new")!("/root/Work/a.md");
+    expect(files["Work/Plan.md"]).toBe("# Plan");
+  });
 });

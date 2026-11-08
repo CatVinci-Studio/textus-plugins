@@ -8,7 +8,7 @@
 // line still says what was listed, the way Obsidian Tasks writes it
 // (obsidian-tasks.js): a done date, and a recurring task's next one.
 
-/* global obsidianTasks, tasksQuery, folderPaths, dates */
+/* global obsidianTasks, tasksQuery, folderPaths */
 /** How far ahead "Due soon" looks. */
 const SOON_DAYS = 7;
 // A Kanban board's cards are tasks in Markdown but live on the board.
@@ -21,7 +21,7 @@ const t = (key, ...args) => textus.l10n.t(key, ...args);
 function day(offset) {
   const d = new Date();
   d.setDate(d.getDate() + offset);
-  return dates.day(d);
+  return textus.dates.format(d);
 }
 
 /** "3 open tasks", in the language's plural form ("open.few"…). */

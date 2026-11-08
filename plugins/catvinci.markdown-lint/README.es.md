@@ -1,11 +1,14 @@
 # Ordenar
 
-Ordena texto y Markdown en un solo lugar, como el Linter de Obsidian. Cada cambio se deshace de una vez.
+Subraya el Markdown que rompe reglas comunes y lo corrige, y ordena líneas en blanco, espacios, puntuación y saltos de línea.
+
+Funciona como el Linter de Obsidian, y cada cambio se deshace de una vez.
 
 ## Markdown
 
 - Lo que rompe una regla común de Markdown se subraya; deja el puntero encima para ver qué regla y por qué.
 - **Corregir Markdown** (clic derecho o el menú Plugins) corrige lo que se puede.
+- Cada bloque se revisa por separado, así que las reglas sobre el documento entero (niveles de encabezado, la primera línea, líneas en blanco entre bloques) no se aplican.
 
 ## Texto
 
@@ -28,6 +31,18 @@ Cada orden actúa sobre la selección o, después de preguntar, sobre todo el do
 El código, las fórmulas, el front matter, los enlaces, las #etiquetas, los recordatorios (@…), los comentarios %%, el HTML y las definiciones de referencia ([d]: url) nunca se marcan ni se cambian, como tampoco lo que escribe Obsidian: los ids de bloque (^1a2b3c), los campos de Dataview (key:: value, [key:: value]), los ==resaltados== y los campos de Obsidian Tasks (📅 2026-11-07, 🔁 every week, 🆔 abc123). Al unir líneas, un campo sigue en su propia línea. Los paréntesis cambian en parejas: 价格(USD) pasa a 价格（USD）.
 
 Espaciado CJK, el complemento que pone espacios entre texto chino y latino, también deja todo esto como está.
+
+## Permisos
+
+- Leer y editar el documento: para revisarlo y hacer las correcciones.
+- Herramientas para Textus AI: para que Textus AI revise Markdown con las mismas reglas.
+
+## Cambios
+
+- **0.3.0** - Ahora se llama Ordenar (antes Revisión de Markdown): los seis comandos de texto de «Ordenar texto» pasan aquí; ajustes para quitar el subrayado o reglas sueltas; la sintaxis propia de Obsidian queda como está.
+- **0.2.1** - Etiquetas, enlaces, recordatorios y definiciones de referencia nunca se marcan: la misma lista que respeta Espaciado CJK.
+- **0.2.0** - Textus AI puede revisar Markdown (`lint_markdown`).
+- **0.1.0-0.1.2** - Primeras versiones: subrayados que explican la regla y Corregir Markdown; página de la tienda e icono; funciona en escritorio e iOS.
 
 <!-- ai-tools -->
 ## Herramientas para Textus AI

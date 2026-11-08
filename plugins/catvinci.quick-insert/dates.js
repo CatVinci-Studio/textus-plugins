@@ -1,7 +1,7 @@
 // Quick Insert's @ dates - "@tomorrow", "@下周五", "@明日": the dates a phrase
 // names, counted from today, in English, Chinese and Japanese.
 
-/* global dates */
+/* global textus */
 (function (root) {
   const WEEK_EN = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"];
   const WEEK_ZH = ["日", "一", "二", "三", "四", "五", "六"];
@@ -45,7 +45,7 @@
     return out;
   }
 
-  const iso = (d) => dates.day(d);
+  const iso = (d) => textus.dates.format(d);
 
   /** The phrases beginning with what was typed after "@", up to `limit`. */
   function suggest(typed, today, limit) {

@@ -1,0 +1,282 @@
+{
+  "id": "catvinci.pomodoro",
+  "name": "%name%",
+  "version": "0.1.0",
+  "publisher": "catvinci",
+  "author": "CatVinci Studio",
+  "description": "%description%",
+  "icon": "icon.svg",
+  "license": "MIT",
+  "repository": "https://github.com/CatVinci-Studio/textus-plugins",
+  "engines": {
+    "textus": ">=1.3.10"
+  },
+  "platforms": [
+    "desktop"
+  ],
+  "main": [
+    "timer.js",
+    "host.js"
+  ],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "permissions": [
+    "notifications"
+  ],
+  "contributes": {
+    "commands": [
+      {
+        "command": "catvinci.pomodoro.toggle",
+        "title": "%toggle%"
+      },
+      {
+        "command": "catvinci.pomodoro.startPause",
+        "title": "%startPause%"
+      },
+      {
+        "command": "catvinci.pomodoro.skip",
+        "title": "%skip%"
+      },
+      {
+        "command": "catvinci.pomodoro.reset",
+        "title": "%reset%"
+      }
+    ],
+    "menus": {
+      "app/plugins": [
+        {
+          "command": "catvinci.pomodoro.toggle"
+        },
+        {
+          "command": "catvinci.pomodoro.startPause"
+        }
+      ],
+      "floating/context": [
+        {
+          "command": "catvinci.pomodoro.skip",
+          "when": "view == catvinci.pomodoro.timer"
+        },
+        {
+          "command": "catvinci.pomodoro.reset",
+          "when": "view == catvinci.pomodoro.timer"
+        }
+      ]
+    },
+    "floatingViews": [
+      {
+        "id": "catvinci.pomodoro.timer",
+        "title": "%timer%",
+        "width": 140,
+        "height": 140,
+        "place": "either"
+      }
+    ],
+    "settings": [
+      {
+        "key": "focus",
+        "type": "number",
+        "default": 25,
+        "title": "%focusMinutes%"
+      },
+      {
+        "key": "rest",
+        "type": "number",
+        "default": 5,
+        "title": "%restMinutes%"
+      }
+    ]
+  },
+  "l10n": {
+    "en": {
+      "name": "Pomodoro",
+      "description": "A focus timer floating over the window or the desktop: 25 minutes of work, 5 of rest, a notification at each end.",
+      "toggle": "Show or Hide the Pomodoro Timer",
+      "startPause": "Start or Pause the Timer",
+      "skip": "Skip to the Next Span",
+      "reset": "Start Over",
+      "timer": "Pomodoro",
+      "focus": "Focus",
+      "rest": "Break",
+      "start": "click to start",
+      "pause": "click to pause",
+      "focusDone": "Focus time is up",
+      "restDone": "Break is over",
+      "takeRest": "Take a break.",
+      "backToFocus": "Back to work.",
+      "focusMinutes": "Focus (minutes)",
+      "restMinutes": "Break (minutes)"
+    },
+    "zh": {
+      "name": "番茄钟",
+      "description": "浮在窗口或桌面上的专注计时器：专注 25 分钟、休息 5 分钟，每段结束时发通知。",
+      "toggle": "显示或隐藏番茄钟",
+      "startPause": "开始或暂停计时",
+      "skip": "跳到下一段",
+      "reset": "重新开始",
+      "timer": "番茄钟",
+      "focus": "专注",
+      "rest": "休息",
+      "start": "点击开始",
+      "pause": "点击暂停",
+      "focusDone": "专注时间到了",
+      "restDone": "休息结束",
+      "takeRest": "休息一下吧。",
+      "backToFocus": "回来继续吧。",
+      "focusMinutes": "专注（分钟）",
+      "restMinutes": "休息（分钟）"
+    },
+    "zh-Hant": {
+      "name": "番茄鐘",
+      "description": "浮在視窗或桌面上的專注計時器：專注 25 分鐘、休息 5 分鐘，每段結束時發通知。",
+      "toggle": "顯示或隱藏番茄鐘",
+      "startPause": "開始或暫停計時",
+      "skip": "跳到下一段",
+      "reset": "重新開始",
+      "timer": "番茄鐘",
+      "focus": "專注",
+      "rest": "休息",
+      "start": "點一下開始",
+      "pause": "點一下暫停",
+      "focusDone": "專注時間到了",
+      "restDone": "休息結束",
+      "takeRest": "休息一下吧。",
+      "backToFocus": "回來繼續吧。",
+      "focusMinutes": "專注（分鐘）",
+      "restMinutes": "休息（分鐘）"
+    },
+    "ja": {
+      "name": "ポモドーロ",
+      "description": "ウィンドウやデスクトップに浮かぶ集中タイマー。作業 25 分、休憩 5 分、区切りごとに通知します。",
+      "toggle": "ポモドーロタイマーを表示／非表示",
+      "startPause": "タイマーを開始／一時停止",
+      "skip": "次の区切りへ",
+      "reset": "最初から",
+      "timer": "ポモドーロ",
+      "focus": "集中",
+      "rest": "休憩",
+      "start": "クリックで開始",
+      "pause": "クリックで一時停止",
+      "focusDone": "集中時間が終わりました",
+      "restDone": "休憩が終わりました",
+      "takeRest": "ひと休みしましょう。",
+      "backToFocus": "作業に戻りましょう。",
+      "focusMinutes": "集中（分）",
+      "restMinutes": "休憩（分）"
+    },
+    "ko": {
+      "name": "뽀모도로",
+      "description": "창이나 바탕화면 위에 떠 있는 집중 타이머: 25분 집중, 5분 휴식, 구간마다 알림.",
+      "toggle": "뽀모도로 타이머 보이기/숨기기",
+      "startPause": "타이머 시작/일시정지",
+      "skip": "다음 구간으로",
+      "reset": "처음부터",
+      "timer": "뽀모도로",
+      "focus": "집중",
+      "rest": "휴식",
+      "start": "클릭해서 시작",
+      "pause": "클릭해서 일시정지",
+      "focusDone": "집중 시간이 끝났어요",
+      "restDone": "휴식이 끝났어요",
+      "takeRest": "잠시 쉬세요.",
+      "backToFocus": "다시 시작해요.",
+      "focusMinutes": "집중(분)",
+      "restMinutes": "휴식(분)"
+    },
+    "es": {
+      "name": "Pomodoro",
+      "description": "Un temporizador de concentración que flota sobre la ventana o el escritorio: 25 minutos de trabajo, 5 de descanso y un aviso al final de cada uno.",
+      "toggle": "Mostrar u ocultar el pomodoro",
+      "startPause": "Iniciar o pausar el temporizador",
+      "skip": "Pasar al siguiente tramo",
+      "reset": "Empezar de nuevo",
+      "timer": "Pomodoro",
+      "focus": "Concentración",
+      "rest": "Descanso",
+      "start": "haz clic para empezar",
+      "pause": "haz clic para pausar",
+      "focusDone": "Se acabó el tiempo de concentración",
+      "restDone": "Se acabó el descanso",
+      "takeRest": "Tómate un descanso.",
+      "backToFocus": "De vuelta al trabajo.",
+      "focusMinutes": "Concentración (minutos)",
+      "restMinutes": "Descanso (minutos)"
+    },
+    "fr": {
+      "name": "Pomodoro",
+      "description": "Un minuteur de concentration flottant sur la fenêtre ou le bureau : 25 minutes de travail, 5 de pause, une notification à chaque fin.",
+      "toggle": "Afficher ou masquer le pomodoro",
+      "startPause": "Lancer ou mettre en pause",
+      "skip": "Passer à la période suivante",
+      "reset": "Recommencer",
+      "timer": "Pomodoro",
+      "focus": "Concentration",
+      "rest": "Pause",
+      "start": "cliquer pour lancer",
+      "pause": "cliquer pour mettre en pause",
+      "focusDone": "Le temps de concentration est écoulé",
+      "restDone": "La pause est terminée",
+      "takeRest": "Faites une pause.",
+      "backToFocus": "Au travail.",
+      "focusMinutes": "Concentration (minutes)",
+      "restMinutes": "Pause (minutes)"
+    },
+    "de": {
+      "name": "Pomodoro",
+      "description": "Ein Fokus-Timer, der über dem Fenster oder dem Schreibtisch schwebt: 25 Minuten Arbeit, 5 Minuten Pause, eine Benachrichtigung am Ende jeder Phase.",
+      "toggle": "Pomodoro-Timer ein- oder ausblenden",
+      "startPause": "Timer starten oder pausieren",
+      "skip": "Zur nächsten Phase",
+      "reset": "Neu beginnen",
+      "timer": "Pomodoro",
+      "focus": "Fokus",
+      "rest": "Pause",
+      "start": "zum Starten klicken",
+      "pause": "zum Pausieren klicken",
+      "focusDone": "Die Fokuszeit ist um",
+      "restDone": "Die Pause ist vorbei",
+      "takeRest": "Mach eine Pause.",
+      "backToFocus": "Zurück an die Arbeit.",
+      "focusMinutes": "Fokus (Minuten)",
+      "restMinutes": "Pause (Minuten)"
+    },
+    "ru": {
+      "name": "Помодоро",
+      "description": "Таймер фокуса поверх окна или рабочего стола: 25 минут работы, 5 минут отдыха и уведомление в конце каждого отрезка.",
+      "toggle": "Показать или скрыть помодоро",
+      "startPause": "Запустить или приостановить таймер",
+      "skip": "К следующему отрезку",
+      "reset": "Начать заново",
+      "timer": "Помодоро",
+      "focus": "Фокус",
+      "rest": "Перерыв",
+      "start": "нажмите, чтобы начать",
+      "pause": "нажмите, чтобы приостановить",
+      "focusDone": "Время фокуса вышло",
+      "restDone": "Перерыв закончился",
+      "takeRest": "Сделайте перерыв.",
+      "backToFocus": "Пора за работу.",
+      "focusMinutes": "Фокус (минуты)",
+      "restMinutes": "Перерыв (минуты)"
+    },
+    "pt": {
+      "name": "Pomodoro",
+      "description": "Um temporizador de foco que flutua sobre a janela ou a área de trabalho: 25 minutos de trabalho, 5 de pausa e um aviso ao fim de cada um.",
+      "toggle": "Mostrar ou ocultar o pomodoro",
+      "startPause": "Iniciar ou pausar o temporizador",
+      "skip": "Ir para o próximo período",
+      "reset": "Recomeçar",
+      "timer": "Pomodoro",
+      "focus": "Foco",
+      "rest": "Pausa",
+      "start": "clique para começar",
+      "pause": "clique para pausar",
+      "focusDone": "O tempo de foco acabou",
+      "restDone": "A pausa acabou",
+      "takeRest": "Faça uma pausa.",
+      "backToFocus": "De volta ao trabalho.",
+      "focusMinutes": "Foco (minutos)",
+      "restMinutes": "Pausa (minutos)"
+    }
+  }
+}
