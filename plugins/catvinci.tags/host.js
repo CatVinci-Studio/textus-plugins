@@ -2,7 +2,7 @@
 // for its notes. Right-click to rename a tag everywhere - to a name another
 // tag has, and the two become one.
 
-/* global tagEdit */
+/* global tagEdit, nameOrder */
 const t = (key, ...args) => textus.l10n.t(key, ...args);
 
 let list = null;
@@ -34,7 +34,7 @@ function level(tags, prefix) {
     if (rest.includes("/")) nested.add(name);
   }
   return [...counts.entries()]
-    .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
+    .sort((a, b) => b[1] - a[1] || nameOrder.compareNames(a[0], b[0]))
     .map(([tag, count]) => tagNode(tag, count, nested.has(tag)));
 }
 
@@ -78,7 +78,7 @@ async function rename(from) {
 async function listTags() {
   if (!(await textus.files.root())) return { error: "No folder is open." };
   const tags = await textus.metadata.tags();
-  return { tags: tags.sort((a, b) => b.count - a.count || a.tag.localeCompare(b.tag)) };
+  return { tags: tags.sort((a, b) => b.count - a.count || nameOrder.compareNames(a.tag, b.tag)) };
 }
 
 async function notesWithTag(input) {

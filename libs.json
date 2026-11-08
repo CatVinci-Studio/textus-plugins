@@ -97,5 +97,6 @@
   "catvinci.canvas/lib/folder-paths.js": "./shared/folder-paths.js",
   "catvinci.slides/lib/folder-paths.js": "./shared/folder-paths.js",
   "catvinci.database/lib/name-order.js": "./shared/name-order.js",
-  "catvinci.templates/lib/name-order.js": "./shared/name-order.js"
+  "catvinci.templates/lib/name-order.js": "./shared/name-order.js",
+  "catvinci.tags/lib/name-order.js": "./shared/name-order.js"
 }
