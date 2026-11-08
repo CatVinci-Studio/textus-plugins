@@ -85,6 +85,7 @@
   "catvinci.database/lib/yaml.js": "./shared/yaml.js",
   "catvinci.database/lib/expr.js": "./shared/expr.js",
   "catvinci.database/lib/bases.js": "./shared/bases.js",
+  "catvinci.database/lib/base-filters.js": "./shared/base-filters.js",
   "catvinci.notion-import/lib/folder-paths.js": "./shared/folder-paths.js",
   "catvinci.notion-import/lib/free-name.js": "./shared/free-name.js",
   "catvinci.notion-import/lib/notion-csv.js": "./shared/notion-csv.js",

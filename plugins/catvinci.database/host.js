@@ -286,9 +286,8 @@ function draw(target, webview, context) {
           const parsed = database.parseBase(target.source());
           if (parsed.error) return;
           const spec = database.viewSpec(parsed.base, Math.min(index, parsed.base.views.length - 1));
-          const filters = spec.filters.filter((f, i) => i !== m.replace);
-          filters.push({ key: m.key, op: m.op, value: String(value).trim() });
-          return set({ filters });
+          const others = spec.filters.filter((f, i) => i !== m.replace);
+          return set({ filters: baseFilters.merge(others, { key: m.key, op: m.op, value: String(value).trim() }) });
         }
         case "newOption": {
           const value = ((await textus.ui.input({ prompt: t("create") })) || "").trim();
