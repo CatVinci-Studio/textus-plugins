@@ -1,10 +1,15 @@
 # Mind Map
 
-Draws a Markdown outline - headings and lists - as a mind map.
+Draw a Markdown outline of headings and lists as a mind map, in a code block.
 
-- Write a code block in `markmap`: it is drawn below, and its source shows again when you click into it.
-- `height=400` after the language sets the drawing's height.
-- An export - HTML, PDF, Word - carries the drawing as a picture.
+Write a code block with the language `markmap` and put an outline in it: headings (`#`, `##`) and list items become the map's branches. The map is drawn below the block; click into the block to see and edit its source again.
+
+- Drag the map to move it and zoom in or out. Click the dot on a branch to fold or unfold it.
+- Write `height=400` after the language to set the map's height in pixels (360 by default).
+- Branches take your theme's colors, and the map is drawn again when you switch themes.
+- An export to HTML, PDF or Word carries the map as a picture, even one scrolled out of sight.
+
+The plugin uses [markmap](https://markmap.js.org). It asks for one permission, to give Textus AI the `check_markmap` tool listed below: it checks a block before Textus AI writes it into a document. It works on the desktop and on iPhone and iPad.
 
 ## Example
 
@@ -17,6 +22,14 @@ Draws a Markdown outline - headings and lists - as a mind map.
 - Writers
 - Reviewers
 ```
+
+## Changes
+
+- **0.3.1** - A mind map scrolled out of sight exports as its picture instead of its source.
+- **0.3.0** - Textus AI can check a `markmap` block before it writes one.
+- **0.2.0** - Branch colors come from the theme's tones. Needs Textus 1.3.2.
+- **0.1.3** - Uses the theme's document text color and footnote size under their Textus 1.3 names.
+- **0.1.0-0.1.2** - First versions: `markmap` code blocks drawn in the document, `height=`, and exports as a picture in the export's colors.
 
 <!-- ai-tools -->
 ## Tools for Textus AI

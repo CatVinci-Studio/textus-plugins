@@ -1,13 +1,18 @@
 # Canvas
 
-Obsidian's canvases open in a tab: the notes, pictures, links and groups on them, and the arrows between them. For reading - editing a canvas stays in Obsidian for now.
+Open Obsidian canvases (`.canvas`) in a tab to look over the notes, pictures, links and groups on them.
 
-- Open a `.canvas` file from the sidebar. It opens fitted to the tab.
-- Drag to move around; zoom with **Ctrl+scroll** (**⌘+scroll** on a Mac), a pinch, or the **-** and **+** buttons. Click the percentage to fit it again.
-- A note on the canvas shows its title and opening lines, a picture shows itself; click one to open it. A link opens in your browser.
-- Colours come from your theme: Obsidian's six preset colours take the theme's red, orange, yellow, green, teal and purple.
+Open a `.canvas` file from the sidebar and it fills a tab, fitted to the window. The canvas is for reading: you can move around it and open what is on it, but editing a canvas stays in Obsidian for now.
+
+- Drag, or scroll, to move around. Zoom with **Ctrl+scroll** (**⌘+scroll** on a Mac), a pinch, or the zoom-out and zoom-in buttons. Click the percentage to fit the whole canvas again.
+- A note on the canvas shows its title and opening lines, and a picture shows itself. Click one to open it; a card that points at a heading or block opens the note right there. A web link opens in your browser.
+- Arrows, their labels and groups are drawn as in Obsidian. Colors come from your theme: Obsidian's six preset colors take the theme's red, orange, yellow, green, teal and purple.
 - Keys: **+** and **-** zoom, **0** or **F** fits, the arrow keys move.
 
-Excalidraw drawings (`.excalidraw.md`, `.excalidraw`) open too. Textus doesn't draw them; it shows the picture Excalidraw exported - one the note embeds, or the `.svg`/`.png` its auto-export writes beside it. Without one, **Open as Text** shows the file itself.
+Excalidraw drawings (`.excalidraw.md`, `.excalidraw`) open too. Textus doesn't draw them; it shows the picture Excalidraw exported: one the note embeds, or the `.svg`/`.png` that Excalidraw's auto-export writes beside it. Without one, **Open as Text** shows the file itself.
 
-The plugin only reads files; it never changes them.
+The plugin asks only to read files (to show the notes and pictures on a canvas). It never changes them. It works on the desktop and on iPhone and iPad.
+
+## Changes
+
+- **0.1.0** - first version: Obsidian canvases in a tab to drag and zoom, notes and pictures shown on the board, and Excalidraw drawings by their exported picture.

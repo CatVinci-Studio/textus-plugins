@@ -1,9 +1,9 @@
-# Cloud Sync for Textus
+# Cloud Sync
 
-Keeps a folder the same on your computers through your own S3-compatible
-storage, WebDAV or Nutstore. Files are encrypted before they leave the device,
-so the service sees neither their contents nor their names. Requires Textus
-1.3.2 or later on desktop.
+Keep a folder the same on your computers through your own S3-compatible storage, WebDAV or Nutstore, encrypted before it leaves each device.
+
+The storage service sees neither the contents of your files nor their names.
+Cloud Sync needs Textus 1.3.2 or later on the desktop.
 
 ## Getting started
 
@@ -17,8 +17,9 @@ so the service sees neither their contents nor their names. Requires Textus
 On another device, open the matching folder and enter the same service, the
 same remote folder and the same sync password. Turn on **Sync automatically
 while Textus is open**: it then syncs a few seconds after you save or rename a
-file, and every few minutes in case nothing triggered it. A file you delete goes
-out with the next sync.
+file, and also every 5 minutes in case nothing triggered it (you can set 5 to
+1,440 minutes). A file you delete goes out with the next sync. **Plugins › Sync
+now** runs a sync at any time.
 
 Once a connection is saved, the status bar shows how sync stands: **Synced ·
 2 min. ago**, **Syncing…**, **Sync conflict** or **Sync error**. Click it to
@@ -49,7 +50,8 @@ repository: it must match the password used to initialize that remote folder.
 
 ## What is synced
 
-- Saved `.md`, `.markdown`, `.mdown`, `.mkd`, `.txt` and `.csv` documents.
+- Saved `.md`, `.markdown`, `.mdown`, `.mkd`, `.txt` and `.csv` documents, and
+  Obsidian's bases (`.base`) and canvases (`.canvas`).
 - Images, PDF, Office/OpenDocument files, audio and video. The exact allowlist
   is `development/cloud-sync/src/config.ts` in the plugin repository.
 - Textus project data: `.textus/agent.md`, `style.md`, `style.previous.md`,
@@ -239,3 +241,10 @@ Originally developed by Ciao1019; the 0.3.0 interface and setup improvements
 were contributed by ChengAo Shen. The MIT notices are preserved in `LICENSE`
 and `THIRD_PARTY_NOTICES.md`. The storage design was informed by Petrichor/Sylva's
 `apps/api/internal/cloudsync/`; no Go source or PostgreSQL backup format is copied.
+
+## Changes
+
+- **0.4.1** - Obsidian bases (`.base`) and canvases (`.canvas`) sync too.
+- **0.4.0** - Deletions and renames reach your other devices (deleted files go to the system Trash there); automatic sync runs a few seconds after you save; the status bar shows how sync stands; syncs are paced to stay within WebDAV and Nutstore request limits.
+- **0.3.1** - Nutstore: a remote folder that already exists no longer stops the sync.
+- **0.3.0** - First official version: end-to-end encrypted sync through S3, WebDAV or Nutstore, with conflict copies when both sides changed a file.

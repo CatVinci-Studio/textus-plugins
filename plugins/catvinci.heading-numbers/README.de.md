@@ -1,10 +1,22 @@
 # Überschriften-Nummern
 
-Nummeriert Überschriften beim Schreiben (1, 1.1, 1.2), ohne den Text zu ändern; Exporte können die Nummern mitnehmen.
+Zeigt beim Schreiben Nummern vor Ihren Überschriften (1, 1.1, 1.2), ohne den Text zu ändern.
 
-- Überschriften erhalten beim Schreiben ihre Nummer: 1, 1.1, 1.2, 2 … Der Text selbst ändert sich nicht.
-- Die Nummerierung beginnt bei der höchsten Überschriftenebene des Dokuments – oder eine darunter, wenn diese Ebene nur den Titel enthält.
-- **Nummern in Exporten**: HTML- und PDF-Exporte zeigen dieselben Nummern.
+- Jede Überschrift zeigt beim Schreiben ihre Nummer davor: 1, 1.1, 1.2, 2… Die Nummern werden nur angezeigt; der Text des Dokuments bleibt, wie er ist.
+- Die Nummerierung beginnt bei der obersten Überschriftenebene des Dokuments, oder eine Ebene tiefer, wenn diese Ebene nur den Titel enthält.
+- Ein Dokument, dessen Überschriften schon von Hand nummeriert sind, bekommt keine zusätzlichen Nummern. Das ist der Fall, wenn die meisten Überschriften der obersten Ebene mit einer Nummer wie `1.`, `1.2`, `一、`, `第一章` oder `(一)` beginnen.
+- Obsidian: `number headings: off` in den Eigenschaften eines Dokuments (die Einstellung des Obsidian-Plugins Number Headings) schaltet die Nummern für dieses Dokument ab.
+- **Nummern in Exporten** (**Einstellungen › Erweiterungen › Plugins › Überschriften-Nummern**, standardmäßig an): HTML- und PDF-Exporte zeigen dieselben Nummern.
+
+Das Plugin liest die Überschriften des offenen Dokuments (Berechtigung, den Editor zu lesen) und gibt Textus AI das unten aufgeführte Werkzeug `number_headings` (Berechtigung für KI-Werkzeuge). Das Werkzeug gibt den Text mit eingefügten oder entfernten Nummern zurück; es ändert keine Datei. Es läuft auf dem Desktop sowie auf iPhone und iPad.
+
+## Änderungen
+
+- **0.2.1** - Keine Nummern bei einem von Hand nummerierten Dokument oder einem mit `number headings: off` in den Eigenschaften.
+- **0.2.0** - Textus AI kann Nummern in die Überschriften eines Markdown-Texts schreiben oder sie entfernen.
+- **0.1.3** - Nennt, wo es läuft: Desktop, iPhone und iPad.
+- **0.1.2** - Die Nummerierung beginnt bei der obersten Überschriftenebene des Dokuments statt nach einer Einstellung.
+- **0.1.0-0.1.1** - Erste Versionen: Nummern vor Überschriften beim Schreiben und in HTML- und PDF-Exporten.
 
 <!-- ai-tools -->
 ## Werkzeuge für Textus AI

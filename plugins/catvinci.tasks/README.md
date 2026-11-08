@@ -1,23 +1,23 @@
 # Tasks
 
-Every task in your folder, in one list.
+List every task in your folder in one place, tick them off there, and query them the way Obsidian Tasks does.
 
 - Write a task anywhere as `- [ ] something to do`.
-- The **Tasks** tab in the sidebar lists the tasks of every document in the open folder.
+- The **Tasks** tab in the sidebar lists the tasks of every document in the open folder, by document and under the heading each one sits beneath.
 - Tick one off there, or click it to go to it in its document.
-- Whether finished tasks show is in the plugin's settings.
-- Give a task a date - `📅 2026-11-01` or `due:2026-11-01` - and it shows as a badge; tasks past due or due within a week are listed first, under **Due soon**.
+- Give a task a date (`📅 2026-11-01`, `due:2026-11-01` or `[due:: 2026-11-01]`) and it shows as a badge. Tasks past due or due within a week are listed first, under **Due soon**.
 - The field at the top filters the list by words, the document's name or its heading.
-- Cards on a Kanban board (a document with `kanban-plugin` in its front matter, or `name.kanban.md`) are left to the board and are not listed.
+- Finished tasks are hidden unless you turn on **Show finished tasks** in **Settings › Extensions › Plugins › Tasks**.
+- Cards on a Kanban board (a document with `kanban-plugin` in its front matter, or `name.kanban.md`) belong to the board and are left out of the sidebar list.
 
 ## Tasks written by Obsidian
 
 Tasks written by Obsidian's Tasks plugin work the same here:
 
 - `[/]` is in progress, and still open; `[-]` is cancelled, and finished.
-- The fields at the end of a task - 📅 due, ⏳ scheduled, 🛫 start, ➕ created, ✅ done, ❌ cancelled, a priority (🔺 ⏫ 🔼 🔽 ⏬) and 🔁 a repeat - stay in the file and are left out of the list.
-- Ticking a task writes ✅ and the day; unticking it takes them off.
-- Ticking a task that repeats - `🔁 every day`, `every 2 weeks`, `every weekday`, `every Monday`, `every month on the 15th`, `every year`, `… when done` - puts its next one on the line above, its dates moved on.
+- The fields at the end of a task (📅 due, ⏳ scheduled, 🛫 start, ➕ created, ✅ done, ❌ cancelled, a priority 🔺 ⏫ 🔼 🔽 ⏬, and 🔁 a repeat) stay in the file and are left out of the list.
+- Ticking a task writes ✅ and the day; unticking it takes the done or cancelled date off.
+- Ticking a task that repeats puts its next one on the line above, its dates moved on. Repeats such as `🔁 every day`, `every 2 weeks`, `every weekday`, `every weekend`, `every Monday`, `every month on the 15th`, `every month on the last`, `every year` and `… when done` are understood.
 
 ## Task queries
 
@@ -32,7 +32,28 @@ sort by due
 ```
 ````
 
-It reads `not done` and `done`; `due`, `scheduled`, `starts`, `done` or `created` with `before`, `after`, `on`, `on or before` or `on or after` a date (2026-11-01, today, tomorrow, yesterday, this, next or last week, month or year); `no due date` and `has due date`; `path`, `filename`, `description` or `heading` `includes` or `does not include`; `tag includes`; `priority is`; `is recurring`; `sort by`, `group by` (path, folder, filename, heading, due, priority, status) and `limit`. Lines about the look (`hide …`, `show …`) are passed over; any other line it can't read is named under the count. Tick a task there to tick it in its file; click it to go to it.
+- **Status**: `done`, `not done`, and `status.type is` (`todo`, `in_progress`, `done` or `cancelled`).
+- **Dates**: `due`, `scheduled`, `starts`, `done`, `created`, `cancelled` or `happens` with `before`, `after`, `on`, `in`, `on or before` or `on or after` a date: 2026-11-01, today, tomorrow, yesterday, or this, next or last week, month or year. Also `no due date` and `has due date` (and the same for the other dates).
+- **Text**: `path`, `folder`, `filename`, `description` or `heading` with `includes` or `does not include`; `tag includes`, `tag does not include`, `has tags` and `no tags`.
+- **Other**: `priority is` (also `above`, `below`, `not`), `is recurring` and `is not recurring`.
+- **Order**: `sort by` and `group by` (status, due, scheduled, start, done, created, priority, path, folder, filename, heading or description, with `reverse` if you like) and `limit`. Without `sort by`, tasks come in Obsidian Tasks' order: status, due date, priority, path.
+
+Lines about the look (`hide …`, `show …`) are passed over; any other line it can't read is named under the count. The block lists a board's cards too. Tick a task there to tick it in its file; click it to go to it.
+
+## Permissions
+
+The plugin reads the folder's documents to find their tasks, and writes to a document only to tick a task or add one. It also gives Textus AI the tools below. It works on the desktop and on iPhone and iPad.
+
+## Changes
+
+- **0.4.0** - Uses the dates built into Textus 1.3.10, which it now needs.
+- **0.3.1** - Ships the updated shared date code; nothing else changed.
+- **0.3.0** - Obsidian Tasks: `[/]` and `[-]`, the task fields, done dates, repeating tasks and `tasks` query blocks; boards marked with `kanban-plugin` are left out of the list.
+- **0.2.1** - Cards on a Kanban board (`name.kanban.md`) are no longer listed.
+- **0.2.0** - Textus AI can list, add and tick off tasks.
+- **0.1.3** - The list follows the interface language when it changes.
+- **0.1.2** - Due dates in local time; counts in each language's plural forms.
+- **0.1.0-0.1.1** - First versions: every task in the folder in a sidebar list, ticked off or opened from there, with a filter, due dates and Due soon.
 
 <!-- ai-tools -->
 ## Tools for Textus AI

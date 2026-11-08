@@ -1,14 +1,14 @@
 # タスク
 
-フォルダ内のすべてのタスクを一つの一覧に。
+フォルダ内のすべてのタスクを一つの一覧に集め、そこで完了にでき、Obsidian Tasks と同じ書き方でクエリもできます。
 
 - どこにでも `- [ ] やること` と書けばタスクになります。
-- サイドバーの **タスク** タブには、開いているフォルダ内のすべての文書のタスクが並びます。
+- サイドバーの **タスク** タブには、開いているフォルダ内のすべての文書のタスクが、文書ごとに、それぞれの見出しとともに並びます。
 - そこでチェックして完了にするか、クリックしてその文書の該当箇所へ移動できます。
-- 完了したタスクを表示するかどうかは、プラグインの設定で変えられます。
-- タスクに日付（`📅 2026-11-01` または `due:2026-11-01`）を書くとバッジで表示され、期限を過ぎたものや 1 週間以内に迫ったものは、一番上の **期限が近い** にまとまります。
+- タスクに日付（`📅 2026-11-01`、`due:2026-11-01`、`[due:: 2026-11-01]`）を書くとバッジで表示され、期限を過ぎたものや 1 週間以内に迫ったものは、一番上の **期限が近い** にまとまります。
 - 上の入力欄で、語句・文書名・見出しから一覧を絞り込めます。
-- カンバンボード（front matter に `kanban-plugin` がある文書、または `名前.kanban.md`）のカードはボードに任せ、一覧には出しません。
+- 完了したタスクは既定では隠れます。**設定 › 拡張機能 › プラグイン › タスク** の **完了したタスクも表示** で表示できます。
+- カンバンボード（フロントマターに `kanban-plugin` がある文書、または `名前.kanban.md`）のカードはボードのもので、サイドバーの一覧には出しません。
 
 ## Obsidian で書いたタスク
 
@@ -16,8 +16,8 @@ Obsidian の Tasks プラグインで書いたタスクも、ここで同じよ�
 
 - `[/]` は進行中で未完了、`[-]` はキャンセルで終了扱いです。
 - タスク末尾のフィールド（📅 期限、⏳ 予定、🛫 開始、➕ 作成、✅ 完了、❌ キャンセル、優先度 🔺 ⏫ 🔼 🔽 ⏬、🔁 繰り返し）はファイルに残し、一覧には出しません。
-- チェックすると ✅ とその日の日付を書き、外すと消します。
-- 繰り返しのタスク（`🔁 every day`、`every 2 weeks`、`every weekday`、`every Monday`、`every month on the 15th`、`every year`、`… when done`）をチェックすると、日付を進めた次の回を上の行に加えます。
+- チェックすると ✅ とその日の日付を書き、外すと完了日やキャンセル日を消します。
+- 繰り返しのタスクをチェックすると、日付を進めた次の回を上の行に加えます。`🔁 every day`、`every 2 weeks`、`every weekday`、`every weekend`、`every Monday`、`every month on the 15th`、`every month on the last`、`every year`、`… when done` などを読み取れます。
 
 ## タスクのクエリ
 
@@ -32,7 +32,28 @@ sort by due
 ```
 ````
 
-読める条件：`not done` と `done`、`due`・`scheduled`・`starts`・`done`・`created` に `before`・`after`・`on`・`on or before`・`on or after` と日付（2026-11-01、today、tomorrow、yesterday、this／next／last week・month・year）、`no due date` と `has due date`、`path`・`filename`・`description`・`heading` の `includes` と `does not include`、`tag includes`、`priority is`、`is recurring`、`sort by`、`group by`（path、folder、filename、heading、due、priority、status）、`limit`。見た目の行（`hide …`、`show …`）は飛ばし、ほかに読めない行は件数の下に示します。ブロックでチェックするとファイルのタスクにチェックが入り、クリックするとその場所へ移ります。
+- **状態**：`done`、`not done`、`status.type is`（`todo`・`in_progress`・`done`・`cancelled`）。
+- **日付**：`due`・`scheduled`・`starts`・`done`・`created`・`cancelled`・`happens` に、`before`・`after`・`on`・`in`・`on or before`・`on or after` と日付（2026-11-01、today、tomorrow、yesterday、または this／next／last と week・month・year）。`no due date` と `has due date` も使えます（ほかの日付も同様）。
+- **テキスト**：`path`・`folder`・`filename`・`description`・`heading` に `includes` か `does not include`。`tag includes`、`tag does not include`、`has tags`、`no tags`。
+- **その他**：`priority is`（`above`・`below`・`not` も可）、`is recurring`、`is not recurring`。
+- **並べ方**：`sort by` と `group by`（status、due、scheduled、start、done、created、priority、path、folder、filename、heading、description。`reverse` も付けられます）、`limit`。`sort by` がなければ、Obsidian Tasks と同じく状態・期限・優先度・パスの順です。
+
+見た目の行（`hide …`、`show …`）は飛ばし、ほかに読めない行は件数の下に示します。クエリのブロックにはボードのカードも出ます。ブロックでチェックするとファイルのタスクにチェックが入り、クリックするとその場所へ移ります。
+
+## 権限
+
+このプラグインは、タスクを見つけるためにフォルダの文書を読み、タスクをチェックするときと追加するときだけ文書に書き込みます。下にあるツールを Textus AI にも渡します。デスクトップと iPhone・iPad で使えます。
+
+## 更新履歴
+
+- **0.4.0** - Textus 1.3.10 に組み込まれた日付の機能を使います。そのため Textus 1.3.10 が必要です。
+- **0.3.1** - 更新された共通の日付コードを同梱。ほかに変更はありません。
+- **0.3.0** - Obsidian Tasks に対応：`[/]` と `[-]`、タスクのフィールド、完了日、繰り返し、`tasks` クエリのブロック。`kanban-plugin` の付いたボードは一覧から外します。
+- **0.2.1** - カンバンボード（`名前.kanban.md`）のカードを一覧に出さなくなりました。
+- **0.2.0** - Textus AI がタスクを一覧・追加・完了できます。
+- **0.1.3** - インターフェースの言語が変わると、一覧も切り替わります。
+- **0.1.2** - 期限をローカル時刻で扱い、件数を各言語の複数形で表示。
+- **0.1.0-0.1.1** - 最初のバージョン：フォルダ内のすべてのタスクをサイドバーに一覧し、そこで完了・移動。絞り込み、期限、「期限が近い」付き。
 
 <!-- ai-tools -->
 ## Textus AI のツール
