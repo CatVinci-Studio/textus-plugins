@@ -1,6 +1,7 @@
 // How the open folder is written, as Textus reads it for every app
 // (textus.files.conventions): the templates folder and the daily notes
-// settings, Templates/ and the plugin's own settings where no app says.
+// settings, Templates/ and the plugin's own settings where no app says -
+// and the few settings of an Obsidian vault Textus doesn't read.
 // Each plugin using it lists this as lib/conventions.js in libs.json,
 // after lib/folder-paths.js.
 /* global folderPaths */
@@ -27,11 +28,31 @@
     return folder === null || folder === undefined ? "Templates" : folder;
   }
 
+  /** The Obsidian vault `base` is in, as Textus found it; null for none. */
+  function obsidian(c) {
+    return (c && (c.sources || []).find((s) => s.app === "obsidian")) || null;
+  }
+
+  /** A JSON file of the vault's .obsidian folder, as an object; {} with no
+   *  vault, or no such file. */
+  async function obsidianSettings(base, name) {
+    var vault = obsidian(await of(base));
+    if (!vault) return {};
+    try {
+      return JSON.parse(await textus.files.readText(folderPaths.abs(vault.root, ".obsidian/" + name))) || {};
+    } catch {
+      return {};
+    }
+  }
+
   /** The daily notes' folder (in `base`), name format and template file (in
-   *  `base`, or null for none); null when no app says. */
+   *  `base`, or null for none); null when no app says. A vault without
+   *  daily notes settings keeps them at its top, as Obsidian does. */
   async function daily(base) {
     var c = await of(base);
     var d = c && c.daily && c.daily.value;
+    var vault = !d && obsidian(c);
+    if (vault) return { folder: inFolder(base, vault.root) || "", format: "YYYY-MM-DD", template: null };
     if (!d) return null;
     return {
       folder: inFolder(base, d.folder) || "",
@@ -40,5 +61,5 @@
     };
   }
 
-  root.folderConventions = { templatesFolder: templatesFolder, daily: daily };
+  root.folderConventions = { templatesFolder: templatesFolder, daily: daily, obsidianSettings: obsidianSettings };
 })(globalThis);

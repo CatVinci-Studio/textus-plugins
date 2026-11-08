@@ -1,5 +1,5 @@
 // Dates written and read in Moment-style formats (YYYY-MM-DD, "dddd, MMMM
-// D"), as Obsidian's settings and templates name them, and the {{date}}
+// Do"), as Obsidian's settings and templates name them, and the {{date}}
 // and {{time}} of a template filled in. Each plugin using it lists this as
 // lib/dates.js in libs.json.
 (function (root) {
@@ -8,31 +8,98 @@
   var pad = function (n, width) {
     return String(n).padStart(width || 2, "0");
   };
-  var TOKENS = /\[([^\]]*)\]|YYYY|YY|MMMM|MMM|MM|M|DD|D|dddd|ddd|HH|H|mm|ss/g;
+  var TOKENS =
+    /\[([^\]]*)\]|YYYY|YY|Q|MMMM|MMM|MM|M|Do|DD|D|dddd|ddd|gggg|GGGG|ww|w|WW|W|HH|H|hh|h|mm|ss|s|A|a/g;
+  var DAY_MS = 86400000;
+
+  /** Moment's ordinal day (Do) in each language; English's otherwise. */
+  var ORDINAL = {
+    en: function (n) {
+      var tens = n % 100;
+      var unit = n % 10;
+      if (tens >= 11 && tens <= 13) return n + "th";
+      return n + ({ 1: "st", 2: "nd", 3: "rd" }[unit] || "th");
+    },
+    zh: (n) => n + "日",
+    ja: (n) => n + "日",
+    ko: (n) => n + "일",
+    de: (n) => n + ".",
+    ru: (n) => n + "-го",
+    es: (n) => n + "º",
+    pt: (n) => n + "º",
+    fr: (n) => n + (n === 1 ? "er" : ""),
+  };
+
+  /** Moment's locale weeks: the day they start on (0 Sunday) and the day
+   *  of January that is always in week 1 (as 7 + dow - doy). */
+  var WEEKS = { en: [0, 6], ja: [0, 6], ko: [0, 6] };
+  var ISO = [1, 4];
+
+  var base = function (language) {
+    return String(language || "en").split("-")[0];
+  };
+  var utcDay = function (date) {
+    return Date.UTC(date.getFullYear(), date.getMonth(), date.getDate());
+  };
+
+  /** `date`'s week and the year it belongs to, weeks starting on `dow`,
+   *  week 1 holding January's (7 + dow - doy)th day. */
+  function week(date, rule) {
+    var dow = rule[0];
+    var firstOf = function (year) {
+      var anchor = new Date(year, 0, 7 + dow - rule[1]);
+      return utcDay(anchor) - ((anchor.getDay() - dow + 7) % 7) * DAY_MS;
+    };
+    var at = utcDay(date);
+    var year = date.getFullYear();
+    if (at >= firstOf(year + 1)) year += 1;
+    else if (at < firstOf(year)) year -= 1;
+    return { week: Math.floor((at - firstOf(year)) / DAY_MS / 7) + 1, year: year };
+  }
 
   /** `date` written in a Moment format, names in `language`. */
   function format(date, form, language) {
     var name = function (options) {
       return date.toLocaleDateString(language || "en", options);
     };
+    var hours = date.getHours();
+    var locale = function () {
+      return week(date, WEEKS[base(language)] || ISO);
+    };
+    var iso = function () {
+      return week(date, ISO);
+    };
     var values = {
-      YYYY: String(date.getFullYear()),
-      YY: String(date.getFullYear()).slice(-2),
-      MMMM: name({ month: "long" }),
-      MMM: name({ month: "short" }),
-      MM: pad(date.getMonth() + 1),
-      M: String(date.getMonth() + 1),
-      DD: pad(date.getDate()),
-      D: String(date.getDate()),
-      dddd: name({ weekday: "long" }),
-      ddd: name({ weekday: "short" }),
-      HH: pad(date.getHours()),
-      H: String(date.getHours()),
-      mm: pad(date.getMinutes()),
-      ss: pad(date.getSeconds()),
+      YYYY: () => String(date.getFullYear()),
+      YY: () => String(date.getFullYear()).slice(-2),
+      Q: () => String(Math.floor(date.getMonth() / 3) + 1),
+      MMMM: () => name({ month: "long" }),
+      MMM: () => name({ month: "short" }),
+      MM: () => pad(date.getMonth() + 1),
+      M: () => String(date.getMonth() + 1),
+      Do: () => (ORDINAL[base(language)] || ORDINAL.en)(date.getDate()),
+      DD: () => pad(date.getDate()),
+      D: () => String(date.getDate()),
+      dddd: () => name({ weekday: "long" }),
+      ddd: () => name({ weekday: "short" }),
+      gggg: () => String(locale().year),
+      GGGG: () => String(iso().year),
+      ww: () => pad(locale().week),
+      w: () => String(locale().week),
+      WW: () => pad(iso().week),
+      W: () => String(iso().week),
+      HH: () => pad(hours),
+      H: () => String(hours),
+      hh: () => pad(hours % 12 || 12),
+      h: () => String(hours % 12 || 12),
+      mm: () => pad(date.getMinutes()),
+      ss: () => pad(date.getSeconds()),
+      s: () => String(date.getSeconds()),
+      A: () => (hours < 12 ? "AM" : "PM"),
+      a: () => (hours < 12 ? "am" : "pm"),
     };
     return String(form || "YYYY-MM-DD").replace(TOKENS, function (all, literal) {
-      return literal !== undefined ? literal : values[all];
+      return literal !== undefined ? literal : values[all]();
     });
   }
 
@@ -41,27 +108,67 @@
     return format(date, "YYYY-MM-DD");
   }
 
+  var escape = function (text) {
+    return text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  };
+
+  /** The twelve month names in `language`, `width` "long" or "short". */
+  function months(language, width) {
+    var out = [];
+    for (var i = 0; i < 12; i++) out.push(new Date(2000, i, 1).toLocaleDateString(language || "en", { month: width }));
+    return out;
+  }
+
+  /** What each token of a name reads: the part of the date it gives
+   *  (Y, M, D, or N for a month's name) and its pattern; tokens that give
+   *  no part of the day only have to be there. */
+  function readers(language) {
+    var names = function (width) {
+      var list = months(language, width);
+      return { part: "N", source: "(" + list.map(escape).join("|") + ")", names: list };
+    };
+    var digits = { source: "\\d{1,4}" };
+    return {
+      YYYY: { part: "Y", source: "(\\d{4})" },
+      MMMM: names("long"),
+      MMM: names("short"),
+      MM: { part: "M", source: "(\\d{2})" },
+      M: { part: "M", source: "(\\d{1,2})" },
+      Do: { part: "D", source: "(\\d{1,2})[^\\s\\d]*" },
+      DD: { part: "D", source: "(\\d{2})" },
+      D: { part: "D", source: "(\\d{1,2})" },
+      dddd: { source: "[^\\s/\\d]+" },
+      ddd: { source: "[^\\s/\\d]+" },
+      A: { source: "[AaPp][Mm]" },
+      a: { source: "[AaPp][Mm]" },
+      YY: digits, Q: digits, gggg: digits, GGGG: digits, ww: digits, w: digits, WW: digits, W: digits,
+      HH: digits, H: digits, hh: digits, h: digits, mm: digits, ss: digits, s: digits,
+    };
+  }
+
   /** The YYYY-MM-DD a name written in `form` stands for; null for a
-   *  name that isn't one. Names of months and weekdays match any word. */
-  function parse(text, form) {
+   *  name that isn't one. Month names are read in `language`. */
+  function parse(text, form, language) {
+    var read = readers(language);
     var order = [];
     var source = String(form || "YYYY-MM-DD").replace(
-      /\[([^\]]*)\]|YYYY|MMMM|MMM|dddd|ddd|MM|M|DD|D|[.*+?^${}()|\\]/g,
+      new RegExp(TOKENS.source + "|[.*+?^${}()|\\\\]", "g"),
       function (all, literal) {
-        if (literal !== undefined) return literal.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-        if (/^[.*+?^${}()|\\]$/.test(all)) return "\\" + all;
-        if (all[0] === "Y" || all === "MM" || all === "M" || all === "DD" || all === "D") {
-          order.push(all[0]);
-          return all === "YYYY" ? "(\\d{4})" : all.length === 2 ? "(\\d{2})" : "(\\d{1,2})";
-        }
-        return "[^\\s/\\d]+";
+        if (literal !== undefined) return escape(literal);
+        var reader = read[all];
+        if (!reader) return "\\" + all;
+        if (reader.part) order.push(reader);
+        return reader.source;
       },
     );
-    var m = new RegExp("^" + source + "$").exec(String(text));
+    var m = new RegExp("^" + source + "$", "i").exec(String(text));
     if (!m) return null;
     var parts = {};
-    order.forEach(function (key, i) {
-      parts[key] = Number(m[i + 1]);
+    order.forEach(function (reader, i) {
+      var found = m[i + 1];
+      if (reader.part !== "N") return (parts[reader.part] = Number(found));
+      var at = reader.names.findIndex((n) => n.toLowerCase() === found.toLowerCase());
+      parts.M = at + 1;
     });
     if (!parts.Y || !parts.M || !parts.D) return null;
     var date = new Date(parts.Y, parts.M - 1, parts.D);
@@ -69,21 +176,43 @@
     return parts.Y + "-" + pad(parts.M) + "-" + pad(parts.D);
   }
 
+  /** What an offset's unit (`{{date+1d}}`) adds to a date. */
+  var UNITS = {
+    y: (d, n) => d.setFullYear(d.getFullYear() + n),
+    q: (d, n) => d.setMonth(d.getMonth() + 3 * n),
+    M: (d, n) => d.setMonth(d.getMonth() + n),
+    m: (d, n) => d.setMinutes(d.getMinutes() + n),
+    w: (d, n) => d.setDate(d.getDate() + 7 * n),
+    d: (d, n) => d.setDate(d.getDate() + n),
+    h: (d, n) => d.setHours(d.getHours() + n),
+    s: (d, n) => d.setSeconds(d.getSeconds() + n),
+  };
+
   /**
    * A template's {{date}} and {{time}} filled in, as Obsidian writes them
-   * ({{date:FORMAT}}, {{time:FORMAT}}): the date is `options.day`'s, the
-   * time `options.now`'s (both now when not given). Every other {{name}}
-   * found in `options.values` is filled in too; the rest stay as written.
+   * ({{date:FORMAT}}, {{time:FORMAT}}, {{date+1d}}): the date is
+   * `options.day`'s, the time `options.now`'s (both now when not given),
+   * in `options.dateFormat` and `options.timeFormat` unless the tag names
+   * one. Every other {{name}} found in `options.values` is filled in too;
+   * the rest stay as written.
    */
   function fill(text, options) {
     var now = options.now || new Date();
     var date = options.day || now;
     var values = options.values || {};
-    return String(text).replace(/\{\{(\w+)(?::([^}]*))?\}\}/g, function (all, key, form) {
-      if (key === "date") return format(date, form || "YYYY-MM-DD", options.language);
-      if (key === "time") return format(now, form || "HH:mm", options.language);
-      return form === undefined && Object.prototype.hasOwnProperty.call(values, key) ? values[key] : all;
-    });
+    var defaults = { date: options.dateFormat || "YYYY-MM-DD", time: options.timeFormat || "HH:mm" };
+    return String(text).replace(
+      /\{\{(\w+)(?:([+-]\d+)([yqMmwdhs]))?(?::([^}]*))?\}\}/g,
+      function (all, key, offset, unit, form) {
+        if (key === "date" || key === "time") {
+          var at = new Date(date.getFullYear(), date.getMonth(), date.getDate(), now.getHours(), now.getMinutes(), now.getSeconds());
+          if (offset) UNITS[unit](at, Number(offset));
+          return format(at, form || defaults[key], options.language);
+        }
+        var plain = offset === undefined && form === undefined;
+        return plain && Object.prototype.hasOwnProperty.call(values, key) ? values[key] : all;
+      },
+    );
   }
 
   root.dates = { format: format, day: day, parse: parse, fill: fill };
