@@ -47,8 +47,10 @@ function headingAt(headings, line) {
 const symbols = new Map();
 async function symbolsOf(doc) {
   if (!doc.tasks.some((task) => task.done)) return {};
+  // The tasks as indexed, ticks included: a tick changes it even within one modified time.
+  const key = doc.modifiedMs + "\n" + doc.tasks.map((task) => (task.done ? "x" : " ") + task.line + task.text).join("\n");
   const known = symbols.get(doc.path);
-  if (known && doc.modifiedMs != null && known.modifiedMs === doc.modifiedMs) return known.byLine;
+  if (known && known.key === key) return known.byLine;
   let rows = [];
   try {
     rows = textLines.split(await textus.files.readText(doc.path));
@@ -60,7 +62,7 @@ async function symbolsOf(doc) {
     const m = obsidianTasks.LINE.exec(rows[task.line] ? rows[task.line].text : "");
     if (m) byLine[task.line] = m[2];
   }
-  symbols.set(doc.path, { modifiedMs: doc.modifiedMs, byLine: byLine });
+  symbols.set(doc.path, { key: key, byLine: byLine });
   return byLine;
 }
 

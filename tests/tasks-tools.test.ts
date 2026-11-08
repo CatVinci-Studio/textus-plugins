@@ -213,3 +213,28 @@ describe("a ```tasks block", () => {
     expect(opened).toEqual([{ path: "/root/Work/Plan.md", line: 0 }]);
   });
 });
+
+it("reads a task ticked since the last look, the file's time unchanged", async () => {
+  const files: Record<string, string> = { "Plan.md": "# Plan\n\n- [ ] One\n- [x] Two\n" };
+  let one = false;
+  const metadata = {
+    all: async () => [
+      {
+        path: "/root/Plan.md",
+        rel: "Plan.md",
+        modifiedMs: 1,
+        headings: [],
+        tasks: [
+          { text: "One", line: 2, done: one, due: null, tags: [] },
+          { text: "Two", line: 3, done: true, due: null, tags: [] },
+        ],
+      },
+    ],
+  };
+  const { tools } = loadPlugin("catvinci.tasks", { files: { ...folder(files), root: async () => "/root" }, metadata });
+  const open = async () => (await tools.get("list_tasks")!({})).tasks.filter((t: { done: boolean }) => !t.done).length;
+  expect(await open()).toBe(1);
+  files["Plan.md"] = "# Plan\n\n- [x] One\n- [x] Two\n";
+  one = true;
+  expect(await open()).toBe(0);
+});
