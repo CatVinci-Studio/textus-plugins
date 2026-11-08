@@ -7,7 +7,7 @@ Uma nota para cada dia e um calendário para chegar a qualquer uma delas.
 - As notas ficam numa pasta dentro da pasta aberta. O nome dela e o texto inicial de um dia novo estão nos ajustes do plugin; a semana começa como na sua região.
 - **Plugins › Abrir o dia anterior** e **Abrir o dia seguinte** passam da nota de um dia para as vizinhas.
 - O modelo aceita {{weekday}}, {{yesterday}}, {{tomorrow}} e {{time}} além de {{date}}; por exemplo, `[[{{yesterday}}]]` liga cada dia ao anterior.
-- O texto inicial também pode ser o nome de um modelo da pasta Templates (a do plugin Modelos), como `Daily`. Num cofre do Obsidian, valem os ajustes de notas diárias dele: pasta, formato do nome como `YYYY/MM/YYYY-MM-DD` e modelo; o Textus nunca os altera.
+- O texto inicial também pode ser o nome de um modelo da pasta Templates (a do plugin Modelos), como `Daily`. Num cofre do Obsidian, valem os ajustes de notas diárias dele: pasta, formato do nome como `YYYY/MM/YYYY-MM-DD` e modelo; o Textus nunca os altera. Um cofre sem ajustes de notas diárias guarda-as na raiz, como o Obsidian, e aí `{{date}}`, `{{yesterday}}` e `{{tomorrow}}` são escritos no formato do nome das notas, incluindo formatos do Moment como `MMMM Do, YYYY`.
 
 <!-- ai-tools -->
 ## Ferramentas para o Textus AI

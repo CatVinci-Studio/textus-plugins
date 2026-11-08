@@ -2,7 +2,8 @@
 // the open folder (Settings: "Daily" by default), made from a template the
 // first time a day is opened. The sidebar's calendar marks the days that
 // have one. Where the folder's app sets daily notes (an Obsidian vault, a
-// Logseq graph, Foam...), its folder, name format and template win.
+// Logseq graph, Foam...), its folder, name format and template win; an
+// Obsidian vault that sets none keeps them at its top, as Obsidian does.
 /* global folderConventions, folderPaths, dates */
 /** What activate was given: the plugin's storage and own files. */
 let ctx;
@@ -39,7 +40,7 @@ function dateAt(where, path) {
   const inside = folderPaths.rel(where.root, path);
   const prefix = where.rel ? where.rel + "/" : "";
   return inside !== null && inside.startsWith(prefix)
-    ? dates.parse(inside.slice(prefix.length).replace(/\.md$/i, ""), where.format)
+    ? dates.parse(inside.slice(prefix.length).replace(/\.md$/i, ""), where.format, textus.env.language)
     : null;
 }
 
@@ -78,18 +79,21 @@ function shift(date, days) {
   return dates.day(new Date(y, m - 1, d + days));
 }
 
-/** A new day's note: the template with its {{…}} filled in for `date`;
- *  {{date:FORMAT}} and {{time:FORMAT}} as Obsidian writes them. */
-function fill(template, date, title) {
+/** A new day's note: the template with its {{…}} filled in for `date` as
+ *  Obsidian fills a daily note's - {{date}}, {{yesterday}} and {{tomorrow}}
+ *  in the notes' name format `form`; {{date:FORMAT}}, {{date+1d}}. */
+function fill(template, date, title, form) {
   const [y, m, d] = date.split("-").map(Number);
   const day = new Date(y, m - 1, d);
+  const name = (days) => dates.format(new Date(y, m - 1, d + days), form, textus.env.language);
   const values = {
     title: title,
     weekday: day.toLocaleDateString(textus.env.language, { weekday: "long" }),
-    yesterday: shift(date, -1),
-    tomorrow: shift(date, 1),
+    yesterday: name(-1),
+    tomorrow: name(1),
   };
-  return dates.fill(template, { day: day, language: textus.env.language, values: values }).replace(/\\n/g, "\n");
+  const options = { day: day, dateFormat: form, language: textus.env.language, values: values };
+  return dates.fill(template, options).replace(/\\n/g, "\n");
 }
 
 /** The day of the note in front - a daily note's name - else today. */
@@ -117,7 +121,7 @@ async function ensureNote(where, note, date) {
   const title = note.rel.split("/").pop().replace(/\.md$/, "");
   const parent = note.path.replace(/[\\/][^\\/]*$/, "");
   await textus.files.createFolder(parent).catch(() => {});
-  await textus.files.create(note.path, fill(await templateText(where), date, title)).catch(() => {});
+  await textus.files.create(note.path, fill(await templateText(where), date, title, where.format)).catch(() => {});
 }
 
 async function openDay(date) {

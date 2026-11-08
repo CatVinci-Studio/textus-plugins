@@ -1,5 +1,5 @@
-// "@tomorrow", "@下周五", "@明日": the dates a phrase names, counted from
-// today, in English, Chinese and Japanese.
+// Quick Insert's @ dates - "@tomorrow", "@下周五", "@明日": the dates a phrase
+// names, counted from today, in English, Chinese and Japanese.
 
 /* global dates */
 (function (root) {

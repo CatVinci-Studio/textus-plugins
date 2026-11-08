@@ -7,7 +7,9 @@ const source = readFileSync(
   new URL("../plugins/catvinci.function-plot/plot.js", import.meta.url),
   "utf8",
 );
-const { compile, bound } = new Function(source + "\nreturn { compile, bound };")() as {
+const { compile, bound } = new Function(
+  source + "\nreturn { compile, bound };",
+)() as {
   compile: (text: string) => (x: number) => number;
   bound: (value: string | undefined, fallback: number) => number;
 };

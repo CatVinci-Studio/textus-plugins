@@ -1,14 +1,53 @@
 // Templates: Markdown files in the open folder's templates folder -
 // Templates/, or the one the folder's app names (an Obsidian vault, Foam...)
 // - filled in as they are used ({{date}}, {{time}}, {{title}},
-// {{date:YYYY-MM-DD}}) into a new document or at the caret. Templates kept
-// in the plugin's storage before 0.3 are copied there once.
-/* global folderConventions, folderPaths, dates, freeName */
+// {{date:YYYY-MM-DD}}, and Templater's common <% tp.… %> tags) into a new
+// document or at the caret. Templates kept in the plugin's storage before
+// 0.3 are copied there once.
+/* global folderConventions, folderPaths, dates, freeName, templater */
 let ctx;
 const t = (key, ...args) => textus.l10n.t(key, ...args);
 const MOVED = "movedToFolder";
 
-const fill = (text, title) => dates.fill(text, { language: textus.env.language, values: { title: title } });
+/** A template filled in for a document titled `title` in `folder` (in the
+ *  open folder): {{date}} and {{time}} in the vault's Templates formats,
+ *  then Templater's tags. Gives the text, the caret's offset or null, and
+ *  the tags left as written. */
+async function fill(root, text, title, folder) {
+  const formats = await folderConventions.obsidianSettings(root, "templates.json");
+  const language = textus.env.language;
+  const filled = dates.fill(text, {
+    language: language,
+    dateFormat: formats.dateFormat,
+    timeFormat: formats.timeFormat,
+    values: { title: title },
+  });
+  return templater.fill(filled, { title: title, folder: folder, now: new Date(), language: language });
+}
+
+/** One notice naming the tags a template had that weren't run. */
+function tellSkipped(filled) {
+  const tags = [...new Set(filled.skipped.map((tag) => (tag.length > 48 ? tag.slice(0, 45) + "…" : tag)))];
+  if (tags.length) textus.ui.notice(t("notRun", tags.join("  ")));
+}
+
+/** The caret put where the template's tp.file.cursor() was: `start` is
+ *  where the template's text begins in the document in front. */
+async function placeCaret(editor, filled, start) {
+  if (filled.cursor === null) return;
+  const doc = (await editor.getText()) || "";
+  await editor.reveal(templater.place(doc, start + filled.cursor));
+}
+
+/** Where `after` (a document's text) first differs from `before`. */
+function firstChange(before, after) {
+  let i = 0;
+  while (i < before.length && before[i] === after[i]) i++;
+  return i;
+}
+
+/** `rel`'s folder in the open folder, "" for its top. */
+const folderOf = (rel) => (rel || "").split("/").slice(0, -1).join("/");
 
 /** The open folder and its templates folder; null without a folder. */
 async function where() {
@@ -98,8 +137,11 @@ async function createFromTemplate(input) {
   const path = folderPaths.abs(place.root, rel);
   if (await textus.files.stat(path)) return { error: t("exists", title) };
   if (folder) await textus.files.createFolder(folderPaths.abs(place.root, folder)).catch(() => {});
-  await textus.files.create(path, fill(await textus.files.readText(tpl.path), title));
-  return { path: rel, template: tpl.name };
+  const filled = await fill(place.root, await textus.files.readText(tpl.path), title, folder);
+  await textus.files.create(path, filled.text);
+  return filled.skipped.length
+    ? { path: rel, template: tpl.name, notRun: filled.skipped }
+    : { path: rel, template: tpl.name };
 }
 
 exports.activate = function (context) {
@@ -115,8 +157,11 @@ exports.activate = function (context) {
     if (!title || !title.trim()) return;
     const path = folderPaths.abs(place.root, title.trim().replace(/[\\/:*?"<>|]/g, "-") + ".md");
     if (await textus.files.stat(path)) return textus.ui.message(t("exists", title.trim()));
-    await textus.files.create(path, fill(template.text, title.trim()));
+    const filled = await fill(place.root, template.text, title.trim(), "");
+    await textus.files.create(path, filled.text);
     await textus.layout.open(path);
+    await placeCaret(textus.editor, filled, 0);
+    tellSkipped(filled);
   });
   textus.commands.registerEditorCommand("catvinci.templates.insert", async function (editor) {
     const place = await where();
@@ -125,7 +170,11 @@ exports.activate = function (context) {
     if (!template) return;
     const path = (await editor.getPath()) || "";
     const title = path.split(/[\\/]/).pop().replace(/\.md$/i, "") || template.name;
-    await editor.insertText(fill(template.text, title));
+    const filled = await fill(place.root, template.text, title, folderOf(folderPaths.rel(place.root, path)));
+    const before = (await editor.getText()) || "";
+    await editor.insertText(filled.text);
+    await placeCaret(editor, filled, firstChange(before, (await editor.getText()) || ""));
+    tellSkipped(filled);
   });
   textus.commands.registerEditorCommand("catvinci.templates.save", async function (editor) {
     const place = await where();

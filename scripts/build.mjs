@@ -145,6 +145,14 @@ function screenshotsOf(id) {
 const ids = readdirSync(PLUGINS)
   .filter((name) => statSync(join(PLUGINS, name)).isDirectory())
   .sort();
+// Plugins merged into another: still updated where installed (their last
+// version says where they went), no longer offered to install.
+const UNLISTED = new Set(
+  existsSync(join(ROOT, "unlisted.json"))
+    ? JSON.parse(readFileSync(join(ROOT, "unlisted.json"), "utf8"))
+    : [],
+);
+
 const catalog = [];
 if (!check) mkdirSync(DIST, { recursive: true });
 
@@ -190,6 +198,7 @@ for (const id of ids) {
   catalog.push({
     id,
     version: manifest.version,
+    ...(UNLISTED.has(id) ? { unlisted: true } : {}),
     // Made by CatVinci Studio and published from this repository: Textus
     // marks it Official.
     official: manifest.publisher === "catvinci",

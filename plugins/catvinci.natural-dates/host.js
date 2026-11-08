@@ -1,37 +1,11 @@
-// Natural Dates: type @ and a day - @tomorrow, @下周五, @明日 - and pick the
-// date it names: as a date, or as a link to that day's note.
-
-/* global naturalDates */
-const DAY = /^(\d{4})-(\d{2})-(\d{2})$/;
-
-/** Textus AI's tool: the date a phrase names, from today or `today`. */
-function parseDate(input) {
-  const m = DAY.exec(String(input.today || ""));
-  const today = m ? new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3])) : new Date();
-  const date = naturalDates.parse(input.phrase || "", today);
-  if (date) return { phrase: String(input.phrase).trim(), date: date };
-  const words = String(input.phrase || "").trim().replace(/^@/, "").slice(0, 3);
-  return {
-    error: "Not a phrase this knows: today, tomorrow, next friday, in 3 days, 下周五, 明後日 and the like.",
-    suggestions: words ? naturalDates.suggest(words, today, 8) : [],
-  };
-}
-
+// Merged into Quick Insert (catvinci.quick-insert): this version only says so, once.
 exports.activate = function (ctx) {
-  ctx.subscriptions.push(
-    textus.ai.registerTool("parse_date", parseDate),
-    textus.editor.registerCompletion("catvinci.natural-dates.at", {
-      async provideCompletions(context) {
-        const typed = context.match.slice(1);
-        // After "(" it is a reminder, (@2026-11-06 09:00): the @ stays.
-        const reminder = /[(（]$/.test(context.text.slice(0, -context.match.length));
-        const asLink = !reminder && (await textus.settings.get("insert")) === "link";
-        return naturalDates.suggest(typed, new Date(), 8).map((s) => ({
-          label: "@" + s.phrase,
-          detail: s.date,
-          insert: reminder ? "@" + s.date : asLink ? "[[" + s.date + "]]" : s.date,
-        }));
-      },
-    }),
-  );
+  void (async () => {
+    if (await ctx.storage.global.get("told")) return;
+    await ctx.storage.global.set("told", true);
+    const offered = await textus.commands
+      .execute("textus.offerPlugin", { id: "catvinci.quick-insert", reason: textus.l10n.t("merged") })
+      .catch(() => false);
+    if (offered !== true) await textus.ui.notice(textus.l10n.t("merged"));
+  })();
 };

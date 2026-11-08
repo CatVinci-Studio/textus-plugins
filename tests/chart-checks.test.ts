@@ -4,7 +4,9 @@ import { loadPlugin } from "./plugin-host";
 /** The chart plugins' check_<kind> tools for Textus AI (each plugin's
  *  check.js, through shared/chart-host.js's registerChartCheck). */
 function checker(kind: string) {
-  const tool = loadPlugin("catvinci." + kind).tools.get("check_" + kind.replace(/-/g, "_"))!;
+  const tool = loadPlugin("catvinci." + kind).tools.get(
+    "check_" + kind.replace(/-/g, "_"),
+  )!;
   return async (source: string) => {
     const result = await tool({ source });
     return result.ok ? [] : (result.problems as string[]);
@@ -20,20 +22,42 @@ describe("chart checks", () => {
 
   it("chartjs: a Chart.js 4 configuration", async () => {
     const check = checker("chartjs");
-    expect(await check("{ type: 'bar', data: { labels: ['a'], datasets: [{ data: [1] }] } }")).toEqual([]);
+    expect(
+      await check(
+        "{ type: 'bar', data: { labels: ['a'], datasets: [{ data: [1] }] } }",
+      ),
+    ).toEqual([]);
     expect(await check("{ type: 'bars', data: { datasets: [] } }")).toEqual([
       "data.datasets must be a list of at least one dataset.",
       "“bars” is not a chart type: one of line, bar, pie, doughnut, polarArea, radar, scatter, bubble.",
     ]);
-    expect((await check("{ type: 'scatter', data: { datasets: [{ data: [1, 2] }] }, options: { scales: { xAxes: [] } } }")).length).toBe(2);
-    expect((await check("{ type: 'line', options: { onClick: function () {} } }"))[0]).toMatch(/^Not JSON/);
+    expect(
+      (
+        await check(
+          "{ type: 'scatter', data: { datasets: [{ data: [1, 2] }] }, options: { scales: { xAxes: [] } } }",
+        )
+      ).length,
+    ).toBe(2);
+    expect(
+      (
+        await check("{ type: 'line', options: { onClick: function () {} } }")
+      )[0],
+    ).toMatch(/^Not JSON/);
   });
 
   it("echarts: series with known types, and their axes", async () => {
     const check = checker("echarts");
-    expect(await check("{ xAxis: { type: 'category', data: ['a'] }, yAxis: {}, series: [{ type: 'bar', data: [1] }] }")).toEqual([]);
+    expect(
+      await check(
+        "{ xAxis: { type: 'category', data: ['a'] }, yAxis: {}, series: [{ type: 'bar', data: [1] }] }",
+      ),
+    ).toEqual([]);
     expect(await check("{ series: [{ type: 'pie', data: [] }] }")).toEqual([]);
-    expect(await check("{ series: [{ type: 'line', data: [1] }, { type: 'donut' }] }")).toEqual([
+    expect(
+      await check(
+        "{ series: [{ type: 'line', data: [1] }, { type: 'donut' }] }",
+      ),
+    ).toEqual([
       "series[0] (line) is drawn on axes: give xAxis and yAxis.",
       expect.stringMatching(/^series\[1\]\.type “donut” is not a series type/),
     ]);
@@ -44,8 +68,16 @@ describe("chart checks", () => {
 
   it("wavedrom: wave characters and data labels", async () => {
     const check = checker("wavedrom");
-    expect(await check("{ signal: [{ name: 'clk', wave: 'p...' }, ['bus', { name: 'd', wave: 'x=.=x', data: 'a b' }], {}] }")).toEqual([]);
-    expect(await check("{ signal: [{ name: 'clk', wave: 'p.k.' }, { name: 'd', wave: 'x=x', data: ['a', 'b'] }] }")).toEqual([
+    expect(
+      await check(
+        "{ signal: [{ name: 'clk', wave: 'p...' }, ['bus', { name: 'd', wave: 'x=.=x', data: 'a b' }], {}] }",
+      ),
+    ).toEqual([]);
+    expect(
+      await check(
+        "{ signal: [{ name: 'clk', wave: 'p.k.' }, { name: 'd', wave: 'x=x', data: ['a', 'b'] }] }",
+      ),
+    ).toEqual([
       "signal[0].wave “p.k.”: k isn't a wave character (p n P N h l H L 0 1 = 2-9 x z u d . |).",
       "signal[1] has 2 data labels for 1 value bricks (= or 2-9) in its wave.",
     ]);
@@ -55,9 +87,17 @@ describe("chart checks", () => {
 
   it("markmap: headings or list items to branch from", async () => {
     const check = checker("markmap");
-    expect(await check("---\nmarkmap:\n  colorFreezeLevel: 2\n---\n# Root\n## Branch\n- leaf")).toEqual([]);
-    expect(await check("Just a paragraph.")).toEqual(["No headings (#, ##) or list items: they are the mind map's branches."]);
-    expect(await check("# Root\n```js\nx")).toEqual(["A code fence is never closed: everything after it is one node."]);
+    expect(
+      await check(
+        "---\nmarkmap:\n  colorFreezeLevel: 2\n---\n# Root\n## Branch\n- leaf",
+      ),
+    ).toEqual([]);
+    expect(await check("Just a paragraph.")).toEqual([
+      "No headings (#, ##) or list items: they are the mind map's branches.",
+    ]);
+    expect(await check("# Root\n```js\nx")).toEqual([
+      "A code fence is never closed: everything after it is one node.",
+    ]);
   });
 
   it("function-plot: lines the parser reads, with something to draw", async () => {
@@ -72,7 +112,11 @@ describe("chart checks", () => {
 
   it("abc: a header ending in K:, and notes", async () => {
     const check = checker("abc");
-    expect(await check('X:1\nT:Scale\nM:6/8\nL:1/8\nK:Dm\n|:"Dm"DEF [DFA]2 !trill!G | (3ABc d2>e :|]\nw: la la la')).toEqual([]);
+    expect(
+      await check(
+        'X:1\nT:Scale\nM:6/8\nL:1/8\nK:Dm\n|:"Dm"DEF [DFA]2 !trill!G | (3ABc d2>e :|]\nw: la la la',
+      ),
+    ).toEqual([]);
     expect(await check("X:1\nT:No key\nabc")).toEqual([
       "No K: line: the header ends with the key, as K:C or K:Am, before the music.",
     ]);
@@ -86,7 +130,9 @@ describe("chart checks", () => {
 
   it("timeline: when | what | more on each line", async () => {
     const check = checker("timeline");
-    expect(await check("2024 | Founded | in a garage\n2025 | First release")).toEqual([]);
+    expect(
+      await check("2024 | Founded | in a garage\n2025 | First release"),
+    ).toEqual([]);
     expect(await check("2024 Founded\n| Lost\n2026 |\n1 | 2 | 3 | 4")).toEqual([
       "Line 1 (“2024 Founded”) has no |: write when | what | more.",
       "Line 2 (“| Lost”) has nothing before its first |, so it isn't drawn.",

@@ -8,7 +8,10 @@ describe("the bundled Marp", () => {
   it("renders a deck, slide by slide, with no page around it", () => {
     const sandbox: Record<string, unknown> = {};
     sandbox.globalThis = sandbox;
-    runInNewContext(readFileSync(new URL("../vendor/marp-core.js", import.meta.url), "utf8"), sandbox);
+    runInNewContext(
+      readFileSync(new URL("../vendor/marp-core.js", import.meta.url), "utf8"),
+      sandbox,
+    );
     const { html, css } = runInNewContext(
       `new Marp({ html: false, math: "katex", script: false }).render("# One\\n\\n---\\n\\n## Two $x^2$")`,
       sandbox,

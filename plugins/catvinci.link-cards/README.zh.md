@@ -15,6 +15,7 @@ image: https://textus.md/og.png
 ````
 
 - 卡片下方的**重新获取**会拿到网页最新的标题和图片。
+- Obsidian 里的卡片也能显示：Auto Card Link 的 `cardlink` 块和 Link Embed 的 `embed` 块都画成卡片，块里的内容保持原样。
 
 为了读取网页，插件需要访问任意网址的权限；它只会访问你做成卡片的那些链接。
 

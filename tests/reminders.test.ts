@@ -33,10 +33,9 @@ describe("reminders", () => {
       { when: "2026-11-02T14:30" },
     ];
     const now = new Date("2026-10-30T12:00:00");
-    expect(r.upcoming(list, now, 5).map((x: { when: string }) => x.when)).toEqual([
-      "2026-11-02T14:30",
-      "2026-11-03T09:00",
-    ]);
+    expect(
+      r.upcoming(list, now, 5).map((x: { when: string }) => x.when),
+    ).toEqual(["2026-11-02T14:30", "2026-11-03T09:00"]);
     expect(r.upcoming(list, now, 1)).toHaveLength(1);
   });
 

@@ -16,10 +16,16 @@ function fakeTextus(text: string) {
   const textus = {
     l10n: {
       t: (key: string, ...args: unknown[]) =>
-        (manifest.l10n.en[key] as string).replace(/\{(\d+)\}/g, (_: string, n: string) => String(args[+n])),
+        (manifest.l10n.en[key] as string).replace(
+          /\{(\d+)\}/g,
+          (_: string, n: string) => String(args[+n]),
+        ),
     },
     commands: {
-      register: (id: string, run: unknown) => ((registered[id] = run), disposable),
+      register: (id: string, run: unknown) => (
+        (registered[id] = run),
+        disposable
+      ),
     },
     views: {
       registerList: (id: string, provider: unknown) => {
@@ -55,20 +61,28 @@ describe("the plugin template", () => {
     plugin.activate(ctx);
     expect(Object.keys(registered).sort()).toEqual(
       [
-        ...manifest.contributes.commands.map((c: { command: string }) => c.command),
+        ...manifest.contributes.commands.map(
+          (c: { command: string }) => c.command,
+        ),
         ...manifest.contributes.sidebarTabs.map((s: { id: string }) => s.id),
       ].sort(),
     );
     await (registered["your-name.hello.count"] as () => Promise<void>)();
     expect(textus.ui.message).toHaveBeenCalledWith("4 words");
-    const items = await (registered["your-name.hello.headings"] as { items: () => Promise<{ label: string; location: unknown }[]> }).items();
+    const items = await (
+      registered["your-name.hello.headings"] as {
+        items: () => Promise<{ label: string; location: unknown }[]>;
+      }
+    ).items();
     expect(items.map((i) => i.label)).toEqual(["Title", "  Part"]);
     expect(items[1].location).toEqual({ path: "/notes/a.md", line: 4 });
   });
 
   it("is English and Chinese, and asks only to read the editor", () => {
     expect(Object.keys(manifest.l10n).sort()).toEqual(["en", "zh"]);
-    expect(Object.keys(manifest.l10n.zh).sort()).toEqual(Object.keys(manifest.l10n.en).sort());
+    expect(Object.keys(manifest.l10n.zh).sort()).toEqual(
+      Object.keys(manifest.l10n.en).sort(),
+    );
     expect(manifest.permissions).toEqual(["editor.read"]);
   });
 });

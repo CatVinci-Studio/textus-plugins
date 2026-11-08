@@ -7,14 +7,21 @@
 (function () {
   "use strict";
   const api = acquireTextusApi();
-  const VIEWS = ["table", "board", "calendar", "gallery"];
-  const VIEW_ICONS = { table: "table", board: "board", calendar: "calendar", gallery: "gallery" };
+  const VIEWS = ["table", "board", "calendar", "gallery", "list"];
+  const VIEW_ICONS = { table: "table", board: "board", calendar: "calendar", gallery: "gallery", list: "list" };
+  /** Rows shown before "Show more", when the view sets no limit of its own. */
+  const PAGE = 25;
   const TYPES = ["text", "number", "select", "tags", "date", "checkbox", "url"];
   const TYPE_ICONS = { text: "text", number: "number", select: "select", tags: "multi", date: "date", checkbox: "checkbox", url: "url" };
   // The order tones are given in (design standard 3.4).
   const TONES = ["blue", "green", "orange", "purple", "red", "teal", "yellow", "pink", "gray"];
   let data = null;
   let month = null;
+  // Each reader's own: the view in front and whether the base is folded.
+  const state = Object.assign({ index: 0, folded: false }, api.getState() || {});
+  const keep = () => api.setState(state);
+  /** How many rows "Show more" has let through, past the first page. */
+  let more = 0;
   /** A field being typed in: the view waits for it before drawing again. */
   let editing = false;
   let stale = false;
@@ -34,7 +41,9 @@
   const s = (key) => (data && data.strings && data.strings[key]) || key;
   const icon = (name) => el("span", { class: "tx-icon", "data-icon": name });
   const typeOf = (key) => (key === "name" ? "text" : data.types[key] || "text");
-  const label = (key) => (key === "name" ? s("page") : key);
+  const label = (key) => (key === "name" ? s("page") : key.replace(/^formula\./, "ƒ "));
+  /** A formula's column: worked out by the base, not typed in. */
+  const isFormula = (key) => key.startsWith("formula.");
   const allKeys = () => ["name"].concat(data.keys);
   /** What the block says, changed: filters, sorts, columns or types. */
   const setSpec = (change) => post({ type: "spec", spec: change });
@@ -96,8 +105,32 @@
     } else if ((type === "select" || type === "tags") && (data.options[key] || []).length) {
       value = await api.menu(data.options[key].map((o) => ({ label: o })), at);
       if (value === null) return;
-    }
+    } else return valueField(key, op, replace);
     post({ type: "addFilter", key, op, value, replace });
+  }
+
+  /** The filter's value typed in place, in the rules row: Enter keeps it. */
+  function valueField(key, op, replace) {
+    const type = typeOf(key);
+    const holder = el("span", { class: "tx-chip editing" }, label(key) + " " + s(OP_NAMES[op] || "is").toLowerCase() + " ");
+    $("rules").append(holder);
+    const input = el("input", { type: type === "date" ? "date" : type === "number" ? "number" : "text", class: "cell-input", "aria-label": s("value") });
+    holder.append(input);
+    editing = true;
+    let done = false;
+    const finish = (ok) => {
+      if (done) return;
+      done = true;
+      editing = false;
+      if (ok && input.value.trim() !== "") post({ type: "addFilter", key, op, value: input.value.trim(), replace });
+      render();
+    };
+    input.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") finish(true);
+      if (e.key === "Escape") finish(false);
+    });
+    input.addEventListener("blur", () => finish(true));
+    input.focus();
   }
 
   async function filterMenu(at) {
@@ -128,7 +161,15 @@
   /** The rules in force, under the bar: a chip each, its menu to change it. */
   function rules() {
     const chips = data.spec.filters.map((f, i) =>
-      el("button", {
+      f.raw !== undefined ? el("button", {
+        type: "button",
+        class: "tx-chip raw",
+        title: String(f.raw),
+        onclick: async (e) => {
+          const choice = await api.menu([{ label: s("remove"), value: "remove", danger: true }], e.currentTarget);
+          if (choice === "remove") setSpec({ filters: data.spec.filters.filter((_, j) => j !== i) });
+        },
+      }, String(f.raw)) : el("button", {
         type: "button",
         class: "tx-chip",
         onclick: async (e) => {
@@ -181,7 +222,7 @@
     else if (choice === "rename") post({ type: "renameProp", from: key });
     else if (choice === "hide") setSpec({ columns: data.columns.filter((c) => c !== key) });
     else if (choice === "delete") post({ type: "deleteProp", key });
-    else if (String(choice).startsWith("type:")) setSpec({ types: { ...data.spec.types, [key]: String(choice).slice(5) } });
+    else if (String(choice).startsWith("type:")) setSpec({ types: { [key]: String(choice).slice(5) } });
   }
 
   /** The last column's +: a new property of a kind, or a hidden one back. */
@@ -207,9 +248,11 @@
       el("th", { tabindex: "0", onclick: (e) => columnMenu(e.currentTarget, key) }, icon(TYPE_ICONS[typeOf(key)]), label(key), sorted(key));
     const head = el("tr", null, th("name"), data.columns.map(th),
       el("th", { class: "plus", tabindex: "0", "aria-label": s("newProperty"), onclick: (e) => addColumnMenu(e.currentTarget) }, icon("plus")));
-    const rows = data.rows.map((row) => el("tr", null, titleCell(row), data.columns.map((key) => cell(row, key)), el("td", { class: "plus" })));
+    const rows = capped(data.rows).map((row) => el("tr", null, titleCell(row), data.columns.map((key) => cell(row, key)), el("td", { class: "plus" })));
     const add = el("tr", { class: "new-row" }, el("td", { colspan: String(data.columns.length + 2) }, newButton({})));
-    return el("div", { class: "tx-table-frame" }, el("table", { class: "tx-table" }, el("thead", null, head), el("tbody", null, rows, add)));
+    return el("div", null,
+      el("div", { class: "tx-table-frame" }, el("table", { class: "tx-table" }, el("thead", null, head), el("tbody", null, rows, add))),
+      moreButton(data.rows.length));
   }
 
   /** A page's title: click to rename it, the arrow beside it to open it. */
@@ -251,6 +294,7 @@
     const value = row.props[key];
     const td = el("td", { class: "cell cell-" + type, "data-key": key, tabindex: "0" }, shown(value, type, key));
     const set = (next) => post({ type: "set", rel: row.rel, key, value: next });
+    if (isFormula(key)) return td;
     if (type === "checkbox") td.addEventListener("click", () => set(value !== true));
     else if (type === "select" || type === "tags") td.addEventListener("click", () => optionsMenu(td, row, key));
     else
@@ -299,11 +343,18 @@
     if (!key) return el("div", { class: "tx-empty" }, s("noGroup"));
     const byRel = new Map(data.rows.map((r) => [r.rel, r]));
     const lanes = data.groups.map((g) => {
+      const head = el("div", { class: "lane-head", draggable: "true", title: s("dragLane") },
+        g.value ? tag(g.value, key, isStatus(key)) : el("span", { class: "tx-tag" }, s("noValue")),
+        el("span", { class: "count" }, String(g.rels.length)));
+      // A list's head dragged onto another list: the board's order, kept in the base.
+      head.addEventListener("dragstart", (e) => {
+        e.stopPropagation();
+        e.dataTransfer.setData("text/plain", JSON.stringify({ lane: g.value }));
+      });
       const lane = el("div", { class: "lane", "data-value": g.value },
-        el("div", { class: "lane-head" },
-          g.value ? tag(g.value, key, isStatus(key)) : el("span", { class: "tx-tag" }, s("noValue")),
-          el("span", { class: "count" }, String(g.rels.length))),
-        g.rels.map((rel) => card(byRel.get(rel), key, g.value)),
+        head,
+        capped(g.rels).map((rel) => card(byRel.get(rel), key, g.value)),
+        moreButton(g.rels.length),
         newButton(groupProps(key, g.value)));
       lane.addEventListener("dragover", (e) => {
         e.preventDefault();
@@ -314,7 +365,11 @@
         e.preventDefault();
         lane.classList.remove("drop");
         const moved = JSON.parse(e.dataTransfer.getData("text/plain") || "{}");
-        if (moved.rel && moved.from !== g.value) post({ type: "move", rel: moved.rel, key, from: moved.from, to: g.value });
+        if (moved.lane !== undefined) {
+          const order = data.groups.map((x) => x.value).filter((v) => v !== moved.lane);
+          order.splice(order.indexOf(g.value), 0, moved.lane);
+          if (order.join("\n") !== data.groups.map((x) => x.value).join("\n")) setSpec({ groupOrder: order });
+        } else if (moved.rel && moved.from !== g.value) post({ type: "move", rel: moved.rel, key, from: moved.from, to: g.value });
       });
       return lane;
     });
@@ -405,15 +460,72 @@
 
   // -------------------------------------------------------------- gallery
   function gallery() {
-    return el("div", { class: "gallery" },
-      data.rows.map((row) => {
+    return el("div", null, el("div", { class: "gallery" },
+      capped(data.rows).map((row) => {
         const cover = typeof row.props.cover === "string" && /^https?:\/\//.test(row.props.cover) ? row.props.cover : null;
         const glyph = typeof row.props.icon === "string" ? row.props.icon : null;
         return el("div", { class: "tx-card tile" },
           (cover || glyph) && el("div", { class: "cover", style: cover ? "background-image:url(" + JSON.stringify(cover) + ")" : null }, cover ? "" : glyph),
           el("div", { class: "text" }, pageLink(row),
             data.columns.filter((c) => c !== "cover" && row.props[c] !== undefined).slice(0, 3).map((c) => el("div", { class: "prop" }, shown(row.props[c], data.types[c], c)))));
-      }));
+      })), moreButton(data.rows.length));
+  }
+
+  // ----------------------------------------------------------------- list
+  function list() {
+    return el("div", null, el("ul", { class: "rows-list" },
+      capped(data.rows).map((row) => el("li", null, pageLink(row),
+        data.columns.filter((c) => row.props[c] !== undefined && row.props[c] !== "").slice(0, 3)
+          .map((c) => el("span", { class: "prop" }, shown(row.props[c], data.types[c], c)))))),
+      moreButton(data.rows.length));
+  }
+
+  // ------------------------------------------------------ how many shown
+  const cap = () => (data.spec.limit || PAGE) + more;
+  const capped = (list) => list.slice(0, cap());
+  /** "Show more" under a list cut at the view's limit. */
+  function moreButton(total) {
+    if (total <= cap()) return null;
+    return el("button", { type: "button", class: "tx-button small more", onclick: () => { more += PAGE; render(); } },
+      s("showMore").replace("{0}", String(total - cap())));
+  }
+
+  // ---------------------------------------------------------------- views
+  /** The base's views, one tab each; the one in front has its menu. */
+  function viewTabs() {
+    const tabs = data.views.map((v) =>
+      el("button", {
+        type: "button",
+        class: "tx-segment",
+        role: "tab",
+        "aria-selected": String(v.index === data.index),
+        onclick: (e) => (v.index === data.index ? viewMenu(e.currentTarget, v) : choose(v.index)),
+      }, icon(VIEW_ICONS[v.view] || "table"), v.name || s(v.view)));
+    const add = el("button", { type: "button", class: "tx-icon-button", "aria-label": s("addView"), onclick: (e) => addViewMenu(e.currentTarget) }, icon("plus"));
+    return tabs.concat([add]);
+  }
+  function choose(index) {
+    state.index = index;
+    more = 0;
+    month = null;
+    keep();
+    post({ type: "select", index });
+  }
+  async function viewMenu(at, v) {
+    const items = [
+      { label: s("type"), items: VIEWS.map((k) => ({ label: s(k), value: "as:" + k, checked: v.view === k })) },
+      { label: s("renameView") + "…", value: "rename" },
+    ];
+    if (data.views.length > 1) items.push("separator", { label: s("deleteView"), value: "delete", danger: true });
+    const choice = await api.menu(items, at);
+    if (choice === null) return;
+    if (choice === "rename") post({ type: "renameView", name: v.name });
+    else if (choice === "delete") post({ type: "deleteView" });
+    else if (String(choice).startsWith("as:")) post({ type: "view", view: String(choice).slice(3) });
+  }
+  async function addViewMenu(at) {
+    const choice = await api.menu(VIEWS.map((k) => ({ label: s(k), value: k })), at);
+    if (choice !== null) post({ type: "addView", view: choice });
   }
 
   // ---------------------------------------------------------------- frame
@@ -421,19 +533,25 @@
     stale = false;
     const body = $("body");
     if (!data) return;
-    if (data.error) return body.replaceChildren(el("div", { class: "tx-empty problem" }, data.error));
+    if (data.error) return body.replaceChildren(el("div", { class: "tx-empty problem" }, data.error, data.detail ? el("div", { class: "detail" }, data.detail) : null));
     if (data.missing) return body.replaceChildren(el("div", { class: "tx-empty" }, s("missing")));
     const view = data.spec.view;
-    $("views").replaceChildren(
-      ...VIEWS.map((v) =>
-        el("button", { type: "button", class: "tx-segment", role: "tab", "aria-selected": String(v === view), onclick: () => v !== view && post({ type: "view", view: v }) }, icon(VIEW_ICONS[v]), s(v))));
+    $("fold").setAttribute("aria-label", s(state.folded ? "unfold" : "fold"));
+    $("fold").setAttribute("aria-expanded", String(!state.folded));
+    document.body.classList.toggle("folded", state.folded);
+    $("views").replaceChildren(...viewTabs());
     $("filter").setAttribute("aria-label", s("filter"));
     $("sort").setAttribute("aria-label", s("sort"));
     $("count").textContent = s("count").replace("{0}", String(data.rows.length));
     $("add").replaceChildren(icon("plus"), s("add"));
     $("rules").replaceChildren(...rules());
+    const notes = [];
+    if (data.skipped && data.skipped.length) notes.push(el("div", { class: "tx-footnote skipped", title: data.skipped.join("\n") }, s("skipped").replace("{0}", String(data.skipped.length))));
+    if (data.spec.unknownView) notes.push(el("div", { class: "tx-footnote" }, s("unknownView").replace("{0}", data.spec.unknownView)));
+    $("notes").replaceChildren(...notes);
+    if (state.folded) return body.replaceChildren();
     if (!data.rows.length && view !== "calendar" && view !== "table") return body.replaceChildren(el("div", { class: "tx-empty" }, s("empty")));
-    body.replaceChildren(view === "board" ? board() : view === "calendar" ? calendar() : view === "gallery" ? gallery() : table());
+    body.replaceChildren(view === "board" ? board() : view === "calendar" ? calendar() : view === "gallery" ? gallery() : view === "list" ? list() : table());
   }
 
   $("add").addEventListener("click", () => {
@@ -443,13 +561,24 @@
     else post({ type: "add", folder: data.folder, props: {} });
   });
   $("filter").addEventListener("click", (e) => data && filterMenu(e.currentTarget));
+  $("fold").addEventListener("click", () => {
+    state.folded = !state.folded;
+    keep();
+    render();
+  });
   $("sort").addEventListener("click", (e) => data && sortMenu(e.currentTarget));
   api.onMessage((m) => {
+    if (m && m.type === "selected") {
+      state.index = m.index;
+      more = 0;
+      keep();
+      return;
+    }
     if (!m || m.type !== "data") return;
     if (data && data.spec && m.data.spec && data.spec.view !== m.data.spec.view) month = null;
     data = m.data;
     if (editing) stale = true;
     else render();
   });
-  post({ type: "ready" });
+  post({ type: "ready", index: state.index });
 })();

@@ -26,7 +26,9 @@ const endpoint = {
     },
   },
   theme: {},
-  skill: { tighten: { installs: 5, installs30: 5, updates30: 0, uninstalls: 0 } },
+  skill: {
+    tighten: { installs: 5, installs30: 5, updates30: 0, uninstalls: 0 },
+  },
 };
 
 describe("statsOf", () => {

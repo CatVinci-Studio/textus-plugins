@@ -1,17 +1,42 @@
-// Link Cards: what a ```card block holds, and what a web page says about
-// itself (its title, description and picture). Pure, for the host and the
-// tests.
+// Link Cards: what a ```card block holds - or a ```cardlink (Obsidian's
+// Auto Card Link) or ```embed (Link Embed) block - and what a web page
+// says about itself (its title, description and picture). Pure, for the
+// host and the tests.
 
 (function (root) {
   const FIELDS = ["url", "title", "description", "image", "site"];
+  // Read too: what Obsidian's card plugins write besides ours.
+  const READ = FIELDS.concat(["host", "favicon"]);
 
-  /** A block's `key: value` lines. */
+  /** A YAML scalar's text: its quotes taken off, '' and \" unescaped. */
+  function unquote(value) {
+    const v = value.trim();
+    if (v.length > 1 && v[0] === '"' && v[v.length - 1] === '"') {
+      try {
+        return JSON.parse(v);
+      } catch {
+        // Quotes inside, not around: as written.
+        return v;
+      }
+    }
+    if (v.length > 1 && v[0] === "'" && v[v.length - 1] === "'") return v.slice(1, -1).replace(/''/g, "'");
+    return v;
+  }
+
+  /** A block's `key: value` lines. Obsidian's `host` is the card's site
+   *  when it names none. */
   function parse(source) {
     const card = {};
     for (const line of String(source).split("\n")) {
       const m = /^(\w+)\s*:\s*(.*)$/.exec(line.trim());
-      if (m && FIELDS.includes(m[1].toLowerCase())) card[m[1].toLowerCase()] = m[2].trim();
+      const key = m && m[1].toLowerCase();
+      if (key && READ.includes(key)) {
+        const value = unquote(m[2]);
+        if (value) card[key] = value;
+      }
     }
+    if (card.host && !card.site) card.site = card.host;
+    delete card.host;
     return card;
   }
 

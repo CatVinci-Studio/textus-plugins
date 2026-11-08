@@ -45,9 +45,17 @@ body {
   overflow: hidden;
 }
 .site {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
   margin-top: 8px;
   color: var(--ui-muted);
   font-size: var(--text-caption);
+}
+.favicon {
+  width: 1.2em;
+  height: 1.2em;
+  border-radius: var(--shape-xs);
 }
 .picture {
   flex: none;

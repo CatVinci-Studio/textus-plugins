@@ -44,6 +44,9 @@ describe("connection and data boundaries", () => {
   it("allows only documented project data and supported workspace documents", () => {
     for (const path of [
       "a.md",
+      // Obsidian's databases and canvases.
+      "Books.base",
+      "Map.canvas",
       "图片/图.png",
       "manual.pdf",
       ".textus/agent.md",

@@ -137,7 +137,7 @@ function identity(c) {
     c.prefix
   ]);
 }
-var documents = /\.(md|markdown|mdown|mkd|txt|csv)$/i;
+var documents = /\.(md|markdown|mdown|mkd|txt|csv|base|canvas)$/i;
 var attachments = /\.(png|jpe?g|gif|webp|svg|avif|bmp|ico|heic|pdf|docx?|xlsx?|pptx?|odt|ods|odp|mp3|wav|m4a|ogg|mp4|mov|webm)$/i;
 var ignored = /* @__PURE__ */ new Set(["node_modules", "dist", "build", "target", "vendor"]);
 var isText = (path) => documents.test(path) || /\.svg$/i.test(path);

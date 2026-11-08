@@ -4,7 +4,8 @@
 // before the first list (a paragraph) is kept as the board's preamble, and
 // what Obsidian's Kanban keeps after the lists - from a "***" rule or its
 // "%% kanban:settings" block on - as the postamble, both written back as
-// they were.
+// they were. A list Obsidian marks as its done list ("**Complete**" under
+// its heading, in any language) keeps the mark.
 (function (root) {
   "use strict";
   const ITEM = /^[-*+]\s+(?:\[( |x|X)\]\s+)?(.*)$/;
@@ -36,6 +37,11 @@
       }
       if (!list) {
         preamble.push(line);
+        continue;
+      }
+      // Obsidian's mark of a done list, first under the heading: not a card.
+      if (!list.cards.length && !list.complete && /^\*\*[^*]+\*\*$/.test(line.trim())) {
+        list.complete = line.trim();
         continue;
       }
       if (line.trim() === "***" || /^%%\s*kanban:settings/.test(line)) {
@@ -79,9 +85,8 @@
           rest.map((l) => "\n    " + l).join("")
         );
       });
-      parts.push(
-        "## " + list.title + (cards.length ? "\n\n" + cards.join("\n") : ""),
-      );
+      const head = "## " + list.title + (list.complete ? "\n\n" + list.complete : "");
+      parts.push(head + (cards.length ? "\n\n" + cards.join("\n") : ""));
     }
     if (board.postamble) parts.push(board.postamble);
     return parts.join("\n\n") + "\n";

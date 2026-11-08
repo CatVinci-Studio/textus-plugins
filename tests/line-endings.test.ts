@@ -15,10 +15,13 @@ function tasks(files: Record<string, string>) {
 it("Tasks ticks a task without touching other lines' endings", async () => {
   const files = { "Plan.md": mixed };
   const { tools, check } = tasks(files);
+  // The done date Obsidian Tasks writes, local.
+  const d = new Date();
+  const done = " ✅ " + [d.getFullYear(), d.getMonth() + 1, d.getDate()].map((n) => String(n).padStart(2, "0")).join("-");
   await tools.get("complete_task")!({ path: "Plan.md", line: 3 });
-  expect(files["Plan.md"]).toBe(mixed.replace("- [ ] One", "- [x] One"));
+  expect(files["Plan.md"]).toBe(mixed.replace("- [ ] One", "- [x] One" + done));
   await check({ path: "/root/Plan.md", line: 3, text: "Two" }, true);
-  expect(files["Plan.md"]).toBe(mixed.replace("- [ ] One", "- [x] One").replace("- [ ] Two", "- [x] Two"));
+  expect(files["Plan.md"]).toBe(mixed.replace("- [ ] One", "- [x] One" + done).replace("- [ ] Two", "- [x] Two" + done));
 });
 
 it("Tasks adds a task with its neighbours' ending, the rest byte for byte", async () => {

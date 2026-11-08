@@ -37,3 +37,13 @@ it("keeps Obsidian Kanban's archive and settings as written, not as cards", () =
   expect(board.lists[0].cards.map((c) => c.text)).toEqual(["Write"]);
   expect(md.serialize(board)).toBe(text);
 });
+
+it("keeps Obsidian's mark of a done list, not as a card", () => {
+  const text = "---\nkanban-plugin: board\n---\n\n## Doing\n\n- [ ] a\n\n## Done\n\n**Complete**\n- [x] b\n";
+  const board = md.parse(text);
+  expect(board.lists[1].cards.map((c: { text: string }) => c.text)).toEqual(["b"]);
+  expect(md.serialize(board)).toContain("## Done\n\n**Complete**\n\n- [x] b");
+  // A list headed by a bold card further down is just a card.
+  expect(md.parse("## A\n\n- [ ] x\n**not a mark**\n").lists[0].cards).toHaveLength(2);
+});
+

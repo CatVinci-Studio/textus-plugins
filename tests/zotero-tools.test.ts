@@ -16,7 +16,9 @@ const ITEM = {
 
 function setup(fetch: (url: string) => Promise<unknown>) {
   const settings = { get: async () => "pandoc" };
-  return loadPlugin("catvinci.zotero", { net: { fetch }, settings }).tools.get("search_library")!;
+  return loadPlugin("catvinci.zotero", { net: { fetch }, settings }).tools.get(
+    "search_library",
+  )!;
 }
 
 describe("zotero's tool", () => {

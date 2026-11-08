@@ -3,7 +3,10 @@ import { changes, report, review, verdict } from "../scripts/review-lib.mjs";
 
 const MIT = "MIT License\n\nCopyright (c) 2026 jane\n";
 
-function plugin(over: Record<string, unknown> = {}, files: Record<string, string> = {}) {
+function plugin(
+  over: Record<string, unknown> = {},
+  files: Record<string, string> = {},
+) {
   const manifest = {
     id: "jane.word-count",
     name: "Word Count",
@@ -25,7 +28,11 @@ function plugin(over: Record<string, unknown> = {}, files: Record<string, string
   };
   const pkg = new Map(Object.entries(all).map(([k, v]) => [k, Buffer.from(v)]));
   const source = new Map([...pkg, ["LICENSE", Buffer.from(MIT)]]);
-  return { entry: { id: "jane.word-count", version: manifest.version }, pkg, source };
+  return {
+    entry: { id: "jane.word-count", version: manifest.version },
+    pkg,
+    source,
+  };
 }
 
 const levels = (results: { level: string; check: string }[], check: string) =>
@@ -35,37 +42,51 @@ describe("review", () => {
   it("passes a plugin that is its tagged source and says what it needs", () => {
     const results = review(plugin());
     expect(verdict(results)).toBe("pass");
-    expect(report({ id: "jane.word-count", version: "0.2.0" }, results)).toContain(
-      "### ✅ jane.word-count 0.2.0",
-    );
+    expect(
+      report({ id: "jane.word-count", version: "0.2.0" }, results),
+    ).toContain("### ✅ jane.word-count 0.2.0");
   });
 
   it("fails a zip that isn't the repository at the tag", () => {
     const p = plugin();
-    p.pkg.set("host.js", Buffer.from("exports.activate = function () { steal(); };"));
+    p.pkg.set(
+      "host.js",
+      Buffer.from("exports.activate = function () { steal(); };"),
+    );
     const results = review(p);
     expect(levels(results, "source")).toEqual(["fail"]);
   });
 
   it("fails an id or version that doesn't match the listing, or a version not newer", () => {
-    expect(levels(review({ ...plugin(), entry: { id: "jane.other", version: "0.2.0" } }), "package")).toContain("fail");
-    const results = review({ ...plugin(), previous: { version: "0.2.0", permissions: [] } });
-    expect(results.find((r) => r.check === "package" && r.level === "fail")?.detail).toContain(
-      "isn't newer",
-    );
+    expect(
+      levels(
+        review({ ...plugin(), entry: { id: "jane.other", version: "0.2.0" } }),
+        "package",
+      ),
+    ).toContain("fail");
+    const results = review({
+      ...plugin(),
+      previous: { version: "0.2.0", permissions: [] },
+    });
+    expect(
+      results.find((r) => r.check === "package" && r.level === "fail")?.detail,
+    ).toContain("isn't newer");
   });
 
   it("fails programs, eval and code from the web", () => {
     const results = review(
-      plugin({}, {
-        "tool.dll": "MZ",
-        "lib/a.js": "eval(x)",
-        "view.html": '<script src="https://evil.example/x.js"></script>',
-      }),
+      plugin(
+        {},
+        {
+          "tool.dll": "MZ",
+          "lib/a.js": "eval(x)",
+          "view.html": '<script src="https://evil.example/x.js"></script>',
+        },
+      ),
     );
-    expect(results.filter((r) => r.level === "fail").map((r) => r.check)).toEqual(
-      expect.arrayContaining(["package", "code"]),
-    );
+    expect(
+      results.filter((r) => r.level === "fail").map((r) => r.check),
+    ).toEqual(expect.arrayContaining(["package", "code"]));
   });
 
   it("asks a person about new or broad permissions", () => {
@@ -79,17 +100,29 @@ describe("review", () => {
 
   it("wants where it runs said, and the background kept off iOS", () => {
     const fails = (over: object) =>
-      review(plugin(over)).filter((r) => r.check === "package" && r.level === "fail");
+      review(plugin(over)).filter(
+        (r) => r.check === "package" && r.level === "fail",
+      );
     expect(fails({ platforms: undefined })).toHaveLength(1);
     expect(fails({ platforms: ["android"] })).toHaveLength(1);
     expect(
-      fails({ requires: [{ setting: "runInBackground" }], platforms: ["desktop", "ios"] }),
+      fails({
+        requires: [{ setting: "runInBackground" }],
+        platforms: ["desktop", "ios"],
+      }),
     ).toHaveLength(1);
-    expect(fails({ requires: [{ setting: "runInBackground" }], platforms: ["desktop"] })).toHaveLength(0);
+    expect(
+      fails({
+        requires: [{ setting: "runInBackground" }],
+        platforms: ["desktop"],
+      }),
+    ).toHaveLength(0);
   });
 
   it("asks why a plugin runs code in the background", () => {
-    const results = review(plugin({ permissions: ["notifications", "background"] }));
+    const results = review(
+      plugin({ permissions: ["notifications", "background"] }),
+    );
     expect(levels(results, "permissions")).toEqual(["warn"]);
   });
 
@@ -109,13 +142,19 @@ describe("review", () => {
 describe("changes", () => {
   // The listed version asks for files.write and network:* and decodes
   // strings: all approved when it was listed.
-  const listedOver = { version: "0.1.0", permissions: ["files.read", "files.write", "network:*"] };
+  const listedOver = {
+    version: "0.1.0",
+    permissions: ["files.read", "files.write", "network:*"],
+  };
   const listedFiles = { "host.js": "exports.activate = () => atob(x);" };
   const listed = () => {
     const results = review(plugin(listedOver, listedFiles));
     return { permissions: listedOver.permissions, results };
   };
-  const next = (over: Record<string, unknown> = {}, files: Record<string, string> = {}) => {
+  const next = (
+    over: Record<string, unknown> = {},
+    files: Record<string, string> = {},
+  ) => {
     const manifest = { ...listedOver, version: "0.2.0", ...over };
     const results = review({
       ...plugin(manifest, { ...listedFiles, ...files }),
@@ -126,23 +165,36 @@ describe("changes", () => {
 
   it("lets through a version that only repeats what was approved", () => {
     const found = changes(listed(), next());
-    expect(found).toMatchObject({ failed: false, newPermissions: [], newWarnings: [] });
+    expect(found).toMatchObject({
+      failed: false,
+      newPermissions: [],
+      newWarnings: [],
+    });
     expect(found.automatic).toBe(true);
-    expect(changes(listed(), next({ permissions: ["network:*"] })).automatic).toBe(true);
+    expect(
+      changes(listed(), next({ permissions: ["network:*"] })).automatic,
+    ).toBe(true);
   });
 
   it("holds a version that asks for a new permission, even one not broad", () => {
     const found = changes(
       listed(),
-      next({ permissions: ["files.read", "files.write", "network:*", "editor.read"] }),
+      next({
+        permissions: ["files.read", "files.write", "network:*", "editor.read"],
+      }),
     );
     expect(found.newPermissions).toEqual(["editor.read"]);
     expect(found.automatic).toBe(false);
   });
 
   it("holds a version with a warning the listed one didn't have", () => {
-    const found = changes(listed(), next({}, { "panel.js": "document.cookie" }));
-    expect(found.newWarnings.map((r) => r.detail)).toEqual(["document.cookie in panel.js."]);
+    const found = changes(
+      listed(),
+      next({}, { "panel.js": "document.cookie" }),
+    );
+    expect(found.newWarnings.map((r) => r.detail)).toEqual([
+      "document.cookie in panel.js.",
+    ]);
     expect(found.automatic).toBe(false);
   });
 

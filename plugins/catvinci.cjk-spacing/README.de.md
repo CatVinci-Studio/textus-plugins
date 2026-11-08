@@ -5,6 +5,7 @@ Setzt ein Leerzeichen zwischen chinesischen oder japanischen Text und lateinisch
 - **Leerzeichen zwischen CJK und Latein einfügen** (Rechtsklick oder das Plugins-Menü): Aus 用Textus写作 wird 用 Textus 写作 – mit einem Schritt rückgängig.
 - Schalten Sie in den Einstellungen **Auch beim Speichern** ein, damit jedes Dokument beim Speichern angepasst wird.
 - Code, Formeln, Links, #Tags, Erinnerungen (@…), %%-Kommentare und HTML bleiben, wie sie sind – auch beim Speichern.
+- Ebenso, was Obsidian schreibt: Block-IDs (^1a2b3c), Dataview-Felder (key:: value), ==Hervorhebungen== und die Felder von Obsidian Tasks (📅 2026-11-07).
 
 <!-- ai-tools -->
 ## Werkzeuge für Textus AI
