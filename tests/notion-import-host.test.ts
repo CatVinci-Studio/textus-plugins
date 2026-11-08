@@ -149,7 +149,10 @@ function host(
         message: async (text: string) => void messages.push(text),
         notice: async (text: string) => void messages.push(text),
       },
-      layout: { open: async (path: string) => void opened.push(path) },
+      layout: {
+        open: async (path: string) => void opened.push(path),
+        showSidebarTab: async (id: string) => void opened.push("tab:" + id),
+      },
       plugins: { get: async (id: string) => ((options.installed ?? []).includes(id) ? {} : null) },
     },
     memoryStorage(),
@@ -180,6 +183,15 @@ describe("the import command", () => {
     expect(report).toContain("- **plugin.catvinci.database**: why.catvinci.database\n- **plugin.catvinci.backlinks**: why.catvinci.backlinks");
     expect(report).not.toContain("plugin.catvinci.pages");
     expect(messages).toEqual(["done|13|2|" + target]);
+  });
+
+  it("shows the import in Workspace's pages tree when Workspace is on", async () => {
+    const folder = disk({ "Inbox/Export-x.zip": await fixtureZip() });
+    const { messages, opened, run } = host(folder, { installed: ["catvinci.database"] });
+    await run();
+    const [target] = targets(folder);
+    expect(opened).toEqual(["/root/" + target + "/reportName.md", "tab:catvinci.database.pages"]);
+    expect(messages).toEqual(["donePages|13|2|" + target]);
   });
 
   it("names the folder as the reader typed, and makes nothing when they cancel", async () => {

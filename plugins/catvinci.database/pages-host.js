@@ -43,7 +43,9 @@ function item(node) {
     actions: path
       ? [
           { label: t("newSubpage"), command: "catvinci.database.newSubpage", args: [path] },
+          { label: t("renamePage"), command: "catvinci.database.renamePage", args: [path] },
           { label: t("setIcon"), command: "catvinci.database.setIcon", args: [path] },
+          { label: t("deletePage"), command: "catvinci.database.deletePage", args: [path] },
         ]
       : [],
   };
@@ -120,6 +122,84 @@ async function toUnits() {
   await textus.ui.notice(t("toUnitsDone", moves.length));
 }
 
+/** What a page is on disk: its unit's folder (Plans/ for Plans/Plans.md), else its file. */
+const holderOf = (rel) => (pages.isUnit(rel) ? rel.slice(0, rel.lastIndexOf("/")) : rel);
+
+/** A page renamed: its file, its unit's folder with it, and links to it. */
+async function renamePage(path) {
+  root = await textus.files.root();
+  const rel = relOf(typeof path === "string" ? path : await textus.editor.getPath());
+  if (!rel) return;
+  const name = pages.nameOf(rel);
+  const title = ((await textus.ui.input({ prompt: t("renamePage"), value: name })) || "").trim();
+  const next = pages.fileName(title);
+  if (!next || next === name) return;
+  const dir = rel.includes("/") ? rel.slice(0, rel.lastIndexOf("/")) : "";
+  if (pages.isUnit(rel)) {
+    const up = dir.includes("/") ? dir.slice(0, dir.lastIndexOf("/") + 1) : "";
+    if (await textus.files.stat(join(root, up + next))) return textus.ui.message(t("exists", title));
+    // The folder first; its page follows it (onDidRename below).
+    await textus.files.rename(join(root, dir), join(root, up + next), { updateLinks: true });
+  } else {
+    const to = (dir ? dir + "/" : "") + next + ".md";
+    if (await textus.files.stat(join(root, to))) return textus.ui.message(t("exists", title));
+    await textus.files.rename(join(root, rel), join(root, to), { updateLinks: true });
+    // Its sub-pages beside it in the older layout keep with it.
+    const old = (dir ? dir + "/" : "") + name;
+    if (await textus.files.stat(join(root, old))) await textus.files.rename(join(root, old), join(root, (dir ? dir + "/" : "") + next), { updateLinks: true });
+  }
+}
+
+/** A page to the Trash, its sub-pages with it, once confirmed. */
+async function deletePage(path) {
+  root = await textus.files.root();
+  const rel = relOf(typeof path === "string" ? path : await textus.editor.getPath());
+  if (!rel) return;
+  const holder = holderOf(rel);
+  const under = docs.filter((d) => d.rel !== rel && (d.rel.startsWith(holder + "/") || d.rel.startsWith(rel.replace(/\.md$/i, "") + "/"))).length;
+  const ok = await textus.ui.confirm(t(under ? "deleteAskMany" : "deleteAsk", pages.nameOf(rel), under), { okLabel: t("deletePage"), danger: true });
+  if (!ok) return;
+  await textus.files.trash(join(root, holder));
+  const beside = rel.replace(/\.md$/i, "");
+  if (!pages.isUnit(rel) && (await textus.files.stat(join(root, beside)))) await textus.files.trash(join(root, beside));
+}
+
+/** A page dragged onto another: it goes in that page's unit, links following. */
+async function movePage(item, target) {
+  root = await textus.files.root();
+  const from = item && item.data && item.data.rel;
+  const onto = target && target.data && (target.data.rel || null);
+  const ontoDir = target && target.data && !target.data.rel ? target.data.dir : null;
+  if (!from) return;
+  let dir = ontoDir;
+  if (onto) {
+    if (onto === from) return;
+    // The page it lands on takes it as a sub-page: a unit first, if it isn't one.
+    const unit = await unitFor(onto);
+    dir = pages.isUnit(unit) ? unit.slice(0, unit.lastIndexOf("/")) : unit.replace(/\.md$/i, "");
+  }
+  if (dir === null || dir === undefined) return;
+  const holder = holderOf(from);
+  // Not into itself or a page under it.
+  if (dir === holder || dir.startsWith(holder + "/")) return;
+  const to = (dir ? dir + "/" : "") + holder.slice(holder.lastIndexOf("/") + 1);
+  if (await textus.files.stat(join(root, to))) return textus.ui.message(t("exists", pages.nameOf(from)));
+  await textus.files.rename(join(root, holder), join(root, to), { updateLinks: true });
+}
+
+/** A unit's folder renamed anywhere (the file tree too): its page takes the
+ *  new name, so Plans/Plans.md stays a unit as Goals/Goals.md. */
+async function followUnit(change) {
+  root = await textus.files.root();
+  const from = relOf(change.from);
+  const to = relOf(change.to);
+  if (!from || !to || /\.md$/i.test(to)) return;
+  const oldPage = to + "/" + pages.nameOf(from + ".md") + ".md";
+  const newPage = to + "/" + pages.nameOf(to + ".md") + ".md";
+  if (oldPage === newPage || !(await textus.files.stat(join(root, oldPage))) || (await textus.files.stat(join(root, newPage)))) return;
+  await textus.files.rename(join(root, oldPage), join(root, newPage), { updateLinks: true });
+}
+
 async function setIcon(path) {
   const file = typeof path === "string" ? path : await textus.editor.getPath();
   if (!file) return textus.ui.message(t("needsSaved"));
@@ -184,6 +264,7 @@ return function activatePages(ctx) {
   };
   list = textus.views.registerList("catvinci.database.pages", {
     items: (parent) => (parent ? parent.data.children : roots).map(item),
+    onMove: (moved, target) => movePage(moved, target),
     emptyText: t("empty"),
     filterPlaceholder: t("filter"),
   });
@@ -193,6 +274,9 @@ return function activatePages(ctx) {
     textus.commands.register("catvinci.database.setIcon", setIcon),
     textus.commands.register("catvinci.database.up", up),
     textus.commands.register("catvinci.database.toUnits", toUnits),
+    textus.commands.register("catvinci.database.renamePage", renamePage),
+    textus.commands.register("catvinci.database.deletePage", deletePage),
+    textus.files.onDidRename((change) => void followUnit(change)),
     textus.ai.registerTool("create_page", createPage),
     textus.files.onDidChangeRoot(later),
     textus.metadata.onDidChange(later),

@@ -52,6 +52,14 @@
       {
         "command": "catvinci.database.toUnits",
         "title": "%pages.toUnits%"
+      },
+      {
+        "command": "catvinci.database.renamePage",
+        "title": "%pages.renamePage%"
+      },
+      {
+        "command": "catvinci.database.deletePage",
+        "title": "%pages.deletePage%"
       }
     ],
     "menus": {
@@ -358,7 +366,11 @@
       "notBase": "This base can't be read.",
       "unknownView": "The “{0}” view isn't drawn here; shown as a table.",
       "dragLane": "Drag to reorder",
-      "baseFile": "Base"
+      "baseFile": "Base",
+      "pages.renamePage": "Rename page…",
+      "pages.deletePage": "Delete page",
+      "pages.deleteAsk": "Move “{0}” to the Trash?",
+      "pages.deleteAskMany": "Move “{0}” and the {1} pages under it to the Trash?"
     },
     "zh": {
       "name": "知识库",
@@ -457,7 +469,11 @@
       "tool.add_row": "在数据库中添加一行：在其文件夹里新建一篇以该行命名的文档，各项属性写在开头属性中。展示该文件夹的每个块都会显示它。 只用于数据库文件夹（create_database、query_rows）；普通待办用 add_task。",
       "pages.tool.create_page": "新建一个页面：在打开的文件夹顶层新建以该标题命名的文档，或在父页面旁的同名文件夹中新建子页面；可设图标。返回它的路径，以及要放进父页面的 [[链接]]。",
       "toolDescription": "以 Obsidian 的 Bases 格式建一个数据库：一个文件夹，里面每篇笔记的开头属性就是它的各项属性；文件夹里再放一个页面，用 ```base 块把它们显示成表格、看板、日历、画廊或列表。返回这个页面的链接，放在用户想要的位置。",
-      "tool.query_rows": "读取一个数据库的行：它的 base 选中的笔记（默认是它文件夹里的笔记），每行带名字、路径和属性，可筛选和排序。"
+      "tool.query_rows": "读取一个数据库的行：它的 base 选中的笔记（默认是它文件夹里的笔记），每行带名字、路径和属性，可筛选和排序。",
+      "pages.renamePage": "重命名页面…",
+      "pages.deletePage": "删除页面",
+      "pages.deleteAsk": "把「{0}」移到废纸篓？",
+      "pages.deleteAskMany": "把「{0}」和它下面的 {1} 个页面移到废纸篓？"
     },
     "zh-Hant": {
       "name": "知識庫",
@@ -556,7 +572,11 @@
       "tool.add_row": "在資料庫中新增一列：在其資料夾裡新建一份以該列命名的文件，各項屬性寫在開頭屬性中。展示該資料夾的每個區塊都會顯示它。 只用於資料庫資料夾（create_database、query_rows）；一般待辦用 add_task。",
       "pages.tool.create_page": "新建一個頁面：在開啟的資料夾頂層新建以該標題命名的文件，或在父頁面旁的同名資料夾中新建子頁面；可設圖示。回傳它的路徑，以及要放進父頁面的 [[連結]]。",
       "toolDescription": "以 Obsidian 的 Bases 格式建立一個資料庫：一個資料夾，裡面每篇筆記的開頭屬性就是它的各項屬性；資料夾裡再放一個頁面，用 ```base 區塊把它們顯示成表格、看板、日曆、畫廊或清單。回傳這個頁面的連結，放在使用者想要的位置。",
-      "tool.query_rows": "讀取一個資料庫的列：它的 base 選中的筆記（預設是它資料夾裡的筆記），每列附名稱、路徑和屬性，可篩選和排序。"
+      "tool.query_rows": "讀取一個資料庫的列：它的 base 選中的筆記（預設是它資料夾裡的筆記），每列附名稱、路徑和屬性，可篩選和排序。",
+      "pages.renamePage": "重新命名頁面…",
+      "pages.deletePage": "刪除頁面",
+      "pages.deleteAsk": "把「{0}」移到垃圾桶？",
+      "pages.deleteAskMany": "把「{0}」和它底下的 {1} 個頁面移到垃圾桶？"
     },
     "ja": {
       "name": "ワークスペース",
@@ -655,7 +675,11 @@
       "tool.add_row": "データベースに行を追加します。そのフォルダに行の名前の文書を作り、プロパティをフロントマターに書きます。そのフォルダを表示するすべてのブロックに現れます。 データベースのフォルダ（create_database、query_rows）専用です。普通の ToDo は add_task です。",
       "pages.tool.create_page": "ページを作ります。開いているフォルダの最上位にそのタイトルの文書を作るか、親ページの隣のフォルダにサブページを作り、アイコンがあれば付けます。パスと、親ページに置く [[リンク]] を返します。",
       "toolDescription": "Makes a database in Obsidian's Bases format: a folder of notes whose front matter holds each one's properties, and a page in it with a ```base block showing them as a table, board, calendar, gallery or list. Returns a link to that page to put where the user wants it.",
-      "tool.query_rows": "Reads a database's rows - the notes its base chooses, by default those in its folder - each with its name, path and properties, filtered and sorted."
+      "tool.query_rows": "Reads a database's rows - the notes its base chooses, by default those in its folder - each with its name, path and properties, filtered and sorted.",
+      "pages.renamePage": "ページ名を変更…",
+      "pages.deletePage": "ページを削除",
+      "pages.deleteAsk": "「{0}」をゴミ箱に入れますか？",
+      "pages.deleteAskMany": "「{0}」とその下の {1} ページをゴミ箱に入れますか？"
     },
     "ko": {
       "name": "워크스페이스",
@@ -754,7 +778,11 @@
       "tool.add_row": "데이터베이스에 행을 추가합니다. 그 폴더에 행 이름의 문서를 만들고 속성을 프런트 매터에 적습니다. 그 폴더를 보여 주는 모든 블록에 나타납니다. 데이터베이스 폴더(create_database, query_rows) 전용입니다. 일반 할 일은 add_task입니다.",
       "pages.tool.create_page": "페이지를 만듭니다. 열린 폴더 맨 위에 그 제목의 문서를 만들거나, 부모 페이지 옆 폴더에 하위 페이지를 만들고, 아이콘이 있으면 붙입니다. 경로와 부모 페이지에 넣을 [[링크]]를 돌려줍니다.",
       "toolDescription": "Makes a database in Obsidian's Bases format: a folder of notes whose front matter holds each one's properties, and a page in it with a ```base block showing them as a table, board, calendar, gallery or list. Returns a link to that page to put where the user wants it.",
-      "tool.query_rows": "Reads a database's rows - the notes its base chooses, by default those in its folder - each with its name, path and properties, filtered and sorted."
+      "tool.query_rows": "Reads a database's rows - the notes its base chooses, by default those in its folder - each with its name, path and properties, filtered and sorted.",
+      "pages.renamePage": "페이지 이름 바꾸기…",
+      "pages.deletePage": "페이지 삭제",
+      "pages.deleteAsk": "“{0}”을(를) 휴지통으로 옮길까요?",
+      "pages.deleteAskMany": "“{0}”과(와) 그 아래 페이지 {1}개를 휴지통으로 옮길까요?"
     },
     "de": {
       "name": "Arbeitsbereich",
@@ -853,7 +881,11 @@
       "tool.add_row": "Fügt einer Datenbank eine Zeile hinzu: ein Dokument in ihrem Ordner, nach der Zeile benannt, mit ihren Eigenschaften im Front Matter. Jeder Block, der den Ordner zeigt, zeigt sie. Nur für den Ordner einer Datenbank (create_database, query_rows); eine einfache Aufgabe ist add_task.",
       "pages.tool.create_page": "Legt eine Seite an: ein Dokument mit dem Titel oben im geöffneten Ordner oder eine Unterseite im Ordner neben ihrer übergeordneten Seite, mit Symbol, falls angegeben. Gibt ihren Pfad und den [[Link]] für die übergeordnete Seite zurück.",
       "toolDescription": "Makes a database in Obsidian's Bases format: a folder of notes whose front matter holds each one's properties, and a page in it with a ```base block showing them as a table, board, calendar, gallery or list. Returns a link to that page to put where the user wants it.",
-      "tool.query_rows": "Reads a database's rows - the notes its base chooses, by default those in its folder - each with its name, path and properties, filtered and sorted."
+      "tool.query_rows": "Reads a database's rows - the notes its base chooses, by default those in its folder - each with its name, path and properties, filtered and sorted.",
+      "pages.renamePage": "Seite umbenennen…",
+      "pages.deletePage": "Seite löschen",
+      "pages.deleteAsk": "„{0}“ in den Papierkorb legen?",
+      "pages.deleteAskMany": "„{0}“ und die {1} Seiten darunter in den Papierkorb legen?"
     },
     "es": {
       "name": "Espacio de trabajo",
@@ -952,7 +984,11 @@
       "tool.add_row": "Añade una fila a una base de datos: un documento en su carpeta, con el nombre de la fila y sus propiedades en el front matter. Todo bloque que muestre esa carpeta la muestra. Solo para la carpeta de una base de datos (create_database, query_rows); una tarea simple es add_task.",
       "pages.tool.create_page": "Crea una página: un documento con ese título en la raíz de la carpeta abierta, o una subpágina en la carpeta junto a su página madre, con icono si se da. Devuelve su ruta y el [[enlace]] para poner en la página madre.",
       "toolDescription": "Makes a database in Obsidian's Bases format: a folder of notes whose front matter holds each one's properties, and a page in it with a ```base block showing them as a table, board, calendar, gallery or list. Returns a link to that page to put where the user wants it.",
-      "tool.query_rows": "Reads a database's rows - the notes its base chooses, by default those in its folder - each with its name, path and properties, filtered and sorted."
+      "tool.query_rows": "Reads a database's rows - the notes its base chooses, by default those in its folder - each with its name, path and properties, filtered and sorted.",
+      "pages.renamePage": "Renombrar página…",
+      "pages.deletePage": "Eliminar página",
+      "pages.deleteAsk": "¿Mover «{0}» a la papelera?",
+      "pages.deleteAskMany": "¿Mover «{0}» y las {1} páginas que contiene a la papelera?"
     },
     "fr": {
       "name": "Espace de travail",
@@ -1051,7 +1087,11 @@
       "tool.add_row": "Ajoute une ligne à une base de données : un document dans son dossier, au nom de la ligne, avec ses propriétés dans son front matter. Tout bloc qui montre ce dossier l'affiche. Seulement pour le dossier d’une base (create_database, query_rows) ; une simple tâche, c’est add_task.",
       "pages.tool.create_page": "Crée une page : un document portant ce titre à la racine du dossier ouvert, ou une sous-page dans le dossier à côté de sa page parente, avec une icône si elle est donnée. Renvoie son chemin et le [[lien]] à mettre dans la page parente.",
       "toolDescription": "Makes a database in Obsidian's Bases format: a folder of notes whose front matter holds each one's properties, and a page in it with a ```base block showing them as a table, board, calendar, gallery or list. Returns a link to that page to put where the user wants it.",
-      "tool.query_rows": "Reads a database's rows - the notes its base chooses, by default those in its folder - each with its name, path and properties, filtered and sorted."
+      "tool.query_rows": "Reads a database's rows - the notes its base chooses, by default those in its folder - each with its name, path and properties, filtered and sorted.",
+      "pages.renamePage": "Renommer la page…",
+      "pages.deletePage": "Supprimer la page",
+      "pages.deleteAsk": "Mettre « {0} » à la corbeille ?",
+      "pages.deleteAskMany": "Mettre « {0} » et les {1} pages en dessous à la corbeille ?"
     },
     "pt": {
       "name": "Área de trabalho",
@@ -1150,7 +1190,11 @@
       "tool.add_row": "Adiciona uma linha a uma base de dados: um documento na sua pasta, com o nome da linha e as propriedades no front matter. Todos os blocos que mostram essa pasta passam a mostrá-la. Só para a pasta de um banco de dados (create_database, query_rows); uma tarefa simples é add_task.",
       "pages.tool.create_page": "Cria uma página: um documento com esse título na raiz da pasta aberta, ou uma subpágina na pasta ao lado da página-mãe, com ícone se for dado. Devolve o caminho e o [[link]] a pôr na página-mãe.",
       "toolDescription": "Makes a database in Obsidian's Bases format: a folder of notes whose front matter holds each one's properties, and a page in it with a ```base block showing them as a table, board, calendar, gallery or list. Returns a link to that page to put where the user wants it.",
-      "tool.query_rows": "Reads a database's rows - the notes its base chooses, by default those in its folder - each with its name, path and properties, filtered and sorted."
+      "tool.query_rows": "Reads a database's rows - the notes its base chooses, by default those in its folder - each with its name, path and properties, filtered and sorted.",
+      "pages.renamePage": "Renomear página…",
+      "pages.deletePage": "Excluir página",
+      "pages.deleteAsk": "Mover “{0}” para a lixeira?",
+      "pages.deleteAskMany": "Mover “{0}” e as {1} páginas abaixo para a lixeira?"
     },
     "ru": {
       "name": "Рабочее пространство",
@@ -1249,7 +1293,11 @@
       "tool.add_row": "Добавляет строку в базу данных: документ в её папке с именем строки и свойствами во front matter. Её покажет каждый блок, показывающий эту папку. Только для папки базы данных (create_database, query_rows); обычная задача — add_task.",
       "pages.tool.create_page": "Создаёт страницу: документ с этим заголовком в корне открытой папки или подстраницу в папке рядом с родительской страницей, со значком, если он задан. Возвращает её путь и [[ссылку]] для родительской страницы.",
       "toolDescription": "Makes a database in Obsidian's Bases format: a folder of notes whose front matter holds each one's properties, and a page in it with a ```base block showing them as a table, board, calendar, gallery or list. Returns a link to that page to put where the user wants it.",
-      "tool.query_rows": "Reads a database's rows - the notes its base chooses, by default those in its folder - each with its name, path and properties, filtered and sorted."
+      "tool.query_rows": "Reads a database's rows - the notes its base chooses, by default those in its folder - each with its name, path and properties, filtered and sorted.",
+      "pages.renamePage": "Переименовать страницу…",
+      "pages.deletePage": "Удалить страницу",
+      "pages.deleteAsk": "Переместить «{0}» в корзину?",
+      "pages.deleteAskMany": "Переместить «{0}» и страницы под ней ({1}) в корзину?"
     }
   }
 }

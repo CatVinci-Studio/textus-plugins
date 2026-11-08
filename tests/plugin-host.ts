@@ -229,11 +229,22 @@ export function folder(files: Record<string, string>) {
       return (files[rel(path)] = change(files[rel(path)]));
     },
     createFolder: async () => {},
+    // A file, or a folder with everything in it.
     rename: async (from: string, to: string) => {
-      if (!(rel(from) in files)) throw new Error("No file " + from);
+      const under = Object.keys(files).filter((r) =>
+        r.startsWith(rel(from) + "/"),
+      );
+      if (!(rel(from) in files) && !under.length)
+        throw new Error("No file " + from);
       if (rel(to) in files) throw new Error("Exists: " + to);
-      files[rel(to)] = files[rel(from)];
-      delete files[rel(from)];
+      for (const r of rel(from) in files ? [rel(from)] : under) {
+        files[rel(to) + r.slice(rel(from).length)] = files[r];
+        delete files[r];
+      }
+    },
+    trash: async (path: string) => {
+      for (const r of Object.keys(files))
+        if (r === rel(path) || r.startsWith(rel(path) + "/")) delete files[r];
     },
     // The core reads the folder's apps; this stands in for an Obsidian vault.
     conventions: async () => conventionsOf(files, root),

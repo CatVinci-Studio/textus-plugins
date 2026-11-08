@@ -122,7 +122,14 @@ async function importNotion(arg) {
   await textus.files.create(page, notionImport.reportPage(report, suggestions, t, { source: name, date: today() }));
   await textus.layout.open(page);
   const where = folderPaths.rel(root, target) || target;
-  textus.ui.notice(report.stopped ? t("cancelled", where) : t("done", report.pages + report.rows, report.databases, where));
+  // With Workspace on, the import is shown as Notion did: its pages tree.
+  const workspace = !report.stopped && (await textus.plugins.get("catvinci.database").catch(() => null));
+  if (workspace && textus.layout.showSidebarTab) await textus.layout.showSidebarTab("catvinci.database.pages").catch(() => {});
+  textus.ui.notice(
+    report.stopped
+      ? t("cancelled", where)
+      : t(workspace ? "donePages" : "done", report.pages + report.rows, report.databases, where),
+  );
 }
 
 async function stillMissing(suggestions) {
