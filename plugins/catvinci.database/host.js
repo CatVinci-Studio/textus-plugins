@@ -4,7 +4,7 @@
 // view go to those notes' front matter, or to the base's own views; New
 // makes a note. Also Textus AI's tools for databases.
 
-/* global database, folderPaths, activatePages */
+/* global database, dataview, folderPaths, activatePages */
 const t = (key, ...args) => textus.l10n.t(key, ...args);
 const STRINGS = [
   "table", "board", "calendar", "gallery", "list", "page", "add", "count", "empty",
@@ -360,6 +360,29 @@ async function newDatabase() {
   await textus.editor.insertText("[[" + page.replace(/\.md$/, "") + "|" + name.trim() + "]]\n");
 }
 
+/** The ```dataview block holding the selection - else the only one, or one
+ *  picked - in place of itself as a ```base block, one undo step. */
+async function fromDataview(editor) {
+  const blocks = ((await editor.getBlocks()) || []).filter((b) => b.kind === "code" && dataview.blockQuery(b.markdown));
+  const selected = ((await editor.getSelection()) || {}).text || "";
+  const holding = selected.trim() ? blocks.filter((b) => b.markdown.includes(selected.trim())) : [];
+  let block = holding.length === 1 ? holding[0] : blocks.length === 1 ? blocks[0] : null;
+  if (!block && blocks.length > 1) {
+    const id = await textus.ui.pick(
+      blocks.map((b) => ({ label: b.markdown.split("\n")[1] || b.markdown, value: b.id })),
+      { placeholder: t("dataviewPick") },
+    );
+    block = blocks.find((b) => b.id === id);
+    if (!block) return;
+  }
+  if (!block) return textus.ui.notice(t("dataviewNone"));
+  const found = dataview.blockQuery(block.markdown);
+  const made = found.error ? found : dataview.toBase(found.query);
+  if (!made.yaml) return textus.ui.notice(t("dataviewCant", made.error), { tone: "warning" });
+  await editor.edit({ action: "replace", block: block.id, text: "```base\n" + made.yaml + "```" });
+  if (made.warnings.length) await textus.ui.notice(t("dataviewLeftOut", made.warnings.join(" ")));
+}
+
 /** A row: a note in `folder` named for it, its properties in its front matter. */
 async function makeRow(folder, row) {
   const title = fileName(String(row.name || ""));
@@ -467,6 +490,7 @@ exports.activate = function (ctx) {
       },
     }),
     textus.commands.register("catvinci.database.new", newDatabase),
+    textus.commands.registerEditorCommand("catvinci.database.fromDataview", fromDataview),
     textus.ai.registerTool("create_database", createDatabase),
     textus.ai.registerTool("query_rows", queryRows),
     textus.ai.registerTool("add_row", addRowTool),

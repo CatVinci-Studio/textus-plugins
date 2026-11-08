@@ -41,6 +41,7 @@ views:
 - **Formulas** (`formulas:` in the base) are worked out for each row and can be columns, filters and sorts: `(price / pages).toFixed(2)`. Summaries are not drawn yet.
 - **Property types** are Obsidian's, in `.obsidian/types.json`, when the folder is a vault.
 - **In an embedded note** (`![[page]]`) a database is one line; click it to draw it.
+- **From Dataview**: put the caret in a ` ```dataview ` block and run **Convert Dataview query to base**. `TABLE`/`LIST` with `FROM`, `WHERE`, `SORT` and `LIMIT` become the same base; `TASK`, `GROUP BY`, `FLATTEN` and `dataviewjs` are refused with the reason, nothing changed.
 
 Notion exports come in through the **Notion Import** plugin, which writes pages and databases this plugin shows.
 
