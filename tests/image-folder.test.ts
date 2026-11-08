@@ -7,6 +7,7 @@ let rules: {
   rebase: (text: string, from: string, to: string) => string;
   srcForms: (doc: string, path: string) => string[];
   shouldMove: (doc: string | null, path: string) => boolean;
+  appPlaces: (rule: unknown, app: unknown) => boolean;
 };
 
 beforeAll(async () => {
@@ -46,6 +47,7 @@ function setup(
   doc: string,
   blockText: string,
   others: string[] = [],
+  attachments: { value: string; app: string; root: string } | null = null,
 ) {
   const f = folder(files);
   const edits: unknown[] = [];
@@ -68,6 +70,7 @@ function setup(
             delete files[k];
           }
       },
+      conventions: async () => ({ ...(await f.conventions()), attachments }),
       onDidCreate: (fn: typeof created) => ((created = fn), { dispose() {} }),
       onDidRename: (fn: typeof renamed) => ((renamed = fn), { dispose() {} }),
     },
@@ -132,5 +135,47 @@ describe("the plugin", () => {
     await rename("/root/Old.md", "/root/New.md");
     expect(files["Old.assets/a.png"]).toBe("PNG");
     expect(files["New.md"]).toBe("![](Old.assets/a.png)");
+  });
+});
+
+describe("in a folder whose app places pictures", () => {
+  it("knows an Obsidian attachment setting and a Logseq graph", () => {
+    const obsidian = { value: "/", app: "obsidian", root: "/r" };
+    expect(rules.appPlaces(obsidian, { attachmentFolderPath: "Attachments" })).toBe(true);
+    expect(rules.appPlaces(obsidian, {})).toBe(false);
+    expect(rules.appPlaces({ value: "assets", app: "logseq", root: "/r" }, null)).toBe(true);
+    expect(rules.appPlaces({ value: "./img", app: "textus", root: "/r" }, null)).toBe(false);
+    expect(rules.appPlaces(null, null)).toBe(false);
+  });
+
+  it("leaves a pasted picture where Textus saved it", async () => {
+    const files: Record<string, string> = {
+      ".obsidian/app.json": JSON.stringify({ attachmentFolderPath: "./" }),
+      "Notes/Note.md": "x",
+      "Notes/p.png": "PNG",
+    };
+    const { create, edits } = setup(files, "/root/Notes/Note.md", "See ![](p.png).", [], {
+      value: "./",
+      app: "obsidian",
+      root: "/root",
+    });
+    await create("/root/Notes/p.png");
+    expect(files["Notes/p.png"]).toBe("PNG");
+    expect(edits).toEqual([]);
+  });
+
+  it("still moves it in a vault without the setting", async () => {
+    const files: Record<string, string> = {
+      ".obsidian/app.json": "{}",
+      "Notes/Note.md": "x",
+      "Notes/p.png": "PNG",
+    };
+    const { create } = setup(files, "/root/Notes/Note.md", "See ![](p.png).", [], {
+      value: "/",
+      app: "obsidian",
+      root: "/root",
+    });
+    await create("/root/Notes/p.png");
+    expect(files["Notes/Note.assets/p.png"]).toBe("PNG");
   });
 });

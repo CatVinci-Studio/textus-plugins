@@ -44,6 +44,16 @@
     );
   }
 
+  /** Whether the folder's app puts pictures in a place of its own, which
+   *  Textus saves them to: an Obsidian vault with an attachment folder
+   *  setting (`app`, its .obsidian/app.json), or a Logseq graph.
+   *  `attachments` is the folder conventions' rule. */
+  function appPlaces(attachments, app) {
+    if (!attachments) return false;
+    if (attachments.app === "logseq") return true;
+    return attachments.app === "obsidian" && !!app && typeof app.attachmentFolderPath === "string";
+  }
+
   var escape = function (s) {
     return s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
   };
@@ -84,6 +94,7 @@
     assetsOf: assetsOf,
     srcForms: srcForms,
     shouldMove: shouldMove,
+    appPlaces: appPlaces,
     relink: relink,
   };
 })(globalThis);
