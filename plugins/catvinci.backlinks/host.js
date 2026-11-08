@@ -4,7 +4,7 @@
 // (complete.js); and the notes, sections and blocks ![[embeds]] show. What
 // Textus knows of the folder (textus.metadata) says where links go.
 
-/* global backlinkMentions, completeLinks, folderPaths, noteParts */
+/* global backlinkMentions, completeLinks, convertLinks, folderPaths, noteParts, linkStyle */
 const t = (key, ...args) => textus.l10n.t(key, ...args);
 /** Unlinked mentions are looked for up to this many lines. */
 const SEARCH_LIMIT = 300;
@@ -187,7 +187,7 @@ async function link(mention) {
   const at = backlinkMentions.findMention(mention.text, mention.name);
   if (at < 0) return;
   const said = mention.text.slice(at, at + mention.name.length);
-  const written = await textus.metadata.linkTo(
+  const written = await linkStyle.linkTo(
     mention.to,
     mention.path,
     said === stem(mention.to) ? {} : { alias: said },
@@ -224,6 +224,73 @@ async function provideEmbed(target) {
   return { markdown: noteParts.body(text) };
 }
 
+/** New links in the open folder: standard or [[wiki]], kept in its
+ *  .textus/settings.json, which Textus and every plugin read. */
+async function chooseStyle() {
+  const root = await textus.files.root();
+  if (!root) return textus.ui.message(t("nofolder"));
+  const now = (await linkStyle.current(root)) || "markdown";
+  const mark = (style) => (style === now ? " ✓" : "");
+  const picked = await textus.ui.pick(
+    [
+      { label: t("styleMarkdown") + mark("markdown"), value: "markdown" },
+      { label: t("styleWiki") + mark("wiki"), value: "wiki" },
+    ],
+    { placeholder: t("styleAsk") },
+  );
+  if (!picked || picked === now) return;
+  await linkStyle.choose(root, picked);
+  await textus.ui.notice(t(picked === "wiki" ? "styleIsWiki" : "styleIsMarkdown"));
+}
+
+/** Rewrites the links of the document in front, or of every note in the
+ *  folder, the `to` way; says first how many it will change. */
+async function convert(to) {
+  const root = await textus.files.root();
+  if (!root) return textus.ui.message(t("nofolder"));
+  const active = await textus.editor.getPath().catch(() => null);
+  const where = await textus.ui.pick(
+    [
+      ...(active ? [{ label: t("convertDocument"), value: "document" }] : []),
+      { label: t("convertFolder"), value: "folder" },
+    ],
+    { placeholder: t(to === "wiki" ? "toWiki" : "toMarkdown") },
+  );
+  if (!where) return;
+  const paths =
+    where === "document"
+      ? [active]
+      : (await textus.metadata.all()).map((d) => d.path).filter((p) => /\.(md|markdown)$/i.test(p));
+  const plans = await textus.ui.withProgress(t("convertReading"), async (report, signal) => {
+    const out = [];
+    for (let i = 0; i < paths.length && !signal.aborted; i++) {
+      report({ fraction: i / paths.length, message: stem(paths[i]) });
+      const text = await textus.files.readText(paths[i]).catch(() => null);
+      if (text === null) continue;
+      const plan = await convertLinks.plan(text, paths[i], to);
+      if (plan.changes.length || plan.left) out.push({ path: paths[i], text, ...plan });
+    }
+    return signal.aborted ? null : out;
+  });
+  if (!plans) return;
+  const changes = plans.reduce((n, p) => n + p.changes.length, 0);
+  const left = plans.reduce((n, p) => n + p.left, 0);
+  if (!changes) return textus.ui.message(t("convertNone"));
+  const files = plans.filter((p) => p.changes.length).length;
+  const ok = await textus.ui.confirm(t("convertConfirm", changes, files) + (left ? "\n\n" + t("convertLeft", left) : ""), {
+    okLabel: t("convertOk"),
+  });
+  if (!ok) return;
+  let changed = 0;
+  for (const p of plans) {
+    if (!p.changes.length) continue;
+    // A note changed since it was read keeps what it has now.
+    const out = await textus.files.process(p.path, (now) => (now === p.text ? convertLinks.apply(now, p.changes) : now));
+    if (out !== p.text) changed++;
+  }
+  await textus.ui.notice(t("convertDone", changed));
+}
+
 let list = null;
 
 exports.activate = function (ctx) {
@@ -245,6 +312,9 @@ exports.activate = function (ctx) {
     textus.ai.registerTool("list_backlinks", listBacklinks),
     textus.commands.register("catvinci.backlinks.linkBlock", completeLinks.linkBlock),
     textus.views.registerEmbed("catvinci.backlinks.embed", { provideEmbed: provideEmbed }),
+    textus.commands.register("catvinci.backlinks.linkStyle", chooseStyle),
+    textus.commands.register("catvinci.backlinks.toMarkdown", () => convert("markdown")),
+    textus.commands.register("catvinci.backlinks.toWiki", () => convert("wiki")),
   );
   for (const kind of ["notes", "headings", "blocks"])
     ctx.subscriptions.push(

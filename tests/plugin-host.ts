@@ -242,8 +242,11 @@ function conventionsOf(files: Record<string, string>, root: string) {
         ? full(/\.md$/i.test(n.template) ? n.template : n.template + ".md")
         : null,
     });
+  // A vault writes [[wiki links]] unless its app.json says Markdown.
+  const app = vault ? (json(".obsidian/app.json") ?? {}) : null;
   return {
     sources: vault ? [{ app: "obsidian", root }] : [],
+    linkStyle: app ? at(app.useMarkdownLinks ? "markdown" : "wiki") : null,
     templates: tpl?.folder ? at(full(tpl.folder)) : null,
     templateFormats:
       tpl && (tpl.dateFormat || tpl.timeFormat)

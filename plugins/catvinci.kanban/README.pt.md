@@ -36,6 +36,7 @@ kanban-plugin: board
 
 ## Alterações
 
+- **0.4.4** - Arrastar um cartão ou uma lista já não seleciona texto pelo caminho.
 - **0.4.3** - Sua página agora diz numa frase o que ele faz, o que pode fazer e o que mudou em cada versão.
 - **0.4.2** - Cartões e listas seguem o ponteiro ao serem arrastados, e os outros abrem espaço. Requer Textus 1.3.10.
 - **0.4.1** - Mantém a marca que o Kanban do Obsidian põe numa lista de concluídos.

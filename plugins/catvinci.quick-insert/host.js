@@ -3,7 +3,7 @@
 // here are the rest: a callout, Turn into…, emoji after :, and dates after
 // @ (@tomorrow, @下周五), written as a date or a link to the day's note.
 
-/* global quickEmoji, naturalDates, folderConventions */
+/* global quickEmoji, naturalDates, folderConventions, linkStyle */
 const t = (key, ...args) => textus.l10n.t(key, ...args);
 const DAY = /^(\d{4})-(\d{2})-(\d{2})$/;
 
@@ -59,11 +59,11 @@ function daily() {
 async function dayLink(day) {
   const notes = await daily();
   const name = textus.dates.format(dateOf(day), notes.format);
-  if (!notes.root) return "[[" + name + "]]";
+  if (!notes.root) return "[" + name + "](" + name.replace(/ /g, "%20") + ".md)";
   const note =
     notes.root + "/" + (notes.folder ? notes.folder + "/" : "") + name + ".md";
   const from = (await textus.editor.getPath().catch(() => null)) || note;
-  return textus.metadata.linkTo(note, from);
+  return linkStyle.linkTo(note, from);
 }
 
 /** Textus AI's tool: the date a phrase names, from today or `today`. */

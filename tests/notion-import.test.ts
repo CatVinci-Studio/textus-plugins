@@ -206,6 +206,43 @@ describe("links", () => {
     expect(found.map((l) => l.kind)).toEqual(["page", "file", "page", "page"]);
   });
 
+  it("name pages as [[links]] where the folder writes them so, as a new subpage's is", () => {
+    const plan = layout();
+    plan.links = ni.wikiNames(plan, { base: "Notion" });
+    const text = [
+      `[Sub](Home%20${H}/Sub%20${id("1")}.md)`,
+      `![pic](Home%20${H}/Sub%20${id("1")}/a%20b.png)`,
+      `[the table](Home%20${H}/DB%20${id("2")}.csv)`,
+      `[Again](<Home ${H}/Sub ${id("1")}.md#Plans>)`,
+    ].join("\n");
+    expect(ni.rewriteLinks(text, `Home ${H}.md`, "Home/Home.md", plan)).toBe(
+      [
+        "[[Sub]]",
+        "![pic](Sub/a%20b.png)",
+        "[[DB|the table]]",
+        "[[Sub#Plans|Again]]",
+      ].join("\n"),
+    );
+  });
+
+  it("give pages named alike their path from the link root", () => {
+    const plan = ni.plan([
+      `A ${id("3")}.md`,
+      `A ${id("3")}/Nov 8 ${id("4")}.md`,
+      `B ${id("5")}.md`,
+      `B ${id("5")}/Nov 8 ${id("6")}.md`,
+    ]);
+    plan.links = ni.wikiNames(plan, { base: "Notion" });
+    expect(
+      ni.rewriteLinks(
+        `[Nov 8](A%20${id("3")}/Nov%208%20${id("4")}.md)`,
+        `A ${id("3")}.md`,
+        "A/A.md",
+        plan,
+      ),
+    ).toBe("[[Notion/A/Nov 8|Nov 8]]");
+  });
+
   it("go up from a sub-page and follow notion.so addresses the export has", () => {
     const text = `[Home](../Home%20${H}.md) [Sub](https://www.notion.so/Sub-${id("1")}?pvs=4)`;
     expect(
@@ -946,7 +983,9 @@ describe("page icons from an HTML export", () => {
     const files: Record<string, string> = {
       [`Home ${H}.html`]: html('<span class="icon">🏠</span>'),
       [`Home ${H}/Sub ${id("1")}.html`]: html('<span class="icon">📚</span>'),
-      [`Home ${H}/Pic ${id("2")}.html`]: html('<img class="icon" src="x.png"/>'),
+      [`Home ${H}/Pic ${id("2")}.html`]: html(
+        '<img class="icon" src="x.png"/>',
+      ),
       "index.html": html('<span class="icon">❓</span>'),
     };
     const icons = await ni.iconsOf({

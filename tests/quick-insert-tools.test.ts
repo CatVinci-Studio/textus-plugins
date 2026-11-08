@@ -52,9 +52,10 @@ describe("an @ date as a link", () => {
   };
 
   it("names the day's note as the vault's daily notes do", async () => {
-    const plain = await linkFor({});
-    expect(plain.insert).toBe(`[[${(await setup().ask("@today"))[0].detail}]]`);
-    expect((await linkFor({ ".obsidian/app.json": "{}" })).insert).toBe(plain.insert);
+    const day = (await setup().ask("@today"))[0].detail;
+    // A plain folder: a standard link; a vault: its [[wiki link]].
+    expect((await linkFor({})).insert).toBe(`[${day}](${day}.md)`);
+    expect((await linkFor({ ".obsidian/app.json": "{}" })).insert).toBe(`[[${day}]]`);
     const named = await linkFor({ ".obsidian/daily-notes.json": '{"folder":"Journal","format":"MMMM Do, YYYY"}' });
     expect(named.insert).toMatch(/^\[\[[A-Z][a-z]+ \d{1,2}(st|nd|rd|th), \d{4}\]\]$/);
     // A name format that makes folders: the link is the folder's to write.

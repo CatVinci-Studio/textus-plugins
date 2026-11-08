@@ -222,10 +222,32 @@
           note({ target: decode(target), kind: "missing" });
           return all;
         }
-        note({ target: hit.at, kind: /\.md$/i.test(hit.at) ? "page" : "file" });
+        const page = /\.md$/i.test(hit.at);
+        note({ target: hit.at, kind: page ? "page" : "file" });
+        // A page linked as the folder writes links: [[Page]], as a new subpage's is.
+        if (page && layout.links && !open.startsWith("!")) {
+          const name = layout.links.get(hit.at);
+          const label = open.slice(1, -2);
+          const heading = hit.rest.startsWith("#") && !NOTION_URL.test(target) ? decode(hit.rest) : "";
+          return "[[" + name + heading + (label && label !== name ? "|" + label : "") + "]]";
+        }
         return open + encodeLink(relative(newDir, hit.at)) + hit.rest + close;
       }),
     );
+  }
+
+  /** Each page's name in a [[link]]: its own where no other imported page
+   *  shares it, else its path from the link root (`links.base`, the import's
+   *  folder there). */
+  function wikiNames(layout, links) {
+    const pages = [...new Set(layout.files.values())].filter((at) => /\.md$/i.test(at));
+    const count = new Map();
+    const stem = (at) => baseOf(at).replace(/\.md$/i, "");
+    for (const at of pages) count.set(stem(at), (count.get(stem(at)) || 0) + 1);
+    const names = new Map();
+    for (const at of pages)
+      names.set(at, count.get(stem(at)) > 1 ? joinPath(links.base, at.replace(/\.md$/i, "")) : stem(at));
+    return names;
   }
 
   const EMOJI = /^\p{Extended_Pictographic}/u;
@@ -504,7 +526,7 @@
 
   /** Imports the export a file at a time, so a large one never sits in memory whole; `signal`
    *  stops it between files. A file that can't be read or written goes in `report.failed`. */
-  async function importExport({ paths, read, write, progress, signal }) {
+  async function importExport({ paths, read, write, progress, signal, links }) {
     // The titles of pages Notion named alike in one folder, to tell them apart.
     const titles = new Map();
     const stems = new Map();
@@ -521,6 +543,7 @@
           if (title) titles.set(p, title);
         }
     const layout = plan(paths, titles);
+    layout.links = links ? wikiNames(layout, links) : null;
     const report = {
       pages: 0, databases: 0, rows: 0, files: 0, total: paths.length, done: 0, stopped: false,
       missing: [], failed: [], blocks: { callout: [], icon: [] },
@@ -796,6 +819,7 @@
     relative,
     encodeLink,
     rewriteLinks,
+    wikiNames,
     convertCallouts,
     frontMatter,
     propertyValue,

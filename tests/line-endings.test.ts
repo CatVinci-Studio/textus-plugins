@@ -44,5 +44,5 @@ it("Backlinks links a mention without touching other lines' endings", async () =
   const metadata = { linkTo: async (to: string) => `[[${to.replace(/^.*\//, "").replace(/\.md$/, "")}]]` };
   loadPlugin("catvinci.backlinks", { files: folder(files), commands, metadata });
   await link!({ path: "/root/Log.md", line: 4, text: "See Ideas here.", name: "Ideas", to: "/root/Ideas.md" });
-  expect(files["Log.md"]).toBe(mixed.replace("See Ideas here.", "See [[Ideas]] here."));
+  expect(files["Log.md"]).toBe(mixed.replace("See Ideas here.", "See [Ideas](Ideas.md) here."));
 });

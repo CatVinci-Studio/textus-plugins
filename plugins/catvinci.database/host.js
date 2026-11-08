@@ -4,7 +4,7 @@
 // view go to those notes' front matter, or to the base's own views; New
 // makes a note. Also Textus AI's tools for databases.
 
-/* global database, dataview, folderPaths, activatePages */
+/* global database, dataview, folderPaths, activatePages, linkStyle */
 const t = (key, ...args) => textus.l10n.t(key, ...args);
 const STRINGS = [
   "table", "board", "calendar", "gallery", "list", "page", "add", "count", "empty",
@@ -359,7 +359,7 @@ async function newDatabase() {
   if (!(await textus.files.stat(join(root, page))))
     await textus.files.create(join(root, page), "# " + name.trim() + "\n\n```base\n" + database.writeBase(database.unitBase("table")) + "```\n");
   // The link the folder writes (its style and path rules), named as asked.
-  await textus.editor.insertText((await textus.metadata.linkTo(join(root, page), doc, { alias: name.trim() })) + "\n");
+  await textus.editor.insertText((await linkStyle.linkTo(join(root, page), doc, { alias: name.trim() })) + "\n");
 }
 
 /** The ```dataview block holding the selection - else the only one, or one
@@ -474,7 +474,7 @@ async function createDatabase(input) {
   if (!(await textus.files.stat(join(root, page))))
     await textus.files.create(join(root, page), "# " + title + "\n\n```base\n" + database.writeBase(base) + "```\n");
   const from = (await textus.editor.getPath().catch(() => null)) || join(root, page);
-  const link = await textus.metadata.linkTo(join(root, page), from, { alias: title });
+  const link = await linkStyle.linkTo(join(root, page), from, { alias: title });
   return { folder, page, documents: made, link, note: t("aiNote") };
 }
 

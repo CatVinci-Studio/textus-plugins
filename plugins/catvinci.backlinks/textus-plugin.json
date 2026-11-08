@@ -1,7 +1,7 @@
 {
   "id": "catvinci.backlinks",
   "name": "%name%",
-  "version": "0.3.1",
+  "version": "0.4.0",
   "publisher": "catvinci",
   "author": "CatVinci Studio",
   "description": "%description%",
@@ -14,10 +14,12 @@
   "platforms": ["desktop", "ios"],
   "main": [
     "lib/folder-paths.js",
+    "lib/link-style.js",
     "lib/note-parts.js",
     "lib/text-lines.js",
     "mentions.js",
     "complete.js",
+    "convert.js",
     "host.js"
   ],
   "permissions": [
@@ -62,9 +64,7 @@
         "targets": ["note", "heading", "block"]
       }
     ],
-    "suggestFor": [
-      "wikilinks"
-    ],
+    "suggestFor": ["wikilinks"],
     "aiTools": [
       {
         "name": "list_backlinks",
@@ -79,7 +79,34 @@
           }
         }
       }
-    ]
+    ],
+    "commands": [
+      {
+        "command": "catvinci.backlinks.linkStyle",
+        "title": "%cmdLinkStyle%"
+      },
+      {
+        "command": "catvinci.backlinks.toMarkdown",
+        "title": "%cmdToMarkdown%"
+      },
+      {
+        "command": "catvinci.backlinks.toWiki",
+        "title": "%cmdToWiki%"
+      }
+    ],
+    "menus": {
+      "app/plugins": [
+        {
+          "command": "catvinci.backlinks.linkStyle"
+        },
+        {
+          "command": "catvinci.backlinks.toMarkdown"
+        },
+        {
+          "command": "catvinci.backlinks.toWiki"
+        }
+      ]
+    }
   },
   "l10n": {
     "en": {
@@ -99,7 +126,25 @@
       "nofolder": "Open a folder to see the links between its documents.",
       "nodoc": "Open a document to see what links to it.",
       "notInFolder": "This document isn't in the open folder.",
-      "tool.list_backlinks": "For a document - the one in front unless a path is given - lists the notes linking to it (path, line, the line's text), the lines naming it without a link, and the notes it links to."
+      "tool.list_backlinks": "For a document - the one in front unless a path is given - lists the notes linking to it (path, line, the line's text), the lines naming it without a link, and the notes it links to.",
+      "cmdLinkStyle": "New Links: Standard or [[Wiki]]…",
+      "cmdToMarkdown": "Convert Links to Standard…",
+      "cmdToWiki": "Convert Links to [[Wiki Links]]…",
+      "styleAsk": "How new links in this folder are written",
+      "styleMarkdown": "Standard links, [Page](Page.md): open in any app",
+      "styleWiki": "[[Wiki links]]: as Obsidian writes them",
+      "styleIsWiki": "New links in this folder are [[wiki links]].",
+      "styleIsMarkdown": "New links in this folder are standard links.",
+      "toMarkdown": "Convert to standard links: which notes?",
+      "toWiki": "Convert to [[wiki links]]: which notes?",
+      "convertDocument": "The document in front",
+      "convertFolder": "Every note in the folder",
+      "convertReading": "Reading the notes…",
+      "convertNone": "No link here to convert.",
+      "convertConfirm": "Convert {0} links in {1} notes? Each still goes where it went.",
+      "convertLeft": "{0} links stay as they are: their note can't be found, or they show a picture or another file.",
+      "convertOk": "Convert",
+      "convertDone": "Converted the links in {0} notes."
     },
     "zh": {
       "name": "双向链接",
@@ -118,7 +163,25 @@
       "nofolder": "打开一个文件夹，查看其中文档之间的链接。",
       "nodoc": "打开一篇文档，查看哪些笔记链接到它。",
       "notInFolder": "这篇文档不在打开的文件夹中。",
-      "tool.list_backlinks": "针对一篇文档（默认当前文档）：列出链接到它的笔记（路径、行号、那一行的文字）、提到它却没加链接的行，以及它链接到的笔记。"
+      "tool.list_backlinks": "针对一篇文档（默认当前文档）：列出链接到它的笔记（路径、行号、那一行的文字）、提到它却没加链接的行，以及它链接到的笔记。",
+      "cmdLinkStyle": "新链接写法：标准链接还是双链…",
+      "cmdToMarkdown": "把链接转成标准链接…",
+      "cmdToWiki": "把链接转成双链…",
+      "styleAsk": "这个文件夹里的新链接怎么写",
+      "styleMarkdown": "标准链接 [页面](页面.md)：在任何软件里都能打开",
+      "styleWiki": "双链 [[页面]]：Obsidian 的写法",
+      "styleIsWiki": "这个文件夹里的新链接会写成双链。",
+      "styleIsMarkdown": "这个文件夹里的新链接会写成标准链接。",
+      "toMarkdown": "转成标准链接：哪些笔记？",
+      "toWiki": "转成双链：哪些笔记？",
+      "convertDocument": "当前文档",
+      "convertFolder": "文件夹里的所有笔记",
+      "convertReading": "正在读取笔记…",
+      "convertNone": "没有需要转换的链接。",
+      "convertConfirm": "要转换 {1} 篇笔记里的 {0} 个链接吗？每个链接仍然指向原来的地方。",
+      "convertLeft": "有 {0} 个链接保持不变：找不到它指向的笔记，或者它显示的是图片或其他文件。",
+      "convertOk": "转换",
+      "convertDone": "已转换 {0} 篇笔记里的链接。"
     },
     "zh-Hant": {
       "name": "雙向連結",
@@ -137,7 +200,25 @@
       "nofolder": "開啟一個資料夾，查看其中文件之間的連結。",
       "nodoc": "開啟一篇文件，查看哪些筆記連結到它。",
       "notInFolder": "這篇文件不在開啟的資料夾中。",
-      "tool.list_backlinks": "針對一份文件（預設目前文件）：列出連結到它的筆記（路徑、行號、那一行的文字）、提到它卻沒加連結的行，以及它連結到的筆記。"
+      "tool.list_backlinks": "針對一份文件（預設目前文件）：列出連結到它的筆記（路徑、行號、那一行的文字）、提到它卻沒加連結的行，以及它連結到的筆記。",
+      "cmdLinkStyle": "新連結寫法：標準連結還是雙向連結…",
+      "cmdToMarkdown": "把連結轉成標準連結…",
+      "cmdToWiki": "把連結轉成雙向連結…",
+      "styleAsk": "這個資料夾裡的新連結怎麼寫",
+      "styleMarkdown": "標準連結 [頁面](頁面.md)：在任何軟體裡都能開啟",
+      "styleWiki": "雙向連結 [[頁面]]：Obsidian 的寫法",
+      "styleIsWiki": "這個資料夾裡的新連結會寫成雙向連結。",
+      "styleIsMarkdown": "這個資料夾裡的新連結會寫成標準連結。",
+      "toMarkdown": "轉成標準連結：哪些筆記？",
+      "toWiki": "轉成雙向連結：哪些筆記？",
+      "convertDocument": "目前文件",
+      "convertFolder": "資料夾裡的所有筆記",
+      "convertReading": "正在讀取筆記…",
+      "convertNone": "沒有需要轉換的連結。",
+      "convertConfirm": "要轉換 {1} 篇筆記裡的 {0} 個連結嗎？每個連結仍然指向原來的地方。",
+      "convertLeft": "有 {0} 個連結保持不變：找不到它指向的筆記，或者它顯示的是圖片或其他檔案。",
+      "convertOk": "轉換",
+      "convertDone": "已轉換 {0} 篇筆記裡的連結。"
     },
     "ja": {
       "name": "双方向リンク",
@@ -156,7 +237,25 @@
       "nofolder": "フォルダを開くと、文書どうしのリンクが表示されます。",
       "nodoc": "文書を開くと、そこへのリンクが表示されます。",
       "notInFolder": "この文書は開いているフォルダにありません。",
-      "tool.list_backlinks": "ある文書（パスがなければ前面の文書）について、そこへリンクしているノート（パス・行番号・その行の本文）、リンクせずに名前を挙げている行、その文書からのリンク先を一覧にします。"
+      "tool.list_backlinks": "ある文書（パスがなければ前面の文書）について、そこへリンクしているノート（パス・行番号・その行の本文）、リンクせずに名前を挙げている行、その文書からのリンク先を一覧にします。",
+      "cmdLinkStyle": "新しいリンクの書き方：標準かウィキリンクか…",
+      "cmdToMarkdown": "リンクを標準リンクに変換…",
+      "cmdToWiki": "リンクをウィキリンクに変換…",
+      "styleAsk": "このフォルダの新しいリンクの書き方",
+      "styleMarkdown": "標準リンク [ページ](ページ.md)：どのアプリでも開けます",
+      "styleWiki": "ウィキリンク [[ページ]]：Obsidian の書き方",
+      "styleIsWiki": "このフォルダの新しいリンクはウィキリンクで書きます。",
+      "styleIsMarkdown": "このフォルダの新しいリンクは標準リンクで書きます。",
+      "toMarkdown": "標準リンクに変換：どのノートを？",
+      "toWiki": "ウィキリンクに変換：どのノートを？",
+      "convertDocument": "表示中の書類",
+      "convertFolder": "フォルダのすべてのノート",
+      "convertReading": "ノートを読み込んでいます…",
+      "convertNone": "変換するリンクはありません。",
+      "convertConfirm": "{1} 件のノートにある {0} 個のリンクを変換しますか？リンク先は変わりません。",
+      "convertLeft": "{0} 個のリンクはそのままです：リンク先のノートが見つからないか、画像や他のファイルを表示しています。",
+      "convertOk": "変換",
+      "convertDone": "{0} 件のノートのリンクを変換しました。"
     },
     "ko": {
       "name": "양방향 링크",
@@ -175,7 +274,25 @@
       "nofolder": "폴더를 열면 문서 사이의 링크를 볼 수 있습니다.",
       "nodoc": "문서를 열면 그 문서를 링크하는 노트가 보입니다.",
       "notInFolder": "이 문서는 열린 폴더에 없습니다.",
-      "tool.list_backlinks": "어떤 문서(경로가 없으면 앞에 열린 문서)에 대해, 그 문서로 링크하는 노트(경로·줄 번호·그 줄의 내용), 링크 없이 이름만 언급한 줄, 그 문서가 링크하는 노트를 나열합니다."
+      "tool.list_backlinks": "어떤 문서(경로가 없으면 앞에 열린 문서)에 대해, 그 문서로 링크하는 노트(경로·줄 번호·그 줄의 내용), 링크 없이 이름만 언급한 줄, 그 문서가 링크하는 노트를 나열합니다.",
+      "cmdLinkStyle": "새 링크 작성 방식: 표준 또는 위키…",
+      "cmdToMarkdown": "링크를 표준 링크로 변환…",
+      "cmdToWiki": "링크를 위키 링크로 변환…",
+      "styleAsk": "이 폴더의 새 링크를 어떻게 쓸까요",
+      "styleMarkdown": "표준 링크 [페이지](페이지.md): 어떤 앱에서도 열립니다",
+      "styleWiki": "위키 링크 [[페이지]]: Obsidian 방식",
+      "styleIsWiki": "이 폴더의 새 링크는 위키 링크로 씁니다.",
+      "styleIsMarkdown": "이 폴더의 새 링크는 표준 링크로 씁니다.",
+      "toMarkdown": "표준 링크로 변환: 어떤 노트를?",
+      "toWiki": "위키 링크로 변환: 어떤 노트를?",
+      "convertDocument": "지금 보고 있는 문서",
+      "convertFolder": "폴더의 모든 노트",
+      "convertReading": "노트를 읽는 중…",
+      "convertNone": "변환할 링크가 없습니다.",
+      "convertConfirm": "노트 {1}개에 있는 링크 {0}개를 변환할까요? 링크가 가리키는 곳은 그대로입니다.",
+      "convertLeft": "링크 {0}개는 그대로 둡니다: 가리키는 노트를 찾을 수 없거나 그림 또는 다른 파일을 보여 줍니다.",
+      "convertOk": "변환",
+      "convertDone": "노트 {0}개의 링크를 변환했습니다."
     },
     "es": {
       "name": "Enlaces bidireccionales",
@@ -194,7 +311,25 @@
       "nofolder": "Abre una carpeta para ver los enlaces entre sus documentos.",
       "nodoc": "Abre un documento para ver qué lo enlaza.",
       "notInFolder": "Este documento no está en la carpeta abierta.",
-      "tool.list_backlinks": "Para un documento - el que está al frente si no se da ruta - enumera las notas que enlazan a él (ruta, línea y texto de la línea), las líneas que lo nombran sin enlace y las notas a las que enlaza."
+      "tool.list_backlinks": "Para un documento - el que está al frente si no se da ruta - enumera las notas que enlazan a él (ruta, línea y texto de la línea), las líneas que lo nombran sin enlace y las notas a las que enlaza.",
+      "cmdLinkStyle": "Enlaces nuevos: estándar o [[wiki]]…",
+      "cmdToMarkdown": "Convertir enlaces a estándar…",
+      "cmdToWiki": "Convertir enlaces a [[enlaces wiki]]…",
+      "styleAsk": "Cómo se escriben los enlaces nuevos en esta carpeta",
+      "styleMarkdown": "Enlaces estándar, [Página](Página.md): se abren en cualquier app",
+      "styleWiki": "[[Enlaces wiki]]: como los escribe Obsidian",
+      "styleIsWiki": "Los enlaces nuevos de esta carpeta son [[enlaces wiki]].",
+      "styleIsMarkdown": "Los enlaces nuevos de esta carpeta son estándar.",
+      "toMarkdown": "Convertir a enlaces estándar: ¿qué notas?",
+      "toWiki": "Convertir a [[enlaces wiki]]: ¿qué notas?",
+      "convertDocument": "El documento al frente",
+      "convertFolder": "Todas las notas de la carpeta",
+      "convertReading": "Leyendo las notas…",
+      "convertNone": "No hay enlaces que convertir.",
+      "convertConfirm": "¿Convertir {0} enlaces en {1} notas? Cada uno sigue yendo al mismo sitio.",
+      "convertLeft": "{0} enlaces se quedan como están: no se encuentra su nota, o muestran una imagen u otro archivo.",
+      "convertOk": "Convertir",
+      "convertDone": "Enlaces convertidos en {0} notas."
     },
     "fr": {
       "name": "Liens bidirectionnels",
@@ -213,7 +348,25 @@
       "nofolder": "Ouvrez un dossier pour voir les liens entre ses documents.",
       "nodoc": "Ouvrez un document pour voir ce qui le lie.",
       "notInFolder": "Ce document n’est pas dans le dossier ouvert.",
-      "tool.list_backlinks": "Pour un document - celui au premier plan si aucun chemin n'est donné - liste les notes qui y renvoient (chemin, ligne, texte de la ligne), les lignes qui le nomment sans lien, et les notes vers lesquelles il renvoie."
+      "tool.list_backlinks": "Pour un document - celui au premier plan si aucun chemin n'est donné - liste les notes qui y renvoient (chemin, ligne, texte de la ligne), les lignes qui le nomment sans lien, et les notes vers lesquelles il renvoie.",
+      "cmdLinkStyle": "Nouveaux liens : standard ou [[wiki]]…",
+      "cmdToMarkdown": "Convertir les liens en liens standard…",
+      "cmdToWiki": "Convertir les liens en [[liens wiki]]…",
+      "styleAsk": "Comment écrire les nouveaux liens de ce dossier",
+      "styleMarkdown": "Liens standard, [Page](Page.md) : s’ouvrent dans n’importe quelle app",
+      "styleWiki": "[[Liens wiki]] : comme les écrit Obsidian",
+      "styleIsWiki": "Les nouveaux liens de ce dossier sont des [[liens wiki]].",
+      "styleIsMarkdown": "Les nouveaux liens de ce dossier sont des liens standard.",
+      "toMarkdown": "Convertir en liens standard : quelles notes ?",
+      "toWiki": "Convertir en [[liens wiki]] : quelles notes ?",
+      "convertDocument": "Le document au premier plan",
+      "convertFolder": "Toutes les notes du dossier",
+      "convertReading": "Lecture des notes…",
+      "convertNone": "Aucun lien à convertir.",
+      "convertConfirm": "Convertir {0} liens dans {1} notes ? Chacun mène toujours au même endroit.",
+      "convertLeft": "{0} liens restent tels quels : leur note est introuvable, ou ils affichent une image ou un autre fichier.",
+      "convertOk": "Convertir",
+      "convertDone": "Liens convertis dans {0} notes."
     },
     "de": {
       "name": "Bidirektionale Links",
@@ -232,7 +385,25 @@
       "nofolder": "Öffne einen Ordner, um die Links zwischen seinen Dokumenten zu sehen.",
       "nodoc": "Öffne ein Dokument, um zu sehen, was darauf verlinkt.",
       "notInFolder": "Dieses Dokument liegt nicht im geöffneten Ordner.",
-      "tool.list_backlinks": "Listet für ein Dokument - das vordere, wenn kein Pfad angegeben ist - die Notizen auf, die darauf verlinken (Pfad, Zeile, Text der Zeile), die Zeilen, die es ohne Link nennen, und die Notizen, auf die es verlinkt."
+      "tool.list_backlinks": "Listet für ein Dokument - das vordere, wenn kein Pfad angegeben ist - die Notizen auf, die darauf verlinken (Pfad, Zeile, Text der Zeile), die Zeilen, die es ohne Link nennen, und die Notizen, auf die es verlinkt.",
+      "cmdLinkStyle": "Neue Links: Standard oder [[Wiki]]…",
+      "cmdToMarkdown": "Links in Standardlinks umwandeln…",
+      "cmdToWiki": "Links in [[Wikilinks]] umwandeln…",
+      "styleAsk": "Wie neue Links in diesem Ordner geschrieben werden",
+      "styleMarkdown": "Standardlinks, [Seite](Seite.md): öffnen sich in jeder App",
+      "styleWiki": "[[Wikilinks]]: wie Obsidian sie schreibt",
+      "styleIsWiki": "Neue Links in diesem Ordner sind [[Wikilinks]].",
+      "styleIsMarkdown": "Neue Links in diesem Ordner sind Standardlinks.",
+      "toMarkdown": "In Standardlinks umwandeln: welche Notizen?",
+      "toWiki": "In [[Wikilinks]] umwandeln: welche Notizen?",
+      "convertDocument": "Das Dokument im Vordergrund",
+      "convertFolder": "Alle Notizen im Ordner",
+      "convertReading": "Notizen werden gelesen…",
+      "convertNone": "Kein Link zum Umwandeln.",
+      "convertConfirm": "{0} Links in {1} Notizen umwandeln? Jeder führt weiter zum selben Ziel.",
+      "convertLeft": "{0} Links bleiben, wie sie sind: Ihre Notiz ist nicht zu finden, oder sie zeigen ein Bild oder eine andere Datei.",
+      "convertOk": "Umwandeln",
+      "convertDone": "Links in {0} Notizen umgewandelt."
     },
     "ru": {
       "name": "Двусторонние ссылки",
@@ -251,7 +422,25 @@
       "nofolder": "Откройте папку, чтобы увидеть ссылки между документами.",
       "nodoc": "Откройте документ, чтобы увидеть, что на него ссылается.",
       "notInFolder": "Этот документ не в открытой папке.",
-      "tool.list_backlinks": "Для документа - переднего, если путь не указан, - перечисляет заметки со ссылками на него (путь, строка, текст строки), строки, где он назван без ссылки, и заметки, на которые он ссылается."
+      "tool.list_backlinks": "Для документа - переднего, если путь не указан, - перечисляет заметки со ссылками на него (путь, строка, текст строки), строки, где он назван без ссылки, и заметки, на которые он ссылается.",
+      "cmdLinkStyle": "Новые ссылки: обычные или [[вики]]…",
+      "cmdToMarkdown": "Превратить ссылки в обычные…",
+      "cmdToWiki": "Превратить ссылки в [[вики-ссылки]]…",
+      "styleAsk": "Как писать новые ссылки в этой папке",
+      "styleMarkdown": "Обычные ссылки [Страница](Страница.md): открываются в любом приложении",
+      "styleWiki": "[[Вики-ссылки]]: как их пишет Obsidian",
+      "styleIsWiki": "Новые ссылки в этой папке — [[вики-ссылки]].",
+      "styleIsMarkdown": "Новые ссылки в этой папке — обычные.",
+      "toMarkdown": "Превратить в обычные ссылки: какие заметки?",
+      "toWiki": "Превратить в [[вики-ссылки]]: какие заметки?",
+      "convertDocument": "Документ на переднем плане",
+      "convertFolder": "Все заметки в папке",
+      "convertReading": "Читаю заметки…",
+      "convertNone": "Нет ссылок для преобразования.",
+      "convertConfirm": "Преобразовать {0} ссылок в {1} заметках? Каждая ведёт туда же, куда и раньше.",
+      "convertLeft": "{0} ссылок останутся как есть: их заметка не найдена, или они показывают картинку или другой файл.",
+      "convertOk": "Преобразовать",
+      "convertDone": "Ссылки преобразованы в {0} заметках."
     },
     "pt": {
       "name": "Links bidirecionais",
@@ -270,7 +459,25 @@
       "nofolder": "Abra uma pasta para ver os links entre seus documentos.",
       "nodoc": "Abra um documento para ver o que aponta para ele.",
       "notInFolder": "Este documento não está na pasta aberta.",
-      "tool.list_backlinks": "Para um documento - o que está em primeiro plano se não for dado caminho - lista as notas que apontam para ele (caminho, linha, texto da linha), as linhas que o nomeiam sem link e as notas para onde ele aponta."
+      "tool.list_backlinks": "Para um documento - o que está em primeiro plano se não for dado caminho - lista as notas que apontam para ele (caminho, linha, texto da linha), as linhas que o nomeiam sem link e as notas para onde ele aponta.",
+      "cmdLinkStyle": "Links novos: padrão ou [[wiki]]…",
+      "cmdToMarkdown": "Converter links em links padrão…",
+      "cmdToWiki": "Converter links em [[links wiki]]…",
+      "styleAsk": "Como escrever os links novos nesta pasta",
+      "styleMarkdown": "Links padrão, [Página](Página.md): abrem em qualquer app",
+      "styleWiki": "[[Links wiki]]: como o Obsidian os escreve",
+      "styleIsWiki": "Os links novos desta pasta são [[links wiki]].",
+      "styleIsMarkdown": "Os links novos desta pasta são links padrão.",
+      "toMarkdown": "Converter em links padrão: quais notas?",
+      "toWiki": "Converter em [[links wiki]]: quais notas?",
+      "convertDocument": "O documento em primeiro plano",
+      "convertFolder": "Todas as notas da pasta",
+      "convertReading": "Lendo as notas…",
+      "convertNone": "Nenhum link para converter.",
+      "convertConfirm": "Converter {0} links em {1} notas? Cada um continua levando ao mesmo lugar.",
+      "convertLeft": "{0} links ficam como estão: a nota deles não foi encontrada, ou mostram uma imagem ou outro arquivo.",
+      "convertOk": "Converter",
+      "convertDone": "Links convertidos em {0} notas."
     }
   }
 }

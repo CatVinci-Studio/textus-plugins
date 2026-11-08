@@ -101,5 +101,9 @@
   "catvinci.zotero/lib/name-order.js": "./shared/name-order.js",
   "catvinci.slides/lib/folder-paths.js": "./shared/folder-paths.js",
   "catvinci.kanban/lib/drag.js": "./shared/drag.js",
-  "catvinci.database/lib/drag.js": "./shared/drag.js"
+  "catvinci.database/lib/drag.js": "./shared/drag.js",
+  "catvinci.database/lib/link-style.js": "./shared/link-style.js",
+  "catvinci.backlinks/lib/link-style.js": "./shared/link-style.js",
+  "catvinci.quick-insert/lib/link-style.js": "./shared/link-style.js",
+  "catvinci.notion-import/lib/link-style.js": "./shared/link-style.js"
 }

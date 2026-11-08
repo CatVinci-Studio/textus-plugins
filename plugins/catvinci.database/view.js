@@ -115,7 +115,10 @@
     const type = typeOf(key);
     const holder = el("span", { class: "tx-chip editing" }, label(key) + " " + s(OP_NAMES[op] || "is").toLowerCase() + " ");
     $("rules").append(holder);
-    const input = el("input", { type: type === "date" ? "date" : type === "number" ? "number" : "text", class: "cell-input", "aria-label": s("value") });
+    const input =
+      type === "date"
+        ? dateInput({ class: "cell-input", "aria-label": s("value") })
+        : el("input", { type: type === "number" ? "number" : "text", class: "cell-input", "aria-label": s("value") });
     holder.append(input);
     editing = true;
     let done = false;
@@ -330,15 +333,27 @@
   }
 
   /** `td` as a field holding `value`; `commit(text)` on Enter or leaving. */
+  /** A date as it is written in the note, the way the table shows it: the
+   *  system's date field would show it in its own order (11/02/2026). */
+  const DATE = /^\d{4}-\d{2}-\d{2}([ T]\d{2}:\d{2}(:\d{2})?)?$/;
+
+  function dateInput(attrs) {
+    return el("input", { ...attrs, type: "text", placeholder: "YYYY-MM-DD", inputmode: "numeric", spellcheck: "false" });
+  }
+
   function editInline(td, value, kind, commit) {
-    const input = el("input", { type: kind, class: "cell-input", value: value === undefined || value === null ? "" : String(value) });
+    const text = value === undefined || value === null ? "" : String(value);
+    const input = kind === "date" ? dateInput({ class: "cell-input", value: text }) : el("input", { type: kind, class: "cell-input", value: text });
     let done = false;
     editing = true;
     const finish = (keep) => {
       if (done) return;
       done = true;
       editing = false;
-      const changed = keep && input.value.trim() !== String(value ?? "");
+      const typed = input.value.trim();
+      // Not a date: the cell keeps what it had.
+      const valid = kind !== "date" || typed === "" || DATE.test(typed);
+      const changed = keep && valid && typed !== String(value ?? "");
       if (changed) commit(input.value.trim());
       if (!changed || stale) render();
     };
@@ -349,7 +364,7 @@
     input.addEventListener("blur", () => finish(true));
     td.replaceChildren(input);
     input.focus();
-    if (kind === "text") input.select();
+    if (kind === "text" || kind === "date") input.select();
   }
 
   function cell(row, key) {

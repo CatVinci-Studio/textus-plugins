@@ -3,7 +3,7 @@
 // that Textus filters as you type; the links are written as Textus would
 // write them (metadata.linkTo), so a vault's link format holds.
 
-/* global noteParts, folderPaths */
+/* global noteParts, folderPaths, linkStyle */
 const completeLinks = (function () {
   /** What linkTo said, for the last few documents written in; dropped
    *  when notes come or go. */
@@ -19,7 +19,7 @@ const completeLinks = (function () {
     const links = written.get(from);
     const key = JSON.stringify([to, options]);
     if (!links.has(key)) {
-      const link = textus.metadata.linkTo(to, from, Object.assign({ style: "wiki" }, options));
+      const link = linkStyle.linkTo(to, from, options);
       links.set(key, link);
       link.catch(() => links.delete(key));
     }

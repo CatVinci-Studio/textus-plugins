@@ -1,7 +1,7 @@
 {
   "id": "catvinci.database",
   "name": "%name%",
-  "version": "0.7.1",
+  "version": "0.7.2",
   "publisher": "catvinci",
   "author": "CatVinci Studio",
   "description": "%description%",
@@ -17,6 +17,7 @@
   ],
   "main": [
     "lib/folder-paths.js",
+    "lib/link-style.js",
     "lib/yaml.js",
     "lib/expr.js",
     "lib/bases.js",
