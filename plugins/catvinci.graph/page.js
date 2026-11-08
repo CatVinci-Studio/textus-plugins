@@ -16,7 +16,7 @@
   const $ = (id) => document.getElementById(id);
   const view = window.createGraphView($("graph"), {
     onOpen: (path, newTab) =>
-      api.postMessage({ type: "open", path: path, newTab: newTab }),
+      api.postMessage({ type: "open", path: path }),
   });
   if ($("fit")) {
     $("fit").textContent = t("fit");

@@ -123,6 +123,12 @@
       unknownView: FROM_BASES[String(v.type)] ? null : String(v.type || ""),
       name: v.name ? String(v.name) : null,
       columns: Array.isArray(v.order) ? v.order.map(keyOf).filter((k) => k !== "name") : null,
+      // Obsidian's columnSize: a column's width in pixels, by property.
+      widths: Object.fromEntries(
+        Object.entries(v.columnSize && typeof v.columnSize === "object" ? v.columnSize : {})
+          .filter(([, w]) => typeof w === "number" && w > 0)
+          .map(([id, w]) => [keyOf(id), w]),
+      ),
       sort: (Array.isArray(v.sort) ? v.sort : [])
         .filter((s) => s && s.property)
         .map((s) => ({ key: keyOf(s.property), desc: String(s.direction).toUpperCase() === "DESC" })),
@@ -143,6 +149,14 @@
     if (spec.view) v.type = TO_BASES[spec.view] || spec.view;
     if (spec.name !== undefined && spec.name !== null) v.name = spec.name;
     if (spec.columns) v.order = ["file.name"].concat(spec.columns.map(idOf));
+    if (spec.width) {
+      const sizes = { ...(v.columnSize && typeof v.columnSize === "object" ? v.columnSize : {}) };
+      // Whichever way the property was written ("status", "note.status").
+      for (const id of Object.keys(sizes)) if (keyOf(id) === spec.width.key) delete sizes[id];
+      if (spec.width.px) sizes[idOf(spec.width.key)] = Math.round(spec.width.px);
+      if (Object.keys(sizes).length) v.columnSize = sizes;
+      else delete v.columnSize;
+    }
     if (spec.sort) {
       if (spec.sort.length) v.sort = spec.sort.map((s) => ({ property: idOf(s.key), direction: s.desc ? "DESC" : "ASC" }));
       else delete v.sort;

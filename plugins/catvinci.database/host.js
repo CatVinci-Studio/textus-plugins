@@ -210,21 +210,22 @@ function draw(target, webview, context) {
     target.onDidChange(send);
     webview.onDidReceiveMessage(async (m) => {
       if (!m) return;
-      const set = (spec) => changeBase(target, (base) => database.setView(base, Math.min(index, base.views.length - 1), spec));
+      // View `at` (the one in front unless a menu named another) set to `spec`.
+      const set = (spec, at = index) => changeBase(target, (base) => database.setView(base, Math.min(at, base.views.length - 1), spec));
       switch (m.type) {
         case "ready":
         case "select":
           index = m.index | 0;
           return send();
-        // A row opens beside the base, to read and write in.
+        // A row opens in a tab, as a file does.
         case "open":
-          return textus.layout.open(join(root, m.rel), { where: "beside" });
+          return textus.layout.open(join(root, m.rel));
         case "set":
           return setProp(m.rel, m.key, m.value);
         case "add":
           return addRow(m.folder, m.props, m.title);
         case "view":
-          return set({ view: m.view });
+          return set({ view: m.view }, m.index ?? index);
         case "addView":
           return changeBase(target, (base) => {
             select(base.views.length);
@@ -232,13 +233,13 @@ function draw(target, webview, context) {
           });
         case "renameView": {
           const name = ((await textus.ui.input({ prompt: t("renameView"), value: m.name || "" })) || "").trim();
-          return name && set({ name });
+          return name && set({ name }, m.index ?? index);
         }
         case "deleteView":
           return changeBase(target, (base) => {
             if (base.views.length < 2) return base;
-            const gone = Math.min(index, base.views.length - 1);
-            select(Math.max(0, gone - 1));
+            const gone = Math.min(m.index ?? index, base.views.length - 1);
+            if (gone <= index) select(Math.max(0, index - 1));
             return { ...base, views: base.views.filter((_, n) => n !== gone) };
           });
         // Filters, sorts, columns, grouping, the board's order, as the view's menus set them.

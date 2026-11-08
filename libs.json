@@ -106,5 +106,7 @@
   "catvinci.tags/lib/name-order.js": "./shared/name-order.js",
   "catvinci.graph/lib/name-order.js": "./shared/name-order.js",
   "catvinci.zotero/lib/name-order.js": "./shared/name-order.js",
-  "catvinci.slides/lib/folder-paths.js": "./shared/folder-paths.js"
+  "catvinci.slides/lib/folder-paths.js": "./shared/folder-paths.js",
+  "catvinci.kanban/lib/drag.js": "./shared/drag.js",
+  "catvinci.database/lib/drag.js": "./shared/drag.js"
 }

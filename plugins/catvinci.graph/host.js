@@ -148,10 +148,7 @@ function wire(webview, isLocal) {
       else await sendGlobal(webview);
     }
     if (message.type === "open" && message.path)
-      await textus.layout.open(
-        message.path,
-        message.newTab ? { where: "tab" } : undefined,
-      );
+      await textus.layout.open(message.path);
     if (message.type === "full")
       await textus.layout.openView("catvinci.graph.global");
     if (message.type === "settings") {

@@ -29,11 +29,36 @@ body {
 .tx-segment .tx-icon {
   margin-right: var(--space-1);
 }
+/* The view in front opens its menu: a small chevron says so. */
+.tx-segment .tx-icon.view-menu {
+  margin: 0 0 0 var(--space-1);
+  transform: rotate(90deg) scale(0.75);
+}
 
 /* Table */
 .tx-table th {
+  position: relative;
   cursor: pointer;
   user-select: none;
+  -webkit-user-select: none;
+}
+/* A column's width: its head's right edge, dragged. */
+.col-resize {
+  position: absolute;
+  top: 0;
+  right: -4px;
+  z-index: 1;
+  width: 8px;
+  height: 100%;
+  cursor: col-resize;
+}
+.tx-table :is(th, td).sized {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.tx-table tr.more-row td,
+.tx-table tr.new-row td {
+  padding: var(--space-1) var(--space-2);
 }
 .tx-table th .tx-icon:last-child:not(:first-child) {
   margin: 0 0 0 var(--space-1);
@@ -128,15 +153,14 @@ body {
   border-radius: var(--shape-m);
   background: var(--ui-subtle);
 }
-.lane.drop {
-  outline: 2px solid var(--ui-accent);
-  outline-offset: -2px;
-}
 .lane-head {
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: var(--space-1);
+  cursor: grab;
+  user-select: none;
+  -webkit-user-select: none;
 }
 .lane-head .count {
   color: var(--ui-muted);
@@ -147,6 +171,9 @@ body {
   flex-direction: column;
   gap: var(--space-1);
   padding: var(--space-3);
+  cursor: grab;
+  user-select: none;
+  -webkit-user-select: none;
   cursor: grab;
 }
 .record .prop,
@@ -296,9 +323,12 @@ body.folded #body {
 .more {
   margin-top: var(--space-2);
 }
-.lane-head {
-  cursor: grab;
-  user-select: none;
+.more-row .more {
+  margin-top: 0;
+}
+/* Folded, the bar is all there is: no room left under it. */
+body.folded #bar {
+  margin-bottom: 0;
 }
 
 /* List */

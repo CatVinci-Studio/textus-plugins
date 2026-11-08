@@ -71,6 +71,23 @@ describe("a base", () => {
     ).toEqual(["Board", "Places"]);
   });
 
+  it("keeps a column's width where Obsidian does (columnSize), and lets it go", () => {
+    const { base } = db.parseBase(
+      "views:\n  - type: table\n    columnSize:\n      note.status: 140\n      file.name: 220\n",
+    );
+    expect(db.viewSpec(base, 0).widths).toEqual({ status: 140, name: 220 });
+    const wider = db.setView(base, 0, { width: { key: "due", px: 96.4 } });
+    expect((load(db.writeBase(wider)) as { views: { columnSize: unknown }[] }).views[0].columnSize).toEqual({
+      "note.status": 140,
+      "file.name": 220,
+      due: 96,
+    });
+    const fit = db.setView(db.setView(base, 0, { width: { key: "status", px: 0 } }), 0, {
+      width: { key: "name", px: 0 },
+    });
+    expect((load(db.writeBase(fit)) as { views: Record<string, unknown>[] }).views[0]).not.toHaveProperty("columnSize");
+  });
+
   it("writes a view's change back and keeps what it doesn't know", () => {
     const { base } = db.parseBase(SOURCE);
     const next = db.setView(base, 0, {
