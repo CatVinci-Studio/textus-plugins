@@ -6,7 +6,8 @@
 // Obsidian vault that sets none keeps them at its top, as Obsidian does.
 // Weekly and monthly notes, when turned on, work the same way, a vault's
 // Periodic Notes settings winning.
-/* global folderConventions, folderPaths, dates */
+/* global folderConventions, folderPaths */
+const today = () => textus.dates.format(new Date());
 /** What activate was given: the plugin's storage and own files. */
 let ctx;
 
@@ -64,7 +65,8 @@ async function folder(period = "daily") {
 
 /** The note of `date` (YYYY-MM-DD) and its path in the folder. */
 function noteFor(where, date) {
-  const rel = dates.notePath(where.rel, where.format, dayOf(date), textus.env.language);
+  const name = textus.dates.format(dayOf(date), where.format);
+  const rel = (where.rel ? where.rel + "/" : "") + name + ".md";
   return { rel: rel, path: folderPaths.abs(where.root, rel) };
 }
 
@@ -78,7 +80,7 @@ function dateAt(where, path) {
   const inside = folderPaths.rel(where.root, path);
   const prefix = where.rel ? where.rel + "/" : "";
   return inside !== null && inside.startsWith(prefix)
-    ? dates.parse(inside.slice(prefix.length).replace(/\.md$/i, ""), where.format, textus.env.language)
+    ? textus.dates.parse(inside.slice(prefix.length).replace(/\.md$/i, ""), where.format)
     : null;
 }
 
@@ -124,14 +126,14 @@ async function refresh() {
 /** `date` (YYYY-MM-DD) `days` later, or earlier when negative. */
 function shift(date, days) {
   const [y, m, d] = date.split("-").map(Number);
-  return dates.day(new Date(y, m - 1, d + days));
+  return textus.dates.format(new Date(y, m - 1, d + days));
 }
 
 /** The day of the note in front - a daily note's name - else today. */
 async function dayInFront() {
   const where = await folder();
   const path = await textus.editor.getPath().catch(() => null);
-  return (where && dateAt(where, path)) || dates.day(new Date());
+  return (where && dateAt(where, path)) || today();
 }
 
 /** A new note's template: the vault's template note, a template of the
@@ -152,11 +154,12 @@ async function ensureNote(where, note, date) {
   const title = note.rel.split("/").pop().replace(/\.md$/, "");
   const parent = note.path.replace(/[\\/][^\\/]*$/, "");
   await textus.files.createFolder(parent).catch(() => {});
-  const text = dates.fillNote(await templateText(where), dayOf(date), {
+  const filled = await textus.templates.fill(await templateText(where), {
+    date: date,
     format: where.format,
-    language: textus.env.language,
     title: title,
   });
+  const text = filled.text;
   await textus.files.create(note.path, text).catch(() => {});
 }
 
@@ -180,7 +183,7 @@ const LIST_ITEM = /^\s*(?:[-*+]|\d+[.)])\s/;
 async function noteOf(input) {
   const where = await folder();
   if (!where) return { error: "No folder is open." };
-  const date = input.date ? String(input.date).trim() : dates.day(new Date());
+  const date = input.date ? String(input.date).trim() : today();
   if (!DAY.test(date)) return { error: "date must be YYYY-MM-DD." };
   const note = noteFor(where, date);
   return { date: date, path: note.path, rel: note.rel, where: where, note: note };
@@ -218,7 +221,7 @@ async function appendToDailyNote(input) {
 exports.activate = function (context) {
   ctx = context;
   textus.commands.register("catvinci.daily-notes.today", function () {
-    return openDay(dates.day(new Date()));
+    return openDay(today());
   });
   // From a day's note to the one before or after it.
   textus.commands.register("catvinci.daily-notes.previous", async function () {
@@ -228,10 +231,10 @@ exports.activate = function (context) {
     return openDay(shift(await dayInFront(), 1));
   });
   textus.commands.register("catvinci.daily-notes.week", function () {
-    return openDay(dates.day(new Date()), "weekly");
+    return openDay(today(), "weekly");
   });
   textus.commands.register("catvinci.daily-notes.month", function () {
-    return openDay(dates.day(new Date()), "monthly");
+    return openDay(today(), "monthly");
   });
   textus.ai.registerTool("read_daily_note", readDailyNote);
   textus.ai.registerTool("append_to_daily_note", appendToDailyNote);

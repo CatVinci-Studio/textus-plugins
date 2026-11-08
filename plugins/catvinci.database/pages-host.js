@@ -91,7 +91,7 @@ async function newSubpage(path) {
   await textus.files.createFolder(join(root, rel.slice(0, rel.lastIndexOf("/")))).catch(() => {});
   await textus.files.create(file, "# " + title.trim() + "\n");
   if (parent === active)
-    await textus.editor.insertText(pages.link(rel, docs.map((d) => d.rel).concat([rel])));
+    await textus.editor.insertText(await textus.metadata.linkTo(file, active));
   await textus.layout.open(file);
 }
 
@@ -252,8 +252,8 @@ async function createPage(input) {
   const body = input.body ? "\n" + String(input.body).replace(/\s+$/, "") + "\n" : "";
   await textus.files.create(file, "# " + title + "\n" + body);
   if (input.icon) await textus.files.frontmatter.update(file, (fm) => void (fm.icon = String(input.icon)));
-  const rels = docs.map((d) => d.rel).concat([rel]);
-  return { path: rel, parent: parentRel, link: pages.link(rel, rels) };
+  const from = (await textus.editor.getPath().catch(() => null)) || file;
+  return { path: rel, parent: parentRel, link: await textus.metadata.linkTo(file, from) };
 }
 
 return function activatePages(ctx) {

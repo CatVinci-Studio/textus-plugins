@@ -6,6 +6,13 @@ let r: any;
 
 beforeAll(async () => {
   await import("../shared/dates.js");
+  // Textus's textus.dates, as the host frame has it.
+  const { dates } = globalThis as unknown as {
+    dates: { format: (d: Date, f: string) => string };
+  };
+  (globalThis as unknown as { textus: unknown }).textus = {
+    dates: { format: (d: Date, f = "YYYY-MM-DD") => dates.format(d, f) },
+  };
   const script = "../plugins/catvinci.reminders/reminders.js";
   await import(/* @vite-ignore */ script);
   r = (globalThis as unknown as { reminders: unknown }).reminders;

@@ -3,7 +3,7 @@
 // later on this computer (http://localhost:23119/api/), which Zotero serves
 // once "Allow other applications on this computer to communicate with
 // Zotero" is on - nothing leaves the computer.
-/* global folderConventions, folderPaths, dates */
+/* global folderConventions, folderPaths */
 /** What activate was given: the plugin's storage and own files. */
 let ctx;
 
@@ -297,18 +297,18 @@ function yamlValue(value) {
 /** A literature note: `template` filled with `values`, a front matter
  *  line that is one {{key}} written as YAML. The default template drops
  *  what the item has none of. */
-function noteText(template, values, language) {
-  const fill = (text) => dates.fill(text, { values: values, language: language });
+async function noteText(template, values, language) {
+  const fill = async (text) => (await textus.templates.fill(text, { values: values, language: language })).text;
   const front = /^---\r?\n[^]*?\r?\n---\r?\n/.exec(template);
   let head = front
-    ? fill(
+    ? await fill(
         front[0].replace(
           /^([ \t]*[\w-]+:[ \t]*)\{\{\s*([\w.-]+)\s*\}\}[ \t]*$/gm,
           (all, lead, key) => (key in values ? lead + yamlValue(values[key]) : all),
         ),
       )
     : "";
-  let body = fill(template.slice(front ? front[0].length : 0));
+  let body = await fill(template.slice(front ? front[0].length : 0));
   if (template !== defaultTemplate()) return head + body;
   head = head.replace(/^[\w-]+:[ \t]*\n/gm, "");
   body = body
@@ -368,7 +368,7 @@ async function openNote(root, item) {
   const path = notePath(root, where, item);
   if (!(await textus.files.stat(path).catch(() => null))) {
     const values = noteValues(item, await childrenOf(item).catch(() => []));
-    const text = noteText(await templateFor(root, where), values, textus.env.language);
+    const text = await noteText(await templateFor(root, where), values, textus.env.language);
     if (where.folder) await textus.files.createFolder(folderPaths.abs(root, where.folder)).catch(() => {});
     await textus.files.create(path, text);
   }

@@ -4,25 +4,17 @@
 // {{date:YYYY-MM-DD}}, and Templater's common <% tp.… %> tags) into a new
 // document or at the caret. Templates kept in the plugin's storage before
 // 0.3 are copied there once.
-/* global folderConventions, folderPaths, dates, freeName, templater, nameOrder */
+/* global folderConventions, folderPaths, freeName, nameOrder */
 let ctx;
 const t = (key, ...args) => textus.l10n.t(key, ...args);
 const MOVED = "movedToFolder";
 
 /** A template filled in for a document titled `title` in `folder` (in the
- *  open folder): {{date}} and {{time}} in the vault's Templates formats,
- *  then Templater's tags. Gives the text, the caret's offset or null, and
- *  the tags left as written. */
-async function fill(root, text, title, folder) {
-  const formats = await folderConventions.obsidianSettings(root, "templates.json");
-  const language = textus.env.language;
-  const filled = dates.fill(text, {
-    language: language,
-    dateFormat: formats.dateFormat,
-    timeFormat: formats.timeFormat,
-    values: { title: title },
-  });
-  return templater.fill(filled, { title: title, folder: folder, now: new Date(), language: language });
+ *  open folder), as Textus fills one: the vault's Templates formats, then
+ *  Templater's tags. Gives the text, the caret's offset or null, and the
+ *  tags left as written. */
+function fill(text, title, folder) {
+  return textus.templates.fill(text, { title: title, folder: folder });
 }
 
 /** One notice naming the tags a template had that weren't run. */
@@ -36,7 +28,16 @@ function tellSkipped(filled) {
 async function placeCaret(editor, filled, start) {
   if (filled.cursor === null) return;
   const doc = (await editor.getText()) || "";
-  await editor.reveal(templater.place(doc, start + filled.cursor));
+  await editor.reveal(place(doc, start + filled.cursor));
+}
+
+/** Where `at` (an offset in `doc`) is for editor.reveal: its line, and the
+ *  rest of that line when it is plain words found once. */
+function place(doc, at) {
+  const line = doc.slice(0, at).split("\n").length - 1;
+  const rest = doc.slice(at).split("\n")[0].trim();
+  const plain = /^[\p{L}\p{N}\s,.;:!?'’()-]+$/u.test(rest);
+  return plain && doc.indexOf(rest) === doc.lastIndexOf(rest) ? { line: line, text: rest } : { line: line };
 }
 
 /** Where `after` (a document's text) first differs from `before`. */
@@ -137,7 +138,7 @@ async function createFromTemplate(input) {
   const path = folderPaths.abs(place.root, rel);
   if (await textus.files.stat(path)) return { error: t("exists", title) };
   if (folder) await textus.files.createFolder(folderPaths.abs(place.root, folder)).catch(() => {});
-  const filled = await fill(place.root, await textus.files.readText(tpl.path), title, folder);
+  const filled = await fill(await textus.files.readText(tpl.path), title, folder);
   await textus.files.create(path, filled.text);
   return filled.skipped.length
     ? { path: rel, template: tpl.name, notRun: filled.skipped }
@@ -157,7 +158,7 @@ exports.activate = function (context) {
     if (!title || !title.trim()) return;
     const path = folderPaths.abs(place.root, title.trim().replace(/[\\/:*?"<>|]/g, "-") + ".md");
     if (await textus.files.stat(path)) return textus.ui.message(t("exists", title.trim()));
-    const filled = await fill(place.root, template.text, title.trim(), "");
+    const filled = await fill(template.text, title.trim(), "");
     await textus.files.create(path, filled.text);
     await textus.layout.open(path);
     await placeCaret(textus.editor, filled, 0);
@@ -170,7 +171,7 @@ exports.activate = function (context) {
     if (!template) return;
     const path = (await editor.getPath()) || "";
     const title = path.split(/[\\/]/).pop().replace(/\.md$/i, "") || template.name;
-    const filled = await fill(place.root, template.text, title, folderOf(folderPaths.rel(place.root, path)));
+    const filled = await fill(template.text, title, folderOf(folderPaths.rel(place.root, path)));
     const before = (await editor.getText()) || "";
     await editor.insertText(filled.text);
     await placeCaret(editor, filled, firstChange(before, (await editor.getText()) || ""));

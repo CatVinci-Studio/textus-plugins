@@ -1,6 +1,6 @@
 import { beforeAll, describe, expect, it } from "vitest";
 
-/** Templater's tags, as Templates fills them in (plugins/catvinci.templates/templater.js). */
+/** Templater's tags, as Templates fills them in (shared/templater.js). */
 type Filled = { text: string; cursor: number | null; skipped: string[] };
 let tp: {
   fill: (text: string, c: { title: string; folder: string; now: Date; language?: string; created?: Date }) => Filled;
@@ -9,7 +9,7 @@ let tp: {
 
 beforeAll(async () => {
   await import("../shared/dates.js");
-  const script = "../plugins/catvinci.templates/templater.js";
+  const script = "../shared/templater.js";
   await import(/* @vite-ignore */ script);
   tp = (globalThis as unknown as { templater: typeof tp }).templater;
 });

@@ -57,11 +57,11 @@ describe("an @ date as a link", () => {
     expect((await linkFor({ ".obsidian/app.json": "{}" })).insert).toBe(plain.insert);
     const named = await linkFor({ ".obsidian/daily-notes.json": '{"folder":"Journal","format":"MMMM Do, YYYY"}' });
     expect(named.insert).toMatch(/^\[\[[A-Z][a-z]+ \d{1,2}(st|nd|rd|th), \d{4}\]\]$/);
-    // A name format that makes folders links by the path from the vault.
+    // A name format that makes folders: the link is the folder's to write.
     const nested = await linkFor({ ".obsidian/daily-notes.json": '{"folder":"Journal","format":"YYYY/MM/YYYY-MM-DD"}' });
     const y = nested.day.getFullYear();
     const mm = String(nested.day.getMonth() + 1).padStart(2, "0");
-    expect(nested.insert).toMatch(new RegExp(`^\\[\\[Journal/${y}/${mm}/${y}-${mm}-\\d{2}\\]\\]$`));
+    expect(nested.insert).toMatch(new RegExp(`^\\[\\[${y}-${mm}-\\d{2}\\]\\]$`));
   });
 });
 

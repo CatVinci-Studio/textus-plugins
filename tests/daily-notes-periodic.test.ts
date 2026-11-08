@@ -73,7 +73,7 @@ describe("weekly and monthly notes", () => {
     expect(Object.keys(files)).toEqual(["Journal/Weeks/2026-W45.md"]);
   });
 
-  it("follow a vault's Periodic Notes settings, and leave them as they are", async () => {
+  it("follow the notes a vault's Periodic Notes turns on, the plugin's own settings for the rest", async () => {
     const data = JSON.stringify({
       weekly: { enabled: true, folder: "Periodic/Weeks", format: "YYYY-[w]w", template: "Meta/Week" },
       monthly: { enabled: false, folder: "Periodic/Months", format: "YYYY-MM" },
@@ -86,7 +86,9 @@ describe("weekly and monthly notes", () => {
     await commands.get("catvinci.daily-notes.week")!();
     await commands.get("catvinci.daily-notes.month")!();
     expect(files["Periodic/Weeks/2026-w45.md"]).toBe("Week of 2026-11-01\n");
-    expect(messages).toEqual(["monthlyOff"]);
+    // Months, off in the vault, are on in the plugin's own settings.
+    expect(messages).toEqual([]);
+    expect(Object.keys(files).some((f) => f.startsWith("Monthly/"))).toBe(true);
     expect(files[".obsidian/plugins/periodic-notes/data.json"]).toBe(data);
   });
 

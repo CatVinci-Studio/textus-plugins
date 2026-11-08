@@ -1,7 +1,7 @@
 // How the open folder is written, as Textus reads it for every app
-// (textus.files.conventions): the templates folder and the daily notes
-// settings, Templates/ and the plugin's own settings where no app says -
-// and the few settings of an Obsidian vault Textus doesn't read.
+// (textus.files.conventions, 1.3.10): the templates folder and the daily,
+// weekly and monthly notes, Templates/ and the plugin's own settings where
+// no app says - and a vault's other settings files (files.appSettings).
 // Each plugin using it lists this as lib/conventions.js in libs.json,
 // after lib/folder-paths.js.
 /* global folderPaths */
@@ -24,63 +24,49 @@
   /** The templates folder in `base`: the app's, else Templates. */
   async function templatesFolder(base) {
     var c = await of(base);
-    var folder = c && c.templates && inFolder(base, c.templates.value);
+    var t = pick(c, "templates");
+    var folder = t && inFolder(base, t.value);
     return folder === null || folder === undefined ? "Templates" : folder;
   }
 
-  /** The Obsidian vault `base` is in, as Textus found it; null for none. */
-  function obsidian(c) {
-    return (c && (c.sources || []).find((s) => s.app === "obsidian")) || null;
+  /** A setting of the folder's app, whether or not the folder took its
+   *  settings. */
+  function pick(c, key) {
+    return (c && (c[key] || (c.detected && c.detected[key]))) || null;
   }
 
-  /** A JSON file of the vault's .obsidian folder, as an object; {} with no
-   *  vault, or no such file. */
+  /** A JSON file of the nearest vault's .obsidian folder, as an object; {}
+   *  with no vault, or no such file. Found above the open folder too. */
   async function obsidianSettings(base, name) {
-    var vault = obsidian(await of(base));
-    if (!vault) return {};
-    try {
-      return JSON.parse(await textus.files.readText(folderPaths.abs(vault.root, ".obsidian/" + name))) || {};
-    } catch {
-      return {};
-    }
+    var found = await textus.files.appSettings("obsidian", name, base).catch(function () {
+      return null;
+    });
+    return found && typeof found === "object" ? found : {};
   }
 
-  /** The daily notes' folder (in `base`), name format and template file (in
-   *  `base`, or null for none); null when no app says. A vault without
-   *  daily notes settings keeps them at its top, as Obsidian does. */
-  async function daily(base) {
-    var c = await of(base);
-    var d = c && c.daily && c.daily.value;
-    var vault = !d && obsidian(c);
-    if (vault) return { folder: inFolder(base, vault.root) || "", format: "YYYY-MM-DD", template: null };
+  /** Periodic notes as Textus reads them: folder (in `base`), name format
+   *  and template file (in `base`, or null). */
+  function notes(base, setting) {
+    var d = setting && setting.value;
     if (!d) return null;
     return {
+      enabled: true,
       folder: inFolder(base, d.folder) || "",
       format: d.format,
       template: d.template ? inFolder(base, d.template) : null,
     };
   }
 
-  /** A vault's weekly or monthly notes (`period`), as the Periodic Notes
-   *  plugin sets them: on or off, folder (in `base`), name format and
-   *  template file; null when it sets none. */
+  /** The daily notes; null when no app says. A vault without daily notes
+   *  settings keeps them at its top, as Obsidian does (Textus says so). */
+  async function daily(base) {
+    return notes(base, pick(await of(base), "daily"));
+  }
+
+  /** A vault's weekly or monthly notes (`period`), only where Periodic
+   *  Notes turns them on; null otherwise. */
   async function periodic(base, period) {
-    var vault = obsidian(await of(base));
-    if (!vault) return null;
-    var p;
-    try {
-      p = JSON.parse(await textus.files.readText(folderPaths.abs(vault.root, ".obsidian/plugins/periodic-notes/data.json")))[period];
-    } catch {
-      return null;
-    }
-    if (!p || typeof p !== "object") return null;
-    var inVault = (rel) => inFolder(base, folderPaths.abs(vault.root, String(rel).replace(/^\/+|\/+$/g, "")));
-    return {
-      enabled: !!p.enabled,
-      folder: (p.folder && inVault(p.folder)) || "",
-      format: p.format || null,
-      template: p.template ? inVault(p.template) : null,
-    };
+    return notes(base, pick(await of(base), period));
   }
 
   /** Calendar & Daily Notes' own settings, where no app says. */
