@@ -77,6 +77,9 @@ let pose = "daydream";
 /** The half of the window or screen she sits in: she faces the middle. */
 let side = "right";
 let guest = null;
+/** Whether Textus AI's panel is open: closed, its guest goes home. Textus
+ *  before 1.3.10 doesn't say, so it counts as open. */
+let aiOpen = true;
 let aiBusy = false;
 let away = false;
 let flowSince = null;
@@ -103,11 +106,11 @@ async function setting(key) {
 }
 
 /** Who is out: the one chosen, else the guest of Textus AI's model while
- *  it works and a little after, else Moyu. */
+ *  it works and a little after (its panel open), else Moyu. */
 async function who() {
   const chosen = await setting("character");
   if (chosen && chosen !== "auto" && CHARACTERS.includes(chosen)) return chosen;
-  return guest || "textus";
+  return (aiOpen && guest) || "textus";
 }
 
 function page(character) {
@@ -404,4 +407,12 @@ exports.activate = function (ctx) {
   void textus.ai.state().then((state) => {
     if (state && state.state !== "idle") void aiChanged(state);
   });
+  if (textus.layout.panels) {
+    const panels = (state) => {
+      aiOpen = !!(state && state.ai && state.ai.open);
+      void refresh();
+    };
+    ctx.subscriptions.push(textus.layout.onDidChangePanels(panels));
+    void textus.layout.panels().then(panels);
+  }
 };
