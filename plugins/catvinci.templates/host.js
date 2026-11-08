@@ -149,16 +149,22 @@ exports.activate = function (context) {
   ctx = context;
   textus.ai.registerTool("list_templates", listTemplates);
   textus.ai.registerTool("create_from_template", createFromTemplate);
-  textus.commands.register("catvinci.templates.new", async function () {
+  // From a file's or folder's menu, it is made in that folder.
+  textus.commands.register("catvinci.templates.new", async function (target) {
     const place = await where();
     if (!place) return textus.ui.message(t("needsFolder"));
     const template = await pickTemplate(place);
     if (!template) return;
     const title = await textus.ui.input({ prompt: t("docName"), value: template.name });
     if (!title || !title.trim()) return;
-    const path = folderPaths.abs(place.root, title.trim().replace(/[\\/:*?"<>|]/g, "-") + ".md");
+    let dir = place.root;
+    if (typeof target === "string" && folderPaths.rel(place.root, target) !== null) {
+      const stat = await textus.files.stat(target).catch(() => null);
+      dir = stat && stat.isDir ? target : target.replace(/[\\/][^\\/]*$/, "");
+    }
+    const path = folderPaths.abs(dir, title.trim().replace(/[\\/:*?"<>|]/g, "-") + ".md");
     if (await textus.files.stat(path)) return textus.ui.message(t("exists", title.trim()));
-    const filled = await fill(template.text, title.trim(), "");
+    const filled = await fill(template.text, title.trim(), folderPaths.rel(place.root, dir) || "");
     await textus.files.create(path, filled.text);
     await textus.layout.open(path);
     await placeCaret(textus.editor, filled, 0);
