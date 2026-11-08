@@ -35,7 +35,17 @@
     const text = el("div", "text");
     text.append(el("div", "title", card.title || card.url || ""));
     if (card.description) text.append(el("div", "description", card.description));
-    text.append(el("div", "site", card.site ? card.site + " · " + domain(card.url) : domain(card.url || "")));
+    const site = el("div", "site");
+    if (card.favicon && /^https?:\/\//.test(card.favicon)) {
+      const icon = el("img", "favicon");
+      icon.src = card.favicon;
+      icon.alt = "";
+      icon.onerror = () => icon.remove();
+      site.append(icon);
+    }
+    const where = domain(card.url || "");
+    site.append(card.site && card.site !== where ? card.site + " · " + where : where);
+    text.append(site);
     link.append(text);
     if (card.image && /^https?:\/\//.test(card.image)) {
       const picture = el("div", "picture");
@@ -43,6 +53,7 @@
       link.append(picture);
     }
     link.addEventListener("click", () => api.postMessage({ type: "open", url: card.url }));
+    if (!m.refresh) return root.replaceChildren(link);
     const refresh = el("button", "tx-button small refresh");
     refresh.type = "button";
     const glyph = el("span", "tx-icon");

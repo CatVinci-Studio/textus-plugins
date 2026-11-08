@@ -1,0 +1,257 @@
+html,
+body {
+  height: 100%;
+}
+body {
+  display: flex;
+  flex-direction: column;
+  background: var(--doc-bg);
+}
+/* A tab view's bar (design-language.md 5.4): Textus's own controls. */
+#bar {
+  flex: none;
+  min-height: 36px;
+  padding: 0 var(--space-3);
+  border-bottom: 1px solid var(--ui-border);
+}
+#name {
+  color: var(--ui-muted);
+  font-size: var(--text-footnote);
+}
+#zoom {
+  min-width: 3.5em;
+}
+#stage {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  outline: none;
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+  /* Dots that move and grow with the canvas (view.js sets their step). */
+  background-color: var(--ui-subtle);
+  background-image: radial-gradient(circle, var(--ui-border) 1px, transparent 1.5px);
+}
+#stage.dragging {
+  cursor: grabbing;
+}
+#stage[hidden] {
+  display: none;
+}
+#world {
+  position: absolute;
+  left: 0;
+  top: 0;
+  transform-origin: 0 0;
+}
+#status {
+  flex: 1;
+}
+#status[hidden] {
+  display: none;
+}
+
+/* Nodes: sizes are the canvas's own units; the view scales them all. */
+.node {
+  position: absolute;
+  box-sizing: border-box;
+  overflow: hidden;
+  border: 2px solid var(--line, var(--ui-border));
+  border-radius: var(--shape-m);
+  background-color: var(--doc-bg);
+  background-image: linear-gradient(var(--fill, transparent), var(--fill, transparent));
+  color: var(--doc-text);
+  font-family: var(--doc-font);
+  font-size: var(--text-body);
+}
+.node[data-file]:not(.missing),
+.node[data-url],
+.markdown a {
+  cursor: pointer;
+}
+.node[data-file]:not(.missing):hover,
+.node[data-url]:hover {
+  border-color: var(--line, var(--ui-accent));
+}
+.node.group {
+  overflow: visible;
+  background-color: transparent;
+  background-image: linear-gradient(var(--fill, var(--ui-hover)), var(--fill, var(--ui-hover)));
+}
+/* A group's name sits above its top-left corner, as in Obsidian. */
+.group-label {
+  position: absolute;
+  bottom: 100%;
+  left: 0;
+  max-width: 100%;
+  padding-bottom: var(--space-1);
+  overflow: hidden;
+  color: var(--ink, var(--ui-muted));
+  font-family: var(--font-sans);
+  font-size: var(--text-title);
+  font-weight: 600;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.content {
+  padding: var(--space-3) var(--space-4);
+}
+.file-name {
+  padding: var(--space-2) var(--space-4) 0;
+  color: var(--ink, var(--ui-muted));
+  font-family: var(--font-sans);
+  font-size: var(--text-footnote);
+  font-weight: 600;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.node.image {
+  display: flex;
+  flex-direction: column;
+}
+.node.image .file-name {
+  display: none;
+}
+.node.image img {
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+  object-fit: contain;
+}
+.node.other {
+  display: grid;
+  place-items: center;
+}
+.node.other .file-name {
+  padding: var(--space-3);
+  font-size: var(--text-body);
+}
+.node.missing {
+  border-style: dashed;
+}
+.note-missing,
+.link-url {
+  color: var(--ui-muted);
+  font-size: var(--text-footnote);
+}
+.link-host {
+  font-weight: 600;
+}
+.link-url {
+  word-break: break-all;
+}
+img.drawing {
+  position: absolute;
+}
+
+/* A text node's or a note's Markdown, as the document draws it. */
+.markdown {
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+.markdown > :first-child {
+  margin-top: 0;
+}
+.markdown > :last-child {
+  margin-bottom: 0;
+}
+.markdown p,
+.markdown ul,
+.markdown ol,
+.markdown pre,
+.markdown blockquote {
+  margin: 0 0 var(--space-2);
+}
+.markdown h1,
+.markdown h2,
+.markdown h3,
+.markdown h4,
+.markdown h5,
+.markdown h6 {
+  margin: var(--space-3) 0 var(--space-2);
+  font-size: var(--text-body-large);
+  line-height: 1.3;
+}
+.markdown h1 {
+  font-size: var(--text-title);
+}
+.markdown ul,
+.markdown ol {
+  padding-left: 1.4em;
+}
+.markdown li.task {
+  list-style: none;
+  margin-left: -1.2em;
+}
+.markdown code,
+.markdown pre {
+  font-family: var(--font-mono);
+  font-size: 0.9em;
+  background: var(--doc-code-bg);
+  border-radius: var(--shape-xs);
+}
+.markdown code {
+  padding: 0 0.25em;
+}
+.markdown pre {
+  padding: var(--space-2);
+  overflow: hidden;
+}
+.markdown pre code {
+  padding: 0;
+  background: none;
+}
+.markdown blockquote {
+  padding-left: var(--space-3);
+  border-left: 3px solid var(--doc-border);
+  color: var(--doc-muted);
+}
+.markdown mark {
+  background: var(--doc-highlight-bg);
+  color: inherit;
+}
+.markdown a,
+.markdown .wikilink {
+  color: var(--doc-accent);
+}
+.markdown hr {
+  border: 0;
+  border-top: 1px solid var(--doc-border);
+}
+
+/* Edges: the curve and its heads in the edge's colour, the label on a
+   chip of the canvas's background over the curve. */
+svg.edges {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 1px;
+  height: 1px;
+  overflow: visible;
+  pointer-events: none;
+}
+.edge path {
+  fill: none;
+  stroke: var(--line, var(--ui-muted));
+  stroke-width: 2;
+}
+.edge polygon {
+  fill: var(--line, var(--ui-muted));
+}
+.edge-label {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  /* Its own width: the world it sits in has none. */
+  width: max-content;
+  max-width: 280px;
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--shape-s);
+  background: var(--ui-subtle);
+  color: var(--ink, var(--ui-text));
+  font-size: var(--text-footnote);
+  text-align: center;
+  pointer-events: none;
+}

@@ -15,6 +15,7 @@ image: https://textus.md/og.png
 ````
 
 - **Fetch again** under a card brings the page's latest title and picture.
+- Cards from Obsidian show too: the `cardlink` blocks of Auto Card Link and the `embed` blocks of Link Embed are drawn as cards, and left as they are written.
 
 To read pages, the plugin asks to reach any web address; it fetches only the links you make cards of.
 
