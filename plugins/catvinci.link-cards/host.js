@@ -42,31 +42,41 @@ async function insertCard() {
   else await textus.editor.insertText(block(card));
 }
 
+/** A card block's page. Only our own ```card fetches again: refreshing
+ *  Obsidian's ```cardlink or ```embed would rewrite it in our fields. */
+function cardBlock(ctx, own) {
+  return {
+    render: async (codeBlock, webview) => {
+      webview.html = await ctx.plugin.readText("card.html");
+      const send = () => {
+        const card = linkCards.parse(codeBlock.source);
+        webview.postMessage({
+          type: "card",
+          card: card,
+          video: linkCards.videoEmbed(card.url || ""),
+          refresh: own ? t("refresh") : null,
+        });
+      };
+      codeBlock.onDidChange(send);
+      webview.onDidReceiveMessage(async (m) => {
+        if (!m) return;
+        if (m.type === "ready") send();
+        if (m.type === "open" && linkCards.isUrl(m.url)) textus.layout.openExternal(m.url);
+        if (m.type === "refresh" && own) {
+          const url = linkCards.parse(codeBlock.source).url;
+          if (url) await codeBlock.setSource(linkCards.write(await cardFor(url)));
+        }
+      });
+    },
+  };
+}
+
 exports.activate = function (ctx) {
   ctx.subscriptions.push(
     textus.commands.register("catvinci.link-cards.insert", insertCard),
     textus.ai.registerTool("fetch_link_card", fetchLinkCard),
-    textus.views.registerCodeBlock("card", {
-      render: async (codeBlock, webview) => {
-        webview.html = await ctx.plugin.readText("card.html");
-        const send = () =>
-          webview.postMessage({
-            type: "card",
-            card: linkCards.parse(codeBlock.source),
-            video: linkCards.videoEmbed(linkCards.parse(codeBlock.source).url || ""),
-            refresh: t("refresh"),
-          });
-        codeBlock.onDidChange(send);
-        webview.onDidReceiveMessage(async (m) => {
-          if (!m) return;
-          if (m.type === "ready") send();
-          if (m.type === "open" && linkCards.isUrl(m.url)) textus.layout.openExternal(m.url);
-          if (m.type === "refresh") {
-            const url = linkCards.parse(codeBlock.source).url;
-            if (url) await codeBlock.setSource(linkCards.write(await cardFor(url)));
-          }
-        });
-      },
-    }),
+    textus.views.registerCodeBlock("card", cardBlock(ctx, true)),
+    textus.views.registerCodeBlock("cardlink", cardBlock(ctx, false)),
+    textus.views.registerCodeBlock("embed", cardBlock(ctx, false)),
   );
 };

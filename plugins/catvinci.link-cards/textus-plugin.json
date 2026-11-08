@@ -1,7 +1,7 @@
 {
   "id": "catvinci.link-cards",
   "name": "%name%",
-  "version": "0.3.1",
+  "version": "0.4.0",
   "publisher": "catvinci",
   "author": "CatVinci Studio",
   "description": "%description%",
@@ -45,6 +45,16 @@
     "codeBlocks": [
       {
         "language": "card",
+        "frame": "none",
+        "title": "%name%"
+      },
+      {
+        "language": "cardlink",
+        "frame": "none",
+        "title": "%name%"
+      },
+      {
+        "language": "embed",
         "frame": "none",
         "title": "%name%"
       }
