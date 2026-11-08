@@ -320,7 +320,7 @@ describe("the fixture's import", () => {
     expect(home).toContain("[Projects](Projects/Projects.md)");
     expect(home).toContain("[Website Redesign](Projects/Website%20Redesign/Website%20Redesign.md)");
     // The database shown here as well: its rows by its folder's path in the open folder.
-    expect(home).toContain('```base\nfilters:\n  and:\n    - file.inFolder("Home/Projects")\n');
+    expect(home).toContain('```base\nfilters:\n  and:\n    - file.inFolder((if(this.file.folder.isEmpty(), "Projects", this.file.folder + "/Projects")))\n');
     expect(home).toContain("![Logo](logo.png)");
     expect(home).toContain("[Spec](Spec.pdf)");
     expect(home).toContain(`[Old page](Home%20${H}/Deleted%20Page%20${id("b")}.md)`);
@@ -600,7 +600,7 @@ describe("Notion's newer export", () => {
     expect(out["Papers/03 2026/03 2026.md"]).toContain("groupBy:\n      property: status");
     expect(out["Papers/03 2026/03 2026.md"]).not.toMatch(/_all\.csv|\nAuthor\n/);
     // A view elsewhere: the link to the database's page, and the database shown, sorted as it was.
-    expect(out["Papers/Papers.md"]).toContain('[03/2026](03%202026/03%202026.md)\n\n```base\nfilters:\n  and:\n    - file.inFolder("Papers/03 2026")\n');
+    expect(out["Papers/Papers.md"]).toContain('[03/2026](03%202026/03%202026.md)\n\n```base\nfilters:\n  and:\n    - file.inFolder((if(this.file.folder.isEmpty(), "03 2026", this.file.folder + "/03 2026")))\n');
     expect(out["Papers/Papers.md"]).toContain(
       "    sort:\n      - property: status\n        direction: DESC\n      - property: year\n        direction: ASC\n```\n\nAfter.",
     );
@@ -617,7 +617,7 @@ describe("Notion's newer export", () => {
     expect(Object.keys(out).sort()).toEqual(["Child.md", "Home.md", "Tasks/Tasks.md", "Tasks/Write.md"]);
     expect(out["Tasks/Write.md"]).toBe("---\nstatus: Doing\n---\n# Write\n");
     expect(out["Home.md"]).toContain("[Child](Child.md)");
-    expect(out["Home.md"]).toContain('[Tasks](Tasks/Tasks.md)\n\n```base\nfilters:\n  and:\n    - file.inFolder("Tasks")\n');
+    expect(out["Home.md"]).toContain('[Tasks](Tasks/Tasks.md)\n\n```base\nfilters:\n  and:\n    - file.inFolder((if(this.file.folder.isEmpty(), "Tasks", this.file.folder + "/Tasks")))\n');
   });
 
   it("leaves out Notion's empty Untitled rows", async () => {
@@ -628,5 +628,8 @@ describe("Notion's newer export", () => {
     expect(Object.keys(out).sort()).toEqual(["Log/Kept.md", "Log/Log.md", "Log/Untitled.md"]);
     expect(out["Log/Untitled.md"]).toBe("---\nstatus: Done\n---\n# Untitled\n");
     expect(report).toMatchObject({ rows: 2, skipped: 2 });
+    // An empty Untitled page of its own, too.
+    const page = await importMemory({ [`Untitled ${id("7")}.md`]: "# Untitled\n", [`Kept ${id("6")}.md`]: "# Kept\n" });
+    expect(Object.keys(page.out)).toEqual(["Kept.md"]);
   });
 });

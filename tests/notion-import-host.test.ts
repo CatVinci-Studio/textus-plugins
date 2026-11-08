@@ -171,8 +171,8 @@ describe("the import command", () => {
     expect(target).toBe("folderName");
     expect(folder.files[target + "/Home/Projects/Projects.md"]).toContain("```base\n");
     expect(folder.files[target + "/Home/Projects/Launch.md"]).toContain("status: In progress");
-    // Another page's view names the database's folder from the open folder's top.
-    expect(folder.files[target + "/Home/Home.md"]).toContain(`file.inFolder("${target}/Home/Projects")`);
+    // Another page's view finds the database's folder from its own, wherever the vault's top is.
+    expect(folder.files[target + "/Home/Home.md"]).toContain('this.file.folder + "/Projects"');
     expect(folder.files[target + "/Home/logo.png"]).toBeInstanceOf(Uint8Array);
     expect(opened).toEqual(["/root/" + target + "/reportName.md"]);
     const report = String(folder.files[target + "/reportName.md"]);

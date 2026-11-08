@@ -17,14 +17,15 @@
   const TO_OBSIDIAN = { text: "text", select: "text", url: "text", number: "number", checkbox: "checkbox", date: "date", tags: "multitext" };
   const DATE = /^\d{4}-\d{2}-\d{2}/;
 
-  /** The filters a folder unit's database is made with: the notes right in
-   *  its folder and the units one level down (a row with sub-pages), not
-   *  their sub-pages or the unit's own page. */
-  const UNIT_ROWS = [
-    "file.inFolder(this.file.folder)",
-    "file.path != this.file.path",
-    'file.folder == this.file.folder || file.folder.endsWith("/" + file.basename) && !file.folder.slice(this.file.folder.length + 1).contains("/")',
+  /** The filters for folder `F`'s rows (F an expression): the notes right in
+   *  it and the units one level down (a row with sub-pages), not their
+   *  sub-pages. Written so they hold wherever the vault's top is. */
+  const rowsIn = (F) => [
+    "file.inFolder(" + F + ")",
+    "file.folder == " + F + " || file.folder == if(" + F + ".isEmpty(), file.basename, " + F + ' + "/" + file.basename)',
   ];
+  /** A folder unit's own database: its folder's rows, not its own page. */
+  const UNIT_ROWS = [rowsIn("this.file.folder")[0], "file.path != this.file.path", rowsIn("this.file.folder")[1]];
 
   // ------------------------------------------------------------ the base
   /** A base's text read: `{ base }`, or `{ error }` for text that isn't one. */
@@ -265,26 +266,38 @@
     const here = thisRel ? dirOf(thisRel) : "";
     const all = [];
     const walk = (f) => {
-      if (typeof f === "string") all.push(f);
+      if (typeof f === "string") all.push(f.trim());
       else if (f && typeof f === "object") for (const k of ["and", "or"]) if (Array.isArray(f[k])) f[k].forEach(walk);
     };
     walk(base.filters);
-    if (all.some((f) => f.includes("file.inFolder(this.file.folder)"))) return here;
+    // The first file.inFolder(...), its folder worked out as the filter would.
+    const self = thisRel ? bexpr.fileOf({ rel: thisRel }) : null;
     for (const f of all) {
-      const m = /file\.inFolder\("((?:[^"\\]|\\.)*)"\)/.exec(f);
-      if (m) return JSON.parse('"' + m[1] + '"').replace(/^\/+|\/+$/g, "");
+      if (!f.startsWith("file.inFolder(") || !f.endsWith(")")) continue;
+      try {
+        const folder = bexpr.str(bexpr.compile(f.slice("file.inFolder(".length, -1))({ file: self, this: self }));
+        return folder.replace(/^\/+|\/+$/g, "");
+      } catch {
+        continue;
+      }
     }
     return here;
   }
 
-  /** The same rows for a base anywhere else: folder unit `folder`'s, by its path in the open folder. */
-  function folderRows(folder) {
-    const q = JSON.stringify(folder);
-    return [
-      "file.inFolder(" + q + ")",
-      "file.path != " + JSON.stringify(folder + "/" + folder.slice(folder.lastIndexOf("/") + 1) + ".md"),
-      "file.folder == " + q + ' || file.folder.endsWith("/" + file.basename) && !file.folder.slice(' + (folder.length + 1) + ').contains("/")',
-    ];
+  /** The same rows shown on a note in `fromDir`: folder unit `folder`, found from
+   *  that note's folder (up and down as far as it takes), not from the vault's top. */
+  function folderRows(fromDir, folder) {
+    const from = fromDir ? fromDir.split("/") : [];
+    const to = folder.split("/");
+    let same = 0;
+    while (same < from.length && same < to.length && from[same] === to[same]) same++;
+    const up = from.length - same;
+    const rest = to.slice(same).join("/");
+    const B = up ? 'this.file.folder.split("/").slice(0, -' + up + ').join("/")' : "this.file.folder";
+    const F = rest ? "if(" + B + '.isEmpty(), "' + rest + '", ' + B + ' + "/' + rest + '")' : B;
+    const name = to[to.length - 1];
+    const [inside, direct] = rowsIn("(" + F + ")");
+    return [inside, "file.path != (" + F + ') + "/' + name + '.md"', direct];
   }
 
   /** A database made in folder unit `folder`: its rows the unit's. */

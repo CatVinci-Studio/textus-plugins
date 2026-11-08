@@ -110,12 +110,22 @@ describe("a base's rows", () => {
     const base = db.unitBase("table");
     const { rows, skipped } = db.rowsOf(base, docs, "Life/Cal/Cal.md");
     expect(skipped).toEqual([]);
+    // With the unit itself the vault's top, too.
+    const top = docs.filter((d) => d.rel.startsWith("Life/Cal/")).map((d) => ({ ...d, rel: d.rel.slice(9) }));
+    expect(db.rowsOf(base, top, "Cal.md").rows.map((r: Row) => r.rel)).toEqual(["Week2.md", "Week1/Week1.md"]);
     expect(rows.map((r: Row) => r.rel)).toEqual(["Life/Cal/Week2.md", "Life/Cal/Week1/Week1.md"]);
     expect(db.folderOf(base, "Life/Cal/Cal.md")).toBe("Life/Cal");
-    // The same rows seen from another page.
-    const there = { filters: { and: db.folderRows("Life/Cal") }, views: [{ type: "table" }] };
-    expect(db.rowsOf(there, docs, "Home.md").rows.map((r: Row) => r.rel)).toEqual(["Life/Cal/Week2.md", "Life/Cal/Week1/Week1.md"]);
-    expect(db.folderOf(there, "Home.md")).toBe("Life/Cal");
+    // The same rows seen from another page, found from that page's folder: they hold
+    // when the vault's top is a folder further in, as long as both notes are in it.
+    for (const [from, top] of [["Work/Plans.md", ""], ["Life/Home.md", ""], ["Life/Home.md", "Life/"], ["Home.md", ""]] as const) {
+      const there = { filters: { and: db.folderRows(from.includes("/") ? from.slice(0, from.lastIndexOf("/")) : "", "Life/Cal") }, views: [{ type: "table" }] };
+      const inside = docs.filter((d) => d.rel.startsWith(top)).map((d) => ({ ...d, rel: d.rel.slice(top.length) }));
+      if (!from.startsWith(top)) continue;
+      expect(db.rowsOf(there, inside, from.slice(top.length)).rows.map((r: Row) => r.rel), from + " in " + top).toEqual(
+        ["Life/Cal/Week2.md", "Life/Cal/Week1/Week1.md"].map((r) => r.slice(top.length)),
+      );
+      expect(db.folderOf(there, from.slice(top.length))).toBe("Life/Cal".slice(top.length));
+    }
   });
 
   it("go through a view's filters and sort, and into a board's lists in its order", () => {

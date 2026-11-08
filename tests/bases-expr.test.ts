@@ -22,7 +22,7 @@ const run = (s: string, doc: Doc, self?: Doc) => x.compile(s)(ctx(doc, self));
 const UNIT_ROWS = [
   "file.inFolder(this.file.folder)",
   "file.path != this.file.path",
-  'file.folder == this.file.folder || file.folder.endsWith("/" + file.basename) && !file.folder.slice(this.file.folder.length + 1).contains("/")',
+  'file.folder == this.file.folder || file.folder == if(this.file.folder.isEmpty(), file.basename, this.file.folder + "/" + file.basename)',
 ];
 
 describe("Bases expressions", () => {

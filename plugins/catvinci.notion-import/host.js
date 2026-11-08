@@ -101,8 +101,6 @@ async function importNotion(arg) {
       return notionImport.importExport({
         ...from,
         signal,
-        // Where the import sits in the open folder: a database shown on another page names its folder from there.
-        prefix: folderPaths.rel(root, target) || "",
         write: {
           folder: (rel) => textus.files.createFolder(join(target, rel)),
           text: (rel, text) => textus.files.create(join(target, rel), text),

@@ -360,7 +360,7 @@
    *  "filters:" (property names only) and "sort:" lines. Each becomes the link to the database's
    *  page and a ```database block showing it, sorted as it was; the database's own page (`own`,
    *  its folder) keeps only the link. */
-  function convertViews(text, from, to, layout, own, prefix) {
+  function convertViews(text, from, to, layout, own) {
     if (!layout.databases.length) return text;
     const lines = text.split("\n");
     const out = [];
@@ -389,7 +389,7 @@
       if (db.folder === own) continue;
       // Another page's view of the database: its rows by the folder's path in the open folder.
       const B = root.database;
-      let base = { filters: { and: B.folderRows(joinPath(prefix || "", db.folder)) }, views: [{ type: "table", name: B.viewName("table") }] };
+      let base = { filters: { and: B.folderRows(dirOf(to), db.folder) }, views: [{ type: "table", name: B.viewName("table") }] };
       if (sort.length) base = B.setView(base, 0, { sort: sort.map((k) => (k.startsWith("-") ? { key: k.slice(1), desc: true } : { key: k, desc: false })) });
       out.push(m[0].trim(), "", "```base", B.writeBase(base).replace(/\n$/, ""), "```");
     }
@@ -401,7 +401,7 @@
   const TEMPLATE = /template|模板|範本|テンプレート|템플릿|plantilla|modèle|vorlage|шаблон|modelo/i;
 
   function convertPage(body, title, props, from, to, layout, found, own) {
-    let text = convertCallouts(convertViews(body, from, to, layout, own, layout.prefix), (kind) => found.block(kind, to));
+    let text = convertCallouts(convertViews(body, from, to, layout, own), (kind) => found.block(kind, to));
     text = rewriteLinks(text, from, to, layout, (link) => found.link(link, to));
     found.todos((text.match(TODO) || []).length);
     for (const m of text.matchAll(BOOKMARK)) if (!NOTION_URL.test(m[1] || m[2])) found.url();
@@ -460,8 +460,10 @@
   function hasSubfolder(layout, page) {
     const to = layout.files.get(page);
     if (!to) return false;
-    const stem = to.slice(0, -3) + "/";
-    for (const target of layout.files.values()) if (target.startsWith(stem)) return true;
+    // A unit (X/X.md) holds what is beside it in X/; an older page, what is in the folder named as it.
+    const unit = dirOf(to) !== "" && baseOf(to).slice(0, -3) === baseOf(dirOf(to));
+    const stem = (unit ? dirOf(to) : to.slice(0, -3)) + "/";
+    for (const target of layout.files.values()) if (target !== to && target.startsWith(stem)) return true;
     return false;
   }
 
@@ -502,7 +504,7 @@
 
   /** Imports the export a file at a time, so a large one never sits in memory whole; `signal`
    *  stops it between files. A file that can't be read or written goes in `report.failed`. */
-  async function importExport({ paths, read, write, progress, signal, prefix }) {
+  async function importExport({ paths, read, write, progress, signal }) {
     // The titles of pages Notion named alike in one folder, to tell them apart.
     const titles = new Map();
     const stems = new Map();
@@ -519,7 +521,6 @@
           if (title) titles.set(p, title);
         }
     const layout = plan(paths, titles);
-    layout.prefix = prefix || "";
     const report = {
       pages: 0, databases: 0, rows: 0, files: 0, total: paths.length, done: 0, stopped: false,
       missing: [], failed: [], blocks: { callout: [], icon: [] },
@@ -666,6 +667,11 @@
           const props = {};
           for (const [key, value] of page.props) props[N.propertyName(key)] = propertyValue(value);
           const title = page.title || cleanName(splitExt(baseOf(path)).stem);
+          // Notion's empty "Untitled" page - no title, no properties, nothing written - isn't brought in.
+          if (/^untitled$/i.test(title.trim()) && !page.body.trim() && !page.props.length && !hasSubfolder(layout, path)) {
+            report.skipped = (report.skipped || 0) + 1;
+            return;
+          }
           await writeText(to, convertPage(page.body, title, props, path, to, layout, found));
           report.pages++;
           if (pageFolders.has(isUnitPage(to) ? dirOf(dirOf(to)) : dirOf(to))) report.stats.subpages++;
