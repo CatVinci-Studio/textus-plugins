@@ -16,6 +16,7 @@ Behält jedes Speichern eines Dokuments als Version, damit Sie sehen, was sich g
 
 ## Änderungen
 
+- **0.3.2** - Seine Seite sagt jetzt in einem Satz, was es tut, was es kann und was sich in jeder Version geändert hat.
 - **0.3.1** - Nur der mit anderen Plugins geteilte Pfad-Code hat sich geändert; in der Bedienung ändert sich nichts.
 - **0.3.0** - Textus AI kann die Versionen eines Dokuments auflisten und vergleichen (`list_versions`, `diff_versions`).
 - **0.2.0** - Textus' eigene Bedienelemente. Benötigt Textus 1.3.2.

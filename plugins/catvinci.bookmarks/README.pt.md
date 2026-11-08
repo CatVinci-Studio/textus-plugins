@@ -22,6 +22,7 @@ Quando a pasta aberta é um cofre do Obsidian (tem uma pasta `.obsidian`):
 
 ## Alterações
 
+- **0.4.1** - Sua página agora diz numa frase o que ele faz, o que pode fazer e o que mudou em cada versão.
 - **0.4.0** - Num cofre do Obsidian, os favoritos novos também são gravados no `bookmarks.json` dele, e removidos e renomeados lá.
 - **0.3.0** - Lista os favoritos do próprio Obsidian no cofre: notas, títulos e blocos.
 - **0.2.1** - Caminhos tratados por código compartilhado com outros plugins; nada muda no uso.

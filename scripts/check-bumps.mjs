@@ -30,7 +30,8 @@ const versionAt = (ref, id) => {
 const late = [];
 for (const id of readdirSync("plugins")) {
   const own = [...changed].some(
-    (f) => f.startsWith(`plugins/${id}/`) && !/\/(README[^/]*|screenshots\/.*)$/.test(f),
+    // The README is packed with the plugin; its pictures aren't.
+    (f) => f.startsWith(`plugins/${id}/`) && !/\/screenshots\//.test(f),
   );
   const bundled = Object.entries(libs).some(
     ([target, from]) =>

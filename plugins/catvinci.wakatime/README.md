@@ -19,6 +19,7 @@ It works on desktop and iPhone and needs Textus 1.3.0 or later. It asks to read 
 
 ## Changes
 
+- **0.2.3** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
 - **0.2.2** - Finds `.wakatime-project` and the Git branch the same way on every system.
 - **0.2.1** - Says where it runs: desktop and iPhone.
 - **0.2.0** - Only your own work in a window in front counts; an offline queue sent in batches; project, branch and lines; Today's Writing Time.

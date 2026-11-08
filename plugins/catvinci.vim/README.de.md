@@ -22,6 +22,7 @@ Das Plugin fragt nach der Berechtigung, Tasten im Editor anzunehmen (um Vims Tas
 
 ## Änderungen
 
+- **0.2.4** - Seine Seite sagt jetzt in einem Satz, was es tut, was es kann und was sich in jeder Version geändert hat.
 - **0.2.3** - Liest die `.obsidian.vimrc` eines Obsidian-Vaults; dieselben Tasten noch einmal zu belegen ersetzt die frühere Belegung.
 - **0.2.2** - **zz**, **zt** und **zb** holen die Zeile mit dem Cursor in die Mitte, nach oben oder nach unten im Fenster.
 - **0.2.1** - Nennt, wo es läuft: Desktop, iPhone und iPad.

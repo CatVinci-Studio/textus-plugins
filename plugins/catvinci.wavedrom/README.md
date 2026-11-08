@@ -27,6 +27,7 @@ It asks only for **Tools for Textus AI**, so Textus AI can check a block before 
 
 ## Changes
 
+- **0.3.1** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
 - **0.3.0** - a tool for Textus AI, `check_wavedrom`
 - **0.2.0** - drawn again when the theme changes, with the chart page of Textus 1.3.2
 - **0.1.3** - text in the theme's colors on Textus 1.3

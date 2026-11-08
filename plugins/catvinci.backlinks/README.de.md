@@ -34,6 +34,7 @@ Der Tab **Bidirektionale Links** in der Seitenleiste zeigt, was auf das geöffne
 
 ## Änderungen
 
+- **0.3.1** - Seine Seite sagt jetzt in einem Satz, was es tut, was es kann und was sich in jeder Version geändert hat.
 - **0.3.0** - Vervollständigung von Notizen, Überschriften und Blöcken mit `[[`; Einbettungen mit `![[`; der Name wechselt von „Rückverweise“ zu „Bidirektionale Links“
 - **0.2.1** - die Beschreibung sagt „bidirektionale Links“, damit die Suche im Store es findet
 - **0.2.0** - ein Werkzeug für Textus AI, `list_backlinks`

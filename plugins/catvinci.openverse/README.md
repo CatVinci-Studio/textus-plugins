@@ -19,6 +19,7 @@ It runs on the desktop and on iOS.
 
 ## Changes
 
+- **0.1.1** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
 - **0.1.0** - first version: openly licensed pictures from Openverse for Textus AI, each with its credit line
 
 <!-- ai-tools -->

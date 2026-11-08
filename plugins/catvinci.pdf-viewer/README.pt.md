@@ -15,6 +15,7 @@ Não pede permissões: o Textus entrega a ele o PDF que você abre.
 
 ## Alterações
 
+- **0.2.1** - Sua página agora diz numa frase o que ele faz, o que pode fazer e o que mudou em cada versão.
 - **0.2.0** - Controles do próprio Textus. Requer Textus 1.3.2.
 - **0.1.3** - O visual do Textus 1.3; os botões seguem o idioma da interface quando ele muda.
 - **0.1.2** - Páginas digitalizadas mostram suas imagens, links para uma página funcionam, páginas fora de vista liberam memória, arquivos ilegíveis avisam; abre na largura da janela; o zoom estica em volta do ponteiro e depois fica nítido.

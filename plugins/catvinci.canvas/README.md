@@ -15,4 +15,5 @@ The plugin asks only to read files (to show the notes and pictures on a canvas).
 
 ## Changes
 
+- **0.1.1** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
 - **0.1.0** - first version: Obsidian canvases in a tab to drag and zoom, notes and pictures shown on the board, and Excalidraw drawings by their exported picture.

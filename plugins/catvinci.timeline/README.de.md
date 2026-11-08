@@ -25,6 +25,7 @@ Es braucht nur **Werkzeuge für Textus AI**, damit Textus AI einen Block prüfen
 
 ## Änderungen
 
+- **0.3.1** - Seine Seite sagt jetzt in einem Satz, was es tut, was es kann und was sich in jeder Version geändert hat.
 - **0.3.0** - ein Werkzeug für Textus AI, `check_timeline`
 - **0.2.0** - die Farben des Themes, neu gezeichnet beim Themewechsel
 - **0.1.3** - Text in den Farben des Themes unter Textus 1.3

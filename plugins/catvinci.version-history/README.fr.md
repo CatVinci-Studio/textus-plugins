@@ -16,6 +16,7 @@ Garde chaque enregistrement d’un document comme une version, pour voir ce qui 
 
 ## Changements
 
+- **0.3.2** - Sa page dit maintenant en une phrase ce qu'il fait, ce qu'il permet et ce qui a changé à chaque version.
 - **0.3.1** - Seul le code de chemins partagé avec d’autres plugins a changé ; rien ne change à l’usage.
 - **0.3.0** - Textus AI peut lister les versions d’un document et les comparer (`list_versions`, `diff_versions`).
 - **0.2.0** - Contrôles propres à Textus. Nécessite Textus 1.3.2.

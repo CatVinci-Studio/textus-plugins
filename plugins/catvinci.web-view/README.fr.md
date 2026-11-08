@@ -24,6 +24,7 @@ Fonctionne sur ordinateur.
 
 ## Changements
 
+- **0.2.1** - Sa page dit maintenant en une phrase ce qu'il fait, ce qu'il permet et ce qui a changé à chaque version.
 - **0.2.0** - Les liens web cliqués avec Ctrl/⌘ s’ouvrent dans un onglet seulement si vous l’activez dans les réglages ; sinon, dans votre navigateur.
 - **0.1.2** - Ordinateur seulement.
 - **0.1.0-0.1.1** - Premières versions : une adresse ou une recherche dans un onglet, pages récentes, sélection ouverte ou recherchée, liens cliqués avec Ctrl/⌘, choix du moteur de recherche.

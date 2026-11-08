@@ -28,6 +28,7 @@ Bob --> Alice : Hi!
 
 ## Änderungen
 
+- **0.2.2** - Seine Seite sagt jetzt in einem Satz, was es tut, was es kann und was sich in jeder Version geändert hat.
 - **0.2.1** - Enthält die aktualisierte gemeinsame Diagrammseite; Diagramme werden wie bisher gezeichnet.
 - **0.2.0** - Enthält die gemeinsame Diagrammseite, die ihre Farben aus dem Theme nimmt. Benötigt Textus 1.3.2.
 - **0.1.3** - Liest Textfarbe und Fußnotengröße des Dokuments unter ihren Namen aus Textus 1.3.

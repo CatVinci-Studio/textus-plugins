@@ -24,6 +24,7 @@ Funciona no desktop.
 
 ## Alterações
 
+- **0.2.1** - Sua página agora diz numa frase o que ele faz, o que pode fazer e o que mudou em cada versão.
 - **0.2.0** - Links da web clicados com Ctrl/⌘ abrem numa aba só quando você liga isso nos ajustes; senão, abrem no navegador.
 - **0.1.2** - Só desktop.
 - **0.1.0-0.1.1** - Primeiras versões: um endereço ou uma pesquisa numa aba, páginas recentes, abrir ou pesquisar a seleção, links clicados com Ctrl/⌘, escolha do buscador.

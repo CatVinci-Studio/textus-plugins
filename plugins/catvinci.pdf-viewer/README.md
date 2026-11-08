@@ -15,6 +15,7 @@ It asks for no permissions: Textus hands it the PDF you open.
 
 ## Changes
 
+- **0.2.1** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
 - **0.2.0** - Textus's own controls. Needs Textus 1.3.2.
 - **0.1.3** - Textus 1.3's look; the buttons follow the interface language when it changes.
 - **0.1.2** - Scanned pages show their images, links to a page work, pages out of sight free their memory, unreadable files say so; opens at the window's width; zoom stretches around the pointer and then turns sharp.

@@ -16,6 +16,7 @@ Keeps each save of a document as a version, so you can see what changed and brin
 
 ## Changes
 
+- **0.3.2** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
 - **0.3.1** - Only the path code shared with other plugins changed; nothing changes in use.
 - **0.3.0** - Textus AI can list a document's versions and compare them (`list_versions`, `diff_versions`).
 - **0.2.0** - Textus's own controls. Needs Textus 1.3.2.

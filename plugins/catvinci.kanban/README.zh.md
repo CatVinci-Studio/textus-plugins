@@ -36,6 +36,7 @@ kanban-plugin: board
 
 ## 更新日志
 
+- **0.4.3** - 介绍页重写：一句话说明它做什么，再讲它能做的事，并列出每个版本的更新。
 - **0.4.2** - 拖动卡片和列表时跟着指针走，其他的会让开位置。需要 Textus 1.3.10。
 - **0.4.1** - 保留 Obsidian 的 Kanban 在完成列表上的标记。
 - **0.4.0** - 改名为任务看板（原名 Kanban）。新看板是 front matter 里带 `kanban-plugin` 的普通 .md 文件，和 Obsidian 的写法一样；.kanban.md 看板照样能打开。

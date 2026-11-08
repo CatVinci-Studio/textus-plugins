@@ -13,6 +13,7 @@ Trabaja con imágenes PNG, JPEG, GIF, WebP, AVIF, BMP, SVG, ICO, HEIC y TIFF. Fu
 
 ## Cambios
 
+- **0.1.3** - Su página dice ahora en una frase qué hace, qué puede hacer y qué cambió en cada versión.
 - **0.1.2** - Deja las imágenes donde las pone la carpeta de adjuntos de una bóveda de Obsidian o un grafo de Logseq.
 - **0.1.1** - Un nombre más corto: Imágenes junto al documento.
 - **0.1.0** - Primera versión: las imágenes pegadas y soltadas van a `Note.assets/`, y la carpeta sigue al documento renombrado.

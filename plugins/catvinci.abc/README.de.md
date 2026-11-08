@@ -23,6 +23,7 @@ C D E F | G A B c |
 
 ## Änderungen
 
+- **0.3.1** - Seine Seite sagt jetzt in einem Satz, was es tut, was es kann und was sich in jeder Version geändert hat.
 - **0.3.0** - Textus AI kann einen `abc`-Block prüfen, bevor es ihn schreibt (`check_abc`).
 - **0.2.0** - Die Noten folgen der Textfarbe des Themes; braucht Textus 1.3.2.
 - **0.1.3** - Nutzt die umbenannten Dokumentfarben von Textus.

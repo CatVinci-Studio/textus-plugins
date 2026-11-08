@@ -39,6 +39,7 @@ Espacement CJK, l’extension qui met des espaces entre texte chinois et latin, 
 
 ## Changements
 
+- **0.3.1** - Sa page dit maintenant en une phrase ce qu'il fait, ce qu'il permet et ce qui a changé à chaque version.
 - **0.3.0** - Renommé Mise au propre (avant : Vérification Markdown) : les six commandes de texte de « Nettoyage du texte » y sont réunies ; réglages pour couper le soulignement ou certaines règles ; la syntaxe propre à Obsidian reste telle quelle.
 - **0.2.1** - Tags, liens, rappels et définitions de référence ne sont jamais signalés : la même liste qu’Espacement CJK laisse intacte.
 - **0.2.0** - Textus AI peut vérifier du Markdown (`lint_markdown`).

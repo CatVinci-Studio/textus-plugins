@@ -11,6 +11,7 @@ El plugin pide leer el editor (para saber qué enlace señalas) y leer archivos 
 
 ## Cambios
 
+- **0.2.1** - Su página dice ahora en una frase qué hace, qué puede hacer y qué cambió en cada versión.
 - **0.2.0** - Un enlace a un bloque (`#^id`) muestra ese bloque. Requiere Textus 1.3.9.
 - **0.1.3** - Indica dónde funciona: escritorio, iPhone y iPad.
 - **0.1.2** - La longitud de la tarjeta es fija en lugar de un ajuste.

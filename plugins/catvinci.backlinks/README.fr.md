@@ -34,6 +34,7 @@ L’onglet **Liens bidirectionnels** de la barre latérale montre ce qui lie le 
 
 ## Changements
 
+- **0.3.1** - Sa page dit maintenant en une phrase ce qu'il fait, ce qu'il permet et ce qui a changé à chaque version.
 - **0.3.0** - complétion des notes, titres et blocs avec `[[` ; intégrations avec `![[` ; le nom passe de Rétroliens à Liens bidirectionnels
 - **0.2.1** - la description dit « liens bidirectionnels », pour que la recherche de la boutique le trouve
 - **0.2.0** - un outil pour Textus AI, `list_backlinks`

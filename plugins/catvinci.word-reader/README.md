@@ -13,6 +13,7 @@ The plugin asks for no permissions: it only reads the file you open in it. It wo
 
 ## Changes
 
+- **0.2.1** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
 - **0.2.0** - Drawn with Textus's own controls and theme tones; the tab follows the interface language when it changes. Needs Textus 1.3.2.
 - **0.1.3** - Uses Textus 1.3's design variables.
 - **0.1.2** - A file that can't be read says so; find skips the document's styles.

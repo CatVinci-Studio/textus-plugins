@@ -34,6 +34,7 @@ A aba **Links bidirecionais** da barra lateral mostra o que aponta para o docume
 
 ## Alterações
 
+- **0.3.1** - Sua página agora diz numa frase o que ele faz, o que pode fazer e o que mudou em cada versão.
 - **0.3.0** - autocompletar notas, títulos e blocos com `[[`; incorporações com `![[`; o nome muda de Backlinks para Links bidirecionais
 - **0.2.1** - a descrição diz "links bidirecionais", para a busca da loja encontrá-lo
 - **0.2.0** - uma ferramenta para o Textus AI, `list_backlinks`

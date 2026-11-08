@@ -17,4 +17,5 @@ Seul ce que vous copiez dans vos documents est gardé, jamais ce que vous copiez
 
 ## Changements
 
+- **0.1.1** - Sa page dit maintenant en une phrase ce qu'il fait, ce qu'il permet et ce qui a changé à chaque version.
 - **0.1.0** - Première version : les 30 dernières copies dans la barre latérale, insérées d’un clic, copiées de nouveau ou retirées d’un clic droit. Nécessite Textus 1.3.10.

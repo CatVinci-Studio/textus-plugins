@@ -15,6 +15,7 @@ Es braucht keine Berechtigungen: Textus übergibt ihm das PDF, das Sie öffnen.
 
 ## Änderungen
 
+- **0.2.1** - Seine Seite sagt jetzt in einem Satz, was es tut, was es kann und was sich in jeder Version geändert hat.
 - **0.2.0** - Textus' eigene Bedienelemente. Benötigt Textus 1.3.2.
 - **0.1.3** - Das Aussehen von Textus 1.3; die Schaltflächen folgen der Sprache der Oberfläche, wenn sie wechselt.
 - **0.1.2** - Gescannte Seiten zeigen ihre Bilder, Links auf eine Seite funktionieren, Seiten außer Sicht geben Speicher frei, unlesbare Dateien sagen es; öffnet in Fensterbreite; der Zoom dehnt um den Zeiger und wird dann scharf.

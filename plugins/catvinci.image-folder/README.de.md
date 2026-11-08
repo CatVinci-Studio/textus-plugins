@@ -13,6 +13,7 @@ Es verarbeitet PNG-, JPEG-, GIF-, WebP-, AVIF-, BMP-, SVG-, ICO-, HEIC- und TIFF
 
 ## Änderungen
 
+- **0.1.3** - Seine Seite sagt jetzt in einem Satz, was es tut, was es kann und was sich in jeder Version geändert hat.
 - **0.1.2** - Lässt Bilder dort, wo der Anhangsordner eines Obsidian-Vaults oder ein Logseq-Graph sie ablegt.
 - **0.1.1** - Ein kürzerer Name: Bilder beim Dokument.
 - **0.1.0** - Erste Version: eingefügte und hineingezogene Bilder kommen nach `Note.assets/`, und der Ordner folgt dem umbenannten Dokument.

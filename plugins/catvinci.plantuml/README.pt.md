@@ -28,6 +28,7 @@ Bob --> Alice : Hi!
 
 ## Alterações
 
+- **0.2.2** - Sua página agora diz numa frase o que ele faz, o que pode fazer e o que mudou em cada versão.
 - **0.2.1** - Traz a página de gráficos compartilhada atualizada; os diagramas são desenhados como antes.
 - **0.2.0** - Traz a página de gráficos compartilhada que tira as cores do tema. Requer Textus 1.3.2.
 - **0.1.3** - Usa a cor do texto do documento e o tamanho das notas de rodapé do tema pelos nomes do Textus 1.3.

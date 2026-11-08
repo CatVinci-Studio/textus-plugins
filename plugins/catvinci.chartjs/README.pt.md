@@ -27,6 +27,7 @@ Funciona no computador e no iPhone e precisa do Textus 1.3.2 ou mais recente. Pe
 
 ## Alterações
 
+- **0.3.1** - Sua página agora diz numa frase o que ele faz, o que pode fazer e o que mudou em cada versão.
 - **0.3.0** - O Textus AI pode verificar um bloco `chartjs` antes de o escrever (`check_chartjs`).
 - **0.2.0** - As séries recebem as cores do tema; precisa do Textus 1.3.2.
 - **0.1.3** - Usa as cores do documento com os novos nomes do Textus.

@@ -26,6 +26,7 @@ Pede apenas **Ferramentas para o Textus AI**, para que o Textus AI possa verific
 
 ## Alterações
 
+- **0.3.1** - Sua página agora diz numa frase o que ele faz, o que pode fazer e o que mudou em cada versão.
 - **0.3.0** - uma ferramenta para o Textus AI, `check_function_plot`
 - **0.2.0** - curvas e eixos nas cores do tema, redesenhados quando o tema muda
 - **0.1.3** - texto nas cores do tema no Textus 1.3

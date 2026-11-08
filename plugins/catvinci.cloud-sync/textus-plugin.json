@@ -2,7 +2,7 @@
   "id": "catvinci.cloud-sync",
   "name": "%name%",
   "description": "%description%",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "publisher": "catvinci",
   "author": "CatVinci Studio",
   "license": "MIT",

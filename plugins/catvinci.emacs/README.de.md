@@ -16,6 +16,7 @@ Läuft auf dem Desktop und auf dem iPhone. Es fragt nach einer einzigen Berechti
 
 ## Änderungen
 
+- **0.1.4** - Seine Seite sagt jetzt in einem Satz, was es tut, was es kann und was sich in jeder Version geändert hat.
 - **0.1.3** - Nennt, wo es läuft: Desktop und iPhone.
 - **0.1.2** - C-x bleibt nicht mehr hängen; C-d und C-y lassen Zwischenablage und Region in Ruhe.
 - **0.1.0-0.1.1** - Erste Versionen: Bewegungen, Marke und Region, Kill-Ring mit C-y und M-y, M-u M-l M-c, Rückgängig und C-x-Tasten; Seite im Store und Symbol.

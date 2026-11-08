@@ -34,6 +34,7 @@ The **Two-way Links** tab of the sidebar shows what links to the document in fro
 
 ## Changes
 
+- **0.3.1** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
 - **0.3.0** - `[[` completion for notes, headings and blocks; `![[` embeds; renamed from Backlinks to Two-way Links
 - **0.2.1** - the description says "two-way links", so a store search finds it
 - **0.2.0** - a tool for Textus AI, `list_backlinks`

@@ -13,6 +13,7 @@ It handles PNG, JPEG, GIF, WebP, AVIF, BMP, SVG, ICO, HEIC and TIFF pictures. It
 
 ## Changes
 
+- **0.1.3** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
 - **0.1.2** - Leaves pictures where an Obsidian vault's attachment folder setting or a Logseq graph puts them.
 - **0.1.1** - A shorter name: Images Follow Document.
 - **0.1.0** - First version: pasted and dropped pictures move into `Note.assets/`, and the folder follows a renamed document.

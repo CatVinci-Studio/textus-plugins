@@ -39,6 +39,7 @@ CJK-Abstände, das Plugin für Leerzeichen zwischen chinesischem und lateinische
 
 ## Änderungen
 
+- **0.3.1** - Seine Seite sagt jetzt in einem Satz, was es tut, was es kann und was sich in jeder Version geändert hat.
 - **0.3.0** - Heißt jetzt Aufräumen (vorher Markdown-Prüfung): die sechs Textbefehle von „Text aufräumen“ sind hier; Einstellungen, um Unterstreichungen oder einzelne Regeln abzuschalten; Obsidians eigene Syntax bleibt, wie sie ist.
 - **0.2.1** - Tags, Links, Erinnerungen und Referenzdefinitionen werden nie markiert: dieselbe Liste, die CJK-Abstände unverändert lässt.
 - **0.2.0** - Textus AI kann Markdown prüfen (`lint_markdown`).

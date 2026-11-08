@@ -15,6 +15,7 @@ Il ne demande aucune autorisation : Textus lui transmet le PDF que vous ouvrez.
 
 ## Changements
 
+- **0.2.1** - Sa page dit maintenant en une phrase ce qu'il fait, ce qu'il permet et ce qui a changé à chaque version.
 - **0.2.0** - Contrôles propres à Textus. Nécessite Textus 1.3.2.
 - **0.1.3** - L’apparence de Textus 1.3 ; les boutons suivent la langue de l’interface quand elle change.
 - **0.1.2** - Les pages numérisées affichent leurs images, les liens vers une page fonctionnent, les pages hors de vue libèrent la mémoire, les fichiers illisibles le disent ; ouverture à la largeur de la fenêtre ; le zoom étire autour du pointeur puis redevient net.

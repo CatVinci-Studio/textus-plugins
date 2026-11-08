@@ -11,6 +11,7 @@ The plugin asks to read the editor (to see which link you point at) and to read 
 
 ## Changes
 
+- **0.2.1** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
 - **0.2.0** - A link to a block (`#^id`) shows that block. Needs Textus 1.3.9.
 - **0.1.3** - Says where it runs: the desktop, iPhone and iPad.
 - **0.1.2** - The card's length is fixed instead of a setting.

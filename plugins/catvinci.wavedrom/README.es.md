@@ -27,6 +27,7 @@ Solo pide **Herramientas para Textus AI**, para que Textus AI pueda revisar un b
 
 ## Cambios
 
+- **0.3.1** - Su página dice ahora en una frase qué hace, qué puede hacer y qué cambió en cada versión.
 - **0.3.0** - una herramienta para Textus AI, `check_wavedrom`
 - **0.2.0** - se vuelve a dibujar al cambiar de tema, con la página de gráficos de Textus 1.3.2
 - **0.1.3** - el texto con los colores del tema en Textus 1.3

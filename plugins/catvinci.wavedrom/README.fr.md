@@ -27,6 +27,7 @@ Il ne demande que **Outils pour Textus AI**, pour que Textus AI puisse vérifier
 
 ## Changements
 
+- **0.3.1** - Sa page dit maintenant en une phrase ce qu'il fait, ce qu'il permet et ce qui a changé à chaque version.
 - **0.3.0** - un outil pour Textus AI, `check_wavedrom`
 - **0.2.0** - redessiné quand le thème change, avec la page de graphiques de Textus 1.3.2
 - **0.1.3** - le texte aux couleurs du thème sous Textus 1.3

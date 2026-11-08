@@ -15,6 +15,7 @@ No pide permisos: Textus le pasa el PDF que abres.
 
 ## Cambios
 
+- **0.2.1** - Su página dice ahora en una frase qué hace, qué puede hacer y qué cambió en cada versión.
 - **0.2.0** - Controles propios de Textus. Requiere Textus 1.3.2.
 - **0.1.3** - El aspecto de Textus 1.3; los botones siguen el idioma de la interfaz cuando cambia.
 - **0.1.2** - Las páginas escaneadas muestran sus imágenes, funcionan los enlaces a una página, las páginas fuera de la vista liberan memoria y los archivos ilegibles lo dicen; se abre al ancho de la ventana; el zoom estira alrededor del puntero y luego se vuelve nítido.

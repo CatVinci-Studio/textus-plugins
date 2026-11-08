@@ -13,6 +13,7 @@ Das Plugin fragt nach keinen Berechtigungen: Es liest nur die Datei, die Sie dam
 
 ## Änderungen
 
+- **0.2.1** - Seine Seite sagt jetzt in einem Satz, was es tut, was es kann und was sich in jeder Version geändert hat.
 - **0.2.0** - Mit den eigenen Bedienelementen von Textus und den Tönen des Themes gezeichnet; der Tab folgt der Sprache der Oberfläche, wenn diese wechselt. Benötigt Textus 1.3.2.
 - **0.1.3** - Nutzt die Design-Variablen von Textus 1.3.
 - **0.1.2** - Eine unlesbare Datei wird gemeldet; die Suche überspringt die Formatvorlagen des Dokuments.
