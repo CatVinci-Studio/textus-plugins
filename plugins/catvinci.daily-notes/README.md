@@ -8,6 +8,7 @@ A note for each day, and a calendar to get to any of them.
 - **Plugins › Open the Day Before** and **Open the Day After** go from a day's note to its neighbours.
 - The template can hold {{weekday}}, {{yesterday}}, {{tomorrow}} and {{time}} as well as {{date}} - for example `[[{{yesterday}}]]` links each day to the one before.
 - The starting text can also be the name of a template in the Templates folder (the Templates plugin's), such as `Daily`. In an Obsidian vault, the vault's own daily notes settings - folder, name format such as `YYYY/MM/YYYY-MM-DD`, and template - are followed; Textus never changes them. A vault without daily notes settings keeps its notes at its top, as Obsidian does. `{{date}}`, `{{yesterday}}` and `{{tomorrow}}` are written in the notes' name format - `MMMM Do, YYYY` and other Moment formats included.
+- **Weekly and monthly notes**, turned on in the settings: **Plugins › Open This Week's Note** and **Open This Month's Note**, or click a week number or the month's name in the calendar. Each has its own folder, name format (`gggg-[W]ww` and `YYYY-MM` by default) and template; a weekly template can hold `{{monday:YYYY-MM-DD}}` … `{{sunday}}`. In a vault with Obsidian's Periodic Notes plugin, its weekly and monthly settings are followed.
 
 <!-- ai-tools -->
 ## Tools for Textus AI

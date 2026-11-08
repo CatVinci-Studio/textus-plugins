@@ -42,6 +42,7 @@
     api.postMessage({ type: "new" });
   };
   const when = (at) =>
+    at &&
     new Date(at).toLocaleString(api.language, {
       month: "short",
       day: "numeric",
@@ -133,7 +134,7 @@
       }
       const area = li.querySelector("textarea");
       if (typing !== note.id) area.value = note.text;
-      li.querySelector(".when").textContent = when(note.at);
+      li.querySelector(".when").textContent = when(note.at) || "";
       if (list.children[i] !== li)
         list.insertBefore(li, list.children[i] || null);
     });

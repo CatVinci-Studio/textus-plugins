@@ -1,7 +1,7 @@
 {
   "id": "catvinci.quick-notes",
   "name": "%name%",
-  "version": "0.3.1",
+  "version": "0.4.0",
   "publisher": "catvinci",
   "author": "CatVinci Studio",
   "description": "%description%",
@@ -9,11 +9,13 @@
   "license": "MIT",
   "repository": "https://github.com/CatVinci-Studio/textus-plugins",
   "engines": {
-    "textus": ">=1.3.2"
+    "textus": ">=1.3.9"
   },
   "platforms": ["desktop"],
-  "main": "host.js",
+  "main": ["lib/folder-paths.js", "lib/dates.js", "lib/conventions.js", "host.js"],
   "permissions": [
+    "files.read",
+    "files.write",
     "editor.write",
     "ai.tools"
   ],
@@ -55,6 +57,32 @@
         "icon": "tab.svg"
       }
     ],
+    "settings": [
+      {
+        "key": "saveTo",
+        "type": "enum",
+        "default": "inbox",
+        "title": "%saveTo%",
+        "description": "%saveToHelp%",
+        "options": [
+          {
+            "value": "inbox",
+            "label": "%saveToInbox%"
+          },
+          {
+            "value": "daily",
+            "label": "%saveToDaily%"
+          }
+        ]
+      },
+      {
+        "key": "inbox",
+        "type": "string",
+        "default": "Inbox.md",
+        "title": "%inbox%",
+        "description": "%inboxHelp%"
+      }
+    ],
     "aiTools": [
       {
         "name": "add_note",
@@ -77,7 +105,7 @@
   "l10n": {
     "en": {
       "name": "Quick Notes",
-      "description": "Jot something down without leaving the document: notes in the sidebar, to insert later or open as a document.",
+      "description": "Jot something down without leaving the document: notes in the sidebar, kept in Inbox.md or today's daily note, to insert later or open as a document.",
       "capture": "New Quick Note…",
       "needsBackground": "With it on, New Quick Note… is in the tray or menu bar even with every window closed.",
       "prompt": "Note something down",
@@ -92,11 +120,17 @@
       "deleted": "Note deleted",
       "undo": "Undo",
       "actions": "Actions",
+      "saveTo": "Save notes to",
+      "saveToHelp": "Each note is a list item with its time. With no folder open, notes stay inside Textus.",
+      "saveToInbox": "Inbox file",
+      "saveToDaily": "Today's daily note",
+      "inbox": "Inbox file",
+      "inboxHelp": "A document in the open folder; notes are added at its end.",
       "tool.add_note": "Adds a quick note to the top of the Quick Notes list in the sidebar, to be inserted into a document or opened as one later. Today's journal is append_to_daily_note; a to-do is add_task."
     },
     "zh": {
       "name": "快速笔记",
-      "description": "不离开当前文档就能随手记下想法：笔记放在侧边栏，之后可以插入文档或单独打开。",
+      "description": "不离开当前文档就能随手记下想法：笔记列在侧边栏，存进 Inbox.md 或今天的日记，之后可以插入文档或单独打开。",
       "capture": "新建快速笔记…",
       "needsBackground": "打开后，关掉所有窗口也能从托盘或菜单栏新建快速笔记。",
       "prompt": "记下点什么",
@@ -111,11 +145,17 @@
       "deleted": "已删除笔记",
       "undo": "撤销",
       "actions": "操作",
+      "saveTo": "笔记存到",
+      "saveToHelp": "每条笔记是一个带时间的列表项。没有打开文件夹时，笔记留在 Textus 里。",
+      "saveToInbox": "收件箱文件",
+      "saveToDaily": "今天的日记",
+      "inbox": "收件箱文件",
+      "inboxHelp": "打开的文件夹里的一篇文档，笔记加在它的末尾。",
       "tool.add_note": "在侧边栏的快速笔记列表顶部添加一条笔记，之后可以插入文档，或单独打开成一篇文档。 写今天的日记用 append_to_daily_note；待办用 add_task。"
     },
     "zh-Hant": {
       "name": "快速筆記",
-      "description": "不離開目前的文件就能隨手記下想法：筆記放在側邊欄，之後可以插入文件或單獨開啟。",
+      "description": "不離開目前的文件就能隨手記下想法：筆記列在側邊欄，存進 Inbox.md 或今天的日記，之後可以插入文件或單獨開啟。",
       "capture": "新增快速筆記…",
       "needsBackground": "開啟後，即使關掉所有視窗，也能從系統匣或選單列新增快速筆記。",
       "prompt": "記下點什麼",
@@ -130,11 +170,17 @@
       "deleted": "已刪除筆記",
       "undo": "復原",
       "actions": "操作",
+      "saveTo": "筆記存到",
+      "saveToHelp": "每則筆記是一個附時間的清單項目。沒有開啟資料夾時，筆記留在 Textus 裡。",
+      "saveToInbox": "收件匣檔案",
+      "saveToDaily": "今天的日記",
+      "inbox": "收件匣檔案",
+      "inboxHelp": "開啟的資料夾裡的一份文件，筆記會加在它的結尾。",
       "tool.add_note": "在側邊欄的快速筆記列表頂端新增一則筆記，之後可以插入文件，或單獨開成一份文件。 寫今天的日記用 append_to_daily_note；待辦用 add_task。"
     },
     "ja": {
       "name": "クイックノート",
-      "description": "文書から離れずに思いつきを書き留められます。メモはサイドバーに置かれ、あとで挿入したり文書として開いたりできます。",
+      "description": "文書から離れずに思いつきを書き留められます。メモはサイドバーに並び、Inbox.md か今日のデイリーノートに保存され、あとで挿入したり文書として開いたりできます。",
       "capture": "新しいクイックノート…",
       "needsBackground": "オンにすると、ウインドウをすべて閉じていても、トレイやメニューバーから「新しいクイックノート…」を使えます。",
       "prompt": "書き留める",
@@ -149,11 +195,17 @@
       "deleted": "ノートを削除しました",
       "undo": "元に戻す",
       "actions": "操作",
+      "saveTo": "メモの保存先",
+      "saveToHelp": "メモは時刻付きのリスト項目になります。フォルダを開いていないときは Textus の中に保存されます。",
+      "saveToInbox": "受信箱ファイル",
+      "saveToDaily": "今日のデイリーノート",
+      "inbox": "受信箱ファイル",
+      "inboxHelp": "開いているフォルダ内の文書。メモは末尾に追加されます。",
       "tool.add_note": "サイドバーのクイックノートの一覧の先頭にメモを追加します。あとで文書に挿入したり、文書として開いたりできます。 今日の日記は append_to_daily_note、ToDo は add_task です。"
     },
     "ko": {
       "name": "빠른 메모",
-      "description": "문서를 떠나지 않고 생각을 바로 적어 두세요. 메모는 사이드바에 있다가 나중에 넣거나 문서로 열 수 있습니다.",
+      "description": "문서를 떠나지 않고 생각을 바로 적어 두세요. 메모는 사이드바에 보이고 Inbox.md나 오늘의 일일 노트에 저장되며, 나중에 넣거나 문서로 열 수 있습니다.",
       "capture": "새 빠른 메모…",
       "needsBackground": "켜 두면 창을 모두 닫아도 트레이나 메뉴 막대에서 새 빠른 메모를 만들 수 있습니다.",
       "prompt": "적어 둘 내용",
@@ -168,11 +220,17 @@
       "deleted": "노트를 삭제했습니다",
       "undo": "실행 취소",
       "actions": "작업",
+      "saveTo": "메모 저장 위치",
+      "saveToHelp": "메모마다 시간이 붙은 목록 항목이 됩니다. 폴더를 열지 않았으면 Textus 안에 남습니다.",
+      "saveToInbox": "받은 편지함 파일",
+      "saveToDaily": "오늘의 일일 노트",
+      "inbox": "받은 편지함 파일",
+      "inboxHelp": "열린 폴더 안의 문서이며, 메모는 끝에 추가됩니다.",
       "tool.add_note": "사이드바의 빠른 메모 목록 맨 위에 메모를 추가합니다. 나중에 문서에 넣거나 문서로 열 수 있습니다. 오늘 일지는 append_to_daily_note, 할 일은 add_task입니다."
     },
     "es": {
       "name": "Notas rápidas",
-      "description": "Apunta algo sin salir del documento: notas en la barra lateral, para insertarlas después o abrirlas como documento.",
+      "description": "Apunta algo sin salir del documento: notas en la barra lateral, guardadas en Inbox.md o en la nota diaria de hoy, para insertarlas después o abrirlas como documento.",
       "capture": "Nueva nota rápida…",
       "needsBackground": "Con esto activado, Nueva nota rápida… está en la bandeja o la barra de menús aunque cierres todas las ventanas.",
       "prompt": "Apunta algo",
@@ -187,11 +245,17 @@
       "deleted": "Nota eliminada",
       "undo": "Deshacer",
       "actions": "Acciones",
+      "saveTo": "Guardar notas en",
+      "saveToHelp": "Cada nota es un elemento de lista con su hora. Sin carpeta abierta, las notas se quedan dentro de Textus.",
+      "saveToInbox": "Archivo de bandeja de entrada",
+      "saveToDaily": "Nota diaria de hoy",
+      "inbox": "Archivo de bandeja de entrada",
+      "inboxHelp": "Un documento de la carpeta abierta; las notas se añaden al final.",
       "tool.add_note": "Añade una nota rápida al principio de la lista de Notas rápidas de la barra lateral, para insertarla luego en un documento o abrirla como uno. El diario de hoy es append_to_daily_note; una tarea, add_task."
     },
     "fr": {
       "name": "Notes rapides",
-      "description": "Notez une idée sans quitter le document : des notes dans la barre latérale, à insérer plus tard ou à ouvrir comme document.",
+      "description": "Notez une idée sans quitter le document : des notes dans la barre latérale, gardées dans Inbox.md ou la note du jour, à insérer plus tard ou à ouvrir comme document.",
       "capture": "Nouvelle note rapide…",
       "needsBackground": "Activé, Nouvelle note rapide… reste dans la zone de notification ou la barre des menus, même toutes fenêtres fermées.",
       "prompt": "Notez quelque chose",
@@ -206,11 +270,17 @@
       "deleted": "Note supprimée",
       "undo": "Annuler",
       "actions": "Actions",
+      "saveTo": "Enregistrer les notes dans",
+      "saveToHelp": "Chaque note est un élément de liste avec son heure. Sans dossier ouvert, les notes restent dans Textus.",
+      "saveToInbox": "Fichier boîte de réception",
+      "saveToDaily": "Note du jour",
+      "inbox": "Fichier boîte de réception",
+      "inboxHelp": "Un document du dossier ouvert ; les notes sont ajoutées à la fin.",
       "tool.add_note": "Ajoute une note rapide en haut de la liste des Notes rapides de la barre latérale, à insérer plus tard dans un document ou à ouvrir comme document. Le journal du jour, c’est append_to_daily_note ; une tâche, add_task."
     },
     "de": {
       "name": "Schnellnotizen",
-      "description": "Schreib etwas auf, ohne das Dokument zu verlassen: Notizen in der Seitenleiste, später einzufügen oder als Dokument zu öffnen.",
+      "description": "Schreib etwas auf, ohne das Dokument zu verlassen: Notizen in der Seitenleiste, gespeichert in Inbox.md oder der heutigen Tagesnotiz, später einzufügen oder als Dokument zu öffnen.",
       "capture": "Neue Schnellnotiz…",
       "needsBackground": "Ist es an, steht „Neue Schnellnotiz…“ im Infobereich oder in der Menüleiste, auch wenn alle Fenster geschlossen sind.",
       "prompt": "Schreib etwas auf",
@@ -225,11 +295,17 @@
       "deleted": "Notiz gelöscht",
       "undo": "Rückgängig",
       "actions": "Aktionen",
+      "saveTo": "Notizen speichern in",
+      "saveToHelp": "Jede Notiz ist ein Listenpunkt mit ihrer Uhrzeit. Ohne geöffneten Ordner bleiben die Notizen in Textus.",
+      "saveToInbox": "Eingangsdatei",
+      "saveToDaily": "Heutige Tagesnotiz",
+      "inbox": "Eingangsdatei",
+      "inboxHelp": "Ein Dokument im geöffneten Ordner; Notizen kommen an sein Ende.",
       "tool.add_note": "Fügt oben in der Liste der Schnellnotizen in der Seitenleiste eine Notiz hinzu, die sich später in ein Dokument einfügen oder als Dokument öffnen lässt. Das heutige Journal ist append_to_daily_note; eine Aufgabe add_task."
     },
     "ru": {
       "name": "Быстрые заметки",
-      "description": "Запишите мысль, не уходя из документа: заметки на боковой панели можно потом вставить или открыть как документ.",
+      "description": "Запишите мысль, не уходя из документа: заметки на боковой панели хранятся в Inbox.md или в сегодняшней ежедневной заметке, их можно потом вставить или открыть как документ.",
       "capture": "Новая быстрая заметка…",
       "needsBackground": "Когда это включено, «Новая быстрая заметка…» доступна в трее или строке меню, даже если все окна закрыты.",
       "prompt": "Запишите что-нибудь",
@@ -244,11 +320,17 @@
       "deleted": "Заметка удалена",
       "undo": "Отменить",
       "actions": "Действия",
+      "saveTo": "Сохранять заметки в",
+      "saveToHelp": "Каждая заметка — пункт списка с её временем. Без открытой папки заметки остаются внутри Textus.",
+      "saveToInbox": "Файл «Входящие»",
+      "saveToDaily": "Сегодняшняя ежедневная заметка",
+      "inbox": "Файл «Входящие»",
+      "inboxHelp": "Документ в открытой папке; заметки добавляются в его конец.",
       "tool.add_note": "Добавляет быструю заметку в начало списка быстрых заметок на боковой панели, чтобы потом вставить её в документ или открыть как документ. Сегодняшний дневник — append_to_daily_note; задача — add_task."
     },
     "pt": {
       "name": "Notas rápidas",
-      "description": "Anote algo sem sair do documento: notas na barra lateral, para inserir depois ou abrir como documento.",
+      "description": "Anote algo sem sair do documento: notas na barra lateral, guardadas em Inbox.md ou na nota diária de hoje, para inserir depois ou abrir como documento.",
       "capture": "Nova nota rápida…",
       "needsBackground": "Com isto ligado, Nova nota rápida… fica na bandeja ou na barra de menus mesmo com todas as janelas fechadas.",
       "prompt": "Anote algo",
@@ -263,6 +345,12 @@
       "deleted": "Nota excluída",
       "undo": "Desfazer",
       "actions": "Ações",
+      "saveTo": "Guardar notas em",
+      "saveToHelp": "Cada nota é um item de lista com a sua hora. Sem pasta aberta, as notas ficam dentro do Textus.",
+      "saveToInbox": "Arquivo de caixa de entrada",
+      "saveToDaily": "Nota diária de hoje",
+      "inbox": "Arquivo de caixa de entrada",
+      "inboxHelp": "Um documento da pasta aberta; as notas são adicionadas ao fim.",
       "tool.add_note": "Adiciona uma nota rápida no topo da lista de Notas rápidas da barra lateral, para inserir depois num documento ou abrir como um. O diário de hoje é append_to_daily_note; uma tarefa, add_task."
     }
   }
