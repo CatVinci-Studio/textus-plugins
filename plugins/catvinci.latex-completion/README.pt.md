@@ -1,8 +1,15 @@
 # Autocompletar LaTeX
 
-Comandos LaTeX sugeridos enquanto você digita uma fórmula.
+Sugere comandos LaTeX enquanto escreve uma fórmula.
 
-- Dentro de uma fórmula — entre $ … $ ou num bloco de matemática — digite uma barra invertida e o início de um comando: \fr, \alp.
-- Uma lista mostra os comandos que começam assim, cada um com o que desenha; são mais de 200, de \frac a \begin{pmatrix}.
-- Letras em ordem também acham um comando: \rarr é \rightarrow, \lra é \leftrightarrow.
-- **Enter** ou **Tab** escreve o escolhido, com o cursor dentro das chaves; **Esc** fecha a lista.
+- Numa fórmula (entre `$ … $` ou num bloco de matemática), escreva uma barra invertida e o início de um comando, como `\fr` ou `\alp`. Uma barra invertida sozinha mostra os mais comuns.
+- A lista mostra os comandos que correspondem, cada um com o que desenha: mais de 200, de `\frac` a `\begin{pmatrix}`. Primeiro vêm os que começam pelo que escreveu e depois os que o contêm, sem distinguir maiúsculas.
+- Letras pela ordem também encontram um comando: `\rarr` é `\rightarrow`, `\lra` é `\leftrightarrow`.
+- **Enter** ou **Tab** escreve o escolhido, com o cursor dentro das chavetas; **Esc** fecha a lista. `\left(`, `\left[` e `\left\{` vêm com o seu `\right`.
+
+Funciona no computador e no iPhone e precisa do Textus 1.3.0 ou mais recente. Pede uma única permissão, ler o editor, para ver o que escreve na fórmula.
+
+## Alterações
+
+- **0.1.2** - Indica onde funciona: computador e iPhone.
+- **0.1.0-0.1.1** - Primeiras versões: mais de 200 comandos com o que cada um desenha, procura por letras pela ordem, chavetas e cursor no lugar, pares de parênteses que crescem; página na loja e ícone.
