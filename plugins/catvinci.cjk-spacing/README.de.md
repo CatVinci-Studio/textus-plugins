@@ -12,5 +12,5 @@ Setzt ein Leerzeichen zwischen chinesischen oder japanischen Text und lateinisch
 
 Ist das Plugin installiert, kann Textus AI sie im Gespräch nutzen:
 
-- `fix_cjk_spacing`: Setzt in Markdown ein Leerzeichen zwischen chinesische, japanische oder koreanische Zeichen und lateinische Buchstaben oder Ziffern, Code und Links ausgenommen, wie der Befehl des Plugins. Gibt den Text zurück; schreibt nichts.
+- `fix_cjk_spacing`: Setzt in Markdown ein Leerzeichen zwischen chinesische oder japanische Zeichen und lateinische Buchstaben oder Ziffern, Code und Links ausgenommen, wie der Befehl des Plugins. Gibt den Text zurück; schreibt nichts.
 <!-- /ai-tools -->

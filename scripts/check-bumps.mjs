@@ -8,7 +8,8 @@ import { execFileSync } from "node:child_process";
 import { readFileSync, readdirSync } from "node:fs";
 
 const base = process.argv[2] || "origin/main";
-const git = (...args) => execFileSync("git", args, { encoding: "utf8" });
+const git = (...args) =>
+  execFileSync("git", args, { encoding: "utf8", stdio: ["ignore", "pipe", "ignore"] });
 try {
   git("rev-parse", "--verify", base);
 } catch {

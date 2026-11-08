@@ -12,5 +12,5 @@ Met une espace entre le texte chinois ou japonais et les lettres latines ou les 
 
 Une fois le plugin installé, Textus AI peut s’en servir dans une conversation :
 
-- `fix_cjk_spacing`: Met une espace entre les caractères chinois, japonais ou coréens et les lettres latines ou les chiffres d'un Markdown, sans toucher au code ni aux liens, comme la commande de l'extension. Renvoie le texte espacé ; n'écrit rien.
+- `fix_cjk_spacing`: Met une espace entre les caractères chinois ou japonais et les lettres latines ou les chiffres d'un Markdown, sans toucher au code ni aux liens, comme la commande de l'extension. Renvoie le texte espacé ; n'écrit rien.
 <!-- /ai-tools -->

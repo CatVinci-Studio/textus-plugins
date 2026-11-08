@@ -1,7 +1,7 @@
 {
   "id": "catvinci.cjk-spacing",
   "name": "%name%",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "publisher": "catvinci",
   "author": "CatVinci Studio",
   "description": "%description%",
@@ -69,7 +69,7 @@
       "onSave": "Also when saving",
       "done": "Spaced {0} blocks.",
       "none": "The spacing is already right.",
-      "tool.fix_cjk_spacing": "Puts a space between Chinese, Japanese or Korean characters and Latin letters or digits in some Markdown, leaving code and links alone, as the plugin's command does. Returns the spaced text; writes nothing."
+      "tool.fix_cjk_spacing": "Puts a space between Chinese or Japanese characters and Latin letters or digits in some Markdown, leaving code and links alone, as the plugin's command does. Returns the spaced text; writes nothing."
     },
     "zh": {
       "name": "中英文间距",
@@ -78,7 +78,7 @@
       "onSave": "保存时也自动加",
       "done": "已调整 {0} 处。",
       "none": "间距已经没问题。",
-      "tool.fix_cjk_spacing": "在一段 Markdown 中给中日韩文字与英文字母、数字之间加上空格，代码和链接保持不变，和插件命令的做法一样。返回处理后的文本，不写入任何文件。"
+      "tool.fix_cjk_spacing": "在一段 Markdown 中给中日文字与英文字母、数字之间加上空格，代码和链接保持不变，和插件命令的做法一样。返回处理后的文本，不写入任何文件。"
     },
     "zh-Hant": {
       "name": "中英文間距",
@@ -87,7 +87,7 @@
       "onSave": "儲存時也自動加",
       "done": "已調整 {0} 處。",
       "none": "間距已經沒問題。",
-      "tool.fix_cjk_spacing": "在一段 Markdown 中為中日韓文字與英文字母、數字之間加上空格，程式碼和連結保持不變，和外掛命令的做法一樣。回傳處理後的文字，不寫入任何檔案。"
+      "tool.fix_cjk_spacing": "在一段 Markdown 中為中日文字與英文字母、數字之間加上空格，程式碼和連結保持不變，和外掛命令的做法一樣。回傳處理後的文字，不寫入任何檔案。"
     },
     "ja": {
       "name": "和欧文スペース",
@@ -96,7 +96,7 @@
       "onSave": "保存時にも入れる",
       "done": "{0} か所を調整しました。",
       "none": "スペースはすでに整っています。",
-      "tool.fix_cjk_spacing": "Markdown の中で、中国語・日本語・韓国語の文字と英字・数字の間に空白を入れます。コードとリンクはそのままで、プラグインのコマンドと同じです。空白を入れた文章を返し、何も書き込みません。"
+      "tool.fix_cjk_spacing": "Markdown の中で、中国語・日本語の文字と英字・数字の間に空白を入れます。コードとリンクはそのままで、プラグインのコマンドと同じです。空白を入れた文章を返し、何も書き込みません。"
     },
     "ko": {
       "name": "CJK·영문 간격",
@@ -105,7 +105,7 @@
       "onSave": "저장할 때도 넣기",
       "done": "{0}곳을 고쳤습니다.",
       "none": "간격이 이미 맞습니다.",
-      "tool.fix_cjk_spacing": "Markdown에서 한중일 문자와 라틴 문자·숫자 사이에 공백을 넣습니다. 코드와 링크는 그대로 두며 플러그인 명령과 같습니다. 공백을 넣은 글을 돌려주고 아무것도 쓰지 않습니다."
+      "tool.fix_cjk_spacing": "Markdown에서 중국어·일본어 문자와 라틴 문자·숫자 사이에 공백을 넣습니다. 코드와 링크는 그대로 두며 플러그인 명령과 같습니다. 공백을 넣은 글을 돌려주고 아무것도 쓰지 않습니다."
     },
     "es": {
       "name": "Espaciado CJK",
@@ -114,7 +114,7 @@
       "onSave": "También al guardar",
       "done": "{0} bloques ajustados.",
       "none": "El espaciado ya está bien.",
-      "tool.fix_cjk_spacing": "Pone un espacio entre caracteres chinos, japoneses o coreanos y letras latinas o cifras en un Markdown, sin tocar el código ni los enlaces, como el comando del complemento. Devuelve el texto espaciado; no escribe nada."
+      "tool.fix_cjk_spacing": "Pone un espacio entre caracteres chinos o japoneses y letras latinas o cifras en un Markdown, sin tocar el código ni los enlaces, como el comando del complemento. Devuelve el texto espaciado; no escribe nada."
     },
     "fr": {
       "name": "Espacement CJK",
@@ -123,7 +123,7 @@
       "onSave": "Aussi à l’enregistrement",
       "done": "{0} blocs ajustés.",
       "none": "L’espacement est déjà correct.",
-      "tool.fix_cjk_spacing": "Met une espace entre les caractères chinois, japonais ou coréens et les lettres latines ou les chiffres d'un Markdown, sans toucher au code ni aux liens, comme la commande de l'extension. Renvoie le texte espacé ; n'écrit rien."
+      "tool.fix_cjk_spacing": "Met une espace entre les caractères chinois ou japonais et les lettres latines ou les chiffres d'un Markdown, sans toucher au code ni aux liens, comme la commande de l'extension. Renvoie le texte espacé ; n'écrit rien."
     },
     "de": {
       "name": "CJK-Abstände",
@@ -132,7 +132,7 @@
       "onSave": "Auch beim Speichern",
       "done": "{0} Blöcke angepasst.",
       "none": "Die Abstände stimmen schon.",
-      "tool.fix_cjk_spacing": "Setzt in Markdown ein Leerzeichen zwischen chinesische, japanische oder koreanische Zeichen und lateinische Buchstaben oder Ziffern, Code und Links ausgenommen, wie der Befehl des Plugins. Gibt den Text zurück; schreibt nichts."
+      "tool.fix_cjk_spacing": "Setzt in Markdown ein Leerzeichen zwischen chinesische oder japanische Zeichen und lateinische Buchstaben oder Ziffern, Code und Links ausgenommen, wie der Befehl des Plugins. Gibt den Text zurück; schreibt nichts."
     },
     "ru": {
       "name": "Пробелы CJK",
@@ -141,7 +141,7 @@
       "onSave": "Также при сохранении",
       "done": "Изменено блоков: {0}.",
       "none": "Пробелы уже в порядке.",
-      "tool.fix_cjk_spacing": "Ставит пробел между китайскими, японскими или корейскими знаками и латинскими буквами или цифрами в Markdown, не трогая код и ссылки, как команда плагина. Возвращает текст с пробелами; ничего не записывает."
+      "tool.fix_cjk_spacing": "Ставит пробел между китайскими или японскими знаками и латинскими буквами или цифрами в Markdown, не трогая код и ссылки, как команда плагина. Возвращает текст с пробелами; ничего не записывает."
     },
     "pt": {
       "name": "Espaçamento CJK",
@@ -150,7 +150,7 @@
       "onSave": "Também ao salvar",
       "done": "{0} blocos ajustados.",
       "none": "O espaçamento já está certo.",
-      "tool.fix_cjk_spacing": "Põe um espaço entre caracteres chineses, japoneses ou coreanos e letras latinas ou algarismos num Markdown, sem mexer no código nem nos links, como o comando do plugin. Devolve o texto espaçado; não escreve nada."
+      "tool.fix_cjk_spacing": "Põe um espaço entre caracteres chineses ou japoneses e letras latinas ou algarismos num Markdown, sem mexer no código nem nos links, como o comando do plugin. Devolve o texto espaçado; não escreve nada."
     }
   }
 }

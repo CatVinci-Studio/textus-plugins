@@ -12,5 +12,5 @@ Pone un espacio entre texto chino o japonés y letras latinas o números.
 
 Con el plugin instalado, Textus AI puede usarlas en una conversación:
 
-- `fix_cjk_spacing`: Pone un espacio entre caracteres chinos, japoneses o coreanos y letras latinas o cifras en un Markdown, sin tocar el código ni los enlaces, como el comando del complemento. Devuelve el texto espaciado; no escribe nada.
+- `fix_cjk_spacing`: Pone un espacio entre caracteres chinos o japoneses y letras latinas o cifras en un Markdown, sin tocar el código ni los enlaces, como el comando del complemento. Devuelve el texto espaciado; no escribe nada.
 <!-- /ai-tools -->
