@@ -5,6 +5,7 @@ Puts a space between Chinese or Japanese text and Latin letters or numbers.
 - **Add Spaces Between CJK and Latin** (right-click, or the Plugins menu): 用Textus写作 becomes 用 Textus 写作, as one undo step.
 - Turn on **Also when saving** in its settings to space every document as it is saved.
 - Code, formulas, links, #tags, reminders (@…), %% comments and HTML are left as they are - on save too.
+- So is what Obsidian writes: block ids (^1a2b3c), Dataview fields (key:: value), ==highlights== and the fields of Obsidian Tasks (📅 2026-11-07).
 
 <!-- ai-tools -->
 ## Tools for Textus AI

@@ -17,6 +17,14 @@ it("has one Notion import, in Workspace", () => {
   expect(titles(/^import.*notion/i)).toEqual(["catvinci.database: Import from Notion…"]);
 });
 
+it("has one place to tidy text and fix Markdown: Tidy", () => {
+  expect(titles(/^(remove blank lines|join selected lines|fix markdown)$/i)).toEqual([
+    "catvinci.markdown-lint: Fix Markdown",
+    "catvinci.markdown-lint: Remove Blank Lines",
+    "catvinci.markdown-lint: Join Selected Lines",
+  ]);
+});
+
 it("has one way to write today's date: Natural Dates' @today", () => {
   expect(titles(/today's date/i)).toEqual([]);
 });

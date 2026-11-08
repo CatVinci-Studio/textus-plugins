@@ -1,7 +1,7 @@
 import { beforeAll, describe, expect, it } from "vitest";
-import { loadPlugin } from "./plugin-host";
+import { loadPlugin, manifestOf, memoryStorage } from "./plugin-host";
 
-/** Text Tidy's rules (plugins/catvinci.text-tidy/tidy.js), a plain script
+/** Tidy's text rules (plugins/catvinci.markdown-lint/tidy.js), a plain script
  *  that puts itself on the global object. */
 let tidy: {
   tidy: (text: string, rule: string, options?: { all?: boolean }) => string;
@@ -15,7 +15,7 @@ let tidy: {
 
 beforeAll(async () => {
   await import("../shared/markdown-keep.js");
-  const script = "../plugins/catvinci.text-tidy/tidy.js";
+  const script = "../plugins/catvinci.markdown-lint/tidy.js";
   await import(/* @vite-ignore */ script);
   tidy = (globalThis as unknown as { textTidy: typeof tidy }).textTidy;
 });
@@ -109,13 +109,13 @@ describe("the command on a whole document", () => {
   it("leaves link definitions untouched", async () => {
     const commands = new Map<string, (editor: unknown) => Promise<void>>();
     let edits: unknown[] = [];
-    loadPlugin("catvinci.text-tidy", {
+    loadPlugin("catvinci.markdown-lint", {
       commands: { registerEditorCommand: (id: string, run: (editor: unknown) => Promise<void>) => void commands.set(id, run) },
       ui: { confirm: async () => true, notice: async () => {} },
     });
     // The title on a line of its own: the rules alone would change it.
     const definition = '[文档]: https://a.com/x,y\n"标题,副题"';
-    await commands.get("catvinci.text-tidy.fullPunctuation")!({
+    await commands.get("catvinci.markdown-lint.fullPunctuation")!({
       getSelection: async () => null,
       getBlocks: async () => [
         { id: "a", kind: "definition", markdown: definition },
@@ -124,5 +124,75 @@ describe("the command on a whole document", () => {
       edit: async (changes: unknown[]) => void (edits = changes),
     });
     expect(edits).toEqual([{ action: "replace", block: "b", text: "你好，世界" }]);
+  });
+});
+
+describe("joining lines around Obsidian's syntax", () => {
+  it("keeps a key:: value line a line of its own", () => {
+    expect(tidy.joinLines("开会\n地点:: 三楼\n- 状态:: 进行中\n下午")).toBe("开会\n地点:: 三楼\n- 状态:: 进行中\n下午");
+  });
+
+  it("joins nothing after a ^block-id", () => {
+    expect(tidy.joinLines("第一句 ^intro\n第二句\n第三句")).toBe("第一句 ^intro\n第二句第三句");
+  });
+});
+
+describe("blank lines before a ^block-id", () => {
+  it("keep the one that ties the id to the list above", () => {
+    expect(tidy.removeBlankLines("- a\n- b\n\n^list-id\n\nc", true)).toBe("- a\n- b\n\n^list-id\nc");
+  });
+});
+
+/** Tidy as the sandbox runs it, with its settings and commands. */
+function host(settings: Record<string, unknown> = {}) {
+  const commands = new Map<string, (editor: unknown) => Promise<void>>();
+  let provider: { decorate: (blocks: unknown[]) => Promise<unknown[]> } | null = null;
+  const { tools } = loadPlugin("catvinci.markdown-lint", {
+    settings: { get: async (key: string) => settings[key] },
+    commands: { registerEditorCommand: (id: string, run: (editor: unknown) => Promise<void>) => void commands.set(id, run) },
+    editor: { registerDecorations: (p: typeof provider) => ((provider = p), { dispose() {} }) },
+    ui: { confirm: async () => true, notice: async () => {} },
+  });
+  return { commands, tools, decorate: (blocks: unknown[]) => provider!.decorate(blocks) };
+}
+
+describe("Tidy: Markdown Lint and Text Tidy in one", () => {
+  it("offers every command of both, under one id", () => {
+    const names = ["fix", "fullPunctuation", "halfLetters", "halfPunctuation", "joinLines", "removeBlankLines", "trimTrailing"];
+    expect([...host().commands.keys()].sort()).toEqual(names.map((c) => "catvinci.markdown-lint." + c));
+  });
+
+  it("leaves out the rules turned off, from underlines, fixes and the AI tool", async () => {
+    const rules = async (settings: Record<string, unknown>) => {
+      const result = await host(settings).tools.get("lint_markdown")!({ text: "*  one\n\nTrailing   " });
+      return result.issues.map((i: { rule: string }) => i.rule.split("/")[0]);
+    };
+    expect(await rules({})).toEqual(["MD030", "MD009"]);
+    expect(await rules({ off: ["no-trailing-spaces", " md030 "] })).toEqual([]);
+    const block = { id: "a", kind: "paragraph", markdown: "Trailing   " };
+    expect(await host({ off: ["MD009"] }).decorate([block])).toEqual([]);
+  });
+
+  it("underlines nothing with underlining off", async () => {
+    const block = { id: "a", kind: "list", markdown: "*  one" };
+    expect(await host().decorate([block])).toHaveLength(1);
+    expect(await host({ underline: false }).decorate([block])).toEqual([]);
+  });
+});
+
+describe("Text Tidy, now part of Tidy", () => {
+  it("offers Tidy once, and does nothing else", async () => {
+    const offers: unknown[] = [];
+    const storage = memoryStorage();
+    const api = {
+      commands: { execute: async (id: string, args: unknown) => void offers.push([id, args]) },
+      ui: { notice: async () => {} },
+    };
+    for (let i = 0; i < 2; i++) {
+      loadPlugin("catvinci.text-tidy", api, storage);
+      await new Promise((r) => setTimeout(r, 0));
+    }
+    expect(offers).toEqual([["textus.offerPlugin", { id: "catvinci.markdown-lint", reason: "merged" }]]);
+    expect(manifestOf("catvinci.text-tidy").contributes).toEqual({});
   });
 });

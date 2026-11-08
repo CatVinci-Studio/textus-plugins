@@ -1,7 +1,7 @@
 import { expect, it } from "vitest";
 import { loadPlugin } from "./plugin-host";
 
-/** Markdown Lint's tool for Textus AI (plugins/catvinci.markdown-lint/host.js),
+/** Tidy's tool for Textus AI (plugins/catvinci.markdown-lint/host.js),
  *  with the bundled markdownlint. */
 it("lists the issues in some Markdown, and fixes them when asked", async () => {
   const { tools } = loadPlugin("catvinci.markdown-lint");

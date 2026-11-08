@@ -1,8 +1,10 @@
-// What the plugins that rewrite prose (Text Tidy, CJK Spacing, Markdown
-// Lint) never change, so all three leave the same things alone. Each lists
+// What the plugins that rewrite prose (Tidy, CJK Spacing) never change, so
+// both leave the same things alone - Obsidian's own syntax too. Each lists
 // this as lib/markdown-keep.js in libs.json and runs it before its own code.
 (function (root) {
   "use strict";
+  // Obsidian Tasks' field marks: dates, recurrence, ids, priorities.
+  var TASK_MARKS = "📅|⏳|🛫|✅|❌|➕|🔁|🆔|⛔|🏁|⏫|🔼|🔽|⏬|🔺";
   // Spans inside a line.
   var SPANS = [
     "`[^`\\n]*`",
@@ -17,6 +19,16 @@
     "<[^>\\n]*>",
     "[a-z][a-z0-9+.-]*:\\/\\/[^\\s)]+",
     "[\\w.+-]+@[\\w-]+\\.[\\w.-]+",
+    "\\[[^[\\]\\n]*?::[^\\]\\n]*\\]", // [key:: value]
+    "\\([^()\\n]*?::[^)\\n]*\\)", // (key:: value)
+    // key:: value on a line of its own, or as a list item.
+    "(?<=^[ \\t]*(?:>[ \\t]*)*(?:(?:[-*+]|\\d+[.)])[ \\t]+(?:\\[.\\][ \\t]+)?)?)[^\\s:[\\]()`>*#+\\d.-][^:\\n[\\]()`]*::.*$",
+    "(?:^|(?<=\\s))\\^[A-Za-z0-9-]+(?=[ \\t]*$)", // ^block-id
+    "==[^\\s=](?:[^=\\n]*[^\\s=])?==", // ==highlight==
+    "(?:📅|⏳|🛫|✅|❌|➕)\\uFE0F? ?\\d{4}-\\d{2}-\\d{2}",
+    "(?:🆔|⛔)\\uFE0F? ?[\\w,-]+",
+    "🏁\\uFE0F? ?\\w+",
+    "🔁\\uFE0F?[^\\n]*?(?=[ \\t]*(?:" + TASK_MARKS + "|\\^[A-Za-z0-9-]+[ \\t]*$|$))",
   ];
   var KEEP = new RegExp("(" + SPANS.join("|") + ")", "m");
   var KEEP_ALL = new RegExp(SPANS.join("|"), "gm");
@@ -117,8 +129,23 @@
       .join("\n");
   }
 
+  /** Whether each line of `text` is prose that may change. */
+  function proseLines(text) {
+    var prose = String(text)
+      .split("\n")
+      .map(function () {
+        return false;
+      });
+    eachProseLine(text, function (line, i) {
+      prose[i] = true;
+      return line;
+    });
+    return prose;
+  }
+
   root.markdownKeep = {
     SPANS: SPANS,
+    proseLines: proseLines,
     SKIP_KINDS: SKIP_KINDS,
     outside: outside,
     mask: mask,

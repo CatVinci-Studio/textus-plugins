@@ -1,7 +1,7 @@
-// Text Tidy's rules: blank lines, trailing spaces, punctuation width,
+// Tidy's text rules: blank lines, trailing spaces, punctuation width,
 // full-width letters and joined lines - in Markdown, so what markdownKeep
-// lists (code, math, links, tags, reminders, comments, HTML, addresses) is
-// left as written. A plain script: the host and the tests read it.
+// lists (code, math, links, tags, comments, Obsidian's fields and block
+// ids) is left as written. A plain script: the host and the tests read it.
 (function (root) {
   "use strict";
   var CJK = "⺀-⻿⼀-⿟぀-ゟ゠-ヺー-ヿ" + "㄀-ㄯ㈀-㋿㐀-䶿一-鿿豈-﫿";
@@ -9,6 +9,10 @@
   var keep = root.markdownKeep;
   var outsideKept = keep.outside;
   var eachProseLine = keep.eachProseLine;
+  // Obsidian's: a Dataview key:: value line, and a ^block-id.
+  var FIELD_LINE = /^\s*(?:>\s*)*(?:(?:[-*+]|\d+[.)])\s+(?:\[.\]\s+)?)?[^\s:[\]()`>*#+\d.-][^:[\]()`]*::/;
+  var BLOCK_ID_END = /(?:^|\s)\^[A-Za-z0-9-]+\s*$/;
+  var BLOCK_ID_LINE = /^\s*\^[A-Za-z0-9-]+\s*$/;
 
   var HALF = ",.?!:;()";
   var FULL = "，。？！：；（）";
@@ -139,6 +143,8 @@
       }
       var blank = !fence && /^\s*(&nbsp;|<br\s*\/?>|\\)?\s*$/i.test(line);
       if (!blank) {
+        // A ^block-id line names the list or table above only after a blank line.
+        if (BLOCK_ID_LINE.test(line) && out.length && out[out.length - 1] !== "" && /^\s*$/.test(lines[i - 1])) out.push("");
         out.push(line);
         continue;
       }
@@ -150,23 +156,27 @@
   }
 
   /** Lines as one: no space between Chinese or Japanese, one between
-   *  words; list markers and quote marks of the lines after the first go. */
+   *  words; list markers and quote marks of the lines after the first go.
+   *  A key:: value line stays a line, and a ^block-id still ends one. */
   function joinLines(text) {
     var lines = String(text)
       .split("\n")
-      .map(function (l, i) {
-        var t = l.trim();
-        return i ? t.replace(/^(>\s*)+/, "").replace(/^([-*+]|\d+[.)])\s+/, "") : l.replace(/\s+$/, "");
-      })
       .filter(function (l) {
-        return l !== "";
+        return l.trim() !== "";
       });
-    return lines.reduce(function (acc, line) {
-      if (!acc) return line;
-      var a = acc[acc.length - 1];
-      var b = line[0];
-      return acc + (isCjk.test(a) || isCjk.test(b) ? "" : " ") + line;
-    }, "");
+    var out = "";
+    var alone = true; // the line before may take no other after it
+    lines.forEach(function (l) {
+      var field = FIELD_LINE.test(l);
+      if (alone || field) {
+        out += (out ? "\n" : "") + l.replace(/\s+$/, "");
+      } else {
+        var line = l.trim().replace(/^(>\s*)+/, "").replace(/^([-*+]|\d+[.)])\s+/, "");
+        out += (isCjk.test(out[out.length - 1]) || isCjk.test(line[0]) ? "" : " ") + line;
+      }
+      alone = field || BLOCK_ID_END.test(l);
+    });
+    return out;
   }
 
   var LINE_RULES = {
