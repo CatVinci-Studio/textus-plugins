@@ -64,7 +64,6 @@
   "catvinci.echarts/lib/parse-loose.js": "./shared/parse-loose.js",
   "catvinci.wavedrom/lib/parse-loose.js": "./shared/parse-loose.js",
   "catvinci.cjk-spacing/lib/markdown-keep.js": "./shared/markdown-keep.js",
-  "catvinci.text-tidy/lib/markdown-keep.js": "./shared/markdown-keep.js",
   "catvinci.markdown-lint/lib/markdown-keep.js": "./shared/markdown-keep.js",
   "catvinci.tasks/lib/text-lines.js": "./shared/text-lines.js",
   "catvinci.backlinks/lib/text-lines.js": "./shared/text-lines.js",
