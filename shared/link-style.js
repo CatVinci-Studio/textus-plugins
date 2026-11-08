@@ -32,7 +32,7 @@
   /** What `metadata.linkTo` is given beside its options for a link written
    *  in the document `from`: the folder's choice, else what the document
    *  already uses, so a page never mixes the two, else standard. */
-  async function options(from) {
+  async function options(from, typing) {
     var found = await textus.files
       .conventions(folderOf(from))
       .catch(function () {
@@ -43,7 +43,8 @@
       var text = await textus.files.readText(from).catch(function () {
         return "";
       });
-      style = usedIn(text);
+      // The [[ being typed is no link the note has yet.
+      style = usedIn(typing ? text.replace(typing, "") : text);
     }
     return { style: style || "markdown" };
   }
@@ -88,7 +89,7 @@
   /** A link to `to` written in the document `from` in the folder's style;
    *  a [[link]] that needs a path to find its note shows the note's name. */
   async function linkTo(to, from, extra) {
-    var o = Object.assign({}, await options(from), extra || {});
+    var o = Object.assign({}, extra && extra.style ? {} : await options(from), extra || {});
     if (o.style === "markdown") return markdownLink(to, from, o);
     var link = await textus.metadata.linkTo(to, from, o);
     if (o.alias || !/^!?\[\[[^\]|#]*\/[^\]|]*\]\]$/.test(link)) return link;

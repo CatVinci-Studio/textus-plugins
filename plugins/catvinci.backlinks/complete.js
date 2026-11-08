@@ -49,9 +49,16 @@ const completeLinks = (function () {
     return found && found.exists && found.kind === "note" ? found.path : null;
   }
 
+  /** The way links are written here, without the [[ being typed: in the
+   *  editor's text it reads as a wiki link the note already has. */
+  async function styleOf(ctx, from) {
+    return (await linkStyle.options(from, ctx.match + ctx.after.slice(0, closing(ctx)))).style;
+  }
+
   async function notes(ctx) {
     const from = await fromOf(ctx);
     if (!from) return null;
+    const style = await styleOf(ctx, from);
     const docs = (await textus.metadata.all())
       .slice()
       .sort((a, b) => (b.modifiedMs || 0) - (a.modifiedMs || 0));
@@ -65,7 +72,7 @@ const completeLinks = (function () {
       for (const alias of doc.aliases || []) entries.push({ doc: doc, alias: alias });
     }
     const links = await Promise.all(
-      entries.map((e) => linkTo(e.doc.path, from, e.alias ? { alias: e.alias } : {})),
+      entries.map((e) => linkTo(e.doc.path, from, e.alias ? { alias: e.alias, style } : { style })),
     );
     const after = closing(ctx);
     return {
@@ -87,7 +94,8 @@ const completeLinks = (function () {
     const doc = path && (await textus.metadata.get(path));
     if (!doc) return null;
     const after = closing(ctx);
-    const links = await Promise.all(doc.headings.map((h) => linkTo(path, from, { heading: h.text })));
+    const style = await styleOf(ctx, from);
+    const links = await Promise.all(doc.headings.map((h) => linkTo(path, from, { heading: h.text, style })));
     return {
       complete: true,
       items: doc.headings.map((h, i) => ({
@@ -114,8 +122,9 @@ const completeLinks = (function () {
     if (!path) return null;
     const found = noteParts.blocksOf(await textus.files.readText(path));
     const after = closing(ctx);
+    const style = await styleOf(ctx, from);
     const links = await Promise.all(
-      found.map((b) => (b.id ? linkTo(path, from, { block: b.id }) : null)),
+      found.map((b) => (b.id ? linkTo(path, from, { block: b.id, style }) : null)),
     );
     return {
       complete: true,

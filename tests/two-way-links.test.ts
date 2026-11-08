@@ -186,6 +186,15 @@ describe("Two-way Links' manifest", () => {
 });
 
 describe("[[ completion", () => {
+  it("doesn't take the [[ being typed for a wiki link the note already has", async () => {
+    // The editor's text holds what is typed, its ]] paired by Textus.
+    const p = plugin({ ...FILES, "Log.md": "x [[Pl]] y\n" }, DOCS);
+    const list = await p.completions.get("catvinci.backlinks.notes")!(
+      ctx("[[Pl"),
+    );
+    expect(list!.items.map((i) => i.insert)).toContain("[Plan](Plan.md)");
+  });
+
   it("writes standard links in a folder that links no other way", async () => {
     const p = plugin(FILES, DOCS);
     const list = await p.completions.get("catvinci.backlinks.notes")!(
