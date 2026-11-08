@@ -1,8 +1,20 @@
 # Histórico da área de transferência
 
-O que você copiou ou recortou nos seus documentos, o mais recente primeiro, na barra lateral: clique para inserir de novo.
+Guarda na barra lateral o que você copia ou recorta nos seus documentos, para pôr de novo.
 
-- Copie ou recorte texto num documento e ele aparece na aba **Histórico da área de transferência** da barra lateral, o mais recente primeiro (os últimos 30).
+Copie ou recorte texto num documento e ele aparece na aba **Histórico da área de transferência** da barra lateral, o mais recente no topo. Ficam os últimos 30, mesmo depois de reiniciar o Textus. Copiar o mesmo texto de novo o leva de volta ao topo; cópias muito longas (mais de 50.000 caracteres) não são guardadas.
+
 - Clique numa entrada para inseri-la no cursor.
-- Com o botão direito, copie de novo ou remova; **Limpar o histórico da área de transferência** (botão direito ou menu Plugins) esvazia a lista.
-- Só é guardado o que você copia nos seus documentos, nunca o que copia nos Ajustes ou em outros apps.
+- Clique com o botão direito numa entrada para **Copiar** de novo ou **Remover**.
+- **Limpar o histórico da área de transferência** (botão direito numa entrada, ou **Plugins › Limpar o histórico da área de transferência**) esvazia a lista.
+
+Só fica guardado o que você copia nos seus documentos, nunca o que copia nos Ajustes ou em outros apps. A lista fica dentro do Textus.
+
+## Permissões
+
+- Área de transferência: para ver o que você copia num documento e copiar uma entrada de novo.
+- Editar o documento: para inserir uma entrada no cursor.
+
+## Alterações
+
+- **0.1.0** - Primeira versão: as últimas 30 cópias na barra lateral, inseridas com um clique, copiadas de novo ou removidas com o botão direito. Requer Textus 1.3.10.

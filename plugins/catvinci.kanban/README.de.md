@@ -1,14 +1,25 @@
 # Aufgaben-Board
 
-Boards aus Karten in Listen, gespeichert als einfache Markdown-Datei.
+Planen Sie Arbeit als Karten in Listen auf einem Board, das als einfache Markdown-Datei gespeichert wird.
 
-- **Plugins › Neues Aufgaben-Board…** legt eines an: _Name_.md mit `kanban-plugin: board` im Front Matter, das Format von Obsidians Kanban, sodass beide die Boards des anderen öffnen. Ältere Boards _Name_.kanban.md öffnen sich weiter als Board.
-- Jede Liste ist eine Überschrift in der Datei und jede Karte eine Aufgabe darunter, sodass das Board überall lesbar bleibt.
-- Füge unten in einer Liste eine Karte hinzu; ziehe Karten zwischen Listen und Listen, um sie umzusortieren. Eine abgehakte Karte ist erledigt.
-- Schreibe einen [[Link]] in eine Karte und klicke darauf, um die Notiz zu öffnen.
-- **Als Markdown bearbeiten** öffnet die Datei als Text; das Board übernimmt Ihre Änderungen.
+- **Plugins › Neues Aufgaben-Board…** fragt nach einem Namen und legt _Name_.md im geöffneten Ordner an, mit `kanban-plugin: board` im Front Matter und drei Listen: Zu erledigen, In Arbeit und Erledigt. Gibt es schon ein Board mit diesem Namen, öffnet sich dieses.
+- Jede .md-Datei mit `kanban-plugin` im Front Matter öffnet sich als Board. So speichert auch Obsidians Kanban-Plugin seine Boards, daher öffnet jede App die Boards der anderen. Ältere Boards namens _Name_.kanban.md öffnen sich weiterhin als Board.
+- Jede Liste ist eine Überschrift in der Datei und jede Karte eine Aufgabe darunter, so bleibt das Board überall lesbar.
+
+## Auf dem Board
+
+- **Karte hinzufügen** am Ende einer Liste. Klicken Sie auf den Text einer Karte, um ihn zu bearbeiten, haken Sie ihr Kästchen ab, wenn sie erledigt ist, und entfernen Sie sie mit ihrer ×-Schaltfläche.
+- **Liste hinzufügen** legt eine neue Liste an. Ein Klick auf den Titel einer Liste benennt sie um; eine leere Liste lässt sich entfernen.
+- Ziehen Sie Karten innerhalb einer Liste oder in eine andere, und eine Liste an ihrem Kopf, um die Reihenfolge zu ändern. Die anderen machen beim Ziehen Platz.
+- Schreiben Sie einen [[Link]] in eine Karte und klicken Sie darauf, um diese Notiz zu öffnen.
+- **Als Markdown bearbeiten** öffnet die Datei als Text. Das Board folgt Änderungen, die dort oder anderswo gemacht werden.
+- Was Obsidians Kanban außer den Listen in der Datei ablegt, etwa seine Einstellungen und die Markierung seiner Erledigt-Liste, bleibt, wie es geschrieben ist.
 
 ```markdown
+---
+kanban-plugin: board
+---
+
 ## Zu erledigen
 
 - [ ] Gliederung schreiben
@@ -17,6 +28,21 @@ Boards aus Karten in Listen, gespeichert als einfache Markdown-Datei.
 
 - [x] Titel wählen
 ```
+
+## Berechtigungen
+
+- Dateien lesen und schreiben: um Boards zu öffnen und zu speichern.
+- Werkzeuge für Textus AI: damit Textus AI Boards finden und lesen, Karten hinzufügen und verschieben kann.
+
+## Änderungen
+
+- **0.4.2** - Karten und Listen folgen beim Ziehen dem Zeiger, die anderen machen Platz. Benötigt Textus 1.3.10.
+- **0.4.1** - Behält die Markierung, die Obsidians Kanban an eine Erledigt-Liste setzt.
+- **0.4.0** - Heißt jetzt Aufgaben-Board (vorher Kanban). Neue Boards sind einfache .md-Dateien mit `kanban-plugin` im Front Matter, wie Obsidian sie schreibt; .kanban.md-Boards öffnen sich weiterhin.
+- **0.3.1** - Textus AI unterscheidet Boards von Aufgaben in Dokumenten.
+- **0.3.0** - Textus AI kann Boards auflisten und lesen, Karten hinzufügen und verschieben.
+- **0.2.0** - Textus' eigene Bedienelemente und Menüs.
+- **0.1.0-0.1.3** - Erste Versionen: Boards als Markdown, Karten zwischen Listen ziehen, Listen am Kopf verschieben, [[Links]], die Notizen öffnen, Als Markdown bearbeiten, Änderungen von anderswo sofort sichtbar, Obsidians Einstellungen bleiben erhalten.
 
 <!-- ai-tools -->
 ## Werkzeuge für Textus AI

@@ -1,12 +1,25 @@
 # Historique des versions
 
-Chaque enregistrement d’un document, conservé.
+Garde chaque enregistrement d’un document comme une version, pour voir ce qui a changé et revenir à une ancienne.
 
-- Chaque fois que vous enregistrez, le texte du document est conservé comme une version.
-- L’onglet **Historique** de la barre latérale liste les versions du document au premier plan, la plus récente d’abord.
-- Choisissez-en une pour voir ce qui a changé depuis ; **Restaurer cette version** la rétablit, ou **Ouvrir comme nouveau document** l’ouvre à côté.
-- Les enregistrements rapprochés (l’enregistrement automatique toutes les quelques secondes) forment une seule version, une nouvelle au plus toutes les 15 minutes ; les 50 dernières sont gardées.
-- Les versions sont regroupées par jour : Aujourd’hui, Hier, puis la date.
+- À chaque enregistrement, le texte du document est gardé comme version. Des enregistrements rapprochés (l’enregistrement automatique toutes les quelques secondes) comptent pour un, avec au plus une nouvelle version toutes les 15 minutes. Les 50 dernières versions de chaque document sont gardées.
+- L’onglet **Historique** de la barre latérale liste les versions du document ouvert, la plus récente en haut, groupées par jour : Aujourd’hui, Hier, puis la date.
+- Choisissez-en une pour voir, ligne par ligne, ce qui a changé depuis.
+- **Restaurer cette version** propose l’ancien texte comme une modification du document, que vous acceptez ou refusez comme les autres. **Ouvrir comme nouveau document** l’ouvre à côté.
+- Les versions sont gardées dans Textus, pas dans votre dossier. Les documents de plus de 2 Mo ne sont pas gardés, et quand le stockage est plein, les plus anciennes versions partent d’abord.
+
+## Autorisations
+
+- Lire les fichiers et le document : pour garder chaque version et la comparer au texte actuel.
+- Proposer des modifications : pour ramener une ancienne version comme une modification à accepter ou refuser.
+- Outils pour Textus AI : pour que Textus AI puisse lister les versions d’un document et les comparer.
+
+## Changements
+
+- **0.3.1** - Seul le code de chemins partagé avec d’autres plugins a changé ; rien ne change à l’usage.
+- **0.3.0** - Textus AI peut lister les versions d’un document et les comparer (`list_versions`, `diff_versions`).
+- **0.2.0** - Contrôles propres à Textus. Nécessite Textus 1.3.2.
+- **0.1.0-0.1.3** - Premières versions : une version à chaque enregistrement, ce qui a changé depuis, restauration comme modification à accepter ou refuser, ouverture comme nouveau document, enregistrements rapprochés réunis, versions groupées par jour, les plus anciennes retirées quand le stockage est plein.
 
 <!-- ai-tools -->
 ## Outils pour Textus AI

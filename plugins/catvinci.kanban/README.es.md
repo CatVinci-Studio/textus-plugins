@@ -1,14 +1,25 @@
 # Tablero de tareas
 
-Tableros de tarjetas en listas, guardados como un archivo Markdown normal.
+Organiza el trabajo en tarjetas y listas sobre un tablero que se guarda como un archivo Markdown normal.
 
-- **Complementos › Nuevo tablero de tareas…** crea uno: _nombre_.md con `kanban-plugin: board` en su front matter, el formato del Kanban de Obsidian, así que cada uno abre los tableros del otro. Los tableros antiguos _nombre_.kanban.md se siguen abriendo como tableros.
-- Cada lista es un encabezado del archivo y cada tarjeta una tarea debajo de él, así que el tablero se puede leer en cualquier parte.
-- Añade una tarjeta al final de una lista; arrastra las tarjetas entre listas, y las listas para reordenarlas. Una tarjeta marcada está hecha.
+- **Plugins › Nuevo tablero de tareas…** pide un nombre y crea _nombre_.md en la carpeta abierta, con `kanban-plugin: board` en su front matter y tres listas: Por hacer, En curso y Hecho. Si ya hay un tablero con ese nombre, se abre ese.
+- Cualquier archivo .md con `kanban-plugin` en su front matter se abre como tablero. Así guarda sus tableros el plugin Kanban de Obsidian, de modo que cada app abre los de la otra. Los tableros antiguos llamados _nombre_.kanban.md también se abren como tableros.
+- Cada lista es un encabezado del archivo y cada tarjeta una tarea debajo, así que el tablero se lee bien en cualquier sitio.
+
+## En el tablero
+
+- **Añadir una tarjeta** al final de una lista. Haz clic en el texto de una tarjeta para editarlo, marca su casilla cuando esté hecha y usa su botón × para quitarla.
+- **Añadir lista** crea una lista nueva. Haz clic en el título de una lista para renombrarla; una lista vacía se puede quitar.
+- Arrastra tarjetas dentro de una lista o a otra, y arrastra una lista por su cabecera para cambiar el orden. Las demás se apartan mientras arrastras.
 - Escribe un [[enlace]] en una tarjeta y haz clic en él para abrir esa nota.
-- **Editar como Markdown** abre el archivo como texto; el tablero refleja tus cambios.
+- **Editar como Markdown** abre el archivo como texto. El tablero sigue los cambios hechos ahí o en cualquier otro sitio.
+- Lo que el Kanban de Obsidian guarda en el archivo además de las listas, como sus ajustes y la marca de su lista de terminadas, queda como estaba.
 
 ```markdown
+---
+kanban-plugin: board
+---
+
 ## Por hacer
 
 - [ ] Escribir el esquema
@@ -17,6 +28,21 @@ Tableros de tarjetas en listas, guardados como un archivo Markdown normal.
 
 - [x] Elegir un título
 ```
+
+## Permisos
+
+- Leer y escribir archivos: para abrir tableros y guardarlos.
+- Herramientas para Textus AI: para que Textus AI pueda encontrar y leer tableros, añadir tarjetas y moverlas.
+
+## Cambios
+
+- **0.4.2** - Tarjetas y listas siguen al puntero al arrastrarlas, y las demás se apartan. Requiere Textus 1.3.10.
+- **0.4.1** - Conserva la marca que el Kanban de Obsidian pone en una lista de terminadas.
+- **0.4.0** - Ahora se llama Tablero de tareas (antes Kanban). Los tableros nuevos son archivos .md normales con `kanban-plugin` en su front matter, como los escribe Obsidian; los .kanban.md siguen abriéndose.
+- **0.3.1** - Textus AI distingue los tableros de las tareas escritas en documentos.
+- **0.3.0** - Textus AI puede listar y leer tableros, añadir tarjetas y moverlas.
+- **0.2.0** - Controles y menús propios de Textus.
+- **0.1.0-0.1.3** - Primeras versiones: tableros en Markdown, tarjetas arrastradas entre listas, listas movidas por su cabecera, [[enlaces]] que abren notas, Editar como Markdown, cambios hechos en otro sitio mostrados al momento, ajustes de Obsidian conservados.
 
 <!-- ai-tools -->
 ## Herramientas para Textus AI

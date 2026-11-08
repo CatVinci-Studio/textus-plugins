@@ -1,13 +1,37 @@
 # Graphansicht
 
-Deine Notizen und die Links zwischen ihnen als Graph.
+Zeichnet Ihre Notizen und die Links zwischen ihnen als Graph, für den ganzen Ordner oder rund um das geöffnete Dokument.
 
-- **Strg+Alt+G** (**⌘⌥G** auf dem Mac) oder **Plugins › Graphansicht öffnen** zeigt den ganzen Ordner in einem Tab.
-- Der Tab **Graph** in der Seitenleiste zeigt die Notizen rund um das geöffnete Dokument.
-- [[Wiki-Links]] und Links auf andere Dokumente zählen. Klicke auf eine Notiz, um sie zu öffnen (mit Strg oder ⌘ in einem neuen Tab); ziehen verschiebt, das Mausrad zoomt.
-- Die Schieberegler-Taste oben öffnet die Einstellungen des Graphen:
-  - **Filter**: Suche (`path:Ideen`, `file:Entwurf`, `tag:#todo`, ein `-` zum Ausschließen), Tags als Knoten, noch nicht angelegte Notizen, Notizen ohne Links. Der Graph der Seitenleiste legt außerdem fest, wie weit er reicht.
-  - **Gruppen**: färbe die Notizen, die eine Suche findet.
+- **Strg+Alt+G** (**⌘⌥G** auf dem Mac) oder **Plugins › Graphansicht öffnen** zeigt den ganzen Ordner in einem Tab. **Einpassen** holt alles ins Bild.
+- Der Reiter **Graph** in der Seitenleiste zeigt die Notizen rund um das geöffnete Dokument. **Ganzer Graph** öffnet den ganzen Ordner.
+- [[Wiki-Links]] und Links auf andere Dokumente zählen beide; zwei Notizen, die aufeinander verlinken, teilen sich eine Linie. Ein [[Link]] auf eine noch nicht geschriebene Notiz erscheint als eigene Notiz.
+- Ein Klick öffnet eine Notiz. Ziehen Sie eine Notiz, um sie zu platzieren, den Hintergrund, um sich zu bewegen, und zoomen Sie mit dem Mausrad oder per Zwei-Finger-Geste. Zeigen Sie auf eine Notiz, um ihre Links hervorzuheben.
+- Der Graph passt sich selbst an: Namen erscheinen beim Hineinzoomen, Pfeile zeigen die Richtung der Links, wenn es wenige genug sind, und Notizen mit mehr Links sind größer. Ohne Farbgruppen bekommt jede Notiz die Farbe ihres Ordners.
+- Ändern sich Dokumente im Ordner, wird der Graph neu gezeichnet.
+
+## Einstellungen
+
+Die Schieberegler-Schaltfläche oben öffnet die Einstellungen des Graphen. Der ganze Graph und die Seitenleiste haben jeweils eigene.
+
+- **Filter**: eine Suche (`path:ideas`, `file:draft`, `tag:#todo`, ein `-` davor schließt aus); **Tags** zeigt #Tags als Knoten; **Nur vorhandene Dateien** blendet noch nicht geschriebene Notizen aus; **Verwaiste Notizen** (ganzer Graph) zeigt Notizen ohne Links. In der Seitenleiste legt **Tiefe** fest, wie viele Links weit er reicht, 1 bis 5.
+- **Gruppen**: färben die Notizen, die eine Suche findet. **Neue Gruppe** fügt eine hinzu; **Standard wiederherstellen** nimmt Ihre Änderungen zurück.
+
+In einem Obsidian-Vault färben auch die in Obsidians `graph.json` gespeicherten Farbgruppen die Notizen, nach Ihren eigenen.
+
+## Berechtigungen
+
+- Dateien und Dokument lesen: um die Notizen und Links des Ordners und Obsidians `graph.json` zu finden.
+- Werkzeuge für Textus AI: damit Textus AI die Notizen rund um ein Dokument sehen kann.
+
+## Änderungen
+
+- **0.5.2** - Obsidians Farbgruppen kommen aus dem nächstgelegenen Vault, auch wenn er über dem geöffneten Ordner liegt. Benötigt Textus 1.3.10.
+- **0.5.1** - In einem Obsidian-Vault färben auch die Farbgruppen aus `.obsidian/graph.json` die Notizen.
+- **0.5.0** - [[Links]] werden Notizen so zugeordnet wie beim Anklicken in Textus.
+- **0.4.0** - Textus AI kann die Notizen rund um ein Dokument sehen (`list_neighbours`).
+- **0.3.0** - Textus' eigene Bedienelemente und Menüs; Farben aus dem Theme.
+- **0.2.0-0.2.1** - Ein Einstellungsfeld mit Filtern, Suche und Farbgruppen; Tags als Knoten; Pfeile für die Linkrichtung; Tiefe des Seitenleisten-Graphen.
+- **0.1.0-0.1.1** - Erste Versionen: der ganze Ordner in einem Tab und die Notizen rund um das geöffnete Dokument in der Seitenleiste, nach Ordner gefärbt, flüssig auch mit Tausenden Notizen.
 
 <!-- ai-tools -->
 ## Werkzeuge für Textus AI

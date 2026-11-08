@@ -1,12 +1,25 @@
 # Historial de versiones
 
-Cada guardado de un documento, conservado.
+Guarda cada guardado de un documento como una versión, para ver qué cambió y recuperar una antigua.
 
-- Cada vez que guardas, el texto del documento se conserva como una versión.
-- La pestaña **Historial** de la barra lateral lista las versiones del documento en primer plano, la más reciente primero.
-- Elige una para ver qué cambió desde entonces; **Restaurar esta versión** la recupera, y **Abrir como documento nuevo** la abre al lado.
-- Los guardados muy seguidos (el autoguardado cada pocos segundos) son una sola versión, una nueva como mucho cada 15 minutos; se guardan las últimas 50.
-- Las versiones se agrupan por día: Hoy, Ayer y después la fecha.
+- Cada vez que guardas, el texto del documento queda como una versión. Los guardados muy seguidos (el autoguardado de cada pocos segundos) cuentan como uno, con una versión nueva como mucho cada 15 minutos. Se conservan las últimas 50 versiones de cada documento.
+- La pestaña **Historial** de la barra lateral lista las versiones del documento abierto, la más reciente arriba, agrupadas por día: Hoy, Ayer y luego la fecha.
+- Elige una para ver, línea a línea, qué cambió desde entonces.
+- **Restaurar esta versión** ofrece el texto antiguo como una edición del documento, que aceptas o rechazas como cualquier otra. **Abrir como documento nuevo** la abre al lado.
+- Las versiones se guardan dentro de Textus, no en tu carpeta. Los documentos de más de 2 MB no se guardan, y cuando el almacenamiento se llena se van primero las versiones más antiguas.
+
+## Permisos
+
+- Leer archivos y el documento: para guardar cada versión y compararla con el texto actual.
+- Proponer ediciones: para devolver una versión antigua como una edición que aceptas o rechazas.
+- Herramientas para Textus AI: para que Textus AI pueda listar las versiones de un documento y compararlas.
+
+## Cambios
+
+- **0.3.1** - Solo cambió el código de rutas compartido con otros plugins; nada cambia al usarlo.
+- **0.3.0** - Textus AI puede listar las versiones de un documento y compararlas (`list_versions`, `diff_versions`).
+- **0.2.0** - Controles propios de Textus. Requiere Textus 1.3.2.
+- **0.1.0-0.1.3** - Primeras versiones: una versión en cada guardado, qué cambió desde entonces, restaurar como edición que se acepta o rechaza, abrir como documento nuevo, guardados seguidos como uno, versiones agrupadas por día, las más antiguas fuera cuando se llena el almacenamiento.
 
 <!-- ai-tools -->
 ## Herramientas para Textus AI

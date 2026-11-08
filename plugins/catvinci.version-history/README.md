@@ -1,12 +1,25 @@
 # Version History
 
-Every save of a document, kept.
+Keeps each save of a document as a version, so you can see what changed and bring an old one back.
 
-- Each time you save, the document's text is kept as a version.
-- The **History** tab in the sidebar lists the versions of the document in front, newest first.
-- Pick one to see what changed since; **Restore This Version** brings it back, or **Open as a New Document** opens it beside.
-- Saves close together - autosave's every few seconds - are one version, a new one at most every 15 minutes; the last 50 are kept.
-- Versions are grouped by day: Today, Yesterday, then the date.
+- Each time you save, the document's text is kept as a version. Saves close together - autosave's every few seconds - count as one, with a new version at most every 15 minutes. The last 50 versions of each document are kept.
+- The **History** tab in the sidebar lists the versions of the document in front, newest first, grouped by day: Today, Yesterday, then the date.
+- Pick one to see what changed since, line by line.
+- **Restore This Version** offers the old text as an edit to the document, which you accept or reject like any other. **Open as a New Document** opens it beside instead.
+- Versions are kept inside Textus, not in your folder. Documents over 2 MB are not kept, and when the storage is full the oldest versions go first.
+
+## Permissions
+
+- Read files and the document: to keep each saved version and compare it with the text now.
+- Propose edits: to bring an old version back as an edit you accept or reject.
+- Tools for Textus AI: so Textus AI can list a document's versions and compare them.
+
+## Changes
+
+- **0.3.1** - Only the path code shared with other plugins changed; nothing changes in use.
+- **0.3.0** - Textus AI can list a document's versions and compare them (`list_versions`, `diff_versions`).
+- **0.2.0** - Textus's own controls. Needs Textus 1.3.2.
+- **0.1.0-0.1.3** - First versions: a version on each save, what changed since, restore as an edit to accept or reject, open as a new document, saves close together kept as one, versions grouped by day, the oldest dropped when storage is full.
 
 <!-- ai-tools -->
 ## Tools for Textus AI
