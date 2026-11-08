@@ -1,13 +1,37 @@
 # Calendário e notas diárias
 
-Uma nota para cada dia e um calendário para chegar a qualquer uma delas.
+Guarda uma nota para cada dia numa pasta da pasta aberta, com um calendário na barra lateral para chegar a qualquer uma delas.
 
-- **Ctrl+Alt+J** (**⌘⌥J** no Mac), ou **Plugins › Abrir a nota de hoje**, abre a nota de hoje; na primeira vez ela é criada.
-- A aba **Calendário** da barra lateral mostra o mês; os dias com nota ficam marcados. Clique num dia para abri-lo.
-- As notas ficam numa pasta dentro da pasta aberta. O nome dela e o texto inicial de um dia novo estão nos ajustes do plugin; a semana começa como na sua região.
-- **Plugins › Abrir o dia anterior** e **Abrir o dia seguinte** passam da nota de um dia para as vizinhas.
-- O modelo aceita {{weekday}}, {{yesterday}}, {{tomorrow}} e {{time}} além de {{date}}; por exemplo, `[[{{yesterday}}]]` liga cada dia ao anterior.
-- O texto inicial também pode ser o nome de um modelo da pasta Templates (a do plugin Modelos), como `Daily`. Num cofre do Obsidian, valem os ajustes de notas diárias dele: pasta, formato do nome como `YYYY/MM/YYYY-MM-DD` e modelo; o Textus nunca os altera. Um cofre sem ajustes de notas diárias guarda-as na raiz, como o Obsidian, e aí `{{date}}`, `{{yesterday}}` e `{{tomorrow}}` são escritos no formato do nome das notas, incluindo formatos do Moment como `MMMM Do, YYYY`.
+- Prima **Ctrl+Alt+J** (**⌘⌥J** no Mac) ou escolha **Plugins › Abrir a nota de hoje**. A nota de hoje abre-se; da primeira vez, é criada.
+- **Plugins › Abrir o dia anterior** e **Plugins › Abrir o dia seguinte** passam da nota do dia aberta para a vizinha.
+- A aba **Calendário** da barra lateral mostra um mês e marca os dias com nota. Clique num dia para abrir a nota dele, ou em **Hoje** para abrir a de hoje. A semana começa como na sua região.
+- Uma nota que já existe nunca é substituída.
+
+## Ajustes
+
+- **Pasta das notas diárias**: uma pasta dentro da pasta aberta, `Daily` por omissão.
+- **A nota de um novo dia**: o texto com que começa uma nota nova, `# {{date}}` por omissão. Aceita `{{date}}`, `{{weekday}}`, `{{yesterday}}` e `{{tomorrow}}` (para ligações como `[[{{yesterday}}]]`), `{{time}}`, `{{title}}`, `{{date:FORMATO}}` e `{{date+1d}}`; `\n` começa uma linha nova. Também pode ser o nome de um modelo da pasta Templates, como `Daily`.
+- **Notas semanais** e **Notas mensais**: desligadas por omissão. Depois de ligadas, **Plugins › Abrir a nota desta semana** e **Abrir a nota deste mês** abrem-nas, tal como os números das semanas e o nome do mês no calendário. Cada uma tem a sua pasta (`Weekly`, `Monthly`), o seu formato de nome (`gggg-[W]ww` dá `2026-W45`, `YYYY-MM` dá `2026-11`) e o seu modelo. Um modelo semanal aceita `{{monday:YYYY-MM-DD}}` … `{{sunday}}` para os dias da semana.
+
+## Cofres do Obsidian
+
+Num cofre do Obsidian valem os ajustes de notas diárias do próprio cofre: pasta, formato do nome (como `YYYY/MM/YYYY-MM-DD` ou `MMMM Do, YYYY`) e modelo. O Textus nunca os altera. Um cofre sem esses ajustes guarda as notas na raiz, como o Obsidian. `{{date}}`, `{{yesterday}}` e `{{tomorrow}}` são escritos no formato de nome das notas. Num cofre com o plugin Periodic Notes, valem os ajustes semanais e mensais dele.
+
+## Permissões
+
+O plugin lê e escreve ficheiros na pasta aberta para encontrar e criar as notas, e lê qual documento está aberto para saber o dia anterior e o seguinte. Também dá ao Textus AI as duas ferramentas abaixo. Funciona no computador e no iPhone e precisa do Textus 1.3.10 ou mais recente.
+
+## Alterações
+
+- **0.7.0** - As datas e os modelos são preenchidos pelo próprio Textus, tal como no plugin Modelos; precisa do Textus 1.3.10.
+- **0.6.0** - Notas semanais e mensais, com ajustes próprios, os números das semanas e o nome do mês no calendário, e os ajustes do Periodic Notes de um cofre.
+- **0.5.0** - Um cofre sem ajustes de notas diárias guarda-as na raiz; `{{date}}`, `{{yesterday}}` e `{{tomorrow}}` seguem o formato de nome, incluindo `MMMM Do, YYYY`.
+- **0.4.0** - Segue os ajustes de notas diárias de um cofre do Obsidian; o texto inicial pode nomear um modelo da pasta Templates; `{{date:FORMATO}}` e `{{title}}`.
+- **0.3.0** - O Textus AI pode ler a nota de um dia e acrescentar-lhe texto.
+- **0.2.0** - O calendário usa os controlos do Textus e segue a língua da interface quando ela muda; precisa do Textus 1.3.2.
+- **0.1.3** - Cores e tipografia do Textus 1.3.
+- **0.1.2** - A semana começa como na sua região; a nota de um dia nunca é substituída.
+- **0.1.0-0.1.1** - Primeiras versões: a nota de hoje por atalho, o calendário, o dia anterior e o seguinte, `{{weekday}}`, `{{yesterday}}`, `{{tomorrow}}` e `{{time}}` no modelo.
 
 <!-- ai-tools -->
 ## Ferramentas para o Textus AI

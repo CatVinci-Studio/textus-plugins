@@ -1,14 +1,37 @@
 # Calendar & Daily Notes
 
-A note for each day, and a calendar to get to any of them.
+Keeps a note for each day in a folder of the open folder, with a calendar in the sidebar to reach any of them.
 
-- **Ctrl+Alt+J** (**⌘⌥J** on a Mac), or **Plugins › Open Today's Note**, opens today's note - made the first time.
-- The **Calendar** tab in the sidebar shows the month; a day with a note is marked. Click a day to open it.
-- The notes are kept in a folder of the open folder. Its name and a new day's starting text are in the plugin's settings; weeks start as your region has them.
-- **Plugins › Open the Day Before** and **Open the Day After** go from a day's note to its neighbours.
-- The template can hold {{weekday}}, {{yesterday}}, {{tomorrow}} and {{time}} as well as {{date}} - for example `[[{{yesterday}}]]` links each day to the one before.
-- The starting text can also be the name of a template in the Templates folder (the Templates plugin's), such as `Daily`. In an Obsidian vault, the vault's own daily notes settings - folder, name format such as `YYYY/MM/YYYY-MM-DD`, and template - are followed; Textus never changes them. A vault without daily notes settings keeps its notes at its top, as Obsidian does. `{{date}}`, `{{yesterday}}` and `{{tomorrow}}` are written in the notes' name format - `MMMM Do, YYYY` and other Moment formats included.
-- **Weekly and monthly notes**, turned on in the settings: **Plugins › Open This Week's Note** and **Open This Month's Note**, or click a week number or the month's name in the calendar. Each has its own folder, name format (`gggg-[W]ww` and `YYYY-MM` by default) and template; a weekly template can hold `{{monday:YYYY-MM-DD}}` … `{{sunday}}`. In a vault with Obsidian's Periodic Notes plugin, its weekly and monthly settings are followed.
+- Press **Ctrl+Alt+J** (**⌘⌥J** on a Mac) or choose **Plugins › Open Today's Note**. Today's note opens; the first time, it is made.
+- **Plugins › Open the Day Before** and **Plugins › Open the Day After** go from the day's note in front to the one beside it.
+- The **Calendar** tab in the sidebar shows a month and marks the days that have a note. Click a day to open its note, or **Today** to open today's. Weeks start as your region has them.
+- A note that is already there is never written over.
+
+## Settings
+
+- **Daily notes folder**: a folder inside the open folder, `Daily` by default.
+- **A new day's note**: the text a new note starts with, `# {{date}}` by default. It can hold `{{date}}`, `{{weekday}}`, `{{yesterday}}` and `{{tomorrow}}` (for links such as `[[{{yesterday}}]]`), `{{time}}`, `{{title}}`, `{{date:FORMAT}}` and `{{date+1d}}`; `\n` starts a new line. It can also be the name of a template in the Templates folder, such as `Daily`.
+- **Weekly notes** and **Monthly notes**: off by default. Once on, **Plugins › Open This Week's Note** and **Open This Month's Note** open them, and so do the week numbers and the month's name in the calendar. Each has its own folder (`Weekly`, `Monthly`), name format (`gggg-[W]ww` gives `2026-W45`, `YYYY-MM` gives `2026-11`) and template. A weekly template can hold `{{monday:YYYY-MM-DD}}` … `{{sunday}}` for the days of the week.
+
+## Obsidian vaults
+
+In an Obsidian vault, the vault's own daily notes settings decide instead: folder, name format (such as `YYYY/MM/YYYY-MM-DD` or `MMMM Do, YYYY`) and template. Textus never changes them. A vault without daily notes settings keeps its notes at its top, as Obsidian does. `{{date}}`, `{{yesterday}}` and `{{tomorrow}}` are written in the notes' name format. In a vault with the Periodic Notes plugin, its weekly and monthly settings decide.
+
+## Permissions
+
+The plugin reads and writes files in the open folder to find and make the notes, and reads which document is in front to know the day before and after. It also gives Textus AI two tools, listed below. It works on desktop and iPhone and needs Textus 1.3.10 or later.
+
+## Changes
+
+- **0.7.0** - Dates and templates are filled in by Textus itself, the same way as in the Templates plugin; needs Textus 1.3.10.
+- **0.6.0** - Weekly and monthly notes, with their own settings, the calendar's week numbers and month name, and a vault's Periodic Notes settings.
+- **0.5.0** - A vault without daily notes settings keeps its notes at its top; `{{date}}`, `{{yesterday}}` and `{{tomorrow}}` follow the notes' name format, `MMMM Do, YYYY` included.
+- **0.4.0** - Follows an Obsidian vault's daily notes settings; the starting text can name a template in the Templates folder; `{{date:FORMAT}}` and `{{title}}`.
+- **0.3.0** - Textus AI can read a day's note and add to it.
+- **0.2.0** - The calendar uses Textus's own controls and follows the interface language when it changes; needs Textus 1.3.2.
+- **0.1.3** - Textus 1.3's colors and type.
+- **0.1.2** - Weeks start as your region has them; a day's note is never written over.
+- **0.1.0-0.1.1** - First versions: today's note with a shortcut, the calendar, the day before and after, `{{weekday}}`, `{{yesterday}}`, `{{tomorrow}}` and `{{time}}` in the template.
 
 <!-- ai-tools -->
 ## Tools for Textus AI
