@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="{{lang}}">
+  <head>
+    <link rel="stylesheet" href="textus-resource:view.css" />
+  </head>
+  <body>
+    <div class="tx-bar" id="bar">
+      <span id="name"></span>
+      <span class="tx-spacer"></span>
+      <button class="tx-icon-button" id="zoom-out"><span class="tx-icon" data-icon="minus"></span></button>
+      <button class="tx-button small" id="zoom">100%</button>
+      <button class="tx-icon-button" id="zoom-in"><span class="tx-icon" data-icon="plus"></span></button>
+    </div>
+    <main id="stage" tabindex="0">
+      <div id="world"></div>
+    </main>
+    <div id="status" class="tx-empty" hidden></div>
+    <script src="textus-resource:canvas-model.js"></script>
+    <script src="textus-resource:view.js"></script>
+  </body>
+</html>

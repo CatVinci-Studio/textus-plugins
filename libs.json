@@ -86,5 +86,6 @@
   "catvinci.database/lib/dates.js": "./shared/dates.js",
   "catvinci.database/lib/free-name.js": "./shared/free-name.js",
   "catvinci.database/lib/notion-csv.js": "./shared/notion-csv.js",
-  "catvinci.database/lib/jszip.min.js": "jszip/dist/jszip.min.js"
+  "catvinci.database/lib/jszip.min.js": "jszip/dist/jszip.min.js",
+  "catvinci.canvas/lib/folder-paths.js": "./shared/folder-paths.js"
 }
