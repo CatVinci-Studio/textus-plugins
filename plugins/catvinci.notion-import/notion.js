@@ -323,14 +323,16 @@
     );
   }
 
+  /** A database's page: one block, its views a click apart in it, opening on a board when the
+   *  rows have a status, else a table; the board's grouping and the calendar's dates set. */
   function databasePage(name, folderName, rows) {
-    const block = (lines) => "```database\nfrom: " + folderName + "\n" + lines.join("\n") + "\n```\n";
-    const out = ["# " + name + "\n", block(["view: table"])];
     const group = boardKey(rows);
     const date = dateKey(rows);
-    if (group) out.push(block(["view: board", "group: " + group]));
-    if (date) out.push(block(["view: calendar", "date: " + date].concat(rows.some((r) => r.props[date + "_end"]) ? ["end: " + date + "_end"] : [])));
-    return { text: out.join("\n"), group, date };
+    const lines = ["from: " + folderName, "view: " + (group ? "board" : "table")];
+    if (group) lines.push("group: " + group);
+    if (date) lines.push("date: " + date);
+    if (date && rows.some((r) => r.props[date + "_end"])) lines.push("end: " + date + "_end");
+    return { text: "# " + name + "\n\n```database\n" + lines.join("\n") + "\n```\n", group, date };
   }
 
   const VIEW_LINK = /^\s*\[[^\]\n]*\]\(([^)\s]+?\.csv)\)\s*$/i;

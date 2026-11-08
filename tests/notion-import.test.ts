@@ -252,9 +252,9 @@ describe("databases", () => {
     ];
     expect(ni.boardKey(rows)).toBe("status");
     expect(ni.dateKey(rows)).toBe("due");
+    // One block, on its board, its views a click apart: the calendar's dates already set.
     expect(ni.databasePage("Tasks", "Tasks", rows).text).toBe(
-      "# Tasks\n\n```database\nfrom: Tasks\nview: table\n```\n\n```database\nfrom: Tasks\nview: board\ngroup: status\n```\n\n" +
-        "```database\nfrom: Tasks\nview: calendar\ndate: due\nend: due_end\n```\n",
+      "# Tasks\n\n```database\nfrom: Tasks\nview: board\ngroup: status\ndate: due\nend: due_end\n```\n",
     );
   });
 
@@ -338,8 +338,8 @@ describe("the fixture's import", () => {
       "---\nstatus: In progress\ndue: 2026-03-01\ntags:\n  - Web\ndone: false\nrelated:\n" +
         '  - "[Website Redesign](Website%20Redesign.md)"\n  - "[Garden](Garden.md)"\n---\n# Launch\n',
     );
-    expect(out["Home/Projects.md"]).toContain("view: board\ngroup: status");
-    expect(out["Home/Projects.md"]).toContain("view: calendar\ndate: due\nend: due_end");
+    expect(out["Home/Projects.md"]).toContain("```database\nfrom: Projects\nview: board\ngroup: status\ndate: due\nend: due_end\n```");
+    expect(out["Home/Projects.md"].match(/```database/g)).toHaveLength(1);
   });
 
   it("reads the Chinese database: its dates, its status and a relation", async () => {
@@ -349,8 +349,7 @@ describe("the fixture's import", () => {
     );
     expect(out["读书笔记/任务/写读后感.md"]).toBe("---\n状态: 未开始\n日期: 2026-02-01\n---\n# 写读后感\n");
     expect(out["读书笔记/任务/整理笔记.md"]).toContain("日期: 2026-03-05");
-    expect(out["读书笔记/任务.md"]).toContain("view: board\ngroup: 状态");
-    expect(out["读书笔记/任务.md"]).toContain("view: calendar\ndate: 日期");
+    expect(out["读书笔记/任务.md"]).toContain("view: board\ngroup: 状态\ndate: 日期");
   });
 
   it("keeps the opening Key: value lines of a page that isn't a row, and links CJK names", async () => {
@@ -577,8 +576,7 @@ describe("Notion's newer export", () => {
       "attachments/slides.pptx",
     ]);
     // The database's own page: its title and words, then its views; no CSV link or filter lines.
-    expect(out["Papers/03 2026.md"]).toMatch(/^# 03\/2026\n\nOur reading list\.\n\n```database\nfrom: 03 2026\nview: table\n```/);
-    expect(out["Papers/03 2026.md"]).toContain("view: board\ngroup: status");
+    expect(out["Papers/03 2026.md"]).toMatch(/^# 03\/2026\n\nOur reading list\.\n\n```database\nfrom: 03 2026\nview: board\ngroup: status\n```\n$/);
     expect(out["Papers/03 2026.md"]).not.toMatch(/filters:|_all\.csv/);
     // A view elsewhere: the link to the database's page, and the database shown, sorted as it was.
     expect(out["Papers.md"]).toContain(
