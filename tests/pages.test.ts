@@ -18,6 +18,7 @@ let p: {
 };
 
 beforeAll(async () => {
+  await import(/* @vite-ignore */ "../shared/name-order.js");
   const script = "../plugins/catvinci.database/pages.js";
   await import(/* @vite-ignore */ script);
   p = (globalThis as unknown as { pages: typeof p }).pages;

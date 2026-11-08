@@ -20,6 +20,7 @@
     "lib/yaml.js",
     "lib/expr.js",
     "lib/bases.js",
+    "lib/name-order.js",
     "pages.js",
     "pages-host.js",
     "host.js"
