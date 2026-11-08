@@ -129,10 +129,15 @@
         grab = { x: x - r.left, y: y - r.top };
         ghost = item.cloneNode(true);
         ghost.classList.add("tx-drag-ghost");
+        // Its width with its padding and border, as the rect has it: a
+        // padded item (a table's head cell) is otherwise measured as zoomed.
+        ghost.style.boxSizing = "border-box";
         ghost.style.width = r.width + "px";
         document.body.append(ghost);
         scale = ghost.getBoundingClientRect().width / r.width || 1;
         ghost.style.width = r.width / scale + "px";
+        // Measured: now it may grow, as everything dragged in Textus does.
+        ghost.classList.add("is-lifted");
         ghost.style.left = r.left / scale + "px";
         ghost.style.top = r.top / scale + "px";
         item.classList.add("tx-drag-source");
