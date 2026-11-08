@@ -117,7 +117,6 @@ input[readonly] {
   padding: 0;
   font-size: var(--text-secondary);
   color: var(--ui-text);
-  cursor: pointer;
 }
 .field.inline {
   flex-direction: row;

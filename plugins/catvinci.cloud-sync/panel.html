@@ -153,10 +153,10 @@
             <p class="hint" data-t="passwordRecovery"></p>
           </div>
           <div class="tx-card switch-row">
-            <label class="switch"
-              ><span data-t="automatic"></span
-              ><input id="automatic" type="checkbox" role="switch" class="tx-switch"
-            /></label>
+            <div class="switch">
+              <span id="automatic-label" data-t="automatic"></span>
+              <input id="automatic" type="checkbox" role="switch" class="tx-switch" aria-labelledby="automatic-label" />
+            </div>
             <div class="field inline" id="interval-field">
               <label for="interval" data-t="interval"></label
               ><input

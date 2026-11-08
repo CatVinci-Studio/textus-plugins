@@ -94,7 +94,9 @@
     if (kind === "toggle") {
       const input = el("input", { type: "checkbox", className: "tx-switch", role: "switch", checked: !!settings[key] });
       input.addEventListener("change", () => change(key, input.checked));
-      return el("label", {}, [el("span", { textContent: label }), input]);
+      // Only the switch turns it on or off, not a click on its words.
+      input.setAttribute("aria-label", label);
+      return el("div", { className: "row" }, [el("span", { textContent: label }), input]);
     }
     const [min, max, step] = range;
     const input = el("input", {

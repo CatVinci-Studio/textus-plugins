@@ -53,7 +53,7 @@ kanban-plugin: board
 裝上這個外掛後，Textus AI 在對話中可以使用：
 
 - `list_boards`：列出開啟的資料夾中的看板（kanban-plugin .md 檔案），以及每個看板的各個列表和其中的卡片數。
-- `read_board`：讀取一個看板：依順序給出各個列表，以及每個列表裡卡片的文字和是否已完成。一般文件裡的任務用 list_tasks。
+- `read_board`：讀取一個看板：依順序給出各個列表，以及每個列表裡卡片的文字和是否已完成。 一般文件裡的任務用 list_tasks。
 - `add_card`：在看板某個列表的末尾新增一張卡片。 只用於看板（kanban-plugin .md）；文件裡的待辦用 add_task。
 - `move_card`：把看板上的一張卡片移到另一個列表，或移到所在列表的另一個位置。
 <!-- /ai-tools -->
