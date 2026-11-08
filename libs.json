@@ -52,8 +52,6 @@
   "catvinci.function-plot/lib/chart.css": "./shared/chart.css",
   "catvinci.markdown-lint/lib/markdownlint.js": "./vendor/markdownlint.js",
   "catvinci.slides/lib/marp-core.js": "./vendor/marp-core.js",
-  "catvinci.notion-import/lib/notion-csv.js": "./shared/notion-csv.js",
-  "catvinci.notion-import/lib/jszip.min.js": "jszip/dist/jszip.min.js",
   "catvinci.tasks/lib/folder-paths.js": "./shared/folder-paths.js",
   "catvinci.kanban/lib/folder-paths.js": "./shared/folder-paths.js",
   "catvinci.backlinks/lib/folder-paths.js": "./shared/folder-paths.js",
@@ -79,14 +77,14 @@
   "catvinci.daily-notes/lib/dates.js": "./shared/dates.js",
   "catvinci.image-folder/lib/folder-paths.js": "./shared/folder-paths.js",
   "catvinci.image-folder/lib/free-name.js": "./shared/free-name.js",
-  "catvinci.notion-import/lib/folder-paths.js": "./shared/folder-paths.js",
-  "catvinci.notion-import/lib/dates.js": "./shared/dates.js",
-  "catvinci.notion-import/lib/free-name.js": "./shared/free-name.js",
-  "catvinci.pages/lib/folder-paths.js": "./shared/folder-paths.js",
   "catvinci.database/lib/folder-paths.js": "./shared/folder-paths.js",
   "catvinci.bookmarks/lib/folder-paths.js": "./shared/folder-paths.js",
   "catvinci.wakatime/lib/folder-paths.js": "./shared/folder-paths.js",
   "catvinci.tasks/lib/dates.js": "./shared/dates.js",
   "catvinci.natural-dates/lib/dates.js": "./shared/dates.js",
-  "catvinci.reminders/lib/dates.js": "./shared/dates.js"
+  "catvinci.reminders/lib/dates.js": "./shared/dates.js",
+  "catvinci.database/lib/dates.js": "./shared/dates.js",
+  "catvinci.database/lib/free-name.js": "./shared/free-name.js",
+  "catvinci.database/lib/notion-csv.js": "./shared/notion-csv.js",
+  "catvinci.database/lib/jszip.min.js": "jszip/dist/jszip.min.js"
 }

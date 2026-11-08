@@ -201,7 +201,19 @@ export function folder(files: Record<string, string>) {
         .map(entry);
     },
     stat: async (path: string) =>
-      rel(path) in files ? entry(rel(path)) : null,
+      rel(path) in files
+        ? entry(rel(path))
+        : Object.keys(files).some((r) => r.startsWith(rel(path) + "/"))
+          ? {
+              ...entry(
+                Object.keys(files).find((r) => r.startsWith(rel(path) + "/"))!,
+              ),
+              name: rel(path).split("/").pop(),
+              path,
+              rel: rel(path),
+              isDir: true,
+            }
+          : null,
     readText: async (path: string) => {
       if (!(rel(path) in files)) throw new Error("No file " + path);
       return files[rel(path)];
@@ -217,6 +229,12 @@ export function folder(files: Record<string, string>) {
       return (files[rel(path)] = change(files[rel(path)]));
     },
     createFolder: async () => {},
+    rename: async (from: string, to: string) => {
+      if (!(rel(from) in files)) throw new Error("No file " + from);
+      if (rel(to) in files) throw new Error("Exists: " + to);
+      files[rel(to)] = files[rel(from)];
+      delete files[rel(from)];
+    },
     // The core reads the folder's apps; this stands in for an Obsidian vault.
     conventions: async () => conventionsOf(files, root),
   };

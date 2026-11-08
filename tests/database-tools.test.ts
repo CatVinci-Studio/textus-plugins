@@ -51,3 +51,38 @@ describe("database's tools", () => {
     expect(await call("add_row", { database: "Books", name: "Dune" })).toHaveProperty("error");
   });
 });
+
+describe("database's view of a folder unit from another page", () => {
+  it("shows the unit page's table rows, and writes their edits into that page", async () => {
+    const files: Record<string, string> = {
+      "Papers/Papers.md": "# Papers\n\n```database\nview: table\nrows:\n| Name | status |\n| --- | --- |\n| SAM | Doing |\n```\n",
+      "Papers/Dune.md": "# Dune\n",
+      "Home.md": "# Home\n",
+    };
+    let render: (b: unknown, w: unknown) => Promise<void> = async () => {};
+    const api = {
+      files: { ...folder(files), frontmatter: { get: async () => ({}), update: async () => {} } },
+      metadata: { all: async () => Object.keys(files).map((rel) => ({ path: "/root/" + rel, rel, frontmatter: {} })) },
+      views: { registerCodeBlock: (_: string, r: { render: typeof render }) => ((render = r.render), { dispose() {} }) },
+    };
+    loadPlugin("catvinci.database", api);
+    const posted: { rows: { rel: string; name: string }[] }[] = [];
+    let receive: (m: unknown) => Promise<unknown> = async () => {};
+    const webview = {
+      html: "",
+      postMessage: (m: { data: (typeof posted)[0] }) => posted.push(m.data),
+      onDidDispose: () => {},
+      onDidReceiveMessage: (f: typeof receive) => (receive = f),
+    };
+    const block = { path: "/root/Home.md", source: "from: Papers\nview: table", setSource: async () => {}, onDidChange: () => {} };
+    await render(block, webview);
+    await receive({ type: "ready" });
+    expect(posted.at(-1)!.rows.map((r) => [r.rel, r.name])).toEqual(
+      expect.arrayContaining([["Papers/Dune.md", "Dune"], ["Papers/Papers.md#0", "SAM"]]),
+    );
+    expect(posted.at(-1)!.rows).toHaveLength(2);
+    await receive({ type: "set", rel: "Papers/Papers.md#0", key: "status", value: "Done" });
+    expect(files["Papers/Papers.md"]).toContain("| SAM | Done |");
+    expect(files["Papers/Papers.md"]).toMatch(/^# Papers\n\n```database\n[\s\S]*\n```\n$/);
+  });
+});
