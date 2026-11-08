@@ -1,7 +1,7 @@
 {
   "id": "catvinci.templates",
   "name": "%name%",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "publisher": "catvinci",
   "author": "CatVinci Studio",
   "description": "%description%",
@@ -12,7 +12,7 @@
     "textus": ">=1.3.9"
   },
   "platforms": ["desktop", "ios"],
-  "main": ["lib/folder-paths.js", "lib/dates.js", "templater.js", "lib/free-name.js", "lib/conventions.js", "host.js"],
+  "main": ["lib/folder-paths.js", "lib/dates.js", "templater.js", "lib/free-name.js", "lib/conventions.js", "lib/name-order.js", "host.js"],
   "permissions": ["files.read", "files.write", "editor.read", "editor.write", "ai.tools"],
   "contributes": {
     "commands": [
