@@ -17,10 +17,16 @@
     if (down.button !== 0) return;
     var from = { x: down.clientX, y: down.clientY };
     var dragging = false;
+    var selecting = "";
     function move(e) {
       if (!dragging) {
         if (Math.hypot(e.clientX - from.x, e.clientY - from.y) < START_PX) return;
         dragging = true;
+        // No text is selected on the way.
+        selecting = document.body.style.userSelect;
+        document.body.style.userSelect = "none";
+        var selection = root.getSelection && root.getSelection();
+        if (selection) selection.removeAllRanges();
         if (handlers.start) handlers.start(from.x, from.y);
       }
       e.preventDefault();
@@ -32,6 +38,7 @@
       window.removeEventListener("pointercancel", cancel);
       window.removeEventListener("keydown", key, true);
       if (!dragging) return;
+      document.body.style.userSelect = selecting;
       handlers.end(x, y, dropped);
       var stop = function (e) {
         e.stopPropagation();
@@ -99,6 +106,9 @@
     var home = { parent: item.parentNode, next: item.nextSibling };
     var ghost = null;
     var grab = { x: 0, y: 0 };
+    // The page's own zoom (a page drawn in a zoomed document): the pointer
+    // is in screen pixels, the ghost's place in the page's.
+    var scale = 1;
     var over = null;
     function listAt(x, y) {
       var lists = options.lists();
@@ -120,15 +130,17 @@
         ghost = item.cloneNode(true);
         ghost.classList.add("tx-drag-ghost");
         ghost.style.width = r.width + "px";
-        ghost.style.left = r.left + "px";
-        ghost.style.top = r.top + "px";
         document.body.append(ghost);
+        scale = ghost.getBoundingClientRect().width / r.width || 1;
+        ghost.style.width = r.width / scale + "px";
+        ghost.style.left = r.left / scale + "px";
+        ghost.style.top = r.top / scale + "px";
         item.classList.add("tx-drag-source");
         over = home.parent;
       },
       move: function (x, y) {
-        ghost.style.left = x - grab.x + "px";
-        ghost.style.top = y - grab.y + "px";
+        ghost.style.left = (x - grab.x) / scale + "px";
+        ghost.style.top = (y - grab.y) / scale + "px";
         var list = listAt(x, y);
         if (!list) return;
         over = list;

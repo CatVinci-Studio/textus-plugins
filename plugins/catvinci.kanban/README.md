@@ -36,6 +36,7 @@ kanban-plugin: board
 
 ## Changes
 
+- **0.4.4** - Dragging a card or a list no longer selects text on the way.
 - **0.4.3** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
 - **0.4.2** - Cards and lists follow the pointer as you drag, the others making way. Needs Textus 1.3.10.
 - **0.4.1** - Keeps the mark Obsidian's Kanban puts on a done list.

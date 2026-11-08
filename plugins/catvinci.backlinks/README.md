@@ -10,7 +10,7 @@ Links like `[[Note]]` are built into Textus: you can write and follow them witho
 - After `#`, the note's headings: `[[Note#Heading]]`. `[[#` lists the document's own headings.
 - After `#^`, its blocks: paragraphs, list items, tables, quotes. A block without an id gets one at its end in that note (`^1a2b3c`), the way Obsidian writes them.
 - Select some words and type `[[` to make them a link.
-- Links are written the way the folder writes them: in an Obsidian vault, in the vault's link format.
+- Links are written the way the folder writes them: its own choice, or an Obsidian vault's link format; else as the note already links; else a standard link, `[Nov 8](Week45/Nov%208.md)`, which opens in any app. A [[link]] that needs a path shows the note's name.
 
 ## Embeds
 
@@ -26,6 +26,11 @@ The **Two-way Links** tab of the sidebar shows what links to the document in fro
 - **Outgoing links**: the notes this one links to, including the ones that don't exist yet.
 - The field at the top filters the list.
 
+## Standard links or [[wiki links]]
+
+- **Plugins › New Links: Standard or [[Wiki]]…** chooses how new links in the open folder are written. The choice is kept in the folder's `.textus/settings.json`, and Textus and the other plugins follow it.
+- **Plugins › Convert Links to Standard…** and **Convert Links to [[Wiki Links]]…** rewrite the links of the document in front or of every note in the folder. They say first how many links will change; each still goes where it went. Code, the front matter, and a link whose note can't be found are left as they are; pictures and other files stay standard links.
+
 ## Permissions
 
 - **Read and edit the document**: to complete links as you type and turn a selection into a link.
@@ -34,6 +39,7 @@ The **Two-way Links** tab of the sidebar shows what links to the document in fro
 
 ## Changes
 
+- **0.4.0** - New Links: Standard or [[Wiki]]… chooses how the folder writes new links, and Convert Links turns a note's or the whole folder's links from one way into the other; [[ writes the folder's way, a standard link where nothing says otherwise.
 - **0.3.1** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
 - **0.3.0** - `[[` completion for notes, headings and blocks; `![[` embeds; renamed from Backlinks to Two-way Links
 - **0.2.1** - the description says "two-way links", so a store search finds it

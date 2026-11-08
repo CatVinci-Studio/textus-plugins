@@ -30,7 +30,7 @@ it("makes a page, or a sub-page in its parent's folder unit, and gives the link"
   ).toEqual({
     path: "Life/Week 1.md",
     parent: "Life/Life.md",
-    link: "[[Week 1]]",
+    link: "[Week 1](Week%201.md)",
   });
   // Its first sub-page made Life a folder unit: Life.md moved into Life/.
   expect(files["Life/Life.md"]).toBe("# Life\n");

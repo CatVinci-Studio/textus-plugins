@@ -5,7 +5,7 @@ var activatePages = (function () {
 // icons in front matter, and the pages above the one in front in the
 // status bar.
 
-/* global pages, folderPaths */
+/* global pages, folderPaths, linkStyle */
 const t = (key, ...args) => textus.l10n.t("pages." + key, ...args);
 const ICONS = ["📄", "📁", "📅", "🗓️", "✅", "📝", "📚", "💡", "🎯", "🚀", "⭐", "❤️", "🏠", "💼", "🎓", "🧪", "📊", "🔖"];
 
@@ -91,7 +91,7 @@ async function newSubpage(path) {
   await textus.files.createFolder(join(root, rel.slice(0, rel.lastIndexOf("/")))).catch(() => {});
   await textus.files.create(file, "# " + title.trim() + "\n");
   if (parent === active)
-    await textus.editor.insertText(await textus.metadata.linkTo(file, active));
+    await textus.editor.insertText(await linkStyle.linkTo(file, active));
   await textus.layout.open(file);
 }
 
@@ -253,7 +253,7 @@ async function createPage(input) {
   await textus.files.create(file, "# " + title + "\n" + body);
   if (input.icon) await textus.files.frontmatter.update(file, (fm) => void (fm.icon = String(input.icon)));
   const from = (await textus.editor.getPath().catch(() => null)) || file;
-  return { path: rel, parent: parentRel, link: await textus.metadata.linkTo(file, from) };
+  return { path: rel, parent: parentRel, link: await linkStyle.linkTo(file, from) };
 }
 
 return function activatePages(ctx) {

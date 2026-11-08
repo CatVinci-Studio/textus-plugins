@@ -14,6 +14,7 @@ Pages and sub-pages, pictures and attachments, the links between them, and datab
 - **Databases**: each database becomes a folder with a page holding a `base` block, the views a click apart - its board when it has a status, its table, and its calendar when it has dates. Every row is a note in that folder, its properties in its front matter: dates as 2026-01-04, checkboxes, numbers, lists, relations as links. Where another page shows a database, it shows it there too, sorted as the export says. Notion's empty "Untitled" rows and pages are left out.
 - **Pictures and attachments** go into an `assets` folder beside the page that shows them; pasted pictures take their page's name.
 - **Links** between pages, to pictures and to attachments follow the new names. Links to pages that weren't exported are listed in the report.
+- **Links between pages**: asked at the start: standard links (recommended), `[Page](Page.md)`, as Notion exports them and every app opens, or `[[wiki links]]` as Obsidian writes them. The imported folder keeps the choice, so a page made in it later links the same way.
 - **Callouts** become notes (`> [!NOTE]`), their emoji kept. Toggles stay as `<details>`.
 
 **Page icons**: Notion's Markdown export leaves them out. Export the same pages as HTML too and pick it when the import asks: the pages' emoji icons come over.
@@ -30,6 +31,7 @@ Everything happens on your device: the plugin reads and writes files in the open
 
 ## Changes
 
+- **0.7.0** - asks how the pages link: standard links (recommended), as Notion exports them, or [[wiki links]] - a path shown by the page's name; the imported folder keeps the choice for pages made in it later
 - **0.6.1** - Calls Workspace by its name in the import report and in the suggested plugins.
 - **0.6.0** - Dates written by Textus itself; needs Textus 1.3.10.
 - **0.5.0** - Page emoji icons, from Notion's HTML export of the same pages.

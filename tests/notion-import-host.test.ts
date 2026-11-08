@@ -148,6 +148,8 @@ function disk(
       },
       write: async (path: string, bytes: Uint8Array) =>
         void (files[rel(path)] = bytes),
+      writeText: async (path: string, text: string) =>
+        void (files[rel(path)] = text),
     },
   };
 }
@@ -167,6 +169,8 @@ function host(
     offer?: (args: unknown) => Promise<unknown>;
     signal?: AbortSignal;
     name?: string | null;
+    /** The link format picked: standard unless "wiki". */
+    links?: string;
   } = {},
 ) {
   const commands = new Map<string, (...args: unknown[]) => Promise<unknown>>();
@@ -197,7 +201,8 @@ function host(
           options.name === undefined ? value : options.name,
         pick: async (items: { value: unknown }[]) => {
           picks.push(items);
-          return items[0].value;
+          const asked = items.find((i) => i.value === options.links);
+          return (asked ?? items[0]).value;
         },
         withProgress: async (
           _title: string,
@@ -259,6 +264,30 @@ describe("the import command", () => {
     );
     expect(report).not.toContain("plugin.catvinci.pages");
     expect(messages).toEqual(["done|13|2|" + target]);
+    // Standard links, asked first, and kept by the folder for pages made later.
+    expect(picks[1].map((i) => (i as { value: unknown }).value)).toEqual([
+      "markdown",
+      "wiki",
+    ]);
+    expect(folder.files[target + "/Home/Home.md"]).toContain("[Reading List](");
+    expect(
+      JSON.parse(String(folder.files[target + "/.textus/settings.json"])),
+    ).toEqual({
+      conventions: { linkStyle: "markdown" },
+    });
+  });
+
+  it("writes [[wiki links]] between the pages when the reader picks them", async () => {
+    const folder = disk({ "Inbox/Export-x.zip": await fixtureZip() });
+    const { run } = host(folder, { installed: [], links: "wiki" });
+    await run();
+    const [target] = targets(folder);
+    expect(folder.files[target + "/Home/Home.md"]).toContain(
+      "[[Reading List]]",
+    );
+    expect(String(folder.files[target + "/.textus/settings.json"])).toContain(
+      '"wiki"',
+    );
   });
 
   it("shows the import in Workspace's pages tree when Workspace is on", async () => {

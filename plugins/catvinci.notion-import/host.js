@@ -1,7 +1,7 @@
 // Notion Import: a Notion export in the open folder (its .zip, or the folder it unzips to) imported
 // into a new dated folder at the open folder's top, then a report page with the plugins that help.
 
-/* global notionImport, notionCsv, JSZip, folderPaths, freeName */
+/* global notionImport, notionCsv, JSZip, folderPaths, freeName, linkStyle */
 // jszip, run before this file, takes the host's module.exports for itself,
 // as a CommonJS module does: given back here.
 const Zip = typeof module !== "undefined" && module.exports !== exports ? module.exports : JSZip;
@@ -93,6 +93,18 @@ async function importNotion(arg) {
       iconSource = picked || null;
     }
   }
+  // Standard links unless the reader wants [[wiki links]]; asked only when
+  // the export was picked here, not named by a caller.
+  const links = arg
+    ? "markdown"
+    : await textus.ui.pick(
+        [
+          { label: t("linksStandard"), value: "markdown" },
+          { label: t("linksWiki"), value: "wiki" },
+        ],
+        { placeholder: t("pickLinks") },
+      );
+  if (links === null || links === undefined) return;
   const name = String(source).replace(/\\/g, "/").split("/").pop();
   const stat = await textus.files.stat(source);
   if (stat && !stat.isDir && stat.size > MAX_READ) return textus.ui.message(t("tooBig", name));
@@ -109,9 +121,12 @@ async function importNotion(arg) {
       if (signal.aborted) return false;
       if (!notionImport.isExport(from.paths)) return null;
       await textus.files.createFolder(target);
+      // The folder keeps the choice, so a page made in it later links alike.
+      await linkStyle.choose(target, links).catch(() => {});
       return notionImport.importExport({
         ...from,
         signal,
+        links: links === "wiki" ? { base: folderPaths.rel(root, target) } : null,
         write: {
           folder: (rel) => textus.files.createFolder(join(target, rel)),
           text: (rel, text) => textus.files.create(join(target, rel), text),

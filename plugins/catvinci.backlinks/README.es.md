@@ -10,7 +10,7 @@ Los enlaces como `[[Nota]]` vienen con Textus: puedes escribirlos y seguirlos si
 - Después de `#`, los encabezados de la nota: `[[Nota#Encabezado]]`. `[[#` muestra los del propio documento.
 - Después de `#^`, sus bloques: párrafos, elementos de lista, tablas, citas. Un bloque sin id recibe uno al final en esa nota (`^1a2b3c`), como lo escribe Obsidian.
 - Selecciona unas palabras y escribe `[[` para convertirlas en enlace.
-- Los enlaces se escriben como los escribe la carpeta: en una bóveda de Obsidian, con su formato de enlaces.
+- Los enlaces se escriben como los escribe la carpeta: lo que eligió, o el formato de enlaces de una bóveda de Obsidian; si no, como ya enlaza la nota; si no, un enlace estándar, `[Nov 8](Week45/Nov%208.md)`, que se abre en cualquier app. Un [[enlace]] que necesita una ruta muestra el nombre de la nota.
 
 ## Incrustaciones
 
@@ -26,6 +26,11 @@ La pestaña **Enlaces bidireccionales** de la barra lateral muestra qué enlaza 
 - **Enlaces salientes**: las notas a las que enlaza esta, incluidas las que aún no existen.
 - El campo de arriba filtra la lista.
 
+## Enlaces estándar o [[enlaces wiki]]
+
+- **Complementos › Enlaces nuevos: estándar o [[wiki]]…** elige cómo se escriben los enlaces nuevos en la carpeta abierta. La elección se guarda en el `.textus/settings.json` de la carpeta, y Textus y los demás complementos la siguen.
+- **Complementos › Convertir enlaces a estándar…** y **Convertir enlaces a [[enlaces wiki]]…** reescriben los enlaces del documento al frente o de todas las notas de la carpeta. Primero dicen cuántos cambiarán; cada uno sigue yendo al mismo sitio. El código, el front matter y un enlace cuya nota no se encuentra quedan como están; las imágenes y otros archivos siguen como enlaces estándar.
+
 ## Permisos
 
 - **Leer y editar el documento**: para completar enlaces al escribir y convertir una selección en enlace.
@@ -34,6 +39,7 @@ La pestaña **Enlaces bidireccionales** de la barra lateral muestra qué enlaza 
 
 ## Cambios
 
+- **0.4.0** - Enlaces nuevos: estándar o [[wiki]]… elige cómo escribe la carpeta los enlaces nuevos, y Convertir enlaces pasa los de una nota o de toda la carpeta de una forma a la otra; [[ escribe como la carpeta, un enlace estándar si nada dice otra cosa.
 - **0.3.1** - Su página dice ahora en una frase qué hace, qué puede hacer y qué cambió en cada versión.
 - **0.3.0** - completado de notas, encabezados y bloques con `[[`; incrustaciones con `![[`; el nombre pasa de Enlaces entrantes a Enlaces bidireccionales
 - **0.2.1** - la descripción dice "enlaces bidireccionales", para que la búsqueda de la tienda lo encuentre

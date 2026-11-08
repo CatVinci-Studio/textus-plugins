@@ -10,7 +10,7 @@ Links como `[[Nota]]` já vêm no Textus: você pode escrevê-los e segui-los se
 - Depois de `#`, os títulos da nota: `[[Nota#Título]]`. `[[#` lista os do próprio documento.
 - Depois de `#^`, os blocos: parágrafos, itens de lista, tabelas, citações. Um bloco sem id ganha um no fim, nessa nota (`^1a2b3c`), do jeito que o Obsidian escreve.
 - Selecione algumas palavras e digite `[[` para transformá-las em link.
-- Os links são escritos do jeito da pasta: num cofre do Obsidian, no formato de links do cofre.
+- Os links são escritos do jeito da pasta: a escolha dela, ou o formato de links de um cofre do Obsidian; senão, como a nota já liga; senão, um link padrão, `[Nov 8](Week45/Nov%208.md)`, que abre em qualquer app. Um [[link]] que precisa de um caminho mostra o nome da nota.
 
 ## Incorporações
 
@@ -26,6 +26,11 @@ A aba **Links bidirecionais** da barra lateral mostra o que aponta para o docume
 - **Links de saída**: as notas para as quais esta aponta, inclusive as que ainda não existem.
 - O campo no topo filtra a lista.
 
+## Links padrão ou [[links wiki]]
+
+- **Plugins › Links novos: padrão ou [[wiki]]…** escolhe como os links novos da pasta aberta são escritos. A escolha fica no `.textus/settings.json` da pasta, e o Textus e os outros plugins a seguem.
+- **Plugins › Converter links em links padrão…** e **Converter links em [[links wiki]]…** reescrevem os links do documento em primeiro plano ou de todas as notas da pasta. Primeiro dizem quantos vão mudar; cada um continua levando ao mesmo lugar. O código, o front matter e um link cuja nota não é encontrada ficam como estão; imagens e outros arquivos continuam como links padrão.
+
 ## Permissões
 
 - **Ler e editar o documento**: para completar links enquanto você digita e transformar uma seleção em link.
@@ -34,6 +39,7 @@ A aba **Links bidirecionais** da barra lateral mostra o que aponta para o docume
 
 ## Alterações
 
+- **0.4.0** - Links novos: padrão ou [[wiki]]… escolhe como a pasta escreve os links novos, e Converter links passa os de uma nota ou de toda a pasta de uma forma para a outra; [[ escreve como a pasta, um link padrão quando nada diz o contrário.
 - **0.3.1** - Sua página agora diz numa frase o que ele faz, o que pode fazer e o que mudou em cada versão.
 - **0.3.0** - autocompletar notas, títulos e blocos com `[[`; incorporações com `![[`; o nome muda de Backlinks para Links bidirecionais
 - **0.2.1** - a descrição diz "links bidirecionais", para a busca da loja encontrá-lo

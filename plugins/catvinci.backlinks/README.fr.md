@@ -10,7 +10,7 @@ Les liens comme `[[Note]]` sont intégrés à Textus : vous pouvez les écrire e
 - Après `#`, les titres de la note : `[[Note#Titre]]`. `[[#` liste ceux du document lui-même.
 - Après `#^`, ses blocs : paragraphes, éléments de liste, tableaux, citations. Un bloc sans id en reçoit un à sa fin dans cette note (`^1a2b3c`), comme Obsidian les écrit.
 - Sélectionnez quelques mots et tapez `[[` pour en faire un lien.
-- Les liens s’écrivent comme le dossier les écrit : dans un coffre Obsidian, au format de liens du coffre.
+- Les liens s’écrivent comme le dossier les écrit : son propre choix, ou le format de liens d’un coffre Obsidian ; sinon comme la note lie déjà ; sinon un lien standard, `[Nov 8](Week45/Nov%208.md)`, qui s’ouvre dans n’importe quelle app. Un [[lien]] qui a besoin d’un chemin affiche le nom de la note.
 
 ## Intégrations
 
@@ -26,6 +26,11 @@ L’onglet **Liens bidirectionnels** de la barre latérale montre ce qui lie le 
 - **Liens sortants** : les notes vers lesquelles celle-ci pointe, y compris celles qui n’existent pas encore.
 - Le champ du haut filtre la liste.
 
+## Liens standard ou [[liens wiki]]
+
+- **Extensions › Nouveaux liens : standard ou [[wiki]]…** choisit comment s’écrivent les nouveaux liens du dossier ouvert. Le choix est gardé dans le `.textus/settings.json` du dossier, et Textus comme les autres modules le suivent.
+- **Extensions › Convertir les liens en liens standard…** et **Convertir les liens en [[liens wiki]]…** réécrivent les liens du document au premier plan ou de toutes les notes du dossier. Ils disent d’abord combien changeront ; chacun mène toujours au même endroit. Le code, le front matter et un lien dont la note est introuvable restent tels quels ; les images et autres fichiers restent des liens standard.
+
 ## Autorisations
 
 - **Lire et modifier le document** : pour compléter les liens pendant la frappe et transformer une sélection en lien.
@@ -34,6 +39,7 @@ L’onglet **Liens bidirectionnels** de la barre latérale montre ce qui lie le 
 
 ## Changements
 
+- **0.4.0** - Nouveaux liens : standard ou [[wiki]]… choisit comment le dossier écrit ses nouveaux liens, et Convertir les liens fait passer ceux d’une note ou de tout le dossier d’une forme à l’autre ; [[ écrit comme le dossier, un lien standard si rien ne dit autrement.
 - **0.3.1** - Sa page dit maintenant en une phrase ce qu'il fait, ce qu'il permet et ce qui a changé à chaque version.
 - **0.3.0** - complétion des notes, titres et blocs avec `[[` ; intégrations avec `![[` ; le nom passe de Rétroliens à Liens bidirectionnels
 - **0.2.1** - la description dit « liens bidirectionnels », pour que la recherche de la boutique le trouve

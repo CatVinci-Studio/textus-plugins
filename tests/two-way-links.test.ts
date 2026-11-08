@@ -122,11 +122,14 @@ const DOCS = [
     headings: [],
   },
 ];
+// An Obsidian vault: it writes [[wiki links]].
+const VAULT_MARK = { ".obsidian/app.json": "{}" };
 const FILES = {
   "Plan.md": "# The plan\n\n## Steps\n\nDo it first. ^step1\n\nThen this.\n",
   "Log.md": "Log\n",
   "a/Idea.md": "Idea\n",
 };
+const VAULT = { ...FILES, ...VAULT_MARK };
 const ctx = (match: string, more: Any = {}) => ({
   text: "x " + match,
   match,
@@ -183,8 +186,16 @@ describe("Two-way Links' manifest", () => {
 });
 
 describe("[[ completion", () => {
-  it("lists every note, newest first, and its aliases, as links Textus writes over the paired ]]", async () => {
+  it("writes standard links in a folder that links no other way", async () => {
     const p = plugin(FILES, DOCS);
+    const list = await p.completions.get("catvinci.backlinks.notes")!(
+      ctx("[[Pl"),
+    );
+    expect(list!.items.map((i) => i.insert)).toContain("[Plan](Plan.md)");
+  });
+
+  it("lists every note, newest first, and its aliases, as links Textus writes over the paired ]]", async () => {
+    const p = plugin(VAULT, DOCS);
     const list = await p.completions.get("catvinci.backlinks.notes")!(
       ctx("[[Pl"),
     );
@@ -218,7 +229,7 @@ describe("[[ completion", () => {
   });
 
   it("lists a note's headings, and the document's own for [[#", async () => {
-    const p = plugin(FILES, DOCS);
+    const p = plugin(VAULT, DOCS);
     const list = await p.completions.get("catvinci.backlinks.headings")!(
       ctx("[[plan#"),
     );
@@ -236,7 +247,7 @@ describe("[[ completion", () => {
   });
 
   it("lists a note's blocks; one without an id gets one written into the note when picked", async () => {
-    const p = plugin(FILES, DOCS);
+    const p = plugin(VAULT, DOCS);
     const list = await p.completions.get("catvinci.backlinks.blocks")!(
       ctx("[[Plan#^"),
     );
@@ -258,7 +269,7 @@ describe("[[ completion", () => {
   });
 
   it("writes links from an unsaved document as from the top of the folder", async () => {
-    const p = plugin(FILES, DOCS);
+    const p = plugin(VAULT, DOCS);
     await p.completions.get("catvinci.backlinks.notes")!(
       ctx("[[", { path: null }),
     );
