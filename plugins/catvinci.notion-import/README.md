@@ -31,6 +31,7 @@ Everything happens on your device: the plugin reads and writes files in the open
 
 ## Changes
 
+- **0.7.1** - Shares Two-way Links' fix for working out how a note links.
 - **0.7.0** - asks how the pages link: standard links (recommended), as Notion exports them, or [[wiki links]] - a path shown by the page's name; the imported folder keeps the choice for pages made in it later
 - **0.6.1** - Calls Workspace by its name in the import report and in the suggested plugins.
 - **0.6.0** - Dates written by Textus itself; needs Textus 1.3.10.

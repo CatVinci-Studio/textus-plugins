@@ -39,6 +39,7 @@ La pestaña **Enlaces bidireccionales** de la barra lateral muestra qué enlaza 
 
 ## Cambios
 
+- **0.4.1** - En una nota sin enlaces todavía, [[ escribe un enlace estándar: el [[ que se escribía se tomaba por un enlace wiki que la nota ya tenía.
 - **0.4.0** - Enlaces nuevos: estándar o [[wiki]]… elige cómo escribe la carpeta los enlaces nuevos, y Convertir enlaces pasa los de una nota o de toda la carpeta de una forma a la otra; [[ escribe como la carpeta, un enlace estándar si nada dice otra cosa.
 - **0.3.1** - Su página dice ahora en una frase qué hace, qué puede hacer y qué cambió en cada versión.
 - **0.3.0** - completado de notas, encabezados y bloques con `[[`; incrustaciones con `![[`; el nombre pasa de Enlaces entrantes a Enlaces bidireccionales
