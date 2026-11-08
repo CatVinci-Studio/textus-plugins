@@ -2,8 +2,10 @@
 // (ctx.storage.global, "bookmarks") and listed in the sidebar by document;
 // a click opens the document at those words. A renamed document's
 // bookmarks follow it (files.onDidRename). In an Obsidian vault, Obsidian's
-// own bookmarks (.obsidian/bookmarks.json) are listed too.
-/* global folderPaths */
+// own bookmarks (.obsidian/bookmarks.json) are listed too, and a new one is
+// written there as well - a heading's, or a block's with a ^id - so
+// Obsidian has it; removed here, it goes from there too.
+/* global folderPaths, obsidianBookmarks */
 let ctx;
 let list;
 const t = (key, ...args) => textus.l10n.t(key, ...args);
@@ -29,16 +31,42 @@ async function listBookmarks() {
   };
 }
 
+/** The open folder's .obsidian/bookmarks.json; null outside a vault. */
+async function vaultFile() {
+  const root = await textus.files.root();
+  if (!root) return null;
+  const config = await textus.files.stat(folderPaths.abs(root, ".obsidian")).catch(() => null);
+  return config && config.isDir ? { root, path: folderPaths.abs(root, ".obsidian/bookmarks.json") } : null;
+}
+
+/** Changes the vault's bookmarks.json through `change` (its text, "" for
+ *  none, to the new text or null to leave it); whether it changed. */
+async function changeVaultFile(file, change) {
+  let changed = false;
+  const run = (text) => {
+    const next = change(text);
+    changed = next !== null && next !== text;
+    return changed ? next : text;
+  };
+  if (await textus.files.stat(file.path).catch(() => null)) await textus.files.process(file.path, run);
+  else {
+    const text = run("");
+    if (changed) await textus.files.writeText(file.path, text);
+  }
+  return changed;
+}
+
 /** Obsidian's bookmarks of notes, headings and blocks, groups flattened
- *  into "Obsidian › group". Searches, folders and the like are left out. */
+ *  into "Obsidian › group". Searches, folders and the like are left out.
+ *  Null without the file. */
 async function obsidianMarks() {
   const root = await textus.files.root();
-  if (!root) return [];
+  if (!root) return null;
   let saved;
   try {
     saved = JSON.parse(await textus.files.readText(folderPaths.abs(root, ".obsidian/bookmarks.json")));
   } catch {
-    return [];
+    return null;
   }
   const out = [];
   const walk = (items, group) => {
@@ -50,7 +78,7 @@ async function obsidianMarks() {
       const location = { path: folderPaths.abs(root, item.path) };
       if (item.type === "heading" && sub) location.heading = sub;
       if (item.type === "block" && sub) location.block = sub.replace(/^\^/, "");
-      out.push({ label: item.title || fileName(item.path).replace(/\.md$/i, "") + (sub ? " › " + sub : ""), group, path: item.path, location });
+      out.push({ label: item.title || fileName(item.path).replace(/\.md$/i, "") + (sub ? " › " + sub : ""), group, path: item.path, location, ctime: item.ctime });
     }
   };
   walk(saved && saved.items, t("obsidian"));
@@ -63,7 +91,14 @@ exports.activate = function (context) {
   list = textus.views.registerList("catvinci.bookmarks.panel", {
     emptyText: t("empty"),
     items: async function () {
-      return (await all()).map((mark, i) => ({
+      const vault = await obsidianMarks();
+      const root = await textus.files.root();
+      // One written to the vault and taken out there is gone.
+      const ours = (mark) => mark.ctime && root && folderPaths.rel(root, mark.path) !== null;
+      const there = new Set((vault || []).map((mark) => mark.ctime));
+      const marks = (await all()).filter((mark) => !vault || !ours(mark) || there.has(mark.ctime));
+      const mine = new Set(marks.map((mark) => mark.ctime).filter(Boolean));
+      return marks.map((mark, i) => ({
         id: String(mark.id),
         label: mark.text,
         group: fileName(mark.path),
@@ -79,7 +114,7 @@ exports.activate = function (context) {
         ],
         data: i,
       })).concat(
-        (await obsidianMarks()).map((mark, i) => ({
+        (vault || []).filter((mark) => !mine.has(mark.ctime)).map((mark, i) => ({
           id: "obsidian:" + i + ":" + mark.path,
           label: mark.label,
           group: mark.group,
@@ -98,11 +133,29 @@ exports.activate = function (context) {
       const selection = await editor.getSelection();
       const text = selection && selection.text.trim().slice(0, 120);
       if (!text) return textus.ui.notice(t("select"));
-      await keep([...(await all()), { id: Date.now(), path, text }]);
+      const mark = { id: Date.now(), path, text };
+      const file = await vaultFile();
+      const rel = file && folderPaths.rel(file.root, path);
+      if (rel) {
+        const blocks = (await editor.getBlocks()) || [];
+        let found = obsidianBookmarks.markFor(blocks, selection.markdown || selection.text);
+        if (found && found.markdown && !(await editor.edit({ action: "replace", block: found.block.id, text: found.markdown })))
+          found = null;
+        const entry = Object.assign({ type: "file" }, found && found.entry);
+        const written = { type: entry.type, ctime: mark.id, path: rel };
+        if (entry.subpath) written.subpath = entry.subpath;
+        if (await changeVaultFile(file, (saved) => obsidianBookmarks.withEntry(saved, written))) mark.ctime = mark.id;
+      }
+      await keep([...(await all()), mark]);
     },
   );
   textus.commands.register("catvinci.bookmarks.remove", async function (id) {
-    await keep((await all()).filter((mark) => mark.id !== id));
+    const marks = await all();
+    const gone = marks.find((mark) => mark.id === id);
+    const file = gone && gone.ctime && (await vaultFile());
+    const rel = file && folderPaths.rel(file.root, gone.path);
+    if (rel) await changeVaultFile(file, (saved) => (saved ? obsidianBookmarks.withoutEntry(saved, gone.ctime, rel) : null));
+    await keep(marks.filter((mark) => mark.id !== id));
   });
   textus.files.onDidRename(async function (event) {
     const moved = (path) =>
@@ -114,6 +167,13 @@ exports.activate = function (context) {
           : path;
     const marks = await all();
     const next = marks.map((mark) => ({ ...mark, path: moved(mark.path) }));
-    if (next.some((mark, i) => mark.path !== marks[i].path)) await keep(next);
+    if (!next.some((mark, i) => mark.path !== marks[i].path)) return;
+    const file = await vaultFile();
+    const from = file && folderPaths.rel(file.root, event.from);
+    const to = file && folderPaths.rel(file.root, event.to);
+    const ctimes = marks.map((mark) => mark.ctime).filter(Boolean);
+    if (from && to && ctimes.length)
+      await changeVaultFile(file, (saved) => (saved ? obsidianBookmarks.movedEntries(saved, ctimes, from, to) : null));
+    await keep(next);
   });
 };
