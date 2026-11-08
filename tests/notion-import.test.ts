@@ -938,3 +938,29 @@ describe("Notion's newer export", () => {
     expect(Object.keys(page.out)).toEqual(["Kept.md"]);
   });
 });
+
+describe("page icons from an HTML export", () => {
+  it("are read by page id, emoji only, and the import says where each page went", async () => {
+    const html = (icon: string) =>
+      `<html><body><article><header><div class="page-header-icon undefined">${icon}</div><h1 class="page-title">x</h1></header></article></body></html>`;
+    const files: Record<string, string> = {
+      [`Home ${H}.html`]: html('<span class="icon">🏠</span>'),
+      [`Home ${H}/Sub ${id("1")}.html`]: html('<span class="icon">📚</span>'),
+      [`Home ${H}/Pic ${id("2")}.html`]: html('<img class="icon" src="x.png"/>'),
+      "index.html": html('<span class="icon">❓</span>'),
+    };
+    const icons = await ni.iconsOf({
+      paths: Object.keys(files),
+      read: async (p: string) => files[p],
+    });
+    expect(icons).toEqual({ [H]: "🏠", [id("1")]: "📚" });
+
+    const md: Record<string, string> = {
+      [`Home ${H}.md`]: "# Home\n",
+      [`Home ${H}/Sub ${id("1")}.md`]: "# Sub\n",
+    };
+    const { report } = await importOf(Object.keys(md), async (p) => md[p]);
+    expect(Object.keys(report.byId).sort()).toEqual([H, id("1")].sort());
+    expect(report.byId[id("1")]).toMatch(/Sub\.md$/);
+  });
+});

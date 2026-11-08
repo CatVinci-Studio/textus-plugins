@@ -686,7 +686,25 @@
       });
       step(path);
     }
+    // Where each Notion page went: its icon, read from an HTML export, follows it.
+    report.byId = Object.fromEntries(layout.byId);
     return report;
+  }
+
+  /** The emoji icon of each page of a Notion HTML export, by the page's id.
+   *  The Markdown export leaves icons out; a picture icon isn't brought. */
+  async function iconsOf({ paths, read, signal }) {
+    const icons = {};
+    for (const path of paths) {
+      if (signal && signal.aborted) break;
+      if (!/\.html$/i.test(path)) continue;
+      const id = N.idOf(splitExt(baseOf(path)).stem);
+      if (!id) continue;
+      const html = await Promise.resolve().then(() => read(path, "text")).catch(() => "");
+      const m = /class="page-header-icon[^"]*"[^>]*>\s*<span class="icon">([^<]{1,16})<\/span>/.exec(html);
+      if (m && EMOJI.test(m[1].trim())) icons[id] = m[1].trim();
+    }
+    return icons;
   }
 
   /** The official plugins that help with what the import holds, `installed` ones left out. */
@@ -710,6 +728,7 @@
     out.push("- " + t("countPages", report.pages));
     out.push("- " + t("countDatabases", report.databases, report.rows));
     out.push("- " + t("countFiles", report.files));
+    if (report.icons) out.push("- " + t("countIcons", report.icons));
     if (report.stopped) out.push("", "> [!WARNING]", "> " + t("stopped", report.done, report.total));
     if (suggestions.length) {
       out.push("", "## " + t("helpTitle"), "", t("helpIntro"), "");
@@ -784,6 +803,7 @@
     dateKey,
     databasePage,
     importExport,
+    iconsOf,
     recommend,
     reportPage,
     tidyPaths,

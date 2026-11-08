@@ -14,7 +14,9 @@ What it becomes:
 - **Links** between pages, to pictures and to attachments follow the new names. Links to pages that weren't exported are listed in the report.
 - **Callouts** become notes (`> [!NOTE]`), their emoji kept. Toggles stay as `<details>`.
 
-What stays behind: Notion's export has no page icons, covers, comments or the filters of saved views, so they don't come over; a view's sort does. Formula and rollup properties keep the value they had, and mentions of people and dates are plain text.
+Page icons: Notion's Markdown export leaves them out. Export the same pages as HTML too and pick it when the import asks: the pages' emoji icons come over.
+
+What stays behind: Notion's export has no covers, comments or the filters of saved views, so they don't come over; a view's sort does. Formula and rollup properties keep the value they had, and mentions of people and dates are plain text.
 
 The report counts what came in, lists the links it couldn't find and the blocks it changed, and suggests the plugins that help with the rest - Workspace first, for the pages tree and the databases. **Plugins › Plugins That Help After a Notion Import…** offers to install one; Textus asks first.
 
