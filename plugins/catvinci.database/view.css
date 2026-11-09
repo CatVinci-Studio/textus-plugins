@@ -411,3 +411,10 @@ body {
   background: var(--ui-accent-fill, var(--ui-accent));
   color: var(--ui-on-fill, var(--ui-bg));
 }
+
+/* A view's tab is dragged to a new place: no text selected on the way (in
+   WebKit a selection would start a drag of its own instead). */
+#views [role="tab"] {
+  user-select: none;
+  -webkit-user-select: none;
+}

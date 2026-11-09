@@ -7,8 +7,6 @@
 (function () {
   "use strict";
   const api = acquireTextusApi();
-  const VIEWS = ["table", "board", "calendar", "gallery", "list"];
-  const VIEW_ICONS = { table: "table", board: "board", calendar: "calendar", gallery: "gallery", list: "list" };
   /** Rows drawn at first, and again each time the list is scrolled to its
    *  end, when the view sets no limit of its own. */
   const PAGE = 25;
@@ -400,56 +398,19 @@
   });
 
   // ---------------------------------------------------------------- views
-  /** The base's views, one tab each. */
-  function viewTabs() {
-    const tabs = data.views.map((v) =>
-      el("button", {
-        type: "button",
-        class: "tx-segment",
-        role: "tab",
-        "aria-selected": String(v.index === data.index),
-        onclick: () => v.index !== data.index && choose(v.index),
-        // A view's type, name or removal: its right-click menu.
-        oncontextmenu: (e) => {
-          e.preventDefault();
-          viewMenu(e.currentTarget, v);
-        },
-        // Dragged along the others to a new place.
-        onpointerdown: (e) =>
-          drag.sortable(e, {
-            item: e.currentTarget,
-            axis: "x",
-            lists: () => [$("views")],
-            itemsOf: (l) => [...l.querySelectorAll('[role="tab"]')],
-            onDrop: (_l, to) => (to !== v.index ? post({ type: "moveView", from: v.index, to }) : render()),
-          }),
-      }, icon(VIEW_ICONS[v.view] || "table"), v.name || s(v.view)));
-    const add = el("button", { type: "button", class: "tx-icon-button", "aria-label": s("addView"), onclick: (e) => addViewMenu(e.currentTarget) }, icon("plus"));
-    return tabs.concat([add]);
-  }
-  function choose(index) {
-    state.index = index;
-    more = 0;
-    views.resetMonth();
-    keep();
-    post({ type: "select", index });
-  }
-  async function viewMenu(at, v) {
-    const items = [
-      { label: s("type"), items: VIEWS.map((k) => ({ label: s(k), value: "as:" + k, checked: v.view === k })) },
-      { label: s("renameView") + "…", value: "rename" },
-    ];
-    if (data.views.length > 1) items.push("separator", { label: s("deleteView"), value: "delete", danger: true });
-    const choice = await api.menu(items, at);
-    if (choice === null) return;
-    if (choice === "rename") post({ type: "renameView", name: v.name, index: v.index });
-    else if (choice === "delete") post({ type: "deleteView", index: v.index });
-    else if (String(choice).startsWith("as:")) post({ type: "view", view: String(choice).slice(3), index: v.index });
-  }
-  async function addViewMenu(at) {
-    const choice = await api.menu(VIEWS.map((k) => ({ label: s(k), value: k })), at);
-    if (choice !== null) post({ type: "addView", view: choice });
-  }
+  const { viewTabs } = databaseTabs({
+    api, $, el, icon, s, post, render,
+    choose(index) {
+      state.index = index;
+      more = 0;
+      views.resetMonth();
+      keep();
+      post({ type: "select", index });
+    },
+    get data() {
+      return data;
+    },
+  });
 
   // ---------------------------------------------------------------- frame
   function render() {
