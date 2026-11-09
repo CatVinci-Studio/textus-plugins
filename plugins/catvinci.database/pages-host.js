@@ -85,13 +85,15 @@ async function newSubpage(path) {
   if (!parentRel) return textus.ui.message(t("outside"));
   const title = await textus.ui.input({ prompt: t("subpageTitle") });
   if (!title || !title.trim()) return;
-  const rel = pages.subpage(await unitFor(parentRel), title);
+  const unit = await unitFor(parentRel);
+  const rel = pages.subpage(unit, title);
   const file = join(root, rel);
   if (await textus.files.stat(file)) return textus.ui.message(t("exists", title.trim()));
   await textus.files.createFolder(join(root, rel.slice(0, rel.lastIndexOf("/")))).catch(() => {});
   await textus.files.create(file, "# " + title.trim() + "\n");
+  // The link from where the page is now: moved into its folder, its tab with it.
   if (parent === active)
-    await textus.editor.insertText(await linkStyle.linkTo(file, active));
+    await textus.editor.insertText(await linkStyle.linkTo(file, join(root, unit)));
   await textus.layout.open(file);
 }
 
