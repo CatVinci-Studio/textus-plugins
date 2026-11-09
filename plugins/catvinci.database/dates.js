@@ -59,25 +59,43 @@ window.databaseDates = function (page) {
     function pick(day) {
       const time = /^\d{4}-\d{2}-\d{2}([ T].*)$/.exec(input.value.trim());
       input.value = day + (time ? time[1] : "");
+      pop.remove();
       input.dispatchEvent(new KeyboardEvent("keydown", { key: "Enter", bubbles: true }));
     }
     // Under the field, in the page's flow, so a short page grows to hold it.
+    // By layout offsets, not the screen's: in a zoomed document WebKit's
+    // screen rectangles are zoomed and the month would land out of sight.
     function place() {
-      const r = input.getBoundingClientRect();
-      pop.style.left = Math.max(0, r.left + window.scrollX) + "px";
-      pop.style.top = r.bottom + window.scrollY + 4 + "px";
+      let left = 0;
+      let top = input.offsetHeight;
+      for (let el = input; el && el !== document.body; el = el.offsetParent) {
+        left += el.offsetLeft;
+        top += el.offsetTop;
+      }
+      pop.style.left = Math.max(0, left) + "px";
+      pop.style.top = top + 4 + "px";
     }
     // Typed, the month follows what is typed.
     input.addEventListener("input", () => {
       if (DATE.test(input.value.trim())) month = monthOf(input.value.trim());
       draw();
     });
-    input.addEventListener("focus", () => {
+    // Opened when the field is made to be edited (not on its focus event,
+    // which a page without the window's focus never gets) and on a click.
+    const open = () => {
+      if (pop.isConnected || !input.isConnected) return;
       draw();
       document.body.append(pop);
       place();
-    });
+    };
+    input.openMonth = open;
+    input.addEventListener("focus", open);
+    input.addEventListener("click", open);
+    // Gone with the field: WebKit sends no blur for a field taken out of the page.
     input.addEventListener("blur", () => pop.remove());
+    input.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === "Escape") pop.remove();
+    });
   }
 
   function dateInput(attrs) {

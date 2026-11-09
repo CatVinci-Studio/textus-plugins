@@ -63,6 +63,7 @@ window.databaseRules = function (page) {
     });
     input.addEventListener("blur", () => finish(true));
     input.focus();
+    if (input.openMonth) input.openMonth();
   }
 
   async function filterMenu(at) {

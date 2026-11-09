@@ -152,7 +152,7 @@
     const more = moreMark(data.rows.length);
     const tail = [
       more && el("tr", { class: "more-row" }, el("td", { colspan: span }, more)),
-      el("tr", { class: "new-row" }, el("td", { colspan: span }, newButton({}))),
+      el("tr", { class: "new-row" }, el("td", { colspan: span }, newRowButton())),
     ];
     const frame = el("div", { class: "tx-table-frame" }, el("table", { class: "tx-table" }, el("thead", null, head), el("tbody", null, rows, tail)));
     for (const [key, px] of Object.entries(widths)) sizeColumn(frame, key, px);
@@ -298,6 +298,7 @@
     td.replaceChildren(input);
     input.focus();
     if (kind === "text" || kind === "date") input.select();
+    if (input.openMonth) input.openMonth();
   }
 
   function cell(row, key) {
@@ -337,6 +338,20 @@
   }
 
   /** "+ New": a page named where it's made, with `props` already set. */
+  /** New, under a table: a row of the table's own cells, its title typed
+   *  in the first, until it is made (or left empty). */
+  function newRowButton() {
+    const button = el("button", { type: "button", class: "tx-button small new" }, icon("plus"), s("add"));
+    button.addEventListener("click", () => {
+      const title = el("td", { class: "title" });
+      const draft = el("tr", { class: "draft-row" }, title, data.columns.map((key) => el("td", { class: "cell", "data-key": key })), el("td", { class: "plus" }));
+      button.closest("tr").replaceWith(draft);
+      editInline(title, "", "text", (text) => post({ type: "add", folder: data.folder, props: {}, title: text }));
+      title.querySelector("input").placeholder = s("untitled");
+    });
+    return button;
+  }
+
   function newButton(props) {
     const button = el("button", { type: "button", class: "tx-button small new" }, icon("plus"), s("add"));
     button.addEventListener("click", () => {
