@@ -4,7 +4,7 @@ import { beforeAll, describe, expect, it } from "vitest";
 import { load } from "js-yaml";
 import { FIXTURE, H, exportFiles, id } from "./notion-fixture";
 
-/** Notion Import's conversion (plugins/catvinci.notion-import/notion.js),
+/** Notion Import's conversion (plugins/catvinci.notion-import/notion*.js),
  *  run on a synthetic export (tests/fixtures/notion-export). */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 let ni: any;
@@ -14,6 +14,12 @@ beforeAll(async () => {
   await import(/* @vite-ignore */ "../shared/yaml.js");
   await import(/* @vite-ignore */ "../shared/base-filters.js");
   await import(/* @vite-ignore */ "../shared/bases.js");
+  await import(
+    /* @vite-ignore */ "../plugins/catvinci.notion-import/notion-layout.js"
+  );
+  await import(
+    /* @vite-ignore */ "../plugins/catvinci.notion-import/notion-pages.js"
+  );
   await import(
     /* @vite-ignore */ "../plugins/catvinci.notion-import/notion.js"
   );

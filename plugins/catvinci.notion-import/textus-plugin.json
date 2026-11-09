@@ -24,6 +24,8 @@
     "lib/yaml.js",
     "lib/base-filters.js",
     "lib/bases.js",
+    "notion-layout.js",
+    "notion-pages.js",
     "notion.js",
     "host.js"
   ],

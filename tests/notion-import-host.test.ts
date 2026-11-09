@@ -16,6 +16,12 @@ beforeAll(async () => {
   await import(/* @vite-ignore */ "../shared/base-filters.js");
   await import(/* @vite-ignore */ "../shared/bases.js");
   await import(
+    /* @vite-ignore */ "../plugins/catvinci.notion-import/notion-layout.js"
+  );
+  await import(
+    /* @vite-ignore */ "../plugins/catvinci.notion-import/notion-pages.js"
+  );
+  await import(
     /* @vite-ignore */ "../plugins/catvinci.notion-import/notion.js"
   );
   ni = (globalThis as unknown as { notionImport: unknown }).notionImport;
