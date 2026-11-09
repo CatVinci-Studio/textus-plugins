@@ -10,6 +10,8 @@ import { join, relative } from "node:path";
 const ALLOWED = {};
 
 const PX = /(?<![\w.-])(\d*\.?\d+)px\b/g;
+/** Text at a size of its own, not the type scale's (--text-*). */
+const FIXED_TEXT = /font-size:\s*[\d.]+(?:rem|pt)\b/g;
 const COLOUR = /#[0-9a-f]{3,8}\b|\b(?:rgba?|hsla?)\(|(?<![\w-])(?:white|black)(?![\w-])/gi;
 
 function* pageFiles(dir) {
@@ -48,6 +50,7 @@ for (const plugin of readdirSync("plugins")) {
         return;
       for (const m of line.matchAll(PX))
         if (Math.abs(Number(m[1])) >= 3) problems.push(`${at}: ${m[0]} - use a token or a proportion`);
+      for (const m of line.matchAll(FIXED_TEXT)) problems.push(`${at}: ${m[0]} - use a --text-* size`);
       for (const m of line.matchAll(COLOUR)) problems.push(`${at}: ${m[0]} - use a colour token`);
     });
   }
