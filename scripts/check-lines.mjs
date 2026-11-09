@@ -7,7 +7,10 @@ import { join } from "node:path";
 
 const MAX_LINES = 500;
 /** Written by scripts/cloud-sync.mjs from development/cloud-sync/src. */
-const BUILT = new Set(["plugins/catvinci.cloud-sync/host.js", "plugins/catvinci.cloud-sync/panel.js"]);
+const BUILT = new Set([
+  "plugins/catvinci.cloud-sync/host.js",
+  "plugins/catvinci.cloud-sync/panel.js",
+]);
 const SOURCE = /\.(m?js|ts|css|html)$/;
 
 function walk(dir, out = []) {
@@ -15,7 +18,8 @@ function walk(dir, out = []) {
     if (name === "node_modules" || name === "lib" || name === "types") continue;
     const path = join(dir, name);
     if (statSync(path).isDirectory()) walk(path, out);
-    else if (SOURCE.test(name) && !/\.(test|e2e)\.ts$/.test(name)) out.push(path);
+    else if (SOURCE.test(name) && !/\.(test|e2e)\.ts$/.test(name))
+      out.push(path);
   }
   return out;
 }
@@ -25,6 +29,9 @@ const long = ["plugins", "shared", "scripts", "development"]
   .filter((path) => !BUILT.has(path))
   .map((path) => [path, readFileSync(path, "utf8").split("\n").length - 1])
   .filter(([, lines]) => lines > MAX_LINES);
-for (const [path, lines] of long) console.error(`${path}: ${lines} lines, over ${MAX_LINES}: split it by what each part does`);
+for (const [path, lines] of long)
+  console.error(
+    `${path}: ${lines} lines, over ${MAX_LINES}: split it by what each part does`,
+  );
 if (long.length) process.exit(1);
 console.log(`lines: every source file within ${MAX_LINES}`);
