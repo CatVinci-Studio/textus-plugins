@@ -130,8 +130,11 @@ function page(character) {
   body.paused img { animation-play-state: paused; }
   .stage.turned img { scale: -1 1; }
   .stage.end img { left: auto; right: 0; }
-  .bubble { position: absolute; top: 0; left: 50%; max-width: 92%; transform: translateX(-50%);
-    line-height: 1.4; text-align: center;
+  /* A small pet's line shrinks with it, to a floor still readable, and
+     wraps into even lines rather than a word left alone. */
+  body { container-type: inline-size; }
+  .bubble { position: absolute; top: 0; left: 50%; box-sizing: border-box; max-width: calc(100% - var(--space-2)); width: max-content; transform: translateX(-50%);
+    font-size: clamp(var(--text-caption), 7cqi, var(--text-secondary)); line-height: 1.4; text-align: center; text-wrap: balance;
     opacity: 0; transition: opacity var(--dur-base) var(--ease-standard); pointer-events: none; }
   .bubble.on { opacity: 1; }
   @media (prefers-reduced-motion: reduce) { img.on, img.hop { animation: none; } }
