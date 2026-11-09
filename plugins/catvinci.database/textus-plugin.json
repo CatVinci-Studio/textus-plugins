@@ -11,10 +11,7 @@
   "engines": {
     "textus": ">=1.3.12"
   },
-  "platforms": [
-    "desktop",
-    "ios"
-  ],
+  "platforms": ["desktop", "ios"],
   "main": [
     "lib/folder-paths.js",
     "lib/link-style.js",
@@ -121,10 +118,7 @@
         "description": "%toolDescription%",
         "parameters": {
           "type": "object",
-          "required": [
-            "name",
-            "rows"
-          ],
+          "required": ["name", "rows"],
           "properties": {
             "name": {
               "type": "string",
@@ -132,13 +126,7 @@
             },
             "view": {
               "type": "string",
-              "enum": [
-                "table",
-                "board",
-                "calendar",
-                "gallery",
-                "list"
-              ]
+              "enum": ["table", "board", "calendar", "gallery", "list"]
             },
             "sort": {
               "type": "string",
@@ -152,9 +140,7 @@
               "type": "array",
               "items": {
                 "type": "object",
-                "required": [
-                  "name"
-                ],
+                "required": ["name"],
                 "properties": {
                   "name": {
                     "type": "string"
@@ -178,9 +164,7 @@
         "description": "%tool.query_rows%",
         "parameters": {
           "type": "object",
-          "required": [
-            "database"
-          ],
+          "required": ["database"],
           "properties": {
             "database": {
               "type": "string",
@@ -209,10 +193,7 @@
         "description": "%tool.add_row%",
         "parameters": {
           "type": "object",
-          "required": [
-            "database",
-            "name"
-          ],
+          "required": ["database", "name"],
           "properties": {
             "database": {
               "type": "string",
@@ -238,9 +219,7 @@
         "description": "%pages.tool.create_page%",
         "parameters": {
           "type": "object",
-          "required": [
-            "title"
-          ],
+          "required": ["title"],
           "properties": {
             "title": {
               "type": "string",
@@ -274,9 +253,7 @@
       {
         "viewType": "catvinci.database.base",
         "displayName": "%baseFile%",
-        "filenamePatterns": [
-          "*.base"
-        ]
+        "filenamePatterns": ["*.base"]
       }
     ]
   },
@@ -371,7 +348,11 @@
       "addView": "Add view",
       "renameView": "Rename view",
       "deleteView": "Delete view",
-      "deleteRow": "Delete row",
+      "deleteRow": "Delete Row",
+      "insertRowBelow": "Insert Row Below",
+      "insertColumnRight": "Insert Column Right",
+      "rowGroup": "Row",
+      "columnGroup": "Column",
       "pickDate": "Pick a date",
       "skipped": "{0} filters can't be read here and are left out",
       "notBase": "This base can't be read.",
@@ -474,7 +455,11 @@
       "addView": "添加视图",
       "renameView": "重命名视图",
       "deleteView": "删除视图",
-      "deleteRow": "删除这一行",
+      "deleteRow": "删除行",
+      "insertRowBelow": "在下方插入行",
+      "insertColumnRight": "在右侧插入列",
+      "rowGroup": "行",
+      "columnGroup": "列",
       "pickDate": "选择日期",
       "skipped": "有 {0} 条筛选在这里读不懂，已跳过",
       "notBase": "这个数据库读不出来。",
@@ -581,7 +566,11 @@
       "addView": "新增檢視",
       "renameView": "重新命名檢視",
       "deleteView": "刪除檢視",
-      "deleteRow": "刪除這一列",
+      "deleteRow": "刪除列",
+      "insertRowBelow": "在下方插入列",
+      "insertColumnRight": "在右側插入欄",
+      "rowGroup": "列",
+      "columnGroup": "欄",
       "pickDate": "選擇日期",
       "skipped": "有 {0} 條篩選在這裡無法讀取，已略過",
       "notBase": "無法讀取這個資料庫。",

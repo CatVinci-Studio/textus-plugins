@@ -12,7 +12,7 @@ const STRINGS = [
   "filter", "sort", "addFilter", "addSort", "ascending", "descending", "remove",
   "is", "isNot", "contains", "notContains", "isEmpty", "notEmpty", "greater", "less",
   "value", "search", "create", "clear", "untitled", "newProperty", "propertyName",
-  "type", "rename", "hide", "deleteProperty", "showAll", "open", "addView", "renameView", "deleteView", "deleteRow", "pickDate", "skipped", "notBase", "unknownView",
+  "type", "rename", "hide", "deleteProperty", "showAll", "open", "addView", "renameView", "deleteView", "deleteRow", "pickDate", "insertRowBelow", "insertColumnRight", "rowGroup", "columnGroup", "skipped", "notBase", "unknownView",
   "type.text", "type.number", "type.select", "type.tags", "type.date", "type.checkbox", "type.url",
 ];
 
