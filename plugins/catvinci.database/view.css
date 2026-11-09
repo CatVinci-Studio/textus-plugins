@@ -118,8 +118,13 @@ body {
   text-align: center;
 }
 .tx-table td.cell {
-  /* Proportional to the block, within a readable range. */
+  /* Proportional to the block, within a readable range: a long value (a
+     paper's title, a note) wraps rather than stretching its column. A width
+     set by dragging the column's edge goes on the cells themselves. */
   min-width: clamp(6em, 10vw, 12em);
+  max-width: clamp(12em, 24vw, 22em);
+  white-space: normal;
+  overflow-wrap: anywhere;
   cursor: default;
 }
 .tx-table td.cell-text,
@@ -131,6 +136,9 @@ body {
 .tx-table td.title {
   position: relative;
   min-width: clamp(9em, 18vw, 20em);
+  max-width: clamp(14em, 34vw, 30em);
+  white-space: normal;
+  overflow-wrap: anywhere;
   padding-right: calc(var(--control-height-sm) + var(--space-3));
   font-weight: 500;
   cursor: text;
