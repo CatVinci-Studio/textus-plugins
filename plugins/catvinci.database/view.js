@@ -17,7 +17,6 @@
   // The order tones are given in (design standard 3.4).
   const TONES = ["blue", "green", "orange", "purple", "red", "teal", "yellow", "pink", "gray"];
   let data = null;
-  let month = null;
   // Each reader's own: the view in front. Folding the block is Textus's.
   const state = Object.assign({ index: 0 }, api.getState() || {});
   const keep = () => api.setState(state);
@@ -94,132 +93,6 @@
   const pageLink = (row) =>
     el("button", { type: "button", class: "page-link", onclick: () => post({ type: "open", rel: row.rel }) },
       (typeof row.props.icon === "string" ? row.props.icon + " " : "") + row.name);
-
-  // ------------------------------------------------- filters and sorts
-  const OPS = {
-    text: ["has", "!has", "=", "!=", "empty", "!empty"],
-    url: ["has", "!has", "empty", "!empty"],
-    select: ["=", "!=", "empty", "!empty"],
-    tags: ["has", "!has", "empty", "!empty"],
-    number: ["=", "!=", ">", "<", "empty", "!empty"],
-    date: ["=", ">", "<", "empty", "!empty"],
-    checkbox: ["="],
-  };
-  const OP_NAMES = { "=": "is", "!=": "isNot", has: "contains", "!has": "notContains", empty: "isEmpty", "!empty": "notEmpty", ">": "greater", "<": "less", ">=": "greater", "<=": "less" };
-  const opsFor = (key) => OPS[typeOf(key)] || OPS.text;
-  const filterText = (f) =>
-    label(f.key) + " " + s(OP_NAMES[f.op] || "is").toLowerCase() + (f.op === "empty" || f.op === "!empty" ? "" : " " + f.value);
-
-  /** A filter on `key`, by menus: its operator, then its value - one of the
-   *  options where there are some, else asked by the host. */
-  async function filterOn(key, at, replace) {
-    const op = await api.menu(opsFor(key).map((o) => ({ label: s(OP_NAMES[o]), value: o })), at);
-    if (op === null) return;
-    const type = typeOf(key);
-    let value;
-    if (op === "empty" || op === "!empty") value = "";
-    else if (type === "checkbox") {
-      value = await api.menu([{ label: "☑", value: "true" }, { label: "☐", value: "false" }], at);
-      if (value === null) return;
-    } else if ((type === "select" || type === "tags") && (data.options[key] || []).length) {
-      value = await api.menu(data.options[key].map((o) => ({ label: o })), at);
-      if (value === null) return;
-    } else return valueField(key, op, replace);
-    post({ type: "addFilter", key, op, value, replace });
-  }
-
-  /** The filter's value typed in place, in the rules row: Enter keeps it. */
-  function valueField(key, op, replace) {
-    const type = typeOf(key);
-    const holder = el("span", { class: "tx-chip editing" }, label(key) + " " + s(OP_NAMES[op] || "is").toLowerCase() + " ");
-    $("rules").append(holder);
-    const input =
-      type === "date"
-        ? dateInput({ class: "tx-inline-input cell-input", "aria-label": s("value") })
-        : el("input", { type: type === "number" ? "number" : "text", class: "tx-inline-input cell-input", "aria-label": s("value") });
-    holder.append(input);
-    editing = true;
-    let done = false;
-    const finish = (ok) => {
-      if (done) return;
-      done = true;
-      editing = false;
-      if (ok && input.value.trim() !== "") post({ type: "addFilter", key, op, value: input.value.trim(), replace });
-      render();
-    };
-    input.addEventListener("keydown", (e) => {
-      if (e.key === "Enter") finish(true);
-      if (e.key === "Escape") finish(false);
-    });
-    input.addEventListener("blur", () => finish(true));
-    input.focus();
-  }
-
-  async function filterMenu(at) {
-    const key = await api.menu(allKeys().map((k) => ({ label: label(k), value: k })), at);
-    if (key !== null) filterOn(key, at);
-  }
-
-  async function sortMenu(at) {
-    const sort = data.spec.sort;
-    const items = allKeys().map((k) => {
-      const now = sort.find((x) => x.key === k);
-      return {
-        label: label(k),
-        items: [
-          { label: s("ascending"), value: k + "\n+", checked: !!now && !now.desc },
-          { label: s("descending"), value: k + "\n-", checked: !!now && now.desc },
-        ],
-      };
-    });
-    if (sort.length) items.push("separator", { label: s("clear"), value: "\nclear" });
-    const choice = await api.menu(items, at);
-    if (choice === null) return;
-    if (choice === "\nclear") return setSpec({ sort: [] });
-    const [key, dir] = String(choice).split("\n");
-    setSpec({ sort: sort.filter((x) => x.key !== key).concat([{ key, desc: dir === "-" }]) });
-  }
-
-  /** The rules in force, under the bar: a chip each, its menu to change it. */
-  function rules() {
-    const chips = data.spec.filters.map((f, i) =>
-      f.raw !== undefined ? el("button", {
-        type: "button",
-        class: "tx-chip raw",
-        title: String(f.raw),
-        onclick: async (e) => {
-          const choice = await api.menu([{ label: s("remove"), value: "remove", danger: true }], e.currentTarget);
-          if (choice === "remove") setSpec({ filters: data.spec.filters.filter((_, j) => j !== i) });
-        },
-      }, String(f.raw)) : el("button", {
-        type: "button",
-        class: "tx-chip",
-        onclick: async (e) => {
-          const at = e.currentTarget;
-          const choice = await api.menu([{ label: s("filter") + "…", value: "change" }, { label: s("remove"), value: "remove", danger: true }], at);
-          if (choice === "remove") setSpec({ filters: data.spec.filters.filter((_, j) => j !== i) });
-          if (choice === "change") filterOn(f.key, at, i);
-        },
-      }, filterText(f), icon("chevron")),
-    );
-    for (const x of data.spec.sort)
-      chips.push(el("button", {
-        type: "button",
-        class: "tx-chip",
-        onclick: async (e) => {
-          const choice = await api.menu([
-            { label: s("ascending"), value: "asc", checked: !x.desc },
-            { label: s("descending"), value: "desc", checked: x.desc },
-            "separator",
-            { label: s("remove"), value: "remove", danger: true },
-          ], e.currentTarget);
-          if (choice === null) return;
-          const rest = data.spec.sort.filter((y) => y.key !== x.key);
-          setSpec({ sort: choice === "remove" ? rest : data.spec.sort.map((y) => (y.key === x.key ? { key: y.key, desc: choice === "desc" } : y)) });
-        },
-      }, icon("sort"), label(x.key), icon("chevron")));
-    return chips;
-  }
 
   // ------------------------------------------------------- table header
   async function columnMenu(th, key) {
@@ -483,158 +356,6 @@
     return button;
   }
 
-  // ---------------------------------------------------------------- board
-  function board() {
-    const key = data.group;
-    if (!key) return el("div", { class: "tx-empty" }, s("noGroup"));
-    const byRel = new Map(data.rows.map((r) => [r.rel, r]));
-    const lanes = data.groups.map((g) => {
-      const head = el("div", { class: "tx-lane-head lane-head", title: s("dragLane") },
-        g.value ? tag(g.value, key, isStatus(key)) : el("span", { class: "tx-tag" }, s("noValue")),
-        el("span", { class: "count" }, String(g.rels.length)));
-      const lane = el("div", { class: "tx-lane lane", "data-value": g.value },
-        head,
-        capped(g.rels).map((rel) => card(byRel.get(rel), key, g.value)),
-        moreMark(g.rels.length),
-        newButton(groupProps(key, g.value)));
-      // A list moved by its head, the others making way: the board's order,
-      // kept in the base (groupOrder).
-      head.addEventListener("pointerdown", (e) =>
-        drag.sortable(e, {
-          item: lane,
-          axis: "x",
-          lists: () => [lane.parentElement],
-          itemsOf: (b) => [...b.children],
-          onDrop: (_board, index) => {
-            const order = data.groups.map((x) => x.value).filter((v) => v !== g.value);
-            order.splice(index, 0, g.value);
-            if (order.join("\n") !== data.groups.map((x) => x.value).join("\n")) setSpec({ groupOrder: order });
-            else render();
-          },
-        }));
-      return lane;
-    });
-    return el("div", { class: "tx-board board" }, lanes);
-  }
-
-  function groupProps(key, value) {
-    if (!value) return {};
-    return { [key]: data.types[key] === "tags" ? [value] : value };
-  }
-
-  function card(row, key, lane) {
-    const others = data.columns.filter((c) => c !== key && row.props[c] !== undefined && row.props[c] !== "").slice(0, 3);
-    const node = el("div", { class: "tx-card record" },
-      pageLink(row),
-      others.map((c) => el("div", { class: "prop" }, shown(row.props[c], data.types[c], c))));
-    // Dragged to another list: the row takes that list's value. Within a
-    // list the view's sort decides the order.
-    node.addEventListener("pointerdown", (e) => {
-      if (e.target.closest("button, input, textarea")) return;
-      drag.sortable(e, {
-        item: node,
-        lists: () => [...document.querySelectorAll(".lane")],
-        itemsOf: (l) => [...l.children].filter((n) => n.classList.contains("record")),
-        after: (l) => l.querySelector(":scope > .more, :scope > .new"),
-        onDrop: (to) => {
-          if (to.dataset.value !== lane) post({ type: "move", rel: row.rel, key, from: lane, to: to.dataset.value });
-          else render();
-        },
-      });
-    });
-    return node;
-  }
-
-  // ------------------------------------------------------------- calendar
-  const day = (d) => d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
-  const parseDay = (v) => (typeof v === "string" && /^\d{4}-\d{2}-\d{2}/.test(v) ? new Date(v.slice(0, 10) + "T00:00:00") : null);
-
-  function calendar() {
-    const key = data.date;
-    if (!key) return el("div", { class: "tx-empty" }, s("noDate"));
-    if (!month) {
-      const first = data.rows.map((r) => parseDay(r.props[key])).find(Boolean);
-      const now = new Date();
-      const inMonth = data.rows.some((r) => {
-        const d = parseDay(r.props[key]);
-        return d && d.getFullYear() === now.getFullYear() && d.getMonth() === now.getMonth();
-      });
-      const base = inMonth || !first ? now : first;
-      month = new Date(base.getFullYear(), base.getMonth(), 1);
-    }
-    const lang = s("locale");
-    const shift = (n) => {
-      month = new Date(month.getFullYear(), month.getMonth() + n, 1);
-      render();
-    };
-    const nav = el("div", { class: "tx-bar month-bar" },
-      el("strong", null, new Intl.DateTimeFormat(lang, { year: "numeric", month: "long" }).format(month)),
-      el("span", { class: "tx-spacer" }),
-      el("button", { type: "button", class: "tx-icon-button", "aria-label": s("prev"), onclick: () => shift(-1) }, icon("left")),
-      el("button", { type: "button", class: "tx-button small", onclick: () => { month = null; render(); } }, s("today")),
-      el("button", { type: "button", class: "tx-icon-button", "aria-label": s("next"), onclick: () => shift(1) }, icon("right")));
-    // Monday first; six weeks always, so the block keeps its height.
-    const start = new Date(month);
-    start.setDate(1 - ((month.getDay() + 6) % 7));
-    const names = [];
-    for (let i = 0; i < 7; i++) {
-      const d = new Date(start);
-      d.setDate(start.getDate() + i);
-      names.push(el("div", { class: "weekday" }, new Intl.DateTimeFormat(lang, { weekday: "short" }).format(d)));
-    }
-    const on = new Map();
-    for (const row of data.rows) {
-      const from = parseDay(row.props[key]);
-      if (!from) continue;
-      const to = data.end ? parseDay(row.props[data.end]) : null;
-      const last = to && to >= from && (to - from) / 864e5 <= 62 ? to : from;
-      for (let d = new Date(from); d <= last; d.setDate(d.getDate() + 1)) {
-        const k = day(d);
-        if (!on.has(k)) on.set(k, []);
-        on.get(k).push({ row, first: day(d) === day(from) });
-      }
-    }
-    const today = day(new Date());
-    const days = [];
-    for (let i = 0; i < 42; i++) {
-      const d = new Date(start);
-      d.setDate(start.getDate() + i);
-      const k = day(d);
-      const weekend = i % 7 >= 5;
-      const node = el("div", { class: "day" + (d.getMonth() !== month.getMonth() ? " other" : "") + (weekend ? " weekend" : "") + (k === today ? " today" : "") },
-        el("span", { class: "num" }, String(d.getDate())),
-        (on.get(k) || []).map((x) =>
-          el("button", { type: "button", class: "chip" + (x.first ? "" : " cont"), title: x.row.name, onclick: () => post({ type: "open", rel: x.row.rel }) }, x.row.name)));
-      node.addEventListener("dblclick", (e) => {
-        if (e.target === node || e.target.classList.contains("num")) post({ type: "add", folder: data.folder, props: { [key]: k } });
-      });
-      days.push(node);
-    }
-    return el("div", null, nav, el("div", { class: "month" }, names, days));
-  }
-
-  // -------------------------------------------------------------- gallery
-  function gallery() {
-    return el("div", null, el("div", { class: "gallery" },
-      capped(data.rows).map((row) => {
-        const cover = typeof row.props.cover === "string" && /^https?:\/\//.test(row.props.cover) ? row.props.cover : null;
-        const glyph = typeof row.props.icon === "string" ? row.props.icon : null;
-        return el("div", { class: "tx-card tile" },
-          (cover || glyph) && el("div", { class: "cover", style: cover ? "background-image:url(" + JSON.stringify(cover) + ")" : null }, cover ? "" : glyph),
-          el("div", { class: "text" }, pageLink(row),
-            data.columns.filter((c) => c !== "cover" && row.props[c] !== undefined).slice(0, 3).map((c) => el("div", { class: "prop" }, shown(row.props[c], data.types[c], c)))));
-      })), moreMark(data.rows.length));
-  }
-
-  // ----------------------------------------------------------------- list
-  function list() {
-    return el("div", null, el("ul", { class: "rows-list" },
-      capped(data.rows).map((row) => el("li", null, pageLink(row),
-        data.columns.filter((c) => row.props[c] !== undefined && row.props[c] !== "").slice(0, 3)
-          .map((c) => el("span", { class: "prop" }, shown(row.props[c], data.types[c], c)))))),
-      moreMark(data.rows.length));
-  }
-
   // ------------------------------------------------------ how many shown
   const cap = () => (data.spec.limit || PAGE) + more;
   const capped = (list) => list.slice(0, cap());
@@ -654,6 +375,20 @@
     { rootMargin: "0px 0px 200px 0px" },
   );
 
+  const views = databaseViews({
+    el, icon, s, post, setSpec, shown, tag, isStatus, label, pageLink, newButton, capped, moreMark, render,
+    get data() {
+      return data;
+    },
+  });
+
+  const { rules, filterMenu, sortMenu, filterOn } = databaseRules({
+    api, $, el, icon, s, post, setSpec, label, typeOf, allKeys, render, dateInput,
+    setEditing: (on) => (editing = on),
+    get data() {
+      return data;
+    },
+  });
   // ---------------------------------------------------------------- views
   /** The base's views, one tab each. */
   function viewTabs() {
@@ -676,7 +411,7 @@
   function choose(index) {
     state.index = index;
     more = 0;
-    month = null;
+    views.resetMonth();
     keep();
     post({ type: "select", index });
   }
@@ -717,7 +452,7 @@
     $("notes").replaceChildren(...notes);
     if (!data.rows.length && view !== "calendar" && view !== "table") return body.replaceChildren(el("div", { class: "tx-empty" }, s("empty")));
     nearEnd.disconnect();
-    body.replaceChildren(view === "board" ? board() : view === "calendar" ? calendar() : view === "gallery" ? gallery() : view === "list" ? list() : table());
+    body.replaceChildren(({ board: views.board, calendar: views.calendar, gallery: views.gallery, list: views.list }[view] || table)());
   }
 
   $("add").addEventListener("click", () => {
@@ -736,7 +471,7 @@
       return;
     }
     if (!m || m.type !== "data") return;
-    if (data && data.spec && m.data.spec && data.spec.view !== m.data.spec.view) month = null;
+    if (data && data.spec && m.data.spec && data.spec.view !== m.data.spec.view) views.resetMonth();
     data = m.data;
     if (editing) stale = true;
     else render();
