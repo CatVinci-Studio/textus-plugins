@@ -16,10 +16,18 @@
     "lib/folder-paths.js",
     "lib/text-lines.js",
     "obsidian-tasks.js",
+    "task-order.js",
     "query.js",
     "host.js"
   ],
-  "permissions": ["files.read", "files.write", "ai.tools"],
+  "activationEvents": ["onEditor"],
+  "permissions": [
+    "files.read",
+    "files.write",
+    "ai.tools",
+    "editor.read",
+    "editor.write"
+  ],
   "contributes": {
     "sidebarTabs": [
       {
@@ -41,6 +49,12 @@
         "type": "boolean",
         "default": false,
         "title": "%showDone%"
+      },
+      {
+        "key": "doneLast",
+        "type": "boolean",
+        "default": false,
+        "title": "%doneLast%"
       }
     ],
     "aiTools": [
@@ -137,6 +151,7 @@
       "name": "Tasks",
       "description": "Every task (- [ ]) in the open folder's documents, in one list: tick one off there, or go to it.",
       "showDone": "Show finished tasks",
+      "doneLast": "Move finished tasks to the end of their list",
       "open.one": "{0} open task",
       "open.other": "{0} open tasks",
       "none": "No open tasks in the folder.",
@@ -164,6 +179,7 @@
       "name": "任务",
       "description": "把打开的文件夹里所有文档中的任务（- [ ]）汇总成一个列表：可以直接勾掉，也可以跳到它所在的地方。",
       "showDone": "显示已完成的任务",
+      "doneLast": "完成的待办移到列表末尾",
       "open.other": "{0} 项待办",
       "none": "打开的文件夹里没有待办任务。",
       "nofolder": "打开一个文件夹，这里会列出其中所有文档的任务。",
@@ -189,6 +205,7 @@
       "name": "任務",
       "description": "把開啟的資料夾裡所有文件中的任務（- [ ]）彙整成一個清單：可以直接勾掉，也可以跳到它所在的地方。",
       "showDone": "顯示已完成的任務",
+      "doneLast": "完成的待辦移到清單末尾",
       "open.other": "{0} 項待辦",
       "none": "開啟的資料夾裡沒有待辦任務。",
       "nofolder": "開啟一個資料夾，這裡會列出其中所有文件的任務。",
@@ -214,6 +231,7 @@
       "name": "タスク",
       "description": "開いているフォルダの文書にあるタスク（- [ ]）をすべて一つのリストに。そこでチェックすることも、その場所へ移ることもできます。",
       "showDone": "完了したタスクも表示",
+      "doneLast": "完了したタスクをリストの最後へ",
       "open.other": "未完了のタスク {0} 件",
       "none": "フォルダに未完了のタスクはありません。",
       "nofolder": "フォルダを開くと、その中のすべての文書のタスクがここに並びます。",
@@ -239,6 +257,7 @@
       "name": "할 일",
       "description": "연 폴더의 문서에 있는 할 일(- [ ])을 모두 한 목록에 모읍니다. 거기서 체크하거나, 그 자리로 갈 수 있습니다.",
       "showDone": "끝난 할 일도 보기",
+      "doneLast": "완료한 할 일을 목록 끝으로",
       "open.other": "남은 할 일 {0}개",
       "none": "폴더에 남은 할 일이 없습니다.",
       "nofolder": "폴더를 열면 그 안 모든 문서의 할 일이 여기에 나옵니다.",
@@ -264,6 +283,7 @@
       "name": "Tareas",
       "description": "Todas las tareas (- [ ]) de los documentos de la carpeta abierta, en una lista: márcala ahí mismo o ve hasta ella.",
       "showDone": "Mostrar las tareas terminadas",
+      "doneLast": "Mover las tareas terminadas al final de su lista",
       "open.one": "{0} tarea pendiente",
       "open.other": "{0} tareas pendientes",
       "none": "No hay tareas pendientes en la carpeta.",
@@ -291,6 +311,7 @@
       "name": "Tâches",
       "description": "Toutes les tâches (- [ ]) des documents du dossier ouvert, en une liste : cochez-en une sur place, ou allez-y.",
       "showDone": "Afficher les tâches terminées",
+      "doneLast": "Placer les tâches terminées en fin de liste",
       "open.one": "{0} tâche en cours",
       "open.other": "{0} tâches en cours",
       "none": "Aucune tâche en cours dans le dossier.",
@@ -318,6 +339,7 @@
       "name": "Aufgaben",
       "description": "Alle Aufgaben (- [ ]) in den Dokumenten des geöffneten Ordners in einer Liste: dort abhaken oder hinspringen.",
       "showDone": "Erledigte Aufgaben zeigen",
+      "doneLast": "Erledigte Aufgaben ans Ende der Liste",
       "open.one": "{0} offene Aufgabe",
       "open.other": "{0} offene Aufgaben",
       "none": "Keine offenen Aufgaben im Ordner.",
@@ -345,6 +367,7 @@
       "name": "Задачи",
       "description": "Все задачи (- [ ]) из документов открытой папки в одном списке: отметьте задачу прямо там или перейдите к ней.",
       "showDone": "Показывать выполненные задачи",
+      "doneLast": "Переносить выполненные задачи в конец списка",
       "open.one": "{0} открытая задача",
       "open.few": "{0} открытые задачи",
       "open.many": "{0} открытых задач",
@@ -376,6 +399,7 @@
       "name": "Tarefas",
       "description": "Todas as tarefas (- [ ]) dos documentos da pasta aberta, numa lista: marque uma ali mesmo ou vá até ela.",
       "showDone": "Mostrar tarefas concluídas",
+      "doneLast": "Mover tarefas concluídas para o fim da lista",
       "open.one": "{0} tarefa pendente",
       "open.other": "{0} tarefas pendentes",
       "none": "Não há tarefas pendentes na pasta.",

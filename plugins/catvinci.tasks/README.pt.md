@@ -46,7 +46,7 @@ O plugin lê os documentos da pasta para achar as tarefas, e só escreve num doc
 
 ## Alterações
 
-- **0.4.1** - Suas barras, listas e controles agora são os do Textus, crescem com a interface e seguem cada tema; requer Textus 1.3.12.
+- **0.4.1** - Suas barras, listas e controles agora são os do Textus, crescem com a interface e seguem cada tema; requer Textus 1.3.12. Nova opção **Mover tarefas concluídas para o fim da lista**: uma tarefa marcada vai para depois das abertas (pede uma vez para ler e editar o documento).
 - **0.4.0** - Usa as datas embutidas no Textus 1.3.10, que agora é necessário.
 - **0.3.1** - Traz o código de datas compartilhado atualizado; nada mais mudou.
 - **0.3.0** - Obsidian Tasks: `[/]` e `[-]`, os campos de tarefa, datas de conclusão, tarefas que se repetem e blocos de consulta `tasks`; quadros marcados com `kanban-plugin` ficam fora da lista.
