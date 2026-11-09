@@ -91,6 +91,7 @@
   "catvinci.notion-import/lib/notion-csv.js": "./shared/notion-csv.js",
   "catvinci.notion-import/lib/jszip.min.js": "jszip/dist/jszip.min.js",
   "catvinci.notion-import/lib/yaml.js": "./shared/yaml.js",
+  "catvinci.notion-import/lib/base-filters.js": "./shared/base-filters.js",
   "catvinci.notion-import/lib/bases.js": "./shared/bases.js",
   "catvinci.canvas/lib/folder-paths.js": "./shared/folder-paths.js",
   "catvinci.zotero/lib/folder-paths.js": "./shared/folder-paths.js",

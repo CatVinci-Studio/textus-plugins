@@ -7,7 +7,7 @@ type Row = { rel: string; name: string; props: Record<string, unknown> };
 let db: any;
 
 beforeAll(async () => {
-  for (const f of ["yaml", "expr", "bases"])
+  for (const f of ["yaml", "expr", "base-filters", "bases"])
     await import(/* @vite-ignore */ `../shared/${f}.js`);
   db = (globalThis as unknown as { database: unknown }).database;
 });

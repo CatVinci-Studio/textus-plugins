@@ -12,6 +12,7 @@ let ni: any;
 beforeAll(async () => {
   await import(/* @vite-ignore */ "../shared/notion-csv.js");
   await import(/* @vite-ignore */ "../shared/yaml.js");
+  await import(/* @vite-ignore */ "../shared/base-filters.js");
   await import(/* @vite-ignore */ "../shared/bases.js");
   await import(
     /* @vite-ignore */ "../plugins/catvinci.notion-import/notion.js"

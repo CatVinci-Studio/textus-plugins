@@ -10,7 +10,7 @@ let db: any;
 let bexpr: any;
 
 beforeAll(async () => {
-  for (const f of ["yaml", "expr", "bases"])
+  for (const f of ["yaml", "expr", "base-filters", "bases"])
     await import(/* @vite-ignore */ `../shared/${f}.js`);
   await import(/* @vite-ignore */ "../plugins/catvinci.database/dataview.js");
   const g = globalThis as unknown as Record<string, unknown>;
