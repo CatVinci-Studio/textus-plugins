@@ -31,7 +31,8 @@ Everything happens on your device: the plugin reads and writes files in the open
 
 ## Changes
 
-- **0.7.2** - A database that sits under a page (as in Notion) stays a link on that page, no longer also shown there as a table; its own page shows it. Notion's blank rows and pages - no title, nothing written, only the "Not started" status Notion fills in - are left out. Its code is split into smaller files by what each part does.
+- **0.7.3** - Notion's blank rows and pages - no title, nothing written, only the "Not started" status Notion fills in - are left out.
+- **0.7.2** - A database that sits under a page (as in Notion) stays a link on that page, no longer also shown there as a table; its own page shows it. Its code is split into smaller files by what each part does.
 - **0.7.1** - Shares Two-way Links' fix for working out how a note links.
 - **0.7.0** - asks how the pages link: standard links (recommended), as Notion exports them, or [[wiki links]] - a path shown by the page's name; the imported folder keeps the choice for pages made in it later
 - **0.6.1** - Calls Workspace by its name in the import report and in the suggested plugins.
