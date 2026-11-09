@@ -171,6 +171,13 @@
     element("credentials-state").textContent = api.t(
       configured ? "credentialsSaved" : "credentialsMissing"
     );
+    const summary = element("summary");
+    summary.hidden = !configured;
+    summary.textContent = [
+      api.t(m.config.provider),
+      m.config.prefix,
+      m.config.automatic ? api.t("summaryAuto", m.config.interval) : api.t("summaryManual")
+    ].join(" \xB7 ");
     const last = element("last-run");
     last.hidden = !m.lastRun;
     last.textContent = m.lastRun ? `${api.t("lastRun")} \xB7 ${new Date(m.lastRun).toLocaleString(api.language)}` : "";

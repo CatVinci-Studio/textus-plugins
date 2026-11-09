@@ -343,9 +343,12 @@ class Controller {
         api.layout.openView(`${ID}.panel`),
       ),
       api.commands.register(`${ID}.sync`, () => this.operation("sync")),
-      api.views.registerWebview(`${ID}.panel`, {
-        resolve: (view) => this.resolve(view),
-      }),
+      // The tab, the sidebar and Settings show one page over one state.
+      ...[`${ID}.panel`, `${ID}.sidebar`].map((id) =>
+        api.views.registerWebview(id, {
+          resolve: (view) => this.resolve(view),
+        }),
+      ),
       api.views.registerSettingsPage({ resolve: (view) => this.resolve(view) }),
       api.files.onDidSave(() => this.pacer.saved()),
       api.files.onDidDelete(({ path }) => this.changed(path)),

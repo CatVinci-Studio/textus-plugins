@@ -197,6 +197,16 @@ api.onMessage((value) => {
   element("credentials-state").textContent = api.t(
     configured ? "credentialsSaved" : "credentialsMissing",
   );
+  // What is synced where, as saved: edits in the form count once saved.
+  const summary = element("summary");
+  summary.hidden = !configured;
+  summary.textContent = [
+    api.t(m.config.provider),
+    m.config.prefix,
+    m.config.automatic
+      ? api.t("summaryAuto", m.config.interval)
+      : api.t("summaryManual"),
+  ].join(" · ");
   const last = element("last-run");
   last.hidden = !m.lastRun;
   last.textContent = m.lastRun
