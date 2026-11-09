@@ -25,6 +25,7 @@ In einem Obsidian-Vault färben auch die in Obsidians `graph.json` gespeicherten
 
 ## Änderungen
 
+- **0.5.3** - Leisten, Listen und Steuerelemente sind jetzt die von Textus, wachsen mit der Oberfläche und folgen jedem Theme; braucht Textus 1.3.12.
 - **0.5.2** - Obsidians Farbgruppen kommen aus dem nächstgelegenen Vault, auch wenn er über dem geöffneten Ordner liegt. Benötigt Textus 1.3.10.
 - **0.5.1** - In einem Obsidian-Vault färben auch die Farbgruppen aus `.obsidian/graph.json` die Notizen.
 - **0.5.0** - [[Links]] werden Notizen so zugeordnet wie beim Anklicken in Textus.

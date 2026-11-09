@@ -36,6 +36,7 @@ kanban-plugin: board
 
 ## Änderungen
 
+- **0.4.5** - Eine gezogene Karte oder Liste bleibt direkt unter dem Zeiger und hebt sich wie alles, was in Textus gezogen wird. Leisten, Listen und Steuerelemente sind jetzt die von Textus, wachsen mit der Oberfläche und folgen jedem Theme; braucht Textus 1.3.12.
 - **0.4.4** - Beim Ziehen einer Karte oder Liste wird unterwegs kein Text mehr markiert.
 - **0.4.3** - Seine Seite sagt jetzt in einem Satz, was es tut, was es kann und was sich in jeder Version geändert hat.
 - **0.4.2** - Karten und Listen folgen beim Ziehen dem Zeiger, die anderen machen Platz. Benötigt Textus 1.3.10.

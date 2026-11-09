@@ -25,6 +25,7 @@ Num cofre do Obsidian, os grupos de cor salvos no `graph.json` do Obsidian tamb�
 
 ## Alterações
 
+- **0.5.3** - Suas barras, listas e controles agora são os do Textus, crescem com a interface e seguem cada tema; requer Textus 1.3.12.
 - **0.5.2** - Os grupos de cor do Obsidian vêm do cofre mais próximo, mesmo acima da pasta aberta. Requer Textus 1.3.10.
 - **0.5.1** - Num cofre do Obsidian, os grupos de cor de `.obsidian/graph.json` também colorem as notas.
 - **0.5.0** - Os [[links]] são ligados às notas do mesmo jeito que ao clicar neles no Textus.

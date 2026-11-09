@@ -94,31 +94,35 @@
       if (dayOf(version.at) !== lastDay) {
         lastDay = dayOf(version.at);
         const day = document.createElement("li");
-        day.className = "day-head";
+        day.className = "tx-list-heading";
         const label = dayLabel(version.at);
         day.textContent =
           label.charAt(0).toLocaleUpperCase(api.language) + label.slice(1);
         list.append(day);
       }
       const li = document.createElement("li");
+      // A version is a row of the list; opened, a card with its changes.
+      li.className = opened === version.at ? "tx-card open" : "tx-list-row";
       const head = document.createElement("div");
       head.className = "row-head";
       const stamp = document.createElement("span");
-      stamp.className = "when";
+      stamp.className = "when tx-list-label";
       stamp.textContent = when(version.at);
       const older = data.versions[index + 1];
       const delta = document.createElement("span");
-      delta.className = "delta";
+      delta.className = "delta tx-list-meta";
       const change = version.text.length - (older ? older.text.length : 0);
       delta.innerHTML = "";
       const sign = document.createElement("span");
       sign.className = change >= 0 ? "plus" : "minus";
       sign.textContent = (change >= 0 ? "+" : "−") + Math.abs(change);
       delta.append(sign);
-      head.append(stamp, delta);
-      li.append(head);
+      // A row's when and change are its label and meta; a card's, its head.
       if (opened === version.at) {
-        li.classList.add("open");
+        head.append(stamp, delta);
+        li.append(head);
+      } else li.append(stamp, delta);
+      if (opened === version.at) {
         const label = document.createElement("div");
         label.className = "muted";
         label.textContent = t("since");

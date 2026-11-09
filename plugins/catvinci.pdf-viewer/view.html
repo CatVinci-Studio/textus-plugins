@@ -5,19 +5,23 @@
   </head>
   <body>
     <div class="tx-bar" id="bar">
-      <button class="tx-icon-button" id="prev"><span class="tx-icon" data-icon="left"></span></button>
-      <input class="tx-input" id="page" type="number" min="1" value="1" />
-      <span id="count">/ 0</span>
-      <button class="tx-icon-button" id="next"><span class="tx-icon" data-icon="right"></span></button>
+      <div class="tx-pager">
+        <button class="tx-icon-button" id="prev"><span class="tx-icon" data-icon="left"></span></button>
+        <input class="tx-input" id="page" type="number" min="1" value="1" />
+        <span class="tx-value" id="count">/ 0</span>
+        <button class="tx-icon-button" id="next"><span class="tx-icon" data-icon="right"></span></button>
+      </div>
       <span class="tx-spacer"></span>
-      <span id="find-box" hidden>
+      <span id="find-box" class="tx-find" hidden>
         <input class="tx-input" id="find" type="search" />
-        <span id="find-count"></span>
+        <span class="tx-value" id="find-count"></span>
       </span>
       <button class="tx-icon-button" id="find-open"><span class="tx-icon" data-icon="search"></span></button>
-      <button class="tx-icon-button" id="zoom-out"><span class="tx-icon" data-icon="minus"></span></button>
-      <button class="tx-button small" id="zoom">100%</button>
-      <button class="tx-icon-button" id="zoom-in"><span class="tx-icon" data-icon="plus"></span></button>
+      <div class="tx-zoom">
+        <button class="tx-icon-button" id="zoom-out"><span class="tx-icon" data-icon="minus"></span></button>
+        <button class="tx-value" id="zoom">100%</button>
+        <button class="tx-icon-button" id="zoom-in"><span class="tx-icon" data-icon="plus"></span></button>
+      </div>
     </div>
     <main id="viewer"></main>
     <p id="status" class="tx-empty"></p>

@@ -13,6 +13,7 @@ El plugin no pide permisos: solo lee el archivo que abres con él. Funciona en e
 
 ## Cambios
 
+- **0.2.2** - Sus barras, listas y controles son ahora los de Textus, crecen con la interfaz y siguen cada tema; necesita Textus 1.3.12.
 - **0.2.1** - Su página dice ahora en una frase qué hace, qué puede hacer y qué cambió en cada versión.
 - **0.2.0** - Usa los controles propios de Textus y los tonos del tema; la pestaña sigue el idioma de la interfaz cuando cambia. Requiere Textus 1.3.2.
 - **0.1.3** - Usa las variables de diseño de Textus 1.3.

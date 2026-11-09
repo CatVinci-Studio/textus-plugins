@@ -149,7 +149,9 @@ async function importNotion(arg) {
   await textus.files.create(page, notionImport.reportPage(report, suggestions, t, { source: name, date: today() }));
   await textus.layout.open(page);
   const where = folderPaths.rel(root, target) || target;
-  // With Workspace on, the import is shown as Notion did: its pages tree.
+  // Into what it made: the sidebar shows the import's folder (Textus 1.3.12),
+  // and with Workspace on, as Notion did: its pages tree.
+  if (!report.stopped) await textus.commands.execute("textus.showFolder", target).catch(() => {});
   const workspace = !report.stopped && (await textus.plugins.get("catvinci.database").catch(() => null));
   if (workspace && textus.layout.showSidebarTab) await textus.layout.showSidebarTab("catvinci.database.pages").catch(() => {});
   textus.ui.notice(

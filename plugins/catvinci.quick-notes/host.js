@@ -284,6 +284,20 @@ async function addNote(input) {
 /** The note deleted last, for Undo. */
 let lastDeleted = null;
 
+/** "Note deleted", with Undo, as Textus says it: the note comes back if
+ *  Undo is clicked before another is deleted. */
+function offerUndo(notes, deleted) {
+  lastDeleted = deleted;
+  void textus.ui
+    .notice(textus.l10n.t("deleted"), { action: textus.l10n.t("undo") })
+    .then(async (undone) => {
+      if (!undone || lastDeleted !== deleted) return;
+      lastDeleted = null;
+      await notes.restore(deleted);
+      await show();
+    });
+}
+
 async function handle(webview, message) {
   const notes = await store();
   if (message.type === "new") {
@@ -293,13 +307,9 @@ async function handle(webview, message) {
     return;
   }
   if (message.type === "edit") await notes.edit(message.id, message.text);
-  if (message.type === "delete") lastDeleted = await notes.remove(message.id);
+  if (message.type === "delete") offerUndo(notes, await notes.remove(message.id));
   // A note left empty: gone, with nothing to undo.
   if (message.type === "drop") await notes.drop(message.id);
-  if (message.type === "undo" && lastDeleted) {
-    await notes.restore(lastDeleted);
-    lastDeleted = null;
-  }
   const note = (await notes.list()).find((n) => n.id === message.id);
   // Asked for by a click: written at the caret at once, one undo away.
   if (message.type === "insert" && note) await textus.editor.insertText(note.text);

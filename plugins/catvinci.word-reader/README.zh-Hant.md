@@ -13,6 +13,7 @@
 
 ## 更新紀錄
 
+- **0.2.2** - Its bars, lists and controls are Textus's own, grow with the interface and follow every theme; needs Textus 1.3.12.
 - **0.2.1** - 介紹頁重寫：一句話說明它做什麼，再講它能做的事，並列出每個版本的更新。
 - **0.2.0** - 使用 Textus 自己的控制項和佈景主題色調；介面語言改變時分頁跟著切換。需要 Textus 1.3.2。
 - **0.1.3** - 使用 Textus 1.3 的設計變數。

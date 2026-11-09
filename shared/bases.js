@@ -16,6 +16,8 @@
   const FROM_OBSIDIAN = { text: "text", number: "number", checkbox: "checkbox", date: "date", datetime: "date", multitext: "tags", tags: "tags", aliases: "tags" };
   const TO_OBSIDIAN = { text: "text", select: "text", url: "text", number: "number", checkbox: "checkbox", date: "date", tags: "multitext" };
   const DATE = /^\d{4}-\d{2}-\d{2}/;
+  // The filter language (base-filters.js, loaded first).
+  const { text: filterText, read: readFilter, statements } = root.baseFilters;
 
   /** The filters for folder `F`'s rows (F an expression): the notes right in
    *  it and the units one level down (a row with sub-pages), not their
@@ -51,64 +53,6 @@
     return s.startsWith("note.") ? s.slice(5) : s;
   };
   const idOf = (key) => (key === "name" ? "file.name" : key);
-
-  /** A name as Bases writes it in an expression: plain, or note["with spaces"]. */
-  const ref = (key) => (/^[A-Za-z_][\w]*$/.test(key) ? key : "note[" + JSON.stringify(key) + "]");
-  const literal = (value) => {
-    const v = String(value).trim().replace(/^["']|["']$/g, "");
-    if (/^-?\d+(\.\d+)?$/.test(v)) return v;
-    if (v === "true" || v === "false") return v;
-    if (DATE.test(v)) return "date(" + JSON.stringify(v.slice(0, 10)) + ")";
-    return JSON.stringify(v);
-  };
-
-  /** A filter the page made ({ key, op, value }) as a Bases statement. */
-  function filterText(f) {
-    const r = ref(f.key === "name" ? "file.basename" : f.key);
-    const k = f.key === "name" ? "file.basename" : r;
-    switch (f.op) {
-      case "=":
-        return k + " == " + literal(f.value);
-      case "!=":
-        return k + " != " + literal(f.value);
-      case "has":
-        return k + ".contains(" + JSON.stringify(String(f.value)) + ")";
-      case "!has":
-        return "!" + k + ".contains(" + JSON.stringify(String(f.value)) + ")";
-      case "empty":
-        return k + ".isEmpty()";
-      case "!empty":
-        return "!" + k + ".isEmpty()";
-      default:
-        return k + " " + f.op + " " + literal(f.value);
-    }
-  }
-
-  const NAME = String.raw`(note\["(?:[^"\\]|\\.)*"\]|file\.basename|[A-Za-z_]\w*)`;
-  const VALUE = String.raw`(date\("[^"]*"\)|"(?:[^"\\]|\\.)*"|-?\d+(?:\.\d+)?|true|false)`;
-  const unref = (name) => (name === "file.basename" ? "name" : name.startsWith("note[") ? JSON.parse(name.slice(5, -1)) : name);
-  const unliteral = (v) => (v.startsWith("date(") ? JSON.parse(v.slice(5, -1)) : v.startsWith('"') ? JSON.parse(v) : v);
-
-  /** A Bases statement as a filter the page can show, or `{ raw }`. */
-  function readFilter(text) {
-    const s = String(text).trim();
-    let m;
-    if ((m = new RegExp("^" + NAME + "\\s*(==|!=|>=|<=|>|<)\\s*" + VALUE + "$").exec(s)))
-      return { key: unref(m[1]), op: m[2] === "==" ? "=" : m[2], value: unliteral(m[3]) };
-    if ((m = new RegExp("^(!?)" + NAME + "\\.contains\\(" + VALUE + "\\)$").exec(s)))
-      return { key: unref(m[2]), op: m[1] ? "!has" : "has", value: unliteral(m[3]) };
-    if ((m = new RegExp("^(!?)" + NAME + "\\.isEmpty\\(\\)$").exec(s)))
-      return { key: unref(m[2]), op: m[1] ? "!empty" : "empty", value: "" };
-    return { raw: s };
-  }
-
-  /** A view's filters as a list of statements: its "and", or the one filter. */
-  function statements(filters) {
-    if (!filters) return [];
-    if (typeof filters === "string") return [filters];
-    if (Array.isArray(filters.and)) return filters.and;
-    return [filters];
-  }
 
   /** What view `i` of `base` asks for, as the page uses it. */
   function viewSpec(base, i) {
@@ -479,8 +423,6 @@
     addView,
     renameKey,
     dropKey,
-    filterText,
-    readFilter,
     rowsOf,
     folderOf,
     unitBase,

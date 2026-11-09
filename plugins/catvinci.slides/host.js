@@ -101,7 +101,7 @@ function standalone(title, html, css) {
   return `<!doctype html><html><head><meta charset="utf-8"><title>${esc(title)}</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>${css}
-html,body{margin:0;height:100%;background:#000}
+html,body{margin:0;height:100%;background:var(--stage-bg)}
 div.marpit{height:100%;display:grid;place-items:center}
 div.marpit>svg{display:none;width:100vw;height:100vh}
 div.marpit>svg.on{display:block}

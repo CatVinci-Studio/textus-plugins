@@ -36,6 +36,7 @@ kanban-plugin: board
 
 ## Alterações
 
+- **0.4.5** - Um cartão ou lista arrastado fica logo abaixo do ponteiro e se eleva como tudo o que se arrasta no Textus. Suas barras, listas e controles agora são os do Textus, crescem com a interface e seguem cada tema; requer Textus 1.3.12.
 - **0.4.4** - Arrastar um cartão ou uma lista já não seleciona texto pelo caminho.
 - **0.4.3** - Sua página agora diz numa frase o que ele faz, o que pode fazer e o que mudou em cada versão.
 - **0.4.2** - Cartões e listas seguem o ponteiro ao serem arrastados, e os outros abrem espaço. Requer Textus 1.3.10.

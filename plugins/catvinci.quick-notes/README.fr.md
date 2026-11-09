@@ -28,6 +28,7 @@ Fonctionne sur ordinateur.
 
 ## Changements
 
+- **0.5.1** - Ses barres, listes et contrôles sont désormais ceux de Textus, grandissent avec l’interface et suivent chaque thème ; nécessite Textus 1.3.12.
 - **0.5.0** - Les dates et le modèle de la note du jour sont remplis par Textus lui-même, comme dans Calendrier et notes du jour et dans Modèles. Nécessite Textus 1.3.10.
 - **0.4.0** - Les notes sont gardées dans un document du dossier : `Inbox.md` ou la note du jour. Celles des anciennes versions y sont déplacées une fois.
 - **0.3.1** - Textus AI distingue les notes rapides du journal et des tâches.

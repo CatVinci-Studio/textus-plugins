@@ -25,6 +25,7 @@ Dans un coffre Obsidian, les groupes de couleur enregistrés dans le `graph.json
 
 ## Changements
 
+- **0.5.3** - Ses barres, listes et contrôles sont désormais ceux de Textus, grandissent avec l’interface et suivent chaque thème ; nécessite Textus 1.3.12.
 - **0.5.2** - Les groupes de couleur d’Obsidian sont lus dans le coffre le plus proche, même au-dessus du dossier ouvert. Nécessite Textus 1.3.10.
 - **0.5.1** - Dans un coffre Obsidian, les groupes de couleur de `.obsidian/graph.json` colorent aussi les notes.
 - **0.5.0** - Les [[liens]] sont rattachés aux notes de la même façon que lorsqu’on clique dessus dans Textus.

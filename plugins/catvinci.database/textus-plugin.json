@@ -1,7 +1,7 @@
 {
   "id": "catvinci.database",
   "name": "%name%",
-  "version": "0.7.3",
+  "version": "0.7.5",
   "publisher": "catvinci",
   "author": "CatVinci Studio",
   "description": "%description%",
@@ -9,22 +9,21 @@
   "license": "MIT",
   "repository": "https://github.com/CatVinci-Studio/textus-plugins",
   "engines": {
-    "textus": ">=1.3.10"
+    "textus": ">=1.3.12"
   },
-  "platforms": [
-    "desktop",
-    "ios"
-  ],
+  "platforms": ["desktop", "ios"],
   "main": [
     "lib/folder-paths.js",
     "lib/link-style.js",
     "lib/yaml.js",
     "lib/expr.js",
+    "lib/base-filters.js",
     "lib/bases.js",
     "lib/name-order.js",
     "pages.js",
     "pages-host.js",
     "dataview.js",
+    "ai-tools.js",
     "host.js"
   ],
   "permissions": [
@@ -119,10 +118,7 @@
         "description": "%toolDescription%",
         "parameters": {
           "type": "object",
-          "required": [
-            "name",
-            "rows"
-          ],
+          "required": ["name", "rows"],
           "properties": {
             "name": {
               "type": "string",
@@ -130,13 +126,7 @@
             },
             "view": {
               "type": "string",
-              "enum": [
-                "table",
-                "board",
-                "calendar",
-                "gallery",
-                "list"
-              ]
+              "enum": ["table", "board", "calendar", "gallery", "list"]
             },
             "sort": {
               "type": "string",
@@ -150,9 +140,7 @@
               "type": "array",
               "items": {
                 "type": "object",
-                "required": [
-                  "name"
-                ],
+                "required": ["name"],
                 "properties": {
                   "name": {
                     "type": "string"
@@ -176,9 +164,7 @@
         "description": "%tool.query_rows%",
         "parameters": {
           "type": "object",
-          "required": [
-            "database"
-          ],
+          "required": ["database"],
           "properties": {
             "database": {
               "type": "string",
@@ -207,10 +193,7 @@
         "description": "%tool.add_row%",
         "parameters": {
           "type": "object",
-          "required": [
-            "database",
-            "name"
-          ],
+          "required": ["database", "name"],
           "properties": {
             "database": {
               "type": "string",
@@ -236,9 +219,7 @@
         "description": "%pages.tool.create_page%",
         "parameters": {
           "type": "object",
-          "required": [
-            "title"
-          ],
+          "required": ["title"],
           "properties": {
             "title": {
               "type": "string",
@@ -272,17 +253,15 @@
       {
         "viewType": "catvinci.database.base",
         "displayName": "%baseFile%",
-        "filenamePatterns": [
-          "*.base"
-        ]
+        "filenamePatterns": ["*.base"]
       }
     ]
   },
   "l10n": {
     "en": {
-      "name": "Workspace",
-      "description": "Pages within pages, and databases of your notes as tables, boards, calendars, galleries and lists - in Obsidian's Bases format, so Obsidian opens the same databases. All plain Markdown files.",
-      "new": "New Database…",
+      "name": "Wiki",
+      "description": "Pages within pages, and bases of your notes as tables, boards, calendars, galleries and lists - in Obsidian's Bases format, so Obsidian opens the same databases. All plain Markdown files.",
+      "new": "New Base…",
       "table": "Table",
       "board": "Board",
       "calendar": "Calendar",
@@ -300,9 +279,9 @@
       "missing": "Open a folder to see its pages.",
       "newTitle": "Page title",
       "exists": "“{0}” is already there.",
-      "needsSaved": "Save this document in the open folder first: the database's folder goes beside it.",
+      "needsSaved": "Save this document in the open folder first: the base's folder goes beside it.",
       "needsFolder": "Open a folder first.",
-      "dbName": "Database name",
+      "dbName": "Base name",
       "aiNote": "Put the link where the user wants the database; its notes are made.",
       "toolDescription": "Makes a database in Obsidian's Bases format: a folder of notes whose front matter holds each one's properties, and a page in it with a ```base block showing them as a table, board, calendar, gallery or list. Returns a link to that page to put where the user wants it.",
       "locale": "en",
@@ -366,12 +345,15 @@
       "pages.toUnitsOk": "Move",
       "pages.toUnitsDone": "{0} pages moved into their folders.",
       "list": "List",
-      "showMore": "Show {0} more",
-      "fold": "Fold",
-      "unfold": "Unfold",
       "addView": "Add view",
       "renameView": "Rename view",
       "deleteView": "Delete view",
+      "deleteRow": "Delete Row",
+      "insertRowBelow": "Insert Row Below",
+      "insertColumnRight": "Insert Column Right",
+      "rowGroup": "Row",
+      "columnGroup": "Column",
+      "pickDate": "Pick a date",
       "skipped": "{0} filters can't be read here and are left out",
       "notBase": "This base can't be read.",
       "unknownView": "The “{0}” view isn't drawn here; shown as a table.",
@@ -389,8 +371,8 @@
     },
     "zh": {
       "name": "知识库",
-      "description": "页面里套页面，再把笔记做成表格、看板、日历、画廊和列表形式的数据库。数据库使用 Obsidian 的 Bases 格式，在 Obsidian 里也能打开同一个数据库。全部是普通 Markdown 文件。",
-      "new": "新建数据库…",
+      "description": "页面里套页面，再把笔记做成表格、看板、日历、画廊和列表形式的知识库。知识库使用 Obsidian 的 Bases 格式，在 Obsidian 里也能打开同一个知识库。全部是普通 Markdown 文件。",
+      "new": "新建知识库…",
       "table": "表格",
       "board": "看板",
       "calendar": "日历",
@@ -408,10 +390,10 @@
       "missing": "打开一个文件夹才能看到其中的页面。",
       "newTitle": "页面标题",
       "exists": "“{0}”已经存在。",
-      "needsSaved": "请先把这篇文档保存在打开的文件夹里：数据库的文件夹会放在它旁边。",
+      "needsSaved": "请先把这篇文档保存在打开的文件夹里：知识库的文件夹会放在它旁边。",
       "needsFolder": "请先打开一个文件夹。",
-      "dbName": "数据库名称",
-      "aiNote": "把链接放在用户想要的位置；数据库的笔记已经建好。",
+      "dbName": "知识库名称",
+      "aiNote": "把链接放在用户想要的位置；知识库的笔记已经建好。",
       "locale": "zh-CN",
       "filter": "筛选",
       "sort": "排序",
@@ -470,21 +452,24 @@
       "pages.toUnitsOk": "移动",
       "pages.toUnitsDone": "已把 {0} 个页面移进各自的文件夹。",
       "list": "列表",
-      "showMore": "再显示 {0} 条",
-      "fold": "折叠",
-      "unfold": "展开",
       "addView": "添加视图",
       "renameView": "重命名视图",
       "deleteView": "删除视图",
+      "deleteRow": "删除行",
+      "insertRowBelow": "在下方插入行",
+      "insertColumnRight": "在右侧插入列",
+      "rowGroup": "行",
+      "columnGroup": "列",
+      "pickDate": "选择日期",
       "skipped": "有 {0} 条筛选在这里读不懂，已跳过",
-      "notBase": "这个数据库读不出来。",
+      "notBase": "这个知识库读不出来。",
       "unknownView": "这里画不了「{0}」视图，先用表格显示。",
       "dragLane": "拖动调整顺序",
-      "baseFile": "数据库",
-      "tool.add_row": "在数据库中添加一行：在其文件夹里新建一篇以该行命名的文档，各项属性写在开头属性中。展示该文件夹的每个块都会显示它。 只用于数据库文件夹（create_database、query_rows）；普通待办用 add_task。",
+      "baseFile": "知识库",
+      "tool.add_row": "在知识库中添加一行：在其文件夹里新建一篇以该行命名的文档，各项属性写在开头属性中。展示该文件夹的每个块都会显示它。 只用于知识库文件夹（create_database、query_rows）；普通待办用 add_task。",
       "pages.tool.create_page": "新建一个页面：在打开的文件夹顶层新建以该标题命名的文档，或在父页面旁的同名文件夹中新建子页面；可设图标。返回它的路径，以及要放进父页面的 [[链接]]。",
-      "toolDescription": "以 Obsidian 的 Bases 格式建一个数据库：一个文件夹，里面每篇笔记的开头属性就是它的各项属性；文件夹里再放一个页面，用 ```base 块把它们显示成表格、看板、日历、画廊或列表。返回这个页面的链接，放在用户想要的位置。",
-      "tool.query_rows": "读取一个数据库的行：它的 base 选中的笔记（默认是它文件夹里的笔记），每行带名字、路径和属性，可筛选和排序。",
+      "toolDescription": "以 Obsidian 的 Bases 格式建一个知识库：一个文件夹，里面每篇笔记的开头属性就是它的各项属性；文件夹里再放一个页面，用 ```base 块把它们显示成表格、看板、日历、画廊或列表。返回这个页面的链接，放在用户想要的位置。",
+      "tool.query_rows": "读取一个知识库的行：它的 base 选中的笔记（默认是它文件夹里的笔记），每行带名字、路径和属性，可筛选和排序。",
       "pages.renamePage": "重命名页面…",
       "pages.deletePage": "删除页面",
       "pages.deleteAsk": "把「{0}」移到废纸篓？",
@@ -497,8 +482,8 @@
     },
     "zh-Hant": {
       "name": "知識庫",
-      "description": "頁面裡套頁面，再把筆記做成表格、看板、日曆、畫廊和清單形式的資料庫。資料庫使用 Obsidian 的 Bases 格式，在 Obsidian 裡也能開啟同一個資料庫。全部是一般的 Markdown 檔案。",
-      "new": "新增資料庫…",
+      "description": "頁面裡套頁面，再把筆記做成表格、看板、日曆、畫廊和清單形式的知識庫。知識庫使用 Obsidian 的 Bases 格式，在 Obsidian 裡也能開啟同一個知識庫。全部是一般的 Markdown 檔案。",
+      "new": "新增知識庫…",
       "table": "表格",
       "board": "看板",
       "calendar": "日曆",
@@ -516,10 +501,10 @@
       "missing": "打開一個資料夾才能看到其中的頁面。",
       "newTitle": "頁面標題",
       "exists": "「{0}」已經存在。",
-      "needsSaved": "請先把這份文件儲存在打開的資料夾裡：資料庫的資料夾會放在它旁邊。",
+      "needsSaved": "請先把這份文件儲存在打開的資料夾裡：知識庫的資料夾會放在它旁邊。",
       "needsFolder": "請先打開一個資料夾。",
-      "dbName": "資料庫名稱",
-      "aiNote": "把連結放在使用者想要的位置；資料庫的筆記已經建立。",
+      "dbName": "知識庫名稱",
+      "aiNote": "把連結放在使用者想要的位置；知識庫的筆記已經建立。",
       "locale": "zh-TW",
       "filter": "篩選",
       "sort": "排序",
@@ -578,21 +563,24 @@
       "pages.toUnitsOk": "移動",
       "pages.toUnitsDone": "已把 {0} 個頁面移進各自的資料夾。",
       "list": "清單",
-      "showMore": "再顯示 {0} 筆",
-      "fold": "摺疊",
-      "unfold": "展開",
       "addView": "新增檢視",
       "renameView": "重新命名檢視",
       "deleteView": "刪除檢視",
+      "deleteRow": "刪除列",
+      "insertRowBelow": "在下方插入列",
+      "insertColumnRight": "在右側插入欄",
+      "rowGroup": "列",
+      "columnGroup": "欄",
+      "pickDate": "選擇日期",
       "skipped": "有 {0} 條篩選在這裡無法讀取，已略過",
-      "notBase": "無法讀取這個資料庫。",
+      "notBase": "無法讀取這個知識庫。",
       "unknownView": "這裡無法繪製「{0}」檢視，先以表格顯示。",
       "dragLane": "拖曳調整順序",
-      "baseFile": "資料庫",
-      "tool.add_row": "在資料庫中新增一列：在其資料夾裡新建一份以該列命名的文件，各項屬性寫在開頭屬性中。展示該資料夾的每個區塊都會顯示它。 只用於資料庫資料夾（create_database、query_rows）；一般待辦用 add_task。",
+      "baseFile": "知識庫",
+      "tool.add_row": "在知識庫中新增一列：在其資料夾裡新建一份以該列命名的文件，各項屬性寫在開頭屬性中。展示該資料夾的每個區塊都會顯示它。 只用於知識庫資料夾（create_database、query_rows）；一般待辦用 add_task。",
       "pages.tool.create_page": "新建一個頁面：在開啟的資料夾頂層新建以該標題命名的文件，或在父頁面旁的同名資料夾中新建子頁面；可設圖示。回傳它的路徑，以及要放進父頁面的 [[連結]]。",
-      "toolDescription": "以 Obsidian 的 Bases 格式建立一個資料庫：一個資料夾，裡面每篇筆記的開頭屬性就是它的各項屬性；資料夾裡再放一個頁面，用 ```base 區塊把它們顯示成表格、看板、日曆、畫廊或清單。回傳這個頁面的連結，放在使用者想要的位置。",
-      "tool.query_rows": "讀取一個資料庫的列：它的 base 選中的筆記（預設是它資料夾裡的筆記），每列附名稱、路徑和屬性，可篩選和排序。",
+      "toolDescription": "以 Obsidian 的 Bases 格式建立一個知識庫：一個資料夾，裡面每篇筆記的開頭屬性就是它的各項屬性；資料夾裡再放一個頁面，用 ```base 區塊把它們顯示成表格、看板、日曆、畫廊或清單。回傳這個頁面的連結，放在使用者想要的位置。",
+      "tool.query_rows": "讀取一個知識庫的列：它的 base 選中的筆記（預設是它資料夾裡的筆記），每列附名稱、路徑和屬性，可篩選和排序。",
       "pages.renamePage": "重新命名頁面…",
       "pages.deletePage": "刪除頁面",
       "pages.deleteAsk": "把「{0}」移到垃圾桶？",
@@ -604,7 +592,7 @@
       "dataviewLeftOut": "已轉換。未保留：{0}"
     },
     "ja": {
-      "name": "ワークスペース",
+      "name": "Wiki",
       "description": "ページの中にページを、そしてノートを表・ボード・カレンダー・ギャラリー・リストのデータベースに。Obsidian の Bases 形式なので、Obsidian でも同じデータベースが開けます。すべて普通の Markdown ファイルです。",
       "new": "新しいデータベース…",
       "table": "表",
@@ -686,9 +674,6 @@
       "pages.toUnitsOk": "移動",
       "pages.toUnitsDone": "{0} 個のページをフォルダーに移しました。",
       "list": "リスト",
-      "showMore": "さらに {0} 件表示",
-      "fold": "折りたたむ",
-      "unfold": "展開",
       "addView": "ビューを追加",
       "renameView": "ビュー名を変更",
       "deleteView": "ビューを削除",
@@ -712,7 +697,7 @@
       "dataviewLeftOut": "変換しました。省いたもの：{0}"
     },
     "ko": {
-      "name": "워크스페이스",
+      "name": "위키",
       "description": "페이지 안의 페이지, 그리고 노트를 표·보드·캘린더·갤러리·목록 데이터베이스로. Obsidian의 Bases 형식이라 Obsidian에서도 같은 데이터베이스가 열립니다. 모두 일반 Markdown 파일입니다.",
       "new": "새 데이터베이스…",
       "table": "표",
@@ -794,9 +779,6 @@
       "pages.toUnitsOk": "옮기기",
       "pages.toUnitsDone": "페이지 {0}개를 폴더로 옮겼습니다.",
       "list": "목록",
-      "showMore": "{0}개 더 보기",
-      "fold": "접기",
-      "unfold": "펼치기",
       "addView": "보기 추가",
       "renameView": "보기 이름 바꾸기",
       "deleteView": "보기 삭제",
@@ -820,7 +802,7 @@
       "dataviewLeftOut": "변환했습니다. 빠진 부분: {0}"
     },
     "de": {
-      "name": "Arbeitsbereich",
+      "name": "Wiki",
       "description": "Seiten in Seiten und Datenbanken deiner Notizen als Tabellen, Boards, Kalender, Galerien und Listen – im Bases-Format von Obsidian, sodass Obsidian dieselben Datenbanken öffnet. Alles einfache Markdown-Dateien.",
       "new": "Neue Datenbank …",
       "table": "Tabelle",
@@ -902,9 +884,6 @@
       "pages.toUnitsOk": "Verschieben",
       "pages.toUnitsDone": "{0} Seiten in ihre Ordner verschoben.",
       "list": "Liste",
-      "showMore": "{0} weitere zeigen",
-      "fold": "Einklappen",
-      "unfold": "Ausklappen",
       "addView": "Ansicht hinzufügen",
       "renameView": "Ansicht umbenennen",
       "deleteView": "Ansicht löschen",
@@ -928,7 +907,7 @@
       "dataviewLeftOut": "Umgewandelt. Weggelassen: {0}"
     },
     "es": {
-      "name": "Espacio de trabajo",
+      "name": "Wiki",
       "description": "Páginas dentro de páginas y bases de datos de tus notas como tablas, tableros, calendarios, galerías y listas, en el formato Bases de Obsidian, para que Obsidian abra las mismas bases de datos. Todo son archivos Markdown normales.",
       "new": "Nueva base de datos…",
       "table": "Tabla",
@@ -1010,9 +989,6 @@
       "pages.toUnitsOk": "Mover",
       "pages.toUnitsDone": "{0} páginas movidas a sus carpetas.",
       "list": "Lista",
-      "showMore": "Mostrar {0} más",
-      "fold": "Plegar",
-      "unfold": "Desplegar",
       "addView": "Añadir vista",
       "renameView": "Renombrar vista",
       "deleteView": "Eliminar vista",
@@ -1036,7 +1012,7 @@
       "dataviewLeftOut": "Convertida. Se omitió: {0}"
     },
     "fr": {
-      "name": "Espace de travail",
+      "name": "Wiki",
       "description": "Des pages dans des pages, et des bases de données de vos notes en tableaux, tableaux kanban, calendriers, galeries et listes – au format Bases d'Obsidian, pour qu'Obsidian ouvre les mêmes bases. Rien que des fichiers Markdown.",
       "new": "Nouvelle base de données…",
       "table": "Tableau",
@@ -1118,9 +1094,6 @@
       "pages.toUnitsOk": "Déplacer",
       "pages.toUnitsDone": "{0} pages rangées dans leur dossier.",
       "list": "Liste",
-      "showMore": "Afficher {0} de plus",
-      "fold": "Replier",
-      "unfold": "Déplier",
       "addView": "Ajouter une vue",
       "renameView": "Renommer la vue",
       "deleteView": "Supprimer la vue",
@@ -1144,7 +1117,7 @@
       "dataviewLeftOut": "Convertie. Laissé de côté : {0}"
     },
     "pt": {
-      "name": "Área de trabalho",
+      "name": "Wiki",
       "description": "Páginas dentro de páginas e bancos de dados das suas notas como tabelas, quadros, calendários, galerias e listas – no formato Bases do Obsidian, para que o Obsidian abra os mesmos bancos. Tudo em arquivos Markdown simples.",
       "new": "Novo banco de dados…",
       "table": "Tabela",
@@ -1226,9 +1199,6 @@
       "pages.toUnitsOk": "Mover",
       "pages.toUnitsDone": "{0} páginas movidas para as suas pastas.",
       "list": "Lista",
-      "showMore": "Mostrar mais {0}",
-      "fold": "Recolher",
-      "unfold": "Expandir",
       "addView": "Adicionar visualização",
       "renameView": "Renomear visualização",
       "deleteView": "Excluir visualização",
@@ -1252,7 +1222,7 @@
       "dataviewLeftOut": "Convertida. Ficou de fora: {0}"
     },
     "ru": {
-      "name": "Рабочее пространство",
+      "name": "Вики",
       "description": "Страницы внутри страниц и базы данных из ваших заметок: таблицы, доски, календари, галереи и списки – в формате Bases из Obsidian, так что Obsidian открывает те же базы. Только обычные файлы Markdown.",
       "new": "Новая база данных…",
       "table": "Таблица",
@@ -1334,9 +1304,6 @@
       "pages.toUnitsOk": "Переместить",
       "pages.toUnitsDone": "Перемещено страниц: {0}.",
       "list": "Список",
-      "showMore": "Показать ещё {0}",
-      "fold": "Свернуть",
-      "unfold": "Развернуть",
       "addView": "Добавить вид",
       "renameView": "Переименовать вид",
       "deleteView": "Удалить вид",

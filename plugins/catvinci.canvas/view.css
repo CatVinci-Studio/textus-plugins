@@ -10,7 +10,7 @@ body {
 /* A tab view's bar (design-language.md 5.4): Textus's own controls. */
 #bar {
   flex: none;
-  min-height: 36px;
+  min-height: var(--bar-height);
   padding: 0 var(--space-3);
   border-bottom: 1px solid var(--ui-border);
 }
@@ -206,7 +206,7 @@ img.drawing {
 }
 .markdown blockquote {
   padding-left: var(--space-3);
-  border-left: 3px solid var(--doc-border);
+  border-left: var(--space-1) solid var(--doc-border);
   color: var(--doc-muted);
 }
 .markdown mark {
@@ -246,7 +246,7 @@ svg.edges {
   transform: translate(-50%, -50%);
   /* Its own width: the world it sits in has none. */
   width: max-content;
-  max-width: 280px;
+  max-width: 20em;
   padding: var(--space-1) var(--space-2);
   border-radius: var(--shape-s);
   background: var(--ui-subtle);

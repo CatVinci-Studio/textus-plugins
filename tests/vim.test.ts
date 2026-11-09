@@ -1,16 +1,20 @@
 import { beforeAll, describe, expect, it } from "vitest";
 import { readFileSync } from "node:fs";
 
-/** Vim's host (plugins/catvinci.vim/host.js): how the lines of the Key
- *  mappings setting - a vimrc's map lines - are read. */
+/** Vim's host (plugins/catvinci.vim, mappings.js): how the lines of the
+ *  Key mappings setting - a vimrc's map lines - are read. */
 type Mapping = { lhs: string[]; rhs: string[] };
 let parseMappings: (text: string) => Record<"n" | "v" | "i", Mapping[]>;
 
 beforeAll(() => {
-  const source = readFileSync(
-    new URL("../plugins/catvinci.vim/host.js", import.meta.url),
-    "utf8",
-  );
+  const dir = new URL("../plugins/catvinci.vim/", import.meta.url);
+  // Its scripts, run as the sandbox runs them: one after another.
+  const main: string[] = JSON.parse(
+    readFileSync(new URL("textus-plugin.json", dir), "utf8"),
+  ).main;
+  const source = main
+    .map((file) => readFileSync(new URL(file, dir), "utf8"))
+    .join("\n;\n");
   const exports: { parseMappings?: typeof parseMappings } = {};
   new Function("exports", source)(exports);
   parseMappings = exports.parseMappings!;

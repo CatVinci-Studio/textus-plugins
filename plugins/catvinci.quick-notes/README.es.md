@@ -28,6 +28,7 @@ Funciona en escritorio.
 
 ## Cambios
 
+- **0.5.1** - Sus barras, listas y controles son ahora los de Textus, crecen con la interfaz y siguen cada tema; necesita Textus 1.3.12.
 - **0.5.0** - Textus mismo rellena las fechas y la plantilla de la nota diaria, igual que en Calendario y notas diarias y en Plantillas. Requiere Textus 1.3.10.
 - **0.4.0** - Las notas se guardan en un documento de la carpeta: `Inbox.md` o la nota diaria de hoy. Las de versiones anteriores pasan a él una vez.
 - **0.3.1** - Textus AI distingue las notas rápidas del diario y de las tareas.

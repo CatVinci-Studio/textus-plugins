@@ -15,14 +15,10 @@ body {
 }
 #bar {
   flex: none;
-  min-height: 36px;
+  min-height: var(--bar-height);
   padding: 0 var(--space-3);
   border-bottom: 1px solid var(--ui-border);
   background: var(--ui-bg);
-}
-#count {
-  color: var(--ui-muted);
-  font-size: var(--text-footnote);
 }
 #stage {
   flex: 1;
@@ -47,7 +43,7 @@ body {
 /* Presenting: the slide alone on black, as a projector shows it. */
 :fullscreen #stage {
   padding: 0;
-  background: black;
+  background: var(--stage-bg);
 }
 :fullscreen #stage div.marpit > svg {
   border-radius: 0;

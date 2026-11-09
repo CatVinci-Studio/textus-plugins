@@ -14,6 +14,7 @@ function setup(
 ) {
   const posted: Message[] = [];
   const opened: unknown[] = [];
+  let clickUndo: (clicked: boolean) => void = () => {};
   let receive: (m: Message) => Promise<void> = async () => {};
   const { tools } = loadPlugin(
     "catvinci.quick-notes",
@@ -22,6 +23,8 @@ function setup(
       settings: { get: async (key: string) => settings[key] },
       layout: { open: async (place: unknown) => opened.push(place), openUntitled: async () => {} },
       l10n: { t: (key: string) => (key === "heading" ? heading : key) },
+      // "Note deleted", with Undo: clicked when the test says so.
+      ui: { notice: () => new Promise<boolean>((resolve) => (clickUndo = resolve)) },
       views: {
         registerWebview: (_id: string, view: { resolve: (w: unknown) => Promise<void> }) =>
           view.resolve({
@@ -36,7 +39,7 @@ function setup(
   const add = (text: string) => tools.get("add_note")!({ text });
   const send = (m: Message) => receive(m);
   const shown = () => (posted.filter((m) => m.type === "notes").at(-1)!.notes as { id: string; text: string }[]);
-  return { add, send, shown, posted, storage, opened };
+  return { add, send, shown, posted, storage, opened, undo: () => clickUndo(true) };
 }
 
 const at = (h: number, m: number, d = 7) => new Date(2026, 10, d, h, m).getTime();
@@ -73,7 +76,7 @@ describe("notes in Inbox.md", () => {
     const files: Record<string, string> = {
       "Inbox.md": "- 2026-11-06 09:00 Old\n  second line\n- by hand\n- 2026-11-07 10:15 New\n",
     };
-    const { send, shown } = setup(files);
+    const { send, shown, undo } = setup(files);
     await send({ type: "ready" });
     // A list item written by hand, with no stamp, is the file's, not a note.
     expect(shown()).toEqual([
@@ -83,9 +86,11 @@ describe("notes in Inbox.md", () => {
     await send({ type: "edit", id: "0", text: "Older\nstill" });
     await send({ type: "delete", id: "1" });
     expect(files["Inbox.md"]).toBe("- 2026-11-06 09:00 Older\n  still\n- by hand\n");
-    await send({ type: "undo" });
-    expect(files["Inbox.md"]).toBe(
-      "- 2026-11-06 09:00 Older\n  still\n- by hand\n- 2026-11-07 10:15 New\n",
+    undo();
+    await vi.waitFor(() =>
+      expect(files["Inbox.md"]).toBe(
+        "- 2026-11-06 09:00 Older\n  still\n- by hand\n- 2026-11-07 10:15 New\n",
+      ),
     );
     await send({ type: "new" });
     await send({ type: "drop", id: "2" });

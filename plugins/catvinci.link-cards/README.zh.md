@@ -35,6 +35,7 @@ image: https://textus.md/og.png
 
 ## 更新日志
 
+- **0.4.2** - 工具栏、列表和各个控件都改用 Textus 自己的，随界面一起缩放，适配每个主题；需要 Textus 1.3.12。
 - **0.4.1** - 介绍页重写：一句话说明它做什么，再讲它能做的事，并列出每个版本的更新。
 - **0.4.0** - Obsidian 的 `cardlink`（Auto Card Link）和 `embed`（Link Embed）块也画成卡片
 - **0.3.1** - 说明里的示例链接改为 textus.md

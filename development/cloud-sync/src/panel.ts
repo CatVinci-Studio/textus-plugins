@@ -39,23 +39,26 @@ const signIn: Record<string, [string, string]> = {
   webdav: ["accountDav", "secretDav"],
   nutstore: ["accountNutstore", "secretNutstore"],
 };
-const providerTabs = [
-  ...document.querySelectorAll<HTMLButtonElement>("[data-provider]"),
-];
-for (const tab of providerTabs)
-  tab.onclick = () => {
-    if (input("provider").value === tab.dataset.provider) return;
-    input("provider").value = tab.dataset.provider!;
-    input("endpoint").value = "";
-    for (const id of secretFields) input(id).value = "";
-    dirty = true;
-    toggles();
-  };
+// The service: Textus's own dropdown, the three in its menu.
+const PROVIDERS = ["s3", "webdav", "nutstore"];
+const providerPick = element("provider-pick") as HTMLButtonElement;
+providerPick.onclick = async () => {
+  const now = input("provider").value;
+  const chosen = await api.menu(
+    PROVIDERS.map((p) => ({ label: api.t(p), value: p, checked: p === now })),
+    providerPick,
+  );
+  if (typeof chosen !== "string" || chosen === now) return;
+  input("provider").value = chosen;
+  input("endpoint").value = "";
+  for (const id of secretFields) input(id).value = "";
+  dirty = true;
+  toggles();
+};
 
 function toggles() {
   const provider = input("provider").value;
-  for (const tab of providerTabs)
-    tab.setAttribute("aria-checked", String(tab.dataset.provider === provider));
+  element("provider-name").textContent = api.t(provider);
   element("bucket-field").hidden = provider !== "s3";
   element("s3-more").hidden = provider !== "s3";
   element("endpoint-field").hidden = provider === "nutstore";
@@ -189,16 +192,24 @@ api.onMessage((value) => {
   element("status").dataset.error = String(m.error);
   element<HTMLFieldSetElement>("fields").disabled = busy || !root;
   element("cancel").hidden = !busy;
-  const progress = element<HTMLProgressElement>("progress");
+  // Textus's progress bar (tx-progress): how far, or a sweep when unknown.
+  const progress = element("progress");
   progress.hidden = !busy;
-  if (m.progress == null) progress.removeAttribute("value");
-  else {
-    progress.max = 1;
-    progress.value = m.progress;
-  }
+  progress.classList.toggle("is-indeterminate", m.progress == null);
+  progress.style.setProperty("--value", String(m.progress ?? 0));
   element("credentials-state").textContent = api.t(
     configured ? "credentialsSaved" : "credentialsMissing",
   );
+  // What is synced where, as saved: edits in the form count once saved.
+  const summary = element("summary");
+  summary.hidden = !configured;
+  summary.textContent = [
+    api.t(m.config.provider),
+    m.config.prefix,
+    m.config.automatic
+      ? api.t("summaryAuto", m.config.interval)
+      : api.t("summaryManual"),
+  ].join(" · ");
   const last = element("last-run");
   last.hidden = !m.lastRun;
   last.textContent = m.lastRun

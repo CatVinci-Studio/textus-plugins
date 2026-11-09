@@ -8,24 +8,10 @@
   $("empty").textContent = t("empty");
   $("filter").placeholder = t("search");
   $("filter").setAttribute("aria-label", t("search"));
-  $("undo-text").textContent = t("deleted");
-  $("undo").textContent = t("undo");
   // The search shows once there are enough notes to look through.
   const SEARCH_FROM = 6;
   let all = [];
   $("filter").addEventListener("input", () => render(all));
-  // A deleted note can be had back for a few seconds.
-  let undoTimer = 0;
-  function offerUndo() {
-    $("undo-bar").hidden = false;
-    clearTimeout(undoTimer);
-    undoTimer = setTimeout(() => ($("undo-bar").hidden = true), 6000);
-  }
-  $("undo").onclick = () => {
-    clearTimeout(undoTimer);
-    $("undo-bar").hidden = true;
-    api.postMessage({ type: "undo" });
-  };
   const timers = new Map();
   // An edit still waiting out its pause goes first, so a button pressed
   // right after typing acts on every word typed.
@@ -65,7 +51,6 @@
     if (type === null) return;
     flush();
     api.postMessage({ type: type, id: id });
-    if (type === "delete") offerUndo();
   }
 
   function render(notes) {
@@ -96,6 +81,7 @@
           actions(note.id, { x: e.clientX, y: e.clientY });
         });
         const area = document.createElement("textarea");
+        area.className = "tx-inline-input";
         area.dataset.id = note.id;
         area.placeholder = t("placeholder");
         // Left empty, a new note goes: nothing was noted.

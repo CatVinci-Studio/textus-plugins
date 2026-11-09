@@ -27,7 +27,7 @@ The plugins for [Textus](https://textus.md), the Markdown editor. None of them c
 | Link Cards | A link as a card with its page's title, description and picture - or a YouTube or Bilibili video playing in place. Kept in the document as text. |
 | Marp | Present a document as slides, the Marp way: a new slide at each ---, themes and layout by Marp directives. The deck follows your writing in a tab beside it, and saves as one HTML file to present from any browser. |
 | Mind Map | Draws a Markdown outline - headings and lists - as a mind map. |
-| Notion Import | Brings in a Notion export (the .zip or its folder) as plain Markdown notes: pages within pages as folders, databases in Obsidian's Bases format, pictures and files beside their pages. Pair it with Workspace to see the pages tree and the databases. |
+| Notion Import | Brings in a Notion export (the .zip or its folder) as plain Markdown notes: pages within pages as folders, databases in Obsidian's Bases format, pictures and files beside their pages. Pair it with Wiki to see the pages tree and the databases. |
 | Openverse Pictures | Lets Textus AI find openly licensed pictures on Openverse (Flickr, museums and more) - CC BY, CC BY-SA, CC0 and public domain only - each with the credit its licence asks for. No account or key; Openverse allows about 200 searches a day. |
 | PDF Viewer | Open PDFs in a tab beside your notes: pages, zoom, and text to select and copy. |
 | PlantUML | UML and other diagrams from PlantUML text, drawn on your computer - or by the PlantUML server, if you choose. Drawing on your computer takes about 100 MB more memory; the PlantUML server takes none. |
@@ -49,8 +49,8 @@ The plugins for [Textus](https://textus.md), the Markdown editor. None of them c
 | WakaTime | Sends your writing time in Textus to your WakaTime account, beside your coding - only while Textus is in front and you are writing; time in the background doesn't count. Works offline: heartbeats wait and go later. Nothing is sent until you set your API key. |
 | WaveDrom | Digital timing diagrams from WaveJSON. |
 | Web View | Open web pages in a tab beside your notes. |
+| Wiki | Pages within pages, and bases of your notes as tables, boards, calendars, galleries and lists - in Obsidian's Bases format, so Obsidian opens the same databases. All plain Markdown files. |
 | Word Reader | Read Word documents as they look in Word, in a tab. Edit as Markdown turns one into a document of yours. |
-| Workspace | Pages within pages, and databases of your notes as tables, boards, calendars, galleries and lists - in Obsidian's Bases format, so Obsidian opens the same databases. All plain Markdown files. |
 | Writing Stats | Words and characters in the document and the selection, reading time, what you wrote today against a daily goal, the days in a row you met it, and the whole folder - CJK counted by character. |
 | Zotero | Cite from your Zotero library while you write. Needs Zotero running, with Settings › Advanced › Allow other applications on this computer to communicate with Zotero on. |
 <!-- /plugins -->

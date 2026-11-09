@@ -72,7 +72,7 @@ function page() {
   return `<!doctype html><html><head><style>
   body { margin: 0; height: 100vh; display: grid; place-items: center; overflow: hidden; user-select: none;
     -webkit-user-select: none; font-family: var(--font-sans); color: var(--ui-text); }
-  button { all: unset; position: relative; width: 112px; height: 112px; border-radius: 50%; cursor: pointer;
+  button { all: unset; position: relative; width: min(100vw, 100vh); height: min(100vw, 100vh); border-radius: 50%; cursor: pointer;
     display: grid; place-items: center; background: var(--ui-surface); box-shadow: var(--shadow-popover); }
   button:focus-visible { outline: 2px solid var(--ui-accent); outline-offset: 2px; }
   svg { position: absolute; inset: 0; transform: rotate(-90deg); }
@@ -91,6 +91,7 @@ function page() {
 <script>
   const api = acquireTextusApi();
   const $ = (id) => document.getElementById(id);
+  // Keys: Enter or Space on the focused button (clicks come as a poke).
   $("timer").onclick = () => api.postMessage({ type: "toggle" });
   api.onMessage((m) => {
     $("clock").textContent = m.clock;
@@ -127,6 +128,12 @@ exports.activate = function (context) {
       if (open.some((v) => v.view === VIEW))
         await textus.layout.closeFloating(VIEW);
       else await textus.layout.openFloating(VIEW);
+    }),
+    // A floating view is dragged anywhere, so its page takes no clicks:
+    // Textus tells a click on it as a poke.
+    textus.layout.onDidTouchFloating((e) => {
+      if (e && e.view === VIEW && e.kind === "poke")
+        void change(pomodoro.toggle(state, Date.now()));
     }),
     textus.commands.register("catvinci.pomodoro.startPause", () =>
       change(pomodoro.toggle(state, Date.now())),

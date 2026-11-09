@@ -140,6 +140,7 @@ async function items() {
  *  it still says `text`: the problem when it doesn't, or what was done. */
 async function setDone(task, done) {
   let result = { problem: "gone" };
+  const ordered = await textus.settings.get("doneLast");
   await textus.files.process(task.path, function (text) {
     const rows = textLines.split(text);
     const row = rows[task.line];
@@ -155,7 +156,8 @@ async function setDone(task, done) {
     row.text = changed.lines[changed.lines.length - 1];
     textLines.insert(rows, task.line, changed.lines.slice(0, -1));
     result = { next: changed.next, line: task.line + changed.lines.length - 1, text: m[4] };
-    return textLines.join(rows);
+    const written = textLines.join(rows);
+    return (ordered && taskOrder.orderAround(written, result.line)) || written;
   });
   return result;
 }
@@ -353,6 +355,38 @@ async function completeTask(input) {
 
 let list = null;
 
+/** With "Finished tasks last" on, a box ticked in the document moves its
+ *  task after the open ones of its list (one more undo step). The list
+ *  blocks as they were, to tell a tick from other typing. */
+function orderTicked() {
+  let before = [];
+  const lists = (blocks) => (blocks || []).filter((b) => b.kind === "list");
+  const seen = () =>
+    textus.editor.getBlocks().then((blocks) => (before = lists(blocks)), () => (before = []));
+  void seen();
+  return [
+    textus.editor.onDidChangeActive(seen),
+    textus.editor.onDidChange(async (e) => {
+      // Only a tick of the user's: an undo of the move must not move it again.
+      if (!e || e.source !== "user") return void seen();
+      const was = before;
+      const now = lists(await textus.editor.getBlocks().catch(() => null));
+      before = now;
+      if (!(await textus.settings.get("doneLast"))) return;
+      for (const block of now) {
+        if (was.some((b) => b.markdown === block.markdown)) continue;
+        const plain = taskOrder.unticked(block.markdown);
+        if (!was.some((b) => taskOrder.unticked(b.markdown) === plain)) continue;
+        const lines = block.markdown.split("\n");
+        const ordered = taskOrder.orderList(lines);
+        if (ordered.every((l, i) => l === lines[i])) continue;
+        await textus.editor.edit({ action: "replace", block: block.id, text: ordered.join("\n") }).catch(() => {});
+        return;
+      }
+    }),
+  ];
+}
+
 exports.activate = function (ctx) {
   list = textus.views.registerList("catvinci.tasks.panel", {
     items: items,
@@ -377,5 +411,6 @@ exports.activate = function (ctx) {
     textus.ai.registerTool("list_tasks", listTasks),
     textus.ai.registerTool("add_task", addTask),
     textus.ai.registerTool("complete_task", completeTask),
+    ...orderTicked(),
   );
 };

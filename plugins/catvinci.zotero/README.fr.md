@@ -41,6 +41,7 @@ La clé de citation vient du champ Citation Key de l’élément (ou d’une lig
 
 ## Changements
 
+- **0.4.1** - Son code est réparti en fichiers plus petits selon le rôle de chaque partie ; rien ne change à l'usage.
 - **0.4.0** - les modèles de notes de lecture sont remplis par le moteur de modèles de Textus ; nécessite Textus 1.3.10
 - **0.3.0** - notes de lecture depuis Zotero, avec modèle et réglages d’un coffre Obsidian ; citations en `[[@citekey]]`
 - **0.2.1** - le raccourci passe de Ctrl+Alt+C à Ctrl+Alt+R

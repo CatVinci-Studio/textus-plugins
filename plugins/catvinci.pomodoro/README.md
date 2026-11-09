@@ -14,4 +14,6 @@ It works on desktop and needs Textus 1.3.10 or later. It asks for one permission
 
 ## Changes
 
+- **0.1.2** - A click on the timer starts and pauses it again (it did nothing in 0.1.0 and 0.1.1).
+- **0.1.1** - Its bars, lists and controls are Textus's own, grow with the interface and follow every theme; needs Textus 1.3.12.
 - **0.1.0** - First version: a floating focus timer with breaks, notifications, a right-click menu, and its own focus and break lengths.

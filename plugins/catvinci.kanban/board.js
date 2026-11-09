@@ -29,7 +29,7 @@
   /** An inline field over `node`'s text; `done` gets the new text. */
   function editInPlace(node, value, multiline, done) {
     const field = document.createElement(multiline ? "textarea" : "input");
-    field.className = "inline-field";
+    field.className = "tx-inline-input inline-field";
     field.value = value;
     node.replaceWith(field);
     field.focus();
@@ -136,9 +136,9 @@
 
   function listNode(list) {
     const section = document.createElement("section");
-    section.className = "list";
+    section.className = "tx-lane list";
     const head = document.createElement("div");
-    head.className = "list-head";
+    head.className = "tx-lane-head list-head";
     // A list moves by its head, the others making way.
     head.addEventListener("pointerdown", (e) => {
       if (e.target.closest("button, textarea, [contenteditable]")) return;

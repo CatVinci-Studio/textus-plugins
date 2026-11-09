@@ -33,6 +33,7 @@ It runs on the desktop and on iOS.
 
 ## Changes
 
+- **0.3.3** - Its bars, lists and controls are Textus's own, grow with the interface and follow every theme; needs Textus 1.3.12.
 - **0.3.2** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
 - **0.3.1** - pictures in the deck, including Obsidian's `![[picture]]` embeds with a width
 - **0.3.0** - a tool for Textus AI, `export_slides`

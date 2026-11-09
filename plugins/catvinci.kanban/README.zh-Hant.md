@@ -36,6 +36,7 @@ kanban-plugin: board
 
 ## 更新紀錄
 
+- **0.4.5** - A dragged card or list stays right under the pointer and lifts like everything dragged in Textus. Its bars, lists and controls are Textus's own, grow with the interface and follow every theme; needs Textus 1.3.12.
 - **0.4.4** - 拖動卡片或列表時不再順帶選取文字。
 - **0.4.3** - 介紹頁重寫：一句話說明它做什麼，再講它能做的事，並列出每個版本的更新。
 - **0.4.2** - 拖曳卡片和清單時會跟著指標走，其他的會讓出位置。需要 Textus 1.3.10。

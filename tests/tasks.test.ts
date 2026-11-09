@@ -3,14 +3,19 @@ import { beforeAll, describe, expect, it } from "vitest";
 /** Tasks' reading and writing of Obsidian Tasks' lines and its ```tasks
  *  queries (plugins/catvinci.tasks/obsidian-tasks.js, query.js). */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-let ot: any, tq: any;
+let ot: any, tq: any, order: any;
 
 beforeAll(async () => {
-  for (const file of ["obsidian-tasks.js", "query.js"])
+  for (const file of ["obsidian-tasks.js", "task-order.js", "query.js"])
     await import(/* @vite-ignore */ "../plugins/catvinci.tasks/" + file);
-  const g = globalThis as unknown as { obsidianTasks: unknown; tasksQuery: unknown };
+  const g = globalThis as unknown as {
+    obsidianTasks: unknown;
+    tasksQuery: unknown;
+    taskOrder: unknown;
+  };
   ot = g.obsidianTasks;
   tq = g.tasksQuery;
+  order = g.taskOrder;
 });
 
 // A Saturday.
@@ -18,7 +23,10 @@ const TODAY = "2026-11-07";
 
 describe("a task line", () => {
   it("reads Obsidian Tasks' statuses: [/] is open, [-] is not", () => {
-    const status = (line: string) => [ot.parse(line).status, ot.parse(line).open];
+    const status = (line: string) => [
+      ot.parse(line).status,
+      ot.parse(line).open,
+    ];
     expect(status("- [ ] a")).toEqual(["todo", true]);
     expect(status("- [/] a")).toEqual(["in_progress", true]);
     expect(status("- [x] a")).toEqual(["done", false]);
@@ -42,39 +50,67 @@ describe("a task line", () => {
       due: "2026-11-04",
       tags: ["#work"],
     });
-    expect(ot.parse("- [x] Read ✅ 2026-11-05 #home").description).toBe("Read #home");
+    expect(ot.parse("- [x] Read ✅ 2026-11-05 #home").description).toBe(
+      "Read #home",
+    );
     expect(ot.parse("- [-] Old ❌ 2026-11-05").cancelled).toBe("2026-11-05");
     expect(ot.parse("- [ ] Plain due:2026-11-09 here").due).toBe("2026-11-09");
     // A field in the middle of the text is text, as in Obsidian Tasks.
-    expect(ot.parse("- [ ] Meet 📅 2026-11-09 with Ann").description).toBe("Meet 📅 2026-11-09 with Ann");
+    expect(ot.parse("- [ ] Meet 📅 2026-11-09 with Ann").description).toBe(
+      "Meet 📅 2026-11-09 with Ann",
+    );
   });
 
   it("writes the done date when ticked and takes it off when opened", () => {
-    expect(ot.setDone("- [ ] Write 📅 2026-11-09", true, TODAY).lines).toEqual(["- [x] Write 📅 2026-11-09 ✅ 2026-11-07"]);
-    expect(ot.setDone("  * [/] Write ^id1", true, TODAY).lines).toEqual(["  * [x] Write ✅ 2026-11-07 ^id1"]);
-    expect(ot.setDone("- [x] Write ✅ 2026-11-01", false, TODAY).lines).toEqual(["- [ ] Write"]);
-    expect(ot.setDone("- [-] Old ❌ 2026-11-01", false, TODAY).lines).toEqual(["- [ ] Old"]);
-    expect(ot.setDone("- [x] Done ✅ 2026-11-01", true, TODAY).lines).toEqual(["- [x] Done ✅ 2026-11-01"]);
+    expect(ot.setDone("- [ ] Write 📅 2026-11-09", true, TODAY).lines).toEqual([
+      "- [x] Write 📅 2026-11-09 ✅ 2026-11-07",
+    ]);
+    expect(ot.setDone("  * [/] Write ^id1", true, TODAY).lines).toEqual([
+      "  * [x] Write ✅ 2026-11-07 ^id1",
+    ]);
+    expect(ot.setDone("- [x] Write ✅ 2026-11-01", false, TODAY).lines).toEqual(
+      ["- [ ] Write"],
+    );
+    expect(ot.setDone("- [-] Old ❌ 2026-11-01", false, TODAY).lines).toEqual([
+      "- [ ] Old",
+    ]);
+    expect(ot.setDone("- [x] Done ✅ 2026-11-01", true, TODAY).lines).toEqual([
+      "- [x] Done ✅ 2026-11-01",
+    ]);
     expect(ot.setDone("plain", true, TODAY)).toBeNull();
   });
 
   it("puts a recurring task's next occurrence above it, its dates moved together", () => {
-    const r = ot.setDone("- [ ] Water 🔁 every week ⏳ 2026-11-03 📅 2026-11-05 ➕ 2026-10-01 ^w", true, TODAY);
+    const r = ot.setDone(
+      "- [ ] Water 🔁 every week ⏳ 2026-11-03 📅 2026-11-05 ➕ 2026-10-01 ^w",
+      true,
+      TODAY,
+    );
     expect(r.lines).toEqual([
       "- [ ] Water 🔁 every week ⏳ 2026-11-10 📅 2026-11-12",
       "- [x] Water 🔁 every week ⏳ 2026-11-03 📅 2026-11-05 ➕ 2026-10-01 ✅ 2026-11-07 ^w",
     ]);
     // "when done": from the day it is ticked.
-    expect(ot.setDone("- [ ] Cut hair 🔁 every 4 weeks when done 📅 2026-10-01", true, TODAY).next).toBe(
-      "- [ ] Cut hair 🔁 every 4 weeks when done 📅 2026-12-05",
-    );
+    expect(
+      ot.setDone(
+        "- [ ] Cut hair 🔁 every 4 weeks when done 📅 2026-10-01",
+        true,
+        TODAY,
+      ).next,
+    ).toBe("- [ ] Cut hair 🔁 every 4 weeks when done 📅 2026-12-05");
     // No dates: the same task again; a rule not understood: just ticked.
-    expect(ot.setDone("- [ ] Stretch 🔁 every day", true, TODAY).next).toBe("- [ ] Stretch 🔁 every day");
-    expect(ot.setDone("- [ ] Odd 🔁 every blue moon 📅 2026-11-01", true, TODAY).next).toBeNull();
+    expect(ot.setDone("- [ ] Stretch 🔁 every day", true, TODAY).next).toBe(
+      "- [ ] Stretch 🔁 every day",
+    );
+    expect(
+      ot.setDone("- [ ] Odd 🔁 every blue moon 📅 2026-11-01", true, TODAY)
+        .next,
+    ).toBeNull();
   });
 
   it("knows the common rules", () => {
-    const next = (rule: string, due: string) => ot.nextDates({ recurrence: rule, due }, TODAY).due;
+    const next = (rule: string, due: string) =>
+      ot.nextDates({ recurrence: rule, due }, TODAY).due;
     expect(next("every day", "2026-11-07")).toBe("2026-11-08");
     expect(next("every 3 days", "2026-11-07")).toBe("2026-11-10");
     expect(next("every 2 weeks", "2026-11-07")).toBe("2026-11-21");
@@ -85,7 +121,9 @@ describe("a task line", () => {
     expect(next("every weekend", "2026-11-07")).toBe("2026-11-08");
     expect(next("every Monday", "2026-11-07")).toBe("2026-11-09");
     expect(next("every tuesday and friday", "2026-11-10")).toBe("2026-11-13");
-    expect(next("every week on Monday, Wednesday", "2026-11-09")).toBe("2026-11-11");
+    expect(next("every week on Monday, Wednesday", "2026-11-09")).toBe(
+      "2026-11-11",
+    );
     expect(next("every 2 weeks on Monday", "2026-11-09")).toBe("2026-11-23");
     expect(next("every month on the 15th", "2026-11-20")).toBe("2026-12-15");
     expect(next("every month on the 31st", "2027-01-31")).toBe("2027-03-31");
@@ -95,7 +133,12 @@ describe("a task line", () => {
 });
 
 describe("a ```tasks query", () => {
-  const task = (line: string, rel = "Plan.md", n = 0, heading: string | null = null) => ({
+  const task = (
+    line: string,
+    rel = "Plan.md",
+    n = 0,
+    heading: string | null = null,
+  ) => ({
     ...ot.parse(line),
     rel,
     path: "/root/" + rel,
@@ -113,16 +156,33 @@ describe("a ```tasks query", () => {
   const run = (source: string) => {
     const q = tq.parse(source, TODAY);
     const r = tq.run(q, tasks());
-    return { q, r, names: r.groups.flatMap((g: { tasks: { description: string }[] }) => g.tasks.map((t) => t.description)) };
+    return {
+      q,
+      r,
+      names: r.groups.flatMap((g: { tasks: { description: string }[] }) =>
+        g.tasks.map((t) => t.description),
+      ),
+    };
   };
 
   it("filters by status and dates", () => {
-    expect(run("not done").names).toEqual(["Pay rent #home", "Draft", "Call", "Someday #idea"]);
+    expect(run("not done").names).toEqual([
+      "Pay rent #home",
+      "Draft",
+      "Call",
+      "Someday #idea",
+    ]);
     expect(run("done").names).toEqual(["Shipped", "Dropped"]);
-    expect(run("due before today").names).toEqual(["Pay rent #home", "Shipped"]);
+    expect(run("due before today").names).toEqual([
+      "Pay rent #home",
+      "Shipped",
+    ]);
     expect(run("not done\ndue after 2026-11-09").names).toEqual(["Call"]);
     expect(run("due on 2026-11-09").names).toEqual(["Draft"]);
-    expect(run("due on or before 2026-11-02").names).toEqual(["Pay rent #home", "Shipped"]);
+    expect(run("due on or before 2026-11-02").names).toEqual([
+      "Pay rent #home",
+      "Shipped",
+    ]);
     expect(run("due today").names).toEqual([]);
     expect(run("due tomorrow").names).toEqual(["Dropped"]);
     // The week from Monday 2 November to Sunday 8 November.
@@ -133,31 +193,112 @@ describe("a ```tasks query", () => {
   });
 
   it("filters by path, tag, priority and words", () => {
-    expect(run("path includes work\nnot done").names).toEqual(["Draft", "Call"]);
-    expect(run("path does not include Work").names).toEqual(["Pay rent #home", "Someday #idea"]);
+    expect(run("path includes work\nnot done").names).toEqual([
+      "Draft",
+      "Call",
+    ]);
+    expect(run("path does not include Work").names).toEqual([
+      "Pay rent #home",
+      "Someday #idea",
+    ]);
     expect(run("tag includes #home").names).toEqual(["Pay rent #home"]);
-    expect(run("tags do not include #home\nnot done").names).toEqual(["Draft", "Call", "Someday #idea"]);
+    expect(run("tags do not include #home\nnot done").names).toEqual([
+      "Draft",
+      "Call",
+      "Someday #idea",
+    ]);
     expect(run("priority is high").names).toEqual(["Call"]);
     expect(run("priority is above none").names).toEqual(["Draft", "Call"]);
     expect(run("description includes RENT").names).toEqual(["Pay rent #home"]);
   });
 
   it("sorts, limits and groups", () => {
-    expect(run("not done\nsort by priority").names).toEqual(["Call", "Draft", "Pay rent #home", "Someday #idea"]);
-    expect(run("not done\nsort by due reverse").names).toEqual(["Someday #idea", "Call", "Draft", "Pay rent #home"]);
+    expect(run("not done\nsort by priority").names).toEqual([
+      "Call",
+      "Draft",
+      "Pay rent #home",
+      "Someday #idea",
+    ]);
+    expect(run("not done\nsort by due reverse").names).toEqual([
+      "Someday #idea",
+      "Call",
+      "Draft",
+      "Pay rent #home",
+    ]);
     const limited = run("not done\nlimit 2");
     expect(limited.names).toEqual(["Pay rent #home", "Draft"]);
     expect(limited.r.total).toBe(4);
     const byPath = run("not done\ngroup by path");
-    expect(byPath.r.groups.map((g: { names: string[] }) => g.names)).toEqual([["Home"], ["Ideas"], ["Work/Plan"]]);
+    expect(byPath.r.groups.map((g: { names: string[] }) => g.names)).toEqual([
+      ["Home"],
+      ["Ideas"],
+      ["Work/Plan"],
+    ]);
     const byDue = run("not done\ngroup by due");
-    expect(byDue.r.groups.map((g: { names: string[] }) => g.names[0])).toEqual(["2026-11-01", "2026-11-09", "2026-11-20", ""]);
+    expect(byDue.r.groups.map((g: { names: string[] }) => g.names[0])).toEqual([
+      "2026-11-01",
+      "2026-11-09",
+      "2026-11-20",
+      "",
+    ]);
   });
 
   it("passes over how the list looks, and gives back what it doesn't understand", () => {
-    const { q, names } = run("not done\nhide edit button\nshort mode\n# a comment\n\n(due today) OR (no due date)\nfilter by function task.urgency > 5");
+    const { q, names } = run(
+      "not done\nhide edit button\nshort mode\n# a comment\n\n(due today) OR (no due date)\nfilter by function task.urgency > 5",
+    );
     expect(names).toHaveLength(4);
-    expect(q.unsupported).toEqual(["(due today) OR (no due date)", "filter by function task.urgency > 5"]);
-    expect(run("due before someday").q.unsupported).toEqual(["due before someday"]);
+    expect(q.unsupported).toEqual([
+      "(due today) OR (no due date)",
+      "filter by function task.urgency > 5",
+    ]);
+    expect(run("due before someday").q.unsupported).toEqual([
+      "due before someday",
+    ]);
+  });
+});
+
+describe("finished tasks last", () => {
+  it("puts a list's finished tasks after its open ones, each with what is under it", () => {
+    const lines = [
+      "- [x] a",
+      "  - [ ] a1",
+      "- [ ] b",
+      "- [-] c",
+      "- [ ] d",
+      "  - [x] d1",
+      "  - [ ] d2",
+    ];
+    expect(order.orderList(lines)).toEqual([
+      "- [ ] b",
+      "- [ ] d",
+      "  - [ ] d2",
+      "  - [x] d1",
+      "- [x] a",
+      "  - [ ] a1",
+      "- [-] c",
+    ]);
+  });
+
+  it("leaves a numbered list and an ordered one as they are", () => {
+    const numbered = ["1. [x] a", "2. [ ] b"];
+    expect(order.orderList(numbered)).toEqual(numbered);
+    expect(order.orderAround("- [ ] a\n- [x] b\n", 0)).toBeNull();
+  });
+
+  it("orders only the list around the line ticked", () => {
+    const text = "# Day\n\n- [x] a\n- [ ] b\n\nText\n\n- [x] c\n- [ ] d\n";
+    expect(order.orderAround(text, 2)).toBe(
+      "# Day\n\n- [ ] b\n- [x] a\n\nText\n\n- [x] c\n- [ ] d\n",
+    );
+  });
+
+  it("tells a tick from other typing", () => {
+    expect(order.unticked("- [x] a ✅ 2026-11-08\n- [ ] b")).toBe(
+      order.unticked("- [ ] a\n- [ ] b"),
+    );
+    expect(order.unticked("- [ ] a\n- [ ] b")).not.toBe(
+      order.unticked("- [ ] a!\n- [ ] b"),
+    );
   });
 });

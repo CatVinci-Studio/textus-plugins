@@ -35,6 +35,7 @@ It runs on the desktop and on iOS.
 
 ## Changes
 
+- **0.4.2** - Its bars, lists and controls are Textus's own, grow with the interface and follow every theme; needs Textus 1.3.12.
 - **0.4.1** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
 - **0.4.0** - Obsidian's `cardlink` (Auto Card Link) and `embed` (Link Embed) blocks are drawn as cards
 - **0.3.1** - the README's example links to textus.md

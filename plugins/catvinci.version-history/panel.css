@@ -10,35 +10,22 @@ body {
   font-size: var(--text-body);
   font-weight: 600;
 }
+/* The versions: a tx-list; the open one a tx-card with its changes. */
 #versions {
-  margin: 0;
   padding: var(--space-2);
-  list-style: none;
 }
-#versions > li {
+#versions > .open {
   display: block;
-  padding: var(--space-2);
-  margin-bottom: var(--space-1);
-  border-radius: var(--shape-s);
-  cursor: pointer;
-}
-#versions > li:hover {
-  background: var(--ui-hover);
-}
-#versions > li.open {
-  border: 1px solid var(--ui-border);
-  border-radius: var(--shape-m);
+  margin: var(--space-1) 0;
+  padding: var(--space-2) var(--space-3);
   background: var(--ui-surface);
-  cursor: default;
 }
 .row-head {
   display: flex;
+  flex: 1;
   align-items: baseline;
   gap: var(--space-2);
-}
-.row-head .when {
-  flex: 1;
-  color: var(--ui-text);
+  min-width: 0;
 }
 .delta {
   font-size: var(--text-caption);
@@ -52,7 +39,7 @@ body {
 }
 .diff {
   margin: var(--space-2) 0;
-  max-height: 320px;
+  max-height: 20em;
   overflow: auto;
   font-family: var(--font-mono);
   font-size: var(--text-caption);
@@ -78,15 +65,4 @@ body {
   display: flex;
   justify-content: flex-end;
   gap: var(--space-2);
-}
-
-/* A day's heading in the list of versions. */
-.day-head {
-  padding: var(--space-3) var(--space-3) var(--space-1);
-  color: var(--ui-muted);
-  font-size: var(--text-caption);
-  font-weight: 600;
-  cursor: default;
-  border: 0;
-  background: none;
 }

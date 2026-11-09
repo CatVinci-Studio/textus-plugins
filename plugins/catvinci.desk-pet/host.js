@@ -130,14 +130,16 @@ function page(character) {
   body.paused img { animation-play-state: paused; }
   .stage.turned img { scale: -1 1; }
   .stage.end img { left: auto; right: 0; }
-  .bubble { position: absolute; top: 0; left: 50%; max-width: 92%; transform: translateX(-50%);
-    padding: var(--space-1) var(--space-2); border: 1px solid var(--ui-border); border-radius: var(--shape-m);
-    background: var(--ui-surface); color: var(--ui-text); font-size: var(--text-secondary); line-height: 1.4; text-align: center;
-    opacity: 0; transition: opacity var(--dur-normal, 0.2s) var(--ease-standard); pointer-events: none; }
+  /* A small pet's line shrinks with it, to a floor still readable, and
+     wraps into even lines rather than a word left alone. */
+  body { container-type: inline-size; }
+  .bubble { position: absolute; top: 0; left: 50%; box-sizing: border-box; max-width: calc(100% - var(--space-2)); width: max-content; transform: translateX(-50%);
+    font-size: clamp(var(--text-caption), 7cqi, var(--text-secondary)); line-height: 1.4; text-align: center; text-wrap: balance;
+    opacity: 0; transition: opacity var(--dur-base) var(--ease-standard); pointer-events: none; }
   .bubble.on { opacity: 1; }
   @media (prefers-reduced-motion: reduce) { img.on, img.hop { animation: none; } }
 </style></head><body>
-<div class="stage">${imgs}</div><div class="bubble" id="bubble"></div>
+<div class="stage">${imgs}</div><div class="tx-bubble bubble" id="bubble"></div>
 <script>
   const api = acquireTextusApi();
   const bubble = document.getElementById("bubble");
@@ -174,6 +176,15 @@ async function refresh() {
   if (character === shownFor) return;
   shownFor = character;
   webview.html = page(character);
+}
+
+/** Her half and whether she's folded, as Textus has her now. */
+async function placed() {
+  const open = await textus.layout.floatingViews?.().catch(() => []);
+  const here = open?.find((v) => v.view === VIEW);
+  if (!here) return;
+  if (here.side) side = here.side;
+  visible = here.visible;
 }
 
 /** Still while folded or while Textus is away: nothing to draw for. */
@@ -344,6 +355,8 @@ exports.activate = function (ctx) {
       resolve: async (view) => {
         webview = view;
         shownFor = null;
+        // Where she was left: the page starts facing the right side.
+        await placed();
         await refresh();
         view.onDidDispose(() => {
           if (webview === view) webview = null;

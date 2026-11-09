@@ -4,7 +4,7 @@ import { beforeAll, describe, expect, it } from "vitest";
 import { load } from "js-yaml";
 import { FIXTURE, H, exportFiles, id } from "./notion-fixture";
 
-/** Notion Import's conversion (plugins/catvinci.notion-import/notion.js),
+/** Notion Import's conversion (plugins/catvinci.notion-import/notion*.js),
  *  run on a synthetic export (tests/fixtures/notion-export). */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 let ni: any;
@@ -12,7 +12,14 @@ let ni: any;
 beforeAll(async () => {
   await import(/* @vite-ignore */ "../shared/notion-csv.js");
   await import(/* @vite-ignore */ "../shared/yaml.js");
+  await import(/* @vite-ignore */ "../shared/base-filters.js");
   await import(/* @vite-ignore */ "../shared/bases.js");
+  await import(
+    /* @vite-ignore */ "../plugins/catvinci.notion-import/notion-layout.js"
+  );
+  await import(
+    /* @vite-ignore */ "../plugins/catvinci.notion-import/notion-pages.js"
+  );
   await import(
     /* @vite-ignore */ "../plugins/catvinci.notion-import/notion.js"
   );
@@ -474,10 +481,8 @@ describe("the fixture's import", () => {
     expect(home).toContain(
       "[Website Redesign](Projects/Website%20Redesign/Website%20Redesign.md)",
     );
-    // The database shown here as well: its rows by its folder's path in the open folder.
-    expect(home).toContain(
-      '```base\nfilters:\n  and:\n    - file.inFolder((if(this.file.folder.isEmpty(), "Projects", this.file.folder + "/Projects")))\n',
-    );
+    // Its own database, a level below: the link to its page, which shows it.
+    expect(home).not.toContain("```base");
     expect(home).toContain("![Logo](logo.png)");
     expect(home).toContain("[Spec](Spec.pdf)");
     expect(home).toContain(
@@ -918,13 +923,11 @@ describe("Notion's newer export", () => {
     expect(out["Papers/03 2026/03 2026.md"]).not.toMatch(
       /_all\.csv|\nAuthor\n/,
     );
-    // A view elsewhere: the link to the database's page, and the database shown, sorted as it was.
+    // A page's own database, a level below: only the link, its view settings gone.
     expect(out["Papers/Papers.md"]).toContain(
-      '[03/2026](03%202026/03%202026.md)\n\n```base\nfilters:\n  and:\n    - file.inFolder((if(this.file.folder.isEmpty(), "03 2026", this.file.folder + "/03 2026")))\n',
+      "[03/2026](03%202026/03%202026.md)\n\nAfter.",
     );
-    expect(out["Papers/Papers.md"]).toContain(
-      "    sort:\n      - property: status\n        direction: DESC\n      - property: year\n        direction: ASC\n```\n\nAfter.",
-    );
+    expect(out["Papers/Papers.md"]).not.toContain("```base");
     // A picture beside the page that shows it.
     expect(
       out[
@@ -958,7 +961,7 @@ describe("Notion's newer export", () => {
     const T = id("8");
     const { out, report } = await importMemory({
       [`Log ${T}.csv`]:
-        "Name,Status\nUntitled,\nUntitled,\nKept,Doing\nUntitled,Done\n",
+        "Name,Status,Reading Status\nUntitled,,\nUntitled,,\nKept,Doing,\nUntitled,Done,\nUntitled,Not Started,\n,,To Do\n",
     });
     expect(Object.keys(out).sort()).toEqual([
       "Log/Kept.md",
@@ -966,13 +969,24 @@ describe("Notion's newer export", () => {
       "Log/Untitled.md",
     ]);
     expect(out["Log/Untitled.md"]).toBe("---\nstatus: Done\n---\n# Untitled\n");
-    expect(report).toMatchObject({ rows: 2, skipped: 2 });
+    // A status Notion filled in by itself (Not Started, To Do) isn't something written.
+    expect(report).toMatchObject({ rows: 2, skipped: 4 });
     // An empty Untitled page of its own, too.
     const page = await importMemory({
       [`Untitled ${id("7")}.md`]: "# Untitled\n",
       [`Kept ${id("6")}.md`]: "# Kept\n",
     });
     expect(Object.keys(page.out)).toEqual(["Kept.md"]);
+    // A database's blank page that isn't one of its rows, Notion's own status on it.
+    const blank = await importMemory({
+      [`Log ${T}.csv`]: "Name,Status\nKept,Doing\n",
+      [`Log ${T}/Kept ${id("5")}.md`]: "# Kept\n\nStatus: Doing\n",
+      [`Log ${T}/Untitled ${id("4")}.md`]: "# Untitled\n\nStatus: To Do",
+    });
+    expect(Object.keys(blank.out).sort()).toEqual([
+      "Log/Kept.md",
+      "Log/Log.md",
+    ]);
   });
 });
 

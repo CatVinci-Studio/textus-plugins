@@ -2,26 +2,18 @@
   "id": "catvinci.cloud-sync",
   "name": "%name%",
   "description": "%description%",
-  "version": "0.4.2",
+  "version": "0.4.4",
   "publisher": "catvinci",
   "author": "CatVinci Studio",
   "license": "MIT",
   "engines": {
-    "textus": ">=1.3.2"
+    "textus": ">=1.3.12"
   },
   "icon": "icon.svg",
-  "platforms": [
-    "desktop"
-  ],
+  "platforms": ["desktop"],
   "main": "host.js",
-  "permissions": [
-    "files.read",
-    "files.write",
-    "network:*"
-  ],
-  "activationEvents": [
-    "onStartupFinished"
-  ],
+  "permissions": ["files.read", "files.write", "network:*"],
+  "activationEvents": ["onStartupFinished"],
   "contributes": {
     "commands": [
       {
@@ -43,6 +35,13 @@
         }
       ]
     },
+    "sidebarTabs": [
+      {
+        "id": "catvinci.cloud-sync.sidebar",
+        "title": "%name%",
+        "icon": "tab.svg"
+      }
+    ],
     "views": [
       {
         "id": "catvinci.cloud-sync.panel",
@@ -66,6 +65,7 @@
       "unlock": "Recover stale lock",
       "intro": "Keeps this folder the same on your devices, encrypted before it leaves this one.",
       "provider": "Storage service",
+      "service": "Service",
       "s3": "S3 compatible",
       "webdav": "WebDAV",
       "nutstore": "Nutstore",
@@ -137,7 +137,7 @@
       "unsaved": "Save the connection before testing or syncing.",
       "encryptionTitle": "End-to-end encryption",
       "syncPasswordSeparate": "Use a sync password that differs from your storage account, secret and session token. Storage credentials are sent to the service.",
-      "encryptionHelp": "Encrypts file contents and names before upload. Use the same password, at least 12 characters, on every device.",
+      "encryptionHelp": "Encrypted before upload, names too. The same password on every device, 12 characters or more; it can't be recovered.",
       "syncPassword": "Sync password",
       "confirmPassword": "Confirm sync password",
       "passwordRecovery": "Keep a copy in your password manager: it can't be reset. Leave both blank to keep the saved one.",
@@ -170,7 +170,9 @@
       "statusNever": "Not synced yet",
       "statusSyncing": "Syncing…",
       "statusConflict": "Sync conflict",
-      "statusError": "Sync error"
+      "statusError": "Sync error",
+      "summaryAuto": "Automatic, every {0} min",
+      "summaryManual": "Only when you choose Sync now"
     },
     "zh": {
       "name": "云同步",
@@ -183,6 +185,7 @@
       "unlock": "清除遗留锁",
       "intro": "让这个文件夹在你的几台设备上保持一致，离开本机前先加密。",
       "provider": "存储服务",
+      "service": "服务",
       "s3": "S3 兼容存储",
       "webdav": "WebDAV",
       "nutstore": "坚果云",
@@ -254,7 +257,7 @@
       "unsaved": "请先保存连接，再测试或同步。",
       "encryptionTitle": "端到端加密",
       "syncPasswordSeparate": "同步密码必须不同于存储服务的账号、密钥、应用密码或会话令牌，因为这些连接凭据会发给服务商。",
-      "encryptionHelp": "上传前加密文件内容和文件名。每台设备用同一个密码，至少 12 个字符。",
+      "encryptionHelp": "上传前加密内容和文件名。各设备用同一密码，至少 12 位；忘记无法找回。",
       "syncPassword": "同步密码",
       "confirmPassword": "确认同步密码",
       "passwordRecovery": "请存进密码管理器：忘了无法重置。两项都留空则沿用已保存的密码。",
@@ -287,7 +290,9 @@
       "statusNever": "尚未同步",
       "statusSyncing": "正在同步…",
       "statusConflict": "同步冲突",
-      "statusError": "同步出错"
+      "statusError": "同步出错",
+      "summaryAuto": "自动，每 {0} 分钟",
+      "summaryManual": "只在点“立即同步”时"
     },
     "zh-Hant": {
       "name": "Cloud Sync",
@@ -300,6 +305,7 @@
       "unlock": "Recover stale lock",
       "intro": "Keeps this folder the same on your devices, encrypted before it leaves this one.",
       "provider": "Storage service",
+      "service": "服務",
       "s3": "S3 compatible",
       "webdav": "WebDAV",
       "nutstore": "Nutstore",
@@ -371,7 +377,7 @@
       "unsaved": "Save the connection before testing or syncing.",
       "encryptionTitle": "End-to-end encryption",
       "syncPasswordSeparate": "Use a sync password that differs from your storage account, secret and session token. Storage credentials are sent to the service.",
-      "encryptionHelp": "Encrypts file contents and names before upload. Use the same password, at least 12 characters, on every device.",
+      "encryptionHelp": "上傳前加密內容和檔名。各裝置用同一密碼，至少 12 位；忘記無法找回。",
       "syncPassword": "Sync password",
       "confirmPassword": "Confirm sync password",
       "passwordRecovery": "Keep a copy in your password manager: it can't be reset. Leave both blank to keep the saved one.",
@@ -404,7 +410,9 @@
       "statusNever": "尚未同步",
       "statusSyncing": "正在同步…",
       "statusConflict": "同步衝突",
-      "statusError": "同步出錯"
+      "statusError": "同步出錯",
+      "summaryAuto": "自動，每 {0} 分鐘",
+      "summaryManual": "只在按「Sync now」時"
     },
     "ja": {
       "name": "Cloud Sync",
@@ -417,6 +425,7 @@
       "unlock": "Recover stale lock",
       "intro": "Keeps this folder the same on your devices, encrypted before it leaves this one.",
       "provider": "Storage service",
+      "service": "サービス",
       "s3": "S3 compatible",
       "webdav": "WebDAV",
       "nutstore": "Nutstore",
@@ -521,7 +530,9 @@
       "statusNever": "未同期",
       "statusSyncing": "同期中…",
       "statusConflict": "同期の競合",
-      "statusError": "同期エラー"
+      "statusError": "同期エラー",
+      "summaryAuto": "自動、{0} 分ごと",
+      "summaryManual": "「Sync now」を選んだときだけ"
     },
     "ko": {
       "name": "Cloud Sync",
@@ -534,6 +545,7 @@
       "unlock": "Recover stale lock",
       "intro": "Keeps this folder the same on your devices, encrypted before it leaves this one.",
       "provider": "Storage service",
+      "service": "서비스",
       "s3": "S3 compatible",
       "webdav": "WebDAV",
       "nutstore": "Nutstore",
@@ -638,7 +650,9 @@
       "statusNever": "아직 동기화 안 됨",
       "statusSyncing": "동기화 중…",
       "statusConflict": "동기화 충돌",
-      "statusError": "동기화 오류"
+      "statusError": "동기화 오류",
+      "summaryAuto": "자동, {0}분마다",
+      "summaryManual": "‘Sync now’를 누를 때만"
     },
     "es": {
       "name": "Cloud Sync",
@@ -651,6 +665,7 @@
       "unlock": "Recover stale lock",
       "intro": "Keeps this folder the same on your devices, encrypted before it leaves this one.",
       "provider": "Storage service",
+      "service": "Servicio",
       "s3": "S3 compatible",
       "webdav": "WebDAV",
       "nutstore": "Nutstore",
@@ -755,7 +770,9 @@
       "statusNever": "Sin sincronizar",
       "statusSyncing": "Sincronizando…",
       "statusConflict": "Conflicto de sincronización",
-      "statusError": "Error de sincronización"
+      "statusError": "Error de sincronización",
+      "summaryAuto": "Automática, cada {0} min",
+      "summaryManual": "Solo al elegir Sync now"
     },
     "fr": {
       "name": "Cloud Sync",
@@ -768,6 +785,7 @@
       "unlock": "Recover stale lock",
       "intro": "Keeps this folder the same on your devices, encrypted before it leaves this one.",
       "provider": "Storage service",
+      "service": "Service",
       "s3": "S3 compatible",
       "webdav": "WebDAV",
       "nutstore": "Nutstore",
@@ -872,7 +890,9 @@
       "statusNever": "Pas encore synchronisé",
       "statusSyncing": "Synchronisation…",
       "statusConflict": "Conflit de synchronisation",
-      "statusError": "Erreur de synchronisation"
+      "statusError": "Erreur de synchronisation",
+      "summaryAuto": "Automatique, toutes les {0} min",
+      "summaryManual": "Seulement quand vous choisissez Sync now"
     },
     "de": {
       "name": "Cloud Sync",
@@ -885,6 +905,7 @@
       "unlock": "Recover stale lock",
       "intro": "Keeps this folder the same on your devices, encrypted before it leaves this one.",
       "provider": "Storage service",
+      "service": "Dienst",
       "s3": "S3 compatible",
       "webdav": "WebDAV",
       "nutstore": "Nutstore",
@@ -989,7 +1010,9 @@
       "statusNever": "Noch nicht synchronisiert",
       "statusSyncing": "Wird synchronisiert…",
       "statusConflict": "Sync-Konflikt",
-      "statusError": "Sync-Fehler"
+      "statusError": "Sync-Fehler",
+      "summaryAuto": "Automatisch, alle {0} Min.",
+      "summaryManual": "Nur wenn du Sync now wählst"
     },
     "ru": {
       "name": "Cloud Sync",
@@ -1002,6 +1025,7 @@
       "unlock": "Recover stale lock",
       "intro": "Keeps this folder the same on your devices, encrypted before it leaves this one.",
       "provider": "Storage service",
+      "service": "Сервис",
       "s3": "S3 compatible",
       "webdav": "WebDAV",
       "nutstore": "Nutstore",
@@ -1106,7 +1130,9 @@
       "statusNever": "Ещё не синхронизировано",
       "statusSyncing": "Синхронизация…",
       "statusConflict": "Конфликт синхронизации",
-      "statusError": "Ошибка синхронизации"
+      "statusError": "Ошибка синхронизации",
+      "summaryAuto": "Автоматически, каждые {0} мин",
+      "summaryManual": "Только по кнопке Sync now"
     },
     "pt": {
       "name": "Cloud Sync",
@@ -1119,6 +1145,7 @@
       "unlock": "Recover stale lock",
       "intro": "Keeps this folder the same on your devices, encrypted before it leaves this one.",
       "provider": "Storage service",
+      "service": "Serviço",
       "s3": "S3 compatible",
       "webdav": "WebDAV",
       "nutstore": "Nutstore",
@@ -1223,7 +1250,9 @@
       "statusNever": "Ainda não sincronizado",
       "statusSyncing": "Sincronizando…",
       "statusConflict": "Conflito de sincronização",
-      "statusError": "Erro de sincronização"
+      "statusError": "Erro de sincronização",
+      "summaryAuto": "Automática, a cada {0} min",
+      "summaryManual": "Só ao escolher Sync now"
     }
   },
   "repository": "https://github.com/CatVinci-Studio/textus-plugins"

@@ -41,6 +41,7 @@ La clave de cita sale del campo Citation Key del elemento (o de una línea `Cita
 
 ## Cambios
 
+- **0.4.1** - Su código se divide en archivos más pequeños según lo que hace cada parte; nada cambia al usarlo.
 - **0.4.0** - las plantillas de notas de lectura las rellena el motor de plantillas de Textus; requiere Textus 1.3.10
 - **0.3.0** - notas de lectura desde Zotero, con plantilla y los ajustes de una bóveda de Obsidian; citas como `[[@citekey]]`
 - **0.2.1** - el atajo pasa de Ctrl+Alt+C a Ctrl+Alt+R

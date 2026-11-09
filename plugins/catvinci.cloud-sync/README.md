@@ -7,7 +7,8 @@ Cloud Sync needs Textus 1.3.2 or later on the desktop.
 
 ## Getting started
 
-1. Open the folder to sync in Textus, then choose **Plugins › Cloud Sync**.
+1. Open the folder to sync in Textus, then choose **Plugins › Cloud Sync**
+   (or its tab in the sidebar).
 2. Pick the storage service and enter its server address and sign-in. Nutstore
    needs only your email and an app password from Account › Security.
 3. Set a **sync password** of at least 12 characters and keep it in your
@@ -244,6 +245,8 @@ and `THIRD_PARTY_NOTICES.md`. The storage design was informed by Petrichor/Sylva
 
 ## Changes
 
+- **0.4.4** - A Cloud Sync tab in the sidebar shows at a glance how sync stands - connected or not, the last sync, any error, which service and remote folder - with the whole connection form below; Settings shows the same page. The service is picked from a dropdown, and a long name, path or error wraps inside the page.
+- **0.4.3** - Its bars, lists and controls are Textus's own, grow with the interface and follow every theme; needs Textus 1.3.12.
 - **0.4.2** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
 - **0.4.1** - Obsidian bases (`.base`) and canvases (`.canvas`) sync too.
 - **0.4.0** - Deletions and renames reach your other devices (deleted files go to the system Trash there); automatic sync runs a few seconds after you save; the status bar shows how sync stands; syncs are paced to stay within WebDAV and Nutstore request limits.

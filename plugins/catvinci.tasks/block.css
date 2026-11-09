@@ -10,8 +10,8 @@ body {
 }
 #bar {
   /* Clear of the block's own source button at its top right. */
-  padding-right: 40px;
-  min-height: 24px;
+  padding-right: var(--block-source-room);
+  min-height: var(--control-height-sm);
 }
 #count,
 #unsupported,

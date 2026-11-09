@@ -196,7 +196,7 @@
   function markHits(div) {
     for (const span of div.querySelectorAll(".textLayer span"))
       span.classList.toggle(
-        "hit",
+        "tx-hit",
         !!query && span.textContent.toLowerCase().includes(query),
       );
   }

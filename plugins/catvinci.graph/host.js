@@ -146,6 +146,10 @@ function wire(webview, isLocal) {
       await textus.layout.open(message.path);
     if (message.type === "full")
       await textus.layout.openView("catvinci.graph.global");
+    if (message.type === "pickColor") {
+      const hex = await textus.ui.pickColor({ value: message.value });
+      if (hex) webview.postMessage({ type: "color", index: message.index, hex });
+    }
     if (message.type === "settings") {
       const key = isLocal ? "local" : "global";
       // Only what differs from the defaults is kept: "Reset" is null.

@@ -1,7 +1,7 @@
 {
   "id": "catvinci.notion-import",
   "name": "%name%",
-  "version": "0.7.1",
+  "version": "0.7.3",
   "publisher": "catvinci",
   "author": "CatVinci Studio",
   "description": "%description%",
@@ -11,10 +11,7 @@
   "engines": {
     "textus": ">=1.3.10"
   },
-  "platforms": [
-    "desktop",
-    "ios"
-  ],
+  "platforms": ["desktop", "ios"],
   "main": [
     "lib/folder-paths.js",
     "lib/link-style.js",
@@ -22,14 +19,14 @@
     "lib/notion-csv.js",
     "lib/jszip.min.js",
     "lib/yaml.js",
+    "lib/base-filters.js",
     "lib/bases.js",
+    "notion-layout.js",
+    "notion-pages.js",
     "notion.js",
     "host.js"
   ],
-  "permissions": [
-    "files.read",
-    "files.write"
-  ],
+  "permissions": ["files.read", "files.write"],
   "contributes": {
     "commands": [
       {
@@ -61,7 +58,7 @@
   "l10n": {
     "en": {
       "name": "Notion Import",
-      "description": "Brings in a Notion export (the .zip or its folder) as plain Markdown notes: pages within pages as folders, databases in Obsidian's Bases format, pictures and files beside their pages. Pair it with Workspace to see the pages tree and the databases.",
+      "description": "Brings in a Notion export (the .zip or its folder) as plain Markdown notes: pages within pages as folders, databases in Obsidian's Bases format, pictures and files beside their pages. Pair it with Wiki to see the pages tree and the databases.",
       "import": "Import from Notion…",
       "recommend": "Plugins That Help After a Notion Import…",
       "needsFolder": "Open a folder first: the import goes into a new folder inside it.",
@@ -109,7 +106,7 @@
       "why.catvinci.link-cards": "Your pages have web links: select one, right-click and choose Insert Link Card… to show it as a card with its title and picture.",
       "why.catvinci.pdf-viewer": "Opens the PDFs you attached right in Textus.",
       "why.catvinci.templates": "Keep your template pages as templates for new documents.",
-      "plugin.catvinci.database": "Workspace",
+      "plugin.catvinci.database": "Wiki",
       "plugin.catvinci.backlinks": "Two-way Links",
       "plugin.catvinci.quick-preview": "Quick Preview",
       "plugin.catvinci.tasks": "Tasks",
@@ -119,7 +116,7 @@
     },
     "zh": {
       "name": "Notion 导入",
-      "description": "把 Notion 导出包（.zip 或解压后的文件夹）转成普通的 Markdown 笔记：页面里的页面变成文件夹，数据库用 Obsidian 的 Bases 格式，图片和附件放在各自页面旁边。配合「知识库」插件查看页面树和数据库。",
+      "description": "把 Notion 导出包（.zip 或解压后的文件夹）转成普通的 Markdown 笔记：页面里的页面变成文件夹，知识库用 Obsidian 的 Bases 格式，图片和附件放在各自页面旁边。配合「知识库」插件查看页面树和知识库。",
       "import": "从 Notion 导入…",
       "recommend": "Notion 导入后推荐的插件…",
       "needsFolder": "请先打开一个文件夹：导入的内容会放进其中的一个新文件夹。",
@@ -136,16 +133,16 @@
       "importing": "正在从 Notion 导入",
       "reading": "正在读取导出文件…",
       "failed": "导入中断：{0}",
-      "notExport": "{0} 看起来不是 Notion 导出：里面没有 Notion 的页面或数据库。",
+      "notExport": "{0} 看起来不是 Notion 导出：里面没有 Notion 的页面或知识库。",
       "tooBig": "{0} 太大，没法作为 .zip 读取。请把它连同里面的 Part-1.zip、Part-2.zip…一起解压到打开的文件夹里的同一个文件夹，再导入那个文件夹。",
-      "done": "已将 {0} 个页面和 {1} 个数据库导入到 {2}。",
-      "donePages": "已导入 {0} 个页面和 {1} 个数据库到 {2}，已在页面树中显示。",
+      "done": "已将 {0} 个页面和 {1} 个知识库导入到 {2}。",
+      "donePages": "已导入 {0} 个页面和 {1} 个知识库到 {2}，已在页面树中显示。",
       "cancelled": "已取消导入。已经写好的内容在 {0}。",
       "reportName": "导入报告",
       "reportTitle": "Notion 导入报告",
       "reportFrom": "{1} 从 {0} 导入。",
       "countPages": "页面：{0}",
-      "countDatabases": "数据库：{0}（{1} 行）",
+      "countDatabases": "知识库：{0}（{1} 行）",
       "countFiles": "图片和附件：{0}",
       "stopped": "导入在 {1} 个文件中的第 {0} 个之后取消，其余没有导入。",
       "helpTitle": "推荐的插件",
@@ -160,7 +157,7 @@
       "noTips": "没有要推荐的：对上次导入有用的插件都已安装。",
       "recommendPick": "选一个插件安装",
       "offerFallback": "在「设置 › 扩展 › 插件」里找到「{0}」安装。",
-      "why.catvinci.database": "把数据库显示成表格、看板、日历和画廊。",
+      "why.catvinci.database": "把知识库显示成表格、看板、日历和画廊。",
       "why.catvinci.backlinks": "页面之间互相链接：看哪些页面链到了当前页。",
       "why.catvinci.quick-preview": "鼠标停在链接上就能预览页面，不用跳走。",
       "why.catvinci.tasks": "把所有页面里的待办汇总到一处。",
@@ -177,7 +174,7 @@
     },
     "zh-Hant": {
       "name": "Notion 匯入",
-      "description": "把 Notion 匯出檔（.zip 或解壓後的資料夾）轉成一般的 Markdown 筆記：頁面裡的頁面變成資料夾，資料庫使用 Obsidian 的 Bases 格式，圖片和附件放在各自頁面旁邊。搭配「知識庫」外掛檢視頁面樹和資料庫。",
+      "description": "把 Notion 匯出檔（.zip 或解壓後的資料夾）轉成一般的 Markdown 筆記：頁面裡的頁面變成資料夾，知識庫使用 Obsidian 的 Bases 格式，圖片和附件放在各自頁面旁邊。搭配「知識庫」外掛檢視頁面樹和知識庫。",
       "import": "從 Notion 匯入…",
       "recommend": "Notion 匯入後推薦的外掛…",
       "needsFolder": "請先開啟一個資料夾：匯入的內容會放進其中的一個新資料夾。",
@@ -194,16 +191,16 @@
       "importing": "正在從 Notion 匯入",
       "reading": "正在讀取匯出檔案…",
       "failed": "匯入中斷：{0}",
-      "notExport": "{0} 看起來不是 Notion 匯出：裡面沒有 Notion 的頁面或資料庫。",
+      "notExport": "{0} 看起來不是 Notion 匯出：裡面沒有 Notion 的頁面或知識庫。",
       "tooBig": "{0} 太大，沒辦法作為 .zip 讀取。請把它連同裡面的 Part-1.zip、Part-2.zip…一起解壓到開啟的資料夾裡的同一個資料夾，再匯入那個資料夾。",
-      "done": "已將 {0} 個頁面和 {1} 個資料庫匯入到 {2}。",
-      "donePages": "已匯入 {0} 個頁面和 {1} 個資料庫到 {2}，已在頁面樹中顯示。",
+      "done": "已將 {0} 個頁面和 {1} 個知識庫匯入到 {2}。",
+      "donePages": "已匯入 {0} 個頁面和 {1} 個知識庫到 {2}，已在頁面樹中顯示。",
       "cancelled": "已取消匯入。已經寫好的內容在 {0}。",
       "reportName": "匯入報告",
       "reportTitle": "Notion 匯入報告",
       "reportFrom": "{1} 從 {0} 匯入。",
       "countPages": "頁面：{0}",
-      "countDatabases": "資料庫：{0}（{1} 列）",
+      "countDatabases": "知識庫：{0}（{1} 列）",
       "countFiles": "圖片和附件：{0}",
       "stopped": "匯入在 {1} 個檔案中的第 {0} 個之後取消，其餘沒有匯入。",
       "helpTitle": "推薦的外掛",
@@ -218,7 +215,7 @@
       "noTips": "沒有要推薦的：對上次匯入有用的外掛都已安裝。",
       "recommendPick": "選一個外掛安裝",
       "offerFallback": "在「設定 › 擴充功能 › 外掛程式」裡找到「{0}」安裝。",
-      "why.catvinci.database": "把資料庫顯示成表格、看板、日曆和畫廊。",
+      "why.catvinci.database": "把知識庫顯示成表格、看板、日曆和畫廊。",
       "why.catvinci.backlinks": "頁面之間互相連結：看哪些頁面連到了目前這頁。",
       "why.catvinci.quick-preview": "滑鼠停在連結上就能預覽頁面，不用跳走。",
       "why.catvinci.tasks": "把所有頁面裡的待辦彙整到一處。",
