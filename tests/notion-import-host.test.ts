@@ -198,10 +198,13 @@ function host(
           commands.set(id, run);
           return { dispose() {} };
         },
-        execute: async (id: string, args: unknown) =>
-          id === "textus.offerPlugin" && options.offer
+        execute: async (id: string, args: unknown) => {
+          if (id === "textus.showFolder")
+            opened.push(id + ":" + String(args).replace(/^\/root\//, ""));
+          return id === "textus.offerPlugin" && options.offer
             ? options.offer(args)
-            : null,
+            : null;
+        },
       },
       ui: {
         input: async ({ value }: { value?: string }) =>
@@ -264,7 +267,11 @@ describe("the import command", () => {
     );
     expect(folder.files[target + "/Home/Home.md"]).not.toContain("```base");
     expect(folder.files[target + "/Home/logo.png"]).toBeInstanceOf(Uint8Array);
-    expect(opened).toEqual(["/root/" + target + "/reportName.md"]);
+    // Into what it made: its folder shown in the sidebar.
+    expect(opened).toEqual([
+      "/root/" + target + "/reportName.md",
+      "textus.showFolder:" + target,
+    ]);
     const report = String(folder.files[target + "/reportName.md"]);
     // Workspace first, for the pages tree and the databases; Pages is part of it now.
     expect(report).toContain(
@@ -305,8 +312,10 @@ describe("the import command", () => {
     });
     await run();
     const [target] = targets(folder);
+    // Into what it made: its folder in the sidebar, as a pages tree.
     expect(opened).toEqual([
       "/root/" + target + "/reportName.md",
+      "textus.showFolder:" + target,
       "tab:catvinci.database.pages",
     ]);
     expect(messages).toEqual(["donePages|13|2|" + target]);
