@@ -22,6 +22,7 @@ The plugin asks to take keys in the editor (to run Vim's keys) and to read files
 
 ## Changes
 
+- **0.2.5** - Its code is split into smaller files by what each part does; nothing changes in use.
 - **0.2.4** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
 - **0.2.3** - Reads an Obsidian vault's `.obsidian.vimrc`; mapping the same keys again replaces the earlier mapping.
 - **0.2.2** - **zz**, **zt** and **zb** bring the caret's line to the middle, top or bottom of the window.
