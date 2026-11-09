@@ -239,13 +239,16 @@
   const VIEW_LINK = /^\s*\[[^\]\n]*\]\(([^)\s]+?\.csv)\)\s*$/i;
 
   /** Newer exports show a database where a page has it as a link to its CSV, then the view's
-   *  "filters:" (property names only) and "sort:" lines. Each becomes the link to the database's
-   *  page and a ```database block showing it, sorted as it was; the database's own page (`own`,
-   *  its folder) keeps only the link. */
+   *  "filters:" (property names only) and "sort:" lines. A database of the page's own, a level
+   *  below it, stays the link to its page, which shows it; another page's database becomes the
+   *  link and a ```base block showing it, sorted as it was; the database's own page (`own`, its
+   *  folder) keeps nothing. */
   function convertViews(text, from, to, layout, own) {
     if (!layout.databases.length) return text;
     const lines = text.split("\n");
     const out = [];
+    // The folder this page heads (Life/Life.md heads Life/), if it heads one.
+    const ownDir = baseOf(to) === baseOf(dirOf(to)) + ".md" ? dirOf(to) : null;
     for (let i = 0; i < lines.length; i++) {
       const m = VIEW_LINK.exec(lines[i]);
       const id = m && N.idOf(splitExt(baseOf(decode(m[1]))).stem.replace(/_all$/, ""));
@@ -269,6 +272,10 @@
         i = k - 1;
       }
       if (db.folder === own) continue;
+      if (ownDir !== null && dirOf(db.folder) === ownDir) {
+        out.push(m[0].trim());
+        continue;
+      }
       // Another page's view of the database: its rows by the folder's path in the open folder.
       const B = root.database;
       let base = { filters: { and: B.folderRows(dirOf(to), db.folder) }, views: [{ type: "table", name: B.viewName("table") }] };

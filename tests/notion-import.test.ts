@@ -481,10 +481,8 @@ describe("the fixture's import", () => {
     expect(home).toContain(
       "[Website Redesign](Projects/Website%20Redesign/Website%20Redesign.md)",
     );
-    // The database shown here as well: its rows by its folder's path in the open folder.
-    expect(home).toContain(
-      '```base\nfilters:\n  and:\n    - file.inFolder((if(this.file.folder.isEmpty(), "Projects", this.file.folder + "/Projects")))\n',
-    );
+    // Its own database, a level below: the link to its page, which shows it.
+    expect(home).not.toContain("```base");
     expect(home).toContain("![Logo](logo.png)");
     expect(home).toContain("[Spec](Spec.pdf)");
     expect(home).toContain(
@@ -925,13 +923,11 @@ describe("Notion's newer export", () => {
     expect(out["Papers/03 2026/03 2026.md"]).not.toMatch(
       /_all\.csv|\nAuthor\n/,
     );
-    // A view elsewhere: the link to the database's page, and the database shown, sorted as it was.
+    // A page's own database, a level below: only the link, its view settings gone.
     expect(out["Papers/Papers.md"]).toContain(
-      '[03/2026](03%202026/03%202026.md)\n\n```base\nfilters:\n  and:\n    - file.inFolder((if(this.file.folder.isEmpty(), "03 2026", this.file.folder + "/03 2026")))\n',
+      "[03/2026](03%202026/03%202026.md)\n\nAfter.",
     );
-    expect(out["Papers/Papers.md"]).toContain(
-      "    sort:\n      - property: status\n        direction: DESC\n      - property: year\n        direction: ASC\n```\n\nAfter.",
-    );
+    expect(out["Papers/Papers.md"]).not.toContain("```base");
     // A picture beside the page that shows it.
     expect(
       out[
