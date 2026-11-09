@@ -6,7 +6,7 @@ Pages and sub-pages, pictures and attachments, the links between them, and datab
 
 1. In Notion, choose **Settings › Export all workspace content**, with **Markdown & CSV** and sub-pages included. Put the .zip it gives you (or the folder it unzips to) in the folder open in Textus.
 2. Choose **Plugins › Import from Notion…** (or right-click the .zip in the sidebar) and pick the export. A large export split into Part-1.zip, Part-2.zip… inside one zip is opened as one. A .zip over 256 MB is too big to read at once: unzip it into the open folder and pick that folder.
-3. Name the folder the import goes into (**Notion** unless you type another); nothing already there is changed. A progress bar lets you cancel; what was written so far stays. A report page opens at the end, and with **Workspace** installed the sidebar shows the import as a tree of pages.
+3. Name the folder the import goes into (**Notion** unless you type another); nothing already there is changed. A progress bar lets you cancel; what was written so far stays. A report page opens at the end, and with **Wiki** installed the sidebar shows the import as a tree of pages.
 
 ## What it becomes
 
@@ -23,7 +23,7 @@ Pages and sub-pages, pictures and attachments, the links between them, and datab
 
 ## The report
 
-The report counts what came in, lists the links it couldn't find, the files it couldn't read or write and the blocks it changed, and suggests the plugins that help with the rest - Workspace first, for the pages tree and the databases; then Two-way Links, Quick Preview, Tasks, Link Cards, PDF Viewer and Templates, each only when the import has what it helps with. **Plugins › Plugins That Help After a Notion Import…** offers to install one; Textus asks first, and nothing is installed by itself.
+The report counts what came in, lists the links it couldn't find, the files it couldn't read or write and the blocks it changed, and suggests the plugins that help with the rest - Wiki first, for the pages tree and the databases; then Two-way Links, Quick Preview, Tasks, Link Cards, PDF Viewer and Templates, each only when the import has what it helps with. **Plugins › Plugins That Help After a Notion Import…** offers to install one; Textus asks first, and nothing is installed by itself.
 
 ## Permissions
 
