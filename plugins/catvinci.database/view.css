@@ -82,16 +82,6 @@ body {
   z-index: 4;
   box-shadow: var(--shadow-popover);
 }
-.col-slot {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  z-index: 1;
-  box-sizing: border-box;
-  border: 1px dashed var(--ui-muted);
-  border-radius: var(--shape-xs);
-  pointer-events: none;
-}
 /* A column's width: its head's right edge, dragged. */
 .col-resize {
   position: absolute;

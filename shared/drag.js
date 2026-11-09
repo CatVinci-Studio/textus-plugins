@@ -185,5 +185,67 @@
     });
   }
 
-  root.drag = { track: track, sortable: sortable, indexAt: indexAt };
+  /**
+   * `item` dragged along its row (`axis` "x") or column ("y") among
+   * `items()`, as the window's own tabs and sidebar icons are: the item
+   * itself follows the pointer, the others slide aside, no copy and no
+   * outline. `onDrop(index)`: where it was let go, among all of them.
+   */
+  function reorder(down, options) {
+    var item = options.item;
+    var axis = options.axis || "x";
+    var all = [];
+    var slots = [];
+    var from = 0;
+    var at = 0;
+    var size = 0;
+    var start = axis === "x" ? down.clientX : down.clientY;
+    var scale = 1;
+    function place(n, px, lifted) {
+      n.style.translate = px ? (axis === "x" ? px + "px 0" : "0 " + px + "px") : "";
+      n.classList.toggle("is-drag-lifted", lifted);
+    }
+    track(down, {
+      start: function () {
+        all = options.items();
+        from = all.indexOf(item);
+        at = from;
+        slots = all.map(function (n) {
+          var r = n.getBoundingClientRect();
+          return axis === "x" ? { a: r.left, mid: r.left + r.width / 2 } : { a: r.top, mid: r.top + r.height / 2 };
+        });
+        var box = item.getBoundingClientRect();
+        // A page drawn in a zoomed document: screen pixels to the page's.
+        scale = (axis === "x" ? box.width / item.offsetWidth : box.height / item.offsetHeight) || 1;
+        var next = slots[from + 1] || slots[from - 1];
+        size = next ? Math.abs(next.a - slots[from].a) : axis === "x" ? box.width : box.height;
+        all.forEach(function (n) {
+          if (n !== item) n.style.transition = "translate " + SLIDE_MS + "ms ease-out";
+        });
+      },
+      move: function (x, y) {
+        var delta = (axis === "x" ? x : y) - start;
+        var mid = slots[from].mid + delta;
+        at = from;
+        slots.forEach(function (s, i) {
+          if (i < from && mid < s.mid) at = Math.min(at, i);
+          if (i > from && mid > s.mid) at = Math.max(at, i);
+        });
+        all.forEach(function (n, i) {
+          if (n === item) return place(n, delta / scale, true);
+          var shift = i >= at && i < from ? size : i <= at && i > from ? -size : 0;
+          place(n, shift / scale, false);
+        });
+      },
+      end: function (_x, _y, dropped) {
+        all.forEach(function (n) {
+          place(n, 0, false);
+          n.style.transition = "";
+        });
+        options.onDrop(dropped ? at : from);
+      },
+    });
+  }
+
+  root.drag = { track: track, sortable: sortable, reorder: reorder, indexAt: indexAt };
 })(globalThis);

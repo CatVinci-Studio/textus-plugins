@@ -28,17 +28,17 @@ window.databaseTabs = function (page) {
     return tabs.concat([add]);
   }
 
-  /** A tab dragged along the others to a new place, kept in the base. */
+  /** A tab dragged along the others to a new place, kept in the base: it
+   *  slides as the sidebar's icons do (drag.reorder). */
   function moveTab(e, v) {
     // No text selected from the press: in WebKit a selection starts a drag
     // of its own and the tab never moves.
     if (e.pointerType === "mouse") e.preventDefault();
-    drag.sortable(e, {
+    drag.reorder(e, {
       item: e.currentTarget,
       axis: "x",
-      lists: () => [$("views")],
-      itemsOf: (l) => [...l.querySelectorAll('[role="tab"]')],
-      onDrop: (_l, to) => (to !== v.index ? post({ type: "moveView", from: v.index, to }) : render()),
+      items: () => [...$("views").querySelectorAll('[role="tab"]')],
+      onDrop: (to) => to !== v.index && post({ type: "moveView", from: v.index, to }),
     });
   }
 

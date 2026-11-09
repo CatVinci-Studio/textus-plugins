@@ -211,9 +211,6 @@
     // A page drawn in a zoomed document: the pointer moves in screen
     // pixels, the cells in the page's.
     let zoom = 1;
-    /** Where it will land, kept as an outline. */
-    const slot = el("div", { class: "col-slot", "aria-hidden": "true" });
-    let frameLeft = 0;
     const place = (k, dx, lifted) => {
       for (const c of cells(k)) {
         c.style.transform = dx ? "translateX(" + dx + "px)" : "";
@@ -228,9 +225,7 @@
           return { key: k, left: r.left, middle: r.left + r.width / 2, width: r.width };
         });
         zoom = node.getBoundingClientRect().width / node.offsetWidth || 1;
-        frameLeft = frame.getBoundingClientRect().left;
         frame.classList.add("col-moving");
-        frame.append(slot);
       },
       move: (x) => {
         const from = order.indexOf(key);
@@ -242,10 +237,7 @@
           if (i < from && middle < s.middle) at = Math.min(at, i);
           if (i > from && middle > s.middle) at = Math.max(at, i);
         });
-        // The hole moves to where it would land: the others close it up.
-        const landing = at <= from ? slots[at].left : slots[at].left + slots[at].width - me.width;
-        slot.style.left = (landing - frameLeft) / zoom + "px";
-        slot.style.width = me.width / zoom + "px";
+        // The others slide aside into the room it leaves, as the sidebar's icons do.
         slots.forEach((s, i) => {
           if (i === from) return place(s.key, dx, true);
           const room = me.width / zoom;
@@ -255,7 +247,6 @@
       },
       end: (_x, _y, dropped) => {
         frame.classList.remove("col-moving");
-        slot.remove();
         for (const k of order) place(k, 0, false);
         const from = order.indexOf(key);
         if (!dropped || at === from) return render();
