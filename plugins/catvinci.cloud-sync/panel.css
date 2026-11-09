@@ -173,6 +173,23 @@ fieldset > .actions {
     grid-template-columns: 1fr;
   }
 }
+/* The sidebar: status above its buttons, one service a line. */
+@media (max-width: 22em) {
+  .tx-card {
+    padding: var(--space-3);
+  }
+  .status-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .tx-segmented {
+    flex-direction: column;
+    border-radius: var(--shape-m);
+  }
+  .tx-segment {
+    border-radius: var(--shape-s);
+  }
+}
 /* A phone's keyboard doesn't zoom into a field whose text is its body's. */
 :root[data-window-chrome="mobile"] input:not([type="checkbox"]) {
   font-size: var(--text-body);

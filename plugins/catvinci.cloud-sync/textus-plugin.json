@@ -2,7 +2,7 @@
   "id": "catvinci.cloud-sync",
   "name": "%name%",
   "description": "%description%",
-  "version": "0.4.3",
+  "version": "0.4.4",
   "publisher": "catvinci",
   "author": "CatVinci Studio",
   "license": "MIT",
@@ -43,6 +43,13 @@
         }
       ]
     },
+    "sidebarTabs": [
+      {
+        "id": "catvinci.cloud-sync.sidebar",
+        "title": "%name%",
+        "icon": "tab.svg"
+      }
+    ],
     "views": [
       {
         "id": "catvinci.cloud-sync.panel",
@@ -170,7 +177,9 @@
       "statusNever": "Not synced yet",
       "statusSyncing": "Syncing…",
       "statusConflict": "Sync conflict",
-      "statusError": "Sync error"
+      "statusError": "Sync error",
+      "summaryAuto": "Automatic, every {0} min",
+      "summaryManual": "Only when you choose Sync now"
     },
     "zh": {
       "name": "云同步",
@@ -287,7 +296,9 @@
       "statusNever": "尚未同步",
       "statusSyncing": "正在同步…",
       "statusConflict": "同步冲突",
-      "statusError": "同步出错"
+      "statusError": "同步出错",
+      "summaryAuto": "自动，每 {0} 分钟",
+      "summaryManual": "只在点“立即同步”时"
     },
     "zh-Hant": {
       "name": "Cloud Sync",
@@ -404,7 +415,9 @@
       "statusNever": "尚未同步",
       "statusSyncing": "正在同步…",
       "statusConflict": "同步衝突",
-      "statusError": "同步出錯"
+      "statusError": "同步出錯",
+      "summaryAuto": "自動，每 {0} 分鐘",
+      "summaryManual": "只在按「Sync now」時"
     },
     "ja": {
       "name": "Cloud Sync",
@@ -521,7 +534,9 @@
       "statusNever": "未同期",
       "statusSyncing": "同期中…",
       "statusConflict": "同期の競合",
-      "statusError": "同期エラー"
+      "statusError": "同期エラー",
+      "summaryAuto": "自動、{0} 分ごと",
+      "summaryManual": "「Sync now」を選んだときだけ"
     },
     "ko": {
       "name": "Cloud Sync",
@@ -638,7 +653,9 @@
       "statusNever": "아직 동기화 안 됨",
       "statusSyncing": "동기화 중…",
       "statusConflict": "동기화 충돌",
-      "statusError": "동기화 오류"
+      "statusError": "동기화 오류",
+      "summaryAuto": "자동, {0}분마다",
+      "summaryManual": "‘Sync now’를 누를 때만"
     },
     "es": {
       "name": "Cloud Sync",
@@ -755,7 +772,9 @@
       "statusNever": "Sin sincronizar",
       "statusSyncing": "Sincronizando…",
       "statusConflict": "Conflicto de sincronización",
-      "statusError": "Error de sincronización"
+      "statusError": "Error de sincronización",
+      "summaryAuto": "Automática, cada {0} min",
+      "summaryManual": "Solo al elegir Sync now"
     },
     "fr": {
       "name": "Cloud Sync",
@@ -872,7 +891,9 @@
       "statusNever": "Pas encore synchronisé",
       "statusSyncing": "Synchronisation…",
       "statusConflict": "Conflit de synchronisation",
-      "statusError": "Erreur de synchronisation"
+      "statusError": "Erreur de synchronisation",
+      "summaryAuto": "Automatique, toutes les {0} min",
+      "summaryManual": "Seulement quand vous choisissez Sync now"
     },
     "de": {
       "name": "Cloud Sync",
@@ -989,7 +1010,9 @@
       "statusNever": "Noch nicht synchronisiert",
       "statusSyncing": "Wird synchronisiert…",
       "statusConflict": "Sync-Konflikt",
-      "statusError": "Sync-Fehler"
+      "statusError": "Sync-Fehler",
+      "summaryAuto": "Automatisch, alle {0} Min.",
+      "summaryManual": "Nur wenn du Sync now wählst"
     },
     "ru": {
       "name": "Cloud Sync",
@@ -1106,7 +1129,9 @@
       "statusNever": "Ещё не синхронизировано",
       "statusSyncing": "Синхронизация…",
       "statusConflict": "Конфликт синхронизации",
-      "statusError": "Ошибка синхронизации"
+      "statusError": "Ошибка синхронизации",
+      "summaryAuto": "Автоматически, каждые {0} мин",
+      "summaryManual": "Только по кнопке Sync now"
     },
     "pt": {
       "name": "Cloud Sync",
@@ -1223,7 +1248,9 @@
       "statusNever": "Ainda não sincronizado",
       "statusSyncing": "Sincronizando…",
       "statusConflict": "Conflito de sincronização",
-      "statusError": "Erro de sincronização"
+      "statusError": "Erro de sincronização",
+      "summaryAuto": "Automática, a cada {0} min",
+      "summaryManual": "Só ao escolher Sync now"
     }
   },
   "repository": "https://github.com/CatVinci-Studio/textus-plugins"
