@@ -48,7 +48,7 @@ window.databaseViews = function (page) {
 
   function card(row, key, lane) {
     const others = page.data.columns.filter((c) => c !== key && row.props[c] !== undefined && row.props[c] !== "").slice(0, 3);
-    const node = el("div", { class: "tx-card record" },
+    const node = el("div", { class: "tx-card record", "data-rel": row.rel },
       pageLink(row),
       others.map((c) => el("div", { class: "prop" }, shown(row.props[c], page.data.types[c], c))));
     // Dragged to another list: the row takes that list's value. Within a
@@ -128,7 +128,7 @@ window.databaseViews = function (page) {
       const node = el("div", { class: "day" + (d.getMonth() !== month.getMonth() ? " other" : "") + (weekend ? " weekend" : "") + (k === today ? " today" : "") },
         el("span", { class: "num" }, String(d.getDate())),
         (on.get(k) || []).map((x) =>
-          el("button", { type: "button", class: "chip" + (x.first ? "" : " cont"), title: x.row.name, onclick: () => post({ type: "open", rel: x.row.rel }) }, x.row.name)));
+          el("button", { type: "button", class: "chip" + (x.first ? "" : " cont"), title: x.row.name, "data-rel": x.row.rel, onclick: () => post({ type: "open", rel: x.row.rel }) }, x.row.name)));
       node.addEventListener("dblclick", (e) => {
         if (e.target === node || e.target.classList.contains("num")) post({ type: "add", folder: page.data.folder, props: { [key]: k } });
       });
@@ -143,7 +143,7 @@ window.databaseViews = function (page) {
       capped(page.data.rows).map((row) => {
         const cover = typeof row.props.cover === "string" && /^https?:\/\//.test(row.props.cover) ? row.props.cover : null;
         const glyph = typeof row.props.icon === "string" ? row.props.icon : null;
-        return el("div", { class: "tx-card tile" },
+        return el("div", { class: "tx-card tile", "data-rel": row.rel },
           (cover || glyph) && el("div", { class: "cover", style: cover ? "background-image:url(" + JSON.stringify(cover) + ")" : null }, cover ? "" : glyph),
           el("div", { class: "text" }, pageLink(row),
             page.data.columns.filter((c) => c !== "cover" && row.props[c] !== undefined).slice(0, 3).map((c) => el("div", { class: "prop" }, shown(row.props[c], page.data.types[c], c)))));
@@ -153,7 +153,7 @@ window.databaseViews = function (page) {
   // ----------------------------------------------------------------- list
   function list() {
     return el("div", null, el("ul", { class: "rows-list" },
-      capped(page.data.rows).map((row) => el("li", null, pageLink(row),
+      capped(page.data.rows).map((row) => el("li", { "data-rel": row.rel }, pageLink(row),
         page.data.columns.filter((c) => row.props[c] !== undefined && row.props[c] !== "").slice(0, 3)
           .map((c) => el("span", { class: "prop" }, shown(row.props[c], page.data.types[c], c)))))),
       moreMark(page.data.rows.length));

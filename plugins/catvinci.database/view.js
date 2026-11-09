@@ -149,7 +149,7 @@
     };
     const head = el("tr", null, th("name"), data.columns.map(th),
       el("th", { class: "plus", tabindex: "0", "aria-label": s("newProperty"), onclick: (e) => addColumnMenu(e.currentTarget) }, icon("plus")));
-    const rows = capped(data.rows).map((row) => el("tr", null, titleCell(row), data.columns.map((key) => cell(row, key)), el("td", { class: "plus" })));
+    const rows = capped(data.rows).map((row) => el("tr", { "data-rel": row.rel }, titleCell(row), data.columns.map((key) => cell(row, key)), el("td", { class: "plus" })));
     const span = String(data.columns.length + 2);
     const more = moreMark(data.rows.length);
     const tail = [
@@ -273,15 +273,9 @@
     return td;
   }
 
+  const { DATE, dateInput } = databaseDates({ el, icon, s });
+
   /** `td` as a field holding `value`; `commit(text)` on Enter or leaving. */
-  /** A date as it is written in the note, the way the table shows it: the
-   *  system's date field would show it in its own order (11/02/2026). */
-  const DATE = /^\d{4}-\d{2}-\d{2}([ T]\d{2}:\d{2}(:\d{2})?)?$/;
-
-  function dateInput(attrs) {
-    return el("input", { ...attrs, type: "text", placeholder: "YYYY-MM-DD", inputmode: "numeric", spellcheck: "false" });
-  }
-
   function editInline(td, value, kind, commit) {
     const text = value === undefined || value === null ? "" : String(value);
     const input = kind === "date" ? dateInput({ class: "tx-inline-input cell-input", value: text }) : el("input", { type: kind, class: "tx-inline-input cell-input", value: text });
@@ -389,6 +383,22 @@
       return data;
     },
   });
+  // ----------------------------------------------------------------- rows
+  // A row's own menu, wherever it shows (a table row, a card, a tile, a
+  // day's chip): open it, or delete it.
+  document.addEventListener("contextmenu", async (e) => {
+    const row = e.target.closest("[data-rel]");
+    if (!row || e.target.closest("input, textarea")) return;
+    e.preventDefault();
+    const choice = await api.menu([
+      { label: s("open"), value: "open" },
+      "separator",
+      { label: s("deleteRow"), value: "delete", danger: true },
+    ], { x: e.clientX, y: e.clientY });
+    if (choice === "open") post({ type: "open", rel: row.dataset.rel });
+    else if (choice === "delete") post({ type: "deleteRow", rel: row.dataset.rel });
+  });
+
   // ---------------------------------------------------------------- views
   /** The base's views, one tab each. */
   function viewTabs() {
@@ -404,6 +414,15 @@
           e.preventDefault();
           viewMenu(e.currentTarget, v);
         },
+        // Dragged along the others to a new place.
+        onpointerdown: (e) =>
+          drag.sortable(e, {
+            item: e.currentTarget,
+            axis: "x",
+            lists: () => [$("views")],
+            itemsOf: (l) => [...l.querySelectorAll('[role="tab"]')],
+            onDrop: (_l, to) => (to !== v.index ? post({ type: "moveView", from: v.index, to }) : render()),
+          }),
       }, icon(VIEW_ICONS[v.view] || "table"), v.name || s(v.view)));
     const add = el("button", { type: "button", class: "tx-icon-button", "aria-label": s("addView"), onclick: (e) => addViewMenu(e.currentTarget) }, icon("plus"));
     return tabs.concat([add]);

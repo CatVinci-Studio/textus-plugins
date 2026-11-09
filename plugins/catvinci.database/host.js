@@ -12,7 +12,7 @@ const STRINGS = [
   "filter", "sort", "addFilter", "addSort", "ascending", "descending", "remove",
   "is", "isNot", "contains", "notContains", "isEmpty", "notEmpty", "greater", "less",
   "value", "search", "create", "clear", "untitled", "newProperty", "propertyName",
-  "type", "rename", "hide", "deleteProperty", "showAll", "open", "addView", "renameView", "deleteView", "skipped", "notBase", "unknownView",
+  "type", "rename", "hide", "deleteProperty", "showAll", "open", "addView", "renameView", "deleteView", "deleteRow", "pickDate", "skipped", "notBase", "unknownView",
   "type.text", "type.number", "type.select", "type.tags", "type.date", "type.checkbox", "type.url",
 ];
 
@@ -246,6 +246,24 @@ function draw(target, webview, context) {
           const name = ((await textus.ui.input({ prompt: t("renameView"), value: m.name || "" })) || "").trim();
           return name && set({ name }, m.index ?? index);
         }
+        // A row to the Trash, as the page tree deletes a page (asked first).
+        case "deleteRow":
+          return textus.commands.execute("catvinci.database.deletePage", join(root, m.rel));
+        // A view's tab dragged to another place; the one in front stays in front.
+        case "moveView":
+          return changeBase(target, (base) => {
+            const from = Math.min(m.from | 0, base.views.length - 1);
+            const to = Math.min(m.to | 0, base.views.length - 1);
+            if (from === to) return base;
+            const views = base.views.slice();
+            const [moved] = views.splice(from, 1);
+            views.splice(to, 0, moved);
+            const order = base.views.map((_, n) => n);
+            const [i] = order.splice(from, 1);
+            order.splice(to, 0, i);
+            select(order.indexOf(index));
+            return { ...base, views };
+          });
         case "deleteView":
           return changeBase(target, (base) => {
             if (base.views.length < 2) return base;
