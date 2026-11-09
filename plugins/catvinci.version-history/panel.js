@@ -7,7 +7,6 @@
   for (const [id, key] of [["refresh", "refresh"]])
     for (const attr of ["aria-label", "title"])
       $(id).setAttribute(attr, api.t(key));
-  $("title").textContent = t("title");
   $("refresh").onclick = () => api.postMessage({ type: "refresh" });
   let opened = null;
   let data = { path: null, current: null, versions: [] };

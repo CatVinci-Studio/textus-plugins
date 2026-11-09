@@ -3,7 +3,6 @@
   const api = acquireTextusApi();
   const t = api.t;
   const $ = (id) => document.getElementById(id);
-  $("title").textContent = t("title");
   $("new").setAttribute("aria-label", t("new"));
   $("empty").textContent = t("empty");
   $("filter").placeholder = t("search");

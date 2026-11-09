@@ -12,7 +12,6 @@ body {
 main * {
   min-width: 0;
 }
-h1,
 h2,
 label,
 .tx-card {
@@ -27,11 +26,6 @@ label,
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-h1 {
-  margin: 0;
-  font-size: var(--text-title);
-  font-weight: 600;
-}
 h2 {
   margin: var(--space-5) 0 var(--space-2);
   padding: 0 var(--space-1);
@@ -42,9 +36,6 @@ h2 {
 p {
   margin: 0;
   overflow-wrap: anywhere;
-}
-header p {
-  margin-top: var(--space-1);
 }
 .small,
 .hint {

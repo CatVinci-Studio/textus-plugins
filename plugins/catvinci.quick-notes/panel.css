@@ -6,10 +6,6 @@ body {
 #bar {
   padding: var(--space-2) var(--space-3) 0;
 }
-#title {
-  font-size: var(--text-body);
-  font-weight: 600;
-}
 #filter {
   display: block;
   width: calc(100% - 2 * var(--space-3));
