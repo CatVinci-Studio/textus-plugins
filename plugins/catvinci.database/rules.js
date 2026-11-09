@@ -61,7 +61,8 @@ window.databaseRules = function (page) {
       if (e.key === "Enter") finish(true);
       if (e.key === "Escape") finish(false);
     });
-    input.addEventListener("blur", () => finish(true));
+    // Not while Textus's text menu is open over it (data-menu-open).
+    input.addEventListener("blur", () => input.hasAttribute("data-menu-open") || finish(true));
     input.focus();
     if (input.openMonth) input.openMonth();
   }
