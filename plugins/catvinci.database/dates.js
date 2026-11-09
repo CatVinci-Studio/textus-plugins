@@ -74,6 +74,13 @@ window.databaseDates = function (page) {
       }
       pop.style.left = Math.max(0, left) + "px";
       pop.style.top = top + 4 + "px";
+      // Near the page's end (a frame no taller than 70% of the window can't
+      // grow to hold it): above the field instead.
+      const box = input.getBoundingClientRect();
+      const zoom = box.height / input.offsetHeight || 1;
+      const below = (window.innerHeight - box.bottom) / zoom;
+      const tall = pop.offsetHeight + 8;
+      if (below < tall && top - input.offsetHeight - tall >= 0) pop.style.top = top - input.offsetHeight - tall + "px";
     }
     // Typed, the month follows what is typed.
     input.addEventListener("input", () => {
@@ -94,6 +101,7 @@ window.databaseDates = function (page) {
     // Gone with the field: WebKit sends no blur for a field taken out of the page.
     input.addEventListener("blur", () => pop.remove());
     input.addEventListener("keydown", (e) => {
+      if (e.isComposing || e.keyCode === 229) return;
       if (e.key === "Enter" || e.key === "Escape") pop.remove();
     });
   }

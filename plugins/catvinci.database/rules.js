@@ -58,6 +58,8 @@ window.databaseRules = function (page) {
       render();
     };
     input.addEventListener("keydown", (e) => {
+      // An input method's Enter picks its words; it doesn't end the edit.
+      if (e.isComposing || e.keyCode === 229) return;
       if (e.key === "Enter") finish(true);
       if (e.key === "Escape") finish(false);
     });

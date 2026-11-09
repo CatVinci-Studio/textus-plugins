@@ -297,6 +297,8 @@
       if (!changed || stale) render();
     };
     input.addEventListener("keydown", (e) => {
+      // An input method's Enter picks its words; it doesn't end the edit.
+      if (e.isComposing || e.keyCode === 229) return;
       if (e.key === "Enter") finish(true);
       if (e.key === "Escape") finish(false);
     });
@@ -404,32 +406,11 @@
     },
   });
   // ----------------------------------------------------------------- rows
-  // A row's right-click menu, wherever it shows (a table row, a card, a
-  // tile, a day's chip), laid out as a Markdown table's in the editor:
-  // insert below and to the right first, then the row's and the column's.
-  const prefixed = (prefix, items) =>
-    items.map((item) => (item === "separator" ? item : item.items ? { ...item, items: prefixed(prefix, item.items) } : { ...item, value: prefix + item.value }));
-  document.addEventListener("contextmenu", async (e) => {
-    const row = e.target.closest("[data-rel]");
-    if (!row || e.target.closest("input, textarea")) return;
-    e.preventDefault();
-    const at = { x: e.clientX, y: e.clientY };
-    const key = (e.target.closest("[data-key]") || {}).dataset?.key;
-    const items = [
-      { label: s("insertRowBelow"), value: "new" },
-      { label: s("insertColumnRight"), value: "column" },
-      { label: s("rowGroup"), items: [{ label: s("open"), value: "open" }, "separator", { label: s("deleteRow"), value: "delete", danger: true }] },
-    ];
-    if (key) items.push({ label: s("columnGroup"), items: prefixed("col:", columnItems(key)) });
-    const choice = await api.menu(items, at);
-    if (choice === "open") post({ type: "open", rel: row.dataset.rel });
-    else if (choice === "delete") post({ type: "deleteRow", rel: row.dataset.rel });
-    else if (choice === "column") addColumnMenu(at);
-    else if (choice === "new") {
-      const draft = document.querySelector(".new-row .new");
-      if (draft) draft.click();
-      else post({ type: "add", folder: data.folder, props: {} });
-    } else if (typeof choice === "string" && choice.startsWith("col:")) columnChoice(choice.slice(4), key, e.target.closest("[data-key]"));
+  databaseRows({
+    api, s, post, columnItems, columnChoice, addColumnMenu,
+    get data() {
+      return data;
+    },
   });
 
   // ---------------------------------------------------------------- views
