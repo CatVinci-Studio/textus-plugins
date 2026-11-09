@@ -258,10 +258,11 @@ describe("the import command", () => {
     expect(folder.files[target + "/Home/Projects/Launch.md"]).toContain(
       "status: In progress",
     );
-    // Another page's view finds the database's folder from its own, wherever the vault's top is.
+    // Its own database, a level below: a link, the database shown on its own page.
     expect(folder.files[target + "/Home/Home.md"]).toContain(
-      'this.file.folder + "/Projects"',
+      "[Projects](Projects/Projects.md)",
     );
+    expect(folder.files[target + "/Home/Home.md"]).not.toContain("```base");
     expect(folder.files[target + "/Home/logo.png"]).toBeInstanceOf(Uint8Array);
     expect(opened).toEqual(["/root/" + target + "/reportName.md"]);
     const report = String(folder.files[target + "/reportName.md"]);
