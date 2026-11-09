@@ -961,7 +961,7 @@ describe("Notion's newer export", () => {
     const T = id("8");
     const { out, report } = await importMemory({
       [`Log ${T}.csv`]:
-        "Name,Status\nUntitled,\nUntitled,\nKept,Doing\nUntitled,Done\n",
+        "Name,Status,Reading Status\nUntitled,,\nUntitled,,\nKept,Doing,\nUntitled,Done,\nUntitled,Not Started,\n,,To Do\n",
     });
     expect(Object.keys(out).sort()).toEqual([
       "Log/Kept.md",
@@ -969,13 +969,24 @@ describe("Notion's newer export", () => {
       "Log/Untitled.md",
     ]);
     expect(out["Log/Untitled.md"]).toBe("---\nstatus: Done\n---\n# Untitled\n");
-    expect(report).toMatchObject({ rows: 2, skipped: 2 });
+    // A status Notion filled in by itself (Not Started, To Do) isn't something written.
+    expect(report).toMatchObject({ rows: 2, skipped: 4 });
     // An empty Untitled page of its own, too.
     const page = await importMemory({
       [`Untitled ${id("7")}.md`]: "# Untitled\n",
       [`Kept ${id("6")}.md`]: "# Kept\n",
     });
     expect(Object.keys(page.out)).toEqual(["Kept.md"]);
+    // A database's blank page that isn't one of its rows, Notion's own status on it.
+    const blank = await importMemory({
+      [`Log ${T}.csv`]: "Name,Status\nKept,Doing\n",
+      [`Log ${T}/Kept ${id("5")}.md`]: "# Kept\n\nStatus: Doing\n",
+      [`Log ${T}/Untitled ${id("4")}.md`]: "# Untitled\n\nStatus: To Do",
+    });
+    expect(Object.keys(blank.out).sort()).toEqual([
+      "Log/Kept.md",
+      "Log/Log.md",
+    ]);
   });
 });
 

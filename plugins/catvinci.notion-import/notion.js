@@ -7,6 +7,16 @@
   const N = root.notionCsv;
   const { cleanName, plan, unique, splitExt, dirOf, baseOf, joinPath } = root.notionLayout;
   const P = root.notionPages;
+  /** A status column's "not started", which Notion fills in on a new row by itself. */
+  const STATUS_KEY = /(^|_)(status|state|stage|progress)$|进度|状态|狀態/i;
+  const NOT_STARTED = /^(not started|to ?do|new|backlog|未开始|未開始|待办|待辦)$/i;
+  /** Whether a page's properties say anything: a status Notion set by itself doesn't. */
+  const said = (props) =>
+    Object.entries(props).some(
+      ([k, v]) =>
+        !(STATUS_KEY.test(k) && NOT_STARTED.test(String(v).trim())) &&
+        v !== null && v !== undefined && v !== "" && !(Array.isArray(v) && !v.length),
+    );
   const { EMOJI, SCHEME, TEMPLATE, boardKey, convertCallouts, convertPage, databasePage, dateKey, decode } = P;
   const { encodeLink, frontMatter, linkRelations, propertyValue, relative, resolve, rewriteLinks, wikiNames } = P;
 
@@ -199,13 +209,13 @@
         if (id) layout.byId.set(id, name);
       }
       // A row with no title, no properties and nothing written in it isn't brought in: Notion's
-      // empty "Untitled". Links to its page go to the database's page.
+      // empty "Untitled". A status Notion filled in by itself (Not started) doesn't count.
+      // Links to its page go to the database's page.
       db.skip = [];
       for (const [i, page] of db.pages.entries()) {
         const row = db.rows[i];
         const untitled = !row.name.trim() || /^untitled$/i.test(cleanName(row.name));
-        const said = Object.values(row.props).some((v) => v !== null && v !== undefined && v !== "" && !(Array.isArray(v) && !v.length));
-        if (!untitled || said || (page && hasSubfolder(layout, page))) continue;
+        if (!untitled || said(row.props) || (page && hasSubfolder(layout, page))) continue;
         const text = page ? await Promise.resolve().then(() => read(page, "text")).catch(() => null) : "";
         if (text === null || (page && N.pageParts(text).body.trim())) continue;
         db.skip[i] = true;
@@ -267,8 +277,9 @@
           const props = {};
           for (const [key, value] of page.props) props[N.propertyName(key)] = propertyValue(value);
           const title = page.title || cleanName(splitExt(baseOf(path)).stem);
-          // Notion's empty "Untitled" page - no title, no properties, nothing written - isn't brought in.
-          if (/^untitled$/i.test(title.trim()) && !page.body.trim() && !page.props.length && !hasSubfolder(layout, path)) {
+          // Notion's empty "Untitled" page - no title, no properties, nothing written - isn't brought in;
+          // nor a database's blank page that isn't one of its rows, its status Notion's own "not started".
+          if (/^untitled$/i.test(title.trim()) && !page.body.trim() && !said(props) && !hasSubfolder(layout, path)) {
             report.skipped = (report.skipped || 0) + 1;
             return;
           }
