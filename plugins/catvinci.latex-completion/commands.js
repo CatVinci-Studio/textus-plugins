@@ -241,12 +241,17 @@
     const holds = [];
     const short = [];
     for (const [name, insert, detail] of COMMANDS) {
+      const written = "\\" + (insert || name);
       const item = {
         label: "\\" + name,
-        insert: "\\" + (insert || name),
+        // A command without braces ends in a space, so the next letter
+        // typed doesn't join its name.
+        insert: written.includes("$0") ? written : written + " ",
         detail: detail,
       };
-      if (name.startsWith(typed)) starts.push(item);
+      // The command typed out whole goes first: Enter keeps \in as \in.
+      if (name === typed) starts.unshift(item);
+      else if (name.startsWith(typed)) starts.push(item);
       else if (lower && name.toLowerCase().includes(lower)) holds.push(item);
       else if (abbreviates(name.toLowerCase(), lower)) short.push(item);
     }
