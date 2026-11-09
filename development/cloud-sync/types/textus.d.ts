@@ -1,8 +1,8 @@
 /**
- * The Textus plugin API, 1.0: the `textus` object a plugin's code is given
+ * The Textus plugin API, 1.4: the `textus` object a plugin's code is given
  * (src/plugins/host/runtime/host.js), the context its `activate` receives, and
  * `acquireTextusApi()` in its webviews (runtime/webview.js). The one source
- * of truth: docs/dev/writing-plugins.md explains it, the reference pages are
+ * of truth: docs/dev/plugins/guide.md explains it, the reference pages are
  * made from it, Textus AI writes plugins from it, and
  * src/plugins/host/textus-types.test.ts keeps it in step with the runtime.
  *
@@ -70,7 +70,8 @@ declare global {
       readonly plugin: PluginInfo;
       /** Places of the plugin's own: `global` for every folder, in
        *  Textus's config folder; `project` in the open folder's
-       *  .textus/plugins/<id>/ (needs project.data); `document(path)` for
+       *  .textus/plugins/<id>/ (needs project.data; with no folder open, a
+       *  hidden one in Textus's config folder); `document(path)` for
        *  one document - a diagram's zoom, a bookmark - which follows the
        *  document when it is renamed or moved. */
       readonly storage: {
@@ -141,19 +142,30 @@ declare global {
       editor: Editor;
       files: Files;
       metadata: Metadata;
+      /** From 1.3.10: no permission, nothing leaves the plugin's frame. */
+      dates: Dates;
+      templates: Templates;
       net: Net;
       settings: Settings;
       ai: Ai;
       plugins: Plugins;
       uri: Uri;
       export: Export;
+      /** 1.1: jobs Textus fires on time (notifications, background). */
+      schedule: Schedule;
+      /** 1.1: system notifications (notifications). */
+      notify: Notify;
+      /** 1.1: whether Textus is in front, behind, or has no window. */
+      app: App;
     }
 
     interface Env {
       /** Textus's UI language ("en", "zh", "zh-Hant", ...). */
       readonly language: string;
       readonly appVersion: string;
-      /** This API's version: "1.0". */
+      /** This API's version: "1.4" from Textus 1.3.10 ("1.3": 1.3.10-rc.1,
+       *  "1.2": 1.3.9, "1.1": 1.3.0-beta.8). Prefer engines.textus; compare
+       *  it as numbers, not as text ("1.10" > "1.9"). */
       readonly apiVersion: string;
       readonly platform: "macos" | "windows" | "linux" | "ios";
       readonly theme: "light" | "dark";
@@ -162,6 +174,10 @@ declare global {
       /** Plain text on the system clipboard (needs clipboard). */
       readClipboard(): Promise<string>;
       writeClipboard(text: string): Promise<void>;
+      /** 1.3: the user copied or cut text from a document (needs
+       *  clipboard): the Markdown that went on the clipboard, math source
+       *  kept. Not what is copied elsewhere in Textus or in other apps. */
+      onDidCopy: Event<{ text: string; cut: boolean }>;
     }
 
     interface L10n {
@@ -180,8 +196,24 @@ declare global {
         id: string,
         run: (editor: Editor, ...args: unknown[]) => unknown,
       ): Disposable;
-      /** A command of Textus's ("textus.save", "textus.closeTab") or of a
-       *  plugin's. */
+      /** A command of Textus's or of a plugin's. Textus's: "textus.save",
+       *  "textus.closeTab" ({ save: true } closes once saved) and
+       *  "textus.insertBlock" with a Format menu block at the caret - "h1"
+       *  to "h6", "paragraph", "bullet-list", "ordered-list", "task-list",
+       *  "blockquote", "code-block", "math-block", "rule" or "table".
+       *  "textus.showFolder" with a folder's path inside the open one shows
+       *  it in the sidebar, as double-clicking it does (1.3.12).
+       *  "textus.offerPlugin" with { id } suggests an official plugin from
+       *  the market: a card at the bottom right with its name. It never
+       *  blocks editing and stays until the user acts; its permissions are
+       *  still asked before it installs.
+       *  Resolves true once it is installed and on (at once when it already
+       *  is); false for an id the market has no official plugin for (or
+       *  when the market can't be reached), for an installed plugin that
+       *  can't be turned on, while another card is shown, when the install
+       *  fails, on "Later", and on × - after which your plugin's offers of
+       *  that plugin aren't shown again (the user can bring them back in
+       *  Settings › Extensions). Don't await it in activate. From 1.3.9. */
       execute(id: string, ...args: unknown[]): Promise<unknown>;
     }
 
@@ -190,8 +222,13 @@ declare global {
     // ---------------------------------------------------------------
 
     interface Ui {
-      /** A short note at the bottom of the window that goes by itself. */
-      notice(text: string, options?: { tone?: Tone }): Promise<void>;
+      /** A short note at the bottom of the window that goes by itself.
+       *  With `action` ("Undo"), a button on it: resolves true when it was
+       *  clicked before the note went, false otherwise (Textus 1.3.12). */
+      notice(
+        text: string,
+        options?: { tone?: Tone; action?: string },
+      ): Promise<boolean>;
       /** A box with one button; resolves when it is closed. */
       message(text: string, options?: { tone?: Tone }): Promise<void>;
       confirm(
@@ -218,6 +255,19 @@ declare global {
           commands?: boolean;
         },
       ): Promise<unknown>;
+      /** A date picked on Textus's month calendar, as `YYYY-MM-DD`, or
+       *  null when cancelled; `value` is the one picked to start with
+       *  (Textus 1.3.12). */
+      pickDate(options?: {
+        title?: string;
+        value?: string;
+      }): Promise<string | null>;
+      /** A colour picked from the tones or typed, as `#rrggbb`, or null
+       *  when cancelled (Textus 1.3.12). */
+      pickColor(options?: {
+        title?: string;
+        value?: string;
+      }): Promise<string | null>;
       /** A small form: the values by key, or null when cancelled. */
       form(options: {
         title?: string;
@@ -258,6 +308,10 @@ declare global {
         }
       | { key: string; type: "number"; label: string; value?: number }
       | { key: string; type: "boolean"; label: string; value?: boolean }
+      /** `YYYY-MM-DD`, picked on a month calendar (Textus 1.3.12). */
+      | { key: string; type: "date"; label: string; value?: string }
+      /** `#rrggbb`, from the tones or typed (Textus 1.3.12). */
+      | { key: string; type: "color"; label: string; value?: string }
       | {
           key: string;
           type: "choice";
@@ -295,6 +349,9 @@ declare global {
         viewId: string,
         options?: { where?: Where; title?: string; state?: unknown },
       ): Promise<void>;
+      /** Opens the sidebar on a tab: a plugin's sidebar tab id, or `tree`
+       *  (Files) or `outline`. From 1.3.10. */
+      showSidebarTab(id: string): Promise<void>;
       /** A web page in a tab, for a host the plugin was granted. */
       openWebPage(
         url: string,
@@ -318,6 +375,39 @@ declare global {
       }>;
       onDidChangeActiveTab: Event<TabInfo | null>;
       onDidChangeLayout: Event<void>;
+      /** From 1.3.10: which of the window's panels are open - the sidebar
+       *  (and the tab it shows) and Textus AI's. Read only; Zen mode closes
+       *  them all. A panel added later is a new key. */
+      panels(): Promise<PanelsState>;
+      onDidChangePanels: Event<PanelsState>;
+      /** Shows one of the plugin's floating views (`contributes.floatingViews`):
+       *  a small transparent page of its own size, floating where the user
+       *  left it. The user moves, folds and closes it; nothing floats until
+       *  the plugin opens it, usually from a command. From Textus 1.3.6. */
+      openFloating(viewId: string): Promise<void>;
+      closeFloating(viewId: string): Promise<void>;
+      /** The plugin's floating views that are open. */
+      floatingViews(): Promise<FloatingViewState[]>;
+      /** One of them opened, closed, folded or moved: stop animating while
+       *  `visible` is false. */
+      onDidChangeFloating: Event<FloatingViewState>;
+      /** The user clicked one ("poke"), clicked it three times in a moment
+       *  ("pet") or dragged it somewhere ("moved"). */
+      onDidTouchFloating: Event<{
+        view: string;
+        kind: "poke" | "pet" | "moved";
+      }>;
+    }
+
+    interface FloatingViewState {
+      view: string;
+      open: boolean;
+      /** False while folded to a dot or closed. */
+      visible: boolean;
+      place: "desktop" | "window";
+      /** The half of the window or screen it sits in: a character there
+       *  can face the middle. */
+      side: "left" | "right";
     }
 
     interface TabInfo {
@@ -372,10 +462,46 @@ declare global {
           render(block: CodeBlock, webview: Webview): void | Promise<void>;
         },
       ): Disposable;
+      /** The content of `![[...]]` embeds of the kinds `contributes.embeds`
+       *  names, asked only for embeds in sight; Textus draws it read-only
+       *  and expands embeds inside it itself. One plugin draws each kind:
+       *  the first turned on. From 1.3.9 (files.read). */
+      registerEmbed(id: string, provider: EmbedProvider): EmbedHandle;
       /** The plugin's page in Settings (`contributes.settingsPage`). */
       registerSettingsPage(provider: {
         resolve(webview: Webview): void | Promise<void>;
       }): Disposable;
+    }
+
+    interface EmbedProvider {
+      /** null: nothing to show (Textus shows the link's name, dimmed). */
+      provideEmbed(
+        target: EmbedTarget,
+        context: { signal: AbortSignal },
+      ): EmbedContent | null | Promise<EmbedContent | null>;
+    }
+
+    /** What `![[...]]` points at, as `metadata.resolveNote` resolves it. */
+    interface EmbedTarget {
+      path: string;
+      heading?: string;
+      block?: string;
+      alias?: string;
+    }
+
+    interface EmbedContent {
+      /** Markdown, drawn read-only. Links and pictures in it are read from
+       *  `target.path`'s folder. Leave `![[...]]` in it as is: Textus draws
+       *  those itself, at most 5 deep and never in a loop. */
+      markdown: string;
+      /** Shown over it, opening the source when clicked; the link's name
+       *  without it. */
+      title?: string;
+    }
+
+    interface EmbedHandle extends Disposable {
+      /** Asks again for every embed shown. */
+      refresh(): void;
     }
 
     interface ListProvider {
@@ -386,6 +512,9 @@ declare global {
       onSelect?(item: ListItem): void | Promise<void>;
       /** Its checkbox ticked or unticked. */
       onCheck?(item: ListItem, checked: boolean): void | Promise<void>;
+      /** An item dragged onto another; with it, the rows can be dragged.
+       *  From 1.3.10. */
+      onMove?(item: ListItem, target: ListItem): void | Promise<void>;
       /** What the field over the list says; without it, there is no
        *  field. The list filters itself by label, description and detail. */
       filterPlaceholder?: string;
@@ -500,7 +629,9 @@ declare global {
       ): Promise<boolean>;
       /** Completions as you type, for one of `contributes.completions`
        *  (editor.read): asked when what is before the caret matches its
-       *  `pattern`. `insert` replaces the match; `$0` marks the caret. */
+       *  `pattern`. `insert` replaces the match; `$0` marks the caret.
+       *  Shown in the / panel, grouped by plugin. 1.2: every matching
+       *  provider is asked at once, and none holds up typing. */
       registerCompletion(id: string, provider: CompletionProvider): Disposable;
       /** A card for what the pointer rests on (editor.read). */
       registerHover(provider: {
@@ -515,8 +646,14 @@ declare global {
       }): Disposable;
       /** Another document came to the front (or none). */
       onDidChangeActive: Event<{ path: string | null }>;
-      /** Its text changed: once typing pauses, not on every key. */
-      onDidChange: Event<{ path: string | null }>;
+      /** Its text changed: once typing pauses, not on every key. 1.1:
+       *  `source` says who changed it - "user" (typing, pasting, the
+       *  keyboard), "ai" (Textus AI: an accepted proposal, a completion, a
+       *  grammar fix), "disk" (the file changed and was read again),
+       *  "plugin" (a plugin through this API) or "history" (undo, redo).
+       *  When several did since the last event, "user" wins, then history,
+       *  ai, plugin, disk. */
+      onDidChange: Event<{ path: string | null; source: ChangeSource }>;
       onDidChangeSelection: Event<{ text: string }>;
       /** The keyboard, for plugins that are a way of typing - Vim, Emacs
        *  (editor.input). */
@@ -561,27 +698,71 @@ declare global {
     }
 
     interface CompletionProvider {
-      provideCompletions(context: {
-        /** Before the caret, in its paragraph or formula. */
-        text: string;
-        /** The part `pattern` matched, which an item replaces. */
-        match: string;
-        inMath: boolean;
-      }):
+      provideCompletions(
+        context: CompletionContext,
+      ):
         | CompletionItem[]
+        | CompletionList
         | null
         | undefined
-        | Promise<CompletionItem[] | null | undefined>;
+        | Promise<CompletionItem[] | CompletionList | null | undefined>;
+    }
+
+    interface CompletionContext {
+      /** Before the caret, in its paragraph or formula. */
+      text: string;
+      /** The part `pattern` matched, which an item replaces. */
+      match: string;
+      inMath: boolean;
+      /** From 1.3.9: the pattern's last capture group (the query); the
+       *  match without one. */
+      query: string;
+      /** From 1.3.9: after the caret, to the end of its block (at most 200
+       *  characters): the "]]" Textus pairs with "[[". */
+      after: string;
+      /** From 1.3.9: the document's path; null for an unsaved one. */
+      path: string | null;
+      /** From 1.3.9: aborts when Textus no longer needs the answer (the
+       *  text moved on, the panel closed). An answer after that is dropped. */
+      signal: AbortSignal;
+    }
+
+    /** From 1.3.9: a whole list (up to 20,000 items) Textus filters itself
+     *  as typing goes on, without asking again while the same pattern keeps
+     *  matching from the same place. An array is the provider's own
+     *  filtering: asked again on each key, at most 50 kept. */
+    interface CompletionList {
+      items: CompletionItem[];
+      complete: true;
     }
 
     interface CompletionItem {
       label: string;
+      /** Replaces the match; `$0` marks the caret. */
       insert: string;
       detail?: string;
+      /** From 1.3.9: one of the app's icons ("file", "link", "tag",
+       *  "calendar", "clock", "star", "heading", "block", "quote",
+       *  "emoji") or an SVG of the plugin's. */
+      icon?: string;
+      /** From 1.3.9: also found by (an English name, an alias). */
+      keywords?: string;
+      /** From 1.3.9: characters after the caret it replaces too: 2 for the
+       *  "]]" in `after`. */
+      replaceAfter?: number;
+      /** From 1.3.9: run once it is inserted - the plugin's own command or
+       *  one of Textus's. */
+      command?: { id: string; args?: unknown[] };
     }
 
     type HoverTarget =
-      | { type: "document"; path: string; heading: string | null }
+      | {
+          type: "document";
+          path: string;
+          heading: string | null;
+          /** From 1.3.9: a "^id" block the link points at, without "^". */
+          block?: string | null;
+        }
       | { type: "link"; url: string }
       | { type: "citation"; key: string };
 
@@ -605,12 +786,29 @@ declare global {
       before?: boolean;
     }
 
+    /** A document about to be saved. */
+    interface WillSave {
+      path: string;
+      text: string;
+      trigger: "manual" | "auto";
+      /** Its blocks in order; `from`/`to` are offsets into `text`. */
+      blocks: (Block & { from: number; to: number })[];
+    }
+
+    /** A block's new Markdown, by its id. */
+    interface BlockEdit {
+      block: string;
+      markdown: string;
+    }
+
     interface EditorKeys {
       /** Takes the editor's keys: "all" but the app's shortcuts, or "some" -
-       *  only `keys`. null gives them back. */
+       *  only `keys`. null gives back your own capture. One plugin at a time:
+       *  false while another holds them (its id is in your log). The boolean
+       *  is from 1.3.9; older Textus answers undefined. */
       capture(
         capture: { mode: "all" | "some"; keys: string[] } | null,
-      ): Promise<void>;
+      ): Promise<boolean>;
       onKey: Event<string>;
       exec(op: EditorOp): Promise<EditorOpResult>;
     }
@@ -641,6 +839,7 @@ declare global {
       | { op: "undo" }
       | { op: "redo" }
       | { op: "cursor"; style: "bar" | "block" }
+      | { op: "scroll"; to: "center" | "top" | "bottom" }
       | { op: "flash"; query: string }
       | { op: "flashJump"; label: string; select?: boolean; extend?: boolean }
       | { op: "flashClear" };
@@ -658,6 +857,68 @@ declare global {
     // at once, and for changes made outside it when the window comes back
     // to the front.
     // ---------------------------------------------------------------
+
+    /** Dates written and read in Moment's tokens, as Obsidian's settings and
+     *  templates name them: YYYY YY Q MMMM MMM MM M Do DD D dddd ddd gggg
+     *  GGGG ww w WW W HH H hh h mm ss s A a, `[literal]`. Names, ordinals
+     *  and where a week starts follow `language` (the UI's by default). */
+    interface Dates {
+      /** `date` (a Date, a time in ms, or "YYYY-MM-DD") in `format`
+       *  (default "YYYY-MM-DD"). */
+      format(
+        date: Date | number | string,
+        format?: string,
+        options?: { language?: string },
+      ): string;
+      /** The day a name written in `format` stands for, as "YYYY-MM-DD";
+       *  null when it isn't one. Days only: a week's or month's name
+       *  ("2026-W45") reads as null. */
+      parse(
+        text: string,
+        format?: string,
+        options?: { language?: string },
+      ): string | null;
+    }
+
+    /** Templates filled in as Obsidian's Templates core plugin and then the
+     *  Templater plugin's common tags fill them. */
+    interface Templates {
+      /**
+       * `text` with {{date}}, {{time}}, {{title}}, {{date:FORMAT}},
+       * {{date+1d}} and every {{key}} of `values` filled in (a list joined
+       * with ", ", nothing for null, a date in its format); then Templater's
+       * `<% tp.date.now(...) %>`, `tp.date.tomorrow/yesterday/weekday`,
+       * `tp.file.title`, `tp.file.folder`, `tp.file.creation_date` and
+       * `tp.file.cursor()`. Any other tag or script stays as written and is
+       * listed in `skipped`. With `format` (a periodic note's name format),
+       * also {{yesterday}}, {{tomorrow}}, {{weekday}} and {{monday}} …
+       * {{sunday:FORMAT}} for `date`'s week, as Periodic Notes fills them.
+       * {{date}} and {{time}} use the folder's Templates formats when the
+       * plugin may read files and the caller gives none.
+       */
+      fill(
+        text: string,
+        options?: {
+          values?: Record<string, unknown>;
+          /** The note's day: "YYYY-MM-DD", a Date or ms (default today). */
+          date?: Date | number | string;
+          /** The clock {{time}} reads (default now). */
+          now?: Date | number | string;
+          title?: string;
+          /** "/"-separated, from the open folder: tp.file.folder. */
+          folder?: string;
+          format?: string;
+          dateFormat?: string;
+          timeFormat?: string;
+          language?: string;
+        },
+      ): Promise<{
+        text: string;
+        /** Where tp.file.cursor() was, as an offset in `text`; null if none. */
+        cursor: number | null;
+        skipped: string[];
+      }>;
+    }
 
     interface Files {
       root(): Promise<string | null>;
@@ -683,6 +944,13 @@ declare global {
        * write nothing.
        */
       process(path: string, change: (text: string) => string): Promise<string>;
+      /** The `^id` of the block at `line` (from 0) of `path`, adding a new
+       *  one (6 lowercase hex characters) where Obsidian reads it - the end
+       *  of a paragraph's, heading's or list item's last line; a line of its
+       *  own after a table, quote or code block - through `process`, every
+       *  other byte kept. null when no block is there. From 1.3.9
+       *  (files.write). */
+      blockId(path: string, line: number): Promise<string | null>;
       /** With `updateLinks`, links to it in the folder's documents follow. */
       rename(
         from: string,
@@ -697,16 +965,106 @@ declare global {
       onDidChange: Event<{ path: string }>;
       onDidRename: Event<{ from: string; to: string }>;
       onDidDelete: Event<{ path: string }>;
-      /** A document is about to be saved: return its text changed to save
-       *  that instead (within a second; files.write). */
+      /** A document is about to be saved (files.write). Plugins are asked
+       *  one after another in plugin id order, each given the text as the
+       *  one before left it, at most a second each. Return the blocks you
+       *  changed (`{ block, markdown }`, by the ids in `blocks`) - only
+       *  those are written back - or the whole text, which is written back
+       *  block by block. Code, math, HTML and link definition blocks stay
+       *  as the user wrote them, and each block keeps its line endings. A
+       *  change that would change again when run a second time is skipped
+       *  for this save. `trigger`, `blocks` and `BlockEdit[]` answers are
+       *  from 1.3.9. */
       onWillSave(
-        listener: (e: {
-          path: string;
-          text: string;
-        }) => string | void | Promise<string | void>,
+        listener: (
+          e: WillSave,
+        ) => string | BlockEdit[] | void | Promise<string | BlockEdit[] | void>,
       ): Disposable;
-      onDidSave: Event<{ path: string; text: string }>;
+      /** 1.1: `trigger` is "manual" for File › Save or Save As, "auto" for
+       *  autosave. */
+      onDidSave: Event<{
+        path: string;
+        text: string;
+        trigger: "manual" | "auto";
+      }>;
       onDidChangeRoot: Event<{ path: string | null }>;
+      /** How the folder of `path` (a document or folder, from the root;
+       *  the open folder when left out) is written, whichever app made it -
+       *  Obsidian, Logseq, Foam, Dendron, a site generator, git, or the
+       *  folder's own `.textus/settings.json` "conventions". Read it
+       *  instead of other apps' settings files; a field no app sets is
+       *  null, for Textus's own settings. From 1.3.9 (files.read). */
+      conventions(path?: string): Promise<FolderConventions>;
+      /** From 1.3.10: a settings file of the nearest Obsidian vault -
+       *  `appSettings("obsidian", "bookmarks.json")` reads
+       *  `.obsidian/bookmarks.json` - parsed as JSON, found above the open
+       *  folder too; null where there is none. Read only (files.read). */
+      appSettings(
+        app: "obsidian",
+        file: string,
+        path?: string,
+      ): Promise<unknown | null>;
+      /** The open folder's conventions changed: another folder, or its
+       *  app's settings edited. From 1.3.9. */
+      onDidChangeConventions: Event<{ root: string }>;
+    }
+
+    /** One setting of a folder and where it came from. */
+    interface ConventionSetting<T> {
+      value: T;
+      /** "textus", "typora", "obsidian", "logseq", "dendron", "foam",
+       *  "vscode", "mkdocs", "hugo", "docusaurus", "jekyll", "quarto" or
+       *  "git". */
+      app: string;
+      /** The folder these settings belong to. */
+      root: string;
+    }
+
+    /** A kind of periodic note: its folder (full path), file name format
+     *  (moment.js tokens, `[literal]` text) and template file (full path).
+     *  An Obsidian vault with no daily notes settings keeps them at its top. */
+    interface PeriodicNotes {
+      folder: string;
+      format: string;
+      template: string | null;
+    }
+
+    interface FolderConventions {
+      /** The apps found, nearest first. */
+      sources: { app: string; root: string }[];
+      /** "wiki" or "markdown". */
+      linkStyle: ConventionSetting<string> | null;
+      /** "shortest", "relative" or "absolute". */
+      linkPath: ConventionSetting<string> | null;
+      /** The folder a link starting with "/" is read from. */
+      linkRoot: ConventionSetting<string> | null;
+      /** On a rename: "always", "ask" or "never". */
+      updateLinks: ConventionSetting<string> | null;
+      /** Where pictures go: "/" the root, "./" beside the document, "./sub"
+       *  below it, else a folder from the root; `${filename}` the
+       *  document's name. */
+      attachments: ConventionSetting<string> | null;
+      /** Whether a single newline shows as a line break. */
+      softBreaks: ConventionSetting<boolean> | null;
+      /** The templates folder, a full path. */
+      templates: ConventionSetting<string> | null;
+      /** Daily notes: folder (full path), file name format (moment.js
+       *  tokens, `[literal]` text), template file (full path). */
+      daily: ConventionSetting<PeriodicNotes> | null;
+      /** From 1.3.10: weekly and monthly notes (Periodic Notes), only where
+       *  turned on. */
+      weekly: ConventionSetting<PeriodicNotes> | null;
+      monthly: ConventionSetting<PeriodicNotes> | null;
+      /** From 1.3.10: how a template writes {{date}} and {{time}}
+       *  (Obsidian's Templates settings); null where unset. */
+      templateFormats: ConventionSetting<{
+        date: string | null;
+        time: string | null;
+      }> | null;
+      /** Where new notes go, as `attachments` names a folder. */
+      newNotes: ConventionSetting<string> | null;
+      /** Paths the app hides. */
+      ignore: string[];
     }
 
     interface FileEntry {
@@ -746,8 +1104,32 @@ declare global {
         path: string,
       ): Promise<{ path: string; line: number; text: string }[]>;
       /** Where a link written in `from` goes: a [[wiki link]] or a relative
-       *  path; null for none. */
+       *  path; null for none. 1.2: the same as `(await resolveNote(link,
+       *  from))?.path` for a target that exists. */
       resolveLink(link: string, from: string): Promise<string | null>;
+      /** Where a link goes, exactly as a click takes it: `link` as written -
+       *  "[[Note#^id|alias]]", "![[Note#Heading]]", "[[#^id]]", or a Markdown
+       *  link's target "Note.md#my-heading" / "../a/Note" - from the document
+       *  `from` (needed for relative links and same-note anchors). null when
+       *  `link` is no link to a file (a web URL). From 1.3.9 (files.read). */
+      resolveNote(link: string, from: string): Promise<ResolvedLink | null>;
+      /** The link Textus writes to `to` from `from`: the folder's style (in
+       *  an Obsidian vault, its "new link format" and wiki or Markdown
+       *  links; `[[wiki]]` by the shortest name elsewhere), with `#heading`,
+       *  `#^block` and `|alias` as given - `[[#Heading]]` within one note.
+       *  `style` overrides wiki or Markdown; `embed` adds "!". From 1.3.9
+       *  (files.read). */
+      linkTo(
+        to: string,
+        from: string,
+        options?: {
+          heading?: string;
+          block?: string;
+          alias?: string;
+          style?: "wiki" | "markdown";
+          embed?: boolean;
+        },
+      ): Promise<string>;
       tags(): Promise<{ tag: string; count: number }[]>;
       tasks(filter?: {
         done?: boolean;
@@ -766,6 +1148,22 @@ declare global {
       onDidChange: Event<{ paths: string[] }>;
     }
 
+    interface ResolvedLink {
+      /** Absolute. For a note that doesn't exist: where a click creates it. */
+      path: string;
+      exists: boolean;
+      /** "note": a Markdown document; "file": anything else (a PDF, a picture). */
+      kind: "note" | "file";
+      /** The last level of "#A#B"; never a "^id". */
+      heading?: string;
+      /** A "^id", without the "^". */
+      block?: string;
+      alias?: string;
+      /** Where the heading or block is; null for the top, or when it isn't
+       *  found (the note opens at its top, as a click does). */
+      line: number | null;
+    }
+
     interface DocumentMetadata {
       path: string;
       rel: string;
@@ -778,9 +1176,17 @@ declare global {
         resolved: string | null;
         line: number;
         text: string;
+        /** From 1.3.9: a `[[wiki link]]` or `![[embed]]`, so `target` is a
+         *  name to pass to resolveNote as "[[" + target + "]]". */
+        wiki: boolean;
       }[];
       tags: string[];
       tasks: Task[];
+      /** From 1.3.9: the block ids ("^abc123") in it, with the first words of
+       *  their block - for [[Note#^ completion. Also from `all`. */
+      blockIds: { id: string; line: number; text: string }[];
+      /** From 1.3.9: front matter `aliases` / `alias`, as strings. */
+      aliases: string[];
       /** Only from `get`. */
       blocks?: { id: string; kind: Block["kind"]; line: number }[];
       modifiedMs: number | null;
@@ -838,6 +1244,25 @@ declare global {
           args: Record<string, unknown>,
         ) => string | Promise<string> | unknown,
       ): Disposable;
+      /** What Textus AI is doing and with which service and model - never
+       *  what is said. From 1.3.6. */
+      state(): Promise<AiState>;
+      onDidChangeState: Event<AiState>;
+    }
+
+    interface PanelsState {
+      /** `tab`: the sidebar tab's id ("tree" for the files, "outline", or a
+       *  plugin's view id). */
+      sidebar: { open: boolean; tab: string };
+      ai: { open: boolean };
+    }
+
+    interface AiState {
+      state: "idle" | "thinking" | "writing" | "proposing";
+      /** null before Textus AI is first used. */
+      model: { provider: string; id: string | null } | null;
+      /** On going idle after a request: finished, failed or stopped. */
+      ended?: "done" | "failed" | "stopped";
     }
 
     interface Plugins {
@@ -852,8 +1277,9 @@ declare global {
     interface Export {
       /** An HTML or PDF export's page, before it is written (editor.read):
        *  `css` is added to its styles, `html` replaces its content. Scripts
-       *  and handlers in the HTML are taken out. Each plugin is waited for
-       *  at most two seconds. */
+       *  and handlers in the HTML are taken out. Plugins are asked in plugin
+       *  id order, each given the HTML as the one before left it, and
+       *  waited for at most two seconds. */
       onWillExport(
         listener: (page: {
           format: "html" | "pdf";
@@ -877,9 +1303,110 @@ declare global {
       ): Disposable;
     }
 
+    /** Who changed the document (editor.onDidChange). */
+    type ChangeSource = "user" | "ai" | "disk" | "plugin" | "history";
+
+    /**
+     * A job Textus keeps for the plugin and fires on time while it runs -
+     * with a window open or, in background mode, with none - even after a
+     * restart. One of `at`, `every`, `daily`; then `notify`, `run` or both.
+     *
+     * - `at`: once, "2026-11-02T09:00" (local) or with an offset.
+     * - `every`: "15m", "1h", "1h30m", "1d": 15 minutes at least, counted
+     *   from when it was set.
+     * - `daily`: "HH:MM", local time; across daylight saving it keeps the
+     *   time on the clock.
+     * - `catchUp`: a time missed while Textus wasn't running fires once on
+     *   its next start ("once", the default) or is let go ("skip").
+     * - `notify`: shown as a system notification (needs notifications).
+     * - `run`: the name of a function the manifest's `background` code
+     *   exports, called as `exports[run](job, ctx)` (needs background).
+     */
+    interface Job {
+      at?: string;
+      every?: string;
+      daily?: string;
+      catchUp?: "once" | "skip";
+      notify?: Notification;
+      run?: string;
+    }
+
+    /** A job as Textus keeps it: what was set, when it is due next (Unix
+     *  ms; null once an `at` fired) and when it last fired. */
+    interface ScheduledJob extends Job {
+      id: string;
+      catchUp: "once" | "skip";
+      nextDue: number | null;
+      lastFired: number | null;
+    }
+
+    /**
+     * A system notification. A click brings Textus up with `open.path` (a
+     * file of the open folder - or, from a job, of the folder open when it
+     * was set - absolute or relative to it; needs files.read) open at
+     * `open.line`. macOS asks the user to allow notifications the first time.
+     */
+    interface Notification {
+      title: string;
+      body?: string;
+      open?: { path: string; line?: number };
+    }
+
+    interface Schedule {
+      /** Adds the job, or replaces the plugin's job of that id (letters,
+       *  digits, `-`, `_`, `.`; at most 32 jobs a plugin). */
+      set(id: string, job: Job): Promise<ScheduledJob>;
+      /** Whether there was one to take away. */
+      clear(id: string): Promise<boolean>;
+      list(): Promise<ScheduledJob[]>;
+    }
+
+    interface Notify {
+      show(notification: Notification): Promise<void>;
+    }
+
+    interface App {
+      /** "active": a Textus window has the focus; "inactive": windows are
+       *  open, none focused; "background": no window (background code, or
+       *  every window closed in background mode). */
+      readonly state: "active" | "inactive" | "background";
+      onDidChangeState: Event<"active" | "inactive" | "background">;
+      /** The user typed (heard once typing pauses) or saved by hand -
+       *  that it happened, with nothing of the document. From 1.3.6. */
+      onDidActivity: Event<{ kind: "typing" | "saved" }>;
+    }
+
+    /**
+     * What a job's `run` is given, in the manifest's `background` code: a
+     * frame of its own, started for the run and stopped after it (30
+     * seconds at most). That code reaches `files` (in the folder open when
+     * the job was set), `net`, `settings.get`, `schedule`, `notify`, `app`,
+     * `l10n`, `env` and the context's storage, secrets and log - not the
+     * editor, UI, layout, views, commands or metadata.
+     *
+     *     exports.remind = async (job, ctx) => { ... };
+     */
+    interface JobRun {
+      /** The job's id. */
+      id: string;
+      /** When it was due: well before now for one caught up after a start. */
+      due: Date;
+    }
+
     // ---------------------------------------------------------------
     // A webview's page
     // ---------------------------------------------------------------
+
+    /** An item of a page's menu (`WebviewApi.menu`); `items` makes it a
+     *  submenu (one level). */
+    interface MenuItem {
+      label: string;
+      value?: unknown;
+      checked?: boolean;
+      danger?: boolean;
+      disabled?: boolean;
+      items?: (MenuItem | "separator")[];
+    }
 
     interface WebviewApi {
       readonly language: string;
@@ -888,6 +1415,20 @@ declare global {
       onMessage(fn: (message: unknown) => void): Disposable;
       getState(): unknown;
       setState<T>(state: T): T;
+      /** Textus's own menu over the page, for a right-click or a dropdown,
+       *  under `at` (an element) or at a point of the page. Resolves to the
+       *  chosen item's value (its label without one), or null when the menu
+       *  is closed without a choice. A page draws no menu of its own. */
+      menu(
+        items: (MenuItem | "separator")[],
+        at?: Element | { x: number; y: number },
+      ): Promise<unknown>;
+      /** A text field's menu items (undo, redo, cut, copy, paste, select
+       *  all) in Textus's language, for a page's own right-click menu; each
+       *  value is the action `editText` takes (1.3.12). */
+      textItems(field: Element): Promise<(MenuItem | "separator")[]>;
+      /** One of those actions in `field`, the clipboard through Textus. */
+      editText(field: Element, action: string): Promise<void>;
       /** How the page looks as a picture, asked when the document is
        *  exported (a code block's page): an SVG's markup or an image's
        *  `data:` URL, for a page of `theme`. Without it, or answering

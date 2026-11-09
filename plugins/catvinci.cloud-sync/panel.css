@@ -4,6 +4,29 @@ main {
   margin: 0 auto;
   padding: var(--space-5) var(--space-4) var(--space-6);
 }
+/* Nothing wider than the page: a long name, path or error wraps, never
+   running out under the window's other column. */
+body {
+  overflow-x: hidden;
+}
+main * {
+  min-width: 0;
+}
+h1,
+h2,
+label,
+.tx-card {
+  overflow-wrap: anywhere;
+}
+#provider-pick {
+  width: 100%;
+  justify-content: space-between;
+}
+#provider-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
 h1 {
   margin: 0;
   font-size: var(--text-title);
@@ -181,13 +204,6 @@ fieldset > .actions {
   .status-row {
     flex-direction: column;
     align-items: stretch;
-  }
-  .tx-segmented {
-    flex-direction: column;
-    border-radius: var(--shape-m);
-  }
-  .tx-segment {
-    border-radius: var(--shape-s);
   }
 }
 /* A phone's keyboard doesn't zoom into a field whose text is its body's. */

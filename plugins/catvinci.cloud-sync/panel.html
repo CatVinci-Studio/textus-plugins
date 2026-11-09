@@ -9,7 +9,6 @@
     <main>
       <header>
         <h1 data-t="name"></h1>
-        <p class="muted" data-t="intro"></p>
       </header>
       <section class="tx-card sync-status" aria-label="Sync status">
         <div class="status-row">
@@ -24,7 +23,13 @@
             <p id="last-run" class="muted small" hidden></p>
           </div>
           <div class="actions">
-            <button type="button" class="tx-button" id="cancel" data-t="cancel" hidden></button>
+            <button
+              type="button"
+              class="tx-button"
+              id="cancel"
+              data-t="cancel"
+              hidden
+            ></button>
             <button
               type="button"
               class="tx-button primary"
@@ -41,28 +46,12 @@
         <fieldset id="fields" disabled>
           <h2 data-t="connectionTitle"></h2>
           <div class="tx-card">
-            <div class="tx-segmented" role="radiogroup" id="provider-tabs">
-              <button
-                type="button"
-                class="tx-segment"
-                role="radio"
-                data-provider="s3"
-                data-t="s3"
-              ></button>
-              <button
-                type="button"
-                class="tx-segment"
-                role="radio"
-                data-provider="webdav"
-                data-t="webdav"
-              ></button>
-              <button
-                type="button"
-                class="tx-segment"
-                role="radio"
-                data-provider="nutstore"
-                data-t="nutstore"
-              ></button>
+            <div class="field">
+              <label for="provider-pick" data-t="service"></label
+              ><button type="button" class="tx-select" id="provider-pick">
+                <span id="provider-name"></span
+                ><span class="tx-icon" data-icon="chevron"></span>
+              </button>
             </div>
             <input id="provider" type="hidden" value="s3" />
             <p id="nutstore-help" class="hint" data-t="nutstoreHelp" hidden></p>
@@ -101,7 +90,6 @@
                 aria-describedby="prefix-help"
                 spellcheck="false"
               />
-              <p id="prefix-help" class="hint" data-t="prefixHelp"></p>
             </div>
             <details id="s3-more" class="tx-disclosure">
               <summary data-t="moreOptions"></summary>
@@ -151,12 +139,17 @@
                 />
               </div>
             </div>
-            <p class="hint" data-t="passwordRecovery"></p>
           </div>
           <div class="tx-card switch-row">
             <div class="switch">
               <span id="automatic-label" data-t="automatic"></span>
-              <input id="automatic" type="checkbox" role="switch" class="tx-switch" aria-labelledby="automatic-label" />
+              <input
+                id="automatic"
+                type="checkbox"
+                role="switch"
+                class="tx-switch"
+                aria-labelledby="automatic-label"
+              />
             </div>
             <div class="field inline" id="interval-field">
               <label for="interval" data-t="interval"></label
@@ -172,7 +165,13 @@
           </div>
           <p id="credentials-state" class="hint"></p>
           <div class="actions">
-            <button type="button" class="tx-button" id="test" data-t="test" disabled></button
+            <button
+              type="button"
+              class="tx-button"
+              id="test"
+              data-t="test"
+              disabled
+            ></button
             ><button
               type="button"
               class="tx-button primary"
@@ -185,7 +184,13 @@
       <details class="trouble tx-disclosure">
         <summary data-t="advanced"></summary>
         <p class="hint" data-t="unlockHelp"></p>
-        <button type="button" class="tx-button" id="unlock" data-t="unlock" disabled></button>
+        <button
+          type="button"
+          class="tx-button"
+          id="unlock"
+          data-t="unlock"
+          disabled
+        ></button>
       </details>
     </main>
     <script src="textus-resource:panel.js"></script>
