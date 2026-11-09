@@ -362,7 +362,8 @@
         const before = toWorld(p.x, p.y);
         view.k = Math.min(
           4,
-          Math.max(0.15, view.k * (e.deltaY < 0 ? 1.12 : 1 / 1.12)),
+          // A pinch sends many small steps, a mouse wheel few large ones.
+          Math.max(0.15, view.k * Math.exp(-Math.max(-12, Math.min(12, e.deltaY)) * 0.01)),
         );
         const after = toWorld(p.x, p.y);
         view.x += after.x - before.x;

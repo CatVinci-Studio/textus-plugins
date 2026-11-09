@@ -102,7 +102,9 @@
     (event) => {
       if (!event.ctrlKey && !event.metaKey) return;
       event.preventDefault();
-      setZoom(current() * (event.deltaY < 0 ? 1.1 : 1 / 1.1));
+      // A pinch sends many small steps, a mouse wheel few large ones.
+      const step = Math.max(-10, Math.min(10, event.deltaY));
+      setZoom(current() * Math.exp(-step * 0.01));
     },
     { passive: false },
   );
