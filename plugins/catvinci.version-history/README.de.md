@@ -16,6 +16,7 @@ Behält jedes Speichern eines Dokuments als Version, damit Sie sehen, was sich g
 
 ## Änderungen
 
+- **0.3.4** - In der Seitenleiste zeigt das Feld keinen eigenen Titel mehr, wie die anderen Tabs dort.
 - **0.3.3** - Leisten, Listen und Steuerelemente sind jetzt die von Textus, wachsen mit der Oberfläche und folgen jedem Theme; braucht Textus 1.3.12.
 - **0.3.2** - Seine Seite sagt jetzt in einem Satz, was es tut, was es kann und was sich in jeder Version geändert hat.
 - **0.3.1** - Nur der mit anderen Plugins geteilte Pfad-Code hat sich geändert; in der Bedienung ändert sich nichts.

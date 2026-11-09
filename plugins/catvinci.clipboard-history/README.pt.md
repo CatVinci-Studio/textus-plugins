@@ -17,5 +17,6 @@ Só fica guardado o que você copia nos seus documentos, nunca o que copia nos A
 
 ## Alterações
 
+- **0.1.2** - O botão Limpar voltou: um clique esvazia o histórico.
 - **0.1.1** - Sua página agora diz numa frase o que ele faz, o que pode fazer e o que mudou em cada versão.
 - **0.1.0** - Primeira versão: as últimas 30 cópias na barra lateral, inseridas com um clique, copiadas de novo ou removidas com o botão direito. Requer Textus 1.3.10.

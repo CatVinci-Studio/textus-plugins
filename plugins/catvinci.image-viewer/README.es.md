@@ -19,6 +19,7 @@ No pide ninguno. Solo lee el archivo que abres, en escritorio y en iOS.
 
 ## Cambios
 
+- **0.2.3** - Un pellizco en el trackpad hace zoom con suavidad, al ritmo del gesto; con Textus 1.3.13, en un Mac el pellizco amplía la imagen, no el documento de detrás.
 - **0.2.2** - Sus barras, listas y controles son ahora los de Textus, crecen con la interfaz y siguen cada tema; necesita Textus 1.3.12.
 - **0.2.1** - Su página dice ahora en una frase qué hace, qué puede hacer y qué cambió en cada versión.
 - **0.2.0** - los botones y la barra de pestaña propios de Textus; las etiquetas siguen el idioma de la interfaz al cambiarlo

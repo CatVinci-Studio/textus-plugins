@@ -17,5 +17,6 @@ Only what you copy in your documents is kept, never what you copy in Settings or
 
 ## Changes
 
+- **0.1.2** - The panel's Clear button is back: one click empties the history.
 - **0.1.1** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
 - **0.1.0** - First version: the last 30 copies in the sidebar, put in with a click, copied again or removed with a right-click. Needs Textus 1.3.10.

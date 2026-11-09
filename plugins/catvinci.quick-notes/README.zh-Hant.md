@@ -28,6 +28,7 @@
 
 ## 更新紀錄
 
+- **0.5.2** - 側欄裡的面板不再單獨顯示標題，和側欄其他標籤一致。
 - **0.5.1** - Its bars, lists and controls are Textus's own, grow with the interface and follow every theme; needs Textus 1.3.12.
 - **0.5.0** - 日期和日記範本由 Textus 自己填寫，與「日曆與每日筆記」「範本」外掛的做法一致。需要 Textus 1.3.10。
 - **0.4.0** - 筆記存進資料夾裡的文件：`Inbox.md` 或今天的日記。舊版本的筆記會一次搬進來。

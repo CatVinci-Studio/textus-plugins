@@ -28,6 +28,7 @@ Funciona no desktop.
 
 ## Alterações
 
+- **0.5.2** - Na barra lateral o painel não mostra mais um título próprio, como as outras abas.
 - **0.5.1** - Suas barras, listas e controles agora são os do Textus, crescem com a interface e seguem cada tema; requer Textus 1.3.12.
 - **0.5.0** - As datas e o modelo da nota diária são preenchidos pelo próprio Textus, do mesmo jeito que no Calendário e notas diárias e em Modelos. Requer Textus 1.3.10.
 - **0.4.0** - As notas ficam num documento da pasta: `Inbox.md` ou a nota diária de hoje. As de versões antigas vão para lá uma vez.

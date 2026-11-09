@@ -17,5 +17,6 @@ Solo se guarda lo que copias en tus documentos, nunca lo que copias en Ajustes o
 
 ## Cambios
 
+- **0.1.2** - Vuelve el botón Borrar: un clic vacía el historial.
 - **0.1.1** - Su página dice ahora en una frase qué hace, qué puede hacer y qué cambió en cada versión.
 - **0.1.0** - Primera versión: las últimas 30 copias en la barra lateral, que se ponen con un clic y se copian de nuevo o se quitan con clic derecho. Requiere Textus 1.3.10.

@@ -11,6 +11,7 @@ Läuft auf dem Desktop und auf dem iPhone und braucht Textus 1.3.0 oder neuer. E
 
 ## Änderungen
 
+- **0.1.4** - Ein ganz ausgeschriebener Befehl steht oben, sodass Enter ihn behält (\in bleibt \in); ein Befehl ohne Klammern wird mit einem Leerzeichen danach geschrieben; mit Textus 1.3.13 schließt sich die Liste, sobald ein Befehl geschrieben ist.
 - **0.1.3** - Seine Seite sagt jetzt in einem Satz, was es tut, was es kann und was sich in jeder Version geändert hat.
 - **0.1.2** - Nennt, wo es läuft: Desktop und iPhone.
 - **0.1.0-0.1.1** - Erste Versionen: über 200 Befehle mit dem, was jeder zeichnet, Suche nach Buchstaben in Reihenfolge, Klammern und Cursor an ihrem Platz, mitwachsende Klammerpaare; Seite im Store und Symbol.

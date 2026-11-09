@@ -36,6 +36,7 @@ kanban-plugin: board
 
 ## Changes
 
+- **0.4.6** - The board fades at its edges where lists run past the window.
 - **0.4.5** - A dragged card or list stays right under the pointer and lifts like everything dragged in Textus. Its bars, lists and controls are Textus's own, grow with the interface and follow every theme; needs Textus 1.3.12.
 - **0.4.4** - Dragging a card or a list no longer selects text on the way.
 - **0.4.3** - Its page now says in one sentence what it does, what it can do, and what changed in each version.

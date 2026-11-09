@@ -16,6 +16,7 @@ Guarda cada salvamento de um documento como uma versão, para ver o que mudou e 
 
 ## Alterações
 
+- **0.3.4** - Na barra lateral o painel não mostra mais um título próprio, como as outras abas.
 - **0.3.3** - Suas barras, listas e controles agora são os do Textus, crescem com a interface e seguem cada tema; requer Textus 1.3.12.
 - **0.3.2** - Sua página agora diz numa frase o que ele faz, o que pode fazer e o que mudou em cada versão.
 - **0.3.1** - Só mudou o código de caminhos compartilhado com outros plugins; nada muda no uso.

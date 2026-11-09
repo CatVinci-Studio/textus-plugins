@@ -11,6 +11,7 @@ Funciona no computador e no iPhone e precisa do Textus 1.3.0 ou mais recente. Pe
 
 ## Alterações
 
+- **0.1.4** - Um comando digitado por inteiro vem primeiro, então Enter o mantém (\in continua \in); um comando sem chaves é escrito com um espaço depois; com o Textus 1.3.13 a lista fecha assim que o comando é escrito.
 - **0.1.3** - Sua página agora diz numa frase o que ele faz, o que pode fazer e o que mudou em cada versão.
 - **0.1.2** - Indica onde funciona: computador e iPhone.
 - **0.1.0-0.1.1** - Primeiras versões: mais de 200 comandos com o que cada um desenha, procura por letras pela ordem, chavetas e cursor no lugar, pares de parênteses que crescem; página na loja e ícone.

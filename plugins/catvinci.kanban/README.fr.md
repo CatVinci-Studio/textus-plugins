@@ -36,6 +36,7 @@ kanban-plugin: board
 
 ## Changements
 
+- **0.4.6** - Le tableau s’estompe sur les bords quand des listes dépassent la fenêtre.
 - **0.4.5** - Une carte ou une liste glissée reste juste sous le pointeur et se soulève comme tout ce qu’on glisse dans Textus. Ses barres, listes et contrôles sont désormais ceux de Textus, grandissent avec l’interface et suivent chaque thème ; nécessite Textus 1.3.12.
 - **0.4.4** - Faire glisser une carte ou une liste ne sélectionne plus de texte au passage.
 - **0.4.3** - Sa page dit maintenant en une phrase ce qu'il fait, ce qu'il permet et ce qui a changé à chaque version.

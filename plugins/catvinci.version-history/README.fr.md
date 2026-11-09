@@ -16,6 +16,7 @@ Garde chaque enregistrement d’un document comme une version, pour voir ce qui 
 
 ## Changements
 
+- **0.3.4** - Dans la barre latérale, le panneau n’affiche plus son propre titre, comme les autres onglets.
 - **0.3.3** - Ses barres, listes et contrôles sont désormais ceux de Textus, grandissent avec l’interface et suivent chaque thème ; nécessite Textus 1.3.12.
 - **0.3.2** - Sa page dit maintenant en une phrase ce qu'il fait, ce qu'il permet et ce qui a changé à chaque version.
 - **0.3.1** - Seul le code de chemins partagé avec d’autres plugins a changé ; rien ne change à l’usage.
