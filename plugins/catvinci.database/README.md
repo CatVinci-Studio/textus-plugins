@@ -1,8 +1,8 @@
 # Workspace
 
-Pages within pages, and databases of your notes as tables, boards, calendars, galleries and lists, all in plain Markdown files.
+Pages within pages, and bases of your notes as tables, boards, calendars, galleries and lists, all in plain Markdown files.
 
-Databases are written in **Obsidian's Bases format** (` ```base ` blocks and `.base` files), so Obsidian opens the same databases. The plugin runs on the desktop and on iOS.
+Bases are written in **Obsidian's Bases format** (` ```base ` blocks and `.base` files), so Obsidian opens the same bases. The plugin runs on the desktop and on iOS.
 
 ## Pages
 
@@ -14,9 +14,9 @@ Databases are written in **Obsidian's Bases format** (` ```base ` blocks and `.b
 - **Renaming a page's folder** in the Files tab renames its page with it, so it stays a page with sub-pages.
 - **Older layout**: `Plans.md` with its sub-pages in a `Plans/` folder beside it reads the same. **Plugins › Organize Pages into Folders…** moves every such page into its folder at once, after showing the list.
 
-## Databases
+## Bases
 
-A database is a `base` block in a page, or a `.base` file opened in a tab. Its filters choose notes: each note is a row, and the properties in its front matter are the columns. Type `/` and choose **New Database…** (or **Plugins › New Database…**): it makes a folder for the database with a page that holds the block.
+A base is a `base` block in a page, or a `.base` file opened in a tab. Its filters choose notes: each note is a row, and the properties in its front matter are the columns. Type `/` and choose **New Base…** (or **Plugins › New Base…**): it makes a folder for the base with a page that holds the block.
 
 ````markdown
 ```base
@@ -37,28 +37,28 @@ views:
 ````
 
 - **Views** are tabs at the block's top: Table, Board, Calendar, Gallery (Bases' `cards`) and List. Right-click a view for its menu: its layout, rename, delete. **+** adds a view. Calendar is Textus's own; Obsidian shows it as a view it doesn't know.
-- **Every row is a note.** Click a cell to change it; the property is written to that note's front matter. **New** makes a note in the database's folder. A row opens in a tab, as a file does.
+- **Every row is a note.** Click a cell to change it; the property is written to that note's front matter. **New** makes a note in the base's folder. A row opens in a tab, as a file does.
 - **Columns**: click a column's head to sort by it, filter it, change its type, rename it, hide it or delete the property from every row; **+** adds a property. Drag a head to move the column, and drag its right edge to set its width (double-click the edge to fit it again). Order and widths are kept in the base, widths as Obsidian's `columnSize`.
 - **Board**: drag a card to another list to change its value. Drag a list by its head to put the lists in the order you want (`groupOrder`).
 - **Calendar**: rows are placed by a date property; click a day to make a row on that date.
 - **Filter**, **Sort** and the column menus are kept in the view as Bases writes them: `status == "Read"`, `tags.contains("ml")`, `due.isEmpty()`. Filters Textus can't read yet are left as they are and said so under the bar.
-- **Long databases** show their first 25 rows (or the view's `limit`); scrolling down loads the rest, the table's head staying in view. The caret on a block's left, on hover, folds it to one line; the fold and the view you leave it on are kept on this device only.
+- **Long bases** show their first 25 rows (or the view's `limit`); scrolling down loads the rest, the table's head staying in view. The caret on a block's left, on hover, folds it to one line; the fold and the view you leave it on are kept on this device only.
 - **Formulas** (`formulas:` in the base) are worked out for each row and can be columns, filters and sorts: `(price / pages).toFixed(2)`. Summaries are not drawn yet.
 - **Property types** are Obsidian's, from `.obsidian/types.json`, when the folder is a vault.
-- **In an embedded note** (`![[page]]`) a database is one line; click it to draw it.
+- **In an embedded note** (`![[page]]`) a base is one line; click it to draw it.
 - **From Dataview**: put the caret in a ` ```dataview ` block and run **Plugins › Convert Dataview query to base**. `TABLE` and `LIST` with `FROM`, `WHERE`, `SORT` and `LIMIT` become the same base in the block's place; `TASK`, `GROUP BY`, `FLATTEN` and `dataviewjs` are refused with the reason, and nothing changes.
 
-Notion exports come in through the **Notion Import** plugin, which writes pages and databases this plugin shows.
+Notion exports come in through the **Notion Import** plugin, which writes pages and bases this plugin shows.
 
 ## Permissions
 
-- **Read and write files in the open folder**: to read notes and their properties, make pages and databases, write cell edits to front matter, and move or rename pages with their links.
-- **Read and edit the document**: to insert a new database or sub-page and its link, and to turn a Dataview block into a base.
-- **Tools for Textus AI**: so Textus AI can make databases and pages, read rows and add them.
+- **Read and write files in the open folder**: to read notes and their properties, make pages and bases, write cell edits to front matter, and move or rename pages with their links.
+- **Read and edit the document**: to insert a new base or sub-page and its link, and to turn a Dataview block into a base.
+- **Tools for Textus AI**: so Textus AI can make bases and pages, read rows and add them.
 
 ## Changes
 
-- **0.7.5** - A long title or text wraps within a column of a set width instead of stretching the table; a row's right-click menu is laid out as a Markdown table's (insert a row below or a column to the right, then Row and Column); the date month opens and sits under its field in every window, zoomed too; a new row is drafted in the table's own cells; a field's right-click menu is Textus's own; a view's tab can be dragged on a Mac too; needs Textus 1.3.12.
+- **0.7.5** - A long title or text wraps within a column of a set width instead of stretching the table; a row's right-click menu is laid out as a Markdown table's (insert a row below or a column to the right, then Row and Column); the date month opens and sits under its field in every window, zoomed too; a new row is drafted in the table's own cells; a field's right-click menu is Textus's own; a view's tab can be dragged on a Mac too; needs Textus 1.3.12. In English the Workspace's databases are called bases, as Obsidian calls them (New Base…).
 - **0.7.4** - a table's head stays in view while its rows scroll; more rows load as you scroll down, no Show more; a view's menu is on right-click only; columns start at widths in proportion to the block; the view you leave a block in is kept on this device, not in the note; a block folds with Textus's own caret on its left, no fold arrow of its own; a column is dragged by its head as the sidebar's tabs are, the others sliding aside; a rating column shows the same way all down; a filter added twice is kept once, and one that contradicts another (status is Done, then status is Doing) takes its place; its board, fields and stars are Textus's own controls; a row's right-click menu opens it or moves it to the Trash; view tabs are dragged into a new order; a date is typed or picked from a small month under its field; a new sub-page's link in a page just moved into its folder points from where the page is now; needs Textus 1.3.12
 - **0.7.3** - Shares Two-way Links' fix for working out how a note links.
 - **0.7.2** - a dragged column stays under the pointer in a zoomed document, and dragging selects no text; a date is edited as it is shown, 2026-11-08, not in the system's order; new pages and databases are linked with standard links, [Week 1](Week%201.md), unless the folder or the page already uses [[wiki links]]

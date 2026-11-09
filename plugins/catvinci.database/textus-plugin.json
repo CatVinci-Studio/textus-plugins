@@ -260,8 +260,8 @@
   "l10n": {
     "en": {
       "name": "Workspace",
-      "description": "Pages within pages, and databases of your notes as tables, boards, calendars, galleries and lists - in Obsidian's Bases format, so Obsidian opens the same databases. All plain Markdown files.",
-      "new": "New Database…",
+      "description": "Pages within pages, and bases of your notes as tables, boards, calendars, galleries and lists - in Obsidian's Bases format, so Obsidian opens the same databases. All plain Markdown files.",
+      "new": "New Base…",
       "table": "Table",
       "board": "Board",
       "calendar": "Calendar",
@@ -279,9 +279,9 @@
       "missing": "Open a folder to see its pages.",
       "newTitle": "Page title",
       "exists": "“{0}” is already there.",
-      "needsSaved": "Save this document in the open folder first: the database's folder goes beside it.",
+      "needsSaved": "Save this document in the open folder first: the base's folder goes beside it.",
       "needsFolder": "Open a folder first.",
-      "dbName": "Database name",
+      "dbName": "Base name",
       "aiNote": "Put the link where the user wants the database; its notes are made.",
       "toolDescription": "Makes a database in Obsidian's Bases format: a folder of notes whose front matter holds each one's properties, and a page in it with a ```base block showing them as a table, board, calendar, gallery or list. Returns a link to that page to put where the user wants it.",
       "locale": "en",
