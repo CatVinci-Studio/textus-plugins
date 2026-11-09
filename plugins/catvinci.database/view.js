@@ -405,7 +405,7 @@
   });
 
   // ---------------------------------------------------------------- views
-  const { viewTabs } = databaseTabs({
+  const { viewTabs, viewPicker, pickView } = databaseTabs({
     api, $, el, icon, s, post, render,
     choose(index) {
       state.index = index;
@@ -428,10 +428,12 @@
     if (data.missing) return body.replaceChildren(el("div", { class: "tx-empty" }, s("missing")));
     const view = data.spec.view;
     $("views").replaceChildren(...viewTabs());
+    $("view-pick").replaceChildren(...viewPicker());
     $("filter").setAttribute("aria-label", s("filter"));
     $("sort").setAttribute("aria-label", s("sort"));
     $("count").textContent = s("count").replace("{0}", String(data.rows.length));
-    $("add").replaceChildren(icon("plus"), s("add"));
+    $("add").replaceChildren(icon("plus"), el("span", { class: "label" }, s("add")));
+    $("add").setAttribute("aria-label", s("add"));
     $("rules").replaceChildren(...rules());
     const notes = [];
     if (data.skipped && data.skipped.length) notes.push(el("div", { class: "tx-footnote skipped", title: data.skipped.join("\n") }, s("skipped").replace("{0}", String(data.skipped.length))));
@@ -448,6 +450,7 @@
     if (button) button.click();
     else post({ type: "add", folder: data.folder, props: {} });
   });
+  $("view-pick").addEventListener("click", (e) => data && pickView(e.currentTarget));
   $("filter").addEventListener("click", (e) => data && filterMenu(e.currentTarget));
   $("sort").addEventListener("click", (e) => data && sortMenu(e.currentTarget));
   api.onMessage((m) => {
@@ -463,5 +466,15 @@
     if (editing) stale = true;
     else render();
   });
+  databaseBarFit($);
+
+  // Whether the page goes on past its right edge, for the fade there.
+  const edge = () => {
+    const root = document.documentElement;
+    root.classList.toggle("more-right", root.scrollWidth - root.clientWidth - window.scrollX > 1);
+  };
+  window.addEventListener("scroll", edge, { passive: true });
+  window.addEventListener("resize", edge);
+  new MutationObserver(edge).observe($("body"), { childList: true, subtree: true });
   post({ type: "ready", index: state.index });
 })();

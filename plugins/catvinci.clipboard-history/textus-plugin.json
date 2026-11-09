@@ -31,6 +31,13 @@
       }
     ],
     "menus": {
+      "view/title": [
+        {
+          "command": "catvinci.clipboard-history.clear",
+          "when": "view == catvinci.clipboard-history.panel",
+          "icon": "clear.svg"
+        }
+      ],
       "app/plugins": [
         {
           "command": "catvinci.clipboard-history.clear"

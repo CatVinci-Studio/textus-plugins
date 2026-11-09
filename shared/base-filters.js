@@ -18,10 +18,20 @@
     return JSON.stringify(v);
   };
 
+  /** Several values at once ("any of", Notion's ticked options): one
+   *  statement each, joined with ||; negated, the whole group. */
+  const ANY = { in: "=", "!in": "=", hasAny: "has", "!hasAny": "has" };
+
   /** A filter the page made ({ key, op, value }) as a Bases statement. */
   function filterText(f) {
     const r = ref(f.key === "name" ? "file.basename" : f.key);
     const k = f.key === "name" ? "file.basename" : r;
+    if (ANY[f.op]) {
+      const values = [].concat(f.value);
+      const one = values.map((v) => filterText({ key: f.key, op: ANY[f.op], value: v }));
+      const group = one.length === 1 ? one[0] : "(" + one.join(" || ") + ")";
+      return f.op.startsWith("!") ? "!" + (one.length === 1 ? "(" + group + ")" : group) : group;
+    }
     switch (f.op) {
       case "=":
         return k + " == " + literal(f.value);
@@ -45,8 +55,53 @@
   const unref = (name) => (name === "file.basename" ? "name" : name.startsWith("note[") ? JSON.parse(name.slice(5, -1)) : name);
   const unliteral = (v) => (v.startsWith("date(") ? JSON.parse(v.slice(5, -1)) : v.startsWith('"') ? JSON.parse(v) : v);
 
+  /** `text` split at its top-level ||, outside quotes and brackets. */
+  function orParts(text) {
+    const parts = [];
+    let depth = 0;
+    let quote = false;
+    let from = 0;
+    for (let i = 0; i < text.length; i++) {
+      const c = text[i];
+      if (quote) {
+        if (c === "\\") i++;
+        else if (c === '"') quote = false;
+      } else if (c === '"') quote = true;
+      else if (c === "(" || c === "[") depth++;
+      else if (c === ")" || c === "]") depth--;
+      else if (depth === 0 && text.startsWith("||", i)) {
+        parts.push(text.slice(from, i).trim());
+        from = i + 2;
+        i++;
+      }
+    }
+    parts.push(text.slice(from).trim());
+    return parts;
+  }
+
+  /** `a == x || a == y` (or contains) as one rule of several values. */
+  function readAny(text) {
+    const not = /^!\((.*)\)$/.exec(text);
+    const inner = not ? not[1] : /^\((.*)\)$/.exec(text)?.[1] ?? text;
+    const parts = orParts(inner);
+    if (!not && parts.length < 2) return null;
+    const read = parts.map(readOne);
+    const key = read[0].key;
+    const op = read[0].op;
+    if (!read.every((r) => r.raw === undefined && r.key === key && r.op === op)) return null;
+    if (op !== "=" && op !== "has") return null;
+    const any = op === "=" ? "in" : "hasAny";
+    return { key, op: (not ? "!" : "") + any, value: read.map((r) => r.value) };
+  }
+
   /** A Bases statement as a filter the page can show, or `{ raw }`. */
   function readFilter(text) {
+    const s = String(text).trim();
+    const one = readOne(s);
+    return one.raw === undefined ? one : readAny(s) || one;
+  }
+
+  function readOne(text) {
     const s = String(text).trim();
     let m;
     if ((m = new RegExp("^" + NAME + "\\s*(==|!=|>=|<=|>|<)\\s*" + VALUE + "$").exec(s)))
@@ -68,9 +123,9 @@
 
   /** Operators a property can meet once: a second one of them, on the same
    *  property, takes the first one's place. */
-  const ONE_EACH = [["="], [">", ">="], ["<", "<="], ["empty", "!empty"]];
+  const ONE_EACH = [["=", "in", "!in"], [">", ">="], ["<", "<="], ["empty", "!empty"], ["hasAny", "!hasAny"]];
   const family = (op) => ONE_EACH.find((f) => f.includes(op)) || null;
-  const same = (a, b) => a.key === b.key && a.op === b.op && String(a.value) === String(b.value);
+  const same = (a, b) => a.key === b.key && a.op === b.op && String([].concat(a.value)) === String([].concat(b.value));
 
   /** `filters` with `next` added: once, and in place of a rule it contradicts. */
   function merge(filters, next) {

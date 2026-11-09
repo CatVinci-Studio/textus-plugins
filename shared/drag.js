@@ -238,6 +238,10 @@
         });
       },
       end: function (_x, _y, dropped) {
+        // Put in its new place at once: it stays there while the plugin
+        // saves the order and draws again, instead of springing back first.
+        if (dropped && at !== from && item.parentNode)
+          item.parentNode.insertBefore(item, at > from ? all[at].nextSibling : all[at]);
         all.forEach(function (n) {
           place(n, 0, false);
           n.style.transition = "";

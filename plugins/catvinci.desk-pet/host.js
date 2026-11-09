@@ -139,7 +139,7 @@ function page(character) {
   .bubble.on { opacity: 1; }
   @media (prefers-reduced-motion: reduce) { img.on, img.hop { animation: none; } }
 </style></head><body>
-<div class="stage">${imgs}</div><div class="tx-bubble bubble" id="bubble"></div>
+<div class="stage">${imgs}</div><div class="tx-bubble bubble" id="bubble" data-bubble-tail="bottom"></div>
 <script>
   const api = acquireTextusApi();
   const bubble = document.getElementById("bubble");
