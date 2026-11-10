@@ -74,6 +74,8 @@ function toggles() {
   for (const id of buttons)
     element<HTMLButtonElement>(id).disabled =
       busy || !root || !configured || dirty;
+  // The sidebar offers Sync now only once there is something to sync.
+  document.body.dataset.ready = String(!!root && configured);
 }
 function fill(config: Config) {
   for (const id of [

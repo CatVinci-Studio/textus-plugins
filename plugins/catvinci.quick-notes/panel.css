@@ -25,9 +25,9 @@
 /* A note is written where it is shown (tx-inline-input). */
 #notes textarea {
   display: block;
-  min-height: 3.6em;
+  overflow: hidden;
   line-height: 1.5;
-  resize: vertical;
+  resize: none;
 }
 .note-foot {
   display: flex;

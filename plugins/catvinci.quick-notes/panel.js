@@ -4,7 +4,14 @@
   const t = api.t;
   const $ = (id) => document.getElementById(id);
   $("new").setAttribute("aria-label", t("new"));
-  $("empty").textContent = t("empty");
+  $("empty-intro").textContent = t("emptyIntro");
+  $("empty-new").textContent = t("new");
+  $("empty-new").addEventListener("click", () => $("new").click());
+  // A note's box as tall as its text, from one line.
+  const fit = (area) => {
+    area.style.height = "auto";
+    area.style.height = area.scrollHeight + "px";
+  };
   $("filter").placeholder = t("search");
   $("filter").setAttribute("aria-label", t("search"));
   // The search shows once there are enough notes to look through.
@@ -77,6 +84,7 @@
         });
         const area = document.createElement("textarea");
         area.className = "tx-inline-input";
+        area.rows = 1;
         area.dataset.id = note.id;
         area.placeholder = t("placeholder");
         // Left empty, a new note goes: nothing was noted.
@@ -88,6 +96,7 @@
             }, 150);
         });
         area.addEventListener("input", () => {
+          fit(area);
           clearTimeout(timers.get(note.id));
           timers.set(
             note.id,
@@ -118,8 +127,12 @@
       li.querySelector(".when").textContent = when(note.at) || "";
       if (list.children[i] !== li)
         list.insertBefore(li, list.children[i] || null);
+      fit(area);
     });
   }
+  window.addEventListener("resize", () =>
+    document.querySelectorAll("#notes textarea").forEach(fit),
+  );
 
   api.onMessage((message) => {
     if (message.type === "notes") render(message.notes);
