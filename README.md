@@ -12,8 +12,10 @@ The plugins for [Textus](https://textus.md), the Markdown editor. None of them c
 | Canvas | Open Obsidian's canvases (.canvas) in a tab: notes, pictures, links and groups on a board to drag and zoom. Excalidraw drawings show the picture exported from them. |
 | Chart.js | Simple charts from a Chart.js configuration. |
 | CJK Spacing | Puts a space between Chinese or Japanese text and Latin letters or numbers. |
+| Claude Code | Claude Code in Textus AI: it reads your folder, writes and edits your notes, and asks before it changes anything. |
 | Clipboard History | What you copied or cut in your documents, newest first, in the sidebar: click one to put it in again. |
 | Cloud Sync | End-to-end encrypted workspace sync with S3, WebDAV or Nutstore. Keep both versions on conflict. |
+| Codex | Codex in Textus AI: it reads your folder, writes and edits your notes, and asks before it changes anything. |
 | Desk Pet | A chibi companion that floats on your desktop or in the window while you write: Moyu, or the LLM-chan of the model Textus AI is using. She writes when you type, dozes when you stop, cheers when you save and leans in when Textus AI is at work. |
 | ECharts | Charts from an ECharts option - bars, lines, pies and more. |
 | Emacs | Emacs keys in the editor: C-f C-b C-n C-p, C-a C-e, M-f M-b, M-< M->, the mark (C-SPC) and the region, C-k and C-w into a kill ring, C-y and M-y, C-/ undo and C-x prefixes. |

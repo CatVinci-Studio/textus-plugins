@@ -1,0 +1,86 @@
+{
+  "id": "catvinci.claude-code",
+  "name": "%name%",
+  "version": "0.1.0",
+  "publisher": "catvinci",
+  "author": "CatVinci Studio",
+  "description": "%description%",
+  "icon": "icon.svg",
+  "license": "MIT",
+  "repository": "https://github.com/CatVinci-Studio/textus-plugins",
+  "engines": {
+    "textus": ">=1.3.13-rc.2"
+  },
+  "platforms": [
+    "desktop"
+  ],
+  "permissions": [
+    "agents"
+  ],
+  "contributes": {
+    "agents": [
+      {
+        "id": "catvinci.claude-code.claude",
+        "name": "Claude Code",
+        "command": "npx",
+        "args": [
+          "-y",
+          "@agentclientprotocol/claude-agent-acp@0.104.1"
+        ],
+        "setup": "%setup%"
+      }
+    ]
+  },
+  "l10n": {
+    "en": {
+      "name": "Claude Code",
+      "description": "Claude Code in Textus AI: it reads your folder, writes and edits your notes, and asks before it changes anything.",
+      "setup": "Needs Node.js, and Claude Code signed in once: run claude in a terminal and sign in."
+    },
+    "zh": {
+      "name": "Claude Code",
+      "description": "在 Textus AI 里用 Claude Code：读你的文件夹、写和改笔记，改动前先征得你同意。",
+      "setup": "需要 Node.js，并先登录一次 Claude Code：在终端运行 claude 并登录。"
+    },
+    "zh-Hant": {
+      "name": "Claude Code",
+      "description": "在 Textus AI 裡用 Claude Code：讀你的資料夾、寫和改筆記，改動前先徵得你同意。",
+      "setup": "需要 Node.js，並先登入一次 Claude Code：在終端機執行 claude 並登入。"
+    },
+    "ja": {
+      "name": "Claude Code",
+      "description": "Textus AI で Claude Code を使う：フォルダを読み、ノートを書いて直し、変更の前に確認します。",
+      "setup": "Node.js と、一度サインインした Claude Code が必要です。ターミナルで claude を実行してサインインしてください。"
+    },
+    "ko": {
+      "name": "Claude Code",
+      "description": "Textus AI에서 Claude Code 사용: 폴더를 읽고 노트를 쓰고 고치며, 바꾸기 전에 먼저 묻습니다.",
+      "setup": "Node.js와 한 번 로그인한 Claude Code가 필요합니다. 터미널에서 claude를 실행해 로그인하세요."
+    },
+    "de": {
+      "name": "Claude Code",
+      "description": "Claude Code in Textus AI: liest deinen Ordner, schreibt und überarbeitet Notizen und fragt vor jeder Änderung.",
+      "setup": "Braucht Node.js und ein einmal angemeldetes Claude Code: claude im Terminal starten und anmelden."
+    },
+    "fr": {
+      "name": "Claude Code",
+      "description": "Claude Code dans Textus AI : il lit votre dossier, écrit et révise vos notes, et demande avant tout changement.",
+      "setup": "Nécessite Node.js et Claude Code connecté une fois : lancez claude dans un terminal et connectez-vous."
+    },
+    "es": {
+      "name": "Claude Code",
+      "description": "Claude Code en Textus AI: lee tu carpeta, escribe y edita tus notas y pregunta antes de cambiar nada.",
+      "setup": "Necesita Node.js y Claude Code con la sesión iniciada una vez: ejecuta claude en una terminal e inicia sesión."
+    },
+    "pt": {
+      "name": "Claude Code",
+      "description": "Claude Code no Textus AI: lê sua pasta, escreve e edita suas notas e pergunta antes de mudar algo.",
+      "setup": "Precisa do Node.js e do Claude Code conectado uma vez: rode claude num terminal e entre."
+    },
+    "ru": {
+      "name": "Claude Code",
+      "description": "Claude Code в Textus AI: читает папку, пишет и правит заметки и спрашивает перед любым изменением.",
+      "setup": "Нужны Node.js и Claude Code, в который вы вошли хотя бы раз: запустите claude в терминале и войдите."
+    }
+  }
+}
