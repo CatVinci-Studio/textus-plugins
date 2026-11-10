@@ -40,6 +40,15 @@ canvas {
   color: var(--ui-accent);
 }
 
+/* In the sidebar: the graph around the open document and a way to the
+   whole one; its groups are set there, not here. */
+[data-local="true"] #settings {
+  display: none;
+}
+[data-local="true"] #bar {
+  border-bottom: 0;
+}
+
 /* The settings panel over the graph's corner: an overlay (design-language.md
    7), its rows as Settings' are. */
 #panel {

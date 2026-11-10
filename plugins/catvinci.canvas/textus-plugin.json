@@ -53,7 +53,7 @@
       "empty": "This canvas is empty.",
       "missing": "Not in this folder",
       "failed": "This canvas can't be read: {0}",
-      "excalidraw": "This drawing was made with the Excalidraw plugin in Obsidian, and Textus can't draw it. Turn on Excalidraw's auto-export there and the exported picture shows here.",
+      "excalidraw": "Drawn with Obsidian's Excalidraw: turn on its auto-export there to see it here.",
       "openAsText": "Open as Text"
     },
     "zh": {
@@ -66,7 +66,7 @@
       "empty": "这个白板是空的。",
       "missing": "不在这个文件夹里",
       "failed": "无法读取这个白板：{0}",
-      "excalidraw": "这幅图是用 Obsidian 的 Excalidraw 插件画的，Textus 画不出来。在 Obsidian 里打开 Excalidraw 的自动导出，导出的图片就会显示在这里。",
+      "excalidraw": "这是 Obsidian Excalidraw 画的图：在那里开启自动导出后可在此查看。",
       "openAsText": "以文本打开"
     },
     "zh-Hant": {
@@ -79,7 +79,7 @@
       "empty": "這個白板是空的。",
       "missing": "不在這個資料夾裡",
       "failed": "無法讀取這個白板：{0}",
-      "excalidraw": "這幅圖是用 Obsidian 的 Excalidraw 外掛畫的，Textus 畫不出來。在 Obsidian 裡開啟 Excalidraw 的自動匯出，匯出的圖片就會顯示在這裡。",
+      "excalidraw": "這是 Obsidian Excalidraw 畫的圖：在那裡開啟自動匯出後可在此檢視。",
       "openAsText": "以文字開啟"
     },
     "ja": {
@@ -92,7 +92,7 @@
       "empty": "このキャンバスは空です。",
       "missing": "このフォルダーにありません",
       "failed": "このキャンバスを読み込めません：{0}",
-      "excalidraw": "この図は Obsidian の Excalidraw プラグインで描かれたもので、Textus では描画できません。Obsidian で Excalidraw の自動エクスポートをオンにすると、書き出された画像がここに表示されます。",
+      "excalidraw": "Obsidian の Excalidraw で描かれた図です。そちらで自動エクスポートをオンにするとここに表示されます。",
       "openAsText": "テキストとして開く"
     },
     "ko": {
@@ -105,7 +105,7 @@
       "empty": "이 캔버스는 비어 있습니다.",
       "missing": "이 폴더에 없음",
       "failed": "이 캔버스를 읽을 수 없습니다: {0}",
-      "excalidraw": "이 그림은 Obsidian의 Excalidraw 플러그인으로 그려서 Textus가 그릴 수 없습니다. Obsidian에서 Excalidraw 자동 내보내기를 켜면 내보낸 이미지가 여기에 나타납니다.",
+      "excalidraw": "Obsidian Excalidraw로 그린 그림입니다. 그쪽에서 자동 내보내기를 켜면 여기에 표시됩니다.",
       "openAsText": "텍스트로 열기"
     },
     "es": {
@@ -118,7 +118,7 @@
       "empty": "Este lienzo está vacío.",
       "missing": "No está en esta carpeta",
       "failed": "No se puede leer este lienzo: {0}",
-      "excalidraw": "Este dibujo se hizo con el plugin Excalidraw de Obsidian y Textus no puede dibujarlo. Activa allí la exportación automática de Excalidraw y la imagen exportada se verá aquí.",
+      "excalidraw": "Dibujado con Excalidraw de Obsidian: activa allí su exportación automática para verlo aquí.",
       "openAsText": "Abrir como texto"
     },
     "fr": {
@@ -131,7 +131,7 @@
       "empty": "Ce canevas est vide.",
       "missing": "Absent de ce dossier",
       "failed": "Impossible de lire ce canevas : {0}",
-      "excalidraw": "Ce dessin a été fait avec le plugin Excalidraw d’Obsidian, que Textus ne sait pas dessiner. Activez-y l’export automatique d’Excalidraw et l’image exportée s’affichera ici.",
+      "excalidraw": "Dessiné avec Excalidraw d'Obsidian : activez-y l'export automatique pour le voir ici.",
       "openAsText": "Ouvrir en texte"
     },
     "de": {
@@ -144,7 +144,7 @@
       "empty": "Dieses Canvas ist leer.",
       "missing": "Nicht in diesem Ordner",
       "failed": "Dieses Canvas lässt sich nicht lesen: {0}",
-      "excalidraw": "Diese Zeichnung stammt aus dem Excalidraw-Plugin in Obsidian, und Textus kann sie nicht zeichnen. Schalte dort den automatischen Export von Excalidraw ein, dann erscheint das exportierte Bild hier.",
+      "excalidraw": "Mit Excalidraw in Obsidian gezeichnet: Aktiviere dort den automatischen Export, um es hier zu sehen.",
       "openAsText": "Als Text öffnen"
     },
     "ru": {
@@ -157,7 +157,7 @@
       "empty": "Этот холст пуст.",
       "missing": "Нет в этой папке",
       "failed": "Не удаётся прочитать этот холст: {0}",
-      "excalidraw": "Этот рисунок сделан плагином Excalidraw в Obsidian, и Textus не может его нарисовать. Включите там автоэкспорт Excalidraw, и экспортированная картинка появится здесь.",
+      "excalidraw": "Нарисовано в Excalidraw для Obsidian: включите там автоэкспорт, чтобы видеть рисунок здесь.",
       "openAsText": "Открыть как текст"
     },
     "pt": {
@@ -170,7 +170,7 @@
       "empty": "Este canvas está vazio.",
       "missing": "Não está nesta pasta",
       "failed": "Não foi possível ler este canvas: {0}",
-      "excalidraw": "Este desenho foi feito com o plugin Excalidraw do Obsidian e o Textus não consegue desenhá-lo. Ative lá a exportação automática do Excalidraw e a imagem exportada aparece aqui.",
+      "excalidraw": "Desenhado com o Excalidraw do Obsidian: ative lá a exportação automática para vê-lo aqui.",
       "openAsText": "Abrir como texto"
     }
   }

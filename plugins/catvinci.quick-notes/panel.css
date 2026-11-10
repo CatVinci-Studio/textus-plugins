@@ -1,18 +1,15 @@
-/* The Quick Notes tab: a sidebar panel (design-language.md 5.4) - a title
-   row, a search once there are many, the notes as cards. */
-body {
-  background: var(--ui-subtle);
-}
+/* The Quick Notes tab: a sidebar panel (design-language.md 5.7) - its
+   search and New on the panel's first row, as every sidebar panel's, then
+   the notes. */
 #bar {
-  padding: var(--space-2) var(--space-3) 0;
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: 0 var(--space-1) var(--space-2);
 }
 #filter {
-  display: block;
-  width: calc(100% - 2 * var(--space-3));
-  margin: var(--space-2) var(--space-3) 0;
-}
-#filter[hidden] {
-  display: none;
+  flex: 1;
+  min-width: 0;
 }
 #notes {
   display: flex;

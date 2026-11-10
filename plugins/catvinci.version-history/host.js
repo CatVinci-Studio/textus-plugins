@@ -158,7 +158,7 @@ exports.activate = function (context) {
         if (panel === webview) panel = null;
       });
       webview.onDidReceiveMessage(async function (message) {
-        if (message.type === "ready" || message.type === "refresh")
+        if (message.type === "ready")
           await show();
         const path = await textus.editor.getPath();
         const version = (await versionsOf(path)).find(

@@ -1,37 +1,17 @@
-/* On top of Textus's plugin-ui base; only the theme variables plugins get. */
+/* On top of Textus's plugin-ui base; only the theme variables plugins get.
+   The settings are the app's groups and rows (tx-group, tx-row): the name
+   on the left, its control on the right. */
 main {
   max-width: 45em;
   margin: 0 auto;
-  padding: var(--space-5) var(--space-4) var(--space-6);
+  padding: var(--space-6) var(--space-4);
 }
-/* Nothing wider than the page: a long name, path or error wraps, never
-   running out under the window's other column. */
+/* Nothing wider than the page: a long name, path or error wraps. */
 body {
   overflow-x: hidden;
 }
 main * {
   min-width: 0;
-}
-h2,
-label,
-.tx-card {
-  overflow-wrap: anywhere;
-}
-#provider-pick {
-  width: 100%;
-  justify-content: space-between;
-}
-#provider-name {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-h2 {
-  margin: var(--space-5) 0 var(--space-2);
-  padding: 0 var(--space-1);
-  font-size: var(--text-footnote);
-  font-weight: 500;
-  color: var(--ui-muted);
 }
 p {
   margin: 0;
@@ -42,17 +22,85 @@ p {
   font-size: var(--text-footnote);
   color: var(--ui-muted);
 }
-.tx-card {
+fieldset {
+  border: 0;
+  margin: 0;
+  padding: 0;
+  min-width: 0;
+}
+.tx-group + .tx-group-title,
+.tx-group + .tx-group,
+.tx-group + .form-end,
+form + .tx-group-title {
+  margin-top: var(--space-6);
+}
+.tx-group-title {
+  margin-top: 0;
+}
+/* A row's name, and a line under it when it needs one. */
+.row-text {
   display: flex;
   flex-direction: column;
-  gap: var(--space-3);
-  padding: var(--space-4);
+  gap: 2px;
 }
-.tx-card + .tx-card {
-  margin-top: var(--space-3);
+.tx-row > label,
+.row-text > label {
+  color: var(--ui-text);
+  overflow-wrap: anywhere;
 }
+.tx-row > input:not([type="checkbox"]),
+.tx-row > .tx-select {
+  flex: 0 1 50%;
+  min-height: var(--control-height);
+}
+.tx-row > input.number {
+  flex: 0 0 6em;
+  text-align: right;
+}
+.tx-row.start {
+  justify-content: flex-start;
+}
+#provider-pick {
+  justify-content: space-between;
+}
+#provider-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+input[readonly] {
+  color: var(--ui-muted);
+}
+/* More options folds inside the connection group, its rows below it. */
+#s3-more > summary {
+  width: fit-content;
+  padding: var(--space-3) 0;
+  font-size: var(--text-footnote);
+  color: var(--ui-muted);
+}
+#s3-more > .tx-row {
+  border-top: 1px solid color-mix(in srgb, var(--ui-border) 60%, transparent);
+}
+.form-end {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--space-2);
+}
+.form-end > .hint {
+  flex: 1;
+}
+/* The status: what the sidebar shows too; on a page, a group of its own. */
 .sync-status {
-  margin-top: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin-bottom: var(--space-6);
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid color-mix(in srgb, var(--ui-border) 75%, transparent);
+  border-radius: var(--shape-m);
+  background: var(--ui-subtle);
 }
 .status-row {
   display: flex;
@@ -66,95 +114,11 @@ p {
 #status[data-error="true"] {
   color: var(--ui-danger);
 }
-fieldset {
-  border: 0;
-  margin: 0;
-  padding: 0;
-  min-width: 0;
-}
-.field {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-1);
-  min-width: 0;
-}
-label {
-  font-size: var(--text-footnote);
-  color: var(--ui-muted);
-  padding: 0 var(--space-1);
-}
-input:not([type="checkbox"]) {
-  width: 100%;
-  min-height: var(--control-height);
-  padding: 0 var(--space-3);
-}
-input[readonly] {
-  color: var(--ui-muted);
-}
-.columns {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: var(--space-3);
-}
-.hint {
-  padding: 0 var(--space-1);
-}
-.tx-disclosure > summary {
-  width: fit-content;
-  padding: 0 var(--space-1);
-  font-size: var(--text-footnote);
-  color: var(--ui-muted);
-}
-.tx-disclosure[open] > summary {
-  margin-bottom: var(--space-3);
-}
-#s3-more[open] {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-3);
-}
-.check {
-  display: flex;
-  align-items: center;
-  gap: var(--space-2);
-  color: var(--ui-text);
-  font-size: var(--text-secondary);
-}
-.switch-row {
-  margin-top: var(--space-5);
-}
-.switch {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--space-3);
-  padding: 0;
-  font-size: var(--text-secondary);
-  color: var(--ui-text);
-}
-.field.inline {
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
-}
-.field.inline label {
-  font-size: var(--text-secondary);
-}
-.field.inline input {
-  width: 6em;
-  text-align: right;
-}
-#credentials-state {
-  margin-top: var(--space-4);
-}
 .actions {
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-end;
   gap: var(--space-2);
-}
-fieldset > .actions {
-  margin-top: var(--space-3);
 }
 #results:empty {
   display: none;
@@ -170,31 +134,16 @@ fieldset > .actions {
   font-size: var(--text-footnote);
   overflow-wrap: anywhere;
 }
-.trouble {
-  margin-top: var(--space-6);
-}
-.trouble p {
-  margin-bottom: var(--space-2);
-}
-[hidden] {
-  display: none !important;
-}
 @media (max-width: 30em) {
   main {
     padding: var(--space-4) var(--space-3);
   }
-  .columns {
-    grid-template-columns: 1fr;
+  .tx-row {
+    flex-wrap: wrap;
   }
-}
-/* The sidebar: status above its buttons, one service a line. */
-@media (max-width: 22em) {
-  .tx-card {
-    padding: var(--space-3);
-  }
-  .status-row {
-    flex-direction: column;
-    align-items: stretch;
+  .tx-row > input:not([type="checkbox"]),
+  .tx-row > .tx-select {
+    flex-basis: 100%;
   }
 }
 /* A phone's keyboard doesn't zoom into a field whose text is its body's. */
@@ -202,17 +151,38 @@ fieldset > .actions {
   font-size: var(--text-body);
 }
 
+/* On the plugin's page: no frame of its own, its groups in line with the
+   page's. */
+body[data-place="settings"] main {
+  max-width: none;
+  padding: var(--space-6) 0 0;
+}
+
 /* In the sidebar: the status and Sync now, and a way to the plugin's own
    page, where the connection is set up. */
 body:not([data-place="sidebar"]) .sidebar-only {
   display: none;
 }
-
+body[data-place="sidebar"] main {
+  padding: 0;
+}
+body[data-place="sidebar"] .sync-status {
+  margin: 0;
+  padding: 0 var(--space-3);
+}
+body[data-place="sidebar"] .status-row {
+  flex-direction: column;
+  align-items: stretch;
+}
 body[data-place="sidebar"] .sidebar-only {
   display: inline-flex;
   margin-top: var(--space-3);
 }
-
 body[data-place="sidebar"] main > :not(.sync-status) {
   display: none;
+}
+body[data-place="sidebar"] .sync-status {
+  border: 0;
+  background: none;
+  box-shadow: none;
 }

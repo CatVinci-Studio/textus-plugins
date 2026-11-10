@@ -115,7 +115,7 @@ async function items() {
     list.setMessage(focus ? t("notInFolder") : t("nodoc"));
     return [];
   }
-  list.setMessage(t("of", stem(focus)));
+  list.setMessage("");
   const relOf = new Map(docs.map((d) => [d.path, d.rel]));
   const found = await gather(focus, doc);
   const at = (path, line, text) => ({ path: path, line: line, text: text.trim().slice(0, 60) });

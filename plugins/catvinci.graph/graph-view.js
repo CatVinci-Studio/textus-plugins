@@ -198,8 +198,8 @@
     function draw() {
       if (!size.w) return;
       ctx.setTransform(size.ratio, 0, 0, size.ratio, 0, 0);
-      ctx.fillStyle = colors.bg;
-      ctx.fillRect(0, 0, size.w, size.h);
+      // The page's own ground shows through: the sidebar's, or the tab's.
+      ctx.clearRect(0, 0, size.w, size.h);
       const lit = hover ? neighbours.get(hover.id) : null;
       const scale = Math.min(1.6, Math.max(0.6, view.k));
       ctx.lineWidth = 1;

@@ -1,14 +1,8 @@
-/* The History tab: a sidebar panel (design-language.md 5.4) - a title row,
-   then the versions by day; the open one a card with its changes. */
-body {
-  background: var(--ui-subtle);
-}
-#bar {
-  padding: var(--space-2) var(--space-3) 0;
-}
-/* The versions: a tx-list; the open one a tx-card with its changes. */
+/* The History tab: a sidebar panel (design-language.md 5.7) - the
+   versions by day, kept up to date as the document is saved; the open one
+   with its changes. */
 #versions {
-  padding: var(--space-2);
+  padding: 0 var(--space-1);
 }
 #versions > .open {
   display: block;

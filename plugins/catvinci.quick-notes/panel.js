@@ -8,7 +8,6 @@
   $("filter").placeholder = t("search");
   $("filter").setAttribute("aria-label", t("search"));
   // The search shows once there are enough notes to look through.
-  const SEARCH_FROM = 6;
   let all = [];
   $("filter").addEventListener("input", () => render(all));
   const timers = new Map();
@@ -54,10 +53,7 @@
 
   function render(notes) {
     all = notes;
-    $("filter").hidden = notes.length < SEARCH_FROM;
-    const words = $("filter").hidden
-      ? []
-      : $("filter").value.toLowerCase().split(/\s+/).filter(Boolean);
+    const words = $("filter").value.toLowerCase().split(/\s+/).filter(Boolean);
     if (words.length)
       notes = notes.filter((n) =>
         words.every((w) => n.text.toLowerCase().includes(w)),

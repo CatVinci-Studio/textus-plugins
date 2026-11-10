@@ -56,15 +56,13 @@
         "key": "clickLinks",
         "type": "boolean",
         "default": false,
-        "title": "%clickLinks%",
-        "description": "%clickLinksHelp%"
+        "title": "%clickLinks%"
       },
       {
         "key": "search",
         "type": "enum",
         "default": "duckduckgo",
         "title": "%search%",
-        "description": "%searchHelp%",
         "options": [
           {
             "value": "duckduckgo",
@@ -90,7 +88,6 @@
     "en": {
       "name": "Web View",
       "clickLinks": "Open Ctrl/Cmd+clicked web links in a tab",
-      "clickLinksHelp": "Off: they open in your browser, as without this plugin",
       "description": "Open web pages in a tab beside your notes.",
       "open": "Open a Web Page…",
       "openSelection": "Open or search the selection in a tab",
@@ -99,13 +96,11 @@
       "newPage": "New page…",
       "clearRecent": "Clear this list",
       "recentPlaceholder": "A page opened before, or a new one",
-      "search": "Search with",
-      "searchHelp": "Where words that aren't an address are searched for"
+      "search": "Search with"
     },
     "zh": {
       "name": "网页视图",
       "clickLinks": "按住 Ctrl/⌘ 点击的网页链接在标签页中打开",
-      "clickLinksHelp": "关闭时用浏览器打开，和没装这个插件时一样",
       "description": "在笔记旁边的标签页里打开网页。",
       "open": "打开网页…",
       "openSelection": "在标签页中打开或搜索选中内容",
@@ -114,13 +109,11 @@
       "newPage": "新网页…",
       "clearRecent": "清空这个列表",
       "recentPlaceholder": "打开过的网页，或新网页",
-      "search": "搜索引擎",
-      "searchHelp": "输入的不是网址时，用它来搜索"
+      "search": "搜索引擎"
     },
     "zh-Hant": {
       "name": "網頁檢視",
       "clickLinks": "按住 Ctrl/⌘ 點擊的網頁連結在分頁中開啟",
-      "clickLinksHelp": "關閉時用瀏覽器開啟，和沒裝這個外掛時一樣",
       "description": "在筆記旁邊的分頁中開啟網頁。",
       "open": "開啟網頁…",
       "openSelection": "在分頁中開啟或搜尋選取內容",
@@ -129,13 +122,11 @@
       "newPage": "新網頁…",
       "clearRecent": "清空這個列表",
       "recentPlaceholder": "開過的網頁，或新網頁",
-      "search": "搜尋引擎",
-      "searchHelp": "輸入的不是網址時，用它來搜尋"
+      "search": "搜尋引擎"
     },
     "ja": {
       "name": "ウェブビュー",
       "clickLinks": "Ctrl/⌘ クリックしたウェブリンクをタブで開く",
-      "clickLinksHelp": "オフのときは、このプラグインがない場合と同じくブラウザで開きます",
       "description": "ノートの隣のタブでウェブページを開きます。",
       "open": "ウェブページを開く…",
       "openSelection": "選択範囲をタブで開く・検索する",
@@ -144,13 +135,11 @@
       "newPage": "新しいページ…",
       "clearRecent": "このリストを消去",
       "recentPlaceholder": "以前開いたページ、または新しいページ",
-      "search": "検索エンジン",
-      "searchHelp": "アドレスでない言葉はここで検索します"
+      "search": "検索エンジン"
     },
     "ko": {
       "name": "웹 보기",
       "clickLinks": "Ctrl/⌘ 클릭한 웹 링크를 탭에서 열기",
-      "clickLinksHelp": "끄면 이 플러그인이 없을 때처럼 브라우저에서 열립니다",
       "description": "노트 옆 탭에서 웹 페이지를 엽니다.",
       "open": "웹 페이지 열기…",
       "openSelection": "선택한 내용을 탭에서 열거나 검색",
@@ -159,13 +148,11 @@
       "newPage": "새 페이지…",
       "clearRecent": "목록 지우기",
       "recentPlaceholder": "전에 연 페이지 또는 새 페이지",
-      "search": "검색 엔진",
-      "searchHelp": "주소가 아닌 단어는 여기서 검색합니다"
+      "search": "검색 엔진"
     },
     "es": {
       "name": "Vista web",
       "clickLinks": "Abrir en una pestaña los enlaces web con Ctrl/⌘+clic",
-      "clickLinksHelp": "Desactivado: se abren en tu navegador, como sin este complemento",
       "description": "Abre páginas web en una pestaña junto a tus notas.",
       "open": "Abrir una página web…",
       "openSelection": "Abrir o buscar la selección en una pestaña",
@@ -174,13 +161,11 @@
       "newPage": "Página nueva…",
       "clearRecent": "Vaciar esta lista",
       "recentPlaceholder": "Una página abierta antes, o una nueva",
-      "search": "Buscar con",
-      "searchHelp": "Dónde se buscan las palabras que no son una dirección"
+      "search": "Buscar con"
     },
     "fr": {
       "name": "Vue web",
       "clickLinks": "Ouvrir dans un onglet les liens web cliqués avec Ctrl/⌘",
-      "clickLinksHelp": "Désactivé : ils s’ouvrent dans votre navigateur, comme sans cette extension",
       "description": "Ouvrez des pages web dans un onglet à côté de vos notes.",
       "open": "Ouvrir une page web…",
       "openSelection": "Ouvrir ou rechercher la sélection dans un onglet",
@@ -189,13 +174,11 @@
       "newPage": "Nouvelle page…",
       "clearRecent": "Vider cette liste",
       "recentPlaceholder": "Une page déjà ouverte, ou une nouvelle",
-      "search": "Rechercher avec",
-      "searchHelp": "Où chercher les mots qui ne sont pas une adresse"
+      "search": "Rechercher avec"
     },
     "de": {
       "name": "Webansicht",
       "clickLinks": "Mit Strg/⌘ angeklickte Weblinks in einem Tab öffnen",
-      "clickLinksHelp": "Aus: Sie öffnen sich im Browser, wie ohne dieses Plugin",
       "description": "Öffne Webseiten in einem Tab neben deinen Notizen.",
       "open": "Webseite öffnen…",
       "openSelection": "Auswahl im Tab öffnen oder suchen",
@@ -204,13 +187,11 @@
       "newPage": "Neue Seite…",
       "clearRecent": "Liste leeren",
       "recentPlaceholder": "Eine schon geöffnete Seite oder eine neue",
-      "search": "Suchen mit",
-      "searchHelp": "Wo Wörter gesucht werden, die keine Adresse sind"
+      "search": "Suchen mit"
     },
     "ru": {
       "name": "Веб-страницы",
       "clickLinks": "Открывать во вкладке веб-ссылки по Ctrl/⌘+щелчку",
-      "clickLinksHelp": "Выключено: они открываются в браузере, как без этого плагина",
       "description": "Открывайте веб-страницы во вкладке рядом с заметками.",
       "open": "Открыть веб-страницу…",
       "openSelection": "Открыть или найти выделенное во вкладке",
@@ -219,13 +200,11 @@
       "newPage": "Новая страница…",
       "clearRecent": "Очистить список",
       "recentPlaceholder": "Открытая раньше страница или новая",
-      "search": "Поиск через",
-      "searchHelp": "Где искать слова, которые не являются адресом"
+      "search": "Поиск через"
     },
     "pt": {
       "name": "Visão web",
       "clickLinks": "Abrir numa aba os links da web clicados com Ctrl/⌘",
-      "clickLinksHelp": "Desligado: abrem no seu navegador, como sem este plugin",
       "description": "Abra páginas da web numa aba ao lado das suas notas.",
       "open": "Abrir uma página da web…",
       "openSelection": "Abrir ou pesquisar a seleção numa aba",
@@ -234,8 +213,7 @@
       "newPage": "Nova página…",
       "clearRecent": "Limpar esta lista",
       "recentPlaceholder": "Uma página já aberta, ou uma nova",
-      "search": "Pesquisar com",
-      "searchHelp": "Onde pesquisar as palavras que não são um endereço"
+      "search": "Pesquisar com"
     }
   }
 }

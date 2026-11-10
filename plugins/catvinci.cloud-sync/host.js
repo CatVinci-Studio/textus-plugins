@@ -1797,15 +1797,16 @@ var Controller = class {
   }
   /** One page over one state; in the sidebar (`compact`) only the
    *  status and Sync now, the connection being set up on the plugin's own
-   *  page - a sidebar keeps to what is used at a glance. */
-  async resolve(view, compact = false) {
+   *  page - a sidebar keeps to what is used at a glance. On the plugin's
+   *  page (`settings`) its groups line up with the page's own. */
+  async resolve(view, place) {
     this.views.add(view);
     view.onDidReceiveMessage((m) => {
       void this.receive(m);
     });
     view.onDidDispose(() => this.views.delete(view));
     const html = await this.ctx.plugin.readText("panel.html");
-    view.html = compact ? html.replace("<body>", '<body data-place="sidebar">') : html;
+    view.html = place ? html.replace("<body>", `<body data-place="${place}">`) : html;
   }
   changed(path) {
     if (!this.workspace?.touched.has(path)) this.pacer.saved();
@@ -1823,9 +1824,11 @@ var Controller = class {
         resolve: (view) => this.resolve(view)
       }),
       api.views.registerWebview(`${ID}.sidebar`, {
-        resolve: (view) => this.resolve(view, true)
+        resolve: (view) => this.resolve(view, "sidebar")
       }),
-      api.views.registerSettingsPage({ resolve: (view) => this.resolve(view) }),
+      api.views.registerSettingsPage({
+        resolve: (view) => this.resolve(view, "settings")
+      }),
       api.files.onDidSave(() => this.pacer.saved()),
       api.files.onDidDelete(({ path }) => this.changed(path)),
       api.files.onDidRename(({ from }) => this.changed(from)),

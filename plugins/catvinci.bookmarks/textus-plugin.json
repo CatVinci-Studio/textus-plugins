@@ -81,7 +81,7 @@
       "remove": "Remove Bookmark",
       "select": "Select some words to bookmark first.",
       "saveFirst": "Save the document first: a bookmark needs its file.",
-      "empty": "No bookmarks yet. Select words, then Bookmark Selection.",
+      "empty": "No bookmarks",
       "tool.list_bookmarks": "Lists the user's bookmarks: the words bookmarked in each document, with the document's path in the open folder.",
       "obsidian": "Obsidian"
     },
@@ -92,7 +92,7 @@
       "remove": "删除书签",
       "select": "请先选中要加书签的文字。",
       "saveFirst": "请先保存文档，书签需要知道文件位置。",
-      "empty": "还没有书签。选中文字后，用「给选中文字加书签」。",
+      "empty": "还没有书签",
       "tool.list_bookmarks": "列出用户的书签：每篇文档中加了书签的文字，以及该文档在打开的文件夹中的路径。",
       "obsidian": "Obsidian 书签"
     },
@@ -103,7 +103,7 @@
       "remove": "刪除書籤",
       "select": "請先選取要加書籤的文字。",
       "saveFirst": "請先儲存文件，書籤需要知道檔案位置。",
-      "empty": "還沒有書籤。選取文字後，用「為選取文字加書籤」。",
+      "empty": "還沒有書籤",
       "tool.list_bookmarks": "列出使用者的書籤：每份文件中加了書籤的文字，以及該文件在開啟的資料夾中的路徑。",
       "obsidian": "Obsidian 書籤"
     },
@@ -114,7 +114,7 @@
       "remove": "ブックマークを削除",
       "select": "先にブックマークする語句を選択してください。",
       "saveFirst": "先に文書を保存してください。ブックマークにはファイルが必要です。",
-      "empty": "まだブックマークはありません。語句を選択して「選択範囲をブックマーク」を。",
+      "empty": "ブックマークはありません",
       "tool.list_bookmarks": "ユーザーのブックマークを一覧にします。各文書でブックマークした語句と、開いているフォルダでのその文書のパスです。",
       "obsidian": "Obsidian のブックマーク"
     },
@@ -125,7 +125,7 @@
       "remove": "북마크 삭제",
       "select": "먼저 북마크할 글자를 선택하세요.",
       "saveFirst": "먼저 문서를 저장하세요. 북마크에는 파일이 필요합니다.",
-      "empty": "아직 북마크가 없습니다. 글자를 선택한 뒤 「선택 영역 북마크」를 쓰세요.",
+      "empty": "북마크가 없습니다",
       "tool.list_bookmarks": "사용자의 북마크를 나열합니다. 각 문서에서 북마크한 글과, 열린 폴더에서 그 문서의 경로입니다.",
       "obsidian": "Obsidian 북마크"
     },
@@ -136,7 +136,7 @@
       "remove": "Quitar marcador",
       "select": "Selecciona primero unas palabras.",
       "saveFirst": "Guarda primero el documento: el marcador necesita su archivo.",
-      "empty": "Aún no hay marcadores. Selecciona palabras y usa Marcar la selección.",
+      "empty": "Sin marcadores",
       "tool.list_bookmarks": "Enumera los marcadores del usuario: las palabras marcadas en cada documento, con la ruta del documento en la carpeta abierta.",
       "obsidian": "Marcadores de Obsidian"
     },
@@ -147,7 +147,7 @@
       "remove": "Supprimer le signet",
       "select": "Sélectionnez d’abord quelques mots.",
       "saveFirst": "Enregistrez d’abord le document : le signet a besoin de son fichier.",
-      "empty": "Pas encore de signets. Sélectionnez des mots, puis Signet sur la sélection.",
+      "empty": "Aucun signet",
       "tool.list_bookmarks": "Liste les signets de l'utilisateur : les mots marqués dans chaque document, avec le chemin du document dans le dossier ouvert.",
       "obsidian": "Signets d’Obsidian"
     },
@@ -158,7 +158,7 @@
       "remove": "Lesezeichen entfernen",
       "select": "Markieren Sie zuerst ein paar Wörter.",
       "saveFirst": "Speichern Sie zuerst das Dokument: Ein Lesezeichen braucht seine Datei.",
-      "empty": "Noch keine Lesezeichen. Wörter markieren, dann Auswahl als Lesezeichen.",
+      "empty": "Keine Lesezeichen",
       "tool.list_bookmarks": "Listet die Lesezeichen des Nutzers auf: die markierten Worte in jedem Dokument, mit dem Pfad des Dokuments im geöffneten Ordner.",
       "obsidian": "Obsidian-Lesezeichen"
     },
@@ -169,7 +169,7 @@
       "remove": "Удалить закладку",
       "select": "Сначала выделите слова.",
       "saveFirst": "Сначала сохраните документ: закладке нужен файл.",
-      "empty": "Закладок пока нет. Выделите слова и выберите «Добавить выделение в закладки».",
+      "empty": "Закладок нет",
       "tool.list_bookmarks": "Перечисляет закладки пользователя: отмеченные слова в каждом документе с путём документа в открытой папке.",
       "obsidian": "Закладки Obsidian"
     },
@@ -180,7 +180,7 @@
       "remove": "Remover favorito",
       "select": "Selecione algumas palavras primeiro.",
       "saveFirst": "Salve o documento primeiro: o favorito precisa do arquivo.",
-      "empty": "Ainda não há favoritos. Selecione palavras e use Marcar a seleção.",
+      "empty": "Sem marcadores",
       "tool.list_bookmarks": "Lista os marcadores do utilizador: as palavras marcadas em cada documento, com o caminho do documento na pasta aberta.",
       "obsidian": "Favoritos do Obsidian"
     }

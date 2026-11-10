@@ -67,9 +67,14 @@ it("shows the whole page in the tab and Settings, its status in the sidebar", as
     await resolve(view);
     html.set(id, view.html);
   }
-  // The tab and Settings: the whole page; the sidebar: the same page kept
-  // to its status, the connection set up on the plugin's own page.
-  expect(html.get("catvinci.cloud-sync.panel")).toBe(html.get("settings"));
+  // The tab and the plugin's page: the whole page (the page's marked, to
+  // line up with the groups around it); the sidebar: the same page kept to
+  // its status, the connection set up on the plugin's own page.
+  expect(html.get("settings")).toBe(
+    html
+      .get("catvinci.cloud-sync.panel")!
+      .replace("<body>", '<body data-place="settings">'),
+  );
   expect(html.get("settings")).toContain('id="connection"');
   expect(html.get("catvinci.cloud-sync.sidebar")).toContain(
     '<body data-place="sidebar">',

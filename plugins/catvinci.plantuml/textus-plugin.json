@@ -51,7 +51,7 @@
       "name": "PlantUML",
       "description": "UML and other diagrams from PlantUML text, drawn on your computer - or by the PlantUML server, if you choose. Drawing on your computer takes about 100 MB more memory; the PlantUML server takes none.",
       "renderer": "Drawn by",
-      "rendererHelp": "On this computer, nothing leaves it. The PlantUML server (plantuml.com) gets each diagram's text.",
+      "rendererHelp": "The server receives the diagram's text.",
       "local": "This computer",
       "server": "PlantUML server"
     },
@@ -59,7 +59,7 @@
       "name": "PlantUML",
       "description": "用 PlantUML 文本画 UML 等图，默认在本机渲染，也可以选择用 PlantUML 服务器。在本机画图约多占 100 MB 内存；改用 PlantUML 服务器则不占。",
       "renderer": "渲染方式",
-      "rendererHelp": "本机渲染时内容不会离开电脑；用 PlantUML 服务器（plantuml.com）时，每张图的文本会发给它。",
+      "rendererHelp": "服务器会收到图的文本。",
       "local": "本机",
       "server": "PlantUML 服务器"
     },
@@ -67,7 +67,7 @@
       "name": "PlantUML",
       "description": "用 PlantUML 文字畫 UML 等圖，預設在本機算繪，也可以選擇用 PlantUML 伺服器。在本機畫圖約多佔 100 MB 記憶體；改用 PlantUML 伺服器則不佔。",
       "renderer": "算繪方式",
-      "rendererHelp": "本機算繪時內容不會離開電腦；用 PlantUML 伺服器（plantuml.com）時，每張圖的文字會傳給它。",
+      "rendererHelp": "伺服器會收到圖的文字。",
       "local": "本機",
       "server": "PlantUML 伺服器"
     },
@@ -75,7 +75,7 @@
       "name": "PlantUML",
       "description": "PlantUML のテキストから UML などの図を描きます。既定はこのコンピュータで描画し、PlantUML サーバーも選べます。このコンピュータで描くとメモリを約 100 MB 余分に使います。PlantUML サーバーなら使いません。",
       "renderer": "描画する場所",
-      "rendererHelp": "このコンピュータなら内容は外に出ません。PlantUML サーバー（plantuml.com）では各図のテキストが送られます。",
+      "rendererHelp": "サーバーに図のテキストが送られます。",
       "local": "このコンピュータ",
       "server": "PlantUML サーバー"
     },
@@ -83,7 +83,7 @@
       "name": "PlantUML",
       "description": "PlantUML 텍스트로 UML 등 다이어그램을 그립니다. 기본은 이 컴퓨터에서 그리고, PlantUML 서버도 고를 수 있습니다. 이 컴퓨터에서 그리면 메모리를 약 100MB 더 씁니다. PlantUML 서버를 쓰면 쓰지 않습니다.",
       "renderer": "그리는 곳",
-      "rendererHelp": "이 컴퓨터에서 그리면 내용이 밖으로 나가지 않습니다. PlantUML 서버(plantuml.com)는 각 다이어그램의 텍스트를 받습니다.",
+      "rendererHelp": "서버가 다이어그램 텍스트를 받습니다.",
       "local": "이 컴퓨터",
       "server": "PlantUML 서버"
     },
@@ -91,7 +91,7 @@
       "name": "PlantUML",
       "description": "Diagramas UML y otros a partir de texto PlantUML, dibujados en tu equipo o, si lo eliges, por el servidor de PlantUML. Dibujar en tu ordenador usa unos 100 MB más de memoria; el servidor de PlantUML no usa ninguno.",
       "renderer": "Dibujado por",
-      "rendererHelp": "En este equipo, nada sale de él. El servidor de PlantUML (plantuml.com) recibe el texto de cada diagrama.",
+      "rendererHelp": "El servidor recibe el texto del diagrama.",
       "local": "Este equipo",
       "server": "Servidor de PlantUML"
     },
@@ -99,7 +99,7 @@
       "name": "PlantUML",
       "description": "Diagrammes UML et autres à partir de texte PlantUML, dessinés sur votre ordinateur ou, au choix, par le serveur PlantUML. Dessiner sur votre ordinateur prend environ 100 Mo de mémoire en plus ; le serveur PlantUML n’en prend pas.",
       "renderer": "Dessiné par",
-      "rendererHelp": "Sur cet ordinateur, rien n’en sort. Le serveur PlantUML (plantuml.com) reçoit le texte de chaque diagramme.",
+      "rendererHelp": "Le serveur reçoit le texte du diagramme.",
       "local": "Cet ordinateur",
       "server": "Serveur PlantUML"
     },
@@ -107,7 +107,7 @@
       "name": "PlantUML",
       "description": "UML- und andere Diagramme aus PlantUML-Text, auf Ihrem Rechner gezeichnet – oder auf Wunsch vom PlantUML-Server. Auf deinem Computer zu zeichnen braucht etwa 100 MB mehr Arbeitsspeicher; der PlantUML-Server braucht keinen.",
       "renderer": "Gezeichnet von",
-      "rendererHelp": "Auf diesem Rechner verlässt nichts den Computer. Der PlantUML-Server (plantuml.com) erhält den Text jedes Diagramms.",
+      "rendererHelp": "Der Server erhält den Text des Diagramms.",
       "local": "Diesem Rechner",
       "server": "PlantUML-Server"
     },
@@ -115,7 +115,7 @@
       "name": "PlantUML",
       "description": "UML и другие диаграммы по тексту PlantUML — рисуются на вашем компьютере или, по выбору, сервером PlantUML. Рисование на компьютере занимает примерно на 100 МБ больше памяти; сервер PlantUML не занимает ничего.",
       "renderer": "Чем рисовать",
-      "rendererHelp": "На этом компьютере ничего не уходит наружу. Сервер PlantUML (plantuml.com) получает текст каждой диаграммы.",
+      "rendererHelp": "Сервер получает текст диаграммы.",
       "local": "Этот компьютер",
       "server": "Сервер PlantUML"
     },
@@ -123,7 +123,7 @@
       "name": "PlantUML",
       "description": "Diagramas UML e outros a partir de texto PlantUML, desenhados no seu computador ou, se preferir, pelo servidor do PlantUML. Desenhar no seu computador usa cerca de 100 MB a mais de memória; o servidor do PlantUML não usa nenhuma.",
       "renderer": "Desenhado por",
-      "rendererHelp": "Neste computador, nada sai dele. O servidor do PlantUML (plantuml.com) recebe o texto de cada diagrama.",
+      "rendererHelp": "O servidor recebe o texto do diagrama.",
       "local": "Este computador",
       "server": "Servidor do PlantUML"
     }

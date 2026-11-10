@@ -3,11 +3,6 @@
   const api = acquireTextusApi();
   const t = api.t;
   const $ = (id) => document.getElementById(id);
-  // The icon buttons' names, in the UI's language.
-  for (const [id, key] of [["refresh", "refresh"]])
-    for (const attr of ["aria-label", "title"])
-      $(id).setAttribute(attr, api.t(key));
-  $("refresh").onclick = () => api.postMessage({ type: "refresh" });
   let opened = null;
   let data = { path: null, current: null, versions: [] };
 
