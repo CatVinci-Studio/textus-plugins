@@ -1,6 +1,6 @@
 # Codex
 
-Talk to Codex in Textus AI. It reads the open folder, writes and edits your notes, and asks before it changes anything: its edits arrive as Textus's own proposals, which you accept or reject.
+Talk to Codex in Textus AI. It reads the open folder, writes and edits your notes, and asks before each change: Textus shows what it wants to do, and you allow it or not. What it changed is marked in the document, one undo away.
 
 1. Install [Node.js](https://nodejs.org) if it isn't on this computer.
 2. Sign in to Codex once: run `npx @openai/codex login` in a terminal.
