@@ -13,6 +13,7 @@ The plugin asks for no permissions: it only reads the file you open in it. It wo
 
 ## Changes
 
+- **0.2.3** - Its bar keeps Textus's one order: what it shows, then find and zoom.
 - **0.2.2** - Its bars, lists and controls are Textus's own, grow with the interface and follow every theme; needs Textus 1.3.12.
 - **0.2.1** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
 - **0.2.0** - Drawn with Textus's own controls and theme tones; the tab follows the interface language when it changes. Needs Textus 1.3.2.

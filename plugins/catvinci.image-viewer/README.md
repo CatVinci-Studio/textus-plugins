@@ -19,7 +19,7 @@ It asks for none. It only reads the file you open, on the desktop and on iOS.
 
 ## Changes
 
-- **0.2.3** - A trackpad pinch zooms smoothly, in step with the gesture; with Textus 1.3.13 a pinch on a Mac zooms the picture, not the document behind it.
+- **0.2.3** - A trackpad pinch zooms smoothly, in step with the gesture; with Textus 1.3.13 a pinch on a Mac zooms the picture, not the document behind it. Its bar keeps Textus's one order: what it shows, then find and zoom.
 - **0.2.2** - Its bars, lists and controls are Textus's own, grow with the interface and follow every theme; needs Textus 1.3.12.
 - **0.2.1** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
 - **0.2.0** - Textus's own buttons and tab bar; labels follow the interface language when it changes

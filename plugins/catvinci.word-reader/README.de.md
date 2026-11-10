@@ -13,6 +13,7 @@ Das Plugin fragt nach keinen Berechtigungen: Es liest nur die Datei, die Sie dam
 
 ## Änderungen
 
+- **0.2.3** - Die Leiste folgt der Reihenfolge von Textus: was sie zeigt, dann Suche und Zoom.
 - **0.2.2** - Leisten, Listen und Steuerelemente sind jetzt die von Textus, wachsen mit der Oberfläche und folgen jedem Theme; braucht Textus 1.3.12.
 - **0.2.1** - Seine Seite sagt jetzt in einem Satz, was es tut, was es kann und was sich in jeder Version geändert hat.
 - **0.2.0** - Mit den eigenen Bedienelementen von Textus und den Tönen des Themes gezeichnet; der Tab folgt der Sprache der Oberfläche, wenn diese wechselt. Benötigt Textus 1.3.2.

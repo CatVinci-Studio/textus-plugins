@@ -19,7 +19,7 @@ Keine. Es liest nur die Datei, die du öffnest, auf dem Desktop und unter iOS.
 
 ## Änderungen
 
-- **0.2.3** - Ein Trackpad-Pinch zoomt fließend, im Takt der Geste; mit Textus 1.3.13 zoomt ein Pinch auf dem Mac das Bild, nicht das Dokument dahinter.
+- **0.2.3** - Ein Trackpad-Pinch zoomt fließend, im Takt der Geste; mit Textus 1.3.13 zoomt ein Pinch auf dem Mac das Bild, nicht das Dokument dahinter. Die Leiste folgt der Reihenfolge von Textus: was sie zeigt, dann Suche und Zoom.
 - **0.2.2** - Leisten, Listen und Steuerelemente sind jetzt die von Textus, wachsen mit der Oberfläche und folgen jedem Theme; braucht Textus 1.3.12.
 - **0.2.1** - Seine Seite sagt jetzt in einem Satz, was es tut, was es kann und was sich in jeder Version geändert hat.
 - **0.2.0** - die Schaltflächen und Tab-Leiste von Textus; Beschriftungen folgen einem Wechsel der Oberflächensprache
