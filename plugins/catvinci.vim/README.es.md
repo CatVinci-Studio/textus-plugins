@@ -22,6 +22,7 @@ El plugin pide tomar las teclas en el editor (para ejecutar las de Vim) y leer a
 
 ## Cambios
 
+- **0.2.6** - Textos de ayuda y de estado vacío más breves.
 - **0.2.5** - Su código se divide en archivos más pequeños según lo que hace cada parte; nada cambia al usarlo.
 - **0.2.4** - Su página dice ahora en una frase qué hace, qué puede hacer y qué cambió en cada versión.
 - **0.2.3** - Lee el `.obsidian.vimrc` de una bóveda de Obsidian; asignar de nuevo las mismas teclas sustituye la asignación anterior.

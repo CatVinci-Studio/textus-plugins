@@ -39,6 +39,7 @@ A aba **Links bidirecionais** da barra lateral mostra o que aponta para o docume
 
 ## Alterações
 
+- **0.4.2** - Textos de ajuda e de estado vazio mais curtos. O painel lateral e a página seguem o layout do Textus 1.3.13.
 - **0.4.1** - Numa nota ainda sem links, [[ escreve um link padrão: o [[ que se digitava era tomado por um link wiki que a nota já tinha.
 - **0.4.0** - Links novos: padrão ou [[wiki]]… escolhe como a pasta escreve os links novos, e Converter links passa os de uma nota ou de toda a pasta de uma forma para a outra; [[ escreve como a pasta, um link padrão quando nada diz o contrário.
 - **0.3.1** - Sua página agora diz numa frase o que ele faz, o que pode fazer e o que mudou em cada versão.

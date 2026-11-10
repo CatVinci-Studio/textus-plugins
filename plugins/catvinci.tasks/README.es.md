@@ -46,6 +46,7 @@ El plugin lee los documentos de la carpeta para encontrar sus tareas, y escribe 
 
 ## Cambios
 
+- **0.4.2** - Textos de ayuda y de estado vacío más breves.
 - **0.4.1** - Sus barras, listas y controles son ahora los de Textus, crecen con la interfaz y siguen cada tema; necesita Textus 1.3.12. Nuevo ajuste **Mover las tareas terminadas al final de su lista**: una tarea marcada pasa detrás de las abiertas (pide una vez leer y editar el documento).
 - **0.4.0** - Usa las fechas integradas en Textus 1.3.10, que ahora requiere.
 - **0.3.1** - Incluye el código de fechas compartido actualizado; nada más cambia.

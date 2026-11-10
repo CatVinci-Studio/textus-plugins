@@ -41,6 +41,7 @@ The citation key is the item's Citation Key field (or a `Citation Key:` line in 
 
 ## Changes
 
+- **0.4.2** - Shorter help and empty-state text.
 - **0.4.1** - Its code is split into smaller files by what each part does; nothing changes in use.
 - **0.4.0** - literature note templates are filled by Textus's own template engine; needs Textus 1.3.10
 - **0.3.0** - literature notes from Zotero, with a template and an Obsidian vault's settings; citations as `[[@citekey]]`

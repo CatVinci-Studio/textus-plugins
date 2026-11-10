@@ -23,6 +23,7 @@ O plugin lê e escreve ficheiros na pasta aberta para encontrar e criar as notas
 
 ## Alterações
 
+- **0.7.2** - Textos de ajuda e de estado vazio mais curtos.
 - **0.7.1** - Suas barras, listas e controles agora são os do Textus, crescem com a interface e seguem cada tema; requer Textus 1.3.12.
 - **0.7.0** - As datas e os modelos são preenchidos pelo próprio Textus, tal como no plugin Modelos; precisa do Textus 1.3.10.
 - **0.6.0** - Notas semanais e mensais, com ajustes próprios, os números das semanas e o nome do mês no calendário, e os ajustes do Periodic Notes de um cofre.

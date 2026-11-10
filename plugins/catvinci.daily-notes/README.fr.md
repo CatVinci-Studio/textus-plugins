@@ -23,6 +23,7 @@ L'extension lit et écrit des fichiers du dossier ouvert pour trouver et créer 
 
 ## Changements
 
+- **0.7.2** - Textes d'aide et d'état vide plus courts.
 - **0.7.1** - Ses barres, listes et contrôles sont désormais ceux de Textus, grandissent avec l’interface et suivent chaque thème ; nécessite Textus 1.3.12.
 - **0.7.0** - Les dates et les modèles sont remplis par Textus lui-même, comme dans l'extension Modèles ; demande Textus 1.3.10.
 - **0.6.0** - Notes hebdomadaires et mensuelles, avec leurs réglages, les numéros de semaine et le nom du mois dans le calendrier, et les réglages Periodic Notes d'un coffre.

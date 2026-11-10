@@ -16,7 +16,7 @@ Guarda cada guardado de un documento como una versión, para ver qué cambió y 
 
 ## Cambios
 
-- **0.3.4** - En la barra lateral el panel ya no muestra un título propio, como las demás pestañas.
+- **0.3.4** - En la barra lateral el panel ya no muestra un título propio, como las demás pestañas. Textos de ayuda y de estado vacío más breves. Su panel lateral y su página siguen el diseño de Textus 1.3.13.
 - **0.3.3** - Sus barras, listas y controles son ahora los de Textus, crecen con la interfaz y siguen cada tema; necesita Textus 1.3.12.
 - **0.3.2** - Su página dice ahora en una frase qué hace, qué puede hacer y qué cambió en cada versión.
 - **0.3.1** - Solo cambió el código de rutas compartido con otros plugins; nada cambia al usarlo.

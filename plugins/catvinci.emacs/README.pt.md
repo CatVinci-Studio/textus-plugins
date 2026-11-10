@@ -16,6 +16,7 @@ Funciona no computador e no iPhone. Pede uma única permissão, teclas do editor
 
 ## Alterações
 
+- **0.1.5** - Textos de ajuda e de estado vazio mais curtos.
 - **0.1.4** - Sua página agora diz numa frase o que ele faz, o que pode fazer e o que mudou em cada versão.
 - **0.1.3** - Indica onde funciona: computador e iPhone.
 - **0.1.2** - C-x já não fica preso; C-d e C-y não mexem na área de transferência nem na região.

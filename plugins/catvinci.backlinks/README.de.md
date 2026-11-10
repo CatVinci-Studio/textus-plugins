@@ -39,6 +39,7 @@ Der Tab **Bidirektionale Links** in der Seitenleiste zeigt, was auf das geöffne
 
 ## Änderungen
 
+- **0.4.2** - Kürzere Hilfe- und Leertexte. Seitenleiste und Seite folgen dem Layout von Textus 1.3.13.
 - **0.4.1** - In einer Notiz ohne Links schreibt [[ einen Standardlink: Das gerade getippte [[ galt als Wikilink, den die Notiz schon hatte.
 - **0.4.0** - Neue Links: Standard oder [[Wiki]]… wählt, wie der Ordner neue Links schreibt, und Links umwandeln bringt die Links einer Notiz oder des ganzen Ordners in die andere Form; [[ schreibt wie der Ordner, einen Standardlink, wenn nichts anderes festgelegt ist.
 - **0.3.1** - Seine Seite sagt jetzt in einem Satz, was es tut, was es kann und was sich in jeder Version geändert hat.

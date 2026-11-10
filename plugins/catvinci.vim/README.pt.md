@@ -22,6 +22,7 @@ O plugin pede para receber as teclas no editor (para executar as do Vim) e para 
 
 ## Alterações
 
+- **0.2.6** - Textos de ajuda e de estado vazio mais curtos.
 - **0.2.5** - Seu código foi dividido em arquivos menores conforme o que cada parte faz; nada muda no uso.
 - **0.2.4** - Sua página agora diz numa frase o que ele faz, o que pode fazer e o que mudou em cada versão.
 - **0.2.3** - Lê o `.obsidian.vimrc` de um cofre do Obsidian; mapear de novo as mesmas teclas substitui o mapeamento anterior.

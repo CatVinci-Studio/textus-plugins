@@ -46,6 +46,7 @@ Le plugin lit les documents du dossier pour trouver leurs tâches, et n’écrit
 
 ## Changements
 
+- **0.4.2** - Textes d'aide et d'état vide plus courts.
 - **0.4.1** - Ses barres, listes et contrôles sont désormais ceux de Textus, grandissent avec l’interface et suivent chaque thème ; nécessite Textus 1.3.12. Nouveau réglage **Placer les tâches terminées en fin de liste** : une tâche cochée passe après les tâches ouvertes (demande une fois de lire et modifier le document).
 - **0.4.0** - Utilise les dates intégrées à Textus 1.3.10, désormais nécessaire.
 - **0.3.1** - Contient le code de dates partagé mis à jour ; rien d’autre ne change.

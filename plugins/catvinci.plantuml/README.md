@@ -28,6 +28,7 @@ Bob --> Alice : Hi!
 
 ## Changes
 
+- **0.2.3** - Shorter help and empty-state text.
 - **0.2.2** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
 - **0.2.1** - Ships the updated shared chart page; diagrams are drawn as before.
 - **0.2.0** - Ships the shared chart page that takes its colors from the theme. Needs Textus 1.3.2.

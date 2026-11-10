@@ -28,6 +28,7 @@ Bob --> Alice : Hi!
 
 ## Änderungen
 
+- **0.2.3** - Kürzere Hilfe- und Leertexte.
 - **0.2.2** - Seine Seite sagt jetzt in einem Satz, was es tut, was es kann und was sich in jeder Version geändert hat.
 - **0.2.1** - Enthält die aktualisierte gemeinsame Diagrammseite; Diagramme werden wie bisher gezeichnet.
 - **0.2.0** - Enthält die gemeinsame Diagrammseite, die ihre Farben aus dem Theme nimmt. Benötigt Textus 1.3.2.

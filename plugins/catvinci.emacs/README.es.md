@@ -16,6 +16,7 @@ Funciona en escritorio y en iPhone. Pide un solo permiso, teclas del editor, par
 
 ## Cambios
 
+- **0.1.5** - Textos de ayuda y de estado vacío más breves.
 - **0.1.4** - Su página dice ahora en una frase qué hace, qué puede hacer y qué cambió en cada versión.
 - **0.1.3** - Indica dónde funciona: escritorio y iPhone.
 - **0.1.2** - C-x ya no se queda enganchado; C-d y C-y no tocan el portapapeles ni la región.

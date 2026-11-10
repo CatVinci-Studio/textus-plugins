@@ -22,6 +22,7 @@ Le plugin demande à recevoir les touches dans l’éditeur (pour exécuter cell
 
 ## Changements
 
+- **0.2.6** - Textes d'aide et d'état vide plus courts.
 - **0.2.5** - Son code est réparti en fichiers plus petits selon le rôle de chaque partie ; rien ne change à l'usage.
 - **0.2.4** - Sa page dit maintenant en une phrase ce qu'il fait, ce qu'il permet et ce qui a changé à chaque version.
 - **0.2.3** - Lit le `.obsidian.vimrc` d’un coffre Obsidian ; associer de nouveau les mêmes touches remplace l’association précédente.

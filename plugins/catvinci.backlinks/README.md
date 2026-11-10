@@ -39,6 +39,7 @@ The **Two-way Links** tab of the sidebar shows what links to the document in fro
 
 ## Changes
 
+- **0.4.2** - Shorter help and empty-state text. Its sidebar panel and page follow Textus 1.3.13's layout.
 - **0.4.1** - In a note with no links yet, [[ writes a standard link: the [[ being typed was taken for a wiki link the note already had.
 - **0.4.0** - New Links: Standard or [[Wiki]]… chooses how the folder writes new links, and Convert Links turns a note's or the whole folder's links from one way into the other; [[ writes the folder's way, a standard link where nothing says otherwise.
 - **0.3.1** - Its page now says in one sentence what it does, what it can do, and what changed in each version.

@@ -22,6 +22,7 @@ Cuando la carpeta abierta es una bóveda de Obsidian (tiene una carpeta `.obsidi
 
 ## Cambios
 
+- **0.4.2** - Textos de ayuda y de estado vacío más breves.
 - **0.4.1** - Su página dice ahora en una frase qué hace, qué puede hacer y qué cambió en cada versión.
 - **0.4.0** - En una bóveda de Obsidian, los marcadores nuevos se escriben también en su `bookmarks.json`, y se quitan y renombran allí.
 - **0.3.0** - Lista los marcadores propios de Obsidian de la bóveda: notas, encabezados y bloques.

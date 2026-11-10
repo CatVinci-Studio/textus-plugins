@@ -23,6 +23,7 @@
 
 ## 更新紀錄
 
+- **0.7.2** - 說明和空狀態文字更簡短。
 - **0.7.1** - Its bars, lists and controls are Textus's own, grow with the interface and follow every theme; needs Textus 1.3.12.
 - **0.7.0** - 日期和範本改由 Textus 本身填入，與範本外掛的寫法一致；需要 Textus 1.3.10。
 - **0.6.0** - 每週和每月筆記：各有設定，日曆上可點選週數和月份名稱，也會依儲存庫中 Periodic Notes 的設定。

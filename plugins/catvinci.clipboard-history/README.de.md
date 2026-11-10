@@ -17,6 +17,6 @@ Behalten wird nur, was Sie in Ihren Dokumenten kopieren, nie, was Sie in den Ein
 
 ## Änderungen
 
-- **0.1.2** - Die Schaltfläche zum Leeren ist zurück: ein Klick leert den Verlauf.
+- **0.1.2** - Die Schaltfläche zum Leeren ist zurück: ein Klick leert den Verlauf. Kürzere Hilfe- und Leertexte.
 - **0.1.1** - Seine Seite sagt jetzt in einem Satz, was es tut, was es kann und was sich in jeder Version geändert hat.
 - **0.1.0** - Erste Version: die letzten 30 Kopien in der Seitenleiste, per Klick eingefügt, per Rechtsklick erneut kopiert oder entfernt. Benötigt Textus 1.3.10.

@@ -24,6 +24,7 @@ Funciona no desktop.
 
 ## Alterações
 
+- **0.2.2** - Textos de ajuda e de estado vazio mais curtos.
 - **0.2.1** - Sua página agora diz numa frase o que ele faz, o que pode fazer e o que mudou em cada versão.
 - **0.2.0** - Links da web clicados com Ctrl/⌘ abrem numa aba só quando você liga isso nos ajustes; senão, abrem no navegador.
 - **0.1.2** - Só desktop.

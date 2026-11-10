@@ -22,6 +22,7 @@ Das Plugin fragt nach der Berechtigung, Tasten im Editor anzunehmen (um Vims Tas
 
 ## Änderungen
 
+- **0.2.6** - Kürzere Hilfe- und Leertexte.
 - **0.2.5** - Sein Code ist nach Aufgaben in kleinere Dateien aufgeteilt; in der Nutzung ändert sich nichts.
 - **0.2.4** - Seine Seite sagt jetzt in einem Satz, was es tut, was es kann und was sich in jeder Version geändert hat.
 - **0.2.3** - Liest die `.obsidian.vimrc` eines Obsidian-Vaults; dieselben Tasten noch einmal zu belegen ersetzt die frühere Belegung.

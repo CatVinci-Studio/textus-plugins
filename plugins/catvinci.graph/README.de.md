@@ -25,7 +25,7 @@ In einem Obsidian-Vault färben auch die in Obsidians `graph.json` gespeicherten
 
 ## Änderungen
 
-- **0.5.4** - Ein Trackpad-Pinch zoomt fließend, im Takt der Geste; mit Textus 1.3.13 zoomt ein Pinch auf dem Mac den Graphen, nicht das Dokument dahinter.
+- **0.5.4** - Ein Trackpad-Pinch zoomt fließend, im Takt der Geste; mit Textus 1.3.13 zoomt ein Pinch auf dem Mac den Graphen, nicht das Dokument dahinter. Kürzere Hilfe- und Leertexte. Seitenleiste und Seite folgen dem Layout von Textus 1.3.13.
 - **0.5.3** - Leisten, Listen und Steuerelemente sind jetzt die von Textus, wachsen mit der Oberfläche und folgen jedem Theme; braucht Textus 1.3.12.
 - **0.5.2** - Obsidians Farbgruppen kommen aus dem nächstgelegenen Vault, auch wenn er über dem geöffneten Ordner liegt. Benötigt Textus 1.3.10.
 - **0.5.1** - In einem Obsidian-Vault färben auch die Farbgruppen aus `.obsidian/graph.json` die Notizen.

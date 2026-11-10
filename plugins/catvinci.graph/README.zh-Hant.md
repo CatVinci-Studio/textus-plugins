@@ -25,7 +25,7 @@
 
 ## 更新紀錄
 
-- **0.5.4** - 觸控板捏合縮放隨手勢平滑變化；搭配 Textus 1.3.13，在 Mac 上捏合縮放的是關係圖，不再縮放後面的文件。
+- **0.5.4** - 觸控板捏合縮放隨手勢平滑變化；搭配 Textus 1.3.13，在 Mac 上捏合縮放的是關係圖，不再縮放後面的文件。 說明和空狀態文字更簡短。 側邊欄面板和頁面依 Textus 1.3.13 的版面調整。
 - **0.5.3** - Its bars, lists and controls are Textus's own, grow with the interface and follow every theme; needs Textus 1.3.12.
 - **0.5.2** - Obsidian 的顏色群組取自最近的儲存庫，儲存庫在開啟的資料夾之上也可以。需要 Textus 1.3.10。
 - **0.5.1** - 在 Obsidian 儲存庫裡，`.obsidian/graph.json` 中的顏色群組也會用來上色。

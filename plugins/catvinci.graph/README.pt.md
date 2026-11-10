@@ -25,7 +25,7 @@ Num cofre do Obsidian, os grupos de cor salvos no `graph.json` do Obsidian tamb�
 
 ## Alterações
 
-- **0.5.4** - Um movimento de pinça no trackpad faz zoom suavemente, acompanhando o gesto; com o Textus 1.3.13, no Mac a pinça amplia o grafo, não o documento por trás.
+- **0.5.4** - Um movimento de pinça no trackpad faz zoom suavemente, acompanhando o gesto; com o Textus 1.3.13, no Mac a pinça amplia o grafo, não o documento por trás. Textos de ajuda e de estado vazio mais curtos. O painel lateral e a página seguem o layout do Textus 1.3.13.
 - **0.5.3** - Suas barras, listas e controles agora são os do Textus, crescem com a interface e seguem cada tema; requer Textus 1.3.12.
 - **0.5.2** - Os grupos de cor do Obsidian vêm do cofre mais próximo, mesmo acima da pasta aberta. Requer Textus 1.3.10.
 - **0.5.1** - Num cofre do Obsidian, os grupos de cor de `.obsidian/graph.json` também colorem as notas.

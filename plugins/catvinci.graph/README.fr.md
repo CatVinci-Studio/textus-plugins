@@ -25,7 +25,7 @@ Dans un coffre Obsidian, les groupes de couleur enregistrés dans le `graph.json
 
 ## Changements
 
-- **0.5.4** - Un pincement sur le trackpad zoome en douceur, au rythme du geste ; avec Textus 1.3.13, un pincement sur Mac zoome le graphe, pas le document derrière.
+- **0.5.4** - Un pincement sur le trackpad zoome en douceur, au rythme du geste ; avec Textus 1.3.13, un pincement sur Mac zoome le graphe, pas le document derrière. Textes d'aide et d'état vide plus courts. Son panneau latéral et sa page suivent la mise en page de Textus 1.3.13.
 - **0.5.3** - Ses barres, listes et contrôles sont désormais ceux de Textus, grandissent avec l’interface et suivent chaque thème ; nécessite Textus 1.3.12.
 - **0.5.2** - Les groupes de couleur d’Obsidian sont lus dans le coffre le plus proche, même au-dessus du dossier ouvert. Nécessite Textus 1.3.10.
 - **0.5.1** - Dans un coffre Obsidian, les groupes de couleur de `.obsidian/graph.json` colorent aussi les notes.
