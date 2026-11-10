@@ -317,7 +317,6 @@
 
   api.onMessage((m) => {
     if (!m) return;
-    if (m.name) $("name").textContent = m.name;
     if (m.type === "canvas") drawCanvas(m.canvas);
     else if (m.type === "file") fillFile(m);
     else if (m.type === "excalidraw") drawExcalidraw(m);

@@ -28,7 +28,6 @@ body {
 }
 #count,
 #page,
-#name,
 #info,
 #find-count {
   color: var(--ui-muted);

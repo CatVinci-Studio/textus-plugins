@@ -5,15 +5,15 @@
   </head>
   <body>
     <div class="tx-bar" id="bar">
+      <span id="info"></span>
+      <span class="tx-spacer"></span>
+      <button class="tx-button small" id="source" hidden></button>
+      <button class="tx-icon-button" id="rotate"><span class="tx-icon" data-icon="rotate"></span></button>
       <div class="tx-zoom">
         <button class="tx-icon-button" id="zoom-out"><span class="tx-icon" data-icon="minus"></span></button>
         <button class="tx-value" id="zoom">100%</button>
         <button class="tx-icon-button" id="zoom-in"><span class="tx-icon" data-icon="plus"></span></button>
       </div>
-      <button class="tx-icon-button" id="rotate"><span class="tx-icon" data-icon="rotate"></span></button>
-      <span class="tx-spacer"></span>
-      <span id="info"></span>
-      <button class="tx-button small" id="source" hidden></button>
     </div>
     <main id="stage" class="fit"><img id="image" alt="" /></main>
     <pre id="code" hidden></pre>

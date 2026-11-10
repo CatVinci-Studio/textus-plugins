@@ -141,7 +141,6 @@
       return;
     }
     if (message.type !== "file") return;
-    $("name").textContent = message.name;
     $("status").textContent = t("loading");
     try {
       await window.docx.renderAsync(
