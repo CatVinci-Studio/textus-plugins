@@ -172,8 +172,32 @@ async function open(
   await expect(page.locator(".sidebar .tree-root-label")).toHaveText("notes");
   await emit(page, "menu-plugin-command", `${manifest.id}.open`);
   const panel = page.frameLocator(".plugin-webview-frame");
-  await expect(panel.locator("[data-provider=s3]")).toBeEnabled();
+  await expect(panel.locator("#provider-pick")).toBeEnabled();
   return panel;
+}
+
+/** The service picked from the page's menu, drawn by Textus over it. */
+async function pickProvider(
+  page: Page,
+  provider: "s3" | "webdav" | "nutstore",
+  language = "en",
+) {
+  const strings = (manifest as { l10n: Record<string, Record<string, string>> })
+    .l10n[language];
+  const label = { [provider]: strings[provider] };
+  await page
+    .frameLocator(".plugin-webview-frame")
+    .locator("#provider-pick")
+    .click();
+  await page
+    .getByRole("menuitemradio", { name: label[provider] })
+    .or(page.getByRole("menuitem", { name: label[provider] }))
+    .first()
+    .click();
+  // The pick clears the sign-in fields as it lands: type after it.
+  await expect(
+    page.frameLocator(".plugin-webview-frame").locator("#provider-name"),
+  ).toHaveText(label[provider]);
 }
 async function configure(
   page: Page,
@@ -181,7 +205,7 @@ async function configure(
   password = syncPassword,
 ) {
   const panel = page.frameLocator(".plugin-webview-frame");
-  await panel.locator(`[data-provider=${provider}]`).click();
+  await pickProvider(page, provider);
   if (provider !== "nutstore")
     await panel.locator("#endpoint").fill("https://fixture.invalid/dav");
   if (provider === "s3") await panel.locator("#bucket").fill("test-bucket");
@@ -312,7 +336,7 @@ test("configuration errors preserve input and Chinese UI fits narrow and dark vi
     { "/work/notes/note.md": "# 示例" },
     "zh",
   );
-  await panel.locator("[data-provider=nutstore]").click();
+  await pickProvider(page, "nutstore", "zh");
   await expect(panel.locator("#endpoint")).toHaveValue(
     "https://dav.jianguoyun.com/dav",
   );
@@ -482,7 +506,7 @@ test("password confirmation errors retain input and an old plaintext directory i
 }) => {
   const remote = new Remote();
   const panel = await open(page, remote, { "/work/notes/note.md": "private" });
-  await panel.locator("[data-provider=webdav]").click();
+  await pickProvider(page, "webdav");
   await panel.locator("#endpoint").fill("https://fixture.invalid/dav");
   await panel.locator("#account").fill("fixture-account");
   await panel.locator("#secret").fill("fixture-secret");
