@@ -293,6 +293,11 @@ class Controller {
         this.broadcast();
         return;
       }
+      // From the sidebar's page: the form is on the plugin's own page.
+      if (m.type === "openSettings") {
+        await this.api.layout.openSettings();
+        return;
+      }
       if (m.type === "cancel") {
         this.abort?.abort();
         this.message("cancelling");
@@ -325,13 +330,19 @@ class Controller {
       this.fail(error);
     }
   }
-  async resolve(view: Textus.Webview) {
+  /** One page over one state; in the sidebar (`compact`) only the
+   *  status and Sync now, the connection being set up on the plugin's own
+   *  page - a sidebar keeps to what is used at a glance. */
+  async resolve(view: Textus.Webview, compact = false) {
     this.views.add(view);
     view.onDidReceiveMessage((m) => {
       void this.receive(m);
     });
     view.onDidDispose(() => this.views.delete(view));
-    view.html = await this.ctx.plugin.readText("panel.html");
+    const html = await this.ctx.plugin.readText("panel.html");
+    view.html = compact
+      ? html.replace("<body>", '<body data-place="sidebar">')
+      : html;
   }
   private changed(path: string) {
     if (!this.workspace?.touched.has(path)) this.pacer.saved();
@@ -344,11 +355,12 @@ class Controller {
       ),
       api.commands.register(`${ID}.sync`, () => this.operation("sync")),
       // The tab, the sidebar and Settings show one page over one state.
-      ...[`${ID}.panel`, `${ID}.sidebar`].map((id) =>
-        api.views.registerWebview(id, {
-          resolve: (view) => this.resolve(view),
-        }),
-      ),
+      api.views.registerWebview(`${ID}.panel`, {
+        resolve: (view) => this.resolve(view),
+      }),
+      api.views.registerWebview(`${ID}.sidebar`, {
+        resolve: (view) => this.resolve(view, true),
+      }),
       api.views.registerSettingsPage({ resolve: (view) => this.resolve(view) }),
       api.files.onDidSave(() => this.pacer.saved()),
       api.files.onDidDelete(({ path }) => this.changed(path)),

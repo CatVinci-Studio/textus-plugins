@@ -201,3 +201,18 @@ fieldset > .actions {
 :root[data-window-chrome="mobile"] input:not([type="checkbox"]) {
   font-size: var(--text-body);
 }
+
+/* In the sidebar: the status and Sync now, and a way to the plugin's own
+   page, where the connection is set up. */
+body:not([data-place="sidebar"]) .sidebar-only {
+  display: none;
+}
+
+body[data-place="sidebar"] .sidebar-only {
+  display: inline-flex;
+  margin-top: var(--space-3);
+}
+
+body[data-place="sidebar"] main > :not(.sync-status) {
+  display: none;
+}

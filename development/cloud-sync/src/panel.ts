@@ -134,7 +134,7 @@ element("connection").addEventListener("keydown", (event) => {
     save();
   }
 });
-for (const id of [...buttons, "cancel"])
+for (const id of [...buttons, "cancel", "openSettings"])
   element(id).onclick = () => api.postMessage({ type: id });
 
 function showResult(result?: Result) {
