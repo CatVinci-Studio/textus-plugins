@@ -63,6 +63,8 @@
     element("interval-field").hidden = !input("automatic").checked;
     for (const id of buttons)
       element(id).disabled = busy || !root || !configured || dirty;
+    // The sidebar offers Sync now only once there is something to sync.
+    document.body.dataset.ready = String(!!root && configured);
   }
   function fill(config) {
     for (const id of [

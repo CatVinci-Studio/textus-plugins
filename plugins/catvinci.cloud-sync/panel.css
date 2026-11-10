@@ -168,21 +168,40 @@ body[data-place="sidebar"] main {
 }
 body[data-place="sidebar"] .sync-status {
   margin: 0;
-  padding: 0 var(--space-3);
+  padding: var(--space-4) var(--space-3);
+  align-items: center;
+  gap: var(--space-3);
+  text-align: center;
+  border: 0;
+  background: none;
+  box-shadow: none;
 }
+/* A sentence, then the one button that moves things on, centred under it:
+   Sync now once set up, the connection's settings before. */
 body[data-place="sidebar"] .status-row {
   flex-direction: column;
-  align-items: stretch;
+  align-items: center;
+  gap: var(--space-3);
+}
+body[data-place="sidebar"] .actions {
+  justify-content: center;
+}
+body[data-place="sidebar"]:not([data-ready="true"]) #sync {
+  display: none;
 }
 body[data-place="sidebar"] .sidebar-only {
   display: inline-flex;
-  margin-top: var(--space-3);
+}
+body[data-place="sidebar"][data-ready="true"] .sidebar-only {
+  border-color: transparent;
+  background: none;
+  color: var(--ui-muted);
 }
 body[data-place="sidebar"] main > :not(.sync-status) {
   display: none;
 }
-body[data-place="sidebar"] .sync-status {
-  border: 0;
-  background: none;
-  box-shadow: none;
+body[data-place="sidebar"] #results,
+body[data-place="sidebar"] #progress {
+  align-self: stretch;
+  text-align: start;
 }
