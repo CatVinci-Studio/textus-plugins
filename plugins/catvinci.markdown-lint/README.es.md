@@ -39,6 +39,7 @@ Espaciado CJK, el complemento que pone espacios entre texto chino y latino, tamb
 
 ## Cambios
 
+- **0.4.0** - Cambia las líneas seleccionadas a lista con viñetas, numerada o de tareas (numera desde 1 en cada nivel; una tarea conserva su marca).
 - **0.3.2** - Textos de ayuda y de estado vacío más breves.
 - **0.3.1** - Su página dice ahora en una frase qué hace, qué puede hacer y qué cambió en cada versión.
 - **0.3.0** - Ahora se llama Ordenar (antes Revisión de Markdown): los seis comandos de texto de «Ordenar texto» pasan aquí; ajustes para quitar el subrayado o reglas sueltas; la sintaxis propia de Obsidian queda como está.

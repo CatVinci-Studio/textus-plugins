@@ -11,6 +11,7 @@ let tidy: {
   trimTrailing: (text: string) => string;
   removeBlankLines: (text: string, all?: boolean) => string;
   joinLines: (text: string) => string;
+  listType: (text: string, kind: string) => string;
 };
 
 beforeAll(async () => {
@@ -90,6 +91,27 @@ describe("joining lines", () => {
   it("drops the list and quote marks of the lines after the first", () => {
     expect(tidy.joinLines("- first\n- second\n> third")).toBe(
       "- first second third",
+    );
+  });
+});
+
+describe("switching a list's type", () => {
+  it("numbers each level from 1 and keeps the indents", () => {
+    expect(tidy.listType("- a\n  * b\n  * c\n- d", "ordered")).toBe(
+      "1. a\n  1. b\n  2. c\n2. d",
+    );
+  });
+
+  it("makes items of plain lines and keeps a task's tick", () => {
+    expect(tidy.listType("plain\n- [x] done\n3. three", "task")).toBe(
+      "- [ ] plain\n- [x] done\n- [ ] three",
+    );
+    expect(tidy.listType("- [x] done", "bullet")).toBe("- done");
+  });
+
+  it("leaves blank lines and fenced code as they are", () => {
+    expect(tidy.listType("a\n\n```\ncode\n```", "bullet")).toBe(
+      "- a\n\n```\ncode\n```",
     );
   });
 });
@@ -192,6 +214,9 @@ describe("Tidy: Markdown Lint and Text Tidy in one", () => {
       "halfPunctuation",
       "joinLines",
       "removeBlankLines",
+      "toBulletList",
+      "toOrderedList",
+      "toTaskList",
       "trimTrailing",
     ];
     expect([...host().commands.keys()].sort()).toEqual(

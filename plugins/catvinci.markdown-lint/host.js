@@ -25,7 +25,24 @@ const CONFIG = {
   MD053: false,
 };
 const SKIP = new Set(markdownKeep.SKIP_KINDS);
-const RULES = ["removeBlankLines", "trimTrailing", "fullPunctuation", "halfPunctuation", "halfLetters", "joinLines"];
+const RULES = [
+  "removeBlankLines",
+  "trimTrailing",
+  "fullPunctuation",
+  "halfPunctuation",
+  "halfLetters",
+  "joinLines",
+  "toBulletList",
+  "toOrderedList",
+  "toTaskList",
+];
+// Rules for lines picked, never a whole document, and what they ask for.
+const SELECTION_ONLY = {
+  joinLines: "selectFirst",
+  toBulletList: "selectLists",
+  toOrderedList: "selectLists",
+  toTaskList: "selectLists",
+};
 
 /** The rules, less the ones the user turned off in settings. */
 async function config() {
@@ -119,8 +136,8 @@ async function tidyText(rule, editor) {
     await editor.replaceSelection(tidied);
     return textus.ui.notice(textus.l10n.t("doneSelection"), { tone: "success" });
   }
-  // Joining lines is for a few lines picked, never a whole document.
-  if (rule === "joinLines") return textus.ui.notice(textus.l10n.t("selectFirst"));
+  const ask = SELECTION_ONLY[rule];
+  if (ask) return textus.ui.notice(textus.l10n.t(ask));
   const ok = await textus.ui.confirm(textus.l10n.t("confirmWhole"), {
     okLabel: textus.l10n.t("confirmOk"),
   });

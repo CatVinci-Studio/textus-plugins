@@ -1,7 +1,7 @@
 {
   "id": "catvinci.markdown-lint",
   "name": "%name%",
-  "version": "0.3.2",
+  "version": "0.4.0",
   "publisher": "catvinci",
   "author": "CatVinci Studio",
   "description": "%description%",
@@ -58,6 +58,18 @@
       {
         "command": "catvinci.markdown-lint.joinLines",
         "title": "%joinLines%"
+      },
+      {
+        "command": "catvinci.markdown-lint.toBulletList",
+        "title": "%toBulletList%"
+      },
+      {
+        "command": "catvinci.markdown-lint.toOrderedList",
+        "title": "%toOrderedList%"
+      },
+      {
+        "command": "catvinci.markdown-lint.toTaskList",
+        "title": "%toTaskList%"
       }
     ],
     "menus": {
@@ -67,6 +79,18 @@
         },
         {
           "command": "catvinci.markdown-lint.joinLines",
+          "when": "editorHasSelection"
+        },
+        {
+          "command": "catvinci.markdown-lint.toBulletList",
+          "when": "editorHasSelection"
+        },
+        {
+          "command": "catvinci.markdown-lint.toOrderedList",
+          "when": "editorHasSelection"
+        },
+        {
+          "command": "catvinci.markdown-lint.toTaskList",
           "when": "editorHasSelection"
         }
       ],
@@ -91,6 +115,15 @@
         },
         {
           "command": "catvinci.markdown-lint.joinLines"
+        },
+        {
+          "command": "catvinci.markdown-lint.toBulletList"
+        },
+        {
+          "command": "catvinci.markdown-lint.toOrderedList"
+        },
+        {
+          "command": "catvinci.markdown-lint.toTaskList"
         }
       ]
     },
@@ -151,7 +184,11 @@
       "none": "Nothing to tidy.",
       "selectFirst": "Select the lines to join first.",
       "confirmWhole": "Tidy the whole document? Select some text first to tidy only that.",
-      "confirmOk": "Tidy"
+      "confirmOk": "Tidy",
+      "toBulletList": "To Bullet List",
+      "toOrderedList": "To Numbered List",
+      "toTaskList": "To Task List",
+      "selectLists": "Select the lines or list to switch first."
     },
     "zh": {
       "name": "整理",
@@ -174,7 +211,11 @@
       "none": "没有需要整理的地方。",
       "selectFirst": "请先选中要合并的几行。",
       "confirmWhole": "整理整篇文档吗？只想整理一部分，请先选中那部分文字。",
-      "confirmOk": "整理"
+      "confirmOk": "整理",
+      "toBulletList": "转为无序列表",
+      "toOrderedList": "转为有序列表",
+      "toTaskList": "转为待办列表",
+      "selectLists": "请先选中要切换的行或列表。"
     },
     "zh-Hant": {
       "name": "整理",
@@ -197,7 +238,11 @@
       "none": "沒有需要整理的地方。",
       "selectFirst": "請先選取要合併的幾行。",
       "confirmWhole": "整理整份文件嗎？只想整理一部分，請先選取那部分文字。",
-      "confirmOk": "整理"
+      "confirmOk": "整理",
+      "toBulletList": "轉為項目符號清單",
+      "toOrderedList": "轉為編號清單",
+      "toTaskList": "轉為待辦清單",
+      "selectLists": "請先選取要切換的行或清單。"
     },
     "ja": {
       "name": "整形",
@@ -220,7 +265,11 @@
       "none": "整形するところはありません。",
       "selectFirst": "結合する行を先に選択してください。",
       "confirmWhole": "文書全体を整形しますか？一部だけなら、先にその部分を選択してください。",
-      "confirmOk": "整形"
+      "confirmOk": "整形",
+      "toBulletList": "箇条書きリストに",
+      "toOrderedList": "番号付きリストに",
+      "toTaskList": "タスクリストに",
+      "selectLists": "切り替える行かリストを先に選択してください。"
     },
     "ko": {
       "name": "정리",
@@ -243,7 +292,11 @@
       "none": "정리할 곳이 없습니다.",
       "selectFirst": "합칠 줄을 먼저 선택하세요.",
       "confirmWhole": "문서 전체를 정리할까요? 일부만 정리하려면 먼저 그 부분을 선택하세요.",
-      "confirmOk": "정리"
+      "confirmOk": "정리",
+      "toBulletList": "글머리 기호 목록으로",
+      "toOrderedList": "번호 목록으로",
+      "toTaskList": "할 일 목록으로",
+      "selectLists": "바꿀 줄이나 목록을 먼저 선택하세요."
     },
     "es": {
       "name": "Ordenar",
@@ -266,7 +319,11 @@
       "none": "No hay nada que ordenar.",
       "selectFirst": "Selecciona primero las líneas que quieres unir.",
       "confirmWhole": "¿Ordenar todo el documento? Para ordenar solo una parte, selecciónala primero.",
-      "confirmOk": "Ordenar"
+      "confirmOk": "Ordenar",
+      "toBulletList": "A lista con viñetas",
+      "toOrderedList": "A lista numerada",
+      "toTaskList": "A lista de tareas",
+      "selectLists": "Selecciona primero las líneas o la lista que quieres cambiar."
     },
     "fr": {
       "name": "Mise au propre",
@@ -289,7 +346,11 @@
       "none": "Rien à nettoyer.",
       "selectFirst": "Sélectionnez d’abord les lignes à réunir.",
       "confirmWhole": "Nettoyer tout le document ? Pour n’en nettoyer qu’une partie, sélectionnez-la d’abord.",
-      "confirmOk": "Nettoyer"
+      "confirmOk": "Nettoyer",
+      "toBulletList": "En liste à puces",
+      "toOrderedList": "En liste numérotée",
+      "toTaskList": "En liste de tâches",
+      "selectLists": "Sélectionnez d’abord les lignes ou la liste à changer."
     },
     "de": {
       "name": "Aufräumen",
@@ -312,7 +373,11 @@
       "none": "Nichts aufzuräumen.",
       "selectFirst": "Wähle zuerst die Zeilen aus, die zusammengefügt werden sollen.",
       "confirmWhole": "Das ganze Dokument aufräumen? Um nur einen Teil aufzuräumen, wähle ihn zuerst aus.",
-      "confirmOk": "Aufräumen"
+      "confirmOk": "Aufräumen",
+      "toBulletList": "Zur Aufzählung",
+      "toOrderedList": "Zur nummerierten Liste",
+      "toTaskList": "Zur Aufgabenliste",
+      "selectLists": "Wähle zuerst die Zeilen oder die Liste aus, die umgestellt werden sollen."
     },
     "ru": {
       "name": "Уборка",
@@ -335,7 +400,11 @@
       "none": "Исправлять нечего.",
       "selectFirst": "Сначала выделите строки, которые нужно объединить.",
       "confirmWhole": "Привести в порядок весь документ? Чтобы обработать только часть, сначала выделите её.",
-      "confirmOk": "Привести в порядок"
+      "confirmOk": "Привести в порядок",
+      "toBulletList": "В маркированный список",
+      "toOrderedList": "В нумерованный список",
+      "toTaskList": "В список задач",
+      "selectLists": "Сначала выделите строки или список, которые нужно переключить."
     },
     "pt": {
       "name": "Arrumar",
@@ -358,7 +427,11 @@
       "none": "Nada para arrumar.",
       "selectFirst": "Selecione primeiro as linhas que quer juntar.",
       "confirmWhole": "Arrumar o documento inteiro? Para arrumar só uma parte, selecione-a primeiro.",
-      "confirmOk": "Arrumar"
+      "confirmOk": "Arrumar",
+      "toBulletList": "Para lista com marcadores",
+      "toOrderedList": "Para lista numerada",
+      "toTaskList": "Para lista de tarefas",
+      "selectLists": "Selecione primeiro as linhas ou a lista que quer mudar."
     }
   }
 }
