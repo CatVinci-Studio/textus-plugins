@@ -45,8 +45,10 @@ canvas {
 [data-local="true"] #settings {
   display: none;
 }
+/* Its one line, the counts, starts where the sidebar's rows do. */
 [data-local="true"] #bar {
   border-bottom: 0;
+  padding: 0 var(--pane-row-inset, var(--space-2));
 }
 
 /* The settings panel over the graph's corner: an overlay (design-language.md

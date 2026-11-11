@@ -144,8 +144,6 @@ function wire(webview, isLocal) {
     }
     if (message.type === "open" && message.path)
       await textus.layout.open(message.path);
-    if (message.type === "full")
-      await textus.layout.openView("catvinci.graph.global");
     if (message.type === "pickColor") {
       const hex = await textus.ui.pickColor({ value: message.value });
       if (hex) webview.postMessage({ type: "color", index: message.index, hex });

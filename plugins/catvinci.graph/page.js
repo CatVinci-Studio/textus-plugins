@@ -22,10 +22,6 @@
     $("fit").textContent = t("fit");
     $("fit").onclick = () => view.zoomToFit();
   }
-  if ($("full")) {
-    $("full").textContent = t("full");
-    $("full").onclick = () => api.postMessage({ type: "full" });
-  }
 
   // The panel, section by section: [key, kind, range]. "local" rows are
   // the sidebar's only, "global" the full graph's.

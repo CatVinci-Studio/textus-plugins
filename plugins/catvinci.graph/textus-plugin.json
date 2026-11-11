@@ -11,7 +11,10 @@
   "engines": {
     "textus": ">=1.3.12"
   },
-  "platforms": ["desktop", "ios"],
+  "platforms": [
+    "desktop",
+    "ios"
+  ],
   "main": [
     "lib/folder-paths.js",
     "lib/name-order.js",
@@ -40,6 +43,13 @@
       "app/plugins": [
         {
           "command": "catvinci.graph.open"
+        }
+      ],
+      "view/title": [
+        {
+          "command": "catvinci.graph.open",
+          "when": "view == catvinci.graph.local",
+          "icon": "full.svg"
         }
       ]
     },
@@ -88,7 +98,6 @@
       "local": "Graph",
       "search": "Search notes",
       "fit": "Fit",
-      "full": "Full graph",
       "notes.one": "{0} note",
       "notes.other": "{0} notes",
       "links.one": "{0} link",
@@ -117,7 +126,6 @@
       "local": "图谱",
       "search": "搜索笔记",
       "fit": "适应窗口",
-      "full": "完整图谱",
       "notes.other": "{0} 篇",
       "links.other": "{0} 条链接",
       "nofolder": "未打开文件夹",
@@ -144,7 +152,6 @@
       "local": "圖譜",
       "search": "搜尋筆記",
       "fit": "符合視窗",
-      "full": "完整圖譜",
       "notes.other": "{0} 篇",
       "links.other": "{0} 個連結",
       "nofolder": "未開啟資料夾",
@@ -171,7 +178,6 @@
       "local": "グラフ",
       "search": "ノートを検索",
       "fit": "全体を表示",
-      "full": "全体のグラフ",
       "notes.other": "{0} 件のノート",
       "links.other": "{0} 本のリンク",
       "nofolder": "フォルダが開かれていません",
@@ -198,7 +204,6 @@
       "local": "그래프",
       "search": "노트 검색",
       "fit": "화면에 맞추기",
-      "full": "전체 그래프",
       "notes.other": "노트 {0}개",
       "links.other": "링크 {0}개",
       "nofolder": "열린 폴더 없음",
@@ -225,7 +230,6 @@
       "local": "Grafo",
       "search": "Buscar notas",
       "fit": "Ajustar",
-      "full": "Grafo completo",
       "notes.one": "{0} nota",
       "notes.other": "{0} notas",
       "links.one": "{0} enlace",
@@ -254,7 +258,6 @@
       "local": "Graphe",
       "search": "Rechercher des notes",
       "fit": "Ajuster",
-      "full": "Graphe complet",
       "notes.one": "{0} note",
       "notes.other": "{0} notes",
       "links.one": "{0} lien",
@@ -283,7 +286,6 @@
       "local": "Graph",
       "search": "Notizen suchen",
       "fit": "Einpassen",
-      "full": "Ganzer Graph",
       "notes.one": "{0} Notiz",
       "notes.other": "{0} Notizen",
       "links.one": "{0} Link",
@@ -312,7 +314,6 @@
       "local": "Граф",
       "search": "Поиск заметок",
       "fit": "Вписать",
-      "full": "Полный граф",
       "notes.one": "{0} заметка",
       "notes.few": "{0} заметки",
       "notes.many": "{0} заметок",
@@ -345,7 +346,6 @@
       "local": "Grafo",
       "search": "Buscar notas",
       "fit": "Ajustar",
-      "full": "Grafo completo",
       "notes.one": "{0} nota",
       "notes.other": "{0} notas",
       "links.one": "{0} link",
