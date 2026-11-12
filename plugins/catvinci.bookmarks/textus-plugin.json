@@ -1,7 +1,7 @@
 {
   "id": "catvinci.bookmarks",
   "name": "%name%",
-  "version": "0.4.3",
+  "version": "0.4.4",
   "publisher": "catvinci",
   "author": "CatVinci Studio",
   "description": "%description%",
@@ -9,7 +9,7 @@
   "license": "MIT",
   "repository": "https://github.com/CatVinci-Studio/textus-plugins",
   "engines": {
-    "textus": ">=1.3.0-beta.2"
+    "textus": ">=1.4.0"
   },
   "platforms": [
     "desktop",
@@ -17,14 +17,11 @@
   ],
   "main": [
     "lib/folder-paths.js",
-    "obsidian.js",
     "host.js"
   ],
   "permissions": [
     "editor.read",
-    "editor.write",
     "files.read",
-    "files.write",
     "ai.tools"
   ],
   "activationEvents": [

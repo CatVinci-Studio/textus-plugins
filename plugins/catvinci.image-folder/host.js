@@ -41,12 +41,9 @@ async function appPlaces(doc) {
     return false;
   }
   if (!rule || rule.app !== "obsidian") return imageFolder.appPlaces(rule, null);
-  try {
-    const app = JSON.parse(await textus.files.readText(folderPaths.abs(rule.root, ".obsidian/app.json")));
-    return imageFolder.appPlaces(rule, app);
-  } catch {
-    return false;
-  }
+  // Its settings through Textus: plugins don't read .obsidian themselves.
+  const app = await textus.files.appSettings("obsidian", "app.json", doc).catch(() => null);
+  return app ? imageFolder.appPlaces(rule, app) : false;
 }
 
 const moving = new Set();

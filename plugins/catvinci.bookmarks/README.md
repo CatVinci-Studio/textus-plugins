@@ -11,17 +11,16 @@ The **Bookmarks** tab in the sidebar lists your bookmarks by document. Click one
 When the open folder is an Obsidian vault (it has a `.obsidian` folder):
 
 - Obsidian's own bookmarks in `.obsidian/bookmarks.json` show in the tab too, under **Obsidian**, in Obsidian's groups. Bookmarks of notes, headings and blocks are listed; searches, folders and the like are not.
-- A new bookmark is also written to `bookmarks.json`, so Obsidian has it. On a heading it is a heading bookmark. Anywhere else it is a block bookmark, and the block gets an id such as `^a1b2c3` (an id it already has is reused).
-- Removing a bookmark here, or renaming its document, changes `bookmarks.json` too. Everything else in the file stays as it was.
 
 ## Permissions
 
-- Read and edit the document: to read the selection, and to add a block id in a vault.
-- Read and write files: for Obsidian's `bookmarks.json`.
+- Read the document: to read the selection.
+- Read files: for Obsidian's `bookmarks.json`.
 - Tools for Textus AI: so Textus AI can list your bookmarks.
 
 ## Changes
 
+- **0.4.4** - Obsidian's bookmarks are listed as before but no longer written: Textus 1.4 keeps plugins out of `.obsidian`. Needs Textus 1.4.0.
 - **0.4.3** - Rows are grouped by the document's path in the folder, one group per document; long passages end at a word with "…"; a failed block-id edit in a vault keeps the bookmark.
 - **0.4.2** - Shorter help and empty-state text.
 - **0.4.1** - Its page now says in one sentence what it does, what it can do, and what changed in each version.

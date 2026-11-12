@@ -46,6 +46,7 @@ El plugin lee los documentos de la carpeta para encontrar sus tareas, y escribe 
 
 ## Cambios
 
+- **0.4.4** - Una consulta de tareas en un documento se dibuja al tamaño de texto de la interfaz: una columna más ancha muestra más en lugar de letra más grande (Textus 1.4.1).
 - **0.4.3** - Ya se pueden marcar tareas con un comentario HTML, y si no se puede marcar una, se avisa del motivo. `group by status` ordena bien, los bloques de tareas caben en paneles estrechos, las fechas de vencimiento se ven como en la barra lateral y escribir es más ligero.
 - **0.4.2** - Textos de ayuda y de estado vacío más breves.
 - **0.4.1** - Sus barras, listas y controles son ahora los de Textus, crecen con la interfaz y siguen cada tema; necesita Textus 1.3.12. Nuevo ajuste **Mover las tareas terminadas al final de su lista**: una tarea marcada pasa detrás de las abiertas (pide una vez leer y editar el documento).

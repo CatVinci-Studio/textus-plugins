@@ -11,17 +11,16 @@ A aba **Favoritos** da barra lateral lista os favoritos por documento. Clique em
 Quando a pasta aberta é um cofre do Obsidian (tem uma pasta `.obsidian`):
 
 - Os favoritos do próprio Obsidian, em `.obsidian/bookmarks.json`, também aparecem na aba, em **Favoritos do Obsidian**, com os grupos do Obsidian. Entram os de notas, títulos e blocos; pesquisas, pastas e afins ficam de fora.
-- Cada favorito novo também é gravado em `bookmarks.json`, para o Obsidian tê-lo. Num título, é um favorito de título; em outro lugar, é de bloco, e o bloco ganha um id como `^a1b2c3` (se já tiver um, ele é usado).
-- Remover um favorito aqui, ou renomear o documento, também altera `bookmarks.json`. O resto do arquivo fica como estava.
 
 ## Permissões
 
-- Ler e editar o documento: para ler a seleção e adicionar o id de um bloco num cofre.
-- Ler e gravar arquivos: para o `bookmarks.json` do Obsidian.
+- Ler o documento: para ler a seleção.
+- Ler arquivos: para o `bookmarks.json` do Obsidian.
 - Ferramentas para o Textus AI: para o Textus AI poder listar seus favoritos.
 
 ## Alterações
 
+- **0.4.4** - Os favoritos do Obsidian continuam listados, mas não são mais gravados: desde o Textus 1.4 os plugins não alteram `.obsidian`. Precisa do Textus 1.4.0.
 - **0.4.3** - A lista é agrupada pelo caminho do documento na pasta, um grupo por documento; trechos longos terminam em uma palavra com "…"; se o id de bloco falhar em um cofre, o favorito é salvo mesmo assim.
 - **0.4.2** - Textos de ajuda e de estado vazio mais curtos.
 - **0.4.1** - Sua página agora diz numa frase o que ele faz, o que pode fazer e o que mudou em cada versão.

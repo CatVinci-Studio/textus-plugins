@@ -104,20 +104,3 @@ it("lists one group per document, by its path in the folder, words cut at a word
     ["b/A.md", long.slice(0, 119) + "…", undefined],
   ]);
 });
-
-it("keeps the bookmark when the vault's block id cannot be written", async () => {
-  const storage = memoryStorage();
-  const files = { ".obsidian/app.json": "{}", "Log.md": "Ship the draft." };
-  const { commands } = listOf(storage, { files: folder(files) });
-  await commands.get("catvinci.bookmarks.add")!({
-    getPath: async () => "/root/Log.md",
-    getSelection: async () => ({ text: "Ship the draft.", markdown: "Ship the draft." }),
-    getBlocks: async () => [{ id: "p", kind: "paragraph", markdown: "Ship the draft." }],
-    edit: async () => {
-      throw new Error("No block p");
-    },
-  });
-  const saved = (await storage.get("bookmarks")) as { path: string; ctime?: number }[];
-  expect(saved).toHaveLength(1);
-  expect(JSON.parse(files[".obsidian/bookmarks.json" as keyof typeof files]).items[0]).toMatchObject({ type: "file", path: "Log.md" });
-});
