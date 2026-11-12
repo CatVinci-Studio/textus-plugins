@@ -22,6 +22,7 @@ The plugins for [Textus](https://textus.md), the Markdown editor. None of them c
 | Function Plot | Graphs of functions, one per line: sin(x), x^2 - 1. |
 | Graph View | Your notes and the links between them as a graph - for the whole folder, or around the document in front - with filters and colour groups. |
 | Heading Numbers | Numbers headings as you write - 1, 1.1, 1.2 - without changing the text; exports can carry the numbers too. |
+| HTML View | See .html files as the pages they are, in a tab. Edit source opens one as text. |
 | Image Viewer | Open pictures and SVG files in a tab: zoom, fit, and an SVG's source. |
 | Images Follow Document | Keeps each document's pictures beside it, in a folder of its name - Note.assets/ for Note.md - as Typora and VS Code do. |
 | Keenable Search | Lets Textus AI search the web with Keenable, with no key needed; set a Keenable API key for its full search. Searches go to Keenable only while Textus AI uses this tool. |

@@ -135,7 +135,10 @@ function page(character) {
   ).join("");
   return `<!doctype html><html><head><style>
   body { margin: 0; height: 100vh; overflow: hidden; user-select: none; }
-  .stage { position: absolute; inset: var(--space-6) 0 0; }
+  /* Room above her for two lines of what she says, so a line never covers
+     her face. */
+  body { --say: clamp(var(--text-caption), 7cqi, var(--text-secondary)); }
+  .stage { position: absolute; inset: calc(2.8 * var(--say) + var(--space-4) + 8px) 0 0; }
   img { position: absolute; bottom: 0; left: 0; max-width: 100%; max-height: 100%; opacity: 0; transform-origin: 50% 100%;
     transition: opacity var(--dur-fast) var(--ease-standard); pointer-events: none; }
   img.on { opacity: 1; animation: breathe 3.6s ease-in-out infinite; }
@@ -150,7 +153,8 @@ function page(character) {
   body { container-type: inline-size; }
   /* Anchored over her middle, its tail at the same share of its width. */
   .bubble { --at: 35%; --tail-at: var(--at); position: absolute; top: 0; left: var(--at); box-sizing: border-box; max-width: calc(100% - var(--space-2)); width: max-content; transform: translateX(calc(-1 * var(--at)));
-    font-size: clamp(var(--text-caption), 7cqi, var(--text-secondary)); line-height: 1.4; text-align: center; text-wrap: balance;
+    font-size: var(--say); line-height: 1.4; text-align: center; text-wrap: balance;
+    display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden;
     opacity: 0; transition: opacity var(--dur-base) var(--ease-standard); pointer-events: none; }
   .stage.end ~ .bubble { --at: 65%; }
   .bubble.on { opacity: 1; }

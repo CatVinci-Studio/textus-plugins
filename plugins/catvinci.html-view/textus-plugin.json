@@ -1,0 +1,104 @@
+{
+  "id": "catvinci.html-view",
+  "name": "%name%",
+  "version": "0.1.0",
+  "publisher": "catvinci",
+  "author": "CatVinci Studio",
+  "description": "%description%",
+  "icon": "icon.svg",
+  "license": "MIT",
+  "repository": "https://github.com/CatVinci-Studio/textus-plugins",
+  "engines": {
+    "textus": ">=1.3.12"
+  },
+  "platforms": [
+    "desktop",
+    "ios"
+  ],
+  "main": "host.js",
+  "permissions": [],
+  "contributes": {
+    "customEditors": [
+      {
+        "viewType": "catvinci.html-view.page",
+        "displayName": "%name%",
+        "filenamePatterns": [
+          "*.html",
+          "*.htm"
+        ]
+      }
+    ]
+  },
+  "l10n": {
+    "en": {
+      "name": "HTML View",
+      "description": "See .html files as the pages they are, in a tab. Edit source opens one as text.",
+      "edit": "Edit source",
+      "loading": "Opening…",
+      "failed": "This page can't be opened: {0}"
+    },
+    "zh": {
+      "name": "HTML 查看器",
+      "description": "在标签页里把 .html 文件显示成网页。点“编辑源码”以文本打开。",
+      "edit": "编辑源码",
+      "loading": "正在打开…",
+      "failed": "无法打开这个网页：{0}"
+    },
+    "zh-Hant": {
+      "name": "HTML 檢視器",
+      "description": "在分頁中把 .html 檔案顯示成網頁。點「編輯原始碼」以文字開啟。",
+      "edit": "編輯原始碼",
+      "loading": "正在開啟…",
+      "failed": "無法開啟這個網頁：{0}"
+    },
+    "ja": {
+      "name": "HTML ビューア",
+      "description": ".html ファイルをウェブページとしてタブに表示します。「ソースを編集」でテキストとして開きます。",
+      "edit": "ソースを編集",
+      "loading": "開いています…",
+      "failed": "このページを開けません：{0}"
+    },
+    "ko": {
+      "name": "HTML 뷰어",
+      "description": ".html 파일을 웹 페이지 그대로 탭에서 봅니다. '소스 편집'을 누르면 텍스트로 엽니다.",
+      "edit": "소스 편집",
+      "loading": "여는 중…",
+      "failed": "이 페이지를 열 수 없습니다: {0}"
+    },
+    "de": {
+      "name": "HTML-Ansicht",
+      "description": ".html-Dateien als die Seiten sehen, die sie sind, in einem Tab. „Quelltext bearbeiten“ öffnet sie als Text.",
+      "edit": "Quelltext bearbeiten",
+      "loading": "Wird geöffnet…",
+      "failed": "Diese Seite lässt sich nicht öffnen: {0}"
+    },
+    "fr": {
+      "name": "Visionneuse HTML",
+      "description": "Voir les fichiers .html comme les pages qu’ils sont, dans un onglet. « Modifier la source » les ouvre en texte.",
+      "edit": "Modifier la source",
+      "loading": "Ouverture…",
+      "failed": "Impossible d’ouvrir cette page : {0}"
+    },
+    "es": {
+      "name": "Visor HTML",
+      "description": "Mira los archivos .html como las páginas que son, en una pestaña. «Editar código» los abre como texto.",
+      "edit": "Editar código",
+      "loading": "Abriendo…",
+      "failed": "No se puede abrir esta página: {0}"
+    },
+    "pt": {
+      "name": "Visualizador HTML",
+      "description": "Veja arquivos .html como as páginas que são, numa aba. “Editar código” abre como texto.",
+      "edit": "Editar código",
+      "loading": "Abrindo…",
+      "failed": "Não é possível abrir esta página: {0}"
+    },
+    "ru": {
+      "name": "Просмотр HTML",
+      "description": "Файлы .html во вкладке — такими, какими они выглядят как страницы. «Изменить код» открывает их как текст.",
+      "edit": "Изменить код",
+      "loading": "Открывается…",
+      "failed": "Не удаётся открыть страницу: {0}"
+    }
+  }
+}
