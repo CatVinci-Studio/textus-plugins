@@ -1,6 +1,11 @@
 /* A database block's page: layout only. Every control is Textus's own
    (tx- classes, design-language.md 15.4); this file places them, with
    tokens only. */
+html {
+  /* The room a scroll bar takes is kept whether it shows or not: the page
+     is as wide at every height, so its bar fits the same way. */
+  scrollbar-gutter: stable;
+}
 html,
 body {
   margin: 0;
