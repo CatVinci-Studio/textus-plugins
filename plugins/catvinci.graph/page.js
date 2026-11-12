@@ -189,6 +189,7 @@
       );
       return render();
     }
+    if (message.type === "focus") return view.setFocus(message.focus || null);
     if (message.type !== "graph") return;
     const graph = message.graph;
     // While the panel is being typed in, what it holds is newer.

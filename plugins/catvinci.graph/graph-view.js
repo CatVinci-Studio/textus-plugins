@@ -68,7 +68,16 @@
       return 3.5 + Math.min(9, Math.sqrt(node.degree || 0) * 1.8);
     }
 
+    let shape = "";
     function setData(data, focusId) {
+      // The same notes and links (a save, a setting): drawn again, not
+      // shaken loose and settled anew.
+      const next =
+        data.nodes.map((n) => n.id).join("\n") +
+        "\0" +
+        data.edges.map((e) => e.source + "\n" + e.target).join("\n");
+      const same = next === shape;
+      shape = next;
       const old = byId;
       byId = new Map();
       nodes = data.nodes.map(function (n, i) {
@@ -99,10 +108,12 @@
         neighbours.get(b.id).add(a.id);
       }
       focus = focusId || null;
+      if (dragging) dragging = byId.get(dragging.id) || null;
       // Mostly new (the first data, another folder): laid out before it is
       // drawn, so it shows where it ends up rather than unfolding there.
       const fresh = nodes.filter((n) => !old.has(n.id)).length;
-      if (fresh > nodes.length / 2) {
+      if (same) draw();
+      else if (fresh > nodes.length / 2) {
         alpha = 1;
         const until = performance.now() + 150;
         while (alpha > 0.02 && performance.now() < until) step();

@@ -15,6 +15,7 @@ Não pede permissões: o Textus entrega a ele o PDF que você abre.
 
 ## Alterações
 
+- **0.2.5** - Um PDF longo percorrido até o fim ocupa muito menos memória: as páginas fora de vista também liberam suas imagens.
 - **0.2.4** - A barra quebra linha em um painel estreito, e a busca não mistura mais resultados de uma palavra anterior.
 - **0.2.3** - A barra segue a ordem do Textus: o que mostra, depois busca e zoom.
 - **0.2.2** - Suas barras, listas e controles agora são os do Textus, crescem com a interface e seguem cada tema; requer Textus 1.3.12.
