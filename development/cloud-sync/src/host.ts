@@ -1,6 +1,7 @@
 import { defaults, providers } from "./config";
 import { parseBase } from "./content";
 import { synchronize } from "./engine";
+import { scopeOf } from "./scope";
 import { openEncryptedStore } from "./encrypted-store";
 import { Workspace } from "./local";
 import { Pacer } from "./pacer";
@@ -230,11 +231,19 @@ class Controller {
       }
       const base = parseBase(await this.ctx.storage.global.get(key));
       this.pacer.started();
+      // The folder's .gitignore, read each sync: it changes as Git's does.
+      const gitignore = config.gitignore
+        ? await this.api.files
+            .read(`${root.replace(/[/\\]$/, "")}/.gitignore`)
+            .then((bytes) => new TextDecoder().decode(bytes))
+            .catch(() => "")
+        : "";
       this.workspace = new Workspace(
         this.api,
         root,
         this.ctx.storage.global,
         this.abort.signal,
+        scopeOf(config, gitignore),
       );
       const result = await synchronize({
         store: encrypted,

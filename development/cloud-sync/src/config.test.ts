@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { inScope, normalizeConfig, relativePath } from "./config";
 import { parseManifest } from "./content";
+import { scopeOf } from "./scope";
 import { FORMAT, encode } from "./model";
 
 describe("connection and data boundaries", () => {
@@ -65,6 +66,46 @@ describe("connection and data boundaries", () => {
       "script.js",
     ])
       expect(inScope(path)).toBe(false);
+  });
+  it("leaves out what the user's rules and .gitignore leave out, as Git reads them", () => {
+    const scope = scopeOf(
+      {
+        exclude: "drafts/\n*.pdf\n!keep.pdf\n/top.md\nnotes/**/old-?.md",
+        gitignore: true,
+        obsidian: false,
+      },
+      "# build\nout/\n",
+    );
+    for (const path of ["a.md", "keep.pdf", "sub/top.md", "notes/old.md"])
+      expect(scope.wants(path)).toBe(true);
+    for (const path of [
+      "drafts/a.md",
+      "x/drafts/a.md",
+      "manual.pdf",
+      "top.md",
+      "notes/a/b/old-1.md",
+      "out/a.md",
+      ".obsidian/app.json",
+    ])
+      expect(scope.wants(path)).toBe(false);
+    expect(scope.enters("drafts")).toBe(false);
+    expect(scope.enters("notes")).toBe(true);
+    // Nothing comes back from inside a folder left out.
+    expect(
+      scopeOf({ exclude: "a/\n!a/b.md", gitignore: false, obsidian: false })
+        .wants("a/b.md"),
+    ).toBe(false);
+    // The folder's .gitignore counts only when asked for.
+    expect(
+      scopeOf({ exclude: "", gitignore: false, obsidian: false }, "out/")
+        .wants("out/a.md"),
+    ).toBe(true);
+  });
+  it("carries Obsidian's shared settings only when asked, never its per-device files", () => {
+    const scope = scopeOf({ exclude: "", gitignore: false, obsidian: true });
+    expect(scope.wants(".obsidian/app.json")).toBe(true);
+    expect(scope.wants(".obsidian/workspace.json")).toBe(false);
+    expect(scope.wants(".obsidian/plugins/x/data.json")).toBe(false);
   });
   it.each([
     "../escape.md",

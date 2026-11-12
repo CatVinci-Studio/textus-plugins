@@ -151,6 +151,41 @@
               />
             </div>
           </div>
+          <div class="tx-group">
+            <div class="tx-row stack">
+              <div class="row-text">
+                <label for="exclude" data-t="exclude"></label>
+                <p id="exclude-hint" class="hint" data-t="excludeHint"></p>
+              </div>
+              <textarea
+                id="exclude"
+                rows="3"
+                maxlength="20000"
+                spellcheck="false"
+                aria-describedby="exclude-hint"
+              ></textarea>
+            </div>
+            <div class="tx-row">
+              <label id="gitignore-label" for="gitignore" data-t="gitignore"></label>
+              <input
+                id="gitignore"
+                type="checkbox"
+                role="switch"
+                class="tx-switch"
+                aria-labelledby="gitignore-label"
+              />
+            </div>
+            <div class="tx-row">
+              <label id="obsidian-label" for="obsidian" data-t="obsidian"></label>
+              <input
+                id="obsidian"
+                type="checkbox"
+                role="switch"
+                class="tx-switch"
+                aria-labelledby="obsidian-label"
+              />
+            </div>
+          </div>
           <div class="form-end">
             <p id="credentials-state" class="hint"></p>
             <button

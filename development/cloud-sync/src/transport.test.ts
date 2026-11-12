@@ -317,7 +317,13 @@ describe("storage protocols over HTTP", () => {
       // refused MKCOL is checked with one more PROPFIND. Not counted.
       return recorded
         .slice(start)
-        .filter((r) => !(r.method === "PROPFIND" && /\/blocks\/[0-9a-f]{2}\/?$/.test(r.path))).length;
+        .filter(
+          (r) =>
+            !(
+              r.method === "PROPFIND" &&
+              /\/blocks\/[0-9a-f]{2}\/?$/.test(r.path)
+            ),
+        ).length;
     };
     const idle = await measure();
     local.files.set("a.md", bytes("edited"));

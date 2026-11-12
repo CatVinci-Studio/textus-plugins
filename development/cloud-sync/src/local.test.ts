@@ -199,9 +199,15 @@ it("remembers the paths it trashed and renamed", async () => {
 it("reads again only a file whose size or time changed since the last sync", async () => {
   const { api, files, storage } = fixture();
   let modifiedMs = Date.now() - 60_000;
-  api.files.list = async () => [
-    { name: "a.md", isDir: false, size: files.get("/notes/a.md")!.length, modifiedMs },
-  ] as never;
+  api.files.list = async () =>
+    [
+      {
+        name: "a.md",
+        isDir: false,
+        size: files.get("/notes/a.md")!.length,
+        modifiedMs,
+      },
+    ] as never;
   const read = vi.spyOn(api.files, "read");
   const scan = () =>
     new Workspace(api as unknown as Textus.Api, "/notes", storage).scan();

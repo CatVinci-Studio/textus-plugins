@@ -133,7 +133,15 @@ export async function synchronize(options: Options): Promise<Result> {
       deferred: [],
       unchanged: 0,
     };
-    const actions = plan(files, remote.files, base.files);
+    // What this device leaves out stays as it is, here and there.
+    const ours = (from: Record<string, Entry>) =>
+      Object.fromEntries(
+        Object.entries(from).filter(([path]) => local.wants(path)),
+      );
+    const ourBase = Object.fromEntries(
+      Object.entries(base.files).filter(([path]) => local.wants(path)),
+    );
+    const actions = plan(files, ours(remote.files), ourBase);
     const names = new Map<string, string>();
     for (const a of actions) {
       const folded = a.path.normalize("NFC").toLowerCase();
@@ -171,7 +179,7 @@ export async function synchronize(options: Options): Promise<Result> {
       throw new SyncError("localChanged");
     };
     const done = new Set<string>();
-    for (const [to, from] of moves(actions, files, remote.files, base.files)) {
+    for (const [to, from] of moves(actions, files, remote.files, ourBase)) {
       checkAbort(signal);
       await local.check();
       if (!(await local.move(from, to, files[from].hash))) continue;

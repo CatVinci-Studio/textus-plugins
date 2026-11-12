@@ -61,7 +61,10 @@ var defaults = {
   prefix: "textus/my-workspace",
   pathStyle: true,
   automatic: false,
-  interval: 5
+  interval: 5,
+  exclude: "",
+  gitignore: false,
+  obsidian: false
 };
 var providers = {
   s3: { transport: "s3", endpoint: "", requestLimit: Infinity, saveGap: 0 },
@@ -122,6 +125,9 @@ function normalizeConfig(input) {
   c.endpoint = url.toString().replace(/\/+$/, "");
   c.pathStyle = c.pathStyle !== false;
   c.automatic = c.automatic === true;
+  c.exclude = String(c.exclude ?? "").slice(0, 2e4);
+  c.gitignore = c.gitignore === true;
+  c.obsidian = c.obsidian === true;
   c.interval = Number(c.interval);
   if (!Number.isInteger(c.interval) || c.interval < 5 || c.interval > 1440)
     throw new SyncError("invalidInterval");
@@ -141,8 +147,19 @@ var documents = /\.(md|markdown|mdown|mkd|txt|csv|base|canvas)$/i;
 var attachments = /\.(png|jpe?g|gif|webp|svg|avif|bmp|ico|heic|pdf|docx?|xlsx?|pptx?|odt|ods|odp|mp3|wav|m4a|ogg|mp4|mov|webm)$/i;
 var ignored = /* @__PURE__ */ new Set(["node_modules", "dist", "build", "target", "vendor"]);
 var isText = (path) => documents.test(path) || /\.svg$/i.test(path);
+var OBSIDIAN_SETTINGS = [
+  "app.json",
+  "appearance.json",
+  "hotkeys.json",
+  "bookmarks.json",
+  "graph.json",
+  "core-plugins.json",
+  "types.json"
+];
+var isObsidianSetting = (path) => path.startsWith(".obsidian/") && OBSIDIAN_SETTINGS.includes(path.slice(".obsidian/".length));
 function inScope(path) {
   if (!relativePath(path)) return false;
+  if (isObsidianSetting(path)) return true;
   const parts = path.split("/");
   if (parts[0] === ".textus") {
     return /^\.textus\/(agent|style|style\.previous)\.md$/.test(path) || /^\.textus\/(library|memory|skills)\/.+\.md$/i.test(path) && parts.slice(1).every((p) => !p.startsWith("."));
@@ -337,7 +354,13 @@ async function synchronize(options) {
       deferred: [],
       unchanged: 0
     };
-    const actions = plan(files, remote.files, base.files);
+    const ours = (from) => Object.fromEntries(
+      Object.entries(from).filter(([path]) => local.wants(path))
+    );
+    const ourBase = Object.fromEntries(
+      Object.entries(base.files).filter(([path]) => local.wants(path))
+    );
+    const actions = plan(files, ours(remote.files), ourBase);
     const names = /* @__PURE__ */ new Map();
     for (const a of actions) {
       const folded = a.path.normalize("NFC").toLowerCase();
@@ -365,7 +388,7 @@ async function synchronize(options) {
       throw new SyncError("localChanged");
     };
     const done = /* @__PURE__ */ new Set();
-    for (const [to, from] of moves(actions, files, remote.files, base.files)) {
+    for (const [to, from] of moves(actions, files, remote.files, ourBase)) {
       checkAbort(signal);
       await local.check();
       if (!await local.move(from, to, files[from].hash)) continue;
@@ -464,6 +487,49 @@ async function synchronize(options) {
       if (completed) throw new SyncError("unlockFailed");
     }
   }
+}
+
+// development/cloud-sync/src/scope.ts
+function patternTest(pattern) {
+  const anchored = pattern.replace(/\/$/, "").includes("/");
+  const body = pattern.replace(/^\//, "").replace(/\/$/, "").split(/(\*\*\/|\/\*\*|\*\*|\*|\?)/).map(
+    (part) => part === "**/" ? "(?:.*/)?" : part === "/**" ? "(?:/.*)?" : part === "**" ? ".*" : part === "*" ? "[^/]*" : part === "?" ? "[^/]" : part.replace(/[.+^${}()|[\]\\]/g, "\\$&")
+  ).join("");
+  return new RegExp(`^${anchored ? "" : "(?:.*/)?"}${body}$`);
+}
+function readRules(text) {
+  return text.split(/\r?\n/).flatMap((raw) => {
+    const line = raw.trim();
+    if (!line || line.startsWith("#")) return [];
+    const negate = line.startsWith("!");
+    const pattern = negate ? line.slice(1) : line;
+    if (!pattern || pattern === "/") return [];
+    return [
+      { test: patternTest(pattern), negate, dirOnly: pattern.endsWith("/") }
+    ];
+  });
+}
+function ruledOut(rules, path, dir) {
+  const parts = path.split("/");
+  for (let i = 1; i <= parts.length; i++) {
+    const at = parts.slice(0, i).join("/");
+    const isDir = i < parts.length || dir;
+    let out = false;
+    for (const rule of rules)
+      if ((!rule.dirOnly || isDir) && rule.test.test(at)) out = !rule.negate;
+    if (out) return true;
+  }
+  return false;
+}
+function scopeOf(config, gitignore = "") {
+  const rules = readRules(
+    (config.gitignore ? gitignore + "\n" : "") + config.exclude
+  );
+  return {
+    wants: (path) => inScope(path) && (config.obsidian || !isObsidianSetting(path)) && !ruledOut(rules, path, false),
+    enters: (dir) => descend(dir) && !ruledOut(rules, dir, true),
+    obsidian: config.obsidian
+  };
 }
 
 // development/cloud-sync/src/encryption.ts
@@ -1201,14 +1267,22 @@ var Reservations = class {
 var described = /* @__PURE__ */ new Map();
 var SETTLED_MS = 2e3;
 var Workspace = class {
-  constructor(api, root, storage, signal) {
+  constructor(api, root, storage, signal, scope = scopeOf({
+    exclude: "",
+    gitignore: false,
+    obsidian: false
+  })) {
     this.api = api;
     this.root = root;
     this.signal = signal;
+    this.scope = scope;
     __publicField(this, "reservations");
     /** Paths this run trashed or renamed, so their file events start no new sync. */
     __publicField(this, "touched", /* @__PURE__ */ new Set());
     this.reservations = new Reservations(storage, root);
+  }
+  wants(path) {
+    return this.scope.wants(path);
   }
   async check() {
     checkAbort(this.signal);
@@ -1293,7 +1367,12 @@ var Workspace = class {
       if (!bytes) return;
       files[rel] = await describe(bytes);
       if (stat && at != null)
-        seen.set(rel, { size: stat.size, modifiedMs: at, at: Date.now(), entry: files[rel] });
+        seen.set(rel, {
+          size: stat.size,
+          modifiedMs: at,
+          at: Date.now(),
+          entry: files[rel]
+        });
     };
     const walk = async (relative = "") => {
       await this.check();
@@ -1303,9 +1382,9 @@ var Workspace = class {
       for (const entry of await this.api.files.list(dir)) {
         const rel = relative ? `${relative}/${entry.name}` : entry.name;
         if (entry.isDir) {
-          if (descend(rel) || /^\.textus\/(library|memory|skills)(\/|$)/.test(rel))
+          if (this.scope.enters(rel) || /^\.textus\/(library|memory|skills)(\/|$)/.test(rel))
             await walk(rel);
-        } else if (inScope(rel)) {
+        } else if (this.scope.wants(rel)) {
           if (++visits > MAX_FILES) throw new SyncError("tooManyFiles");
           await add(rel, entry);
         }
@@ -1317,6 +1396,13 @@ var Workspace = class {
       const stat = await this.api.files.stat(this.path(rel));
       if (stat) await add(rel, stat);
     }
+    if (this.scope.obsidian)
+      for (const name of OBSIDIAN_SETTINGS) {
+        const rel = `.obsidian/${name}`;
+        if (!this.scope.wants(rel)) continue;
+        const stat = await this.api.files.stat(this.path(rel));
+        if (stat && !stat.isDir) await add(rel, stat);
+      }
     for (const name of ["library", "memory", "skills"]) {
       if ((await this.api.files.stat(`${this.root}/.textus/${name}`))?.isDir)
         await walk(`.textus/${name}`);
@@ -1725,11 +1811,13 @@ var Controller = class {
       }
       const base = parseBase(await this.ctx.storage.global.get(key));
       this.pacer.started();
+      const gitignore = config.gitignore ? await this.api.files.read(`${root.replace(/[/\\]$/, "")}/.gitignore`).then((bytes) => new TextDecoder().decode(bytes)).catch(() => "") : "";
       this.workspace = new Workspace(
         this.api,
         root,
         this.ctx.storage.global,
-        this.abort.signal
+        this.abort.signal,
+        scopeOf(config, gitignore)
       );
       const result = await synchronize({
         store: encrypted,

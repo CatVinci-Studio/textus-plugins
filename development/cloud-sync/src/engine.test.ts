@@ -238,4 +238,21 @@ suite("workspace synchronization", () => {
     expect(result.deferred).toEqual(["a.md"]);
     expect(text(b.files.get(result.conflicts[0]))).toBe("remote");
   });
+  it("leaves excluded files alone on both sides", async () => {
+    const remote = new MemoryStore(),
+      a = new MemoryLocal({ "a.md": "a", "drafts/x.md": "theirs" }),
+      b = new MemoryLocal({ "drafts/y.md": "mine" });
+    b.leaves = (path) => path.startsWith("drafts/");
+    await a.sync(remote);
+    expect((await b.sync(remote)).downloaded).toBe(1);
+    expect(b.files.has("drafts/x.md")).toBe(false);
+    a.files.set("drafts/x.md", bytes("theirs, edited"));
+    await a.sync(remote);
+    await b.sync(remote);
+    const c = new MemoryLocal();
+    await c.sync(remote);
+    expect(text(c.files.get("drafts/x.md"))).toBe("theirs, edited");
+    expect(c.files.has("drafts/y.md")).toBe(false);
+    expect(text(b.files.get("drafts/y.md"))).toBe("mine");
+  });
 });

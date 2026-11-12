@@ -87,7 +87,8 @@ function fill(config: Config) {
     "interval",
   ] as const)
     input(id).value = String(config[id]);
-  for (const id of ["pathStyle", "automatic"] as const)
+  element<HTMLTextAreaElement>("exclude").value = config.exclude;
+  for (const id of ["pathStyle", "automatic", "gitignore", "obsidian"] as const)
     input(id).checked = config[id];
   toggles();
 }
@@ -111,6 +112,9 @@ function save() {
     pathStyle: input("pathStyle").checked,
     automatic: input("automatic").checked,
     interval: Number(input("interval").value),
+    exclude: element<HTMLTextAreaElement>("exclude").value,
+    gitignore: input("gitignore").checked,
+    obsidian: input("obsidian").checked,
   };
   api.postMessage({
     type: "save",

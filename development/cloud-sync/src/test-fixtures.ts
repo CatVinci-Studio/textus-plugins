@@ -40,13 +40,19 @@ export class MemoryLocal implements LocalFiles {
   trashed: [string, Uint8Array][] = [];
   base: Base = emptyBase();
   beforeApply?: () => void;
+  /** What this device leaves out, as the user's rules would. */
+  leaves = (_path: string) => false;
+  wants(path: string) {
+    return !this.leaves(path);
+  }
   constructor(files: Record<string, string> = {}) {
     for (const [p, t] of Object.entries(files)) this.files.set(p, bytes(t));
   }
   async check() {}
   async scan() {
     const entries: Record<string, Entry> = {};
-    for (const [p, value] of this.files) entries[p] = await describe(value);
+    for (const [p, value] of this.files)
+      if (this.wants(p)) entries[p] = await describe(value);
     return entries;
   }
   async read(path: string) {
