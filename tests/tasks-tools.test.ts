@@ -82,7 +82,7 @@ type Any = any;
 
 /** A folder whose index is made from its files as Textus's is: a task's
  *  box says only empty or not; a board is known by its front matter. */
-function indexed(files: Record<string, string>) {
+function indexed(files: Record<string, string>, settings: Record<string, unknown> = {}, editor?: Any) {
   const metadata = {
     all: async () =>
       Object.keys(files).map((rel) => ({
@@ -104,8 +104,12 @@ function indexed(files: Record<string, string>) {
   };
   const opened: unknown[] = [];
   const layout = { open: async (where: unknown) => void opened.push(where) };
-  const { tools } = loadPlugin("catvinci.tasks", { files: folder(files), metadata, views, layout });
-  return { tools, panel: () => panel, block: () => block, opened };
+  const notices: string[] = [];
+  const ui = { notice: async (text: string) => void notices.push(text) };
+  const api: Any = { files: folder(files), metadata, views, layout, ui, settings: { get: async (key: string) => settings[key] } };
+  if (editor) api.editor = editor;
+  const { tools } = loadPlugin("catvinci.tasks", api);
+  return { tools, panel: () => panel, block: () => block, opened, notices };
 }
 
 /** A ```tasks block drawn: what its page was sent, and a way to talk back. */
@@ -166,6 +170,37 @@ describe("Obsidian Tasks' way of writing tasks", () => {
     expect(files["Plan.md"]).toBe(
       "# Plan\n- [ ] Water 🔁 every day 📅 2026-11-06\n- [x] Water 🔁 every day 📅 2026-11-05 ✅ " + today() + "\n",
     );
+  });
+
+  it("answers where the ticked task went when finished tasks move last", async () => {
+    const files = { "Plan.md": "- [ ] A\n- [ ] B 🔁 every day 📅 2026-11-05\n- [ ] C\n" };
+    const { tools } = indexed(files, { doneLast: true });
+    const out = await tools.get("complete_task")!({ path: "Plan.md", line: 2, text: "B" });
+    expect(files["Plan.md"]).toBe(
+      "- [ ] A\n- [ ] B 🔁 every day 📅 2026-11-06\n- [ ] C\n- [x] B 🔁 every day 📅 2026-11-05 ✅ " + today() + "\n",
+    );
+    expect(out).toMatchObject({ line: 4, next: { line: 2 } });
+    expect(await tools.get("complete_task")!({ path: "Plan.md", line: 4, done: false })).toMatchObject({ text: "B" });
+  });
+
+  it("ticks a task with an HTML comment in it, and says when a tick was refused", async () => {
+    const files = { "Plan.md": "- [ ] Call <!-- x --> Bob\n" };
+    const { panel, notices } = indexed(files);
+    await panel().onCheck({ data: { path: "/root/Plan.md", line: 0, text: "Call  Bob" } }, true);
+    expect(files["Plan.md"]).toBe("- [x] Call <!-- x --> Bob ✅ " + today() + "\n");
+    await panel().onCheck({ data: { path: "/root/Plan.md", line: 0, text: "Other" } }, false);
+    expect(notices).toEqual(["changed"]);
+  });
+
+  it("reads the editor's blocks only while finished tasks move last", async () => {
+    let reads = 0;
+    const editor = { getBlocks: async () => (reads++, []), onDidChange: () => ({ dispose() {} }) };
+    indexed({}, { doneLast: false }, editor);
+    await new Promise((r) => setTimeout(r, 0));
+    expect(reads).toBe(0);
+    indexed({}, { doneLast: true }, editor);
+    await new Promise((r) => setTimeout(r, 0));
+    expect(reads).toBeGreaterThan(0);
   });
 
   it("leaves out the cards of a board known by its front matter", async () => {

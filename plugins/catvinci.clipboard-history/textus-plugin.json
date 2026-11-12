@@ -1,7 +1,7 @@
 {
   "id": "catvinci.clipboard-history",
   "name": "%name%",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "publisher": "catvinci",
   "author": "CatVinci Studio",
   "description": "%description%",
@@ -31,6 +31,13 @@
       }
     ],
     "menus": {
+      "view/title": [
+        {
+          "command": "catvinci.clipboard-history.clear",
+          "when": "view == catvinci.clipboard-history.panel",
+          "icon": "clear.svg"
+        }
+      ],
       "app/plugins": [
         {
           "command": "catvinci.clipboard-history.clear"
@@ -50,7 +57,7 @@
     "en": {
       "name": "Clipboard History",
       "description": "What you copied or cut in your documents, newest first, in the sidebar: click one to put it in again.",
-      "empty": "Nothing yet. Text you copy or cut in a document shows up here.",
+      "empty": "Nothing copied yet",
       "copy": "Copy",
       "remove": "Remove",
       "clear": "Clear Clipboard History"
@@ -58,7 +65,7 @@
     "zh": {
       "name": "剪贴板历史",
       "description": "在文档里复制或剪切过的内容，按时间排在侧栏，点一下就能再插入。",
-      "empty": "还没有内容。在文档里复制或剪切的文字会出现在这里。",
+      "empty": "还没有复制的内容",
       "copy": "复制",
       "remove": "移除",
       "clear": "清空剪贴板历史"
@@ -66,7 +73,7 @@
     "zh-Hant": {
       "name": "剪貼簿紀錄",
       "description": "在文件裡拷貝或剪下過的內容，依時間排在側欄，點一下就能再插入。",
-      "empty": "還沒有內容。在文件裡拷貝或剪下的文字會出現在這裡。",
+      "empty": "還沒有複製的內容",
       "copy": "拷貝",
       "remove": "移除",
       "clear": "清除剪貼簿紀錄"
@@ -74,7 +81,7 @@
     "ja": {
       "name": "クリップボード履歴",
       "description": "文書でコピー・カットした内容を新しい順にサイドバーへ。クリックするともう一度挿入できます。",
-      "empty": "まだありません。文書でコピー・カットした文字がここに表示されます。",
+      "empty": "まだ何もコピーしていません",
       "copy": "コピー",
       "remove": "削除",
       "clear": "クリップボード履歴を消去"
@@ -82,7 +89,7 @@
     "ko": {
       "name": "클립보드 기록",
       "description": "문서에서 복사하거나 잘라낸 내용을 최신순으로 사이드바에 보여 줍니다. 클릭하면 다시 넣습니다.",
-      "empty": "아직 없습니다. 문서에서 복사하거나 잘라낸 글이 여기에 나타납니다.",
+      "empty": "복사한 내용이 없습니다",
       "copy": "복사",
       "remove": "제거",
       "clear": "클립보드 기록 지우기"
@@ -90,7 +97,7 @@
     "es": {
       "name": "Historial del portapapeles",
       "description": "Lo que copiaste o cortaste en tus documentos, lo más reciente primero, en la barra lateral: haz clic para insertarlo de nuevo.",
-      "empty": "Nada todavía. El texto que copies o cortes en un documento aparece aquí.",
+      "empty": "Aún no se ha copiado nada",
       "copy": "Copiar",
       "remove": "Quitar",
       "clear": "Vaciar el historial del portapapeles"
@@ -98,7 +105,7 @@
     "fr": {
       "name": "Historique du presse-papiers",
       "description": "Ce que vous avez copié ou coupé dans vos documents, le plus récent en premier, dans la barre latérale : cliquez pour l’insérer à nouveau.",
-      "empty": "Rien pour l’instant. Le texte copié ou coupé dans un document s’affiche ici.",
+      "empty": "Rien de copié",
       "copy": "Copier",
       "remove": "Retirer",
       "clear": "Vider l’historique du presse-papiers"
@@ -106,7 +113,7 @@
     "de": {
       "name": "Zwischenablage-Verlauf",
       "description": "Was Sie in Ihren Dokumenten kopiert oder ausgeschnitten haben, das Neueste zuerst, in der Seitenleiste: ein Klick fügt es wieder ein.",
-      "empty": "Noch nichts. Text, den Sie in einem Dokument kopieren oder ausschneiden, erscheint hier.",
+      "empty": "Noch nichts kopiert",
       "copy": "Kopieren",
       "remove": "Entfernen",
       "clear": "Zwischenablage-Verlauf leeren"
@@ -114,7 +121,7 @@
     "ru": {
       "name": "История буфера обмена",
       "description": "Что вы копировали или вырезали в документах, новое сверху, в боковой панели: щёлкните, чтобы вставить снова.",
-      "empty": "Пока пусто. Здесь появится текст, скопированный или вырезанный в документе.",
+      "empty": "Пока ничего не скопировано",
       "copy": "Копировать",
       "remove": "Убрать",
       "clear": "Очистить историю буфера обмена"
@@ -122,7 +129,7 @@
     "pt": {
       "name": "Histórico da área de transferência",
       "description": "O que você copiou ou recortou nos seus documentos, o mais recente primeiro, na barra lateral: clique para inserir de novo.",
-      "empty": "Nada ainda. O texto que você copiar ou recortar num documento aparece aqui.",
+      "empty": "Nada copiado ainda",
       "copy": "Copiar",
       "remove": "Remover",
       "clear": "Limpar o histórico da área de transferência"

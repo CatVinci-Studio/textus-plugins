@@ -23,6 +23,8 @@ El complemento lee y escribe archivos de la carpeta abierta para encontrar y cre
 
 ## Cambios
 
+- **0.7.3** - Se rechazan fechas imposibles como el 30 de febrero, el calendario mantiene un ancho cómodo en paneles anchos y se redibuja al cambiar los ajustes de carpetas, y los ajustes semanales y mensuales solo aparecen si esas notas están activadas.
+- **0.7.2** - Textos de ayuda y de estado vacío más breves.
 - **0.7.1** - Sus barras, listas y controles son ahora los de Textus, crecen con la interfaz y siguen cada tema; necesita Textus 1.3.12.
 - **0.7.0** - Las fechas y plantillas las rellena el propio Textus, igual que en el complemento Plantillas; necesita Textus 1.3.10.
 - **0.6.0** - Notas semanales y mensuales, con sus ajustes, los números de semana y el nombre del mes en el calendario, y los ajustes de Periodic Notes de una bóveda.

@@ -241,6 +241,12 @@ describe("a ```tasks query", () => {
       "2026-11-20",
       "",
     ]);
+    // Status groups as Obsidian Tasks lists them, not by name.
+    expect(
+      run("group by status").r.groups.map(
+        (g: { names: string[] }) => g.names[0],
+      ),
+    ).toEqual(["todo", "in_progress", "done", "cancelled"]);
   });
 
   it("passes over how the list looks, and gives back what it doesn't understand", () => {
@@ -288,9 +294,11 @@ describe("finished tasks last", () => {
 
   it("orders only the list around the line ticked", () => {
     const text = "# Day\n\n- [x] a\n- [ ] b\n\nText\n\n- [x] c\n- [ ] d\n";
-    expect(order.orderAround(text, 2)).toBe(
+    const moved = order.orderAround(text, 2);
+    expect(moved.text).toBe(
       "# Day\n\n- [ ] b\n- [x] a\n\nText\n\n- [x] c\n- [ ] d\n",
     );
+    expect([moved.place(2), moved.place(3), moved.place(8)]).toEqual([3, 2, 8]);
   });
 
   it("tells a tick from other typing", () => {

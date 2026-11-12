@@ -35,6 +35,11 @@ async function versionsOf(path) {
   return kept && kept.path === path ? kept.versions : [];
 }
 
+/** A version's id: when it was first kept, which later merged saves keep. */
+const idOf = (v) => v.since || v.at;
+/** Set when the last save couldn't be kept even alone. */
+let full = false;
+
 async function record(saved) {
   if (!saved.path || saved.text.length > MAX_TEXT) return;
   const list = await versionsOf(saved.path);
@@ -44,24 +49,58 @@ async function record(saved) {
   // since it was first kept.
   const now = Date.now();
   const newest = list[0];
-  if (newest && now - (newest.since || newest.at) < EVERY)
-    list[0] = { at: now, since: newest.since || newest.at, text: saved.text };
+  if (newest && now - idOf(newest) < EVERY)
+    list[0] = { at: now, since: idOf(newest), text: saved.text };
   else list.unshift({ at: now, text: saved.text });
+  const key = keyOf(saved.path);
   let versions = list.slice(0, KEEP);
-  // The storage full: the oldest half goes, until the newest fits.
+  // The storage full: older versions of any document go, until this fits.
+  full = false;
   for (;;) {
     try {
-      await ctx.storage.global.set(keyOf(saved.path), {
-        path: saved.path,
-        versions: versions,
-      });
+      await ctx.storage.global.set(key, { path: saved.path, versions });
       break;
-    } catch {
-      if (versions.length <= 1) return;
+    } catch (e) {
+      // Only a full storage makes room from other documents' versions.
+      const isFull = /full/i.test(String((e && e.message) || e));
+      if (isFull && (await freeOther(key, versions[versions.length - 1].at)))
+        continue;
+      if (versions.length <= 1) {
+        full = true;
+        break;
+      }
       versions = versions.slice(0, Math.ceil(versions.length / 2));
     }
   }
   await show();
+}
+
+/** Halves the versions of the other document whose oldest one is oldest,
+ *  if older than `before`; false when there is none. */
+async function freeOther(key, before) {
+  const store = ctx.storage.global;
+  let pick = null;
+  for (const k of await store.keys()) {
+    if (k === key || !k.startsWith("v:")) continue;
+    const kept = await store.get(k);
+    const list = (kept && kept.versions) || [];
+    const oldest = list.length ? list[list.length - 1].at : -Infinity;
+    if (oldest < before && (!pick || oldest < pick.oldest))
+      pick = { k, kept, oldest };
+  }
+  if (!pick) return false;
+  const list = (pick.kept && pick.kept.versions) || [];
+  if (list.length > 1) {
+    const half = list.slice(0, Math.ceil(list.length / 2));
+    try {
+      await store.set(pick.k, { path: pick.kept.path, versions: half });
+      return true;
+    } catch {
+      // Even half doesn't fit: the whole entry goes.
+    }
+  }
+  await store.delete(pick.k);
+  return true;
 }
 
 async function show() {
@@ -71,13 +110,14 @@ async function show() {
     type: "versions",
     path: path,
     current: path ? await textus.editor.getText() : null,
-    versions: await versionsOf(path),
+    versions: (await versionsOf(path)).map((v) => ({ ...v, id: idOf(v) })),
+    full: full,
   });
 }
 
 // Textus AI's tools: versions numbered from 1, the newest.
 
-/* global folderPaths, lineDiff */
+/* global folderPaths, lineDiff, lineHunks */
 const CONTEXT = 2;
 
 /** The document a tool means: its path in the folder, or the one in front. */
@@ -85,7 +125,8 @@ async function documentOf(input) {
   const root = await textus.files.root();
   if (input.path) {
     const rel = root && folderPaths.clean(root, input.path, true);
-    if (!rel) return { error: "path must be a document's path in the open folder." };
+    if (!rel)
+      return { error: "path must be a document's path in the open folder." };
     return { path: folderPaths.abs(root, rel), name: rel };
   }
   const path = await textus.editor.getPath();
@@ -109,22 +150,15 @@ async function listVersions(input) {
 
 /** A diff as text: "+ " added, "- " removed, CONTEXT lines around each
  *  change, "…" for what is left out. */
-function diffText(parts) {
-  const near = new Set();
-  parts.forEach((p, i) => {
-    if (p.kind === "same") return;
-    for (let j = i - CONTEXT; j <= i + CONTEXT; j++) near.add(j);
-  });
-  const out = [];
-  parts.forEach((p, i) => {
-    if (!near.has(i)) {
-      if (out[out.length - 1] !== "…") out.push("…");
-      return;
-    }
-    out.push((p.kind === "added" ? "+ " : p.kind === "removed" ? "- " : "  ") + p.line);
-  });
-  return out.join("\n");
-}
+const diffText = (parts) =>
+  lineHunks(parts, CONTEXT)
+    .map((p) =>
+      p.kind === "gap"
+        ? "…"
+        : (p.kind === "added" ? "+ " : p.kind === "removed" ? "- " : "  ") +
+          p.line,
+    )
+    .join("\n");
 
 async function diffVersions(input) {
   const doc = await documentOf(input);
@@ -138,11 +172,24 @@ async function diffVersions(input) {
   };
   const from = await pick(input.from);
   const to = await pick(input.to);
-  if (!from || !to) return { error: doc.name + " has " + versions.length + " versions; number them from 1, the newest." };
+  if (!from || !to)
+    return {
+      error:
+        doc.name +
+        " has " +
+        versions.length +
+        " versions; number them from 1, the newest.",
+    };
   const parts = lineDiff(from.text, to.text);
-  if (!parts) return { error: "The two are too far apart to compare line by line." };
+  if (!parts)
+    return { error: "The two are too far apart to compare line by line." };
   const changed = parts.some((p) => p.kind !== "same");
-  return { document: doc.name, from: from.label, to: to.label, diff: changed ? diffText(parts) : "(no changes)" };
+  return {
+    document: doc.name,
+    from: from.label,
+    to: to.label,
+    diff: changed ? diffText(parts) : "(no changes)",
+  };
 }
 
 exports.activate = function (context) {
@@ -158,11 +205,10 @@ exports.activate = function (context) {
         if (panel === webview) panel = null;
       });
       webview.onDidReceiveMessage(async function (message) {
-        if (message.type === "ready" || message.type === "refresh")
-          await show();
+        if (message.type === "ready") return show();
         const path = await textus.editor.getPath();
         const version = (await versionsOf(path)).find(
-          (v) => v.at === message.at,
+          (v) => idOf(v) === message.id,
         );
         if (!version) return;
         if (message.type === "restore") {

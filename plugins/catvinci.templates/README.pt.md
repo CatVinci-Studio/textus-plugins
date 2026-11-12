@@ -19,6 +19,7 @@ Funciona no computador e no iPhone e precisa do Textus 1.3.10 ou mais recente. P
 
 ## Alterações
 
+- **0.5.2** - Agora aparecem os modelos de uma pasta de modelos oculta ou em minúsculas, e de suas subpastas. Depois de inserir, o cursor fica logo após o modelo.
 - **0.5.1** - **Novo a partir de modelo…** no menu de contexto de um arquivo ou pasta cria o documento nessa pasta.
 - **0.5.0** - Os modelos são preenchidos pelo próprio Textus, tal como as notas diárias; precisa do Textus 1.3.10.
 - **0.4.1** - Os modelos aparecem por ordem natural: 2 antes de 10.

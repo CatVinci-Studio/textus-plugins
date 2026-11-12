@@ -22,12 +22,12 @@ Type `:` and a word for an emoji: `:tada` gives 🎉, `:+1` 👍, `:笑` 😄.
 Type `@` and a day, and pick the date it names:
 
 - English: `@today`, `@tomorrow`, `@yesterday`, `@friday`, `@next friday`, `@in 3 days`, `@next week`
-- 中文: `@今天`、`@明天`、`@后天`、`@周五`、`@下周五`、`@星期三`、`@3天后`、`@下周`
+- 中文: `@今天`、`@明天`、`@后天`、`@周五`、`@下周五`、`@星期三`、`@3天后`、`@下周` (or `@後天`、`@下週五`、`@禮拜三`、`@3天後`)
 - 日本語: `@今日`、`@明日`、`@明後日`、`@金曜日`、`@来週金曜日`、`@3日後`
 
 Weeks start on Monday, and a weekday alone is the next one.
 
-The date is written as `2026-11-06`. Set **Insert as** in the plugin's settings to **A link to the day's note** to write a link to that day's daily note instead, the way the folder writes links: `[[2026-11-06]]`, or in an Obsidian vault the name and folder its daily notes settings give, such as `[[November 6th, 2026]]` or `[[Journal/2026/11/2026-11-06]]`. In a folder without such settings, daily notes are looked for in `Daily/`.
+The date is written as `2026-11-06`. Set **Insert as** in the plugin's settings to **A link to the day's note** to write a link to that day's daily note instead, the way the folder writes links: a standard link such as `[2026-11-06](Daily/2026-11-06.md)`, or, in an Obsidian vault or a folder whose notes use wiki links, `[[2026-11-06]]` with the name and folder its daily notes settings give, such as `[[November 6th, 2026]]` or `[[Journal/2026/11/2026-11-06]]`. In a folder without such settings, daily notes are looked for in `Daily/`.
 
 The list opens after a space, at the start of a line or after a bracket - not in an address like `me@example.com` or a citation like `[@key]`. After `(` the `@` stays, so `(@tomorrow` becomes a reminder, `(@2026-11-06`.
 
@@ -43,6 +43,7 @@ It runs on the desktop and on iOS.
 
 ## Changes
 
+- **0.4.3** - Dates in Traditional Chinese like 後天, 3天後 and 下週五 now work. A bare @ lists your app language's dates first, and day links are right relative to the note.
 - **0.4.2** - Shares Two-way Links' fix for working out how a note links.
 - **0.4.1** - a day's link is a standard link, [2026-11-08](Journal/2026-11-08.md), unless the folder or the note already uses [[wiki links]]
 - **0.4.0** - day links are written the way the folder writes links, on Textus 1.3.10's dates; needs Textus 1.3.10

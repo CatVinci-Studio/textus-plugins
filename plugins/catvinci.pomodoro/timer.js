@@ -54,6 +54,13 @@
     return { state: next(state, state.endsAt, minutes), ended: state.phase };
   }
 
+  /** A stopped, untouched span takes new lengths; anything begun keeps its own. */
+  function retime(state, before, after) {
+    var key = state.phase === "focus" ? "focus" : "rest";
+    if (state.running || state.left !== before[key] * 60000) return state;
+    return Object.assign({}, state, { left: after[key] * 60000 });
+  }
+
   /** "mm:ss" for a span of `ms`. */
   function clock(ms) {
     var s = Math.ceil(ms / 1000);
@@ -70,6 +77,7 @@
     toggle: toggle,
     next: next,
     tick: tick,
+    retime: retime,
     clock: clock,
   };
 })(typeof window !== "undefined" ? window : globalThis);

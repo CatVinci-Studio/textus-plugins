@@ -6,43 +6,50 @@ body {
   display: flex;
   flex-direction: column;
 }
-/* A tab view's bar (design-language.md 5.4): Textus's own controls. */
-#bar,
-#find-bar {
+/* A tab view's bar: Textus's own controls; in a narrow island it wraps
+   and find takes a row of its own. */
+#bar {
   flex: none;
+  flex-wrap: wrap;
+  row-gap: var(--space-1);
   min-height: var(--bar-height);
   padding: 0 var(--space-3);
   border-bottom: 1px solid var(--ui-border);
+  container-type: inline-size;
 }
-#bar .tx-input[type="number"] {
+#bar #page {
   flex: none;
   width: 4em;
   min-height: var(--control-height-sm);
   text-align: right;
 }
-#bar #find,
-#find-bar .tx-input {
+#bar #find {
   flex: none;
-  width: var(--find-field-width);
   min-height: var(--control-height-sm);
 }
 #count,
-#page,
-#name,
-#info,
-#find-count {
+#page {
   color: var(--ui-muted);
   font-size: var(--text-footnote);
 }
-#page {
-  width: 4em;
-  text-align: right;
+@container (max-width: 22em) {
+  #count {
+    display: none;
+  }
+  #find-box {
+    order: 9;
+    flex: 1 1 100%;
+  }
+  #bar #find {
+    flex: 1;
+    width: auto;
+  }
 }
-#zoom {
-  min-width: 3.5em;
-  text-align: center;
-}
+/* Pages measure from the viewer; the scrollbar's room is kept so a fitted
+   page never overflows when it appears. */
 #viewer {
+  position: relative;
+  scrollbar-gutter: stable;
   flex: 1;
   min-height: 0;
   overflow: auto;

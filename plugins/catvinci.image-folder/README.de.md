@@ -13,6 +13,7 @@ Es verarbeitet PNG-, JPEG-, GIF-, WebP-, AVIF-, BMP-, SVG-, ICO-, HEIC- und TIFF
 
 ## Änderungen
 
+- **0.1.4** - Lässt Bilder dort, wo die Typora-Bildordner-Einstellung eines Dokuments sie ablegt, und verschiebt keinen Ordner mehr, solange Links darauf noch ungeprüft sein könnten.
 - **0.1.3** - Seine Seite sagt jetzt in einem Satz, was es tut, was es kann und was sich in jeder Version geändert hat.
 - **0.1.2** - Lässt Bilder dort, wo der Anhangsordner eines Obsidian-Vaults oder ein Logseq-Graph sie ablegt.
 - **0.1.1** - Ein kürzerer Name: Bilder beim Dokument.

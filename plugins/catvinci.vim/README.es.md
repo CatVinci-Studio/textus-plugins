@@ -2,7 +2,7 @@
 
 Usa los modos y las teclas de Vim en el editor de Textus.
 
-- **Complementos › Activar o desactivar las teclas de Vim** los enciende y apaga. Mientras están activos, la barra de estado muestra el modo (NORMAL, INSERT, VISUAL, V-LINE); haz clic en él para apagar Vim.
+- **Complementos › Activar o desactivar las teclas de Vim** los enciende y apaga. Mientras están activos, la barra de estado muestra el modo (NORMAL, INSERT, VISUAL, V-LINE); su menú apaga Vim.
 - Modos normal, inserción, visual y visual por líneas, con movimientos (**h j k l**, **w b e**, **0 ^ $**, **gg G**, **f t F T** con **;** y **,**, **Ctrl+D** y **Ctrl+U**), operadores (**d c y**, **dd**, **x**, **p P**, **r**, e **iw**/**aw**), contadores, un registro, **u** y **Ctrl+R** para deshacer y rehacer, y **.** para repetir.
 - Una línea es un párrafo, un título, un elemento de lista o una línea de un bloque de código: **j** y **k** pasan por todos ellos, **}** y **{** de bloque en bloque. **zz**, **zt** y **zb** llevan la línea del cursor al centro, arriba o abajo de la ventana.
 - **~** cambia mayúsculas y minúsculas bajo el cursor; en modo visual, **~**, **U** y **u** invierten, pasan a mayúsculas o a minúsculas la selección.
@@ -16,12 +16,14 @@ Ajustes, en **Ajustes › Extensiones › Complementos › Vim**:
 - **Salir del modo de inserción con**: dos letras tecleadas rápido en modo de inserción que valen como Escape, por ejemplo `jk`. Vacío: solo Escape y **Ctrl+[**.
 - **Asignaciones de teclas**: líneas como en un vimrc (`map`, `noremap`, `nnoremap`, `inoremap`, `vnoremap` y `let mapleader`), por ejemplo `inoremap jj <Esc>` o `nnoremap <leader>w :w<CR>`.
 
-Obsidian: en una bóveda de Obsidian también se lee su `.obsidian.vimrc` (el del plugin Vimrc Support), después de tus propias líneas, y se vuelve a leer cuando cambia.
+Obsidian: en una bóveda de Obsidian también se lee su `.obsidian.vimrc` (el del plugin Vimrc Support), después de tus propias líneas, y se vuelve a leer cuando cambia. Abre la bóveda misma, no una carpeta dentro de ella.
 
 El plugin pide tomar las teclas en el editor (para ejecutar las de Vim) y leer archivos (solo para leer `.obsidian.vimrc`). Funciona en el escritorio y en iPhone y iPad.
 
 ## Cambios
 
+- **0.2.7** - El modo de la barra de estado abre un menú que apaga Vim; `.obsidian.vimrc` se vuelve a leer al volver a Textus; salir del modo visual con **:** siempre funciona.
+- **0.2.6** - Textos de ayuda y de estado vacío más breves.
 - **0.2.5** - Su código se divide en archivos más pequeños según lo que hace cada parte; nada cambia al usarlo.
 - **0.2.4** - Su página dice ahora en una frase qué hace, qué puede hacer y qué cambió en cada versión.
 - **0.2.3** - Lee el `.obsidian.vimrc` de una bóveda de Obsidian; asignar de nuevo las mismas teclas sustituye la asignación anterior.

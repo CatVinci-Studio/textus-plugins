@@ -12,8 +12,10 @@ The plugins for [Textus](https://textus.md), the Markdown editor. None of them c
 | Canvas | Open Obsidian's canvases (.canvas) in a tab: notes, pictures, links and groups on a board to drag and zoom. Excalidraw drawings show the picture exported from them. |
 | Chart.js | Simple charts from a Chart.js configuration. |
 | CJK Spacing | Puts a space between Chinese or Japanese text and Latin letters or numbers. |
+| Claude Code | Claude Code in Textus AI: it reads your folder, writes and edits your notes, and asks before it changes anything. |
 | Clipboard History | What you copied or cut in your documents, newest first, in the sidebar: click one to put it in again. |
 | Cloud Sync | End-to-end encrypted workspace sync with S3, WebDAV or Nutstore. Keep both versions on conflict. |
+| Codex | Codex in Textus AI: it reads your folder, writes and edits your notes, and asks before it changes anything. |
 | Desk Pet | A chibi companion that floats on your desktop or in the window while you write: Moyu, or the LLM-chan of the model Textus AI is using. She writes when you type, dozes when you stop, cheers when you save and leans in when Textus AI is at work. |
 | ECharts | Charts from an ECharts option - bars, lines, pies and more. |
 | Emacs | Emacs keys in the editor: C-f C-b C-n C-p, C-a C-e, M-f M-b, M-< M->, the mark (C-SPC) and the region, C-k and C-w into a kill ring, C-y and M-y, C-/ undo and C-x prefixes. |
@@ -24,7 +26,7 @@ The plugins for [Textus](https://textus.md), the Markdown editor. None of them c
 | Images Follow Document | Keeps each document's pictures beside it, in a folder of its name - Note.assets/ for Note.md - as Typora and VS Code do. |
 | Keenable Search | Lets Textus AI search the web with Keenable, with no key needed; set a Keenable API key for its full search. Searches go to Keenable only while Textus AI uses this tool. |
 | LaTeX Completion | In a formula, type a backslash and the start of a command - \fr, \alp - to pick from the LaTeX commands that begin so, each with what it draws. Enter or Tab writes it, with the caret inside its braces. |
-| Link Cards | A link as a card with its page's title, description and picture - or a YouTube or Bilibili video playing in place. Kept in the document as text. |
+| Link Cards | A link as a card with its page's title, description and picture - or a Bilibili video playing in place. Kept in the document as text. |
 | Marp | Present a document as slides, the Marp way: a new slide at each ---, themes and layout by Marp directives. The deck follows your writing in a tab beside it, and saves as one HTML file to present from any browser. |
 | Mind Map | Draws a Markdown outline - headings and lists - as a mind map. |
 | Notion Import | Brings in a Notion export (the .zip or its folder) as plain Markdown notes: pages within pages as folders, databases in Obsidian's Bases format, pictures and files beside their pages. Pair it with Wiki to see the pages tree and the databases. |

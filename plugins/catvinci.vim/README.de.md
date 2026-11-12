@@ -2,7 +2,7 @@
 
 Nutzen Sie Vims Modi und Tasten im Editor von Textus.
 
-- **Plugins › Vim-Tasten ein- oder ausschalten** schaltet sie um. Solange sie an sind, zeigt die Statusleiste den Modus (NORMAL, INSERT, VISUAL, V-LINE); ein Klick darauf schaltet Vim aus.
+- **Plugins › Vim-Tasten ein- oder ausschalten** schaltet sie um. Solange sie an sind, zeigt die Statusleiste den Modus (NORMAL, INSERT, VISUAL, V-LINE); sein Menü schaltet Vim aus.
 - Normal-, Einfüge-, Visuell- und zeilenweiser Visuell-Modus, mit Bewegungen (**h j k l**, **w b e**, **0 ^ $**, **gg G**, **f t F T** mit **;** und **,**, **Strg+D** und **Strg+U**), Operatoren (**d c y**, **dd**, **x**, **p P**, **r** und **iw**/**aw**), Zählern, einem Register, **u** und **Strg+R** für Rückgängig und Wiederholen und **.** zum Wiederholen der letzten Änderung.
 - Eine Zeile ist ein Absatz, eine Überschrift, ein Listeneintrag oder eine Zeile eines Codeblocks: **j** und **k** gehen durch alle, **}** und **{** Block für Block. **zz**, **zt** und **zb** holen die Zeile mit dem Cursor in die Mitte, nach oben oder nach unten im Fenster.
 - **~** wechselt die Groß- und Kleinschreibung unter dem Cursor; im Visuell-Modus kehren **~**, **U** und **u** die Auswahl um oder setzen sie in Groß- oder Kleinbuchstaben.
@@ -16,12 +16,14 @@ Einstellungen unter **Einstellungen › Erweiterungen › Plugins › Vim**:
 - **Einfügemodus verlassen mit**: zwei schnell getippte Buchstaben im Einfügemodus, die wie Escape wirken, etwa `jk`. Leer: nur Escape und **Strg+[**.
 - **Tastenbelegungen**: Zeilen wie in einer vimrc (`map`, `noremap`, `nnoremap`, `inoremap`, `vnoremap` und `let mapleader`), etwa `inoremap jj <Esc>` oder `nnoremap <leader>w :w<CR>`.
 
-Obsidian: In einem Obsidian-Vault wird auch dessen `.obsidian.vimrc` (die des Plugins Vimrc Support) gelesen, nach Ihren eigenen Zeilen, und neu gelesen, wenn sie sich ändert.
+Obsidian: In einem Obsidian-Vault wird auch dessen `.obsidian.vimrc` (die des Plugins Vimrc Support) gelesen, nach Ihren eigenen Zeilen, und neu gelesen, wenn sie sich ändert. Öffnen Sie den Vault selbst, keinen Ordner darin.
 
 Das Plugin fragt nach der Berechtigung, Tasten im Editor anzunehmen (um Vims Tasten auszuführen), und Dateien zu lesen (nur um `.obsidian.vimrc` zu lesen). Es läuft auf dem Desktop sowie auf iPhone und iPad.
 
 ## Änderungen
 
+- **0.2.7** - Der Modus in der Statusleiste öffnet ein Menü, das Vim ausschaltet; `.obsidian.vimrc` wird neu gelesen, wenn Sie zu Textus zurückkehren; **:** verlässt den visuellen Modus immer.
+- **0.2.6** - Kürzere Hilfe- und Leertexte.
 - **0.2.5** - Sein Code ist nach Aufgaben in kleinere Dateien aufgeteilt; in der Nutzung ändert sich nichts.
 - **0.2.4** - Seine Seite sagt jetzt in einem Satz, was es tut, was es kann und was sich in jeder Version geändert hat.
 - **0.2.3** - Liest die `.obsidian.vimrc` eines Obsidian-Vaults; dieselben Tasten noch einmal zu belegen ersetzt die frühere Belegung.

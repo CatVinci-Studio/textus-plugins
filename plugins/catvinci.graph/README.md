@@ -3,7 +3,7 @@
 Draws your notes and the links between them as a graph, for the whole folder or around the document in front.
 
 - **Ctrl+Alt+G** (**⌘⌥G** on a Mac), or **Plugins › Open the Graph View**, shows the whole folder in a tab. **Fit** brings all of it into view.
-- The **Graph** tab in the sidebar shows the notes around the document in front. **Full graph** opens the whole folder.
+- The **Graph** tab in the sidebar shows the notes around the document in front. The button at the top of the sidebar's Graph panel opens the whole folder.
 - [[Wiki links]] and links to other documents both count; two notes that link to each other share one line. A [[link]] to a note not written yet shows as a note of its own.
 - Click a note to open it. Drag a note to place it, drag the background to move around, and scroll or pinch to zoom. Rest the pointer on a note to light up its links.
 - The graph adapts by itself: names appear as you zoom in, arrows show which way links go when there are few enough to read, and a note with more links is larger. Without colour groups, each note takes its folder's colour.
@@ -11,9 +11,9 @@ Draws your notes and the links between them as a graph, for the whole folder or 
 
 ## Settings
 
-The sliders button at the top opens the graph's settings. The full graph and the sidebar keep their own.
+The sliders button at the top of the full graph opens its settings; the sidebar graph has none.
 
-- **Filters**: a search (`path:ideas`, `file:draft`, `tag:#todo`, a `-` in front to leave out); **Tags** shows #tags as nodes; **Existing files only** hides notes not written yet; **Orphans** (full graph) shows notes with no links. In the sidebar, **Depth** sets how many links away it reaches, 1 to 5.
+- **Filters**: a search (`path:ideas`, `file:draft`, `tag:#todo`, a `-` in front to leave out); **Tags** shows #tags as nodes; **Existing files only** hides notes not written yet; **Orphans** (full graph) shows notes with no links.
 - **Groups**: colour the notes a search finds. **New group** adds one; **Restore defaults** clears your changes.
 
 In an Obsidian vault, the colour groups saved in Obsidian's `graph.json` colour the notes too, after your own groups.
@@ -25,6 +25,8 @@ In an Obsidian vault, the colour groups saved in Obsidian's `graph.json` colour 
 
 ## Changes
 
+- **0.5.5** - Standard Markdown links to notes not written yet are placed as Textus places them, and merge with [[links]] to the same note. Fit spreads a small graph over the whole pane, so names no longer sit on each other. Ctrl/Cmd-click opens a note beside the one in front. Labels follow the interface text size, and folder colours follow the theme. The sidebar graph has no settings of its own any more.
+- **0.5.4** - A trackpad pinch zooms smoothly, in step with the gesture; with Textus 1.3.13 a pinch on a Mac zooms the graph, not the document behind it. Shorter help and empty-state text. Its sidebar panel and page follow Textus 1.3.13's layout.
 - **0.5.3** - Its bars, lists and controls are Textus's own, grow with the interface and follow every theme; needs Textus 1.3.12.
 - **0.5.2** - Obsidian's colour groups come from the nearest vault, even one above the open folder. Needs Textus 1.3.10.
 - **0.5.1** - In an Obsidian vault, the colour groups in `.obsidian/graph.json` colour the notes too.

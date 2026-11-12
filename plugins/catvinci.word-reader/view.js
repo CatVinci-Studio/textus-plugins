@@ -15,17 +15,54 @@
       $(id).setAttribute(attr, t(key));
   $("find-input").placeholder = t("find");
 
-  // Zoom: the pages scaled as a whole, from 50% to 200%.
-  let zoom = 1;
-  function setZoom(next) {
-    zoom = Math.min(2, Math.max(0.5, Math.round(next * 10) / 10));
+  // Zoom: the pages scaled as a whole, from 50% to 200%. They open fitted
+  // to the tab's width (never above 100%) until the reader zooms.
+  const saved = api.getState() || {};
+  let zoom = saved.zoom || 1;
+  let fit = !saved.zoom;
+  let natural = 0;
+  function setZoom(next, x, y) {
+    const before = zoom;
+    zoom = Math.min(2, Math.max(0.5, Math.round(next * 100) / 100));
     const wrapper = pages.querySelector(".docx-wrapper");
     if (wrapper) wrapper.style.zoom = String(zoom);
     $("zoom").textContent = Math.round(zoom * 100) + "%";
+    if (x !== undefined && wrapper) {
+      // The point under the pointer stays where it was.
+      const box = pages.getBoundingClientRect();
+      const ratio = zoom / before;
+      pages.scrollLeft =
+        (pages.scrollLeft + x - box.left) * ratio - (x - box.left);
+      pages.scrollTop = (pages.scrollTop + y - box.top) * ratio - (y - box.top);
+    }
+    api.setState({ zoom: fit ? 0 : zoom });
   }
-  $("zoom-in").onclick = () => setZoom(zoom + 0.1);
-  $("zoom-out").onclick = () => setZoom(zoom - 0.1);
-  $("zoom").onclick = () => setZoom(1);
+  function zoomBy(next, x, y) {
+    fit = false;
+    setZoom(next, x, y);
+  }
+  function fitWidth() {
+    if (fit && natural) setZoom(Math.min(1, pages.clientWidth / natural));
+  }
+  $("zoom-in").onclick = () => zoomBy(zoom + 0.1);
+  $("zoom-out").onclick = () => zoomBy(zoom - 0.1);
+  $("zoom").onclick = () => zoomBy(1);
+  pages.addEventListener(
+    "wheel",
+    (event) => {
+      if (!event.ctrlKey && !event.metaKey) return;
+      event.preventDefault();
+      // A pinch sends many small steps, a mouse wheel few large ones.
+      const step = Math.max(-25, Math.min(25, event.deltaY));
+      zoomBy(zoom * Math.exp(-step * 0.01), event.clientX, event.clientY);
+    },
+    { passive: false },
+  );
+  let resizing;
+  window.addEventListener("resize", () => {
+    clearTimeout(resizing);
+    resizing = setTimeout(fitWidth, 120);
+  });
 
   // "Page 3 of 12": the page the middle of the tab is on.
   const pageList = () => [...pages.querySelectorAll("section.docx")];
@@ -125,13 +162,13 @@
       openFind();
     } else if (mod && (event.key === "=" || event.key === "+")) {
       event.preventDefault();
-      setZoom(zoom + 0.1);
+      zoomBy(zoom + 0.1);
     } else if (mod && event.key === "-") {
       event.preventDefault();
-      setZoom(zoom - 0.1);
+      zoomBy(zoom - 0.1);
     } else if (mod && event.key === "0") {
       event.preventDefault();
-      setZoom(1);
+      zoomBy(1);
     }
   });
 
@@ -141,8 +178,6 @@
       return;
     }
     if (message.type !== "file") return;
-    $("name").textContent = message.name;
-    $("status").textContent = t("loading");
     try {
       await window.docx.renderAsync(
         new Blob([message.bytes]),
@@ -156,11 +191,20 @@
         },
       );
       $("status").textContent = "";
+      // The widest page and its margin, measured before any zoom.
+      const wrapper = pages.querySelector(".docx-wrapper");
+      const pad = wrapper
+        ? parseFloat(getComputedStyle(wrapper).paddingLeft)
+        : 0;
+      natural =
+        Math.max(0, ...pageList().map((page) => page.offsetWidth)) + 2 * pad;
       setZoom(zoom);
+      fitWidth();
       showPage();
     } catch (err) {
       $("status").textContent = t("failed", (err && err.message) || err);
     }
   });
+  $("status").textContent = t("loading");
   api.postMessage({ type: "ready" });
 })();

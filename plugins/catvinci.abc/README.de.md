@@ -4,7 +4,7 @@ Zeichnet Noten aus ABC-Notation, die in einem Codeblock steht.
 
 Schreiben Sie einen Codeblock mit der Sprache `abc`. Die Noten erscheinen direkt darunter, und ein Klick in den Block zeigt die Quelle wieder zum Bearbeiten.
 
-- Mit `height=400` hinter `abc` in der ersten Zeile legen Sie die Höhe der Zeichnung in Pixeln fest.
+- Die Takte brechen passend zur Spalte um, sodass die Noten auch in einem schmalen Bereich lesbar bleiben.
 - Die Noten haben die Textfarbe des Themes und werden beim Wechsel zwischen hell und dunkel neu gezeichnet.
 - Exporte nach HTML, PDF und Word enthalten die Noten als Bild.
 
@@ -23,6 +23,7 @@ C D E F | G A B c |
 
 ## Änderungen
 
+- **0.3.2** - Takte brechen passend zur Spalte um, statt die ganze Partitur zu verkleinern; ein Klick auf eine Note färbt sie nicht mehr rot; `check_abc` akzeptiert volle Modusnamen, jede Notenlänge, `+:`-Zeilen, `` ` `` und `$`; `height=` entfällt.
 - **0.3.1** - Seine Seite sagt jetzt in einem Satz, was es tut, was es kann und was sich in jeder Version geändert hat.
 - **0.3.0** - Textus AI kann einen `abc`-Block prüfen, bevor es ihn schreibt (`check_abc`).
 - **0.2.0** - Die Noten folgen der Textfarbe des Themes; braucht Textus 1.3.2.

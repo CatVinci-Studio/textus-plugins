@@ -1,12 +1,12 @@
 # Link Cards
 
-Shows a link as a card with its page's title, description and picture, or plays a YouTube or Bilibili video in place.
+Shows a link as a card with its page's title, description and picture, or plays a Bilibili video in place.
 
 ## Making a card
 
 - Type `/` and choose **Insert Link Card…**, then paste a link. Or select a link in the text, right-click it and choose **Insert Link Card…** to turn it into a card.
 - The card shows the page's title, description, picture and site name. Click it to open the page in your browser.
-- A YouTube or Bilibili link plays its video in the card instead.
+- A Bilibili link plays its video in the card instead. A YouTube link shows as a card with the video's still and opens in your browser.
 - If the page can't be read (offline, or not a web page), the card holds the address alone.
 
 ## What is saved
@@ -22,7 +22,7 @@ image: https://textus.md/og.png
 ```
 ````
 
-- **Fetch again** under a card brings the page's latest title and picture.
+- **Fetch again**, in a card's right-click menu, brings the page's latest title and picture.
 - Cards from Obsidian show too: the `cardlink` blocks of Auto Card Link and the `embed` blocks of Link Embed are drawn as cards, and left as they are written.
 
 ## Permissions
@@ -35,6 +35,7 @@ It runs on the desktop and on iOS.
 
 ## Changes
 
+- **0.4.3** - Pictures and site icons show again; titles with an apostrophe are kept whole; **Fetch again** moved into the card's right-click menu; YouTube links show as cards with the video's still.
 - **0.4.2** - Its bars, lists and controls are Textus's own, grow with the interface and follow every theme; needs Textus 1.3.12.
 - **0.4.1** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
 - **0.4.0** - Obsidian's `cardlink` (Auto Card Link) and `embed` (Link Embed) blocks are drawn as cards

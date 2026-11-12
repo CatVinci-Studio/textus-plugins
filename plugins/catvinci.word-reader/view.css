@@ -11,25 +11,24 @@ body {
 #find-bar {
   flex: none;
   min-height: var(--bar-height);
-  padding: 0 var(--space-3);
+  padding: var(--space-1) var(--space-3);
   border-bottom: 1px solid var(--ui-border);
+  flex-wrap: wrap;
+  row-gap: var(--space-1);
 }
-#bar .tx-input[type="number"] {
-  flex: none;
-  width: 4em;
-  min-height: var(--control-height-sm);
-  text-align: right;
+/* The field gives way first in a narrow island. */
+#find-bar .tx-find {
+  flex: 1 1 auto;
+  min-width: 0;
 }
-#bar #find,
 #find-bar .tx-input {
-  flex: none;
-  width: var(--find-field-width);
+  flex: 1 1 auto;
+  min-width: 0;
+  width: auto;
+  max-width: var(--find-field-width);
   min-height: var(--control-height-sm);
 }
-#count,
 #page,
-#name,
-#info,
 #find-count {
   color: var(--ui-muted);
   font-size: var(--text-footnote);
@@ -46,7 +45,10 @@ body {
   display: none;
 }
 /* docx-preview's own wrapper: the pages on the sidebar's grey. */
+/* As wide as the widest page, so a page wider than the island scrolls. */
 #pages .docx-wrapper {
+  width: fit-content;
+  min-width: 100%;
   min-height: 100%;
   box-sizing: border-box;
   background: var(--ui-subtle);
@@ -59,4 +61,3 @@ body {
 #page:empty {
   display: none;
 }
-

@@ -21,7 +21,7 @@ const today = () => textus.dates.format(new Date());
 async function filesUnder(dir, signal) {
   const out = [];
   const walk = async (at, prefix) => {
-    if (signal.aborted) return;
+    if (signal && signal.aborted) return;
     for (const entry of await textus.files.list(at)) {
       if (entry.name.startsWith(".")) continue;
       if (entry.isDir) await walk(entry.path, prefix + entry.name + "/");
@@ -32,17 +32,18 @@ async function filesUnder(dir, signal) {
   return out;
 }
 
-/** The zips and unzipped exports in the open folder, to pick from. */
-async function choices(root) {
+/** The zips and unzipped exports in the open folder, to pick from; `glob` finds
+ *  an unzipped export's pages (an HTML export's are .html). */
+async function choices(root, glob = "**/*.{md,csv}") {
   const items = [];
   for (const f of await textus.files.find("**/*.zip"))
     items.push({ label: f.rel.split("/").pop(), description: f.rel, value: f.path });
   // An unzipped export: the folder holding the first page or database
   // whose name ends in Notion's id.
   const folders = new Set();
-  for (const f of await textus.files.find("**/*.{md,csv}")) {
+  for (const f of await textus.files.find(glob)) {
     const parts = f.rel.split("/");
-    const first = parts.findIndex((p) => notionCsv.idOf(p.replace(/(_all)?\.(md|csv)$/i, "")));
+    const first = parts.findIndex((p) => notionCsv.idOf(p.replace(/(_all)?\.(md|csv|html)$/i, "")));
     if (first > 0) folders.add(parts.slice(0, first).join("/"));
   }
   for (const rel of [...folders].sort())
@@ -86,7 +87,7 @@ async function importNotion(arg) {
   let iconSource = null;
   // Asked only when the export was picked here, not named by a caller.
   if (!arg) {
-    const others = (await choices(root)).filter((c) => c.value !== source);
+    const others = (await choices(root, "**/*.html")).filter((c) => c.value !== source);
     if (others.length) {
       const picked = await textus.ui.pick([{ label: t("noIcons"), value: "" }].concat(others), { placeholder: t("pickIcons") });
       if (picked === null || picked === undefined) return;
@@ -149,8 +150,8 @@ async function importNotion(arg) {
   await textus.files.create(page, notionImport.reportPage(report, suggestions, t, { source: name, date: today() }));
   await textus.layout.open(page);
   const where = folderPaths.rel(root, target) || target;
-  // Into what it made: the sidebar shows the import's folder (Textus 1.3.12),
-  // and with Workspace on, as Notion did: its pages tree.
+  // Into what it made: the sidebar shows the import's folder,
+  // and with the Wiki plugin on, as Notion did: its pages tree.
   if (!report.stopped) await textus.commands.execute("textus.showFolder", target).catch(() => {});
   const workspace = !report.stopped && (await textus.plugins.get("catvinci.database").catch(() => null));
   if (workspace && textus.layout.showSidebarTab) await textus.layout.showSidebarTab("catvinci.database.pages").catch(() => {});

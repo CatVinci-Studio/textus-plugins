@@ -1,7 +1,7 @@
 {
   "id": "catvinci.templates",
   "name": "%name%",
-  "version": "0.5.1",
+  "version": "0.5.2",
   "publisher": "catvinci",
   "author": "CatVinci Studio",
   "description": "%description%",

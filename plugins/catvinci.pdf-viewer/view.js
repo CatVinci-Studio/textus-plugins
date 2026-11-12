@@ -17,6 +17,7 @@
   const status = $("status");
   $("find").placeholder = t("find");
   $("find").setAttribute("aria-label", t("find"));
+  $("page").setAttribute("aria-label", t("page"));
 
   const libReady = new Promise((resolve) => {
     if (window.pdfjsLib) resolve();
@@ -56,14 +57,17 @@
   let observer = null;
   let freer = null;
 
+  const pad = (side) => parseFloat(getComputedStyle(viewer)[side]) || 0;
   function fitScale() {
-    return Math.max(0.25, (viewer.clientWidth - 48) / baseWidth);
+    const inner = viewer.clientWidth - pad("paddingLeft") - pad("paddingRight");
+    return Math.max(0.25, inner / baseWidth);
   }
 
   function showZoom() {
     $("zoom").textContent = Math.round(scale * 100) + "%";
     // The figure itself switches: fitted, it shows the page's own size.
-    $("zoom").title = t(fitWidth ? "actual" : "fit");
+    for (const attr of ["aria-label", "title"])
+      $("zoom").setAttribute(attr, t(fitWidth ? "actual" : "fit"));
   }
 
   // Each page is a placeholder of its size until it comes into view, then
@@ -182,6 +186,7 @@
   let query = "";
   let hits = [];
   let hit = -1;
+  let searching = null;
   async function pageText(n) {
     if (texts[n] === undefined) {
       const page = await pdf.getPage(n);
@@ -207,11 +212,12 @@
       query = q;
       hits = [];
       hit = -1;
-      if (q)
-        for (let n = 1; n <= pdf.numPages; n++)
-          if ((await pageText(n)).includes(q)) hits.push(n);
+      searching = q ? search(q) : null;
       for (const div of pages) markHits(div);
     }
+    // A repeated Enter waits for the search; an older word's is dropped.
+    if (searching) await searching;
+    if (q !== query) return;
     if (!q) {
       $("find-count").textContent = "";
       return;
@@ -223,6 +229,14 @@
     hit = (hit + (back ? -1 : 1) + hits.length) % hits.length;
     $("find-count").textContent = hit + 1 + "/" + hits.length;
     goTo(hits[hit]);
+  }
+  async function search(q) {
+    const found = [];
+    for (let n = 1; n <= pdf.numPages; n++) {
+      if (query !== q) return;
+      if ((await pageText(n)).includes(q)) found.push(n);
+    }
+    if (query === q) hits = found;
   }
   function openFind() {
     $("find-box").hidden = false;
@@ -250,7 +264,7 @@
   });
   function goTo(n) {
     const page = pages[Math.min(pages.length, Math.max(1, n)) - 1];
-    if (page) viewer.scrollTop = page.offsetTop - 16;
+    if (page) viewer.scrollTop = page.offsetTop - pad("paddingTop");
   }
   viewer.addEventListener("scroll", updatePage, { passive: true });
 
@@ -361,6 +375,10 @@
       scale = position?.scale || 1;
       restoring = message.page || position?.page || 0;
       texts = [];
+      query = "";
+      hits = [];
+      searching = null;
+      $("find-count").textContent = "";
       status.textContent = "";
       await layout();
     } catch (err) {

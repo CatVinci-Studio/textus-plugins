@@ -19,6 +19,7 @@ Funciona en escritorio y en iPhone y necesita Textus 1.3.10 o posterior. Pide le
 
 ## Cambios
 
+- **0.5.2** - Ahora aparecen las plantillas de una carpeta de plantillas oculta o en minúsculas, y de sus subcarpetas. Tras insertar, el cursor queda justo después de la plantilla.
 - **0.5.1** - **Nuevo desde plantilla…** en el menú contextual de un archivo o carpeta crea el documento en esa carpeta.
 - **0.5.0** - Las plantillas las rellena el propio Textus, igual que las notas diarias; necesita Textus 1.3.10.
 - **0.4.1** - Las plantillas se listan en orden natural: 2 antes que 10.

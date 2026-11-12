@@ -154,8 +154,19 @@
   }
 
   /** The section under heading `name`, its heading line included, to the
-   *  next heading of its level or above; null when there is none. */
+   *  next heading of its level or above; null when there is none. "A#B" is
+   *  B inside A's section, as Obsidian reads [[Note#A#B]]. */
   function section(text, name) {
+    var levels = String(name).split("#").filter(Boolean);
+    var found = null;
+    for (var k = 0; k < levels.length; k++) {
+      found = sectionNamed(found ? found.markdown : text, levels[k]);
+      if (!found) return null;
+    }
+    return found;
+  }
+
+  function sectionNamed(text, name) {
     var want = slug(name);
     var blocks = blocksOf(text);
     for (var i = 0; i < blocks.length; i++) {

@@ -60,5 +60,26 @@ window.databaseTabs = function (page) {
     if (choice !== null) post({ type: "addView", view: choice });
   }
 
-  return { viewTabs };
+  /** In a narrow block, the tabs as one button: the view shown, opening a
+   *  menu of all of them and Add View. */
+  function viewPicker() {
+    const data = page.data;
+    const now = data.views.find((v) => v.index === data.index) || data.views[0];
+    return now
+      ? [icon(VIEW_ICONS[now.view] || "table"), el("span", { class: "label" }, now.name || s(now.view)), icon("chevron")]
+      : [];
+  }
+
+  async function pickView(at) {
+    const data = page.data;
+    const items = data.views.map((v) => ({ label: v.name || s(v.view), value: "view:" + v.index, checked: v.index === data.index }));
+    items.push("separator", { label: s("addView"), items: VIEWS.map((k) => ({ label: s(k), value: "add:" + k })) });
+    const choice = await api.menu(items, at);
+    if (choice === null) return;
+    const [kind, value] = String(choice).split(":");
+    if (kind === "add") post({ type: "addView", view: value });
+    else if (Number(value) !== data.index) choose(Number(value));
+  }
+
+  return { viewTabs, viewPicker, pickView };
 };

@@ -38,3 +38,36 @@ describe("a filter added to a view", () => {
     expect(merge([f("rating", ">", "2")], f("rating", "<", "5"))).toHaveLength(2);
   });
 });
+
+describe("a rule of several values", () => {
+  type Rule = { key: string; op: string; value: string | string[]; raw?: string };
+  const api = () =>
+    (globalThis as unknown as {
+      baseFilters: { text: (f: Rule) => string; read: (s: string) => Rule };
+    }).baseFilters;
+
+  it("is written with || and read back as one rule", () => {
+    const { text, read } = api();
+    const any = { key: "status", op: "in", value: ["To do", "Doing"] };
+    expect(text(any)).toBe('(status == "To do" || status == "Doing")');
+    expect(read(text(any))).toEqual(any);
+    const none = { key: "status", op: "!in", value: ["Done"] };
+    expect(text(none)).toBe('!(status == "Done")');
+    expect(read(text(none))).toEqual(none);
+    const tags = { key: "my tags", op: "hasAny", value: ["a", "b || c"] };
+    expect(text(tags)).toBe('(note["my tags"].contains("a") || note["my tags"].contains("b || c"))');
+    expect(read(text(tags))).toEqual(tags);
+  });
+
+  it("leaves a mixed or hand-written group as written, and plain rules as they were", () => {
+    const { read } = api();
+    expect(read('status == "A" || rating > 3')).toEqual({ raw: 'status == "A" || rating > 3' });
+    expect(read('status == "Done"')).toEqual({ key: "status", op: "=", value: "Done" });
+  });
+
+  it("takes the place of a single value on the same property", () => {
+    expect(
+      merge([f("status", "=", "Done")], { key: "status", op: "in", value: ["A", "B"] } as never),
+    ).toEqual([{ key: "status", op: "in", value: ["A", "B"] }]);
+  });
+});

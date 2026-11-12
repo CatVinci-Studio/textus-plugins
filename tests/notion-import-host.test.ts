@@ -157,6 +157,17 @@ function disk(
         void (files[rel(path)] = bytes),
       writeText: async (path: string, text: string) =>
         void (files[rel(path)] = text),
+      frontmatter: {
+        update: async (
+          path: string,
+          edit: (fm: Record<string, string>) => void,
+        ) => {
+          const fm: Record<string, string> = {};
+          edit(fm);
+          if (fm.icon)
+            files[rel(path)] = `---\nicon: ${fm.icon}\n---\n` + files[rel(path)];
+        },
+      },
     },
   };
 }
@@ -178,6 +189,8 @@ function host(
     name?: string | null;
     /** The link format picked: standard unless "wiki". */
     links?: string;
+    /** The icon export picked: none unless given. */
+    icons?: string;
   } = {},
 ) {
   const commands = new Map<string, (...args: unknown[]) => Promise<unknown>>();
@@ -211,7 +224,9 @@ function host(
           options.name === undefined ? value : options.name,
         pick: async (items: { value: unknown }[]) => {
           picks.push(items);
-          const asked = items.find((i) => i.value === options.links);
+          const asked = items.find(
+            (i) => i.value === options.links || i.value === options.icons,
+          );
           return (asked ?? items[0]).value;
         },
         withProgress: async (
@@ -365,6 +380,24 @@ describe("the import command", () => {
       "missingTitle",
     );
     expect(messages).toEqual(["done|2|1|" + target]);
+  });
+
+  it("takes page icons from an unzipped HTML export", async () => {
+    const folder = disk({
+      "Inbox/Export-x.zip": await fixtureZip(),
+      [`Html/Export-y/Home ${H}.html`]:
+        '<div class="page-header-icon undefined"><span class="icon">🏠</span></div>',
+    });
+    const { picks, run } = host(folder, { icons: "/root/Html/Export-y" });
+    await run();
+    expect(picks[1].map((i) => (i as { value: unknown }).value)).toEqual([
+      "",
+      "/root/Html/Export-y",
+    ]);
+    const [target] = targets(folder);
+    expect(String(folder.files[target + "/Home/Home.md"])).toMatch(
+      /^---\nicon: 🏠\n/,
+    );
   });
 
   it("asks to unzip an export too big to read at once, and makes nothing", async () => {

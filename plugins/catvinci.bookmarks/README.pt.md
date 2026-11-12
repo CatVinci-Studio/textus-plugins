@@ -22,6 +22,8 @@ Quando a pasta aberta é um cofre do Obsidian (tem uma pasta `.obsidian`):
 
 ## Alterações
 
+- **0.4.3** - A lista é agrupada pelo caminho do documento na pasta, um grupo por documento; trechos longos terminam em uma palavra com "…"; se o id de bloco falhar em um cofre, o favorito é salvo mesmo assim.
+- **0.4.2** - Textos de ajuda e de estado vazio mais curtos.
 - **0.4.1** - Sua página agora diz numa frase o que ele faz, o que pode fazer e o que mudou em cada versão.
 - **0.4.0** - Num cofre do Obsidian, os favoritos novos também são gravados no `bookmarks.json` dele, e removidos e renomeados lá.
 - **0.3.0** - Lista os favoritos do próprio Obsidian no cofre: notas, títulos e blocos.
@@ -34,5 +36,5 @@ Quando a pasta aberta é um cofre do Obsidian (tem uma pasta `.obsidian`):
 
 Com o plugin instalado, o Textus AI pode usá-las numa conversa:
 
-- `list_bookmarks`: Lista os marcadores do utilizador: as palavras marcadas em cada documento, com o caminho do documento na pasta aberta.
+- `list_bookmarks`: Lista os favoritos do usuário: as palavras marcadas em cada documento, com o caminho do documento na pasta aberta.
 <!-- /ai-tools -->

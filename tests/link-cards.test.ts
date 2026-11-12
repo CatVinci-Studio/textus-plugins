@@ -77,16 +77,24 @@ describe("link cards", () => {
     expect(lc.parse('title: "Hello" said "World"').title).toBe('"Hello" said "World"');
   });
 
-  it("plays YouTube and Bilibili videos, and nothing else", () => {
-    expect(lc.videoEmbed("https://www.youtube.com/watch?v=abc123")).toBe(
-      "https://www.youtube.com/embed/abc123",
-    );
-    expect(lc.videoEmbed("https://youtu.be/abc123")).toBe(
-      "https://www.youtube.com/embed/abc123",
-    );
+  it("keeps a title or description with the other kind of quote whole", () => {
+    const html = `<meta property="og:title" content="Don't Panic: It's fine">
+      <meta name='description' content='Tom said "hi"'>`;
+    const card = lc.fromHtml(html, "https://x.org");
+    expect(card.title).toBe("Don't Panic: It's fine");
+    expect(card.description).toBe('Tom said "hi"');
+  });
+
+  it("plays Bilibili videos in place, and gives YouTube's a still", () => {
     expect(
       lc.videoEmbed("https://www.bilibili.com/video/BV1xx411c7mD/"),
     ).toContain("bvid=BV1xx411c7mD");
+    expect(lc.videoEmbed("https://www.youtube.com/watch?v=abc123")).toBeNull();
     expect(lc.videoEmbed("https://example.com/video/1")).toBeNull();
+    const still = "https://i.ytimg.com/vi/abc123/hqdefault.jpg";
+    expect(lc.videoPicture("https://www.youtube.com/watch?v=abc123")).toBe(still);
+    expect(lc.videoPicture("https://youtu.be/abc123?t=42")).toBe(still);
+    expect(lc.videoPicture("https://youtube.com/shorts/abc123")).toBe(still);
+    expect(lc.videoPicture("https://example.com/watch?v=abc123")).toBeNull();
   });
 });

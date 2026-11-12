@@ -1,7 +1,7 @@
 {
   "id": "catvinci.link-cards",
   "name": "%name%",
-  "version": "0.4.2",
+  "version": "0.4.3",
   "publisher": "catvinci",
   "author": "CatVinci Studio",
   "description": "%description%",
@@ -9,7 +9,7 @@
   "license": "MIT",
   "repository": "https://github.com/CatVinci-Studio/textus-plugins",
   "engines": {
-    "textus": ">=1.3.12"
+    "textus": ">=1.4.0"
   },
   "platforms": ["desktop", "ios"],
   "main": [
@@ -81,7 +81,7 @@
   "l10n": {
     "en": {
       "name": "Link Cards",
-      "description": "A link as a card with its page's title, description and picture - or a YouTube or Bilibili video playing in place. Kept in the document as text.",
+      "description": "A link as a card with its page's title, description and picture - or a Bilibili video playing in place. Kept in the document as text.",
       "insert": "Insert Link Card…",
       "urlPrompt": "Link to make a card of",
       "notUrl": "That isn't a web address (https://…).",
@@ -91,7 +91,7 @@
     },
     "zh": {
       "name": "链接卡片",
-      "description": "把链接显示成卡片，带网页的标题、简介和图片；YouTube 或 B 站视频直接在文中播放。内容以文本形式保存在文档里。",
+      "description": "把链接显示成卡片，带网页的标题、简介和图片；B 站视频直接在文中播放。内容以文本形式保存在文档里。",
       "insert": "插入链接卡片…",
       "urlPrompt": "要做成卡片的链接",
       "notUrl": "这不是网址（https://…）。",
@@ -101,7 +101,7 @@
     },
     "zh-Hant": {
       "name": "連結卡片",
-      "description": "把連結顯示成卡片，帶網頁的標題、簡介和圖片；YouTube 或 Bilibili 影片直接在文中播放。內容以文字形式保存在文件裡。",
+      "description": "把連結顯示成卡片，帶網頁的標題、簡介和圖片；Bilibili 影片直接在文中播放。內容以文字形式保存在文件裡。",
       "insert": "插入連結卡片…",
       "urlPrompt": "要做成卡片的連結",
       "notUrl": "這不是網址（https://…）。",
@@ -111,7 +111,7 @@
     },
     "ja": {
       "name": "リンクカード",
-      "description": "リンクをページのタイトル・説明・画像つきのカードに。YouTube や Bilibili の動画はその場で再生。文書にはテキストで残ります。",
+      "description": "リンクをページのタイトル・説明・画像つきのカードに。Bilibili の動画はその場で再生。文書にはテキストで残ります。",
       "insert": "リンクカードを挿入…",
       "urlPrompt": "カードにするリンク",
       "notUrl": "Web アドレス（https://…）ではありません。",
@@ -121,7 +121,7 @@
     },
     "ko": {
       "name": "링크 카드",
-      "description": "링크를 페이지 제목·설명·그림이 있는 카드로, YouTube나 Bilibili 동영상은 그 자리에서 재생합니다. 문서에는 텍스트로 남습니다.",
+      "description": "링크를 페이지 제목·설명·그림이 있는 카드로, Bilibili 동영상은 그 자리에서 재생합니다. 문서에는 텍스트로 남습니다.",
       "insert": "링크 카드 넣기…",
       "urlPrompt": "카드로 만들 링크",
       "notUrl": "웹 주소(https://…)가 아닙니다.",
@@ -131,7 +131,7 @@
     },
     "de": {
       "name": "Link-Karten",
-      "description": "Ein Link als Karte mit Titel, Beschreibung und Bild der Seite – oder ein YouTube- bzw. Bilibili-Video, das an Ort und Stelle läuft. Im Dokument als Text gespeichert.",
+      "description": "Ein Link als Karte mit Titel, Beschreibung und Bild der Seite – oder ein Bilibili-Video, das an Ort und Stelle läuft. Im Dokument als Text gespeichert.",
       "insert": "Link-Karte einfügen …",
       "urlPrompt": "Link für die Karte",
       "notUrl": "Das ist keine Webadresse (https://…).",
@@ -141,7 +141,7 @@
     },
     "es": {
       "name": "Tarjetas de enlace",
-      "description": "Un enlace como tarjeta con el título, la descripción y la imagen de la página, o un vídeo de YouTube o Bilibili que se reproduce ahí mismo. Se guarda en el documento como texto.",
+      "description": "Un enlace como tarjeta con el título, la descripción y la imagen de la página, o un vídeo de Bilibili que se reproduce ahí mismo. Se guarda en el documento como texto.",
       "insert": "Insertar tarjeta de enlace…",
       "urlPrompt": "Enlace para la tarjeta",
       "notUrl": "Eso no es una dirección web (https://…).",
@@ -151,7 +151,7 @@
     },
     "fr": {
       "name": "Cartes de lien",
-      "description": "Un lien en carte avec le titre, la description et l’image de la page, ou une vidéo YouTube ou Bilibili lue sur place. Gardé dans le document sous forme de texte.",
+      "description": "Un lien en carte avec le titre, la description et l’image de la page, ou une vidéo Bilibili lue sur place. Gardé dans le document sous forme de texte.",
       "insert": "Insérer une carte de lien…",
       "urlPrompt": "Lien à transformer en carte",
       "notUrl": "Ce n’est pas une adresse web (https://…).",
@@ -161,17 +161,17 @@
     },
     "pt": {
       "name": "Cartões de link",
-      "description": "Um link como cartão com o título, a descrição e a imagem da página, ou um vídeo do YouTube ou Bilibili tocando ali mesmo. Guardado no documento como texto.",
+      "description": "Um link como cartão com o título, a descrição e a imagem da página, ou um vídeo do Bilibili tocando ali mesmo. Salvo no documento como texto.",
       "insert": "Inserir cartão de link…",
       "urlPrompt": "Link para o cartão",
       "notUrl": "Isso não é um endereço web (https://…).",
       "fetching": "Obtendo a página…",
       "refresh": "Obter de novo",
-      "tool.fetch_link_card": "Obtém o título, a descrição, a imagem e o nome do site de uma página web, e devolve-os com um bloco ```card que mostra o link como cartão - para inserir onde o utilizador quiser."
+      "tool.fetch_link_card": "Obtém o título, a descrição, a imagem e o nome do site de uma página web e os retorna com um bloco ```card que mostra o link como cartão - para inserir onde o usuário quiser."
     },
     "ru": {
       "name": "Карточки ссылок",
-      "description": "Ссылка как карточка с заголовком, описанием и картинкой страницы — или видео YouTube и Bilibili прямо в тексте. Хранится в документе как текст.",
+      "description": "Ссылка как карточка с заголовком, описанием и картинкой страницы — или видео Bilibili прямо в тексте. Хранится в документе как текст.",
       "insert": "Вставить карточку ссылки…",
       "urlPrompt": "Ссылка для карточки",
       "notUrl": "Это не веб-адрес (https://…).",

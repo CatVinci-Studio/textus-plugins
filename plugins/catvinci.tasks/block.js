@@ -4,7 +4,6 @@
 (function () {
   "use strict";
   const api = acquireTextusApi();
-  const TONES = { danger: "red", warning: "orange", muted: "gray" };
   const $ = (id) => document.getElementById(id);
 
   function el(tag, attrs, ...children) {
@@ -34,7 +33,7 @@
       box,
       el("span", { class: "text", onclick: () => open(task) }, task.description),
       task.priority || task.recurring ? el("span", { class: "mark" }, (task.priority || "") + (task.recurring ? "🔁" : "")) : null,
-      task.due ? el("span", { class: "tx-tag", "data-tone": TONES[task.tone] }, task.due) : null,
+      task.due ? el("span", { class: "tx-badge", "data-tone": task.tone }, task.due) : null,
       el("span", { class: "file", title: task.rel, onclick: () => open(task) }, task.file),
     );
   }

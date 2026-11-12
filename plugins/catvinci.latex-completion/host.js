@@ -8,7 +8,12 @@ exports.activate = function () {
     {
       provideCompletions: function (context) {
         // The manifest's pattern: a backslash and the letters after it.
-        return latexCommands.complete(context.match.slice(1));
+        const items = latexCommands.complete(context.match.slice(1));
+        // A space already after the caret: no second one.
+        if (!/^\s/.test(context.after || "")) return items;
+        return items.map(function (item) {
+          return Object.assign({}, item, { insert: item.insert.replace(/ $/, "") });
+        });
       },
     },
   );

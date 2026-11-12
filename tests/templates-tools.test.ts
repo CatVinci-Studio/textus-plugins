@@ -3,14 +3,30 @@ import { folder, loadPlugin, memoryStorage } from "./plugin-host";
 
 /** Templates (plugins/catvinci.templates/host.js): templates are files in
  *  the open folder's templates folder. */
+/** files.list as the app gives it: files and folders one level down. */
+function listing(files: Record<string, string>) {
+  return async (dir: string) => {
+    const at = dir.slice("/root/".length).replace(/\/$/, "");
+    const seen = new Map<string, { name: string; path: string; isDir: boolean }>();
+    for (const r of Object.keys(files)) {
+      if (!r.startsWith(at + "/")) continue;
+      const [name, ...rest] = r.slice(at.length + 1).split("/");
+      seen.set(name, { name, path: `/root/${at}/${name}`, isDir: rest.length > 0 });
+    }
+    return [...seen.values()];
+  };
+}
+
 function setup(
   files: Record<string, string>,
   stored: Record<string, string> = {},
+  conventions?: () => Promise<unknown>,
 ) {
   const notices: string[] = [];
   const f = {
     ...folder(files),
-    find: async (glob: string) => folder(files).find(glob),
+    list: listing(files),
+    ...(conventions ? { conventions } : {}),
   };
   const loaded = loadPlugin(
     "catvinci.templates",
@@ -97,6 +113,57 @@ describe("templates", () => {
     await tools.get("list_templates")!({});
     expect(files["Templates/Plan.md"]).toBeUndefined();
     expect(notices).toHaveLength(1);
+  });
+  it("lists templates in a hidden folder and in subfolders (Foam's .foam/templates)", async () => {
+    const files: Record<string, string> = {
+      ".foam/templates/Daily.md": "# {{title}}",
+      ".foam/templates/Work/Standup.md": "standup",
+      ".foam/templates/.cache.md": "not a template",
+    };
+    const { tools } = setup(files, {}, async () => ({ templates: { value: "/root/.foam/templates" } }));
+    const list = await tools.get("list_templates")!({});
+    expect(list.folder).toBe(".foam/templates");
+    expect(list.templates.map((x: { name: string }) => x.name)).toEqual(["Daily", "Work/Standup"]);
+  });
+
+  it("lists a lowercase templates folder where the disk ignores case", async () => {
+    const files: Record<string, string> = { "templates/Weekly.md": "weekly" };
+    const list = listing(files);
+    // The default Templates/ opens templates/ on macOS and Windows; find gives its own case.
+    const disk = {
+      ...folder(files),
+      list: (dir: string) => list(dir.replace("/root/Templates", "/root/templates")),
+      find: async () => [{ path: "/root/templates/Weekly.md", rel: "templates/Weekly.md" }],
+    };
+    const { tools } = loadPlugin("catvinci.templates", { files: disk });
+    const got = await tools.get("list_templates")!({});
+    expect(got.templates.map((x: { name: string }) => x.name)).toEqual(["Weekly"]);
+  });
+});
+
+describe("inserting a template at the caret", () => {
+  it("puts the caret by the template, not where the text first differs", async () => {
+    const files: Record<string, string> = { "Templates/T.md": "En<% tp.file.cursor() %>try\n", "Log.md": "Entry" };
+    let doc = files["Log.md"];
+    const commands = new Map<string, (editor: unknown) => Promise<void>>();
+    const revealed: unknown[] = [];
+    const editor = {
+      getPath: async () => "/root/Log.md",
+      getText: async () => doc,
+      insertText: async (text: string) => ((doc = text + doc), true),
+      reveal: async (place: unknown) => void revealed.push(place),
+    };
+    loadPlugin("catvinci.templates", {
+      files: { ...folder(files), list: listing(files) },
+      commands: {
+        register: () => ({ dispose() {} }),
+        registerEditorCommand: (id: string, run: (e: unknown) => Promise<void>) => (commands.set(id, run), { dispose() {} }),
+      },
+      ui: { pick: async (items: { value: string }[]) => items[0].value, notice: () => {} },
+    });
+    await commands.get("catvinci.templates.insert")!(editor);
+    expect(doc).toBe("Entry\nEntry");
+    expect(revealed).toEqual([{ line: 0 }]);
   });
 });
 

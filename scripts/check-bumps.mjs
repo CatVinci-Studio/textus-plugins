@@ -16,9 +16,12 @@ try {
   console.log(`check-bumps: no ${base} here, skipped`);
   process.exit(0);
 }
-const changed = new Set(
-  git("diff", "--name-only", `${base}...HEAD`).split("\n").filter(Boolean),
-);
+// Changed on this branch and still unlike the base: a branch whose work
+// the base already took in a squash merge has nothing new there.
+const names = (range) =>
+  git("diff", "--name-only", range).split("\n").filter(Boolean);
+const unlike = new Set(names(base));
+const changed = new Set(names(`${base}...HEAD`).filter((f) => unlike.has(f)));
 const libs = JSON.parse(readFileSync("libs.json", "utf8"));
 const versionAt = (ref, id) => {
   try {

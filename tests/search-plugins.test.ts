@@ -82,4 +82,28 @@ describe("Keenable Search", () => {
     expect(found[0].text).toHaveLength(601);
     expect(found[0].date).toBe("2026-01-02");
   });
+
+  it("treats a key left as \"null\" as none, and reports an unreadable answer", async () => {
+    const asked: string[] = [];
+    let setKey: () => Promise<void> = async () => {};
+    const plugin = loadPlugin("catvinci.keenable", {
+      net: {
+        fetch: async (url: string) => {
+          asked.push(url);
+          return { ok: true, status: 200, json: async () => JSON.parse("<") };
+        },
+      },
+      ui: { input: async () => "null", notice: () => {} },
+      commands: {
+        register: (_id: string, run: () => Promise<void>) => {
+          setKey = run;
+          return { dispose() {} };
+        },
+      },
+    });
+    await setKey();
+    const answer = await plugin.tools.get("keenable_search")!({ query: "q" });
+    expect(asked[0]).toBe("https://api.keenable.ai/v1/search/public");
+    expect(answer).toBe("Keenable sent an unreadable answer.");
+  });
 });

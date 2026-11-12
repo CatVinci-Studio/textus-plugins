@@ -23,6 +23,8 @@ Das Plugin liest und schreibt Dateien im geöffneten Ordner, um die Notizen zu f
 
 ## Änderungen
 
+- **0.7.3** - Unmögliche Daten wie der 30. Februar werden abgelehnt, der Kalender bleibt in breiten Bereichen angenehm schmal und zeichnet sich neu, wenn sich Ordnereinstellungen ändern, und Wochen- und Monatseinstellungen erscheinen nur, wenn diese Notizen an sind.
+- **0.7.2** - Kürzere Hilfe- und Leertexte.
 - **0.7.1** - Leisten, Listen und Steuerelemente sind jetzt die von Textus, wachsen mit der Oberfläche und folgen jedem Theme; braucht Textus 1.3.12.
 - **0.7.0** - Daten und Vorlagen füllt Textus selbst aus, genauso wie im Vorlagen-Plugin; braucht Textus 1.3.10.
 - **0.6.0** - Wochen- und Monatsnotizen mit eigenen Einstellungen, Wochennummern und Monatsname im Kalender und den Periodic-Notes-Einstellungen eines Vaults.

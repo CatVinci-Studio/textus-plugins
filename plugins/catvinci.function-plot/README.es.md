@@ -6,7 +6,7 @@ Dibuja gráficas de funciones de x, una por línea, como sin(x) o x^2 - 1.
 
 - Escribe un bloque de código en `function-plot` con una función por línea. La gráfica se dibuja debajo, y el código vuelve a verse al hacer clic en el bloque.
 - Una línea puede empezar con `y =`. `2x` y `3sin(x)` son multiplicaciones.
-- Entiende + - * / ^, paréntesis, x, pi, e y sin, cos, tan, asin, acos, atan, sinh, cosh, tanh, exp, ln, log (base 10), sqrt, abs, floor y ceil.
+- Entiende + - * / ^, paréntesis, x, pi (π), e y sin, cos, tan, asin, acos, atan, sinh, cosh, tanh, exp, ln, log (base 10), sqrt, abs, floor y ceil.
 - x va de -10 a 10. Escribe `xmin=-5 xmax=5` tras el lenguaje para cambiarlo; `ymin` e `ymax` fijan el rango de y, que si no se ajusta a las curvas.
 - `height=400` tras el lenguaje fija la altura del dibujo.
 - Si una línea no se puede leer, debajo del bloque se dice qué falla.
@@ -26,6 +26,7 @@ Solo pide **Herramientas para Textus AI**, para que Textus AI pueda revisar un b
 
 ## Cambios
 
+- **0.3.2** - Las curvas empinadas como tan(x) conservan su forma y se cortan en las asíntotas; una función sin nada que dibujar lo dice; se leen π y 2xsin(x); la revisión de Textus AI usa el rango de x de la valla.
 - **0.3.1** - Su página dice ahora en una frase qué hace, qué puede hacer y qué cambió en cada versión.
 - **0.3.0** - una herramienta para Textus AI, `check_function_plot`
 - **0.2.0** - curvas y ejes con los colores del tema, que se redibujan al cambiar de tema
@@ -38,5 +39,5 @@ Solo pide **Herramientas para Textus AI**, para que Textus AI pueda revisar un b
 
 Con el plugin instalado, Textus AI puede usarlas en una conversación:
 
-- `check_function_plot`: Revisa el código de un bloque ```function-plot - funciones de x, una por línea, con + - * / ^, paréntesis, pi, e y las funciones habituales - antes de que entre en un documento, sin dibujarlo. Devuelve ok, o los problemas que hay que corregir antes. Pasa el código sin su valla.
+- `check_function_plot`: Revisa el código de un bloque ```function-plot - funciones de x, una por línea, con + - * / ^, paréntesis, pi, e y las funciones habituales - antes de que entre en un documento, sin dibujarlo. Devuelve ok, o los problemas que hay que corregir antes. Pasa el código sin su valla, y las palabras de la valla (xmin=0 xmax=100) como meta.
 <!-- /ai-tools -->

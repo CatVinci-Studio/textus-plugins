@@ -3,13 +3,18 @@
   const api = acquireTextusApi();
   const t = api.t;
   const $ = (id) => document.getElementById(id);
-  $("title").textContent = t("title");
   $("new").setAttribute("aria-label", t("new"));
-  $("empty").textContent = t("empty");
+  $("empty-intro").textContent = t("emptyIntro");
+  $("empty-new").textContent = t("new");
+  $("empty-new").addEventListener("click", () => $("new").click());
+  // A note's box as tall as its text, from one line.
+  const fit = (area) => {
+    area.style.height = "auto";
+    area.style.height = area.scrollHeight + "px";
+  };
   $("filter").placeholder = t("search");
   $("filter").setAttribute("aria-label", t("search"));
-  // The search shows once there are enough notes to look through.
-  const SEARCH_FROM = 6;
+  $("no-match").textContent = t("noMatch");
   let all = [];
   $("filter").addEventListener("input", () => render(all));
   const timers = new Map();
@@ -25,6 +30,11 @@
   }
   $("new").onclick = () => {
     flush();
+    // A search would hide the new, empty note.
+    if ($("filter").value) {
+      $("filter").value = "";
+      render(all);
+    }
     api.postMessage({ type: "new" });
   };
   const when = (at) =>
@@ -37,28 +47,29 @@
     });
 
   /** A note's actions, in Textus's own menu: from its more button or a
-   *  right-click on it. */
-  async function actions(id, at) {
-    const type = await api.menu(
-      [
-        { label: t("insert"), value: "insert" },
-        { label: t("open"), value: "open" },
-        "separator",
-        { label: t("delete"), value: "delete", danger: true },
-      ],
-      at,
-    );
+   *  right-click on it; inside its text, the text actions come first. */
+  async function actions(id, at, field) {
+    const own = [
+      { label: t("insert"), value: "insert" },
+      { label: t("open"), value: "open" },
+      "separator",
+      { label: t("delete"), value: "delete", danger: true },
+    ];
+    const text = field ? await api.textItems(field) : [];
+    const items = text.length ? [...text, "separator", ...own] : own;
+    const type = await api.menu(items, at);
     if (type === null) return;
+    if (!own.some((item) => item.value === type)) {
+      if (field) await api.editText(field, type);
+      return;
+    }
     flush();
     api.postMessage({ type: type, id: id });
   }
 
   function render(notes) {
     all = notes;
-    $("filter").hidden = notes.length < SEARCH_FROM;
-    const words = $("filter").hidden
-      ? []
-      : $("filter").value.toLowerCase().split(/\s+/).filter(Boolean);
+    const words = $("filter").value.toLowerCase().split(/\s+/).filter(Boolean);
     if (words.length)
       notes = notes.filter((n) =>
         words.every((w) => n.text.toLowerCase().includes(w)),
@@ -67,6 +78,7 @@
     // A note being typed in keeps its box, caret and all.
     const typing = document.activeElement && document.activeElement.dataset.id;
     $("empty").hidden = all.length > 0;
+    $("no-match").hidden = !all.length || notes.length > 0;
     const keep = new Set(notes.map((n) => n.id));
     for (const li of [...list.children])
       if (!keep.has(li.dataset.id)) li.remove();
@@ -78,10 +90,15 @@
         li.dataset.id = note.id;
         li.addEventListener("contextmenu", (e) => {
           e.preventDefault();
-          actions(note.id, { x: e.clientX, y: e.clientY });
+          actions(
+            note.id,
+            { x: e.clientX, y: e.clientY },
+            e.target.closest("textarea"),
+          );
         });
         const area = document.createElement("textarea");
         area.className = "tx-inline-input";
+        area.rows = 1;
         area.dataset.id = note.id;
         area.placeholder = t("placeholder");
         // Left empty, a new note goes: nothing was noted.
@@ -93,6 +110,7 @@
             }, 150);
         });
         area.addEventListener("input", () => {
+          fit(area);
           clearTimeout(timers.get(note.id));
           timers.set(
             note.id,
@@ -123,8 +141,12 @@
       li.querySelector(".when").textContent = when(note.at) || "";
       if (list.children[i] !== li)
         list.insertBefore(li, list.children[i] || null);
+      fit(area);
     });
   }
+  window.addEventListener("resize", () =>
+    document.querySelectorAll("#notes textarea").forEach(fit),
+  );
 
   api.onMessage((message) => {
     if (message.type === "notes") render(message.notes);

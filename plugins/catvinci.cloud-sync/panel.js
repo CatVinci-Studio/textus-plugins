@@ -63,6 +63,7 @@
     element("interval-field").hidden = !input("automatic").checked;
     for (const id of buttons)
       element(id).disabled = busy || !root || !configured || dirty;
+    document.body.dataset.ready = String(!!root && configured);
   }
   function fill(config) {
     for (const id of [
@@ -122,7 +123,7 @@
       save();
     }
   });
-  for (const id of [...buttons, "cancel"])
+  for (const id of [...buttons, "cancel", "openSettings"])
     element(id).onclick = () => api.postMessage({ type: id });
   function showResult(result) {
     const container = element("results");

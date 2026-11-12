@@ -315,7 +315,6 @@ async function handle(webview, message) {
   if (message.type === "insert" && note) await textus.editor.insertText(note.text);
   if (message.type === "open" && note) {
     // A note in a document opens there, at its line.
-    const notes = await store();
     const place = notes.place && (await notes.place(note.id));
     if (place) await textus.layout.open(place);
     else await textus.layout.openUntitled(note.text);

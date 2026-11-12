@@ -25,6 +25,7 @@ Pede apenas **Ferramentas para o Textus AI**, para que o Textus AI possa verific
 
 ## Alterações
 
+- **0.3.2** - notas e datas longas quebram a linha num painel estreito, usa a fonte do documento e um bloco vazio diz o que escrever
 - **0.3.1** - Sua página agora diz numa frase o que ele faz, o que pode fazer e o que mudou em cada versão.
 - **0.3.0** - uma ferramenta para o Textus AI, `check_timeline`
 - **0.2.0** - as cores do tema, redesenhada quando o tema muda

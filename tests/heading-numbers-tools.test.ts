@@ -16,3 +16,13 @@ it("numbers headings as the editor does, again over old numbers, or takes them o
     "# Title\n\n## Intro\n\n```\n## not a heading\n```\n\n## 7 Methods\n\n### Data\n\n## 2026 plans\n\n## Notes",
   );
 });
+
+it("leaves front matter alone and closes a fence only on one as long", async () => {
+  const number = loadPlugin("catvinci.heading-numbers").tools.get("number_headings")!;
+  expect(await number({ text: "---\ntitle: x\n# a yaml comment\n---\n# Title\n## A\n## B" })).toEqual({
+    text: "---\ntitle: x\n# a yaml comment\n---\n# Title\n## 1 A\n## 2 B",
+  });
+  expect(await number({ text: "## A\n````\n```\n# inside\n````\n## B" })).toEqual({
+    text: "## 1 A\n````\n```\n# inside\n````\n## 2 B",
+  });
+});

@@ -4,6 +4,7 @@
 window.databaseRules = function (page) {
   "use strict";
   const { api, $, el, icon, s, post, setSpec, label, typeOf, allKeys, render, dateInput, setEditing } = page;
+  const popover = databaseFilterPopover(page);
 
   // ------------------------------------------------- filters and sorts
   const OPS = {
@@ -17,8 +18,6 @@ window.databaseRules = function (page) {
   };
   const OP_NAMES = { "=": "is", "!=": "isNot", has: "contains", "!has": "notContains", empty: "isEmpty", "!empty": "notEmpty", ">": "greater", "<": "less", ">=": "greater", "<=": "less" };
   const opsFor = (key) => OPS[typeOf(key)] || OPS.text;
-  const filterText = (f) =>
-    label(f.key) + " " + s(OP_NAMES[f.op] || "is").toLowerCase() + (f.op === "empty" || f.op === "!empty" ? "" : " " + f.value);
 
   /** A filter on `key`, by menus: its operator, then its value - one of the
    *  options where there are some, else asked by the host. */
@@ -69,9 +68,14 @@ window.databaseRules = function (page) {
     if (input.openMonth) input.openMonth();
   }
 
+  /** + Filter: the property, then at once its values - ticked for one with
+   *  options, typed for the rest (the verb changes from the chip). */
+  const DEFAULT_OP = { text: "has", url: "has", number: "=", date: "=" };
   async function filterMenu(at) {
     const key = await api.menu(allKeys().map((k) => ({ label: label(k), value: k })), at);
-    if (key !== null) filterOn(key, at);
+    if (key === null) return;
+    if (popover.ticked(key)) popover.show(at, key);
+    else valueField(key, DEFAULT_OP[typeOf(key)] || "has");
   }
 
   async function sortMenu(at) {
@@ -110,11 +114,12 @@ window.databaseRules = function (page) {
         class: "tx-chip",
         onclick: async (e) => {
           const at = e.currentTarget;
+          if (popover.ticked(f.key)) return popover.show(at, f.key, i);
           const choice = await api.menu([{ label: s("filter") + "…", value: "change" }, { label: s("remove"), value: "remove", danger: true }], at);
           if (choice === "remove") setSpec({ filters: page.data.spec.filters.filter((_, j) => j !== i) });
           if (choice === "change") filterOn(f.key, at, i);
         },
-      }, filterText(f), icon("chevron")),
+      }, popover.chipText(f), icon("chevron")),
     );
     for (const x of page.data.spec.sort)
       chips.push(el("button", {

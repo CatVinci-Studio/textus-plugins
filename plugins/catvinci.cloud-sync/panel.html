@@ -7,10 +7,7 @@
   </head>
   <body>
     <main>
-      <header>
-        <h1 data-t="name"></h1>
-      </header>
-      <section class="tx-card sync-status" aria-label="Sync status">
+      <section class="sync-status" aria-label="Sync status">
         <div class="status-row">
           <div class="status-text">
             <p
@@ -39,23 +36,31 @@
             ></button>
           </div>
         </div>
+        <button
+          type="button"
+          class="tx-button sidebar-only"
+          id="openSettings"
+          data-t="openSettings"
+        ></button>
         <div id="progress" class="tx-progress" role="progressbar" hidden></div>
         <div id="results"></div>
       </section>
       <form id="connection" autocomplete="off">
         <fieldset id="fields" disabled>
-          <h2 data-t="connectionTitle"></h2>
-          <div class="tx-card">
-            <div class="field">
-              <label for="provider-pick" data-t="service"></label
-              ><button type="button" class="tx-select" id="provider-pick">
+          <h2 class="tx-group-title" data-t="connectionTitle"></h2>
+          <div class="tx-group">
+            <div class="tx-row">
+              <div class="row-text">
+                <label for="provider-pick" data-t="service"></label>
+                <p id="nutstore-help" class="hint" data-t="nutstoreHelp" hidden></p>
+              </div>
+              <button type="button" class="tx-select" id="provider-pick">
                 <span id="provider-name"></span
                 ><span class="tx-icon" data-icon="chevron"></span>
               </button>
             </div>
             <input id="provider" type="hidden" value="s3" />
-            <p id="nutstore-help" class="hint" data-t="nutstoreHelp" hidden></p>
-            <div class="field" id="endpoint-field">
+            <div class="tx-row" id="endpoint-field">
               <label for="endpoint" data-t="endpoint"></label
               ><input
                 id="endpoint"
@@ -64,85 +69,67 @@
                 spellcheck="false"
               />
             </div>
-            <div class="field" id="bucket-field">
+            <div class="tx-row" id="bucket-field">
               <label for="bucket" data-t="bucket"></label
               ><input id="bucket" spellcheck="false" />
             </div>
-            <div class="columns">
-              <div class="field">
-                <label for="account" id="account-label"></label
-                ><input id="account" autocomplete="off" spellcheck="false" />
-              </div>
-              <div class="field">
-                <label for="secret" id="secret-label"></label
-                ><input
-                  id="secret"
-                  type="password"
-                  autocomplete="new-password"
-                />
-              </div>
+            <div class="tx-row">
+              <label for="account" id="account-label"></label
+              ><input id="account" autocomplete="off" spellcheck="false" />
             </div>
-            <div class="field">
+            <div class="tx-row">
+              <label for="secret" id="secret-label"></label
+              ><input id="secret" type="password" autocomplete="new-password" />
+            </div>
+            <div class="tx-row">
               <label for="prefix" data-t="prefix"></label
-              ><input
-                id="prefix"
-                required
-                aria-describedby="prefix-help"
-                spellcheck="false"
-              />
+              ><input id="prefix" required spellcheck="false" />
             </div>
             <details id="s3-more" class="tx-disclosure">
               <summary data-t="moreOptions"></summary>
-              <div class="columns">
-                <div class="field">
-                  <label for="region" data-t="region"></label
-                  ><input id="region" spellcheck="false" />
-                </div>
-                <div class="field">
-                  <label for="token" data-t="token"></label
-                  ><input
-                    id="token"
-                    type="password"
-                    autocomplete="new-password"
-                  />
-                </div>
+              <div class="tx-row">
+                <label for="region" data-t="region"></label
+                ><input id="region" spellcheck="false" />
               </div>
-              <label class="check"
-                ><input id="pathStyle" type="checkbox" class="ui-check" /><span
-                  data-t="pathStyle"
-                ></span
-              ></label>
+              <div class="tx-row">
+                <label for="token" data-t="token"></label
+                ><input id="token" type="password" autocomplete="new-password" />
+              </div>
+              <div class="tx-row">
+                <label for="pathStyle" data-t="pathStyle"></label
+                ><input id="pathStyle" type="checkbox" role="switch" class="tx-switch" />
+              </div>
             </details>
           </div>
-          <h2 data-t="encryptionTitle"></h2>
-          <div class="tx-card">
-            <p class="hint" id="encryption-help" data-t="encryptionHelp"></p>
-            <div class="columns">
-              <div class="field">
+          <h2 class="tx-group-title" data-t="encryptionTitle"></h2>
+          <div class="tx-group">
+            <div class="tx-row">
+              <div class="row-text">
                 <label for="sync-password" data-t="syncPassword"></label>
-                <input
-                  id="sync-password"
-                  type="password"
-                  autocomplete="new-password"
-                  minlength="12"
-                  maxlength="1024"
-                  aria-describedby="encryption-help"
-                />
+                <p class="hint" id="encryption-help" data-t="encryptionHelp"></p>
               </div>
-              <div class="field">
-                <label for="confirm-password" data-t="confirmPassword"></label>
-                <input
-                  id="confirm-password"
-                  type="password"
-                  autocomplete="new-password"
-                  maxlength="1024"
-                />
-              </div>
+              <input
+                id="sync-password"
+                type="password"
+                autocomplete="new-password"
+                minlength="12"
+                maxlength="1024"
+                aria-describedby="encryption-help"
+              />
+            </div>
+            <div class="tx-row">
+              <label for="confirm-password" data-t="confirmPassword"></label>
+              <input
+                id="confirm-password"
+                type="password"
+                autocomplete="new-password"
+                maxlength="1024"
+              />
             </div>
           </div>
-          <div class="tx-card switch-row">
-            <div class="switch">
-              <span id="automatic-label" data-t="automatic"></span>
+          <div class="tx-group">
+            <div class="tx-row">
+              <label id="automatic-label" for="automatic" data-t="automatic"></label>
               <input
                 id="automatic"
                 type="checkbox"
@@ -151,10 +138,11 @@
                 aria-labelledby="automatic-label"
               />
             </div>
-            <div class="field inline" id="interval-field">
+            <div class="tx-row" id="interval-field">
               <label for="interval" data-t="interval"></label
               ><input
                 id="interval"
+                class="number"
                 type="number"
                 min="5"
                 max="1440"
@@ -163,8 +151,8 @@
               />
             </div>
           </div>
-          <p id="credentials-state" class="hint"></p>
-          <div class="actions">
+          <div class="form-end">
+            <p id="credentials-state" class="hint"></p>
             <button
               type="button"
               class="tx-button"
@@ -181,17 +169,18 @@
           </div>
         </fieldset>
       </form>
-      <details class="trouble tx-disclosure">
-        <summary data-t="advanced"></summary>
-        <p class="hint" data-t="unlockHelp"></p>
-        <button
-          type="button"
-          class="tx-button"
-          id="unlock"
-          data-t="unlock"
-          disabled
-        ></button>
-      </details>
+      <h2 class="tx-group-title recovery" data-t="advanced"></h2>
+      <div class="tx-group">
+        <div class="tx-row start">
+          <button
+            type="button"
+            class="tx-button"
+            id="unlock"
+            data-t="unlock"
+            disabled
+          ></button>
+        </div>
+      </div>
     </main>
     <script src="textus-resource:panel.js"></script>
   </body>

@@ -3,7 +3,7 @@
 Dessine vos notes et les liens entre elles sous forme de graphe, pour tout le dossier ou autour du document ouvert.
 
 - **Ctrl+Alt+G** (**⌘⌥G** sur Mac), ou **Plugins › Ouvrir la vue en graphe**, montre tout le dossier dans un onglet. **Ajuster** fait tout tenir à l’écran.
-- L’onglet **Graphe** de la barre latérale montre les notes autour du document ouvert. **Graphe complet** ouvre tout le dossier.
+- L’onglet **Graphe** de la barre latérale montre les notes autour du document ouvert. Le bouton en haut du panneau Graphe de la barre latérale ouvre tout le dossier.
 - Les [[liens wiki]] comme les liens vers d’autres documents comptent ; deux notes liées l’une à l’autre partagent un seul trait. Un [[lien]] vers une note pas encore écrite apparaît comme une note à part entière.
 - Cliquez sur une note pour l’ouvrir. Faites glisser une note pour la placer, le fond pour vous déplacer, et zoomez à la molette ou en pinçant. Survolez une note pour mettre ses liens en évidence.
 - Le graphe s’adapte tout seul : les noms apparaissent quand vous zoomez, des flèches montrent le sens des liens quand ils sont assez peu nombreux, et une note très liée est plus grande. Sans groupes de couleur, chaque note prend la couleur de son dossier.
@@ -11,9 +11,9 @@ Dessine vos notes et les liens entre elles sous forme de graphe, pour tout le do
 
 ## Réglages
 
-Le bouton à curseurs en haut ouvre les réglages du graphe. Le graphe complet et celui de la barre latérale ont chacun les leurs.
+Le bouton à curseurs en haut du graphe complet ouvre ses réglages ; celui de la barre latérale n’en a pas.
 
-- **Filtres** : une recherche (`path:ideas`, `file:draft`, `tag:#todo`, un `-` devant pour exclure) ; **Tags** affiche les #tags comme nœuds ; **Fichiers existants uniquement** masque les notes pas encore écrites ; **Orphelines** (graphe complet) montre les notes sans lien. Dans la barre latérale, **Profondeur** règle jusqu’à combien de liens il va, de 1 à 5.
+- **Filtres** : une recherche (`path:ideas`, `file:draft`, `tag:#todo`, un `-` devant pour exclure) ; **Tags** affiche les #tags comme nœuds ; **Fichiers existants uniquement** masque les notes pas encore écrites ; **Orphelines** (graphe complet) montre les notes sans lien.
 - **Groupes** : colorez les notes qu’une recherche trouve. **Nouveau groupe** en ajoute un ; **Rétablir les valeurs par défaut** annule vos changements.
 
 Dans un coffre Obsidian, les groupes de couleur enregistrés dans le `graph.json` d’Obsidian colorent aussi les notes, après les vôtres.
@@ -25,6 +25,8 @@ Dans un coffre Obsidian, les groupes de couleur enregistrés dans le `graph.json
 
 ## Changements
 
+- **0.5.5** - Les liens Markdown standard vers des notes pas encore écrites sont placés là où Textus les crée, et fusionnent avec les [[liens]] vers la même note. Ctrl/Cmd-clic ouvre une note à côté de celle au premier plan. Les étiquettes suivent la taille du texte de l’interface, les couleurs de dossier suivent le thème. Le graphe de la barre latérale n’a plus de réglages propres.
+- **0.5.4** - Un pincement sur le trackpad zoome en douceur, au rythme du geste ; avec Textus 1.3.13, un pincement sur Mac zoome le graphe, pas le document derrière. Textes d'aide et d'état vide plus courts. Son panneau latéral et sa page suivent la mise en page de Textus 1.3.13.
 - **0.5.3** - Ses barres, listes et contrôles sont désormais ceux de Textus, grandissent avec l’interface et suivent chaque thème ; nécessite Textus 1.3.12.
 - **0.5.2** - Les groupes de couleur d’Obsidian sont lus dans le coffre le plus proche, même au-dessus du dossier ouvert. Nécessite Textus 1.3.10.
 - **0.5.1** - Dans un coffre Obsidian, les groupes de couleur de `.obsidian/graph.json` colorent aussi les notes.

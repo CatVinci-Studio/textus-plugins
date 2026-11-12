@@ -1,8 +1,8 @@
 // Graph View: the open folder's documents and the links between them,
 // from what Textus knows of the folder (textus.metadata - links.js makes
 // the graph), drawn in a tab of its own and around the document in front
-// in the sidebar. Each has a small settings panel - filters and colour
-// groups - kept in the plugin's storage; how it looks adapts by itself.
+// in the sidebar. The full graph has a small settings panel - filters and
+// colour groups - kept in the plugin's storage; how it looks adapts by itself.
 // In an Obsidian vault, its own colour groups colour the notes too.
 // Drawn again, a moment after, whenever the folder's documents change.
 /** What activate was given: the plugin's storage and own files. */
@@ -37,9 +37,8 @@ const DEFAULTS = {
 };
 const LOCAL_DEFAULTS = Object.assign({}, DEFAULTS, { depth: 1 });
 
-async function settingsOf(isLocal) {
-  const saved = await ctx.storage.global.get(isLocal ? "local" : "global");
-  return Object.assign({}, isLocal ? LOCAL_DEFAULTS : DEFAULTS, saved);
+async function settingsOf() {
+  return Object.assign({}, DEFAULTS, await ctx.storage.global.get("global"));
 }
 
 /** `settings` with the vault's own colour groups after the panel's. */
@@ -51,19 +50,28 @@ async function withVaultGroups(settings) {
   return groups.length ? Object.assign({}, settings, { groups: (settings.groups || []).concat(groups) }) : settings;
 }
 
+/** Where each unresolved link goes, by link and the note's folder; kept
+ *  until a file is created, renamed or deleted. */
+let found = new Map();
+const forget = () => (found = new Map());
+
 /** The folder's documents, each link to no file marked with the note a
  *  click on it would make (`missing`), as Textus resolves links. */
 async function documents() {
   const docs = await textus.metadata.all();
   const asks = [];
   for (const doc of docs)
-    for (const l of doc.links)
-      if (!l.resolved && !/^[a-z][a-z0-9+.-]*:/i.test(l.target))
-        asks.push(
-          textus.metadata.resolveNote("[[" + l.target + "]]", doc.path).then((found) => {
-            if (found && found.kind === "note") l[found.exists ? "resolved" : "missing"] = found.path;
-          }),
-        );
+    for (const l of doc.links) {
+      if (l.resolved || /^[a-z][a-z0-9+.-]*:/i.test(l.target) || l.target.startsWith("#")) continue;
+      const link = l.wiki ? "[[" + l.target + "]]" : l.target;
+      const key = link + "\0" + doc.path.replace(/[^\\/]*$/, "");
+      if (!found.has(key)) found.set(key, textus.metadata.resolveNote(link, doc.path).catch(() => null));
+      asks.push(
+        found.get(key).then((note) => {
+          if (note && note.kind === "note") l[note.exists ? "resolved" : "missing"] = note.path;
+        }),
+      );
+    }
   await Promise.all(asks);
   return docs;
 }
@@ -89,7 +97,7 @@ async function current() {
 
 async function sendGlobal(view) {
   const g = await current();
-  const settings = await settingsOf(false);
+  const settings = await settingsOf();
   const focus = await focusPath();
   view.postMessage({
     type: "graph",
@@ -102,7 +110,7 @@ async function sendGlobal(view) {
 async function sendLocal() {
   if (!local) return;
   const g = await current();
-  const settings = await settingsOf(true);
+  const settings = LOCAL_DEFAULTS;
   const focus = await focusPath();
   const known = g && focus && g.nodes.some((n) => n.id === focus);
   local.postMessage({
@@ -117,7 +125,7 @@ async function sendLocal() {
               Object.assign({}, await withVaultGroups(settings), { keep: focus }),
             ),
             focus,
-            Math.min(5, Math.max(1, Number(settings.depth) || 1)),
+            settings.depth,
           ),
     focus: focus,
     settings: settings,
@@ -143,27 +151,19 @@ function wire(webview, isLocal) {
       else await sendGlobal(webview);
     }
     if (message.type === "open" && message.path)
-      await textus.layout.open(message.path);
-    if (message.type === "full")
-      await textus.layout.openView("catvinci.graph.global");
+      await textus.layout.open(message.path, { where: message.beside ? "beside" : "tab" });
     if (message.type === "pickColor") {
       const hex = await textus.ui.pickColor({ value: message.value });
       if (hex) webview.postMessage({ type: "color", index: message.index, hex });
     }
-    if (message.type === "settings") {
-      const key = isLocal ? "local" : "global";
+    if (message.type === "settings" && !isLocal) {
       // Only what differs from the defaults is kept: "Reset" is null.
-      const defaults = isLocal ? LOCAL_DEFAULTS : DEFAULTS;
       const next = {};
       for (const [k, v] of Object.entries(message.settings || {}))
-        if (k in defaults && JSON.stringify(v) !== JSON.stringify(defaults[k]))
+        if (k in DEFAULTS && JSON.stringify(v) !== JSON.stringify(DEFAULTS[k]))
           next[k] = v;
-      await ctx.storage.global.set(
-        key,
-        Object.keys(next).length ? next : null,
-      );
-      if (isLocal) await sendLocal();
-      else for (const view of views) await sendGlobal(view);
+      await ctx.storage.global.set("global", Object.keys(next).length ? next : null);
+      for (const view of views) await sendGlobal(view);
     }
   });
 }
@@ -209,9 +209,12 @@ async function listNeighbours(input) {
 
 exports.activate = function (context) {
   ctx = context;
+  // The sidebar's own settings are gone; what 0.5.3 kept would filter it unseen.
+  ctx.storage.global.set("local", null).catch(() => {});
   textus.ai.registerTool("list_neighbours", listNeighbours);
   textus.metadata.onDidChange(changed);
-  textus.files.onDidChangeRoot(changed);
+  textus.files.onDidChangeRoot(() => (forget(), changed()));
+  for (const on of ["onDidCreate", "onDidRename", "onDidDelete"]) textus.files[on](forget);
   textus.files.onDidChange(function (event) {
     if (/[\\/]\.obsidian[\\/]graph\.json$/.test(event.path)) changed();
   });

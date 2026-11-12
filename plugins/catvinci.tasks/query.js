@@ -8,6 +8,8 @@
   "use strict";
 
   const RANK = { highest: 0, high: 1, medium: 2, null: 3, low: 4, lowest: 5 };
+  // Status groups in Obsidian Tasks' order, not by name.
+  const STATUS_RANK = { todo: 0, in_progress: 1, done: 2, cancelled: 3 };
   const PRIORITY_WORD = { highest: "highest", high: "high", medium: "medium", none: "null", normal: "null", low: "low", lowest: "lowest" };
   const DATE_FIELD = { due: ["due"], scheduled: ["scheduled"], start: ["start"], starts: ["start"], done: ["done"], created: ["created"], cancelled: ["cancelled"], happens: ["due", "scheduled", "start"] };
   const DATES = "(due|scheduled|starts?|done|created|cancelled|happens)";
@@ -90,13 +92,13 @@
 
   /** The sort and group keys: a value to order by, and a group's name. */
   const KEYS = {
-    status: { order: (t) => (t.open ? 0 : 1), name: (t) => t.status },
+    status: { order: (t) => (t.open ? 0 : 1), name: (t) => t.status, rank: (x) => STATUS_RANK[x] },
     due: { order: (t) => t.due || "~", name: (t) => t.due || "" },
     scheduled: { order: (t) => t.scheduled || "~", name: (t) => t.scheduled || "" },
     start: { order: (t) => t.start || "~", name: (t) => t.start || "" },
     done: { order: (t) => t.done || "~", name: (t) => t.done || "" },
     created: { order: (t) => t.created || "~", name: (t) => t.created || "" },
-    priority: { order: (t) => RANK[t.priority], name: (t) => t.priority || "" },
+    priority: { order: (t) => RANK[t.priority], name: (t) => t.priority || "", rank: (x) => RANK[x] },
     path: { order: (t) => lower(t.rel), name: TEXT.path },
     filename: { order: (t) => lower(fileName(t.rel)), name: TEXT.filename },
     folder: { order: (t) => lower(folderOf(t.rel)), name: TEXT.folder },
@@ -176,9 +178,9 @@
         const y = b.names[i];
         if (x === y) continue;
         if (!x || !y) return x ? -1 : 1;
-        const key = query.groups[i].key;
-        const ox = key === "priority" ? RANK[x] : x;
-        const oy = key === "priority" ? RANK[y] : y;
+        const rank = KEYS[query.groups[i].key].rank || ((v) => v);
+        const ox = rank(x);
+        const oy = rank(y);
         return (ox < oy ? -1 : 1) * (query.groups[i].reverse ? -1 : 1);
       }
       return 0;

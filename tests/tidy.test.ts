@@ -11,6 +11,7 @@ let tidy: {
   trimTrailing: (text: string) => string;
   removeBlankLines: (text: string, all?: boolean) => string;
   joinLines: (text: string) => string;
+  listType: (text: string, kind: string) => string;
 };
 
 beforeAll(async () => {
@@ -90,6 +91,27 @@ describe("joining lines", () => {
   it("drops the list and quote marks of the lines after the first", () => {
     expect(tidy.joinLines("- first\n- second\n> third")).toBe(
       "- first second third",
+    );
+  });
+});
+
+describe("switching a list's type", () => {
+  it("numbers each level from 1 and keeps the indents", () => {
+    expect(tidy.listType("- a\n  * b\n  * c\n- d", "ordered")).toBe(
+      "1. a\n  1. b\n  2. c\n2. d",
+    );
+  });
+
+  it("makes items of plain lines and keeps a task's tick", () => {
+    expect(tidy.listType("plain\n- [x] done\n3. three", "task")).toBe(
+      "- [ ] plain\n- [x] done\n- [ ] three",
+    );
+    expect(tidy.listType("- [x] done", "bullet")).toBe("- done");
+  });
+
+  it("leaves blank lines and fenced code as they are", () => {
+    expect(tidy.listType("a\n\n```\ncode\n```", "bullet")).toBe(
+      "- a\n\n```\ncode\n```",
     );
   });
 });
@@ -192,6 +214,9 @@ describe("Tidy: Markdown Lint and Text Tidy in one", () => {
       "halfPunctuation",
       "joinLines",
       "removeBlankLines",
+      "toBulletList",
+      "toOrderedList",
+      "toTaskList",
       "trimTrailing",
     ];
     expect([...host().commands.keys()].sort()).toEqual(
@@ -220,7 +245,7 @@ describe("Tidy: Markdown Lint and Text Tidy in one", () => {
 });
 
 describe("Text Tidy, now part of Tidy", () => {
-  it("offers Tidy once, and does nothing else", async () => {
+  it("explains the merge, then offers Tidy, once", async () => {
     const offers: unknown[] = [];
     const storage = memoryStorage();
     const api = {
@@ -228,17 +253,15 @@ describe("Text Tidy, now part of Tidy", () => {
         execute: async (id: string, args: unknown) =>
           void offers.push([id, args]),
       },
-      ui: { notice: async () => {} },
+      ui: { notice: async (text: string) => void offers.push(["notice", text]) },
     };
     for (let i = 0; i < 2; i++) {
       loadPlugin("catvinci.text-tidy", api, storage);
       await new Promise((r) => setTimeout(r, 0));
     }
     expect(offers).toEqual([
-      [
-        "textus.offerPlugin",
-        { id: "catvinci.markdown-lint", reason: "merged" },
-      ],
+      ["notice", "merged"],
+      ["textus.offerPlugin", { id: "catvinci.markdown-lint" }],
     ]);
     expect(manifestOf("catvinci.text-tidy").contributes).toEqual({});
   });

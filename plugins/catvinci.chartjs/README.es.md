@@ -27,6 +27,7 @@ Funciona en escritorio y en iPhone y necesita Textus 1.3.2 o posterior. Pide un 
 
 ## Cambios
 
+- **0.3.2** - Los gráficos se vuelven a dibujar cuando el panel se estrecha o se ensancha; las etiquetas siguen la fuente y el tamaño de texto del tema, y la línea de error vuelve a ser roja.
 - **0.3.1** - Su página dice ahora en una frase qué hace, qué puede hacer y qué cambió en cada versión.
 - **0.3.0** - Textus AI puede revisar un bloque `chartjs` antes de escribirlo (`check_chartjs`).
 - **0.2.0** - Las series toman los colores del tema; necesita Textus 1.3.2.

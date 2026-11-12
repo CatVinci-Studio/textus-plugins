@@ -25,6 +25,7 @@ Solo pide **Herramientas para Textus AI**, para que Textus AI pueda revisar un b
 
 ## Cambios
 
+- **0.3.2** - las notas y fechas largas se ajustan a un panel estrecho, usa la fuente del documento y un bloque vacío dice qué escribir
 - **0.3.1** - Su página dice ahora en una frase qué hace, qué puede hacer y qué cambió en cada versión.
 - **0.3.0** - una herramienta para Textus AI, `check_timeline`
 - **0.2.0** - los colores del tema, con nuevo dibujo al cambiar de tema

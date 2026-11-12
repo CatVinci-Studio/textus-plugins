@@ -39,6 +39,8 @@ CJK Spacing, the plugin that puts spaces between Chinese and Latin text, leaves 
 
 ## Changes
 
+- **0.4.0** - Switch selected lines to a bullet, numbered or task list (numbered counts from 1 at each level; a task keeps its tick).
+- **0.3.2** - Shorter help and empty-state text.
 - **0.3.1** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
 - **0.3.0** - Renamed Tidy (was Markdown Lint): Text Tidy's six text commands moved in; settings to turn off underlines or single rules; Obsidian's own syntax left as written.
 - **0.2.1** - Tags, links, reminders and reference definitions are never flagged: the same list CJK Spacing leaves alone.

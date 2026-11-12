@@ -10,6 +10,7 @@ The plugin asks for two permissions: AI tools, to give Textus AI the search tool
 
 ## Changes
 
+- **0.1.2** - Removing the API key really removes it, so search goes back to the public search; an unreadable answer gets a plain message.
 - **0.1.1** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
 - **0.1.0** - First version: web search for Textus AI through Keenable, with or without an API key.
 

@@ -36,6 +36,8 @@ kanban-plugin: board
 
 ## 更新紀錄
 
+- **0.4.7** - 卡片裡的空行不再把卡片拆開，按 Esc 也不會留下空白卡片。AI 不再更動一般筆記，看板在窄面板裡也放得下。
+- **0.4.6** - 列表超出視窗時，看板兩邊漸隱。
 - **0.4.5** - A dragged card or list stays right under the pointer and lifts like everything dragged in Textus. Its bars, lists and controls are Textus's own, grow with the interface and follow every theme; needs Textus 1.3.12.
 - **0.4.4** - 拖動卡片或列表時不再順帶選取文字。
 - **0.4.3** - 介紹頁重寫：一句話說明它做什麼，再講它能做的事，並列出每個版本的更新。
@@ -53,7 +55,7 @@ kanban-plugin: board
 裝上這個外掛後，Textus AI 在對話中可以使用：
 
 - `list_boards`：列出開啟的資料夾中的看板（kanban-plugin .md 檔案），以及每個看板的各個列表和其中的卡片數。
-- `read_board`：讀取一個看板：依順序給出各個列表，以及每個列表裡卡片的文字和是否已完成。 一般文件裡的任務用 list_tasks。
-- `add_card`：在看板某個列表的末尾新增一張卡片。 只用於看板（kanban-plugin .md）；文件裡的待辦用 add_task。
+- `read_board`：讀取一個看板：依順序給出各個列表，以及每個列表裡卡片的文字和是否已完成。一般文件裡的任務用 list_tasks。
+- `add_card`：在看板某個列表的末尾新增一張卡片。只用於看板（kanban-plugin .md）；文件裡的待辦用 add_task。
 - `move_card`：把看板上的一張卡片移到另一個列表，或移到所在列表的另一個位置。
 <!-- /ai-tools -->

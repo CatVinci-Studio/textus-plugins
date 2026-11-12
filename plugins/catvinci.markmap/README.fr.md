@@ -25,6 +25,7 @@ Le plugin utilise [markmap](https://markmap.js.org). Il demande une seule permis
 
 ## Changements
 
+- **0.3.3** - Faire défiler sur une carte mentale fait maintenant défiler la note ; pincez ou utilisez Ctrl et la molette pour zoomer. La carte reprend la police et les couleurs de votre thème, en mode sombre aussi, et s’ouvre entièrement ajustée.
 - **0.3.2** - Sa page dit maintenant en une phrase ce qu'il fait, ce qu'il permet et ce qui a changé à chaque version.
 - **0.3.1** - Une carte mentale hors de vue s’exporte en image et non plus en source.
 - **0.3.0** - Textus AI peut vérifier un bloc `markmap` avant de l’écrire.

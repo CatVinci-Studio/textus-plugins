@@ -40,10 +40,13 @@ function place(doc, at) {
   return plain && doc.indexOf(rest) === doc.lastIndexOf(rest) ? { line: line, text: rest } : { line: line };
 }
 
-/** Where `after` (a document's text) first differs from `before`. */
-function firstChange(before, after) {
+/** Where `text` was inserted to turn `before` into `after`: the earliest
+ *  place that fits, since the first difference can sit past the caret. */
+function insertedAt(before, after, text) {
   let i = 0;
   while (i < before.length && before[i] === after[i]) i++;
+  for (let s = Math.max(0, i - text.length); s <= i; s++)
+    if (after.startsWith(text, s) && before.endsWith(after.slice(s + text.length))) return s;
   return i;
 }
 
@@ -83,14 +86,19 @@ async function moveStored(place) {
 }
 
 /** The templates in the folder: name (its path in the templates folder,
- *  without .md) and path. */
+ *  without .md) and path. Listed, not found: find skips hidden folders. */
 async function templates(place) {
   await moveStored(place);
-  const prefix = place.rel + "/";
-  return (await textus.files.find(place.rel + "/**/*.md").catch(() => []))
-    .filter((f) => f.rel.startsWith(prefix))
-    .map((f) => ({ name: f.rel.slice(prefix.length).replace(/\.md$/i, ""), path: f.path }))
-    .sort((a, b) => nameOrder.compareNames(a.name, b.name));
+  const out = [];
+  const walk = async (dir, prefix) => {
+    for (const entry of await textus.files.list(dir).catch(() => [])) {
+      if (entry.name.startsWith(".")) continue;
+      if (entry.isDir) await walk(entry.path, prefix + entry.name + "/");
+      else if (/\.md$/i.test(entry.name)) out.push({ name: prefix + entry.name.replace(/\.md$/i, ""), path: entry.path });
+    }
+  };
+  await walk(place.dir, "");
+  return out.sort((a, b) => nameOrder.compareNames(a.name, b.name));
 }
 
 /** The templates; a first one is written when there are none. */
@@ -180,7 +188,7 @@ exports.activate = function (context) {
     const filled = await fill(template.text, title, folderOf(folderPaths.rel(place.root, path)));
     const before = (await editor.getText()) || "";
     await editor.insertText(filled.text);
-    await placeCaret(editor, filled, firstChange(before, (await editor.getText()) || ""));
+    await placeCaret(editor, filled, insertedAt(before, (await editor.getText()) || "", filled.text));
     tellSkipped(filled);
   });
   textus.commands.registerEditorCommand("catvinci.templates.save", async function (editor) {
@@ -190,6 +198,6 @@ exports.activate = function (context) {
     if (!name || !name.trim()) return;
     await textus.files.createFolder(place.dir).catch(() => {});
     const saved = await createFree(place.dir, name.trim().replace(/[\\/:*?"<>|]/g, "-"), (await editor.getText()) || "");
-    textus.ui.notice(t("saved", saved, place.rel), { tone: "success" });
+    textus.ui.notice(t("saved", saved, place.rel));
   });
 };

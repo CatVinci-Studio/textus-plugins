@@ -35,7 +35,9 @@ body {
    stays where it is when a wide table is scrolled sideways. */
 .tx-table-frame {
   overflow: clip;
-  width: max-content;
+  /* As wide as the block when the columns can wrap to it; wider, and the
+     page scrolls, only when they can't. */
+  width: fit-content;
   min-width: 100%;
   box-sizing: border-box;
 }
@@ -111,7 +113,7 @@ body {
   /* Proportional to the block, within a readable range: a long value (a
      paper's title, a note) wraps rather than stretching its column. A width
      set by dragging the column's edge goes on the cells themselves. */
-  min-width: clamp(6em, 10vw, 12em);
+  min-width: clamp(4.5em, 8vw, 12em);
   max-width: clamp(12em, 24vw, 22em);
   white-space: normal;
   overflow-wrap: anywhere;
@@ -125,7 +127,7 @@ body {
 }
 .tx-table td.title {
   position: relative;
-  min-width: clamp(9em, 18vw, 20em);
+  min-width: clamp(8em, 16vw, 20em);
   max-width: clamp(14em, 34vw, 30em);
   white-space: normal;
   overflow-wrap: anywhere;
@@ -192,7 +194,6 @@ body {
   cursor: grab;
   user-select: none;
   -webkit-user-select: none;
-  cursor: grab;
 }
 .record .prop,
 .tile .prop {
@@ -415,4 +416,77 @@ body {
 #views [role="tab"] {
   user-select: none;
   -webkit-user-select: none;
+}
+
+/* A narrow block (design-language.md 15.4): while the bar doesn't fit on
+   one line (view.js measures it), the page count goes, then New keeps only
+   its +, then the view tabs give way to one button. Nothing breaks
+   mid-word. */
+#count,
+#bar .tx-button,
+#views {
+  white-space: nowrap;
+}
+#views {
+  flex-wrap: nowrap;
+}
+#view-pick {
+  display: none;
+}
+#bar:is([data-fit="tight"], [data-fit="tighter"], [data-fit="compact"]) #count,
+#bar:is([data-fit="tighter"], [data-fit="compact"]) .primary .label,
+#bar[data-fit="compact"] #views {
+  display: none;
+}
+#bar[data-fit="compact"] #view-pick {
+  display: inline-flex;
+}
+#bar #rules {
+  flex: 0 1 auto;
+  flex-wrap: nowrap;
+  min-width: 0;
+  margin: 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+/* More past the block's right edge (a wide table, a board's lanes): the
+   edge fades, so it reads as going on. */
+html.more-right::after {
+  content: "";
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: var(--space-6);
+  background: linear-gradient(to right, transparent, var(--doc-bg, var(--ui-bg)));
+  pointer-events: none;
+}
+
+/* A filter's values to tick, under its chip (filter-popover.js): the
+   shared bubble, its rows the list's. */
+.filter-popover {
+  position: absolute;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  min-width: 12em;
+}
+.filter-head {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  color: var(--ui-muted);
+}
+.filter-boxes {
+  display: flex;
+  flex-direction: column;
+}
+.filter-box {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: var(--control-height-sm);
+  cursor: pointer;
 }

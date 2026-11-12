@@ -62,14 +62,15 @@
   }
 
   /** A canvas colour as CSS: a preset ("1"-"6") as a tone, a hex as given;
-   *  null for none. `fill` is a faint background in it. */
+   *  null for none. `fill` is a faint background in it. A hex gives no text
+   *  colour, since it may not read on either theme. */
   function color(value) {
     const v = String(value || "").trim();
     const tone = PRESETS[v];
     if (tone)
       return { line: "var(--tone-" + tone + ")", fill: "var(--tone-" + tone + "-tint)", text: "var(--tone-" + tone + "-text)" };
     if (/^#(?:[0-9a-f]{3,4}|[0-9a-f]{6}|[0-9a-f]{8})$/i.test(v))
-      return { line: v, fill: "color-mix(in srgb, " + v + " 16%, transparent)", text: v };
+      return { line: v, fill: "color-mix(in srgb, " + v + " 16%, transparent)", text: null };
     return null;
   }
 

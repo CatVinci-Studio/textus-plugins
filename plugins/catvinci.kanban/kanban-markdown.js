@@ -10,6 +10,11 @@
   "use strict";
   const ITEM = /^[-*+]\s+(?:\[( |x|X)\]\s+)?(.*)$/;
 
+  function continues(lines, from) {
+    for (let j = from; j < lines.length; j++) if (lines[j].trim()) return /^\s+\S/.test(lines[j]);
+    return false;
+  }
+
   function parse(text) {
     const lines = String(text).replace(/\r\n/g, "\n").split("\n");
     let front = "";
@@ -54,6 +59,9 @@
         list.cards.push(card);
       } else if (card && /^\s+\S/.test(line)) {
         card.text += "\n" + line.replace(/^\s{2,4}/, "");
+      } else if (card && !line.trim() && continues(lines, i + 1)) {
+        // A blank line inside a card, its next line still indented.
+        card.text += "\n";
       } else if (line.trim()) {
         // A stray line in a list: a card of its own, so nothing is lost.
         card = { text: line.trim(), done: false };
@@ -82,7 +90,7 @@
           (card.done ? "x" : " ") +
           "] " +
           first +
-          rest.map((l) => "\n    " + l).join("")
+          rest.map((l) => "\n" + (l ? "    " + l : "")).join("")
         );
       });
       const head = "## " + list.title + (list.complete ? "\n\n" + list.complete : "");

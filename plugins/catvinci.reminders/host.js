@@ -6,28 +6,60 @@
 const t = (key, ...args) => textus.l10n.t(key, ...args);
 const LIMIT = 30;
 
+const DOC = /\.(md|markdown)$/i;
+
 let list = null;
 let soon = [];
+// Each document's reminders by path, for the folder at `cachedRoot`;
+// `loading` is its first full read, shared by whoever asks meanwhile.
+const byPath = new Map();
+let cachedRoot = null;
+let loading = null;
 
-/** Every reminder in the folder's documents. */
-async function readAll() {
-  const all = [];
-  for (const doc of await textus.files.find("**/*.md")) {
-    const text = await textus.files.readText(doc.path).catch(() => "");
-    if (!text.includes("(@")) continue;
-    for (const r of reminders.find(text)) all.push(Object.assign({ path: doc.path, rel: doc.rel }, r));
-  }
-  return all;
+const under = (path, dir) => path === dir || (path.startsWith(dir) && "/\\".includes(path[dir.length]));
+const relOf = (path, root) => path.slice(root.length + 1).replace(/\\/g, "/");
+
+async function readOne(path, root, text) {
+  byPath.delete(path);
+  if (!DOC.test(path) || !under(path, root)) return;
+  if (text === undefined) text = await textus.files.readText(path).catch(() => "");
+  if (!text.includes("(@")) return;
+  const rel = relOf(path, root);
+  byPath.set(path, reminders.find(text).map((r) => Object.assign({ path, rel }, r)));
 }
 
-/** Every document's reminders read again, and the next ones scheduled;
- *  those no longer in a document are cleared. */
+function drop(path) {
+  for (const key of [...byPath.keys()]) if (under(key, path)) byPath.delete(key);
+}
+
+/** Every reminder in the folder's documents; read in full once a folder. */
+async function readAll(root) {
+  if (cachedRoot !== root) {
+    byPath.clear();
+    cachedRoot = root;
+    loading = (async () => {
+      for (const doc of await textus.files.find()) await readOne(doc.path, root);
+    })();
+  }
+  await loading;
+  return [].concat(...byPath.values());
+}
+
+/** The next reminders scheduled; this folder's jobs no longer in a
+ *  document are cleared, other folders' (other windows') kept. */
 async function sync() {
   const root = await textus.files.root();
-  if (!root) return;
-  soon = reminders.upcoming(await readAll(), new Date(), LIMIT);
+  if (!root) {
+    soon = [];
+    if (list) list.refresh();
+    return;
+  }
+  soon = reminders.upcoming(await readAll(root), new Date(), LIMIT);
   const keep = new Set(soon.map((r) => reminders.jobId(r.rel, r)));
-  for (const job of await textus.schedule.list()) if (!keep.has(job.id)) await textus.schedule.clear(job.id);
+  for (const job of await textus.schedule.list()) {
+    const path = job.notify && job.notify.open && job.notify.open.path;
+    if (!keep.has(job.id) && (!path || under(path, root))) await textus.schedule.clear(job.id);
+  }
   for (const r of soon)
     await textus.schedule.set(reminders.jobId(r.rel, r), {
       at: r.when,
@@ -63,6 +95,7 @@ async function remind() {
     const m = typed && /^(\d{4}-\d{2}-\d{2})(?:\s+(\d{1,2}):(\d{2}))?$/.exec(typed.trim());
     if (!m) return typed && textus.ui.message(t("badTime"));
     when = new Date(m[1] + "T" + (m[2] || "09").padStart(2, "0") + ":" + (m[3] || "00") + ":00");
+    if (isNaN(when)) return textus.ui.message(t("badTime"));
   }
   await textus.editor.insertText(" " + reminders.mark(when));
 }
@@ -71,10 +104,11 @@ async function remind() {
 const WHEN = /^(\d{4}-\d{2}-\d{2})(?:[ T](\d{1,2}):(\d{2}))?$/;
 
 async function listReminders(input) {
-  if (!(await textus.files.root())) return { error: "No folder is open." };
+  const root = await textus.files.root();
+  if (!root) return { error: "No folder is open." };
   const limit = Math.max(1, Number(input.limit) || LIMIT);
   return {
-    reminders: reminders.upcoming(await readAll(), new Date(), limit).map((r) => ({
+    reminders: reminders.upcoming(await readAll(root), new Date(), limit).map((r) => ({
       when: r.when.replace("T", " "),
       text: r.text,
       path: r.rel,
@@ -98,10 +132,25 @@ async function addReminder(input) {
 }
 
 exports.activate = function (ctx) {
+  // Events gather the paths to read again; `null` reads the folder anew.
   let pending = null;
-  const later = () => {
+  let dirty = new Map();
+  const flush = async () => {
+    const root = await textus.files.root();
+    const work = dirty;
+    dirty = new Map();
+    if (root && cachedRoot === root && !work.has(null))
+      for (const [path, text] of work) {
+        if (text === false) drop(path);
+        else await readOne(path, root, text);
+      }
+    else cachedRoot = null;
+    await sync();
+  };
+  const later = (path, text) => {
+    dirty.set(path, text);
     clearTimeout(pending);
-    pending = setTimeout(() => void sync(), 800);
+    pending = setTimeout(() => void flush(), 800);
   };
   list = textus.views.registerList("catvinci.reminders.list", {
     items: () =>
@@ -118,12 +167,13 @@ exports.activate = function (ctx) {
   ctx.subscriptions.push(
     list,
     textus.commands.register("catvinci.reminders.remind", remind),
-    textus.files.onDidChangeRoot(later),
-    textus.files.onDidSave(later),
-    textus.files.onDidChange(later),
-    textus.files.onDidCreate(later),
-    textus.files.onDidDelete(later),
-    textus.files.onDidRename(later),
+    textus.files.onDidChangeRoot(() => later(null)),
+    textus.files.onDidSave((e) => later(e.path, e.text)),
+    textus.files.onDidChange((e) => later(e.path)),
+    textus.files.onDidCreate((e) => later(e.path)),
+    textus.files.onDidDelete((e) => later(e.path, false)),
+    // A folder renamed carries documents the event doesn't name.
+    textus.files.onDidRename((e) => (DOC.test(e.to) ? (later(e.from, false), later(e.to)) : later(null))),
     textus.ai.registerTool("list_reminders", listReminders),
     textus.ai.registerTool("add_reminder", addReminder),
   );

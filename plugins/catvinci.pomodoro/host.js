@@ -9,6 +9,8 @@ let ctx;
 let state = null;
 let webview = null;
 let timer = 0;
+let lengths = null;
+let loaded = null;
 
 async function minutes() {
   const read = async (key, fallback) => {
@@ -19,8 +21,17 @@ async function minutes() {
 }
 
 async function load() {
-  state =
-    (await ctx.storage.global.get("timer")) || pomodoro.fresh(await minutes());
+  lengths = await minutes();
+  state = (await ctx.storage.global.get("timer")) || pomodoro.fresh(lengths);
+}
+
+async function retime() {
+  await loaded;
+  const after = await minutes();
+  const next = pomodoro.retime(state, lengths, after);
+  lengths = after;
+  if (next !== state) await change(next);
+  else await show();
 }
 
 function save() {
@@ -45,6 +56,7 @@ async function show() {
 
 /** Once a second while it runs: the page, and a span's end. */
 async function step() {
+  await loaded;
   const m = await minutes();
   const { state: now, ended } = pomodoro.tick(state, Date.now(), m);
   if (ended) {
@@ -63,7 +75,8 @@ async function step() {
 }
 
 async function change(next) {
-  state = next;
+  await loaded;
+  state = typeof next === "function" ? next(state) : next;
   await save();
   await step();
 }
@@ -80,9 +93,9 @@ function page() {
   .track { stroke: var(--ui-border); }
   .done { stroke: var(--ui-accent); stroke-linecap: round; }
   body.rest .done { stroke: var(--tone-green, var(--ui-accent)); }
-  .text { position: relative; text-align: center; }
-  .clock { font-size: var(--text-title); font-variant-numeric: tabular-nums; }
-  .label { font-size: var(--text-caption); color: var(--ui-muted); }
+  .text { position: relative; text-align: center; max-width: 70%; }
+  .clock { font-size: max(var(--text-body), calc(min(100vw, 100vh) * 0.17)); font-variant-numeric: tabular-nums; }
+  .label { font-size: max(var(--text-caption), calc(min(100vw, 100vh) * 0.085)); color: var(--ui-muted); overflow-wrap: anywhere; }
   body.paused .clock { color: var(--ui-muted); }
 </style></head><body>
 <button id="timer" type="button"><svg viewBox="0 0 112 112"><circle class="track" cx="56" cy="56" r="50"/>
@@ -116,7 +129,7 @@ exports.activate = function (context) {
           if (!m) return;
           if (m.type === "ready") await step();
           if (m.type === "toggle")
-            await change(pomodoro.toggle(state, Date.now()));
+            await change((s) => pomodoro.toggle(s, Date.now()));
         });
         view.onDidDispose(() => {
           if (webview === view) webview = null;
@@ -130,21 +143,24 @@ exports.activate = function (context) {
       else await textus.layout.openFloating(VIEW);
     }),
     // A floating view is dragged anywhere, so its page takes no clicks:
-    // Textus tells a click on it as a poke.
+    // Textus tells a click on it as a poke, and quick clicks as a pet.
     textus.layout.onDidTouchFloating((e) => {
-      if (e && e.view === VIEW && e.kind === "poke")
-        void change(pomodoro.toggle(state, Date.now()));
+      if (e && e.view === VIEW && (e.kind === "poke" || e.kind === "pet"))
+        void change((s) => pomodoro.toggle(s, Date.now()));
     }),
     textus.commands.register("catvinci.pomodoro.startPause", () =>
-      change(pomodoro.toggle(state, Date.now())),
+      change((s) => pomodoro.toggle(s, Date.now())),
     ),
-    textus.commands.register("catvinci.pomodoro.skip", async () =>
-      change(pomodoro.next(state, Date.now(), await minutes())),
-    ),
+    textus.commands.register("catvinci.pomodoro.skip", async () => {
+      const m = await minutes();
+      await change((s) => pomodoro.next(s, Date.now(), m));
+    }),
+    textus.settings.onDidChange(() => void retime()),
     textus.commands.register("catvinci.pomodoro.reset", async () =>
       change(pomodoro.fresh(await minutes())),
     ),
     { dispose: () => clearTimeout(timer) },
   );
-  void load().then(step);
+  loaded = load();
+  void loaded.then(step);
 };

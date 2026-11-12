@@ -1763,6 +1763,10 @@ var Controller = class {
         this.broadcast();
         return;
       }
+      if (m.type === "openSettings") {
+        await this.api.layout.openSettings();
+        return;
+      }
       if (m.type === "cancel") {
         this.abort?.abort();
         this.message("cancelling");
@@ -1791,13 +1795,18 @@ var Controller = class {
       this.fail(error);
     }
   }
-  async resolve(view) {
+  /** One page over one state; in the sidebar (`compact`) only the
+   *  status and Sync now, the connection being set up on the plugin's own
+   *  page - a sidebar keeps to what is used at a glance. On the plugin's
+   *  page (`settings`) its groups line up with the page's own. */
+  async resolve(view, place) {
     this.views.add(view);
     view.onDidReceiveMessage((m) => {
       void this.receive(m);
     });
     view.onDidDispose(() => this.views.delete(view));
-    view.html = await this.ctx.plugin.readText("panel.html");
+    const html = await this.ctx.plugin.readText("panel.html");
+    view.html = place ? html.replace("<body>", `<body data-place="${place}">`) : html;
   }
   changed(path) {
     if (!this.workspace?.touched.has(path)) this.pacer.saved();
@@ -1810,12 +1819,16 @@ var Controller = class {
         () => api.layout.openView(`${ID}.panel`)
       ),
       api.commands.register(`${ID}.sync`, () => this.operation("sync")),
-      ...[`${ID}.panel`, `${ID}.sidebar`].map(
-        (id) => api.views.registerWebview(id, {
-          resolve: (view) => this.resolve(view)
-        })
-      ),
-      api.views.registerSettingsPage({ resolve: (view) => this.resolve(view) }),
+      // The tab, the sidebar and Settings show one page over one state.
+      api.views.registerWebview(`${ID}.panel`, {
+        resolve: (view) => this.resolve(view)
+      }),
+      api.views.registerWebview(`${ID}.sidebar`, {
+        resolve: (view) => this.resolve(view, "sidebar")
+      }),
+      api.views.registerSettingsPage({
+        resolve: (view) => this.resolve(view, "settings")
+      }),
       api.files.onDidSave(() => this.pacer.saved()),
       api.files.onDidDelete(({ path }) => this.changed(path)),
       api.files.onDidRename(({ from }) => this.changed(from)),

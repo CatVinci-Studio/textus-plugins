@@ -66,3 +66,58 @@ it("lists Obsidian's own bookmarks of notes, headings and blocks in a vault", as
     ["That line", "obsidian", { path: "/root/Log.md", block: "abc" }],
   ]);
 });
+
+type Row = { label: string; group: string; detail?: string };
+function listOf(storage: ReturnType<typeof memoryStorage>, api: Record<string, unknown> = {}) {
+  let provider = { items: async (): Promise<Row[]> => [] };
+  const commands = new Map<string, (...a: unknown[]) => Promise<unknown>>();
+  loadPlugin(
+    "catvinci.bookmarks",
+    {
+      files: { root: async () => "/root" },
+      views: {
+        registerList: (_: string, p: typeof provider) => ((provider = p), { refresh() {}, dispose() {} }),
+      },
+      commands: {
+        register: (id: string, run: never) => (commands.set(id, run), { dispose() {} }),
+        registerEditorCommand: (id: string, run: never) => (commands.set(id, run), { dispose() {} }),
+      },
+      ...api,
+    },
+    storage,
+  );
+  return { items: () => provider.items(), commands };
+}
+
+it("lists one group per document, by its path in the folder, words cut at a word", async () => {
+  const storage = memoryStorage();
+  const long = "word ".repeat(30).trim();
+  await storage.set("bookmarks", [
+    { id: 1, path: "/root/b/A.md", text: "one" },
+    { id: 2, path: "/root/a/A.md", text: "two" },
+    { id: 3, path: "/root/b/A.md", text: long.slice(0, 120), cut: true },
+  ]);
+  const rows = await listOf(storage).items();
+  expect(rows.map((r) => [r.group, r.label, r.detail])).toEqual([
+    ["a/A.md", "two", undefined],
+    ["b/A.md", "one", undefined],
+    ["b/A.md", long.slice(0, 119) + "…", undefined],
+  ]);
+});
+
+it("keeps the bookmark when the vault's block id cannot be written", async () => {
+  const storage = memoryStorage();
+  const files = { ".obsidian/app.json": "{}", "Log.md": "Ship the draft." };
+  const { commands } = listOf(storage, { files: folder(files) });
+  await commands.get("catvinci.bookmarks.add")!({
+    getPath: async () => "/root/Log.md",
+    getSelection: async () => ({ text: "Ship the draft.", markdown: "Ship the draft." }),
+    getBlocks: async () => [{ id: "p", kind: "paragraph", markdown: "Ship the draft." }],
+    edit: async () => {
+      throw new Error("No block p");
+    },
+  });
+  const saved = (await storage.get("bookmarks")) as { path: string; ctime?: number }[];
+  expect(saved).toHaveLength(1);
+  expect(JSON.parse(files[".obsidian/bookmarks.json" as keyof typeof files]).items[0]).toMatchObject({ type: "file", path: "Log.md" });
+});

@@ -43,3 +43,22 @@ it("draws none over headings already numbered", async () => {
   // The heading's own words.
   expect(await badges("## 2026 plans\n\n## 7 Methods\n\n## Notes")).toEqual(["1", "2", "3"]);
 });
+
+it("numbers only top-level headings in an export, as the editor does", async () => {
+  let willExport: (() => Promise<{ css: string } | undefined>) | null = null;
+  loadPlugin("catvinci.heading-numbers", {
+    editor: {
+      getText: async () => "## A\n\n## B",
+      getBlocks: async () => [
+        { id: "a", kind: "heading", markdown: "## A" },
+        { id: "b", kind: "heading", markdown: "## B" },
+      ],
+      registerDecorations: () => ({ dispose() {} }),
+    },
+    settings: { get: async () => true },
+    export: { onWillExport: (f: typeof willExport) => ((willExport = f), { dispose() {} }) },
+  });
+  const { css } = (await willExport!())!;
+  expect(css).toContain(".ProseMirror > h2 { counter-increment: tx-h2;");
+  expect(css).not.toMatch(/(^|\n)h\d/);
+});

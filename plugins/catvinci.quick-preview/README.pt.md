@@ -11,6 +11,7 @@ O plugin pede para ler o editor (para saber em que link você aponta) e ler arqu
 
 ## Alterações
 
+- **0.2.2** - Um link para um título aninhado (`[[Nota#A#B]]`) mostra a seção desse título, a mesma que um clique abre. Requer Textus 1.4.0.
 - **0.2.1** - Sua página agora diz numa frase o que ele faz, o que pode fazer e o que mudou em cada versão.
 - **0.2.0** - Um link para um bloco (`#^id`) mostra esse bloco. Requer Textus 1.3.9.
 - **0.1.3** - Diz onde funciona: computador, iPhone e iPad.

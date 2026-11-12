@@ -13,7 +13,7 @@ const disposable = () => ({ dispose() {} });
 
 afterEach(() => deactivate());
 
-it("shows one page in the sidebar tab, the tab and Settings", async () => {
+it("shows the whole page in the tab and Settings, its status in the sidebar", async () => {
   const pages = new Map<string, Resolve>();
   const register = (id: string, provider: { resolve: Resolve }) => {
     pages.set(id, provider.resolve);
@@ -56,8 +56,8 @@ it("shows one page in the sidebar tab, the tab and Settings", async () => {
   ].map((v: { id: string }) => v.id);
   expect(declared).toContain("catvinci.cloud-sync.sidebar");
   expect([...pages.keys()].sort()).toEqual([...declared, "settings"].sort());
-  const html = new Set<string>();
-  for (const resolve of pages.values()) {
+  const html = new Map<string, string>();
+  for (const [id, resolve] of pages) {
     const view = {
       html: "",
       onDidReceiveMessage: disposable,
@@ -65,8 +65,18 @@ it("shows one page in the sidebar tab, the tab and Settings", async () => {
       postMessage: async () => {},
     };
     await resolve(view);
-    html.add(view.html);
+    html.set(id, view.html);
   }
-  expect(html.size).toBe(1);
-  expect([...html][0]).toContain('id="connection"');
+  // The tab and the plugin's page: the whole page (the page's marked, to
+  // line up with the groups around it); the sidebar: the same page kept to
+  // its status, the connection set up on the plugin's own page.
+  expect(html.get("settings")).toBe(
+    html
+      .get("catvinci.cloud-sync.panel")!
+      .replace("<body>", '<body data-place="settings">'),
+  );
+  expect(html.get("settings")).toContain('id="connection"');
+  expect(html.get("catvinci.cloud-sync.sidebar")).toContain(
+    '<body data-place="sidebar">',
+  );
 });

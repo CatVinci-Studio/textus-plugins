@@ -13,6 +13,8 @@ Le plugin ne demande aucune permission : il lit seulement le fichier que vous ou
 
 ## Changements
 
+- **0.2.4** - S'ouvre à la largeur de l'onglet ; un pincement ou Ctrl+molette (⌘ sur Mac) zoome les pages ; une page plus large que l'onglet défile jusqu'aux deux bords ; les barres passent à la ligne dans un onglet étroit et le zoom reste après un changement de langue.
+- **0.2.3** - Sa barre suit l'ordre de Textus : ce qu'elle montre, puis recherche et zoom.
 - **0.2.2** - Ses barres, listes et contrôles sont désormais ceux de Textus, grandissent avec l’interface et suivent chaque thème ; nécessite Textus 1.3.12.
 - **0.2.1** - Sa page dit maintenant en une phrase ce qu'il fait, ce qu'il permet et ce qui a changé à chaque version.
 - **0.2.0** - Dessiné avec les contrôles de Textus et les tons du thème ; l’onglet suit la langue de l’interface quand elle change. Nécessite Textus 1.3.2.

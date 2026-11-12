@@ -3,11 +3,19 @@
 // later on this computer (http://localhost:23119/api/), which Zotero serves
 // once "Allow other applications on this computer to communicate with
 // Zotero" is on - nothing leaves the computer.
-/* global folderConventions, folderPaths */
+/* global nameOrder, noteSettings, notePath, openNote */
 /** What activate was given: the plugin's storage and own files. */
 let ctx;
 
-const API = "http://localhost:23119/api/users/0/items/top";
+const ITEMS = "http://localhost:23119/api/users/0/items/";
+const API = ITEMS + "top";
+
+/** Every locale's References heading, so a list made in another app
+ *  language is still found and replaced. */
+const REFERENCE_HEADINGS = [
+  "References", "参考文献", "參考文獻", "참고문헌", "Referencias",
+  "Références", "Literatur", "Литература", "Referências",
+];
 
 const t = textus.l10n.t;
 
@@ -68,7 +76,9 @@ async function get(url) {
       headers: { "Zotero-API-Version": "3", "Zotero-Allowed-Request": "1" },
     });
   } catch (cause) {
-    throw new Error(t("unreachable"), { cause: cause });
+    const error = new Error(t("unreachable"), { cause: cause });
+    error.unreachable = true;
+    throw error;
   }
   if (!response.ok) throw new Error("Zotero: " + response.status);
   return response.json();
@@ -84,18 +94,29 @@ function citationKey(item) {
   );
 }
 
+/** Citation keys found this session, so a hover answers at once. */
+const byCitationKey = new Map();
+
 /** The item a citation or a zotero:// link names, or null. */
 async function itemFor(target) {
   if (target.type === "citation") {
-    const items = await search(target.key, "everything");
-    return items.find((item) => citationKey(item) === target.key) || null;
+    if (byCitationKey.has(target.key)) return byCitationKey.get(target.key);
+    // The quick mode first: full text can outlast the hover's wait.
+    for (const mode of ["titleCreatorYear", "everything"]) {
+      const items = await search(target.key, mode);
+      const item = items.find((i) => citationKey(i) === target.key);
+      if (item) {
+        byCitationKey.set(target.key, item);
+        return item;
+      }
+    }
+    return null;
   }
   const key =
     target.type === "link" &&
     (/^zotero:\/\/select\/library\/items\/([A-Z0-9]+)/i.exec(target.url) ||
       [])[1];
-  if (!key) return null;
-  return get(API.replace(/\/top$/, "/") + key + "?format=json");
+  return key ? itemByKey(key) : null;
 }
 
 /** An item as its card shows it: who and when, where it appeared, and
@@ -118,9 +139,10 @@ function card(item) {
 /** The items cited lately, newest first: {key, title, byline}. */
 const RECENT = "recent";
 
-async function insert(item, style) {
-  // Picked by the user: the citation goes in at the caret, one undo away.
-  await textus.editor.insertText(citation(item, style));
+async function insert(item, style, replace) {
+  // Searched by the selected words: the citation takes their place.
+  if (replace) await textus.editor.replaceSelection(citation(item, style));
+  else await textus.editor.insertText(citation(item, style));
   const recent = (await ctx.storage.global.get(RECENT)) || [];
   const entry = {
     key: item.key,
@@ -134,7 +156,7 @@ async function insert(item, style) {
 }
 
 async function itemByKey(key) {
-  return get(API.replace(/\/top$/, "/") + key + "?format=json");
+  return get(ITEMS + key + "?format=json");
 }
 
 /** The citations and zotero:// links in `text`, each once; not in code,
@@ -208,11 +230,12 @@ async function searchLibrary(input) {
   };
 }
 
-/** The item the user picks: from the selection's words, else a recent
- *  item or a search; null when they pick none. */
+/** The item the user picks, from the selection's words (`fromSelection`),
+ *  else a recent item or a search: {item, fromSelection}, or null. */
 async function chooseItem() {
   const selection = await textus.editor.getSelection();
   let query = selection && selection.text && selection.text.trim();
+  const fromSelection = Boolean(query);
   if (!query) {
     const recent = (await ctx.storage.global.get(RECENT)) || [];
     if (recent.length) {
@@ -230,7 +253,7 @@ async function chooseItem() {
       if (picked === null || picked === undefined) return null;
       if (picked) {
         const item = await itemByKey(picked).catch(() => null);
-        if (item) return item;
+        if (item) return { item: item, fromSelection: false };
       }
     }
     query = await textus.ui.input({ prompt: t("search"), value: "" });
@@ -255,7 +278,8 @@ async function chooseItem() {
     })),
     { placeholder: t("choose") },
   );
-  return items.find((i) => i.key === picked) || null;
+  const item = items.find((i) => i.key === picked);
+  return item ? { item: item, fromSelection: fromSelection } : null;
 }
 
 exports.activate = function (context) {
@@ -277,9 +301,10 @@ exports.activate = function (context) {
 
   textus.commands.register("catvinci.zotero.cite", async function () {
     const style = await textus.settings.get("style");
-    const item = await chooseItem();
-    if (!item) return;
-    await insert(item, style);
+    const chosen = await chooseItem();
+    if (!chosen) return;
+    const item = chosen.item;
+    await insert(item, style, chosen.fromSelection);
     // A [[@key]] link leads nowhere until its note is there: offer it.
     const key = citationKey(item);
     const root = await textus.files.root().catch(() => null);
@@ -297,8 +322,8 @@ exports.activate = function (context) {
       await textus.ui.message(t("needsFolder"));
       return;
     }
-    const item = await chooseItem();
-    if (item) await openNote(root, item);
+    const chosen = await chooseItem();
+    if (chosen) await openNote(root, chosen.item);
   });
 
   textus.commands.register(
@@ -310,16 +335,16 @@ exports.activate = function (context) {
         await textus.ui.message(t("noCitations"));
         return;
       }
-      let items;
-      try {
-        items = (await Promise.all(found.map((f) => itemFor(f).catch(() => null))))
-          .filter(Boolean);
-      } catch (err) {
-        await textus.ui.message(err.message, { tone: "warning" });
-        return;
-      }
+      let unreachable = false;
+      const lookup = (f) =>
+        itemFor(f).catch((err) => {
+          if (err.unreachable) unreachable = true;
+          return null;
+        });
+      const items = (await Promise.all(found.map(lookup))).filter(Boolean);
       if (!items.length) {
-        await textus.ui.message(t("unreachable"), { tone: "warning" });
+        if (unreachable) await textus.ui.message(t("unreachable"), { tone: "warning" });
+        else await textus.ui.message(t("notInLibrary"));
         return;
       }
       // One entry per item, by its first author, then its year.
@@ -333,8 +358,9 @@ exports.activate = function (context) {
       const list = "## " + t("references") + "\n\n" + entries.join("\n");
       // Run again, the list there is replaced, not added a second time.
       const blocks = (await textus.editor.getBlocks()) || [];
+      const headings = new Set([t("references"), ...REFERENCE_HEADINGS].map((h) => "## " + h));
       const at = blocks.findIndex(
-        (b) => b.kind === "heading" && b.markdown.trim() === "## " + t("references"),
+        (b) => b.kind === "heading" && headings.has(b.markdown.trim()),
       );
       if (at < 0) {
         await textus.editor.edit({ action: "append", text: list });

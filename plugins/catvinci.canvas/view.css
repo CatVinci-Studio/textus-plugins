@@ -14,9 +14,8 @@ body {
   padding: 0 var(--space-3);
   border-bottom: 1px solid var(--ui-border);
 }
-#name {
-  color: var(--ui-muted);
-  font-size: var(--text-footnote);
+#bar[hidden] {
+  display: none;
 }
 #zoom {
   min-width: 3.5em;

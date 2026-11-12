@@ -27,6 +27,9 @@ describe("daily notes' tools", () => {
     expect(
       await tools.get("read_daily_note")!({ date: "Monday" }),
     ).toHaveProperty("error");
+    expect(
+      await tools.get("read_daily_note")!({ date: "2026-02-30" }),
+    ).toHaveProperty("error");
   });
 
   it("append to a day's note, made from the template when missing", async () => {

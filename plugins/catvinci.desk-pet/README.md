@@ -23,6 +23,8 @@ Moyu is CatVinci Studio's own character. The LLM-chan are the community's person
 
 ## Changes
 
+- **0.1.7** - A visiting LLM-chan keeps her pose and greeting when a new page opens, and stays still while Textus is in the background. Her hop is gentler, and the bubble's tail points at her middle.
+- **0.1.6** - The speech bubble's tail joins its box with no line between them.
 - **0.1.5** - started on the left, she faces the middle from the first frame; her speech bubble is Textus's own, and when she is small its words shrink with her (to a readable floor) and wrap into even lines; needs Textus 1.3.12
 - **0.1.4** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
 - **0.1.3** - The model's LLM-chan visits only while the Textus AI panel is open, and goes home when it closes.

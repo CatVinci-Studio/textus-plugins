@@ -1,7 +1,7 @@
 {
   "id": "catvinci.markdown-lint",
   "name": "%name%",
-  "version": "0.3.1",
+  "version": "0.4.0",
   "publisher": "catvinci",
   "author": "CatVinci Studio",
   "description": "%description%",
@@ -58,6 +58,18 @@
       {
         "command": "catvinci.markdown-lint.joinLines",
         "title": "%joinLines%"
+      },
+      {
+        "command": "catvinci.markdown-lint.toBulletList",
+        "title": "%toBulletList%"
+      },
+      {
+        "command": "catvinci.markdown-lint.toOrderedList",
+        "title": "%toOrderedList%"
+      },
+      {
+        "command": "catvinci.markdown-lint.toTaskList",
+        "title": "%toTaskList%"
       }
     ],
     "menus": {
@@ -67,6 +79,18 @@
         },
         {
           "command": "catvinci.markdown-lint.joinLines",
+          "when": "editorHasSelection"
+        },
+        {
+          "command": "catvinci.markdown-lint.toBulletList",
+          "when": "editorHasSelection"
+        },
+        {
+          "command": "catvinci.markdown-lint.toOrderedList",
+          "when": "editorHasSelection"
+        },
+        {
+          "command": "catvinci.markdown-lint.toTaskList",
           "when": "editorHasSelection"
         }
       ],
@@ -91,6 +115,15 @@
         },
         {
           "command": "catvinci.markdown-lint.joinLines"
+        },
+        {
+          "command": "catvinci.markdown-lint.toBulletList"
+        },
+        {
+          "command": "catvinci.markdown-lint.toOrderedList"
+        },
+        {
+          "command": "catvinci.markdown-lint.toTaskList"
         }
       ]
     },
@@ -135,7 +168,7 @@
       "description": "Tidy text and Markdown: underlines what breaks common Markdown rules and fixes it in one go, removes blank lines and trailing spaces, switches punctuation between Chinese and English, turns full-width letters into ASCII and joins lines - leaving code, math, front matter and Obsidian's own syntax as written.",
       "underline": "Underline Markdown that breaks a rule",
       "off": "Rules to leave alone",
-      "offHelp": "One per line, as markdownlint names them: MD009 or no-trailing-spaces. Neither underlined nor fixed.",
+      "offHelp": "One per line, e.g. MD009.",
       "fix": "Fix Markdown",
       "fixed": "Fixed {0} blocks.",
       "clean": "Nothing to fix.",
@@ -151,14 +184,18 @@
       "none": "Nothing to tidy.",
       "selectFirst": "Select the lines to join first.",
       "confirmWhole": "Tidy the whole document? Select some text first to tidy only that.",
-      "confirmOk": "Tidy"
+      "confirmOk": "Tidy",
+      "toBulletList": "To Bullet List",
+      "toOrderedList": "To Numbered List",
+      "toTaskList": "To Task List",
+      "selectLists": "Select the lines or list to switch first."
     },
     "zh": {
       "name": "整理",
       "description": "整理文字和 Markdown：给不合常见规范的 Markdown 画波浪线并一键修好，删除空行和行尾空格，中英文标点互转，全角字母数字转半角，合并多行。代码、公式、front matter 和 Obsidian 的写法原样保留。",
       "underline": "给不合规范的 Markdown 画波浪线",
       "off": "不检查的规则",
-      "offHelp": "一行一条，用 markdownlint 的名字：MD009 或 no-trailing-spaces。这些规则既不画线也不修正。",
+      "offHelp": "每行一条，如 MD009。",
       "fix": "修正 Markdown",
       "fixed": "已修正 {0} 处。",
       "clean": "没有需要修正的地方。",
@@ -174,14 +211,18 @@
       "none": "没有需要整理的地方。",
       "selectFirst": "请先选中要合并的几行。",
       "confirmWhole": "整理整篇文档吗？只想整理一部分，请先选中那部分文字。",
-      "confirmOk": "整理"
+      "confirmOk": "整理",
+      "toBulletList": "转为无序列表",
+      "toOrderedList": "转为有序列表",
+      "toTaskList": "转为待办列表",
+      "selectLists": "请先选中要切换的行或列表。"
     },
     "zh-Hant": {
       "name": "整理",
       "description": "整理文字和 Markdown：為不合常見規範的 Markdown 畫波浪線並一鍵修好，刪除空行和行尾空格，中英文標點互轉，全形字母數字轉半形，合併多行。程式碼、公式、front matter 和 Obsidian 的寫法原樣保留。",
       "underline": "為不合規範的 Markdown 畫波浪線",
       "off": "不檢查的規則",
-      "offHelp": "一行一條，用 markdownlint 的名稱：MD009 或 no-trailing-spaces。這些規則既不畫線也不修正。",
+      "offHelp": "每行一條，如 MD009。",
       "fix": "修正 Markdown",
       "fixed": "已修正 {0} 處。",
       "clean": "沒有需要修正的地方。",
@@ -197,14 +238,18 @@
       "none": "沒有需要整理的地方。",
       "selectFirst": "請先選取要合併的幾行。",
       "confirmWhole": "整理整份文件嗎？只想整理一部分，請先選取那部分文字。",
-      "confirmOk": "整理"
+      "confirmOk": "整理",
+      "toBulletList": "轉為項目符號清單",
+      "toOrderedList": "轉為編號清單",
+      "toTaskList": "轉為待辦清單",
+      "selectLists": "請先選取要切換的行或清單。"
     },
     "ja": {
       "name": "整形",
       "description": "文章と Markdown を整えます：よくある規則に合わない Markdown に波線を引いて一度に直し、空行と行末の空白を削除、和文と欧文の句読点を切り替え、全角英数字を半角に、行を結合。コード、数式、front matter、Obsidian の書き方はそのまま残します。",
       "underline": "規則に合わない Markdown に波線を引く",
       "off": "検査しない規則",
-      "offHelp": "1 行に 1 つ、markdownlint の名前で：MD009 や no-trailing-spaces。波線も修正もしません。",
+      "offHelp": "1 行に 1 つ。例：MD009",
       "fix": "Markdown を修正",
       "fixed": "{0} か所を修正しました。",
       "clean": "直すところはありません。",
@@ -220,14 +265,18 @@
       "none": "整形するところはありません。",
       "selectFirst": "結合する行を先に選択してください。",
       "confirmWhole": "文書全体を整形しますか？一部だけなら、先にその部分を選択してください。",
-      "confirmOk": "整形"
+      "confirmOk": "整形",
+      "toBulletList": "箇条書きリストに",
+      "toOrderedList": "番号付きリストに",
+      "toTaskList": "タスクリストに",
+      "selectLists": "切り替える行かリストを先に選択してください。"
     },
     "ko": {
       "name": "정리",
       "description": "글과 Markdown 정리: 흔한 규칙에 어긋나는 Markdown에 물결선을 긋고 한 번에 고치며, 빈 줄과 줄 끝 공백 삭제, 중국어·영어 문장 부호 전환, 전각 영문·숫자를 반각으로, 줄 합치기를 합니다. 코드, 수식, front matter, Obsidian 문법은 그대로 둡니다.",
       "underline": "규칙에 어긋나는 Markdown에 물결선 긋기",
       "off": "검사하지 않을 규칙",
-      "offHelp": "한 줄에 하나씩, markdownlint의 이름으로: MD009 또는 no-trailing-spaces. 밑줄도 수정도 하지 않습니다.",
+      "offHelp": "한 줄에 하나. 예: MD009",
       "fix": "Markdown 고치기",
       "fixed": "{0}곳을 고쳤습니다.",
       "clean": "고칠 것이 없습니다.",
@@ -243,14 +292,18 @@
       "none": "정리할 곳이 없습니다.",
       "selectFirst": "합칠 줄을 먼저 선택하세요.",
       "confirmWhole": "문서 전체를 정리할까요? 일부만 정리하려면 먼저 그 부분을 선택하세요.",
-      "confirmOk": "정리"
+      "confirmOk": "정리",
+      "toBulletList": "글머리 기호 목록으로",
+      "toOrderedList": "번호 목록으로",
+      "toTaskList": "할 일 목록으로",
+      "selectLists": "바꿀 줄이나 목록을 먼저 선택하세요."
     },
     "es": {
       "name": "Ordenar",
       "description": "Ordena texto y Markdown: subraya lo que rompe reglas comunes de Markdown y lo corrige de una vez, quita líneas en blanco y espacios finales, cambia la puntuación entre chino e inglés, pasa letras de ancho completo a ASCII y une líneas, sin tocar código, fórmulas, front matter ni la sintaxis de Obsidian.",
       "underline": "Subrayar el Markdown que rompe una regla",
       "off": "Reglas que no se aplican",
-      "offHelp": "Una por línea, con el nombre de markdownlint: MD009 o no-trailing-spaces. Ni se subrayan ni se corrigen.",
+      "offHelp": "Uno por línea, p. ej. MD009.",
       "fix": "Corregir Markdown",
       "fixed": "{0} bloques corregidos.",
       "clean": "Nada que corregir.",
@@ -266,14 +319,18 @@
       "none": "No hay nada que ordenar.",
       "selectFirst": "Selecciona primero las líneas que quieres unir.",
       "confirmWhole": "¿Ordenar todo el documento? Para ordenar solo una parte, selecciónala primero.",
-      "confirmOk": "Ordenar"
+      "confirmOk": "Ordenar",
+      "toBulletList": "A lista con viñetas",
+      "toOrderedList": "A lista numerada",
+      "toTaskList": "A lista de tareas",
+      "selectLists": "Selecciona primero las líneas o la lista que quieres cambiar."
     },
     "fr": {
       "name": "Mise au propre",
       "description": "Met au propre texte et Markdown : souligne ce qui enfreint les règles Markdown courantes et le corrige d'un coup, supprime lignes vides et espaces en fin de ligne, adapte la ponctuation chinoise ou anglaise, convertit les lettres pleine chasse en ASCII et réunit des lignes, sans toucher au code, aux formules, au front matter ni à la syntaxe d'Obsidian.",
       "underline": "Souligner le Markdown qui enfreint une règle",
       "off": "Règles laissées de côté",
-      "offHelp": "Une par ligne, sous le nom de markdownlint : MD009 ou no-trailing-spaces. Ni soulignées ni corrigées.",
+      "offHelp": "Une par ligne, p. ex. MD009.",
       "fix": "Corriger le Markdown",
       "fixed": "{0} blocs corrigés.",
       "clean": "Rien à corriger.",
@@ -289,14 +346,18 @@
       "none": "Rien à nettoyer.",
       "selectFirst": "Sélectionnez d’abord les lignes à réunir.",
       "confirmWhole": "Nettoyer tout le document ? Pour n’en nettoyer qu’une partie, sélectionnez-la d’abord.",
-      "confirmOk": "Nettoyer"
+      "confirmOk": "Nettoyer",
+      "toBulletList": "En liste à puces",
+      "toOrderedList": "En liste numérotée",
+      "toTaskList": "En liste de tâches",
+      "selectLists": "Sélectionnez d’abord les lignes ou la liste à changer."
     },
     "de": {
       "name": "Aufräumen",
       "description": "Räumt Text und Markdown auf: unterstreicht, was gängige Markdown-Regeln verletzt, und behebt es in einem Schritt, entfernt Leerzeilen und Leerzeichen am Zeilenende, stellt Satzzeichen zwischen Chinesisch und Englisch um, wandelt Vollbreite-Buchstaben in ASCII um und fügt Zeilen zusammen - Code, Formeln, Front Matter und Obsidians Syntax bleiben, wie sie sind.",
       "underline": "Markdown unterstreichen, das eine Regel verletzt",
       "off": "Ausgelassene Regeln",
-      "offHelp": "Eine pro Zeile, mit dem Namen aus markdownlint: MD009 oder no-trailing-spaces. Weder unterstrichen noch korrigiert.",
+      "offHelp": "Eine pro Zeile, z. B. MD009.",
       "fix": "Markdown korrigieren",
       "fixed": "{0} Blöcke korrigiert.",
       "clean": "Nichts zu korrigieren.",
@@ -312,14 +373,18 @@
       "none": "Nichts aufzuräumen.",
       "selectFirst": "Wähle zuerst die Zeilen aus, die zusammengefügt werden sollen.",
       "confirmWhole": "Das ganze Dokument aufräumen? Um nur einen Teil aufzuräumen, wähle ihn zuerst aus.",
-      "confirmOk": "Aufräumen"
+      "confirmOk": "Aufräumen",
+      "toBulletList": "Zur Aufzählung",
+      "toOrderedList": "Zur nummerierten Liste",
+      "toTaskList": "Zur Aufgabenliste",
+      "selectLists": "Wähle zuerst die Zeilen oder die Liste aus, die umgestellt werden sollen."
     },
     "ru": {
       "name": "Уборка",
       "description": "Приводит в порядок текст и Markdown: подчёркивает нарушения общих правил Markdown и исправляет их за раз, убирает пустые строки и пробелы в конце строк, меняет пунктуацию между китайской и английской, переводит полноширинные буквы в ASCII и объединяет строки, не трогая код, формулы, front matter и синтаксис Obsidian.",
       "underline": "Подчёркивать Markdown, нарушающий правило",
       "off": "Отключённые правила",
-      "offHelp": "По одному в строке, как их называет markdownlint: MD009 или no-trailing-spaces. Не подчёркиваются и не исправляются.",
+      "offHelp": "По одному в строке, например MD009.",
       "fix": "Исправить Markdown",
       "fixed": "Исправлено блоков: {0}.",
       "clean": "Исправлять нечего.",
@@ -335,14 +400,18 @@
       "none": "Исправлять нечего.",
       "selectFirst": "Сначала выделите строки, которые нужно объединить.",
       "confirmWhole": "Привести в порядок весь документ? Чтобы обработать только часть, сначала выделите её.",
-      "confirmOk": "Привести в порядок"
+      "confirmOk": "Привести в порядок",
+      "toBulletList": "В маркированный список",
+      "toOrderedList": "В нумерованный список",
+      "toTaskList": "В список задач",
+      "selectLists": "Сначала выделите строки или список, которые нужно переключить."
     },
     "pt": {
       "name": "Arrumar",
       "description": "Arruma texto e Markdown: sublinha o que quebra regras comuns de Markdown e corrige de uma vez, remove linhas em branco e espaços no fim das linhas, troca a pontuação entre chinês e inglês, converte letras de largura total em ASCII e junta linhas, sem mexer em código, fórmulas, front matter nem na sintaxe do Obsidian.",
       "underline": "Sublinhar o Markdown que quebra uma regra",
       "off": "Regras deixadas de lado",
-      "offHelp": "Uma por linha, com o nome do markdownlint: MD009 ou no-trailing-spaces. Nem sublinhadas nem corrigidas.",
+      "offHelp": "Um por linha, ex. MD009.",
       "fix": "Corrigir Markdown",
       "fixed": "{0} blocos corrigidos.",
       "clean": "Nada a corrigir.",
@@ -358,7 +427,11 @@
       "none": "Nada para arrumar.",
       "selectFirst": "Selecione primeiro as linhas que quer juntar.",
       "confirmWhole": "Arrumar o documento inteiro? Para arrumar só uma parte, selecione-a primeiro.",
-      "confirmOk": "Arrumar"
+      "confirmOk": "Arrumar",
+      "toBulletList": "Para lista com marcadores",
+      "toOrderedList": "Para lista numerada",
+      "toTaskList": "Para lista de tarefas",
+      "selectLists": "Selecione primeiro as linhas ou a lista que quer mudar."
     }
   }
 }

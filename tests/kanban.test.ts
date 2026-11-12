@@ -47,3 +47,12 @@ it("keeps Obsidian's mark of a done list, not as a card", () => {
   expect(md.parse("## A\n\n- [ ] x\n**not a mark**\n").lists[0].cards).toHaveLength(2);
 });
 
+
+it("keeps a blank line inside a card as one card", () => {
+  const board = { lists: [{ title: "A", cards: [{ text: "first\n\nsecond", done: false }] }] };
+  const text = md.serialize(board as Board);
+  expect(text).not.toMatch(/ +\n/);
+  expect(md.parse(text).lists[0].cards.map((c) => c.text)).toEqual(["first\n\nsecond"]);
+  // A blank line before an unindented line still ends the card.
+  expect(md.parse("## A\n\n- [ ] a\n\nstray\n").lists[0].cards).toHaveLength(2);
+});

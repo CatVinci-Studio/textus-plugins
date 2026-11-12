@@ -10,10 +10,11 @@ A focus timer that floats over the Textus window or the desktop: 25 minutes of f
 
 **Settings**: **Focus (minutes)** and **Break (minutes)**, 25 and 5 by default, up to 180.
 
-It works on desktop and needs Textus 1.3.10 or later. It asks for one permission: notifications, for the end of each span.
+It works on desktop and needs Textus 1.3.12 or later. It asks for one permission: notifications, for the end of each span.
 
 ## Changes
 
+- **0.1.3** - Quick clicks no longer lose one; a new focus or break length shows on a timer not yet started; the clock grows and shrinks with the timer.
 - **0.1.2** - A click on the timer starts and pauses it again (it did nothing in 0.1.0 and 0.1.1).
-- **0.1.1** - Its bars, lists and controls are Textus's own, grow with the interface and follow every theme; needs Textus 1.3.12.
+- **0.1.1** - Follows every theme and grows with the interface; needs Textus 1.3.12.
 - **0.1.0** - First version: a floating focus timer with breaks, notifications, a right-click menu, and its own focus and break lengths.

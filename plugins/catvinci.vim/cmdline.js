@@ -69,7 +69,8 @@ async function runCommand(text) {
   }
   var name = line.split(/\s+/)[0];
   if (mode === "visual" || mode === "vline") {
-    await exec({ op: "collapse", to: "head" });
+    // Leave visual mode even when the editor refuses the collapse.
+    await exec({ op: "collapse", to: "head" }).catch(function () {});
     await setMode("normal");
   }
   switch (name) {

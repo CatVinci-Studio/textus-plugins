@@ -41,6 +41,8 @@ A chave de citação vem do campo Citation Key do item (ou de uma linha `Citatio
 
 ## Alterações
 
+- **0.4.3** - Agora a citação substitui as palavras selecionadas; a lista de referências não diz mais que o Zotero está fora do ar quando ele responde, e a prévia ao passar o mouse aparece com mais confiabilidade.
+- **0.4.2** - Textos de ajuda e de estado vazio mais curtos.
 - **0.4.1** - Seu código foi dividido em arquivos menores conforme o que cada parte faz; nada muda no uso.
 - **0.4.0** - os modelos de notas de leitura são preenchidos pelo mecanismo de modelos do Textus; requer Textus 1.3.10
 - **0.3.0** - notas de leitura do Zotero, com modelo e os ajustes de um cofre do Obsidian; citações como `[[@citekey]]`

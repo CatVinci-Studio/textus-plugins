@@ -16,6 +16,8 @@ Läuft auf dem Desktop und auf dem iPhone. Es fragt nach einer einzigen Berechti
 
 ## Änderungen
 
+- **0.1.6** - C-x C-s und C-x C-g funktionieren unter Windows und Linux wieder. Die Statusleiste zeigt Emacs nur, solange es die Tasten wirklich hat.
+- **0.1.5** - Kürzere Hilfe- und Leertexte.
 - **0.1.4** - Seine Seite sagt jetzt in einem Satz, was es tut, was es kann und was sich in jeder Version geändert hat.
 - **0.1.3** - Nennt, wo es läuft: Desktop und iPhone.
 - **0.1.2** - C-x bleibt nicht mehr hängen; C-d und C-y lassen Zwischenablage und Region in Ruhe.

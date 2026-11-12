@@ -11,6 +11,7 @@ const metadata = {
     { title: "Alpha", rel: "Alpha.md", tags: ["project/alpha"] },
     { title: "Beta", rel: "Work/Beta.md", tags: ["project", "idea"] },
     { title: "Home", rel: "Home.md", tags: ["projects"] },
+    { title: "Gamma", rel: "Gamma.md", tags: ["Project"] },
   ],
 };
 
@@ -34,6 +35,7 @@ describe("tags' tools", () => {
     expect(found.notes.map((n: { path: string }) => n.path)).toEqual([
       "Alpha.md",
       "Work/Beta.md",
+      "Gamma.md",
     ]);
   });
 });
@@ -55,6 +57,7 @@ describe("the Tags panel", () => {
           { tag: "project/alpha", count: 2 },
           { tag: "project/alpha/x", count: 1 },
           { tag: "idea", count: 3 },
+          { tag: "Project/Alpha", count: 1 },
         ],
         all: async () => [
           {
@@ -62,6 +65,12 @@ describe("the Tags panel", () => {
             rel: "Beta.md",
             path: "/root/Beta.md",
             tags: ["project"],
+          },
+          {
+            title: "Gamma",
+            rel: "Gamma.md",
+            path: "/root/Gamma.md",
+            tags: ["Project"],
           },
         ],
       },
@@ -74,13 +83,57 @@ describe("the Tags panel", () => {
     });
     const top = await provider.items();
     expect(top.map((n) => [n.label, n.description])).toEqual([
-      ["#project", "4"],
+      ["#project", "5"],
       ["#idea", "3"],
     ]);
     const under = await provider.items(top[0]);
-    expect(under.map((n) => n.label)).toEqual(["#alpha", "Beta"]);
+    expect(under.map((n) => [n.label, n.description])).toEqual([
+      ["#alpha", "4"],
+      ["Beta", undefined],
+      ["Gamma", undefined],
+    ]);
     expect((await provider.items(under[0])).map((n) => n.label)).toEqual([
       "#x",
     ]);
+  });
+});
+
+describe("renaming a tag from the panel", () => {
+  it("renames every letter case and the nested tags, in their notes", async () => {
+    const texts: Record<string, string> = {
+      "/root/A.md": "#Project/alpha",
+      "/root/B.md": "#project",
+      "/root/C.md": "#projects",
+    };
+    let rename: (tag: string) => Promise<unknown> = async () => {};
+    const notices: string[] = [];
+    loadPlugin("catvinci.tags", {
+      files: {
+        root: async () => "/root",
+        process: async (path: string, edit: (t: string) => string) =>
+          void (texts[path] = edit(texts[path])),
+      },
+      metadata: {
+        all: async () => [
+          { path: "/root/A.md", tags: ["Project/alpha"] },
+          { path: "/root/B.md", tags: ["project"] },
+          { path: "/root/C.md", tags: ["projects"] },
+        ],
+      },
+      ui: { input: async () => "work", notice: (m: string) => void notices.push(m) },
+      commands: {
+        register: (id: string, run: typeof rename) => (
+          id === "catvinci.tags.rename" && (rename = run),
+          { dispose() {} }
+        ),
+      },
+    });
+    await rename("project");
+    expect(texts).toEqual({
+      "/root/A.md": "#work/alpha",
+      "/root/B.md": "#work",
+      "/root/C.md": "#projects",
+    });
+    expect(notices).toEqual(["renamed #project #work 2"]);
   });
 });

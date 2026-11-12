@@ -26,8 +26,9 @@
     save();
   }
 
-  /** An inline field over `node`'s text; `done` gets the new text. */
-  function editInPlace(node, value, multiline, done) {
+  /** An inline field over `node`'s text; `done` gets the new text,
+   *  `cancel` (else a redraw) runs when it is left empty or escaped. */
+  function editInPlace(node, value, multiline, done, cancel) {
     const field = document.createElement(multiline ? "textarea" : "input");
     field.className = "tx-inline-input inline-field";
     field.value = value;
@@ -39,6 +40,7 @@
       if (finished) return;
       finished = true;
       if (keep && field.value.trim()) done(field.value.trim());
+      else if (cancel) cancel();
       else render();
     };
     field.addEventListener("blur", () => finish(true));
@@ -141,7 +143,7 @@
     head.className = "tx-lane-head list-head";
     // A list moves by its head, the others making way.
     head.addEventListener("pointerdown", (e) => {
-      if (e.target.closest("button, textarea, [contenteditable]")) return;
+      if (e.target.closest("input, button, textarea, [contenteditable]")) return;
       drag.sortable(e, {
         item: section,
         axis: "x",
@@ -190,18 +192,20 @@
       const node = nodes[board.lists.indexOf(list)].querySelector(
         ".card:last-child .card-text",
       );
-      editInPlace(node, "", true, (value) => {
-        card.text = value;
-        changed();
-      });
-      // Given up empty: no card.
-      const field = nodes[board.lists.indexOf(list)].querySelector("textarea");
-      field.addEventListener("blur", () => {
-        if (!card.text) {
+      editInPlace(
+        node,
+        "",
+        true,
+        (value) => {
+          card.text = value;
+          changed();
+        },
+        // Given up empty: no card.
+        () => {
           list.cards.splice(list.cards.indexOf(card), 1);
           render();
-        }
-      });
+        },
+      );
     };
     section.append(head, cards, add);
     return section;

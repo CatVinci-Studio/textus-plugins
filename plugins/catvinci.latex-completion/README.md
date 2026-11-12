@@ -11,6 +11,7 @@ It works on desktop and iPhone and needs Textus 1.3.0 or later. It asks for one 
 
 ## Changes
 
+- **0.1.4** - A command typed out whole comes first, so Enter keeps it (\in stays \in); a command without braces is written with a space after it; with Textus 1.3.13 the list closes once a command is written.
 - **0.1.3** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
 - **0.1.2** - Says where it runs: desktop and iPhone.
 - **0.1.0-0.1.1** - First versions: over 200 commands with what each draws, letters in order, braces and caret in place, growing bracket pairs; store page and icon.

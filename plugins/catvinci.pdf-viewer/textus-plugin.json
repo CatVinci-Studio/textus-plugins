@@ -1,7 +1,7 @@
 {
   "id": "catvinci.pdf-viewer",
   "name": "%name%",
-  "version": "0.2.2",
+  "version": "0.2.4",
   "publisher": "catvinci",
   "author": "CatVinci Studio",
   "description": "%description%",
@@ -38,7 +38,8 @@
       "nextPage": "Next page",
       "find": "Find in the PDF",
       "notFound": "Not found",
-      "actual": "Actual size"
+      "actual": "Actual size",
+      "page": "Page number"
     },
     "zh": {
       "name": "PDF 阅读器",
@@ -52,7 +53,8 @@
       "nextPage": "下一页",
       "find": "在 PDF 中查找",
       "notFound": "没有找到",
-      "actual": "原始大小"
+      "actual": "原始大小",
+      "page": "页码"
     },
     "zh-Hant": {
       "name": "PDF 閱讀器",
@@ -66,7 +68,8 @@
       "nextPage": "下一頁",
       "find": "在 PDF 中尋找",
       "notFound": "找不到",
-      "actual": "原始大小"
+      "actual": "原始大小",
+      "page": "頁碼"
     },
     "ja": {
       "name": "PDF ビューア",
@@ -80,7 +83,8 @@
       "nextPage": "次のページ",
       "find": "PDF 内を検索",
       "notFound": "見つかりません",
-      "actual": "実際のサイズ"
+      "actual": "実際のサイズ",
+      "page": "ページ番号"
     },
     "ko": {
       "name": "PDF 뷰어",
@@ -94,7 +98,8 @@
       "nextPage": "다음 페이지",
       "find": "PDF에서 찾기",
       "notFound": "찾을 수 없음",
-      "actual": "실제 크기"
+      "actual": "실제 크기",
+      "page": "페이지 번호"
     },
     "es": {
       "name": "Visor de PDF",
@@ -108,7 +113,8 @@
       "nextPage": "Página siguiente",
       "find": "Buscar en el PDF",
       "notFound": "Sin resultados",
-      "actual": "Tamaño real"
+      "actual": "Tamaño real",
+      "page": "Número de página"
     },
     "fr": {
       "name": "Lecteur PDF",
@@ -122,7 +128,8 @@
       "nextPage": "Page suivante",
       "find": "Rechercher dans le PDF",
       "notFound": "Introuvable",
-      "actual": "Taille réelle"
+      "actual": "Taille réelle",
+      "page": "Numéro de page"
     },
     "de": {
       "name": "PDF-Betrachter",
@@ -136,7 +143,8 @@
       "nextPage": "Nächste Seite",
       "find": "Im PDF suchen",
       "notFound": "Nicht gefunden",
-      "actual": "Originalgröße"
+      "actual": "Originalgröße",
+      "page": "Seitenzahl"
     },
     "ru": {
       "name": "Просмотр PDF",
@@ -150,7 +158,8 @@
       "nextPage": "Следующая страница",
       "find": "Найти в PDF",
       "notFound": "Не найдено",
-      "actual": "Исходный размер"
+      "actual": "Исходный размер",
+      "page": "Номер страницы"
     },
     "pt": {
       "name": "Visualizador de PDF",
@@ -164,7 +173,8 @@
       "nextPage": "Próxima página",
       "find": "Procurar no PDF",
       "notFound": "Não encontrado",
-      "actual": "Tamanho real"
+      "actual": "Tamanho real",
+      "page": "Número da página"
     }
   }
 }

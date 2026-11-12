@@ -3,16 +3,20 @@
   <head>
     <meta charset="utf-8" />
     <link rel="stylesheet" href="textus-resource:lib/chart.css" />
+    <style>
+      #chart > svg {
+        height: auto;
+      }
+    </style>
   </head>
   <body>
     <div id="chart"></div>
     <div id="chart-problem" role="alert" hidden></div>
     <script src="textus-resource:lib/chart-page.js"></script>
     <script src="textus-resource:lib/viz-global.js"></script>
-    <!-- The engine is a module; its import is resolved in the page's own
-         text, so the drawing code is here rather than in a file. -->
+    <script src="textus-resource:lib/themes.js"></script>
+    <!-- The engine is a module, so the drawing code lives in the page. -->
     <script type="module">
-      // The engine is a module: it is imported here, then the block is drawn.
       import { renderToString } from "textus-resource:lib/plantuml.js";
 
       function render(source, dark) {
@@ -23,12 +27,23 @@
         });
       }
 
+      // The server's fixed size, stretch and background give way to the page.
+      function fromServer(el, svg) {
+        el.innerHTML = svg;
+        const root = el.querySelector("svg");
+        if (!root) return;
+        root.removeAttribute("style");
+        root.removeAttribute("preserveAspectRatio");
+      }
+
       drawChartBlock({
         draw: async function (el, source, meta, dark, server) {
-          el.innerHTML = server ? server.svg : await render(source, dark);
+          if (server) fromServer(el, dark ? server.dark : server.svg);
+          else el.innerHTML = await render(source, dark);
         },
         picture: function (el, source, meta, dark, server) {
-          return server ? server.svg : render(source, dark);
+          if (server) return dark ? server.dark : server.svg;
+          return render(source, dark);
         },
       });
     </script>

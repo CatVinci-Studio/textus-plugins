@@ -67,8 +67,9 @@
           "i",
         );
         const tag = re.exec(head);
-        const content = tag && /content=["']([^"']*)["']/i.exec(tag[0]);
-        if (content && content[1].trim()) return decode(content[1].trim());
+        const content = tag && /content=(?:"([^"]*)"|'([^']*)')/i.exec(tag[0]);
+        const value = content ? (content[1] ?? content[2]).trim() : "";
+        if (value) return decode(value);
       }
       return null;
     };
@@ -90,24 +91,43 @@
     };
   }
 
-  /** The player a video page can be shown in: YouTube's or Bilibili's. */
-  function videoEmbed(url) {
-    let u;
+  const address = (url) => {
     try {
-      u = new URL(url);
+      return new URL(url);
     } catch {
       return null;
     }
+  };
+
+  /** A YouTube video's id, from a watch, youtu.be or Shorts address. */
+  function youtubeId(url) {
+    const u = address(url);
+    if (!u) return null;
     const host = u.hostname.replace(/^www\.|^m\./, "");
-    if (host === "youtu.be") return "https://www.youtube.com/embed/" + u.pathname.slice(1);
-    if (host === "youtube.com" && u.searchParams.get("v"))
-      return "https://www.youtube.com/embed/" + u.searchParams.get("v");
+    if (host === "youtu.be") return u.pathname.slice(1).split("/")[0] || null;
+    if (host !== "youtube.com") return null;
+    const shorts = /^\/shorts\/([\w-]+)/.exec(u.pathname);
+    return shorts ? shorts[1] : u.searchParams.get("v");
+  }
+
+  /** The player a video page can be shown in: Bilibili's. YouTube's player
+   *  refuses a page with no referrer, as a plugin's is, so it gets a card. */
+  function videoEmbed(url) {
+    const u = address(url);
+    if (!u) return null;
+    const host = u.hostname.replace(/^www\.|^m\./, "");
     const bv = /\/video\/(BV[0-9A-Za-z]+)/.exec(u.pathname);
     if (host === "bilibili.com" && bv) return "https://player.bilibili.com/player.html?bvid=" + bv[1] + "&autoplay=0";
     return null;
   }
 
+  /** A YouTube video's still, for its card. */
+  function videoPicture(url) {
+    const id = youtubeId(url);
+    return id ? "https://i.ytimg.com/vi/" + encodeURIComponent(id) + "/hqdefault.jpg" : null;
+  }
+
   const isUrl = (text) => /^https?:\/\/\S+$/.test(String(text).trim());
 
-  root.linkCards = { parse, write, fromHtml, videoEmbed, isUrl };
+  root.linkCards = { parse, write, fromHtml, videoEmbed, videoPicture, isUrl };
 })(typeof window !== "undefined" ? window : globalThis);

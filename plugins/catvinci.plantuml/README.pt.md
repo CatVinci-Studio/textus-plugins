@@ -28,6 +28,8 @@ Bob --> Alice : Hi!
 
 ## Alterações
 
+- **0.2.4** - `!theme` funciona; sem espaço vazio numa coluna estreita; no modo servidor aparece o erro do próprio PlantUML e os temas escuros têm desenho escuro.
+- **0.2.3** - Textos de ajuda e de estado vazio mais curtos.
 - **0.2.2** - Sua página agora diz numa frase o que ele faz, o que pode fazer e o que mudou em cada versão.
 - **0.2.1** - Traz a página de gráficos compartilhada atualizada; os diagramas são desenhados como antes.
 - **0.2.0** - Traz a página de gráficos compartilhada que tira as cores do tema. Requer Textus 1.3.2.

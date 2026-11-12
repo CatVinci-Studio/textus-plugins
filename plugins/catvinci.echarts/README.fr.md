@@ -25,6 +25,7 @@ Le plugin demande une seule permission, pour donner à Textus AI l’outil `chec
 
 ## Changements
 
+- **0.3.2** - Les graphiques se redessinent quand la largeur du panneau change, et leur texte et leur hauteur par défaut suivent le zoom et la police de l’app.
 - **0.3.1** - Sa description ne cite plus les cartes, qu'un bloc ne peut pas charger.
 - **0.3.0** - Textus AI peut vérifier un bloc `echarts` avant de l’écrire.
 - **0.2.0** - Les couleurs des séries viennent des tons du thème. Nécessite Textus 1.3.2.

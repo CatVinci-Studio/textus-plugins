@@ -1,7 +1,7 @@
 // A force-directed graph on a canvas: nodes pushed apart, links pulling
 // together, settling over a few seconds. Drag the background to move, the
 // wheel (or a pinch) to zoom, a node to place it; hover lights its links,
-// a click opens it (with Ctrl or Cmd, in a new tab). It adapts by itself:
+// a click opens it (with Ctrl or Cmd, beside the one in front). It adapts by itself:
 // labels as it is zoomed in, arrows when there are few enough links to
 // read them, a node's size by its links. Repulsion is computed on a grid of nearby nodes, so a
 // folder of thousands of documents still moves smoothly.
@@ -14,6 +14,9 @@
       .trim();
     return value || fallback;
   }
+
+  // The theme's tones, in order, for folders' colours.
+  const TONES = ["blue", "green", "orange", "purple", "red", "teal", "yellow", "pink"];
 
   function createGraphView(canvas, options) {
     const ctx = canvas.getContext("2d");
@@ -33,9 +36,12 @@
     // With colour groups, notes outside them keep the plain colour.
     let grouped = false;
 
+    const probe = document.createElement("span");
+    probe.style.cssText = "position:absolute;visibility:hidden;font-size:var(--text-caption)";
+    document.body.append(probe);
+
     function readColors() {
       colors = {
-        bg: cssVar("--ui-bg"),
         text: cssVar("--ui-text"),
         muted: cssVar("--ui-muted"),
         line: cssVar("--ui-border"),
@@ -43,6 +49,9 @@
         tag: cssVar("--tone-green"),
         node: cssVar("--ui-text"),
         font: cssVar("--font-sans", "sans-serif"),
+        // The caption size, so labels grow with the interface's text size.
+        label: parseFloat(getComputedStyle(probe).fontSize) || 11,
+        tones: TONES.map((name) => cssVar("--tone-" + name)),
       };
     }
 
@@ -198,8 +207,8 @@
     function draw() {
       if (!size.w) return;
       ctx.setTransform(size.ratio, 0, 0, size.ratio, 0, 0);
-      ctx.fillStyle = colors.bg;
-      ctx.fillRect(0, 0, size.w, size.h);
+      // The page's own ground shows through: the sidebar's, or the tab's.
+      ctx.clearRect(0, 0, size.w, size.h);
       const lit = hover ? neighbours.get(hover.id) : null;
       const scale = Math.min(1.6, Math.max(0.6, view.k));
       ctx.lineWidth = 1;
@@ -222,7 +231,7 @@
       }
       const showLabels = view.k > 0.6 || nodes.length < 60;
       ctx.font =
-        Math.round(11 * Math.min(1.4, Math.max(0.9, view.k))) +
+        Math.round(colors.label * Math.min(1.4, Math.max(0.9, view.k))) +
         "px " +
         colors.font;
       ctx.textAlign = "center";
@@ -236,11 +245,17 @@
         ctx.globalAlpha = dim ? 0.25 : 1;
         ctx.beginPath();
         ctx.arc(p.x, p.y, r, 0, Math.PI * 2);
+        if (n.kind === "missing" && n.id !== focus && n !== hover) {
+          // Hollow: the ground under the page shows through, sidebar or tab.
+          ctx.globalCompositeOperation = "destination-out";
+          ctx.fill();
+          ctx.globalCompositeOperation = "source-over";
+        }
         ctx.fillStyle =
           n.id === focus || n === hover
             ? colors.accent
             : n.kind === "missing"
-              ? colors.bg
+              ? "transparent"
               : n.kind === "tag"
                 ? colors.tag
                 : n.color ||
@@ -282,15 +297,13 @@
     // Without groups, a note in a folder takes that folder's colour - its first folder
     // under the open one - so notes on one subject read as a cluster;
     // notes at the top keep the plain colour.
-    const HUES = [210, 155, 28, 280, 345, 95, 190, 52];
-    const folderHue = new Map();
+    const folderIndex = new Map();
     function folderColor(n) {
       const slash = n.rel ? n.rel.indexOf("/") : -1;
       if (slash < 0) return null;
       const folder = n.rel.slice(0, slash);
-      if (!folderHue.has(folder))
-        folderHue.set(folder, HUES[folderHue.size % HUES.length]);
-      return "hsl(" + folderHue.get(folder) + " 48% 56%)";
+      if (!folderIndex.has(folder)) folderIndex.set(folder, folderIndex.size);
+      return colors.tones[folderIndex.get(folder) % TONES.length] || null;
     }
 
     function nodeAt(px, py) {
@@ -362,7 +375,8 @@
         const before = toWorld(p.x, p.y);
         view.k = Math.min(
           4,
-          Math.max(0.15, view.k * (e.deltaY < 0 ? 1.12 : 1 / 1.12)),
+          // A pinch sends many small steps, a mouse wheel few large ones.
+          Math.max(0.15, view.k * Math.exp(-Math.max(-12, Math.min(12, e.deltaY)) * 0.01)),
         );
         const after = toWorld(p.x, p.y);
         view.x += after.x - before.x;
@@ -406,9 +420,12 @@
         if (!nodes.length) return;
         const xs = nodes.map((n) => n.x);
         const ys = nodes.map((n) => n.y);
-        const w = Math.max(...xs) - Math.min(...xs) + 80;
-        const h = Math.max(...ys) - Math.min(...ys) + 80;
-        view.k = Math.min(2, Math.max(0.15, Math.min(size.w / w, size.h / h)));
+        // The notes spread over the pane, a label's room kept at its edges:
+        // labels keep their size, so a small graph zoomed in reads apart.
+        const w = Math.max(...xs) - Math.min(...xs) || 1;
+        const h = Math.max(...ys) - Math.min(...ys) || 1;
+        const k = Math.min((size.w - 180) / w, (size.h - 80) / h);
+        view.k = Math.min(4, Math.max(0.15, k));
         view.x = -(Math.max(...xs) + Math.min(...xs)) / 2;
         view.y = -(Math.max(...ys) + Math.min(...ys)) / 2;
         draw();

@@ -136,6 +136,14 @@ async function items() {
   return soon.concat(rest);
 }
 
+/** A task's text as the index gives it: without HTML comments, spaces
+ *  collapsed. */
+const plain = (text) =>
+  String(text)
+    .replace(/<!--[\s\S]*?-->/g, "")
+    .replace(/\s+/g, " ")
+    .trim();
+
 /** Ticks or opens again the task on `line` of `path` (lines from 0), if
  *  it still says `text`: the problem when it doesn't, or what was done. */
 async function setDone(task, done) {
@@ -148,17 +156,30 @@ async function setDone(task, done) {
     // The file changed since it was listed: nothing is written; the list
     // is drawn again from what is there now.
     if (!m) return text;
-    if (task.text !== undefined && !m[4].includes(String(task.text).trim())) {
+    if (task.text !== undefined && !plain(m[4]).includes(plain(task.text))) {
       result = { problem: "changed", now: m[4] };
       return text;
     }
     const changed = obsidianTasks.setDone(row.text, done, day(0));
     row.text = changed.lines[changed.lines.length - 1];
     textLines.insert(rows, task.line, changed.lines.slice(0, -1));
-    result = { next: changed.next, line: task.line + changed.lines.length - 1, text: m[4] };
+    const at = task.line + changed.lines.length - 1;
+    result = { next: changed.next, nextLine: task.line, line: at, text: m[4] };
     const written = textLines.join(rows);
-    return (ordered && taskOrder.orderAround(written, result.line)) || written;
+    const moved = ordered && taskOrder.orderAround(written, at);
+    if (!moved) return written;
+    // Where the ticked task and its next one ended up.
+    result.line = moved.place(at);
+    result.nextLine = moved.place(task.line);
+    return moved.text;
   });
+  return result;
+}
+
+/** A box ticked in the panel or a block: said so when its line changed. */
+async function tick(task, done) {
+  const result = await setDone(task, done);
+  if (result.problem) void textus.ui.notice(t("changed"));
   return result;
 }
 
@@ -226,7 +247,7 @@ function renderQuery(ctx) {
       if (m.type === "ready") await send();
       if (m.type === "open") textus.layout.open({ path: m.path, line: m.line });
       if (m.type === "check") {
-        await setDone({ path: m.path, line: m.line, text: m.text }, m.done);
+        await tick({ path: m.path, line: m.line, text: m.text }, m.done);
         await send();
       }
     });
@@ -349,11 +370,30 @@ async function completeTask(input) {
     done: done,
   };
   // A recurring task's next one went in above it.
-  if (result.next) out.next = { line: index + 1, text: result.next };
+  if (result.next) out.next = { line: result.nextLine + 1, text: result.next };
   return out;
 }
 
 let list = null;
+
+/** Follows the editor only while "Finished tasks last" is on: off, typing
+ *  costs nothing. */
+function followDoneLast() {
+  let on = null;
+  let queue = Promise.resolve();
+  const stop = () => {
+    if (on) on.forEach((d) => d.dispose());
+    on = null;
+  };
+  const step = async () => {
+    const want = !!(await textus.settings.get("doneLast"));
+    if (want && !on) on = orderTicked();
+    if (!want) stop();
+  };
+  const check = () => (queue = queue.then(step, step));
+  void check();
+  return [textus.settings.onDidChange(check), { dispose: stop }];
+}
 
 /** With "Finished tasks last" on, a box ticked in the document moves its
  *  task after the open ones of its list (one more undo step). The list
@@ -372,11 +412,10 @@ function orderTicked() {
       const was = before;
       const now = lists(await textus.editor.getBlocks().catch(() => null));
       before = now;
-      if (!(await textus.settings.get("doneLast"))) return;
       for (const block of now) {
         if (was.some((b) => b.markdown === block.markdown)) continue;
-        const plain = taskOrder.unticked(block.markdown);
-        if (!was.some((b) => taskOrder.unticked(b.markdown) === plain)) continue;
+        const bare = taskOrder.unticked(block.markdown);
+        if (!was.some((b) => taskOrder.unticked(b.markdown) === bare)) continue;
         const lines = block.markdown.split("\n");
         const ordered = taskOrder.orderList(lines);
         if (ordered.every((l, i) => l === lines[i])) continue;
@@ -391,7 +430,7 @@ exports.activate = function (ctx) {
   list = textus.views.registerList("catvinci.tasks.panel", {
     items: items,
     onCheck: function (item, checked) {
-      return setDone(item.data, checked).finally(() => list.refresh());
+      return tick(item.data, checked).finally(() => list.refresh());
     },
     filterPlaceholder: t("filter"),
     emptyText: t("none"),
@@ -411,6 +450,6 @@ exports.activate = function (ctx) {
     textus.ai.registerTool("list_tasks", listTasks),
     textus.ai.registerTool("add_task", addTask),
     textus.ai.registerTool("complete_task", completeTask),
-    ...orderTicked(),
+    ...followDoneLast(),
   );
 };

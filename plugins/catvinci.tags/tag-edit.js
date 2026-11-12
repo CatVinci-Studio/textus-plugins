@@ -1,11 +1,17 @@
-// Renaming a #tag in a note's text: in the body and in front matter's tags,
-// never inside code, a link's address or a longer tag that starts the same.
+// Renaming a #tag (and its nested tags) in a note's text, any letter case: in
+// the body and front matter's tags, never in code, a link's address or a longer tag.
 
 (function (root) {
   const TAG = "[\\p{L}\\p{N}_\\-/]";
+  // What may follow the name: "/" goes on to a nested tag, which moves too.
+  const MORE = "[\\p{L}\\p{N}_\\-]";
 
   function validTag(name) {
-    return new RegExp("^" + TAG + "+$", "u").test(name) && !/^\d+$/.test(name);
+    return (
+      new RegExp("^" + TAG + "+$", "u").test(name) &&
+      !/^\d+$/.test(name) &&
+      !/^\/|\/$|\/\//.test(name)
+    );
   }
 
   const escape = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
@@ -13,8 +19,8 @@
   /** The text with the tag renamed; code fences and inline code are left. */
   function renameTag(text, from, to) {
     const body = new RegExp(
-      "(^|[\\s(\\[{,;:!?，。；：！？、])#" + escape(from) + "(?!" + TAG + ")",
-      "gu",
+      "(^|[\\s(\\[{,;:!?，。；：！？、])#" + escape(from) + "(?!" + MORE + ")",
+      "giu",
     );
     let inFence = false;
     let inFront = false;
@@ -41,10 +47,10 @@
           return line;
         }
         if (inFence) return line;
-        // Inline code is kept as it is: split on backticks.
+        // Inline code and link addresses are kept as they are.
         return line
-          .split(/(`[^`]*`)/)
-          .map((part) => (part.startsWith("`") ? part : part.replace(body, "$1#" + to)))
+          .split(/(`[^`]*`|\]\([^)]*\))/)
+          .map((part, k) => (k % 2 ? part : part.replace(body, "$1#" + to)))
           .join("");
       })
       .join("\n");
@@ -52,7 +58,10 @@
 
   /** tags: [a, b], tags: a, or a "- a" item under tags:. */
   function renameInFrontMatter(line, from, to) {
-    const word = new RegExp("(^|[\\s\\[,\"'#:-])" + escape(from) + "(?=$|[\\s\\],\"'])", "gu");
+    const word = new RegExp(
+      "(^|[\\s\\[,\"'#]|\\btags?:)" + escape(from) + "(?=$|[\\s\\],\"'/])",
+      "giu",
+    );
     return line.replace(word, "$1" + to);
   }
 

@@ -113,6 +113,10 @@ describe("the parts of a note", () => {
       markdown: "# Next",
     });
     expect(parts.section(NOTE, "Missing")).toBeNull();
+    // Nested: the B under A, not the first B.
+    const nested = "# X\n## B\nx's\n# A\n## B\na's";
+    expect(parts.section(nested, "A#B")?.markdown).toBe("## B\na's");
+    expect(parts.section(nested, "X#Missing")).toBeNull();
     // Ids are neither part of a heading's name nor shown; code keeps its text, and
     // "^item2" in the middle of an item is no id.
     const top = parts.section(NOTE, "Top")!.markdown;

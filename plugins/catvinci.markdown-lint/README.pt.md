@@ -39,6 +39,8 @@ Espaçamento CJK, o plugin que põe espaços entre texto chinês e latino, tamb�
 
 ## Alterações
 
+- **0.4.0** - Troca as linhas selecionadas para lista com marcadores, numerada ou de tarefas (numera a partir de 1 em cada nível; uma tarefa mantém a marca).
+- **0.3.2** - Textos de ajuda e de estado vazio mais curtos.
 - **0.3.1** - Sua página agora diz numa frase o que ele faz, o que pode fazer e o que mudou em cada versão.
 - **0.3.0** - Agora se chama Arrumar (antes Verificação de Markdown): os seis comandos de texto do “Arrumar texto” vieram para cá; ajustes para desligar o sublinhado ou regras específicas; a sintaxe própria do Obsidian fica como está.
 - **0.2.1** - Tags, links, lembretes e definições de referência nunca são marcados: a mesma lista que o Espaçamento CJK deixa em paz.

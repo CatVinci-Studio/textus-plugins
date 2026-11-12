@@ -55,4 +55,15 @@ describe("a Pomodoro timer", () => {
     expect(p.clock(5 * MIN)).toBe("05:00");
     expect(p.clock(61_001)).toBe("01:02");
   });
+
+  it("gives a stopped, untouched span new lengths, and leaves a begun one alone", () => {
+    const longer = { focus: 50, rest: 10 };
+    expect(p.retime(p.fresh(minutes), minutes, longer).left).toBe(50 * MIN);
+    const rest = p.next(p.fresh(minutes), 0, minutes);
+    expect(p.retime(rest, minutes, longer).left).toBe(10 * MIN);
+    const paused = p.toggle(p.toggle(p.fresh(minutes), 0), 3 * MIN);
+    expect(p.retime(paused, minutes, longer).left).toBe(22 * MIN);
+    const running = p.toggle(p.fresh(minutes), 0);
+    expect(p.retime(running, minutes, longer)).toBe(running);
+  });
 });

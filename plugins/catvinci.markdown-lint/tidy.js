@@ -179,6 +179,47 @@
     return out;
   }
 
+  var LIST_LINE = /^(\s*)(?:(?:[-*+]|\d+[.)])\s+(\[[ xX]\]\s+)?)?(.*)$/;
+  var FENCE = /^\s*(`{3,}|~{3,})/;
+
+  /** The lines as one kind of list - "bullet", "ordered" or "task" - each
+   *  keeping its indent and its words; a plain line becomes an item, a
+   *  numbered list counts from 1 at each level, a task keeps its tick.
+   *  Blank lines and code stay as they are. */
+  function listType(text, kind) {
+    var counts = [];
+    var fence = null;
+    return String(text)
+      .split("\n")
+      .map(function (line) {
+        var f = FENCE.exec(line);
+        if (fence) {
+          if (f && f[1][0] === fence[0] && f[1].length >= fence.length) fence = null;
+          return line;
+        }
+        if (f) {
+          fence = f[1];
+          return line;
+        }
+        if (line.trim() === "") return line;
+        var m = LIST_LINE.exec(line);
+        var indent = m[1];
+        var depth = indent.replace(/\t/g, "    ").length;
+        counts = counts.filter(function (c) {
+          return c.depth <= depth;
+        });
+        var level = counts[counts.length - 1];
+        if (!level || level.depth !== depth) counts.push((level = { depth: depth, n: 0 }));
+        level.n++;
+        var box = m[2] ? m[2].trim() : "[ ]";
+        var marker = kind === "ordered" ? level.n + ". " : kind === "task" ? "- " + box + " " : "- ";
+        return indent + marker + m[3];
+      })
+      .join("\n");
+  }
+
+  var LIST_RULES = { toBulletList: "bullet", toOrderedList: "ordered", toTaskList: "task" };
+
   var LINE_RULES = {
     fullPunctuation: fullPunctuation,
     halfPunctuation: halfPunctuation,
@@ -190,6 +231,7 @@
     if (rule === "removeBlankLines") return removeBlankLines(text, options && options.all);
     if (rule === "trimTrailing") return trimTrailing(text);
     if (rule === "joinLines") return joinLines(text);
+    if (LIST_RULES[rule]) return listType(text, LIST_RULES[rule]);
     var change = LINE_RULES[rule];
     if (!change) throw new Error("no rule " + rule);
     return eachProseLine(text, change);
@@ -203,5 +245,6 @@
     trimTrailing: trimTrailing,
     removeBlankLines: removeBlankLines,
     joinLines: joinLines,
+    listType: listType,
   };
 })(globalThis);

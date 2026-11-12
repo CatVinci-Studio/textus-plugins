@@ -1,8 +1,8 @@
 // The functions of a ```function-plot block, one per line ("y =" may lead),
 // read by a small parser - a page may not run text as code - which knows
-// + - * / ^, brackets, x, pi and e, and the usual functions. Shared by the
-// page (draw.js) and the host (its check for Textus AI).
-/* exported compile, bound, functionsOf */
+// + - * / ^, brackets, x, pi (π) and e, and the usual functions. Shared by
+// the page (draw.js) and the host (its check for Textus AI).
+/* exported compile, bound, linesOf, functionsOf, noValue */
 var FUNCTIONS = {
   sin: Math.sin,
   cos: Math.cos,
@@ -21,11 +21,37 @@ var FUNCTIONS = {
   floor: Math.floor,
   ceil: Math.ceil,
 };
-var CONSTANTS = { pi: Math.PI, e: Math.E };
+var CONSTANTS = { pi: Math.PI, "π": Math.PI, e: Math.E };
+// Longest first, so "exp" stays one word and "xsin" is x then sin.
+var NAMES = Object.keys(FUNCTIONS)
+  .concat(["pi", "e", "x"])
+  .sort(function (a, b) {
+    return b.length - a.length;
+  });
+
+/** A run of letters as the known names it is made of, or itself. */
+function words(run) {
+  var out = [];
+  var rest = run;
+  while (rest) {
+    var lower = rest.toLowerCase();
+    var name = NAMES.find(function (n) {
+      return lower.indexOf(n) === 0;
+    });
+    if (!name) return [run];
+    out.push(rest.slice(0, name.length));
+    rest = rest.slice(name.length);
+  }
+  return out;
+}
 
 /** `text` as a function of x; throws, naming the place, when it isn't one. */
 function compile(text) {
-  var tokens = text.match(/\d*\.?\d+(?:e[+-]?\d+)?|[a-z]+|\S/gi) || [];
+  var tokens = (text.match(/\d*\.?\d+(?:e[+-]?\d+)?|[a-z]+|\S/gi) || [])
+    .map(function (token) {
+      return /^[a-z]{2,}$/i.test(token) ? words(token) : [token];
+    })
+    .flat();
   var at = 0;
   function peek() {
     return tokens[at];
@@ -71,7 +97,7 @@ function compile(text) {
         take();
         var right = unary();
         left = next === "*" ? mul(left, right) : div(left, right);
-      } else if (next && (next === "(" || /^[a-z0-9.]/i.test(next))) {
+      } else if (next && (next === "(" || /^[a-z0-9.π]/i.test(next))) {
         left = mul(left, power()); // 2x, 3sin(x)
       } else return left;
     }
@@ -156,13 +182,25 @@ function bound(value, fallback) {
   return isFinite(number) ? number : fallback;
 }
 
-/** Each line of `source` as a function of x. */
-function functionsOf(source) {
+/** The lines of `source` that hold a function, "y =" taken off. */
+function linesOf(source) {
   return String(source)
     .split("\n")
     .map(function (line) {
       return line.replace(/^\s*y\s*=/, "").trim();
     })
-    .filter(Boolean)
-    .map(compile);
+    .filter(Boolean);
+}
+
+/** Each line of `source` as a function of x. */
+function functionsOf(source) {
+  return linesOf(source).map(compile);
+}
+
+/** What to say of a line with no value anywhere from x0 to x1. */
+function noValue(line, x0, x1) {
+  return (
+    "“" + line + "” has no value from x = " + x0 + " to " + x1 +
+    ": set xmin and xmax on the fence (```function-plot xmin=0 xmax=100)."
+  );
 }

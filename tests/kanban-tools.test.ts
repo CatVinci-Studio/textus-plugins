@@ -87,6 +87,37 @@ describe("kanban's tools", () => {
     ).toContain("Todo, Done");
   });
 
+  it("leave a note that isn't a board as it is", async () => {
+    const note = "# Title\n\nIntro\n\n## Notes\n\nSome paragraph here.\n";
+    const files: Record<string, string> = { "Note.md": note };
+    const { tools } = loadPlugin("catvinci.kanban", { files: folder(files) });
+    const add = await tools.get("add_card")!({ board: "Note", list: "Notes", text: "x" });
+    expect(add.error).toContain("isn't a board");
+    expect(files["Note.md"]).toBe(note);
+    expect(await tools.get("read_board")!({ board: "Note" })).toHaveProperty("error");
+  });
+
+  it("list boards from the folder's index without reading every note", async () => {
+    const files: Record<string, string> = {
+      "Plan.md": "---\nkanban-plugin: board\n---\n\n## Next\n",
+      "Notes.md": "# Notes\n",
+    };
+    const read: string[] = [];
+    const base = folder(files);
+    const { tools } = loadPlugin("catvinci.kanban", {
+      files: { ...base, readText: async (p: string) => (read.push(p), base.readText(p)) },
+      metadata: {
+        all: async () => [
+          { path: "/root/Plan.md", rel: "Plan.md", frontmatter: { "kanban-plugin": "board" } },
+          { path: "/root/Notes.md", rel: "Notes.md", frontmatter: {} },
+        ],
+      },
+    });
+    const listed = await tools.get("list_boards")!({});
+    expect(listed.boards.map((b: { path: string }) => b.path)).toEqual(["Plan.md"]);
+    expect(read).toHaveLength(1);
+  });
+
   it("move a card by some of its words, to a place in a list", async () => {
     const { call, files } = setup();
     expect(

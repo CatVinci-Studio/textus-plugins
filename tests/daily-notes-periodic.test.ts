@@ -9,8 +9,17 @@ function setup(files: Record<string, string>, settings: Record<string, unknown> 
   const messages: string[] = [];
   const posted: Record<string, unknown>[] = [];
   let receive: (m: Record<string, unknown>) => Promise<void> = async () => {};
+  const events: Record<string, (e?: Record<string, string>) => unknown> = {};
+  const listen = (name: string) => (f: (e?: Record<string, string>) => unknown) => ((events[name] = f), { dispose() {} });
   loadPlugin("catvinci.daily-notes", {
-    files: folder(files),
+    files: {
+      ...folder(files),
+      onDidSave: listen("save"),
+      onDidCreate: listen("create"),
+      onDidDelete: listen("delete"),
+      onDidRename: listen("rename"),
+      onDidChangeConventions: listen("conventions"),
+    },
     settings: { get: async (key: string) => settings[key] },
     commands: { register: (id: string, run: () => Promise<void>) => (commands.set(id, run), { dispose() {} }) },
     layout: { open: async (...args: unknown[]) => void opened.push(args) },
@@ -24,7 +33,7 @@ function setup(files: Record<string, string>, settings: Record<string, unknown> 
         }),
     },
   });
-  return { commands, opened, messages, posted, send: (m: Record<string, unknown>) => receive(m) };
+  return { commands, opened, messages, posted, events, send: (m: Record<string, unknown>) => receive(m) };
 }
 
 beforeEach(() => {
@@ -104,5 +113,24 @@ describe("weekly and monthly notes", () => {
     await on.send({ type: "open", date: "2026-12-30", period: "weekly" });
     await on.send({ type: "open", date: "2026-12-01", period: "monthly" });
     expect(on.opened).toEqual([["/root/Weekly/2026-W53.md"], ["/root/Monthly/2026-12.md"]]);
+  });
+
+  it("redraw the calendar for the daily folder's notes and the vault's settings, not for other files", async () => {
+    const files: Record<string, string> = {};
+    const { posted, events, send } = setup(files);
+    await send({ type: "ready" });
+    const count = posted.length;
+    await events.save({ path: "/root/Projects/plan.md" });
+    await events.create({ path: "/root/Daily/pic.png" });
+    expect(posted.length).toBe(count);
+    files["Daily/2026-11-04.md"] = "";
+    await events.create({ path: "/root/Daily/2026-11-04.md" });
+    expect(posted.at(-1)).toMatchObject({ dates: ["2026-11-04"] });
+    files[".obsidian/daily-notes.json"] = '{"folder":"Journal"}';
+    await events.conventions();
+    expect(posted.at(-1)).toMatchObject({ dates: [] });
+    files["Journal/2026-11-05.md"] = "";
+    await events.rename({ from: "/root/Journal/Old", to: "/root/Journal/New" });
+    expect(posted.at(-1)).toMatchObject({ dates: ["2026-11-05"] });
   });
 });

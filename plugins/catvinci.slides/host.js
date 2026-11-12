@@ -5,7 +5,6 @@
 
 /* global Marp, slideEmbeds, folderPaths */
 const t = (key, ...args) => textus.l10n.t(key, ...args);
-let ctxRef = null;
 const views = new Set();
 
 function render(markdown) {
@@ -84,7 +83,9 @@ async function inlinePictures(html, doc) {
 /** The last deck, kept while the slides' own tab is in front. */
 let deck = null;
 
+/** Renders only while a slides tab is open: no deck work on other edits. */
 async function update() {
+  if (!views.size) return;
   const text = await textus.editor.getText();
   if (text !== null) {
     const doc = await textus.editor.getPath();
@@ -109,7 +110,7 @@ div.marpit>svg.on{display:block}
 <script>
 const s=[...document.querySelectorAll("div.marpit>svg")];let i=Number(location.hash.slice(1))||0;
 const show=(n)=>{i=Math.max(0,Math.min(s.length-1,n));s.forEach((x,k)=>x.classList.toggle("on",k===i));history.replaceState(null,"","#"+i)};
-addEventListener("keydown",(e)=>{if(["ArrowRight","ArrowDown","PageDown"," "].includes(e.key))show(i+1);else if(["ArrowLeft","ArrowUp","PageUp"].includes(e.key))show(i-1);else if(e.key==="f")document.documentElement.requestFullscreen?.()});
+addEventListener("keydown",(e)=>{if(e.metaKey||e.ctrlKey||e.altKey)return;if(["ArrowRight","ArrowDown","PageDown"," "].includes(e.key))show(i+1);else if(["ArrowLeft","ArrowUp","PageUp"].includes(e.key))show(i-1);else if(e.key==="f")document.documentElement.requestFullscreen?.()?.catch(()=>{})});
 addEventListener("click",(e)=>show(e.clientX>innerWidth/3?i+1:i-1));show(i);
 </script></body></html>`;
 }
@@ -140,11 +141,10 @@ async function exportSlides() {
 }
 
 exports.activate = function (ctx) {
-  ctxRef = ctx;
   ctx.subscriptions.push(
     textus.views.registerWebview("catvinci.slides.view", {
       async resolve(webview) {
-        const page = await ctxRef.plugin.readText("slides.html");
+        const page = await ctx.plugin.readText("slides.html");
         webview.html = page.replace("{{lang}}", textus.env.language);
         // Drawn again in the interface's language when that changes.
         const relabel = textus.env.onDidChangeLanguage(() => {
@@ -152,18 +152,20 @@ exports.activate = function (ctx) {
         });
         webview.onDidDispose(() => relabel.dispose());
         views.add(webview);
-        webview.onDidDispose(() => views.delete(webview));
+        webview.onDidDispose(() => {
+          views.delete(webview);
+          if (!views.size) pictures.clear();
+        });
         webview.onDidReceiveMessage((message) => {
           if (message === "ready") void update();
           if (message === "export") void exportHtml();
         });
       },
     }),
-    textus.commands.register("catvinci.slides.present", async () => {
-      // Read before the deck's tab takes the front.
-      await update();
-      await textus.layout.openView("catvinci.slides.view", { where: "beside" });
-    }),
+    // The tab's "ready" draws the deck: the document stays in front beside it.
+    textus.commands.register("catvinci.slides.present", () =>
+      textus.layout.openView("catvinci.slides.view", { where: "beside" }),
+    ),
     textus.commands.register("catvinci.slides.export", exportHtml),
     textus.ai.registerTool("export_slides", exportSlides),
     textus.editor.onDidChange(update),

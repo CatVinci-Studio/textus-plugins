@@ -79,6 +79,7 @@
       const [a, b] = [...pointers.values()];
       pinch = { distance: Math.hypot(a.x - b.x, a.y - b.y) };
     }
+    stage.setPointerCapture?.(e.pointerId);
     stage.classList.add("dragging");
   });
   window.addEventListener("pointermove", (e) => {
@@ -111,6 +112,7 @@
   };
   window.addEventListener("pointerup", release);
   window.addEventListener("pointercancel", release);
+  stage.addEventListener("lostpointercapture", release);
 
   /** A click: a link in a card, a link node or a file node opens. */
   function activate(target) {
@@ -175,7 +177,7 @@
     node.classList.add("colored");
     node.style.setProperty("--line", c.line);
     node.style.setProperty("--fill", c.fill);
-    node.style.setProperty("--ink", c.text);
+    if (c.text) node.style.setProperty("--ink", c.text);
   }
 
   const hostOf = (url) => {
@@ -253,7 +255,7 @@
     const others = canvas.nodes.filter((n) => n.type !== "group").map(drawNode);
     world.replaceChildren(...groups, ...others, ...drawEdges(canvas, byId));
     box = jc.bounds(canvas.nodes);
-    if (!box) showStatus(t("empty"));
+    if (!box) return noContent(t("empty"));
     fitView();
   }
 
@@ -286,7 +288,10 @@
     }
   }
 
-  function showStatus(text, withButton) {
+  /** No canvas to show: only the message, without the stage or its bar. */
+  function noContent(text, withButton) {
+    stage.hidden = true;
+    $("bar").hidden = true;
     const status = $("status");
     status.replaceChildren(el("span", "", text));
     if (withButton) {
@@ -300,11 +305,7 @@
   /** An Excalidraw drawing: its exported picture to look around, or why
    *  there is none. */
   function drawExcalidraw(m) {
-    if (!m.picture) {
-      stage.hidden = true;
-      for (const id of ["zoom-out", "zoom", "zoom-in"]) $(id).hidden = true;
-      return showStatus(t("excalidraw"), true);
-    }
+    if (!m.picture) return noContent(t("excalidraw"), true);
     const img = picture(m.picture.bytes, m.picture.mime, m.picture.name);
     img.className = "drawing";
     img.onload = () => {
@@ -312,19 +313,16 @@
       place(img, box);
       fitView();
     };
+    img.onerror = () => noContent(t("excalidraw"), true);
     world.replaceChildren(img);
   }
 
   api.onMessage((m) => {
     if (!m) return;
-    if (m.name) $("name").textContent = m.name;
     if (m.type === "canvas") drawCanvas(m.canvas);
     else if (m.type === "file") fillFile(m);
     else if (m.type === "excalidraw") drawExcalidraw(m);
-    else if (m.type === "failed") {
-      stage.hidden = true;
-      showStatus(t("failed", m.message), true);
-    }
+    else if (m.type === "failed") noContent(t("failed", m.message), true);
   });
   apply();
   api.postMessage({ type: "ready" });

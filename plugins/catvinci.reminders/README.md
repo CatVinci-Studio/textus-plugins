@@ -16,6 +16,8 @@ It works on desktop and needs Textus 1.3.10 or later. It asks to read the open f
 
 ## Changes
 
+- **0.3.2** - Two open windows no longer clear each other's reminders, and the list empties when you close the folder. A mistyped time is refused instead of inserting a broken mark.
+- **0.3.1** - Shorter help and empty-state text.
 - **0.3.0** - Marks written with Textus's own dates; needs Textus 1.3.10.
 - **0.2.2-0.2.3** - Updated shared date code.
 - **0.2.1** - Textus AI is told when a due date belongs in Tasks instead.

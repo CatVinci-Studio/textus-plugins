@@ -14,8 +14,8 @@ function setup(api: Record<string, unknown> = {}) {
   const at = manifest.contributes.completions.find((c: { id: string }) => c.id === "catvinci.quick-insert.at");
   const pattern = new RegExp(`(?:${at.pattern})$`, "u");
   const match = (text: string) => pattern.exec(text)?.[0] ?? null;
-  const ask = (text: string) =>
-    providers.get("catvinci.quick-insert.at")!.provideCompletions({ text, match: match(text), inMath: false });
+  const ask = (text: string, path?: string) =>
+    providers.get("catvinci.quick-insert.at")!.provideCompletions({ text, match: match(text), inMath: false, path });
   return { tools, match, ask };
 }
 
@@ -25,6 +25,8 @@ it("turns a day in words into its date, from a given today", async () => {
   expect(await parse("@下周五")).toMatchObject({ date: "2026-11-06" });
   expect(await parse("in 12 days")).toMatchObject({ date: "2026-11-09" });
   expect(await parse("12天后")).toMatchObject({ date: "2026-11-09" });
+  expect(await parse("@下週五")).toMatchObject({ date: "2026-11-06" });
+  expect(await parse("12天後")).toMatchObject({ date: "2026-11-09" });
   const unknown = await parse("tomorrow-ish");
   expect(unknown).toHaveProperty("error");
   expect(unknown.suggestions[0]).toEqual({ phrase: "tomorrow", date: "2026-10-29" });
@@ -44,9 +46,9 @@ it("opens after a space or bracket only, and keeps a reminder's @", async () => 
 });
 
 describe("an @ date as a link", () => {
-  const linkFor = async (files: Record<string, string>) => {
+  const linkFor = async (files: Record<string, string>, path?: string) => {
     const { ask } = setup({ files: folder(files), settings: { get: async () => "link" } });
-    const [picked] = await ask("Due @today");
+    const [picked] = await ask("Due @today", path);
     const [y, m, d] = picked.detail.split("-").map(Number);
     return { insert: picked.insert, day: new Date(y, m - 1, d) };
   };
@@ -55,6 +57,8 @@ describe("an @ date as a link", () => {
     const day = (await setup().ask("@today"))[0].detail;
     // A plain folder: a standard link; a vault: its [[wiki link]].
     expect((await linkFor({})).insert).toBe(`[${day}](${day}.md)`);
+    // Relative to the document being typed in.
+    expect((await linkFor({}, "/root/Notes/a.md")).insert).toBe(`[${day}](../Daily/${day}.md)`);
     expect((await linkFor({ ".obsidian/app.json": "{}" })).insert).toBe(`[[${day}]]`);
     const named = await linkFor({ ".obsidian/daily-notes.json": '{"folder":"Journal","format":"MMMM Do, YYYY"}' });
     expect(named.insert).toMatch(/^\[\[[A-Z][a-z]+ \d{1,2}(st|nd|rd|th), \d{4}\]\]$/);

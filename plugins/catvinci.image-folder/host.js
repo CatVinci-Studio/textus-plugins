@@ -2,7 +2,7 @@
 // "<document>.assets/" beside it, and the link with it; renaming the
 // document in its folder renames that folder and its links. Textus saves
 // the picture first (Settings › Images), so this follows its file events.
-// Where an Obsidian or Logseq setting says where pictures go, they stay.
+// Where Typora front matter or an Obsidian, Logseq or Dendron setting says where pictures go, they stay.
 /* global imageFolder, folderPaths, freeName */
 const WAIT_MS = 3000;
 const STEP_MS = 150;
@@ -31,11 +31,12 @@ async function freePath(dir, name, like) {
   return dir + "/" + (await freeName(name.slice(0, dot), taken, { ext: name.slice(dot), sep: "-", first: 1 }));
 }
 
-/** The folder's attachment rule, when its app places pictures itself. */
+/** Whether the document's attachment rule (its front matter first, then
+ *  its folder's) comes from an app that places pictures itself. */
 async function appPlaces(doc) {
   let rule;
   try {
-    rule = (await textus.files.conventions(imageFolder.dirOf(doc))).attachments;
+    rule = (await textus.files.conventions(doc)).attachments;
   } catch {
     return false;
   }
@@ -89,8 +90,8 @@ async function onRename(event) {
   const like = event.to;
   if (!(await textus.files.stat(native(oldAssets, like))) || (await textus.files.stat(native(newAssets, like)))) return;
   const oldName = imageFolder.baseOf(oldAssets);
-  const { hits } = await textus.metadata.search(oldName + "/", { limit: 20 }).catch(() => ({ hits: [] }));
-  if (hits.some((h) => slash(h.path) !== to && slash(h.path) !== from)) return;
+  const found = await textus.metadata.search(oldName + "/", { limit: 100 }).catch(() => ({ hits: [] }));
+  if (found.truncated || found.hits.some((h) => slash(h.path) !== to && slash(h.path) !== from)) return;
   await textus.files.rename(native(oldAssets, like), native(newAssets, like));
   await textus.files.process(event.to, (text) => imageFolder.rebase(text, oldName, imageFolder.baseOf(newAssets)));
 }

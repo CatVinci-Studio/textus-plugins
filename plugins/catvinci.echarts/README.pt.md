@@ -25,6 +25,7 @@ O plugin pede uma única permissão, para dar ao Textus AI a ferramenta `check_e
 
 ## Alterações
 
+- **0.3.2** - Os gráficos são redesenhados quando a largura do painel muda, e o texto e a altura padrão seguem o zoom e a fonte do app.
 - **0.3.1** - A descrição já não cita mapas, que um bloco não consegue carregar.
 - **0.3.0** - O Textus AI pode verificar um bloco `echarts` antes de escrevê-lo.
 - **0.2.0** - As cores das séries vêm dos tons do tema. Requer Textus 1.3.2.

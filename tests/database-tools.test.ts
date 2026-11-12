@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { readFileSync } from "node:fs";
 import { folder, loadPlugin } from "./plugin-host";
 
 /** Database's tools for Textus AI (plugins/catvinci.database/host.js). */
@@ -215,5 +216,20 @@ describe("a base naming a folder by its path", () => {
       'file.inFolder("Work/Goals")\n    - file.inFolder("Work/Goals/2026")',
     );
     expect(files["Other.md"]).toContain('file.inFolder("Work/Plansx")');
+  });
+});
+
+describe("the page's words", () => {
+  it("every string the page shows is in every locale", () => {
+    const dir = new URL("../plugins/catvinci.database/", import.meta.url);
+    const { l10n } = JSON.parse(readFileSync(new URL("textus-plugin.json", dir), "utf8"));
+    const html = readFileSync(new URL("view.html", dir), "utf8");
+    const page = [...html.matchAll(/textus-resource:([\w.-]+\.js)/g)]
+      .map((m) => readFileSync(new URL(m[1], dir), "utf8"))
+      .join("\n");
+    const keys = [...page.matchAll(/\bs\("([\w.]+)"\)/g)].map((m) => m[1]);
+    expect(keys).toContain("dragLane");
+    for (const [lang, strings] of Object.entries(l10n as Record<string, Record<string, string>>))
+      expect(keys.filter((k) => !strings[k]), lang).toEqual([]);
   });
 });
