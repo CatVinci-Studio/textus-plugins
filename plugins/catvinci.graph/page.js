@@ -33,6 +33,7 @@
         ["search", "search"],
         ["tags", "toggle"],
         ["existingOnly", "toggle"],
+        ["attachments", "toggle"],
         ["orphans", "toggle"],
       ],
     ],
@@ -214,7 +215,9 @@
       : "";
     if (first && data.nodes.length) {
       first = false;
-      setTimeout(() => view.zoomToFit(), 1200);
+      view.zoomToFit();
+      // Too big to lay out at once: fitted again once it has settled.
+      if (view.moving()) setTimeout(() => view.zoomToFit(), 1200);
     }
   });
   api.postMessage({ type: "ready" });

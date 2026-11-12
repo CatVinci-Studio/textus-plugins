@@ -99,7 +99,15 @@
         neighbours.get(b.id).add(a.id);
       }
       focus = focusId || null;
-      heat(1);
+      // Mostly new (the first data, another folder): laid out before it is
+      // drawn, so it shows where it ends up rather than unfolding there.
+      const fresh = nodes.filter((n) => !old.has(n.id)).length;
+      if (fresh > nodes.length / 2) {
+        alpha = 1;
+        const until = performance.now() + 150;
+        while (alpha > 0.02 && performance.now() < until) step();
+        heat(alpha);
+      } else heat(1);
     }
 
     function setFocus(id) {
@@ -236,6 +244,7 @@
         colors.font;
       ctx.textAlign = "center";
       ctx.textBaseline = "top";
+      const labels = [];
       for (const n of nodes) {
         const p = toScreen(n);
         const r = radius(n) * scale;
@@ -266,12 +275,44 @@
           ctx.strokeStyle = colors.muted;
           ctx.stroke();
         }
-        if (showLabels || n === hover || n.id === focus) {
-          ctx.fillStyle = n.kind === "note" ? colors.text : colors.muted;
-          ctx.fillText(n.name, p.x, p.y + r + 3);
-        }
+        if (showLabels || n === hover || n.id === focus)
+          labels.push({ n: n, x: p.x, y: p.y + r + 3, dim: dim });
       }
+      drawLabels(labels, lit);
       ctx.globalAlpha = 1;
+    }
+
+    // Labels that fit: the one hovered or open and its links' first, then
+    // by how many links a note has; one that would cover another drawn
+    // already is left out, and comes back as the graph is zoomed in.
+    function drawLabels(labels, lit) {
+      const rank = (l) =>
+        l.n === hover || l.n.id === focus
+          ? Infinity
+          : (lit && lit.has(l.n.id) ? 1e6 : 0) + (l.n.degree || 0);
+      labels.sort((a, b) => rank(b) - rank(a));
+      const height = parseInt(ctx.font, 10) + 2;
+      const placed = [];
+      for (const l of labels) {
+        const w = ctx.measureText(l.n.name).width + 6;
+        const box = { x: l.x - w / 2, y: l.y, w: w, h: height };
+        const always = rank(l) === Infinity;
+        if (
+          !always &&
+          placed.some(
+            (o) =>
+              box.x < o.x + o.w &&
+              o.x < box.x + box.w &&
+              box.y < o.y + o.h &&
+              o.y < box.y + box.h,
+          )
+        )
+          continue;
+        placed.push(box);
+        ctx.globalAlpha = l.dim ? 0.25 : 1;
+        ctx.fillStyle = l.n.kind === "note" ? colors.text : colors.muted;
+        ctx.fillText(l.n.name, l.x, l.y);
+      }
     }
 
     /** An arrowhead at `to`'s edge, on the line from `from`. */
@@ -431,6 +472,7 @@
         draw();
       },
       nodeCount: () => nodes.length,
+      moving: () => alpha > 0.02,
       edgeCount: () => edges.length,
     };
   }

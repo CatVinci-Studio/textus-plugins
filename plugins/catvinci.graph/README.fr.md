@@ -25,7 +25,7 @@ Dans un coffre Obsidian, les groupes de couleur enregistrés dans le `graph.json
 
 ## Changements
 
-- **0.5.6** - Les compteurs et boutons en haut de l'onglet du graphe restent visibles : faire défiler ou pincer sur le graphe ne les pousse plus sous l'onglet.
+- **0.5.6** - Les compteurs et boutons en haut de l'onglet du graphe restent visibles : faire défiler ou pincer sur le graphe ne les pousse plus sous l'onglet. Les libellés ne s'empilent plus : les notes les plus liées gardent le leur et les autres apparaissent en zoomant. Un grand dossier s'ouvre déjà disposé au lieu de se déplier, et les images et autres pièces jointes liées par une note restent hors du graphe sauf si vous activez Pièces jointes dans ses réglages.
 - **0.5.5** - Les liens Markdown standard vers des notes pas encore écrites sont placés là où Textus les crée, et fusionnent avec les [[liens]] vers la même note. Ctrl/Cmd-clic ouvre une note à côté de celle au premier plan. Les étiquettes suivent la taille du texte de l’interface, les couleurs de dossier suivent le thème. Le graphe de la barre latérale n’a plus de réglages propres.
 - **0.5.4** - Un pincement sur le trackpad zoome en douceur, au rythme du geste ; avec Textus 1.3.13, un pincement sur Mac zoome le graphe, pas le document derrière. Textes d'aide et d'état vide plus courts. Son panneau latéral et sa page suivent la mise en page de Textus 1.3.13.
 - **0.5.3** - Ses barres, listes et contrôles sont désormais ceux de Textus, grandissent avec l’interface et suivent chaque thème ; nécessite Textus 1.3.12.

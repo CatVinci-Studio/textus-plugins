@@ -84,7 +84,7 @@ describe("the settings panel's filters", () => {
   const folder = () =>
     links.graphFromMetadata(
       [
-        doc("ideas/one.md", ["two.md", "Later"], ["draft"]),
+        doc("ideas/one.md", ["two.md", "Later", "chart.png", "v1.2"], ["draft"]),
         doc("two.md"),
         doc("alone.md"),
       ],
@@ -92,13 +92,18 @@ describe("the settings panel's filters", () => {
     );
   const base = { tags: false, existingOnly: false, orphans: true, search: "" };
 
-  it("leaves tags, missing notes and orphans out as asked", () => {
+  it("leaves tags, missing notes, attachments and orphans out as asked", () => {
+    // A picture is no note to make: shown only with attachments on.
     expect(ids(links.filterGraph(folder(), base))).toEqual([
       "/n/alone.md",
       "/n/ideas/one.md",
       "/n/two.md",
       "missing:/n/later.md",
+      "missing:/n/v1.2.md",
     ]);
+    expect(
+      ids(links.filterGraph(folder(), { ...base, attachments: true })),
+    ).toContain("missing:/n/chart.png.md");
     expect(ids(links.filterGraph(folder(), { ...base, tags: true }))).toContain(
       "tag:#draft",
     );

@@ -32,6 +32,7 @@ const DEFAULTS = {
   search: "",
   tags: false,
   existingOnly: false,
+  attachments: false,
   orphans: true,
   groups: [],
 };
