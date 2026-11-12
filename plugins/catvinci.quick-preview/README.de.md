@@ -11,6 +11,7 @@ Das Plugin fragt nach Lesezugriff auf den Editor (um zu sehen, auf welchen Link 
 
 ## Änderungen
 
+- **0.2.2** - Ein Link auf eine verschachtelte Überschrift (`[[Notiz#A#B]]`) zeigt deren Abschnitt, denselben, den ein Klick öffnet. Benötigt Textus 1.4.0.
 - **0.2.1** - Seine Seite sagt jetzt in einem Satz, was es tut, was es kann und was sich in jeder Version geändert hat.
 - **0.2.0** - Ein Link auf einen Block (`#^id`) zeigt diesen Block. Benötigt Textus 1.3.9.
 - **0.1.3** - Nennt, wo es läuft: Desktop, iPhone und iPad.
