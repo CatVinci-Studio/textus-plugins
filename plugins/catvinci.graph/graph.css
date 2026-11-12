@@ -1,10 +1,17 @@
+/* The page is its frame, never taller: a wheel or a pinch over the graph
+   can't scroll its bar up out of sight. */
 html,
 body {
   height: 100%;
+  margin: 0;
+  overflow: hidden;
 }
 body {
   display: flex;
   flex-direction: column;
+}
+#bar {
+  flex: none;
 }
 .stage {
   position: relative;
