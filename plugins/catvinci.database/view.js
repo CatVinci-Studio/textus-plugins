@@ -259,7 +259,7 @@
 
   /** A page's title: click to rename it, the arrow beside it to open it. */
   function titleCell(row) {
-    const td = el("td", { class: "title", "data-key": "name" },
+    const td = el("td", { class: "title", "data-key": "name", title: row.name },
       el("span", { class: "name" }, (typeof row.props.icon === "string" ? row.props.icon + " " : "") + row.name),
       el("button", { type: "button", class: "tx-icon-button open", "aria-label": s("open"), onclick: (e) => { e.stopPropagation(); post({ type: "open", rel: row.rel }); } }, icon("open")));
     td.addEventListener("click", () => {
@@ -305,6 +305,9 @@
     const type = typeOf(key);
     const value = row.props[key];
     const td = el("td", { class: "cell cell-" + type, "data-key": key, tabindex: "0" }, shown(value, type, key));
+    // Cut short to one line: the whole value on hover.
+    const whole = Array.isArray(value) ? value.join(", ") : typeof value === "string" ? value : "";
+    if (whole) td.title = whole;
     const set = (next) => post({ type: "set", rel: row.rel, key, value: next });
     if (isFormula(key)) return td;
     if (type === "checkbox") td.addEventListener("click", () => set(value !== true));

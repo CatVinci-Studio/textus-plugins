@@ -109,31 +109,42 @@ body {
   padding: 0;
   text-align: center;
 }
-.tx-table td.cell {
-  /* Proportional to the block, within a readable range: a long value (a
-     paper's title, a note) wraps rather than stretching its column. A width
-     set by dragging the column's edge goes on the cells themselves. */
-  min-width: clamp(4.5em, 8vw, 12em);
-  max-width: clamp(12em, 24vw, 22em);
-  white-space: normal;
-  overflow-wrap: anywhere;
-  cursor: default;
+/* Dense, as a database reads: every column one width, the title's wider,
+   the block scrolling sideways when they don't fit rather than squeezing
+   them; a column dragged wider keeps its own width (on its cells). The
+   first row sets the widths, so a long value never stretches a column. */
+.tx-table {
+  table-layout: fixed;
 }
-/* Tags wrap within their column, never over the next one. */
-.tx-table td .tags {
-  display: flex;
-  flex-wrap: wrap;
-  padding: var(--space-1) 0;
+.tx-table th {
+  width: 12.5em;
 }
-/* A link keeps to one line, cut short, rather than breaking at every letter. */
-.tx-table td.cell-url {
-  min-width: clamp(6em, 12vw, 14em);
+.tx-table th[data-key="name"] {
+  width: 17.5em;
 }
-.tx-table td.cell-url a {
-  display: block;
+.tx-table th.plus {
+  width: var(--space-8);
+}
+/* One line a row: a value longer than its cell is cut short, whole on
+   hover (its title) or when the cell is edited. */
+.tx-table td {
+  height: calc(var(--control-height-sm) + var(--space-2));
+}
+.tx-table td.cell,
+.tx-table td.title {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+.tx-table td.cell {
+  cursor: default;
+}
+.tx-table td .tags {
+  display: flex;
+  overflow: hidden;
+}
+.tx-table td .tags .tx-tag {
+  flex: none;
 }
 .tx-table td.cell-text,
 .tx-table td.cell-number,
@@ -143,10 +154,6 @@ body {
 }
 .tx-table td.title {
   position: relative;
-  min-width: clamp(8em, 16vw, 20em);
-  max-width: clamp(14em, 34vw, 30em);
-  white-space: normal;
-  overflow-wrap: anywhere;
   padding-right: calc(var(--control-height-sm) + var(--space-3));
   font-weight: 500;
   cursor: text;
