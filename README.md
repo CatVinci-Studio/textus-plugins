@@ -16,6 +16,7 @@ The plugins for [Textus](https://textus.md), the Markdown editor. None of them c
 | Clipboard History | What you copied or cut in your documents, newest first, in the sidebar: click one to put it in again. |
 | Cloud Sync | End-to-end encrypted workspace sync with S3, WebDAV or Nutstore. Keep both versions on conflict. |
 | Codex | Codex in Textus AI: it reads your folder, writes and edits your notes, and asks before it changes anything. |
+| DeepSeek Harness | DeepSeek Harness in Textus AI: DeepSeek's own agent reads your folder, writes and edits your notes, and asks before it changes anything. |
 | Desk Pet | A chibi companion that floats on your desktop or in the window while you write: Moyu, or the LLM-chan of the model Textus AI is using. She writes when you type, dozes when you stop, cheers when you save and leans in when Textus AI is at work. |
 | ECharts | Charts from an ECharts option - bars, lines, pies and more. |
 | Emacs | Emacs keys in the editor: C-f C-b C-n C-p, C-a C-e, M-f M-b, M-< M->, the mark (C-SPC) and the region, C-k and C-w into a kill ring, C-y and M-y, C-/ undo and C-x prefixes. |
@@ -31,6 +32,7 @@ The plugins for [Textus](https://textus.md), the Markdown editor. None of them c
 | Marp | Present a document as slides, the Marp way: a new slide at each ---, themes and layout by Marp directives. The deck follows your writing in a tab beside it, and saves as one HTML file to present from any browser. |
 | Mind Map | Draws a Markdown outline - headings and lists - as a mind map. |
 | Notion Import | Brings in a Notion export (the .zip or its folder) as plain Markdown notes: pages within pages as folders, databases in Obsidian's Bases format, pictures and files beside their pages. Pair it with Wiki to see the pages tree and the databases. |
+| OpenCode | OpenCode in Textus AI: any model it is set up with reads your folder, writes and edits your notes, and asks before it changes anything. |
 | Openverse Pictures | Lets Textus AI find openly licensed pictures on Openverse (Flickr, museums and more) - CC BY, CC BY-SA, CC0 and public domain only - each with the credit its licence asks for. No account or key; Openverse allows about 200 searches a day. |
 | PDF Viewer | Open PDFs in a tab beside your notes: pages, zoom, and text to select and copy. |
 | PlantUML | UML and other diagrams from PlantUML text, drawn on your computer - or by the PlantUML server, if you choose. Drawing on your computer takes about 100 MB more memory; the PlantUML server takes none. |
