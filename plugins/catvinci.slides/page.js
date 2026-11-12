@@ -1,4 +1,4 @@
-// The deck the host renders, one slide at a time: ← → Space and a click
+// The deck the host renders, one slide at a time: ← → Space or the pager
 // to move, F or the button for full screen. The slide shown stays when
 // the writing changes it.
 (function () {
@@ -10,6 +10,8 @@
   let index = Number((api.getState() || {}).index) || 0;
   document.getElementById("export").textContent = t("export");
   document.getElementById("full").textContent = t("fullScreen");
+  document.getElementById("prev").setAttribute("aria-label", t("previous"));
+  document.getElementById("next").setAttribute("aria-label", t("next"));
 
   const slides = () => [...stage.querySelectorAll("div.marpit > svg")];
   function show(n) {
@@ -28,11 +30,22 @@
   document.getElementById("prev").onclick = () => show(index - 1);
   document.getElementById("next").onclick = () => show(index + 1);
   document.getElementById("export").onclick = () => api.postMessage("export");
-  document.getElementById("full").onclick = () => document.documentElement.requestFullscreen();
+  // Where the frame may not go full screen, the tab presents in place.
+  function present() {
+    const root = document.documentElement;
+    if (document.fullscreenElement) return void document.exitFullscreen().catch(() => {});
+    if (root.classList.contains("presenting")) return void root.classList.remove("presenting");
+    const inPlace = () => root.classList.add("presenting");
+    if (!document.fullscreenEnabled || !root.requestFullscreen) return inPlace();
+    Promise.resolve(root.requestFullscreen()).catch(inPlace);
+  }
+  document.getElementById("full").onclick = present;
   addEventListener("keydown", function (e) {
-    if (["ArrowRight", "ArrowDown", "PageDown", " "].includes(e.key)) show(index + 1);
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
+    if (e.key === "Escape" && document.documentElement.classList.contains("presenting")) present();
+    else if (["ArrowRight", "ArrowDown", "PageDown", " "].includes(e.key)) show(index + 1);
     else if (["ArrowLeft", "ArrowUp", "PageUp"].includes(e.key)) show(index - 1);
-    else if (e.key === "f") document.documentElement.requestFullscreen();
+    else if (e.key === "f") present();
     else return;
     e.preventDefault();
   });

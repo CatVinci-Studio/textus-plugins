@@ -13,9 +13,7 @@
   $("today").textContent = api.t("todayButton");
   $("nofolder").textContent = api.t("nofolder");
 
-  const pad = (n) => String(n).padStart(2, "0");
-  const dateOf = (d) =>
-    d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate());
+  const dateOf = (d) => dates.format(d, "YYYY-MM-DD");
   const saved = api.getState() || {};
   let shown = saved.month ? new Date(saved.month + "-01T00:00:00") : new Date();
   shown = new Date(shown.getFullYear(), shown.getMonth(), 1);
@@ -28,12 +26,14 @@
 
   function render() {
     api.setState({ month: dateOf(shown).slice(0, 7) });
-    $("month").textContent = shown.toLocaleDateString(api.language, {
+    const name = shown.toLocaleDateString(api.language, {
       year: "numeric",
       month: "long",
     });
+    $("month").textContent = name;
     $("month").disabled = !monthNotes;
-    $("month").title = monthNotes ? api.t("openMonth") : "";
+    // The full name even when the bar cuts it short.
+    $("month").title = monthNotes ? name + " · " + api.t("openMonth") : name;
     $("nofolder").hidden = hasFolder;
     const grid = $("grid");
     grid.textContent = "";

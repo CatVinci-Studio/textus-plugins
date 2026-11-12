@@ -78,7 +78,19 @@ body {
 .file:hover {
   color: var(--ui-text);
 }
-.tx-tag {
+.tx-badge {
   flex: none;
   align-self: center;
+}
+/* A narrow document: the due date and document go under the words. */
+@media (max-width: 24em) {
+  .task {
+    flex-wrap: wrap;
+  }
+  .text {
+    flex-basis: calc(100% - var(--space-2) - 1.2em);
+  }
+  .file {
+    max-width: none;
+  }
 }

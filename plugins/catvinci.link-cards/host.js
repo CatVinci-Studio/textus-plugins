@@ -48,8 +48,10 @@ function cardBlock(ctx, own) {
   return {
     render: async (codeBlock, webview) => {
       webview.html = await ctx.plugin.readText("card.html");
+      let fetching = false;
       const send = () => {
         const card = linkCards.parse(codeBlock.source);
+        if (!card.image) card.image = linkCards.videoPicture(card.url || "") || undefined;
         webview.postMessage({
           type: "card",
           card: card,
@@ -62,9 +64,15 @@ function cardBlock(ctx, own) {
         if (!m) return;
         if (m.type === "ready") send();
         if (m.type === "open" && linkCards.isUrl(m.url)) textus.layout.openExternal(m.url);
-        if (m.type === "refresh" && own) {
+        if (m.type === "refresh" && own && !fetching) {
           const url = linkCards.parse(codeBlock.source).url;
-          if (url) await codeBlock.setSource(linkCards.write(await cardFor(url)));
+          if (!url) return;
+          fetching = true;
+          try {
+            await codeBlock.setSource(linkCards.write(await cardFor(url)));
+          } finally {
+            fetching = false;
+          }
         }
       });
     },

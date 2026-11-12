@@ -20,11 +20,17 @@ function result(item) {
   };
 }
 
+/** The saved key; a stored "null" is what removing it used to leave. */
+async function savedKey() {
+  const key = await ctx.secrets.get("apiKey");
+  return key && key !== "null" ? key : "";
+}
+
 async function search(args) {
   const query = String(args?.query ?? "").trim();
   if (!query) return "Say what to search for.";
   const count = Math.min(MAX, Math.max(1, Number(args?.count) || 5));
-  const key = await ctx.secrets.get("apiKey");
+  const key = await savedKey();
   const response = await textus.net
     .fetch(key ? `${API}/search` : `${API}/search/public`, {
       method: "POST",
@@ -40,7 +46,8 @@ async function search(args) {
   if (response.status === 401 || response.status === 403)
     return "Keenable refused the API key; set it again or remove it.";
   if (!response.ok) return `Keenable answered ${response.status}.`;
-  const body = await response.json();
+  const body = await response.json().catch(() => null);
+  if (!body) return "Keenable sent an unreadable answer.";
   const found = (body.results ?? []).map(result).filter((r) => r.url);
   if (!found.length) return `Nothing found for "${query}".`;
   return JSON.stringify(found);
@@ -49,11 +56,13 @@ async function search(args) {
 async function setKey() {
   const key = await textus.ui.input({
     prompt: t("keyPrompt"),
-    value: (await ctx.secrets.get("apiKey")) || "",
+    value: await savedKey(),
   });
   if (key === undefined || key === null) return;
-  await ctx.secrets.set("apiKey", key.trim() || null);
-  textus.ui.notice(key.trim() ? t("keySaved") : t("keyRemoved"));
+  const value = key.trim();
+  if (value) await ctx.secrets.set("apiKey", value);
+  else await ctx.secrets.delete("apiKey");
+  textus.ui.notice(value ? t("keySaved") : t("keyRemoved"));
 }
 
 exports.activate = function (context) {

@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { folder, loadPlugin, memoryStorage } from "./plugin-host";
 
 /** Version History's tools for Textus AI (plugins/catvinci.version-history/host.js). */
@@ -25,6 +25,117 @@ async function setup() {
   ];
   return { tools, storage, versions };
 }
+
+/** The plugin's storage held to `quota` characters of JSON, with keys. */
+function smallStorage(quota: number) {
+  const values = new Map<string, unknown>();
+  const size = () =>
+    [...values.values()].reduce<number>(
+      (n, v) => n + JSON.stringify(v).length,
+      0,
+    );
+  return {
+    values,
+    get: async (key: string) => values.get(key),
+    set: async (key: string, value: unknown) => {
+      const old = values.get(key);
+      values.set(key, structuredClone(value));
+      if (size() > quota) {
+        if (old === undefined) values.delete(key);
+        else values.set(key, old);
+        throw new Error("The plugin's storage is full (50 MB).");
+      }
+    },
+    delete: async (key: string) => void values.delete(key),
+    keys: async () => [...values.keys()],
+  };
+}
+
+/** The plugin with its History panel open on `path`; `save` as Textus
+ *  sends a save, `post` as the panel sends a message. */
+function withPanel(storage: ReturnType<typeof smallStorage>, path: string) {
+  let save: (s: {
+    path: string;
+    text: string;
+  }) => Promise<void> = async () => {};
+  let resolve: (w: unknown) => Promise<void> = async () => {};
+  let receive: (m: unknown) => Promise<void> = async () => {};
+  const shown: { versions: { id: number; text: string }[]; full: boolean }[] =
+    [];
+  const opened: string[] = [];
+  const doc = { path };
+  loadPlugin(
+    "catvinci.version-history",
+    {
+      files: { onDidSave: (fn: typeof save) => void (save = fn) },
+      editor: { getPath: async () => doc.path, getText: async () => "" },
+      layout: { openUntitled: async (text: string) => void opened.push(text) },
+      views: {
+        registerWebview: (_id: string, view: { resolve: typeof resolve }) =>
+          void (resolve = view.resolve),
+      },
+    },
+    storage as never,
+  );
+  const ready = resolve({
+    postMessage: (m: (typeof shown)[number]) => void shown.push(m),
+    onDidDispose: () => ({ dispose() {} }),
+    onDidReceiveMessage: (fn: typeof receive) => void (receive = fn),
+  });
+  return {
+    save: (text: string) => save({ path: doc.path, text }),
+    post: (m: unknown) => receive(m),
+    shown,
+    opened,
+    doc,
+    ready,
+  };
+}
+
+describe("version history keeps saves", () => {
+  it("finds a version by its id after autosave merges into it", async () => {
+    const now = vi.spyOn(Date, "now").mockReturnValue(1_000_000);
+    const p = withPanel(smallStorage(1e6), "/root/A.md");
+    await p.ready;
+    await p.save("one");
+    const id = p.shown.at(-1)!.versions[0].id;
+    now.mockReturnValue(1_060_000);
+    await p.save("one two");
+    expect(p.shown.at(-1)!.versions).toHaveLength(1);
+    expect(p.shown.at(-1)!.versions[0].id).toBe(id);
+    await p.post({ type: "open", id });
+    expect(p.opened).toEqual(["one two"]);
+    now.mockRestore();
+  });
+
+  it("makes room from older documents when the storage is full", async () => {
+    const now = vi.spyOn(Date, "now").mockReturnValue(1_000_000);
+    const storage = smallStorage(450);
+    const p = withPanel(storage, "/root/Old.md");
+    await p.ready;
+    await p.save("x".repeat(150));
+    now.mockReturnValue(5_000_000);
+    await p.save("y".repeat(150));
+    p.doc.path = "/root/New.md";
+    now.mockReturnValue(9_000_000);
+    await p.save("z".repeat(150));
+    expect(p.shown.at(-1)!.full).toBe(false);
+    expect(p.shown.at(-1)!.versions.map((v) => v.text[0])).toEqual(["z"]);
+    // The old document lost its oldest version, not all of them.
+    const old = [...storage.values.values()].find(
+      (v) => (v as { path: string }).path === "/root/Old.md",
+    ) as { versions: { text: string }[] };
+    expect(old.versions.map((v) => v.text[0])).toEqual(["y"]);
+    now.mockRestore();
+  });
+
+  it("says so when even one version doesn't fit", async () => {
+    const p = withPanel(smallStorage(100), "/root/A.md");
+    await p.ready;
+    await p.save("x".repeat(150));
+    expect(p.shown.at(-1)).toMatchObject({ versions: [], full: true });
+  });
+});
 
 describe("version history's tools", () => {
   it("list a document's versions, newest first", async () => {

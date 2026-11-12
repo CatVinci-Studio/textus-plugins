@@ -41,6 +41,7 @@ La clave de cita sale del campo Citation Key del elemento (o de una línea `Cita
 
 ## Cambios
 
+- **0.4.3** - Una cita ahora reemplaza las palabras seleccionadas; la lista de referencias ya no dice que Zotero no responde cuando sí lo hace, y la vista previa al pasar el ratón aparece con más fiabilidad.
 - **0.4.2** - Textos de ayuda y de estado vacío más breves.
 - **0.4.1** - Su código se divide en archivos más pequeños según lo que hace cada parte; nada cambia al usarlo.
 - **0.4.0** - las plantillas de notas de lectura las rellena el motor de plantillas de Textus; requiere Textus 1.3.10

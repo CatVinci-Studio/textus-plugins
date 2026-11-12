@@ -1,8 +1,12 @@
-/* The Calendar tab: a sidebar panel (design-language.md 5.4) - the month
-   and its arrows in a bar, the days under it. Controls are Textus's own. */
+/* The Calendar tab: the month and its arrows in a bar, the days under it.
+   Controls are Textus's own; a wide island keeps the month at a calendar's
+   size, measured in text so it follows the interface's text size. */
 body {
   overflow-x: hidden;
-  background: var(--ui-subtle);
+}
+#bar,
+#grid {
+  max-width: 22em;
 }
 #bar {
   gap: var(--space-1);

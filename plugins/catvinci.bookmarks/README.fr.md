@@ -22,6 +22,7 @@ Quand le dossier ouvert est un coffre Obsidian (il contient un dossier `.obsidia
 
 ## Changements
 
+- **0.4.3** - La liste est groupée par chemin du document dans le dossier, un groupe par document ; les longs passages s'arrêtent sur un mot avec « … » ; si l'id de bloc échoue dans un coffre, le signet est quand même gardé.
 - **0.4.2** - Textes d'aide et d'état vide plus courts.
 - **0.4.1** - Sa page dit maintenant en une phrase ce qu'il fait, ce qu'il permet et ce qui a changé à chaque version.
 - **0.4.0** - Dans un coffre Obsidian, les nouveaux signets sont aussi écrits dans son `bookmarks.json`, et supprimés et renommés là aussi.

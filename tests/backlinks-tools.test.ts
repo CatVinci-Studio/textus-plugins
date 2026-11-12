@@ -169,3 +169,61 @@ it("lists an outgoing link the index left unresolved as the note a click finds",
     (await tools.get("list_backlinks")!({ path: "A.md" })).outgoing,
   ).toEqual([{ name: "Note v1.2", path: "Note v1.2.md" }]);
 });
+
+it("takes a missing standard link as written, leaves out in-page links, and redraws on layout only when the document changes", async () => {
+  const docs = [
+    {
+      path: "/root/Week45/A.md",
+      rel: "Week45/A.md",
+      title: "A",
+      links: [
+        { target: "Nov%208.md", wiki: false, resolved: null, line: 0, text: "[Nov 8](Nov%208.md)" },
+        { target: "#Steps", resolved: "/root/Week45/A.md", line: 1, text: "[[#Steps]]" },
+        { target: "#steps", wiki: false, resolved: "/root/Week45/A.md", line: 2, text: "[s](#steps)" },
+      ],
+    },
+  ];
+  const asked: string[] = [];
+  const metadata = {
+    all: async () => docs,
+    get: async () => ({ frontmatter: {} }),
+    backlinks: async () => [],
+    search: async () => ({ hits: [] }),
+    // As Textus: a standard link decoded and beside the note.
+    resolveNote: async (link: string) => {
+      asked.push(link);
+      const name = link.startsWith("[[") ? link.slice(2, -2) : decodeURIComponent(link).replace(/\.md$/, "");
+      return { path: "/root/Week45/" + name + ".md", exists: false, kind: "note", line: null };
+    },
+  };
+  let onLayout: (() => Promise<void>) | null = null;
+  let refreshed = 0;
+  let front = "/root/Week45/A.md";
+  const { tools } = loadPlugin("catvinci.backlinks", {
+    files: folder({ "Week45/A.md": "x" }),
+    metadata,
+    editor: { getPath: async () => front },
+    views: {
+      registerList: () => ({ setMessage() {}, refresh: () => void refreshed++, dispose() {} }),
+    },
+    layout: {
+      tabs: async () => [],
+      onDidChangeLayout: (fn: () => Promise<void>) => {
+        onLayout = fn;
+        return { dispose() {} };
+      },
+    },
+  });
+  expect((await tools.get("list_backlinks")!({ path: "Week45/A.md" })).outgoing).toEqual([
+    { name: "Nov 8", path: null },
+  ]);
+  expect(asked).toEqual(["Nov%208.md"]);
+  await onLayout!();
+  refreshed = 0;
+  await onLayout!();
+  await onLayout!();
+  expect(refreshed).toBe(0);
+  front = "/root/Week45/B.md";
+  await onLayout!();
+  expect(refreshed).toBe(1);
+});

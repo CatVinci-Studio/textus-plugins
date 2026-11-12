@@ -12,6 +12,9 @@ const today = () => textus.dates.format(new Date());
 let ctx;
 
 let panel = null;
+/** The daily notes folder the calendar last showed; file events elsewhere
+ *  leave it as it is. */
+let shownWhere = null;
 
 /** Each kind of note: the settings it is kept by, and their defaults. */
 const PERIODS = {
@@ -85,8 +88,7 @@ function dateAt(where, path) {
 }
 
 /** The dates that have a note, from the folder's file names. */
-async function noteDates() {
-  const where = await folder();
+async function noteDates(where) {
   if (!where) return null;
   const files = await textus.files.find((where.rel ? where.rel + "/" : "") + "**/*.md").catch(() => []);
   return files.map((f) => dateAt(where, f.path)).filter(Boolean);
@@ -112,11 +114,13 @@ function weekToken(format) {
 
 async function refresh() {
   if (!panel) return;
+  const where = await folder();
+  shownWhere = where;
   const weekly = await folder("weekly");
   const monthly = await folder("monthly");
   panel.postMessage({
     type: "dates",
-    dates: await noteDates(),
+    dates: await noteDates(where),
     weekStart: weekStart(),
     week: weekly && weekly.enabled ? weekToken(weekly.format) : null,
     month: !!(monthly && monthly.enabled),
@@ -125,8 +129,21 @@ async function refresh() {
 
 /** `date` (YYYY-MM-DD) `days` later, or earlier when negative. */
 function shift(date, days) {
-  const [y, m, d] = date.split("-").map(Number);
-  return textus.dates.format(new Date(y, m - 1, d + days));
+  const day = dayOf(date);
+  day.setDate(day.getDate() + days);
+  return textus.dates.format(day);
+}
+
+/** Whether a file event at `path` may change the calendar: a note under
+ *  the daily folder, or (`folders`) a folder holding or inside it. */
+function concerns(path, folders) {
+  const w = shownWhere;
+  if (!w || !path) return true;
+  const inside = folderPaths.rel(w.root, path);
+  if (inside === null) return false;
+  const prefix = w.rel ? w.rel + "/" : "";
+  if (/\.md$/i.test(inside)) return inside.startsWith(prefix);
+  return !!folders && (inside.startsWith(prefix) || prefix.startsWith(inside + "/"));
 }
 
 /** The day of the note in front - a daily note's name - else today. */
@@ -185,6 +202,7 @@ async function noteOf(input) {
   if (!where) return { error: "No folder is open." };
   const date = input.date ? String(input.date).trim() : today();
   if (!DAY.test(date)) return { error: "date must be YYYY-MM-DD." };
+  if (textus.dates.format(dayOf(date)) !== date) return { error: "date must be a real day, YYYY-MM-DD." };
   const note = noteFor(where, date);
   return { date: date, path: note.path, rel: note.rel, where: where, note: note };
 }
@@ -239,10 +257,11 @@ exports.activate = function (context) {
   textus.ai.registerTool("read_daily_note", readDailyNote);
   textus.ai.registerTool("append_to_daily_note", appendToDailyNote);
   textus.files.onDidChangeRoot(refresh);
-  textus.files.onDidSave(refresh);
-  textus.files.onDidCreate(refresh);
-  textus.files.onDidDelete(refresh);
-  textus.files.onDidRename(refresh);
+  textus.files.onDidChangeConventions(refresh);
+  textus.files.onDidSave((e) => concerns(e && e.path) && refresh());
+  textus.files.onDidCreate((e) => concerns(e && e.path) && refresh());
+  textus.files.onDidDelete((e) => concerns(e && e.path, true) && refresh());
+  textus.files.onDidRename((e) => (concerns(e && e.from, true) || concerns(e && e.to, true)) && refresh());
   textus.settings.onDidChange(refresh);
   textus.views.registerWebview("catvinci.daily-notes.calendar", {
     resolve: async function (webview) {

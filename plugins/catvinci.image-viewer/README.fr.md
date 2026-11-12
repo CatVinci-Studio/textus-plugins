@@ -19,6 +19,7 @@ Elle n’en demande aucune. Elle lit seulement le fichier que vous ouvrez, sur o
 
 ## Changements
 
+- **0.2.4** - Une image tournée et zoomée défile maintenant jusqu'à chaque bord, et une image de côté tient dans la fenêtre. Le zoom et la rotation restent quand le panneau bouge, un quatrième quart de tour ne revient plus en arrière, et la barre tient dans un panneau étroit.
 - **0.2.3** - Un pincement sur le trackpad zoome en douceur, au rythme du geste ; avec Textus 1.3.13, un pincement sur Mac zoome l’image, pas le document derrière. Sa barre suit l'ordre de Textus : ce qu'elle montre, puis recherche et zoom.
 - **0.2.2** - Ses barres, listes et contrôles sont désormais ceux de Textus, grandissent avec l’interface et suivent chaque thème ; nécessite Textus 1.3.12.
 - **0.2.1** - Sa page dit maintenant en une phrase ce qu'il fait, ce qu'il permet et ce qui a changé à chaque version.

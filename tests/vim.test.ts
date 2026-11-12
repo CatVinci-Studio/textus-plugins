@@ -98,3 +98,37 @@ describe("an Obsidian vault's .obsidian.vimrc", () => {
     expect(done).toEqual(["deleteLines", "deleteChars", "deleteChars"]);
   });
 });
+
+describe("the command line from visual mode", () => {
+  it("leaves visual mode and saves though the editor refuses the collapse", async () => {
+    const { loadPlugin } = await import("./plugin-host");
+    let key: ((k: string) => void) | null = null;
+    const ran: string[] = [];
+    loadPlugin("catvinci.vim", {
+      ui: { pick: async () => ":'<,'>w" },
+      commands: {
+        register: () => ({ dispose() {} }),
+        execute: async (id: string) => void ran.push(id),
+      },
+      editor: {
+        keys: {
+          onKey: (fn: typeof key) => ((key = fn), { dispose() {} }),
+          capture: async () => {},
+          // As after a palette left open over 3 s: the editor refuses.
+          exec: async (op: { op: string }) => {
+            if (op.op === "collapse") throw new Error("Editor actions follow a key the user pressed.");
+            return { empty: false };
+          },
+        },
+      },
+    });
+    const press = async (k: string) => {
+      key!(k);
+      await new Promise((r) => setTimeout(r, 20));
+    };
+    await new Promise((r) => setTimeout(r, 20));
+    await press("v");
+    await press(":");
+    expect(ran).toEqual(["textus.save"]);
+  });
+});

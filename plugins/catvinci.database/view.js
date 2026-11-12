@@ -36,7 +36,7 @@
     for (const c of children.flat()) if (c !== null && c !== undefined && c !== false) node.append(c);
     return node;
   }
-  const s = (key) => (data && data.strings && data.strings[key]) || key;
+  const s = (key) => api.t(key);
   const icon = (name) => el("span", { class: "tx-icon", "data-icon": name });
   const typeOf = (key) => (key === "name" ? "text" : data.types[key] || "text");
   const label = (key) => (key === "name" ? s("page") : key.replace(/^formula\./, "ƒ "));

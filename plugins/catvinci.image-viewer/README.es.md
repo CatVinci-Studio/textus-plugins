@@ -19,6 +19,7 @@ No pide ninguno. Solo lee el archivo que abres, en escritorio y en iOS.
 
 ## Cambios
 
+- **0.2.4** - Una imagen girada y ampliada ahora se desplaza hasta cada borde, y una imagen de lado cabe en la ventana. El zoom y el giro se mantienen al mover el panel, un cuarto giro ya no vuelve atrás y la barra cabe en un panel estrecho.
 - **0.2.3** - Un pellizco en el trackpad hace zoom con suavidad, al ritmo del gesto; con Textus 1.3.13, en un Mac el pellizco amplía la imagen, no el documento de detrás. Su barra sigue el orden de Textus: lo que muestra, luego buscar y zoom.
 - **0.2.2** - Sus barras, listas y controles son ahora los de Textus, crecen con la interfaz y siguen cada tema; necesita Textus 1.3.12.
 - **0.2.1** - Su página dice ahora en una frase qué hace, qué puede hacer y qué cambió en cada versión.

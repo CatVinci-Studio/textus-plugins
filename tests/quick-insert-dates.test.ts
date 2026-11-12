@@ -6,6 +6,7 @@ let nd: {
     typed: string,
     today: Date,
     limit?: number,
+    language?: string,
   ) => { phrase: string; date: string }[];
 };
 
@@ -34,6 +35,26 @@ describe("@ dates", () => {
     expect(date("后天")).toBe("2026-10-30");
     expect(date("昨日")).toBe("2026-10-27");
     expect(date("3天后")).toBe("2026-10-31");
+    expect(date("後天")).toBe("2026-10-30");
+    expect(date("大後天")).toBe("2026-10-31");
+    expect(date("3天後")).toBe("2026-10-31");
+  });
+
+  it("knows Traditional Chinese weekdays and weeks", () => {
+    expect(date("週三")).toBe("2026-11-04");
+    expect(date("下週五")).toBe("2026-11-06");
+    expect(date("禮拜五")).toBe("2026-10-30");
+    expect(date("下週")).toBe("2026-11-04");
+  });
+
+  it("lists the UI language's phrases first", () => {
+    const first = (language: string) =>
+      nd.suggest("", wed, 8, language).map((s) => s.phrase);
+    expect(first("en")[0]).toBe("today");
+    expect(first("ja")[0]).toBe("今日");
+    expect(first("zh-Hant")).toContain("後天");
+    expect(first("zh-Hant")).not.toContain("后天");
+    expect(first("zh-CN")).toContain("后天");
   });
 
   it("takes a weekday as the next one, and next week's from the week after", () => {

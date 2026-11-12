@@ -25,6 +25,7 @@ Das Plugin nutzt [markmap](https://markmap.js.org). Es fragt nur nach einer Bere
 
 ## Änderungen
 
+- **0.3.3** - Scrollen über einer Mindmap scrollt jetzt die Notiz; zum Zoomen mit zwei Fingern ziehen oder Strg gedrückt halten. Die Mindmap übernimmt Schrift und Farben deines Themes, auch im Dunkelmodus, und passt beim Öffnen ganz hinein.
 - **0.3.2** - Seine Seite sagt jetzt in einem Satz, was es tut, was es kann und was sich in jeder Version geändert hat.
 - **0.3.1** - Eine Mindmap außerhalb des sichtbaren Bereichs wird als Bild exportiert statt als Quelltext.
 - **0.3.0** - Textus AI kann einen `markmap`-Block prüfen, bevor es ihn schreibt.

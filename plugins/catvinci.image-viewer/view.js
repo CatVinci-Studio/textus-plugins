@@ -13,11 +13,16 @@
       $(id).setAttribute(attr, api.t(key));
   const stage = $("stage");
   const image = $("image");
-  let zoom = 1;
-  let fit = true;
-  // A quarter turn at a time, for a photo taken on its side - the view
-  // only, the file stays as it is.
-  let turns = 0;
+  const frame = $("frame");
+  // Kept across the frame being drawn again (island move, theme, language).
+  const saved = api.getState() || {};
+  let zoom = saved.zoom || 1;
+  let fit = saved.fit !== false;
+  // Quarter turns, counted on so the 4th turn keeps going round instead of
+  // spinning back - the view only, the file stays as it is.
+  let turns = saved.turns || 0;
+  let source = !!saved.source;
+  const keep = () => api.setState({ zoom, fit, turns, source });
 
   $("source").textContent = t("source");
 
@@ -25,14 +30,21 @@
     image.naturalWidth ? image.width / image.naturalWidth : 1;
 
   function show() {
+    const sideways = turns % 2 === 1;
     stage.classList.toggle("fit", fit);
-    image.style.width = fit ? "" : image.naturalWidth * zoom + "px";
-    image.style.transform = turns ? "rotate(" + turns * 90 + "deg)" : "";
+    const w = image.naturalWidth * zoom;
+    const h = image.naturalHeight * zoom;
+    image.style.width = fit ? "" : w + "px";
+    // The frame takes the turned picture's size, so scrolling reaches all of it.
+    frame.style.width = fit ? "" : (sideways ? h : w) + "px";
+    frame.style.height = fit ? "" : (sideways ? w : h) + "px";
+    image.style.rotate = turns ? turns * 90 + "deg" : "";
     // On its side, fitting means fitting the other way round.
-    stage.classList.toggle("sideways", turns % 2 === 1);
+    stage.classList.toggle("sideways", sideways);
     $("zoom").textContent = Math.round((fit ? scaleNow() : zoom) * 100) + "%";
     // The figure itself switches: fitted, it shows the picture's own size.
     $("zoom").title = t(fit ? "actual" : "fit");
+    keep();
   }
   function setZoom(next) {
     fit = false;
@@ -48,7 +60,7 @@
   };
   $("zoom").onclick = () => (fit ? setZoom(1) : toFit());
   $("rotate").onclick = () => {
-    turns = (turns + 1) % 4;
+    turns += 1;
     show();
   };
   // Double-click: fit, or the picture's own size where it was clicked.
@@ -139,18 +151,25 @@
         " · " +
         size(message.bytes.length);
       show();
+      // Turned already when restored: no spin on the way in.
+      requestAnimationFrame(() => image.classList.add("settled"));
     };
     if (!svg) return;
     const button = $("source");
     const code = $("code");
     button.hidden = false;
     code.textContent = new TextDecoder().decode(message.bytes);
-    button.onclick = () => {
-      const toSource = code.hidden;
-      code.hidden = !toSource;
-      stage.hidden = toSource;
-      button.textContent = toSource ? t("picture") : t("source");
+    const showSource = () => {
+      code.hidden = !source;
+      stage.hidden = source;
+      button.textContent = source ? t("picture") : t("source");
+      keep();
     };
+    button.onclick = () => {
+      source = !source;
+      showSource();
+    };
+    showSource();
   });
   api.postMessage({ type: "ready" });
 })();

@@ -55,14 +55,16 @@ function daily() {
   return dailyNotes;
 }
 
-/** The link to `day`'s note (YYYY-MM-DD), as the folder writes links. */
-async function dayLink(day) {
+/** The link to `day`'s note (YYYY-MM-DD) from the document at `path`, as
+ *  the folder writes links. */
+async function dayLink(day, path) {
   const notes = await daily();
   const name = textus.dates.format(dateOf(day), notes.format);
   if (!notes.root) return "[" + name + "](" + name.replace(/ /g, "%20") + ".md)";
   const note =
     notes.root + "/" + (notes.folder ? notes.folder + "/" : "") + name + ".md";
-  const from = (await textus.editor.getPath().catch(() => null)) || note;
+  const from =
+    path || (await textus.editor.getPath().catch(() => null)) || note;
   return linkStyle.linkTo(note, from);
 }
 
@@ -77,8 +79,10 @@ function parseDate(input) {
     .slice(0, 3);
   return {
     error:
-      "Not a phrase this knows: today, tomorrow, next friday, in 3 days, 下周五, 明後日 and the like.",
-    suggestions: words ? naturalDates.suggest(words, today, 8) : [],
+      "Not a phrase this knows: today, tomorrow, next friday, in 3 days, 下周五, 下週五, 明後日 and the like.",
+    suggestions: words
+      ? naturalDates.suggest(words, today, 8, textus.env.language)
+      : [],
   };
 }
 
@@ -87,13 +91,22 @@ function parseDate(input) {
 async function dateCompletions(context) {
   const reminder = /[(（]$/.test(context.text.slice(0, -context.match.length));
   const asLink = !reminder && (await textus.settings.get("insert")) === "link";
-  const found = naturalDates.suggest(context.match.slice(1), new Date(), 8);
+  const found = naturalDates.suggest(
+    context.match.slice(1),
+    new Date(),
+    8,
+    textus.env.language,
+  );
   const out = [];
   for (const s of found)
     out.push({
       label: "@" + s.phrase,
       detail: s.date,
-      insert: reminder ? "@" + s.date : asLink ? await dayLink(s.date) : s.date,
+      insert: reminder
+        ? "@" + s.date
+        : asLink
+          ? await dayLink(s.date, context.path)
+          : s.date,
     });
   return out;
 }

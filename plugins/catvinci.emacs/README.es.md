@@ -16,6 +16,7 @@ Funciona en escritorio y en iPhone. Pide un solo permiso, teclas del editor, par
 
 ## Cambios
 
+- **0.1.6** - C-x C-s y C-x C-g vuelven a funcionar en Windows y Linux. La barra de estado muestra Emacs solo cuando de verdad tiene las teclas.
 - **0.1.5** - Textos de ayuda y de estado vacío más breves.
 - **0.1.4** - Su página dice ahora en una frase qué hace, qué puede hacer y qué cambió en cada versión.
 - **0.1.3** - Indica dónde funciona: escritorio y iPhone.

@@ -13,6 +13,7 @@ It handles PNG, JPEG, GIF, WebP, AVIF, BMP, SVG, ICO, HEIC and TIFF pictures. It
 
 ## Changes
 
+- **0.1.4** - Leaves pictures where a document's Typora image folder setting puts them, and no longer moves a folder while some links to it may still be unchecked.
 - **0.1.3** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
 - **0.1.2** - Leaves pictures where an Obsidian vault's attachment folder setting or a Logseq graph puts them.
 - **0.1.1** - A shorter name: Images Follow Document.

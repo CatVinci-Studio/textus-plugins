@@ -1,7 +1,7 @@
 {
   "id": "catvinci.plantuml",
   "name": "%name%",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "publisher": "catvinci",
   "author": "CatVinci Studio",
   "description": "%description%",
@@ -89,7 +89,7 @@
     },
     "es": {
       "name": "PlantUML",
-      "description": "Diagramas UML y otros a partir de texto PlantUML, dibujados en tu equipo o, si lo eliges, por el servidor de PlantUML. Dibujar en tu ordenador usa unos 100 MB más de memoria; el servidor de PlantUML no usa ninguno.",
+      "description": "Diagramas UML y otros a partir de texto PlantUML, dibujados en tu equipo o, si lo eliges, por el servidor de PlantUML. Dibujar en tu equipo usa unos 100 MB más de memoria; el servidor de PlantUML no usa ninguno.",
       "renderer": "Dibujado por",
       "rendererHelp": "El servidor recibe el texto del diagrama.",
       "local": "Este equipo",
@@ -105,7 +105,7 @@
     },
     "de": {
       "name": "PlantUML",
-      "description": "UML- und andere Diagramme aus PlantUML-Text, auf Ihrem Rechner gezeichnet – oder auf Wunsch vom PlantUML-Server. Auf deinem Computer zu zeichnen braucht etwa 100 MB mehr Arbeitsspeicher; der PlantUML-Server braucht keinen.",
+      "description": "UML- und andere Diagramme aus PlantUML-Text, auf Ihrem Rechner gezeichnet – oder auf Wunsch vom PlantUML-Server. Auf Ihrem Rechner zu zeichnen braucht etwa 100 MB mehr Arbeitsspeicher; der PlantUML-Server braucht keinen.",
       "renderer": "Gezeichnet von",
       "rendererHelp": "Der Server erhält den Text des Diagramms.",
       "local": "Diesem Rechner",

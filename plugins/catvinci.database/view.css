@@ -192,7 +192,6 @@ body {
   cursor: grab;
   user-select: none;
   -webkit-user-select: none;
-  cursor: grab;
 }
 .record .prop,
 .tile .prop {

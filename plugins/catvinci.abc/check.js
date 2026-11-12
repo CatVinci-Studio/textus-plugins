@@ -4,21 +4,25 @@
 // a tune from engraving as meant.
 /* exported checkBlock */
 const FIELD = /^([A-Za-z]):\s*(.*)$/;
-const KEY = /^(?:[A-G][#b]?\s*(?:m|min|maj|ion|mix|dor|phr|lyd|loc|aeo|minor|major)?|HP|Hp|none)(?:\s|$)/i;
+// A mode counts by its first three letters (Ddor, Ddorian); a key may be
+// left out, or only clef= and other key=value words given.
+const KEY = /^(?:$|[A-G][#b]?\s*(?:m|(?:maj|min|ion|mix|dor|phr|lyd|loc|aeo)[a-z]*)?(?:\s|$)|(?:HP|Hp|none)(?:\s|$)|[a-z-]+=)/i;
 const METER = /^(?:C\|?|none|\d+(?:\+\d+)*\/\d+)$/;
-const LENGTH = /^1\/\d+$/;
+const LENGTH = /^\d+\/\d+$/;
 /** What a music line may hold besides notes: lengths, bars, ties, slurs,
- *  tuplets, broken rhythm, grace notes, decorations, chords and spaces. */
-const MUSIC = /[A-Ga-gzZxX^_=',0-9/|:[\]()\-<>{}.~HLMOPSTuvy&\s\\]/g;
+ *  tuplets, broken rhythm, grace notes, decorations, chords, spaces, beam
+ *  spacers and score line-breaks. */
+const MUSIC = /[A-Ga-gzZxX^_=',0-9/|:[\]()\-<>{}.~HLMOPSTuvy&\s\\`$]/g;
 
 function checkBlock(source) {
   const problems = [];
-  const lines = source.split("\n");
+  const lines = source.split(/\r?\n/);
   const key = lines.findIndex((l) => /^K:/.test(l));
   if (key < 0) return ["No K: line: the header ends with the key, as K:C or K:Am, before the music."];
   lines.forEach((raw, i) => {
     const at = "Line " + (i + 1);
     const line = raw.replace(/%.*$/, "");
+    if (line.startsWith("+:")) return;
     const field = FIELD.exec(line);
     if (field) {
       const value = field[2].trim();

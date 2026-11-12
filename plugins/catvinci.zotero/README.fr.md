@@ -41,6 +41,7 @@ La clé de citation vient du champ Citation Key de l’élément (ou d’une lig
 
 ## Changements
 
+- **0.4.3** - Une citation remplace désormais les mots sélectionnés ; la liste des références n'indique plus que Zotero est injoignable quand il répond, et l'aperçu au survol s'affiche plus sûrement.
 - **0.4.2** - Textes d'aide et d'état vide plus courts.
 - **0.4.1** - Son code est réparti en fichiers plus petits selon le rôle de chaque partie ; rien ne change à l'usage.
 - **0.4.0** - les modèles de notes de lecture sont remplis par le moteur de modèles de Textus ; nécessite Textus 1.3.10

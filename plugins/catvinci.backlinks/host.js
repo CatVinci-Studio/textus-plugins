@@ -4,7 +4,7 @@
 // (complete.js); and the notes, sections and blocks ![[embeds]] show. What
 // Textus knows of the folder (textus.metadata) says where links go.
 
-/* global backlinkMentions, completeLinks, convertLinks, folderPaths, noteParts, linkStyle */
+/* global backlinkMentions, completeLinks, convertLinks, folderPaths, noteParts, linkStyle, textLines */
 const t = (key, ...args) => textus.l10n.t(key, ...args);
 /** Unlinked mentions are looked for up to this many lines. */
 const SEARCH_LIMIT = 300;
@@ -19,9 +19,10 @@ const short = (text) => (text.length > 200 ? text.slice(0, 199) + "…" : text);
 /** The note a link the index found no file for goes to, as a click takes
  *  it - one to make, or one the index missed; null for a web address or a
  *  file that isn't a note. */
-async function noteOf(target, from) {
-  if (/^[a-z][a-z0-9+.-]*:/i.test(target)) return null;
-  const found = await textus.metadata.resolveNote("[[" + target + "]]", from);
+async function noteOf(link, from) {
+  if (/^[a-z][a-z0-9+.-]*:/i.test(link.target)) return null;
+  // A standard link goes as written: encoded, and beside the note.
+  const found = await textus.metadata.resolveNote(link.wiki === false ? link.target : "[[" + link.target + "]]", from);
   return found && found.kind === "note" ? found : null;
 }
 
@@ -92,8 +93,9 @@ async function gather(focus, doc) {
   const out = new Set();
   for (const l of doc.links) {
     // A [[link]] to no note still shows, as the note a click would make.
-    const found = l.resolved ? { path: l.resolved, exists: true } : await noteOf(l.target, focus);
-    if (!found) continue;
+    const found = l.resolved ? { path: l.resolved, exists: true } : await noteOf(l, focus);
+    // In-page links ([[#Heading]], (#heading)) go to the note itself.
+    if (!found || found.path === focus) continue;
     const key = found.path.toLowerCase();
     if (out.has(key)) continue;
     out.add(key);
@@ -308,7 +310,11 @@ exports.activate = function (ctx) {
     textus.metadata.onDidChange(refresh),
     textus.files.onDidChangeRoot(refresh),
     textus.editor.onDidChangeActive(refresh),
-    textus.layout.onDidChangeLayout(refresh),
+    // Only a change of the document shown matters, not a divider moving.
+    textus.layout.onDidChangeLayout(async () => {
+      const was = last;
+      if ((await focusPath()) !== was) refresh();
+    }),
     textus.ai.registerTool("list_backlinks", listBacklinks),
     textus.commands.register("catvinci.backlinks.linkBlock", completeLinks.linkBlock),
     textus.views.registerEmbed("catvinci.backlinks.embed", { provideEmbed: provideEmbed }),

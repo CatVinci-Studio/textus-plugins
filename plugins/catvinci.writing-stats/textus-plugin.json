@@ -1,7 +1,7 @@
 {
   "id": "catvinci.writing-stats",
   "name": "%name%",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "publisher": "catvinci",
   "author": "CatVinci Studio",
   "description": "%description%",
@@ -36,6 +36,7 @@
         "key": "goal",
         "type": "number",
         "default": 500,
+        "min": 0,
         "title": "%goal%"
       }
     ],

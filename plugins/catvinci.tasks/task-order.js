@@ -13,32 +13,35 @@
     return !!task && !task.open;
   };
 
-  /** `lines`, a list (as a block holds it), with each level's finished
-   *  tasks after its open ones. */
-  function orderList(lines) {
-    if (!lines.length || !ITEM.test(lines[0])) return lines;
-    const base = indentOf(lines[0]);
+  /** `rows` ({ text }), a list's lines, with each level's finished tasks
+   *  after their open ones; the same row objects, moved. */
+  function orderRows(rows) {
+    if (!rows.length || !ITEM.test(rows[0].text)) return rows;
+    const base = indentOf(rows[0].text);
     const items = [];
-    for (const line of lines) {
-      const starts = ITEM.test(line) && indentOf(line) <= base;
-      if (starts || !items.length) items.push([line]);
-      else items[items.length - 1].push(line);
+    for (const row of rows) {
+      const starts = ITEM.test(row.text) && indentOf(row.text) <= base;
+      if (starts || !items.length) items.push([row]);
+      else items[items.length - 1].push(row);
     }
     // What is under each item, in order too.
     const ordered = items.map((item) => {
       const under = item.slice(1);
-      const from = under.findIndex((l) => ITEM.test(l));
+      const from = under.findIndex((r) => ITEM.test(r.text));
       if (from < 0) return item;
-      return [item[0], ...under.slice(0, from), ...orderList(under.slice(from))];
+      return [item[0], ...under.slice(0, from), ...orderRows(under.slice(from))];
     });
-    if (!BULLET.test(lines[0])) return ordered.flat();
-    const open = ordered.filter((item) => !finished(item[0]));
-    const done = ordered.filter((item) => finished(item[0]));
+    if (!BULLET.test(rows[0].text)) return ordered.flat();
+    const open = ordered.filter((item) => !finished(item[0].text));
+    const done = ordered.filter((item) => finished(item[0].text));
     return open.concat(done).flat();
   }
 
-  /** `text`'s list around line `at` (from 0) put in order: the new text,
-   *  or null when nothing moves. */
+  /** `lines`, a list (as a block holds it), put in order. */
+  const orderList = (lines) => orderRows(lines.map((text) => ({ text }))).map((r) => r.text);
+
+  /** `text`'s list around line `at` (from 0) put in order: { text, place }
+   *  where place(i) is the line i (from 0) moved to; null when nothing moves. */
   function orderAround(text, at) {
     const lines = text.split("\n");
     if (!lines[at] || !ITEM.test(lines[at])) return null;
@@ -49,10 +52,14 @@
     while (from < at && !ITEM.test(lines[from])) from++;
     let to = at + 1;
     while (to < lines.length && inList(lines[to])) to++;
-    const list = lines.slice(from, to);
-    const ordered = orderList(list);
-    if (ordered.every((l, i) => l === list[i])) return null;
-    return lines.slice(0, from).concat(ordered, lines.slice(to)).join("\n");
+    const rows = lines.slice(from, to).map((line, i) => ({ text: line, was: from + i }));
+    const ordered = orderRows(rows);
+    if (ordered.every((r, i) => r === rows[i])) return null;
+    const moved = new Map(ordered.map((r, i) => [r.was, from + i]));
+    return {
+      text: lines.slice(0, from).concat(ordered.map((r) => r.text), lines.slice(to)).join("\n"),
+      place: (i) => (moved.has(i) ? moved.get(i) : i),
+    };
   }
 
   /** A list block's Markdown with only its boxes' marks and done dates

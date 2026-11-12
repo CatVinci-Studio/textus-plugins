@@ -63,6 +63,10 @@ async function changeBoard(name, change) {
   if (!(await textus.files.stat(file.path))) return { error: "No board " + file.rel };
   let answer = null;
   await textus.files.process(file.path, function (text) {
+    if (!boardText(file.rel, text)) {
+      answer = notBoard(file);
+      return text;
+    }
     const board = kanbanMarkdown.parse(text);
     answer = change(board);
     return answer.error ? text : kanbanMarkdown.serialize(board);
@@ -73,16 +77,27 @@ async function changeBoard(name, change) {
 /** Whether `text` is a board: kanban-plugin in its front matter. */
 const isBoard = (text) => /^---\r?\n(?:[^\n]*\n)*?kanban-plugin\s*:/.test(String(text).split(/\r?\n---/)[0] + "\n");
 
+/** Whether a file is a board: named .kanban.md or marked in its front matter. */
+const boardText = (rel, text) => /\.kanban\.md$/i.test(rel) || isBoard(text);
+const notBoard = (file) => ({ error: file.rel + " isn't a board." });
+
 /** How many documents listBoards reads at most, looking for boards. */
 const MAX_SCAN = 3000;
+
+/** The documents that may be boards: from the folder's index when it has
+ *  them (front matter already read), else every .md. */
+async function candidates() {
+  const docs = await textus.metadata.all().catch(() => null);
+  if (!Array.isArray(docs) || !docs.length) return (await textus.files.find("**/*.md")).slice(0, MAX_SCAN);
+  return docs.filter((d) => /\.kanban\.md$/i.test(d.rel) || (d.frontmatter && "kanban-plugin" in d.frontmatter));
+}
 
 async function listBoards() {
   if (!(await textus.files.root())) return NO_FOLDER;
   const boards = [];
-  const files = (await textus.files.find("**/*.md")).slice(0, MAX_SCAN);
-  for (const file of files) {
+  for (const file of await candidates()) {
     const text = await textus.files.readText(file.path).catch(() => "");
-    if (!/\.kanban\.md$/i.test(file.rel) && !isBoard(text)) continue;
+    if (!boardText(file.rel, text)) continue;
     const board = kanbanMarkdown.parse(text);
     boards.push({
       path: file.rel,
@@ -97,7 +112,9 @@ async function readBoard(input) {
   if (!file) return NO_FOLDER;
   if (file.error) return file;
   if (!(await textus.files.stat(file.path))) return { error: "No board " + file.rel };
-  const board = kanbanMarkdown.parse(await textus.files.readText(file.path));
+  const text = await textus.files.readText(file.path);
+  if (!boardText(file.rel, text)) return notBoard(file);
+  const board = kanbanMarkdown.parse(text);
   return { board: file.rel, lists: board.lists };
 }
 

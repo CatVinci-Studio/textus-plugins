@@ -1,39 +1,39 @@
 // The graph pages: the whole folder's (global.html) and the sidebar's,
-// around the document in front (local.html), each with a small settings
-// panel - filters and colour groups. The host filters the graph and sends
-// it back; how it looks adapts by itself (graph-view.js).
+// around the document in front (local.html). The full graph has a small
+// settings panel - filters and colour groups. The host filters the graph
+// and sends it back; how it looks adapts by itself (graph-view.js).
 (function () {
   "use strict";
   const api = acquireTextusApi();
   const local = document.documentElement.dataset.local === "true";
   const t = api.t;
-  // "3 notes", in the language's plural form ("notes.one", "notes.few"…).
+  // "3 notes", in the language's plural form ("notes.one", "notes.few"…);
+  // only Russian has more forms than one and other.
   const count = (key, n) => {
-    const form = key + "." + new Intl.PluralRules(api.language).select(n);
+    const rule = new Intl.PluralRules(api.language).select(n);
+    const form = key + "." + (/^ru\b/.test(api.language) || rule === "one" ? rule : "other");
     const text = t(form, n);
     return text === form ? t(key + ".other", n) : text;
   };
   const $ = (id) => document.getElementById(id);
   const view = window.createGraphView($("graph"), {
-    onOpen: (path, newTab) =>
-      api.postMessage({ type: "open", path: path }),
+    onOpen: (path, beside) =>
+      api.postMessage({ type: "open", path: path, beside: beside }),
   });
   if ($("fit")) {
     $("fit").textContent = t("fit");
     $("fit").onclick = () => view.zoomToFit();
   }
 
-  // The panel, section by section: [key, kind, range]. "local" rows are
-  // the sidebar's only, "global" the full graph's.
+  // The full graph's panel, section by section: [key, kind].
   const SECTIONS = [
     [
       "filters",
       [
         ["search", "search"],
-        ["depth", "range", [1, 5, 1], "local"],
         ["tags", "toggle"],
         ["existingOnly", "toggle"],
-        ["orphans", "toggle", null, "global"],
+        ["orphans", "toggle"],
       ],
     ],
     ["groups", []],
@@ -73,8 +73,7 @@
     );
   }
 
-  function row([key, kind, range, only]) {
-    if (only && only !== (local ? "local" : "global")) return null;
+  function row([key, kind]) {
     const label = t("set." + key);
     if (kind === "search") {
       const input = el("input", {
@@ -87,26 +86,11 @@
       input.addEventListener("input", () => change("search", input.value));
       return el("label", {}, [input]);
     }
-    if (kind === "toggle") {
-      const input = el("input", { type: "checkbox", className: "tx-switch", role: "switch", checked: !!settings[key] });
-      input.addEventListener("change", () => change(key, input.checked));
-      // Only the switch turns it on or off, not a click on its words.
-      input.setAttribute("aria-label", label);
-      return el("div", { className: "row" }, [el("span", { textContent: label }), input]);
-    }
-    const [min, max, step] = range;
-    const input = el("input", {
-      type: "range",
-      className: "tx-slider",
-      min: String(min),
-      max: String(max),
-      step: String(step),
-      value: String(settings[key]),
-    });
-    input.addEventListener("input", () =>
-      change(key, Number(input.value)),
-    );
-    return el("label", {}, [el("span", { textContent: label }), input]);
+    const input = el("input", { type: "checkbox", className: "tx-switch", role: "switch", checked: !!settings[key] });
+    input.addEventListener("change", () => change(key, input.checked));
+    // Only the switch turns it on or off, not a click on its words.
+    input.setAttribute("aria-label", label);
+    return el("div", { className: "row" }, [el("span", { textContent: label }), input]);
   }
 
   function groupRows() {
@@ -167,7 +151,7 @@
         details.open ? open.add(name) : open.delete(name),
       );
       const items = name === "groups" ? groupRows() : rows.map(row);
-      for (const item of items) if (item) details.append(item);
+      for (const item of items) details.append(item);
       return details;
     });
     const reset = el("button", {
@@ -185,14 +169,15 @@
     );
   }
 
-
   const gear = $("settings");
-  gear.setAttribute("aria-label", t("set.title"));
-  gear.onclick = () => {
-    panel.hidden = !panel.hidden;
-    gear.setAttribute("aria-expanded", String(!panel.hidden));
-  };
-  panel.addEventListener("submit", (e) => e.preventDefault());
+  if (gear) {
+    gear.setAttribute("aria-label", t("set.title"));
+    gear.onclick = () => {
+      panel.hidden = !panel.hidden;
+      gear.setAttribute("aria-expanded", String(!panel.hidden));
+    };
+    panel.addEventListener("submit", (e) => e.preventDefault());
+  }
 
   let first = true;
   api.onMessage((message) => {
@@ -206,12 +191,12 @@
     if (message.type !== "graph") return;
     const graph = message.graph;
     // While the panel is being typed in, what it holds is newer.
-    const typing = settings && panel.contains(document.activeElement);
+    const typing = settings && panel && panel.contains(document.activeElement);
     if (!typing) {
       const fresh =
         JSON.stringify(message.settings) !== JSON.stringify(settings);
       settings = message.settings;
-      if (fresh) render();
+      if (fresh && panel) render();
     }
     view.setGroups(settings.groups.some((g) => g.query.trim()));
     $("status").textContent = !graph

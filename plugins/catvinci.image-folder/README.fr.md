@@ -13,6 +13,7 @@ Elle prend en charge les images PNG, JPEG, GIF, WebP, AVIF, BMP, SVG, ICO, HEIC 
 
 ## Changements
 
+- **0.1.4** - Laisse les images là où les met le réglage de dossier d'images Typora d'un document, et ne déplace plus un dossier tant que des liens vers lui peuvent rester non vérifiés.
 - **0.1.3** - Sa page dit maintenant en une phrase ce qu'il fait, ce qu'il permet et ce qui a changé à chaque version.
 - **0.1.2** - Laisse les images là où les met le dossier de pièces jointes d'un coffre Obsidian ou un graphe Logseq.
 - **0.1.1** - Un nom plus court : Images avec le document.

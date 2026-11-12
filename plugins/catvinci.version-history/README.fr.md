@@ -16,6 +16,7 @@ Garde chaque enregistrement d’un document comme une version, pour voir ce qui 
 
 ## Changements
 
+- **0.3.5** - Une version ouverte reste ouverte quand l’enregistrement automatique la met à jour, et Restaurer la retrouve toujours. Quand le stockage est plein, les anciennes versions des autres documents font de la place, et le panneau prévient si un enregistrement n’a pas pu être gardé. Les lignes s’utilisent au clavier ; les boutons passent à la ligne dans une barre latérale étroite.
 - **0.3.4** - Dans la barre latérale, le panneau n’affiche plus son propre titre, comme les autres onglets. Textes d'aide et d'état vide plus courts. Son panneau latéral et sa page suivent la mise en page de Textus 1.3.13.
 - **0.3.3** - Ses barres, listes et contrôles sont désormais ceux de Textus, grandissent avec l’interface et suivent chaque thème ; nécessite Textus 1.3.12.
 - **0.3.2** - Sa page dit maintenant en une phrase ce qu'il fait, ce qu'il permet et ce qui a changé à chaque version.

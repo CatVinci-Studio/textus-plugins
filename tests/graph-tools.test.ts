@@ -14,6 +14,7 @@ it("gives a note's neighbours within a depth, each with its distance", async () 
     links: links.map(([target, resolved]) => ({
       target,
       resolved: resolved && "/root/" + resolved,
+      wiki: true,
     })),
   });
   const docs = [
@@ -65,8 +66,8 @@ it("finds where a link to no document goes as Textus does: a dotted name, a note
       rel: "A.md",
       tags: [],
       links: [
-        { target: "Note v1.2", resolved: null },
-        { target: "b", resolved: null },
+        { target: "Note v1.2", resolved: null, wiki: true },
+        { target: "b", resolved: null, wiki: true },
         { target: "https://x.org", resolved: null },
       ],
     },
@@ -88,4 +89,29 @@ it("finds where a link to no document goes as Textus does: a dotted name, a note
     { name: "B", path: "B.md", kind: "note", distance: 1 },
     { name: "Note v1.2", path: null, kind: "missing", distance: 1 },
   ]);
+});
+
+it("finds a standard link to no document as one, from the note's folder, and asks once per link and folder", async () => {
+  const link = (target: string, wiki = false) => ({ target, resolved: null, wiki });
+  const docs = [
+    {
+      path: "/root/Notes/A.md",
+      rel: "Notes/A.md",
+      tags: [],
+      links: [link("Week45/Nov%208.md"), link("Nov 8", true), link("#Heading")],
+    },
+    { path: "/root/Notes/B.md", rel: "Notes/B.md", tags: [], links: [link("Week45/Nov%208.md")] },
+  ];
+  const asked: string[] = [];
+  const resolveNote = async (target: string) => {
+    asked.push(target);
+    return { path: "/root/Notes/Week45/Nov 8.md", exists: false, kind: "note" };
+  };
+  const { tools } = loadPlugin("catvinci.graph", {
+    files: { root: async () => "/root" },
+    metadata: { all: async () => docs, resolveNote },
+  });
+  const near = await tools.get("list_neighbours")!({ path: "Notes/A.md" });
+  expect(asked.sort()).toEqual(["Week45/Nov%208.md", "[[Nov 8]]"]);
+  expect(near.notes).toEqual([{ name: "Nov 8", path: null, kind: "missing", distance: 1 }]);
 });

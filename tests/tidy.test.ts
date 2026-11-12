@@ -245,7 +245,7 @@ describe("Tidy: Markdown Lint and Text Tidy in one", () => {
 });
 
 describe("Text Tidy, now part of Tidy", () => {
-  it("offers Tidy once, and does nothing else", async () => {
+  it("explains the merge, then offers Tidy, once", async () => {
     const offers: unknown[] = [];
     const storage = memoryStorage();
     const api = {
@@ -253,17 +253,15 @@ describe("Text Tidy, now part of Tidy", () => {
         execute: async (id: string, args: unknown) =>
           void offers.push([id, args]),
       },
-      ui: { notice: async () => {} },
+      ui: { notice: async (text: string) => void offers.push(["notice", text]) },
     };
     for (let i = 0; i < 2; i++) {
       loadPlugin("catvinci.text-tidy", api, storage);
       await new Promise((r) => setTimeout(r, 0));
     }
     expect(offers).toEqual([
-      [
-        "textus.offerPlugin",
-        { id: "catvinci.markdown-lint", reason: "merged" },
-      ],
+      ["notice", "merged"],
+      ["textus.offerPlugin", { id: "catvinci.markdown-lint" }],
     ]);
     expect(manifestOf("catvinci.text-tidy").contributes).toEqual({});
   });

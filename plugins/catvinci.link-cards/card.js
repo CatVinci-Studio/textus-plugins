@@ -1,5 +1,5 @@
 // A ```card block's page: the card host.js sends, opened in the browser on
-// a click; a video plays in place.
+// a click; a video plays in place. Fetch again sits in its right-click menu.
 (function () {
   "use strict";
   const api = acquireTextusApi();
@@ -18,8 +18,17 @@
     }
   };
 
+  let refresh = null;
+  root.addEventListener("contextmenu", async (e) => {
+    if (!refresh) return;
+    e.preventDefault();
+    const chosen = await api.menu([{ label: refresh, value: "refresh" }], { x: e.clientX, y: e.clientY });
+    if (chosen === "refresh") api.postMessage({ type: "refresh" });
+  });
+
   api.onMessage((m) => {
     if (!m || m.type !== "card") return;
+    refresh = m.refresh || null;
     const card = m.card || {};
     if (m.video) {
       const box = el("div", "video");
@@ -53,14 +62,7 @@
       link.append(picture);
     }
     link.addEventListener("click", () => api.postMessage({ type: "open", url: card.url }));
-    if (!m.refresh) return root.replaceChildren(link);
-    const refresh = el("button", "tx-button small refresh");
-    refresh.type = "button";
-    const glyph = el("span", "tx-icon");
-    glyph.dataset.icon = "refresh";
-    refresh.append(glyph, m.refresh || "");
-    refresh.addEventListener("click", () => api.postMessage({ type: "refresh" }));
-    root.replaceChildren(link, refresh);
+    root.replaceChildren(link);
   });
   api.postMessage({ type: "ready" });
 })();

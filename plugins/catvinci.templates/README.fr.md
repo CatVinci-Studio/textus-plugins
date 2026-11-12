@@ -19,6 +19,7 @@ Fonctionne sur ordinateur et sur iPhone et demande Textus 1.3.10 ou plus récent
 
 ## Changements
 
+- **0.5.2** - Les modèles d'un dossier de modèles caché ou en minuscules, et de ses sous-dossiers, apparaissent désormais. Après l'insertion, le curseur se place juste après le modèle.
 - **0.5.1** - **Nouveau depuis un modèle…** depuis le menu contextuel d'un fichier ou d'un dossier crée le document dans ce dossier.
 - **0.5.0** - Les modèles sont remplis par Textus lui-même, comme les notes du jour ; demande Textus 1.3.10.
 - **0.4.1** - Les modèles sont listés dans l'ordre naturel : 2 avant 10.

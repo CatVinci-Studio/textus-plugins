@@ -6,7 +6,7 @@
 
 - 寫一個 `function-plot` 程式碼區塊，每行一個函數。圖會畫在區塊下方；點進區塊可以再看到並修改原始碼。
 - 每行可以用 `y =` 開頭。`2x`、`3sin(x)` 代表相乘。
-- 支援 + - * / ^、括號、x、pi、e，以及 sin、cos、tan、asin、acos、atan、sinh、cosh、tanh、exp、ln、log（以 10 為底）、sqrt、abs、floor、ceil。
+- 支援 + - * / ^、括號、x、pi（π）、e，以及 sin、cos、tan、asin、acos、atan、sinh、cosh、tanh、exp、ln、log（以 10 為底）、sqrt、abs、floor、ceil。
 - x 預設從 -10 到 10。在語言後寫 `xmin=-5 xmax=5` 可以修改；`ymin`、`ymax` 固定 y 的範圍，不寫時依曲線自動調整。
 - 在語言後寫 `height=400` 可以設定圖的高度。
 - 有一行無法解讀時，區塊下方會說明哪裡有問題。
@@ -26,6 +26,7 @@ x^2 / 4 - 1
 
 ## 更新紀錄
 
+- **0.3.2** - tan(x) 這類陡峭曲線保持形狀，在漸近線處斷開；沒有可畫部分的函數會給出提示；可以寫 π 和 2xsin(x)；Textus AI 的檢查會依圍欄上的 x 範圍進行。
 - **0.3.1** - 介紹頁重寫：一句話說明它做什麼，再講它能做的事，並列出每個版本的更新。
 - **0.3.0** - 新增 Textus AI 工具 `check_function_plot`
 - **0.2.0** - 曲線和座標軸使用主題顏色，切換主題時重新繪製
@@ -38,5 +39,5 @@ x^2 / 4 - 1
 
 裝上這個外掛後，Textus AI 在對話中可以使用：
 
-- `check_function_plot`：在把 ```function-plot 區塊寫進文件之前檢查它的原始碼（關於 x 的函數，每行一個，可用 + - * / ^、括號、pi、e 和常用函數），不實際繪製。回傳 ok，或需要先修正的問題。傳入時不帶程式碼圍欄。
+- `check_function_plot`：在把 ```function-plot 區塊寫進文件之前檢查它的原始碼（關於 x 的函數，每行一個，可用 + - * / ^、括號、pi、e 和常用函數），不實際繪製。回傳 ok，或需要先修正的問題。傳入時不帶程式碼圍欄，圍欄上的參數（xmin=0 xmax=100）放在 meta 裡。
 <!-- /ai-tools -->

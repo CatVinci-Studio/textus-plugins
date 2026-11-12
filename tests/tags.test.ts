@@ -37,7 +37,7 @@ describe("renaming a tag", () => {
         "---",
         "# Note #wip",
         "",
-        "Some #wip, #drafts, `#draft` and #draft/sub.",
+        "Some #wip, #drafts, `#draft` and #wip/sub.",
         "```",
         "#draft",
         "```",
@@ -51,9 +51,29 @@ describe("renaming a tag", () => {
     ).toBe("---\ntags:\n  - 写作\n  - b\n---\n");
   });
 
+  it("renames any letter case, and leaves longer front-matter tags", () => {
+    expect(
+      tagEdit.renameTag("---\ntags: [project-x, X]\n---\n#X and #x/sub", "x", "y"),
+    ).toBe("---\ntags: [project-x, y]\n---\n#y and #y/sub");
+    expect(
+      tagEdit.renameTag("---\ntags:\n  - project-x\n  - x\n---\n", "x", "y"),
+    ).toBe("---\ntags:\n  - project-x\n  - y\n---\n");
+    expect(tagEdit.renameTag("---\ntags:x\n---\n", "x", "y")).toBe(
+      "---\ntags:y\n---\n",
+    );
+  });
+
+  it("leaves a link's address", () => {
+    expect(tagEdit.renameTag("See [top](#x) and #x.", "x", "y")).toBe(
+      "See [top](#x) and #y.",
+    );
+  });
+
   it("takes letters of any script, and not digits alone", () => {
     expect(tagEdit.validTag("写作/草稿")).toBe(true);
     expect(tagEdit.validTag("a b")).toBe(false);
     expect(tagEdit.validTag("2026")).toBe(false);
+    for (const bad of ["/", "a/", "/a", "a//b"])
+      expect(tagEdit.validTag(bad)).toBe(false);
   });
 });

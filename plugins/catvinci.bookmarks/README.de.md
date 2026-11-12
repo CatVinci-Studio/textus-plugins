@@ -22,6 +22,7 @@ Ist der geöffnete Ordner ein Obsidian-Vault (er enthält einen Ordner `.obsidia
 
 ## Änderungen
 
+- **0.4.3** - Die Liste ist nach dem Pfad des Dokuments im Ordner gruppiert, eine Gruppe pro Dokument; lange Stellen enden an einem Wort mit „…“; scheitert die Block-ID in einem Vault, bleibt das Lesezeichen trotzdem erhalten.
 - **0.4.2** - Kürzere Hilfe- und Leertexte.
 - **0.4.1** - Seine Seite sagt jetzt in einem Satz, was es tut, was es kann und was sich in jeder Version geändert hat.
 - **0.4.0** - In einem Obsidian-Vault werden neue Lesezeichen auch in Obsidians `bookmarks.json` geschrieben und dort entfernt und umbenannt.

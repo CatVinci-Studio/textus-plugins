@@ -1,7 +1,7 @@
 {
   "id": "catvinci.wakatime",
   "name": "%name%",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "publisher": "catvinci",
   "author": "CatVinci Studio",
   "description": "%description%",
@@ -92,7 +92,7 @@
       "todayCmd": "WakaTime：今日の執筆時間",
       "today": "今日の WakaTime：{0}",
       "todayFailed": "WakaTime に接続できません。あとでもう一度お試しください。",
-      "noKey": "先に WakaTime の API キーを設定してください（WakaTime: API キーを設定…）。",
+      "noKey": "先に WakaTime の API キーを設定してください（WakaTime：API キーを設定…）。",
       "keyShape": "WakaTime の API キーではないようです（wakatime.com/settings/api-key）。"
     },
     "ko": {
@@ -115,14 +115,14 @@
       "description": "Sendet Ihre Schreibzeit in Textus an Ihr WakaTime-Konto, neben Ihre Programmierzeit – nur solange Textus vorne ist und Sie schreiben; Zeit im Hintergrund zählt nicht. Funktioniert offline: Heartbeats warten und gehen später. Nichts wird gesendet, bevor Sie Ihren API-Schlüssel festlegen.",
       "setKey": "WakaTime: API-Schlüssel festlegen…",
       "dashboard": "WakaTime: Dashboard öffnen",
-      "keyPrompt": "Dein WakaTime-API-Schlüssel (wakatime.com/settings/api-key). Leer lassen, um nichts mehr zu senden.",
-      "keySaved": "WakaTime ist an: Deine Schreibzeit erscheint im Dashboard.",
+      "keyPrompt": "Ihr WakaTime-API-Schlüssel (wakatime.com/settings/api-key). Leer lassen, um nichts mehr zu senden.",
+      "keySaved": "WakaTime ist an: Ihre Schreibzeit erscheint im Dashboard.",
       "keyRemoved": "WakaTime ist aus: Es wird nichts mehr gesendet.",
-      "badKey": "WakaTime hat den API-Schlüssel nicht angenommen. Lege ihn mit „WakaTime: API-Schlüssel festlegen…“ neu fest.",
+      "badKey": "WakaTime hat den API-Schlüssel nicht angenommen. Legen Sie ihn mit „WakaTime: API-Schlüssel festlegen…“ neu fest.",
       "todayCmd": "WakaTime: Heutige Schreibzeit",
       "today": "Heute bei WakaTime: {0}",
       "todayFailed": "WakaTime ist nicht erreichbar. Versuchen Sie es später noch einmal.",
-      "noKey": "Legen Sie zuerst Ihren WakaTime-API-Schlüssel fest (WakaTime: API-Schlüssel festlegen …).",
+      "noKey": "Legen Sie zuerst Ihren WakaTime-API-Schlüssel fest (WakaTime: API-Schlüssel festlegen…).",
       "keyShape": "Das sieht nicht nach einem WakaTime-API-Schlüssel aus (wakatime.com/settings/api-key)."
     },
     "fr": {
@@ -152,7 +152,7 @@
       "todayCmd": "WakaTime: tiempo de escritura de hoy",
       "today": "Hoy en WakaTime: {0}",
       "todayFailed": "No se pudo conectar con WakaTime. Inténtalo más tarde.",
-      "noKey": "Primero pon tu clave de API de WakaTime (WakaTime: Poner clave de API…).",
+      "noKey": "Primero pon tu clave de API de WakaTime (WakaTime: configurar clave de API…).",
       "keyShape": "Eso no parece una clave de API de WakaTime (wakatime.com/settings/api-key)."
     },
     "pt": {
@@ -167,7 +167,7 @@
       "todayCmd": "WakaTime: tempo de escrita de hoje",
       "today": "Hoje no WakaTime: {0}",
       "todayFailed": "Não foi possível acessar o WakaTime. Tente mais tarde.",
-      "noKey": "Defina primeiro sua chave de API do WakaTime (WakaTime: Definir chave de API…).",
+      "noKey": "Defina primeiro sua chave de API do WakaTime (WakaTime: definir chave de API…).",
       "keyShape": "Isso não parece uma chave de API do WakaTime (wakatime.com/settings/api-key)."
     },
     "ru": {

@@ -45,5 +45,22 @@
       a.slice(endA).map((line) => ({ kind: "same", line: line })),
     );
   }
+  /** The changed lines with `context` lines around each; one { kind: "gap" }
+   *  stands for each run left out. */
+  function lineHunks(parts, context) {
+    const near = new Set();
+    parts.forEach((p, i) => {
+      if (p.kind !== "same")
+        for (let j = i - context; j <= i + context; j++) near.add(j);
+    });
+    const out = [];
+    parts.forEach((p, i) => {
+      if (near.has(i)) out.push(p);
+      else if (!out.length || out[out.length - 1].kind !== "gap")
+        out.push({ kind: "gap" });
+    });
+    return out;
+  }
   root.lineDiff = lineDiff;
+  root.lineHunks = lineHunks;
 })(typeof window !== "undefined" ? window : globalThis);

@@ -27,30 +27,16 @@
       return box;
     }
     // Changed lines with two of context around them.
-    const keep = new Set();
-    lines.forEach((l, i) => {
-      if (l.kind !== "same") for (let k = i - 2; k <= i + 2; k++) keep.add(k);
-    });
-    let skipped = false;
-    lines.forEach((l, i) => {
-      if (!keep.has(i)) {
-        if (!skipped) {
-          const gap = document.createElement("div");
-          gap.className = "gap";
-          gap.textContent = "⋯";
-          box.append(gap);
-        }
-        skipped = true;
-        return;
-      }
-      skipped = false;
+    for (const l of window.lineHunks(lines, 2)) {
       const row = document.createElement("div");
       row.className = l.kind;
       row.textContent =
-        (l.kind === "added" ? "+ " : l.kind === "removed" ? "− " : "  ") +
-        l.line;
+        l.kind === "gap"
+          ? "⋯"
+          : (l.kind === "added" ? "+ " : l.kind === "removed" ? "− " : "  ") +
+            l.line;
       box.append(row);
-    });
+    }
     return box;
   }
 
@@ -78,10 +64,62 @@
     });
   }
 
-  function render() {
+  /** A version's row, or its open card: one button opens and closes it. */
+  function versionNode(version, older) {
+    const isOpen = opened === version.id;
+    const li = document.createElement("li");
+    if (isOpen) li.className = "tx-card open";
+    const toggle = document.createElement("button");
+    toggle.className = isOpen ? "row-head" : "tx-list-row";
+    toggle.dataset.id = version.id;
+    toggle.setAttribute("aria-expanded", String(isOpen));
+    const stamp = document.createElement("span");
+    stamp.className = "when tx-list-label";
+    stamp.textContent = when(version.at);
+    const delta = document.createElement("span");
+    delta.className = "delta tx-list-meta";
+    const change = version.text.length - (older ? older.text.length : 0);
+    const sign = document.createElement("span");
+    sign.className = change >= 0 ? "plus" : "minus";
+    sign.textContent = (change >= 0 ? "+" : "−") + Math.abs(change);
+    delta.append(sign);
+    toggle.append(stamp, delta);
+    toggle.onclick = () => {
+      opened = isOpen ? null : version.id;
+      render(version.id);
+    };
+    li.append(toggle);
+    if (!isOpen) return li;
+    const label = document.createElement("div");
+    label.className = "muted";
+    label.textContent = t("since");
+    const actions = document.createElement("div");
+    actions.className = "actions";
+    const button = (key, type, style) => {
+      const b = document.createElement("button");
+      b.className = style;
+      b.textContent = t(key);
+      b.onclick = () => api.postMessage({ type, id: version.id });
+      return b;
+    };
+    actions.append(
+      button("open", "open", "tx-button small"),
+      button("restore", "restore", "tx-button small primary"),
+    );
+    li.append(label, diffNode(version), actions);
+    return li;
+  }
+
+  const toggles = () => [...$("versions").querySelectorAll("[data-id]")];
+
+  /** One tab stop for the list: the open version's button, else the first;
+   *  `focusId`'s button takes focus when given. */
+  function render(focusId) {
     const list = $("versions");
     list.textContent = "";
     let lastDay = null;
+    $("full").hidden = !data.full;
+    $("full").textContent = t("full");
     $("empty").hidden = !!(data.path && data.versions.length);
     $("empty").textContent = data.path ? t("none") : t("nodoc");
     data.versions.forEach((version, index) => {
@@ -94,64 +132,40 @@
           label.charAt(0).toLocaleUpperCase(api.language) + label.slice(1);
         list.append(day);
       }
-      const li = document.createElement("li");
-      // A version is a row of the list; opened, a card with its changes.
-      li.className = opened === version.at ? "tx-card open" : "tx-list-row";
-      const head = document.createElement("div");
-      head.className = "row-head";
-      const stamp = document.createElement("span");
-      stamp.className = "when tx-list-label";
-      stamp.textContent = when(version.at);
-      const older = data.versions[index + 1];
-      const delta = document.createElement("span");
-      delta.className = "delta tx-list-meta";
-      const change = version.text.length - (older ? older.text.length : 0);
-      delta.innerHTML = "";
-      const sign = document.createElement("span");
-      sign.className = change >= 0 ? "plus" : "minus";
-      sign.textContent = (change >= 0 ? "+" : "−") + Math.abs(change);
-      delta.append(sign);
-      // A row's when and change are its label and meta; a card's, its head.
-      if (opened === version.at) {
-        head.append(stamp, delta);
-        li.append(head);
-      } else li.append(stamp, delta);
-      if (opened === version.at) {
-        const label = document.createElement("div");
-        label.className = "muted";
-        label.textContent = t("since");
-        const actions = document.createElement("div");
-        actions.className = "actions";
-        const restore = document.createElement("button");
-        restore.className = "tx-button small primary";
-        restore.textContent = t("restore");
-        restore.onclick = (e) => {
-          e.stopPropagation();
-          api.postMessage({ type: "restore", at: version.at });
-        };
-        const open = document.createElement("button");
-        open.className = "tx-button small";
-        open.textContent = t("open");
-        open.onclick = (e) => {
-          e.stopPropagation();
-          api.postMessage({ type: "open", at: version.at });
-        };
-        actions.append(open, restore);
-        li.append(label, diffNode(version), actions);
-      }
-      li.onclick = () => {
-        opened = opened === version.at ? null : version.at;
-        render();
-      };
-      list.append(li);
+      list.append(versionNode(version, data.versions[index + 1]));
     });
+    const all = toggles();
+    const stop = all.find((b) => b.dataset.id === String(opened)) || all[0];
+    all.forEach((b) => (b.tabIndex = b === stop ? 0 : -1));
+    const focus = all.find((b) => b.dataset.id === String(focusId));
+    if (focus) focus.focus();
   }
+
+  // Up and down move between the versions, Home and End to either end.
+  $("versions").addEventListener("keydown", (e) => {
+    const all = toggles();
+    const at = all.indexOf(document.activeElement);
+    if (at < 0) return;
+    const to = {
+      ArrowUp: at - 1,
+      ArrowDown: at + 1,
+      Home: 0,
+      End: all.length - 1,
+    }[e.key];
+    if (to === undefined || !all[to]) return;
+    e.preventDefault();
+    all[at].tabIndex = -1;
+    all[to].tabIndex = 0;
+    all[to].focus();
+  });
 
   api.onMessage((message) => {
     if (message.type !== "versions") return;
     if (message.path !== data.path) opened = null;
     data = message;
-    render();
+    // A refresh keeps the focused version's button focused.
+    const focused = document.activeElement;
+    render(focused && focused.dataset ? focused.dataset.id : undefined);
   });
   api.postMessage({ type: "ready" });
 })();

@@ -16,6 +16,7 @@ Fonctionne sur ordinateur et sur iPhone. Demande une seule permission, les touch
 
 ## Changements
 
+- **0.1.6** - C-x C-s et C-x C-g fonctionnent de nouveau sous Windows et Linux. La barre d'état n'affiche Emacs que lorsqu'il a vraiment les touches.
 - **0.1.5** - Textes d'aide et d'état vide plus courts.
 - **0.1.4** - Sa page dit maintenant en une phrase ce qu'il fait, ce qu'il permet et ce qui a changé à chaque version.
 - **0.1.3** - Indique où elle fonctionne : ordinateur et iPhone.

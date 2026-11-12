@@ -27,6 +27,7 @@ It works on desktop and iPhone and needs Textus 1.3.2 or later. It asks for one 
 
 ## Changes
 
+- **0.3.2** - Charts redraw to fit a narrower or wider panel, labels follow the theme's font and text size, and the error line is red again.
 - **0.3.1** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
 - **0.3.0** - Textus AI can check a `chartjs` block before writing it (`check_chartjs`).
 - **0.2.0** - Series take the theme's colors; needs Textus 1.3.2.

@@ -28,6 +28,7 @@ Bob --> Alice : Hi!
 
 ## Cambios
 
+- **0.2.4** - `!theme` funciona; sin hueco vacío en una columna estrecha; en modo servidor se ve el error de PlantUML y los temas oscuros tienen un dibujo oscuro.
 - **0.2.3** - Textos de ayuda y de estado vacío más breves.
 - **0.2.2** - Su página dice ahora en una frase qué hace, qué puede hacer y qué cambió en cada versión.
 - **0.2.1** - Incluye la página de gráficos compartida actualizada; los diagramas se dibujan igual que antes.

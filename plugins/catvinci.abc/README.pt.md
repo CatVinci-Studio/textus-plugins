@@ -4,7 +4,7 @@ Desenha partituras a partir de notação ABC escrita num bloco de código.
 
 Escreva um bloco de código com a linguagem `abc`. A música aparece desenhada logo abaixo, e um clique no bloco volta a mostrar o código para editar.
 
-- Escreva `height=400` depois de `abc` na primeira linha para definir a altura do desenho em píxeis.
+- Os compassos quebram de linha para caber na coluna, então as notas continuam legíveis num painel estreito.
 - As notas usam a cor do texto do tema e são desenhadas de novo ao alternar entre claro e escuro.
 - Ao exportar para HTML, PDF ou Word, a música vai como imagem.
 
@@ -23,6 +23,7 @@ C D E F | G A B c |
 
 ## Alterações
 
+- **0.3.2** - Os compassos quebram de linha conforme a coluna em vez de encolher a partitura inteira; clicar numa nota não a deixa mais vermelha; `check_abc` aceita nomes de modo completos, qualquer duração de nota, linhas `+:`, `` ` `` e `$`; `height=` foi removido.
 - **0.3.1** - Sua página agora diz numa frase o que ele faz, o que pode fazer e o que mudou em cada versão.
 - **0.3.0** - O Textus AI pode verificar um bloco `abc` antes de o escrever (`check_abc`).
 - **0.2.0** - As notas seguem a cor do texto do tema; precisa do Textus 1.3.2.

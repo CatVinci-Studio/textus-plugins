@@ -1,6 +1,7 @@
 // Literature notes: an item's note, @citekey.md, made from a template (the
 // vault's, as Zotero Integration or Citations set it, else ours) with the
 // item's details, its notes and its annotations. Loaded before host.js.
+/* global folderConventions, folderPaths, ITEMS, get, citationKey, year, t */
 
 /** A Zotero note's HTML as plain Markdown. */
 function noteMarkdown(html) {
@@ -20,7 +21,7 @@ function noteMarkdown(html) {
  *  doesn't give them. */
 async function childrenOf(item) {
   const children = (key) =>
-    get(API.replace(/\/top$/, "/") + key + "/children?format=json").catch(() => []);
+    get(ITEMS + key + "/children?format=json").catch(() => []);
   const kids = await children(item.key);
   const files = kids.filter((k) => k.data.itemType === "attachment");
   const marks = (await Promise.all(files.map((f) => children(f.key)))).flat();

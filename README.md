@@ -26,7 +26,7 @@ The plugins for [Textus](https://textus.md), the Markdown editor. None of them c
 | Images Follow Document | Keeps each document's pictures beside it, in a folder of its name - Note.assets/ for Note.md - as Typora and VS Code do. |
 | Keenable Search | Lets Textus AI search the web with Keenable, with no key needed; set a Keenable API key for its full search. Searches go to Keenable only while Textus AI uses this tool. |
 | LaTeX Completion | In a formula, type a backslash and the start of a command - \fr, \alp - to pick from the LaTeX commands that begin so, each with what it draws. Enter or Tab writes it, with the caret inside its braces. |
-| Link Cards | A link as a card with its page's title, description and picture - or a YouTube or Bilibili video playing in place. Kept in the document as text. |
+| Link Cards | A link as a card with its page's title, description and picture - or a Bilibili video playing in place. Kept in the document as text. |
 | Marp | Present a document as slides, the Marp way: a new slide at each ---, themes and layout by Marp directives. The deck follows your writing in a tab beside it, and saves as one HTML file to present from any browser. |
 | Mind Map | Draws a Markdown outline - headings and lists - as a mind map. |
 | Notion Import | Brings in a Notion export (the .zip or its folder) as plain Markdown notes: pages within pages as folders, databases in Obsidian's Bases format, pictures and files beside their pages. Pair it with Wiki to see the pages tree and the databases. |

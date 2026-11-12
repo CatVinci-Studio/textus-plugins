@@ -89,7 +89,7 @@ input[readonly] {
   gap: var(--space-2);
 }
 .form-end > .hint {
-  flex: 1;
+  flex: 1 1 12em;
 }
 /* The status: what the sidebar shows too; on a page, a group of its own. */
 .sync-status {
@@ -104,11 +104,12 @@ input[readonly] {
 }
 .status-row {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: var(--space-3);
 }
 .status-text {
-  flex: 1;
+  flex: 1 1 12em;
   min-width: 0;
 }
 #status[data-error="true"] {
@@ -182,6 +183,9 @@ body[data-place="sidebar"] .status-row {
   flex-direction: column;
   align-items: center;
   gap: var(--space-3);
+}
+body[data-place="sidebar"] .status-text {
+  flex: none;
 }
 body[data-place="sidebar"] .actions {
   justify-content: center;

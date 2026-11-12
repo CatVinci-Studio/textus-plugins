@@ -15,6 +15,7 @@
 
 ## 更新紀錄
 
+- **0.2.4** - 窄面板中工具列會換行；尋找不再混入上一個詞的結果。
 - **0.2.3** - 工具列依 Textus 統一的順序排列：先是內容資訊，再是尋找和縮放。
 - **0.2.2** - Its bars, lists and controls are Textus's own, grow with the interface and follow every theme; needs Textus 1.3.12.
 - **0.2.1** - 介紹頁重寫：一句話說明它做什麼，再講它能做的事，並列出每個版本的更新。

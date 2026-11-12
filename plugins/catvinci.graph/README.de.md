@@ -3,7 +3,7 @@
 Zeichnet Ihre Notizen und die Links zwischen ihnen als Graph, für den ganzen Ordner oder rund um das geöffnete Dokument.
 
 - **Strg+Alt+G** (**⌘⌥G** auf dem Mac) oder **Plugins › Graphansicht öffnen** zeigt den ganzen Ordner in einem Tab. **Einpassen** holt alles ins Bild.
-- Der Reiter **Graph** in der Seitenleiste zeigt die Notizen rund um das geöffnete Dokument. **Ganzer Graph** öffnet den ganzen Ordner.
+- Der Reiter **Graph** in der Seitenleiste zeigt die Notizen rund um das geöffnete Dokument. Die Schaltfläche oben im Graph-Bereich der Seitenleiste öffnet den ganzen Ordner.
 - [[Wiki-Links]] und Links auf andere Dokumente zählen beide; zwei Notizen, die aufeinander verlinken, teilen sich eine Linie. Ein [[Link]] auf eine noch nicht geschriebene Notiz erscheint als eigene Notiz.
 - Ein Klick öffnet eine Notiz. Ziehen Sie eine Notiz, um sie zu platzieren, den Hintergrund, um sich zu bewegen, und zoomen Sie mit dem Mausrad oder per Zwei-Finger-Geste. Zeigen Sie auf eine Notiz, um ihre Links hervorzuheben.
 - Der Graph passt sich selbst an: Namen erscheinen beim Hineinzoomen, Pfeile zeigen die Richtung der Links, wenn es wenige genug sind, und Notizen mit mehr Links sind größer. Ohne Farbgruppen bekommt jede Notiz die Farbe ihres Ordners.
@@ -11,9 +11,9 @@ Zeichnet Ihre Notizen und die Links zwischen ihnen als Graph, für den ganzen Or
 
 ## Einstellungen
 
-Die Schieberegler-Schaltfläche oben öffnet die Einstellungen des Graphen. Der ganze Graph und die Seitenleiste haben jeweils eigene.
+Die Schieberegler-Schaltfläche oben im ganzen Graphen öffnet seine Einstellungen; der Graph in der Seitenleiste hat keine.
 
-- **Filter**: eine Suche (`path:ideas`, `file:draft`, `tag:#todo`, ein `-` davor schließt aus); **Tags** zeigt #Tags als Knoten; **Nur vorhandene Dateien** blendet noch nicht geschriebene Notizen aus; **Verwaiste Notizen** (ganzer Graph) zeigt Notizen ohne Links. In der Seitenleiste legt **Tiefe** fest, wie viele Links weit er reicht, 1 bis 5.
+- **Filter**: eine Suche (`path:ideas`, `file:draft`, `tag:#todo`, ein `-` davor schließt aus); **Tags** zeigt #Tags als Knoten; **Nur vorhandene Dateien** blendet noch nicht geschriebene Notizen aus; **Verwaiste Notizen** (ganzer Graph) zeigt Notizen ohne Links.
 - **Gruppen**: färben die Notizen, die eine Suche findet. **Neue Gruppe** fügt eine hinzu; **Standard wiederherstellen** nimmt Ihre Änderungen zurück.
 
 In einem Obsidian-Vault färben auch die in Obsidians `graph.json` gespeicherten Farbgruppen die Notizen, nach Ihren eigenen.
@@ -25,6 +25,7 @@ In einem Obsidian-Vault färben auch die in Obsidians `graph.json` gespeicherten
 
 ## Änderungen
 
+- **0.5.5** - Normale Markdown-Links auf noch nicht geschriebene Notizen landen dort, wo Textus sie anlegt, und fallen mit [[Links]] auf dieselbe Notiz zusammen. Strg/Cmd-Klick öffnet eine Notiz neben der vorderen. Beschriftungen folgen der Textgröße der Oberfläche, Ordnerfarben dem Theme. Der Graph in der Seitenleiste hat keine eigenen Einstellungen mehr.
 - **0.5.4** - Ein Trackpad-Pinch zoomt fließend, im Takt der Geste; mit Textus 1.3.13 zoomt ein Pinch auf dem Mac den Graphen, nicht das Dokument dahinter. Kürzere Hilfe- und Leertexte. Seitenleiste und Seite folgen dem Layout von Textus 1.3.13.
 - **0.5.3** - Leisten, Listen und Steuerelemente sind jetzt die von Textus, wachsen mit der Oberfläche und folgen jedem Theme; braucht Textus 1.3.12.
 - **0.5.2** - Obsidians Farbgruppen kommen aus dem nächstgelegenen Vault, auch wenn er über dem geöffneten Ordner liegt. Benötigt Textus 1.3.10.

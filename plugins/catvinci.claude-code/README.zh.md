@@ -12,4 +12,5 @@ Textus 用 `npx` 运行 Agent Client Protocol 适配器 `@agentclientprotocol/cl
 
 ## 更新日志
 
+- **0.1.1** - Claude Code 回答时，其他插件（比如桌宠）能知道是哪个 AI 在工作。
 - **0.1.0** - 第一版：在 Textus AI 里用 Claude Code。

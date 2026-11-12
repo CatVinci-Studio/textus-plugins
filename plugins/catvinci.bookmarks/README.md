@@ -22,6 +22,7 @@ When the open folder is an Obsidian vault (it has a `.obsidian` folder):
 
 ## Changes
 
+- **0.4.3** - Rows are grouped by the document's path in the folder, one group per document; long passages end at a word with "…"; a failed block-id edit in a vault keeps the bookmark.
 - **0.4.2** - Shorter help and empty-state text.
 - **0.4.1** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
 - **0.4.0** - In an Obsidian vault, new bookmarks are written to Obsidian's `bookmarks.json` too, and removed and renamed there.

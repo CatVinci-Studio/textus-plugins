@@ -46,6 +46,7 @@ The plugin reads the folder's documents to find their tasks, and writes to a doc
 
 ## Changes
 
+- **0.4.3** - Ticking a task with an HTML comment in it now works, and a refused tick tells you why. `group by status` sorts in the right order, task blocks fit narrow panes, due dates look like the sidebar's, and typing stays lighter.
 - **0.4.2** - Shorter help and empty-state text.
 - **0.4.1** - Its bars, lists and controls are Textus's own, grow with the interface and follow every theme; needs Textus 1.3.12. A new setting, **Move finished tasks to the end of their list**: a task ticked in a document or in the list goes after the open ones (it asks once to read and edit the document in front).
 - **0.4.0** - Uses the dates built into Textus 1.3.10, which it now needs.

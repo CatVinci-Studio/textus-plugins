@@ -10,13 +10,19 @@ body {
   background: var(--doc-bg, var(--ui-bg));
 }
 #bar {
+  flex-wrap: wrap;
+  row-gap: var(--space-1);
   min-height: var(--bar-height);
   padding: 0 var(--space-3);
   border-bottom: 1px solid var(--ui-border);
 }
 #state {
+  min-width: 0;
+  overflow: hidden;
   color: var(--ui-muted);
   font-size: var(--text-footnote);
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 #board {
   display: flex;
@@ -29,7 +35,16 @@ body {
 }
 /* A list is Textus's board lane (tx-lane), moved by its head. */
 .list {
+  width: min(var(--board-lane-width), 100vw - 2 * var(--space-4));
   max-height: 100%;
+}
+@media (max-width: 20em) {
+  #board {
+    padding: var(--space-3);
+  }
+  .list {
+    width: min(var(--board-lane-width), 100vw - 2 * var(--space-3));
+  }
 }
 .list-head {
   min-height: var(--control-height-sm);
@@ -88,13 +103,20 @@ textarea.inline-field {
 .add-card {
   align-self: flex-start;
 }
+/* Shown on hover or focus, always where there is no hover; still focusable. */
 .remove {
-  visibility: hidden;
+  opacity: 0;
 }
 .list-head:hover .remove,
 .card:hover .remove,
-.remove:focus-visible {
-  visibility: visible;
+.list-head:focus-within .remove,
+.card:focus-within .remove {
+  opacity: 1;
+}
+@media (hover: none) {
+  .remove {
+    opacity: 1;
+  }
 }
 /* A card's [[link]] to a note. */
 .note-link {

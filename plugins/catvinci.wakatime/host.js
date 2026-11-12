@@ -17,6 +17,11 @@ let sending = false;
 const userAgent = () =>
   "Textus/" + textus.env.appVersion + " (" + textus.env.platform + ") textus-wakatime/" + ctx.plugin.version;
 const auth = (key) => "Basic " + btoa(key);
+// Only a key of WakaTime's shape counts; older versions stored "null" when turned off.
+const apiKey = async () => {
+  const key = await ctx.secrets.get("apiKey");
+  return key && wakaBeat.validKey(key) ? key : null;
+};
 
 async function details(path) {
   const folder = await textus.files.root().catch(() => null);
@@ -38,7 +43,7 @@ async function beat(isWrite, source, path) {
   if (!entity) return; // an unsaved document has no file to name
   const now = Date.now();
   if (!wakaBeat.due(last, entity, now, isWrite, kind)) return;
-  if (!(await ctx.secrets.get("apiKey"))) return;
+  if (!(await apiKey())) return;
   last = { entity: entity, at: now, category: kind };
   const more = await details(entity);
   queue.push(wakaBeat.heartbeat(entity, now, isWrite, Object.assign(more, { category: kind })));
@@ -49,7 +54,7 @@ async function beat(isWrite, source, path) {
 /** The queue to WakaTime, 25 at a time; what can't go yet stays queued. */
 async function flush() {
   if (sending || !queue.length) return;
-  const key = await ctx.secrets.get("apiKey");
+  const key = await apiKey();
   if (!key) return;
   sending = true;
   try {
@@ -81,25 +86,26 @@ async function setKey() {
   const key = await textus.ui.input({
     prompt: t("keyPrompt"),
     placeholder: "waka_…",
-    value: (await ctx.secrets.get("apiKey")) || "",
+    value: (await apiKey()) || "",
   });
   if (key === undefined || key === null) return;
   if (key.trim() && !wakaBeat.validKey(key)) return textus.ui.message(t("keyShape"));
-  await ctx.secrets.set("apiKey", key.trim() || null);
+  if (key.trim()) await ctx.secrets.set("apiKey", key.trim());
+  else await ctx.secrets.delete("apiKey");
   warned = false;
   textus.ui.notice(key.trim() ? t("keySaved") : t("keyRemoved"));
 }
 
 /** Today's total, as WakaTime counts it. */
 async function today() {
-  const key = await ctx.secrets.get("apiKey");
+  const key = await apiKey();
   if (!key) return textus.ui.message(t("noKey"));
   await flush();
   const response = await textus.net
     .fetch(API + "/status_bar/today", { headers: { Authorization: auth(key), "User-Agent": userAgent() } })
     .catch(() => null);
   if (!response || !response.ok) return textus.ui.message(t("todayFailed"));
-  const data = await response.json();
+  const data = await response.json().catch(() => null);
   const text = (data && data.data && data.data.grand_total && data.data.grand_total.text) || "0 secs";
   textus.ui.notice(t("today", text));
 }

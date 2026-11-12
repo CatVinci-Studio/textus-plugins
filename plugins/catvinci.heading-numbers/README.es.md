@@ -12,6 +12,7 @@ El plugin lee los títulos del documento abierto (permiso para leer el editor) y
 
 ## Cambios
 
+- **0.2.3** - Las propiedades y los bloques de código ya no reciben números por error, y las exportaciones numeran solo los títulos de primer nivel, como el editor.
 - **0.2.2** - Su página dice ahora en una frase qué hace, qué puede hacer y qué cambió en cada versión.
 - **0.2.1** - Sin números en un documento numerado a mano ni en uno cuyas propiedades dicen `number headings: off`.
 - **0.2.0** - Textus AI puede escribir números en los títulos de un Markdown, o quitarlos.

@@ -39,6 +39,7 @@ L’onglet **Liens bidirectionnels** de la barre latérale montre ce qui lie le 
 
 ## Changements
 
+- **0.4.3** - Les liens standard vers des notes qui n'existent pas encore apparaissent maintenant dans Liens sortants, les liens vers les titres de la même note ne listent plus la note elle-même, et faire glisser un séparateur ne redessine plus le panneau.
 - **0.4.2** - Textes d'aide et d'état vide plus courts. Son panneau latéral et sa page suivent la mise en page de Textus 1.3.13.
 - **0.4.1** - Dans une note sans lien encore, [[ écrit un lien standard : le [[ en cours de frappe était pris pour un lien wiki que la note avait déjà.
 - **0.4.0** - Nouveaux liens : standard ou [[wiki]]… choisit comment le dossier écrit ses nouveaux liens, et Convertir les liens fait passer ceux d’une note ou de tout le dossier d’une forme à l’autre ; [[ écrit comme le dossier, un lien standard si rien ne dit autrement.

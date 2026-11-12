@@ -1,7 +1,7 @@
 {
   "id": "catvinci.wavedrom",
   "name": "%name%",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "publisher": "catvinci",
   "author": "CatVinci Studio",
   "description": "%description%",
@@ -89,7 +89,7 @@
     "pt": {
       "name": "WaveDrom",
       "description": "Diagramas de tempo digitais a partir de WaveJSON.",
-      "tool.check_wavedrom": "Verifica o código de um bloco ```wavedrom - WaveJSON: faixas de sinal com as suas strings wave e data, ou os campos de um registo - antes de entrar num documento, sem o desenhar. Devolve ok, ou os problemas a corrigir primeiro. Passe o código sem a cerca."
+      "tool.check_wavedrom": "Verifica o código de um bloco ```wavedrom - WaveJSON: faixas de sinal com suas strings wave e data, ou os campos de um registro - antes de entrar num documento, sem desenhá-lo. Retorna ok, ou os problemas a corrigir primeiro. Passe o código sem a cerca."
     }
   }
 }

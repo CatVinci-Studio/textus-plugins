@@ -1,7 +1,7 @@
 {
   "id": "catvinci.claude-code",
   "name": "%name%",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "publisher": "catvinci",
   "author": "CatVinci Studio",
   "description": "%description%",
@@ -27,7 +27,8 @@
           "-y",
           "@agentclientprotocol/claude-agent-acp@0.104.1"
         ],
-        "setup": "%setup%"
+        "setup": "%setup%",
+        "provider": "anthropic"
       }
     ]
   },

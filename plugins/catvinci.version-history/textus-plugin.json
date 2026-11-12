@@ -1,7 +1,7 @@
 {
   "id": "catvinci.version-history",
   "name": "%name%",
-  "version": "0.3.4",
+  "version": "0.3.5",
   "publisher": "catvinci",
   "author": "CatVinci Studio",
   "description": "%description%",
@@ -77,7 +77,6 @@
       "description": "Each save of a document kept as a version: see what changed since, and bring an old one back.",
       "history": "History",
       "restoreReason": "Restore this version",
-      "title": "Version History",
       "none": "No versions yet",
       "nodoc": "Open a saved document to see its versions.",
       "restore": "Restore This Version",
@@ -85,6 +84,7 @@
       "same": "Same as now",
       "large": "Too many changes to compare line by line.",
       "since": "Changed since:",
+      "full": "Storage is full: the last save wasn't kept as a version.",
       "tool.list_versions": "Lists the saved versions of a document - the one in front unless a path is given - newest first, numbered from 1, each with when it was saved and its size.",
       "tool.diff_versions": "Shows what changed between two versions of a document, or between a version and the document as it is now, line by line: + added, - removed, with a little context."
     },
@@ -93,7 +93,6 @@
       "description": "文档每次保存都会留一个版本：可以看出之后改了什么，也能把旧版本找回来。",
       "history": "历史",
       "restoreReason": "恢复到这个版本",
-      "title": "版本历史",
       "none": "还没有版本",
       "nodoc": "打开一篇保存过的文档，这里会显示它的版本。",
       "restore": "恢复这个版本",
@@ -101,6 +100,7 @@
       "same": "和现在一样",
       "large": "改动太多，无法逐行比较。",
       "since": "之后的改动：",
+      "full": "存储空间已满：上次保存没有留下版本。",
       "tool.list_versions": "列出一篇文档（默认当前文档）保存过的各个版本，最新的在前，从 1 开始编号，每个版本带保存时间和大小。",
       "tool.diff_versions": "逐行显示一篇文档两个版本之间、或某个版本与当前内容之间的改动：+ 表示新增，- 表示删除，并附少量上下文。"
     },
@@ -109,7 +109,6 @@
       "description": "文件每次儲存都會留下一個版本：可以看出之後改了什麼，也能把舊版本找回來。",
       "history": "紀錄",
       "restoreReason": "還原到這個版本",
-      "title": "版本紀錄",
       "none": "還沒有版本",
       "nodoc": "開啟一篇儲存過的文件，這裡會顯示它的版本。",
       "restore": "還原這個版本",
@@ -117,6 +116,7 @@
       "same": "和現在一樣",
       "large": "改動太多，無法逐行比較。",
       "since": "之後的改動：",
+      "full": "儲存空間已滿：上次儲存沒有留下版本。",
       "tool.list_versions": "列出一份文件（預設目前文件）儲存過的各個版本，最新的在前，從 1 開始編號，每個版本附儲存時間和大小。",
       "tool.diff_versions": "逐行顯示一份文件兩個版本之間、或某個版本與目前內容之間的改動：+ 表示新增，- 表示刪除，並附少量上下文。"
     },
@@ -125,7 +125,6 @@
       "description": "文書を保存するたびに一つのバージョンとして残します。その後に何が変わったかを見て、古いものを戻せます。",
       "history": "履歴",
       "restoreReason": "このバージョンに戻す",
-      "title": "バージョン履歴",
       "none": "バージョンはまだありません",
       "nodoc": "保存済みの文書を開くと、そのバージョンが表示されます。",
       "restore": "このバージョンに戻す",
@@ -133,6 +132,7 @@
       "same": "現在と同じ",
       "large": "変更が多すぎて、行ごとに比べられません。",
       "since": "その後の変更：",
+      "full": "保存領域がいっぱいです：前回の保存はバージョンとして残っていません。",
       "tool.list_versions": "ある文書（パスがなければ前面の文書）の保存された版を新しい順に 1 から番号を付けて、保存日時と大きさとともに一覧にします。",
       "tool.diff_versions": "文書の二つの版の間、またはある版と今の文書の間の変更を行ごとに示します。+ は追加、- は削除で、前後の行を少し添えます。"
     },
@@ -141,7 +141,6 @@
       "description": "문서를 저장할 때마다 버전으로 남겨 둡니다. 그 뒤로 무엇이 바뀌었는지 보고, 예전 버전을 되살릴 수 있습니다.",
       "history": "기록",
       "restoreReason": "이 버전으로 되돌리기",
-      "title": "버전 기록",
       "none": "아직 버전이 없습니다",
       "nodoc": "저장한 적이 있는 문서를 열면 그 버전들이 보입니다.",
       "restore": "이 버전으로 되돌리기",
@@ -149,6 +148,7 @@
       "same": "지금과 같음",
       "large": "바뀐 곳이 너무 많아 줄별로 비교할 수 없습니다.",
       "since": "그 뒤의 변경:",
+      "full": "저장 공간이 가득 찼습니다. 마지막 저장은 버전으로 남지 않았습니다.",
       "tool.list_versions": "어떤 문서(경로가 없으면 앞에 열린 문서)의 저장된 버전을 최신순으로 1부터 번호를 매겨, 저장 시각과 크기와 함께 나열합니다.",
       "tool.diff_versions": "문서의 두 버전 사이, 또는 어떤 버전과 지금 문서 사이에 바뀐 것을 줄 단위로 보여 줍니다. +는 추가, -는 삭제이며 앞뒤 줄을 조금 덧붙입니다."
     },
@@ -157,7 +157,6 @@
       "description": "Cada vez que guardas un documento queda una versión: mira qué cambió desde entonces y recupera una antigua.",
       "history": "Historial",
       "restoreReason": "Restaurar esta versión",
-      "title": "Historial de versiones",
       "none": "Aún no hay versiones",
       "nodoc": "Abre un documento guardado para ver sus versiones.",
       "restore": "Restaurar esta versión",
@@ -165,6 +164,7 @@
       "same": "Igual que ahora",
       "large": "Demasiados cambios para compararlos línea a línea.",
       "since": "Cambios desde entonces:",
+      "full": "El almacenamiento está lleno: el último guardado no se conservó como versión.",
       "tool.list_versions": "Enumera las versiones guardadas de un documento - el que está al frente si no se da ruta -, la más reciente primero, numeradas desde 1, cada una con cuándo se guardó y su tamaño.",
       "tool.diff_versions": "Muestra, línea a línea, qué cambió entre dos versiones de un documento, o entre una versión y el documento tal como está: + añadido, - quitado, con algo de contexto."
     },
@@ -173,7 +173,6 @@
       "description": "Chaque enregistrement d’un document est gardé comme version : voyez ce qui a changé depuis, et restaurez-en une ancienne.",
       "history": "Historique",
       "restoreReason": "Restaurer cette version",
-      "title": "Historique des versions",
       "none": "Aucune version",
       "nodoc": "Ouvrez un document enregistré pour voir ses versions.",
       "restore": "Restaurer cette version",
@@ -181,6 +180,7 @@
       "same": "Identique à maintenant",
       "large": "Trop de changements pour comparer ligne par ligne.",
       "since": "Modifié depuis :",
+      "full": "Le stockage est plein : le dernier enregistrement n’a pas été gardé comme version.",
       "tool.list_versions": "Liste les versions enregistrées d'un document - celui au premier plan si aucun chemin n'est donné -, la plus récente d'abord, numérotées à partir de 1, chacune avec sa date d'enregistrement et sa taille.",
       "tool.diff_versions": "Montre, ligne par ligne, ce qui a changé entre deux versions d'un document, ou entre une version et le document tel qu'il est : + ajouté, - retiré, avec un peu de contexte."
     },
@@ -189,7 +189,6 @@
       "description": "Jedes Speichern eines Dokuments bleibt als Version: Sieh, was sich seitdem geändert hat, und hol eine alte zurück.",
       "history": "Verlauf",
       "restoreReason": "Diese Version wiederherstellen",
-      "title": "Versionsverlauf",
       "none": "Noch keine Versionen",
       "nodoc": "Öffne ein gespeichertes Dokument, um seine Versionen zu sehen.",
       "restore": "Diese Version wiederherstellen",
@@ -197,6 +196,7 @@
       "same": "Wie jetzt",
       "large": "Zu viele Änderungen, um Zeile für Zeile zu vergleichen.",
       "since": "Seitdem geändert:",
+      "full": "Der Speicher ist voll: Das letzte Speichern wurde nicht als Version behalten.",
       "tool.list_versions": "Listet die gespeicherten Versionen eines Dokuments auf - des vorderen, wenn kein Pfad angegeben ist -, die neueste zuerst, ab 1 nummeriert, jede mit Speicherzeit und Größe.",
       "tool.diff_versions": "Zeigt Zeile für Zeile, was sich zwischen zwei Versionen eines Dokuments geändert hat, oder zwischen einer Version und dem jetzigen Dokument: + hinzugefügt, - entfernt, mit etwas Kontext."
     },
@@ -205,7 +205,6 @@
       "description": "Каждое сохранение документа остаётся версией: смотрите, что изменилось с тех пор, и возвращайте старую.",
       "history": "История",
       "restoreReason": "Вернуть эту версию",
-      "title": "История версий",
       "none": "Версий пока нет",
       "nodoc": "Откройте сохранённый документ, чтобы увидеть его версии.",
       "restore": "Вернуть эту версию",
@@ -213,6 +212,7 @@
       "same": "Как сейчас",
       "large": "Слишком много изменений для построчного сравнения.",
       "since": "Изменено с тех пор:",
+      "full": "Хранилище заполнено: последнее сохранение не попало в версии.",
       "tool.list_versions": "Перечисляет сохранённые версии документа - переднего, если путь не указан, - от новой к старой, с номерами от 1, временем сохранения и размером.",
       "tool.diff_versions": "Построчно показывает, что изменилось между двумя версиями документа или между версией и документом сейчас: + добавлено, - удалено, с небольшим контекстом."
     },
@@ -221,7 +221,6 @@
       "description": "Cada vez que um documento é salvo fica uma versão: veja o que mudou desde então e traga uma antiga de volta.",
       "history": "Histórico",
       "restoreReason": "Restaurar esta versão",
-      "title": "Histórico de versões",
       "none": "Ainda sem versões",
       "nodoc": "Abra um documento salvo para ver as versões dele.",
       "restore": "Restaurar esta versão",
@@ -229,6 +228,7 @@
       "same": "Igual a agora",
       "large": "Mudanças demais para comparar linha a linha.",
       "since": "Mudou desde então:",
+      "full": "O armazenamento está cheio: o último salvamento não foi mantido como versão.",
       "tool.list_versions": "Lista as versões guardadas de um documento - o que está em primeiro plano se não for dado caminho -, a mais recente primeiro, numeradas a partir de 1, cada uma com quando foi guardada e o tamanho.",
       "tool.diff_versions": "Mostra, linha a linha, o que mudou entre duas versões de um documento, ou entre uma versão e o documento como está: + adicionado, - removido, com algum contexto."
     }

@@ -38,29 +38,44 @@ const CHILDREN: Record<string, unknown[]> = {
   ],
 };
 
-function setup(files: Record<string, string>, settings: Record<string, string> = {}) {
+type Hover = { provideHover: (target: unknown) => Promise<unknown> };
+
+function setup(
+  files: Record<string, string>,
+  settings: Record<string, string> = {},
+  extra: { selection?: string; text?: string; fetch?: (url: string) => Promise<unknown> } = {},
+) {
   const commands = new Map<string, () => Promise<unknown>>();
   const opened: unknown[][] = [];
   const inserted: string[] = [];
+  const replaced: string[] = [];
   const asked: string[] = [];
+  const messages: string[] = [];
+  const fetched: string[] = [];
+  const hover: { provider?: Hover } = {};
   const fs = folder(files);
   loadPlugin("catvinci.zotero", {
     files: fs,
     settings: { get: async (key: string) => settings[key] },
     net: {
       fetch: async (url: string) => {
+        fetched.push(url);
+        if (extra.fetch) return extra.fetch(url);
         const child = /items\/(\w+)\/children/.exec(url);
         return { ok: true, json: async () => (child ? CHILDREN[child[1]] || [] : [ITEM]) };
       },
     },
     editor: {
-      getSelection: async () => null,
+      getSelection: async () => (extra.selection ? { text: extra.selection } : null),
+      getText: async () => extra.text ?? null,
       insertText: async (text: string) => void inserted.push(text),
+      replaceSelection: async (text: string) => void replaced.push(text),
+      registerHover: (provider: Hover) => ((hover.provider = provider), { dispose() {} }),
     },
     ui: {
       input: async () => "attention",
       pick: async () => "ABCD1234",
-      message: async () => {},
+      message: async (text: string) => void messages.push(text),
       confirm: async (text: string) => (asked.push(text), true),
     },
     layout: { open: async (...args: unknown[]) => void opened.push(args) },
@@ -71,7 +86,17 @@ function setup(files: Record<string, string>, settings: Record<string, string> =
       ),
     },
   });
-  return { run: (id: string) => commands.get(id)!(), opened, inserted, asked, files };
+  return {
+    run: (id: string) => commands.get(id)!(),
+    hover: (target: unknown) => hover.provider!.provideHover(target),
+    opened,
+    inserted,
+    replaced,
+    asked,
+    messages,
+    fetched,
+    files,
+  };
 }
 
 describe("a literature note", () => {
@@ -177,5 +202,44 @@ describe("a [[@citekey]] citation", () => {
     expect(z.inserted).toEqual(["[[@vaswani2017]]"]);
     expect(z.asked).toEqual([]);
     expect(z.opened).toEqual([]);
+  });
+});
+
+describe("a citation from selected words", () => {
+  it("takes the words' place instead of going in front of them", async () => {
+    const z = setup({}, { style: "pandoc" }, { selection: "Vaswani 2017" });
+    await z.run("catvinci.zotero.cite");
+    expect(z.replaced).toEqual(["[@vaswani2017]"]);
+    expect(z.inserted).toEqual([]);
+  });
+});
+
+describe("Insert References List", () => {
+  it("says the citations aren't in Zotero when Zotero answers without them", async () => {
+    const z = setup({}, {}, { text: "As [@other2020] said.", fetch: async () => ({ ok: true, json: async () => [] }) });
+    await z.run("catvinci.zotero.bibliography");
+    expect(z.messages).toEqual(["notInLibrary"]);
+  });
+
+  it("says Zotero can't be reached only when it can't", async () => {
+    const z = setup({}, {}, {
+      text: "As [@other2020] said.",
+      fetch: async () => {
+        throw new Error("connection refused");
+      },
+    });
+    await z.run("catvinci.zotero.bibliography");
+    expect(z.messages).toEqual(["unreachable"]);
+  });
+});
+
+describe("the hover card of a [@key]", () => {
+  it("asks the quick search first and remembers the item", async () => {
+    const z = setup({});
+    const card = await z.hover({ type: "citation", key: "vaswani2017" });
+    expect(card).toMatchObject({ title: "Attention: Is All You Need" });
+    await z.hover({ type: "citation", key: "vaswani2017" });
+    expect(z.fetched).toHaveLength(1);
+    expect(z.fetched[0]).toContain("qmode=titleCreatorYear");
   });
 });

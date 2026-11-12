@@ -1,7 +1,7 @@
 {
   "id": "catvinci.bookmarks",
   "name": "%name%",
-  "version": "0.4.2",
+  "version": "0.4.3",
   "publisher": "catvinci",
   "author": "CatVinci Studio",
   "description": "%description%",
@@ -180,8 +180,8 @@
       "remove": "Remover favorito",
       "select": "Selecione algumas palavras primeiro.",
       "saveFirst": "Salve o documento primeiro: o favorito precisa do arquivo.",
-      "empty": "Sem marcadores",
-      "tool.list_bookmarks": "Lista os marcadores do utilizador: as palavras marcadas em cada documento, com o caminho do documento na pasta aberta.",
+      "empty": "Sem favoritos",
+      "tool.list_bookmarks": "Lista os favoritos do usuário: as palavras marcadas em cada documento, com o caminho do documento na pasta aberta.",
       "obsidian": "Favoritos do Obsidian"
     }
   }

@@ -21,6 +21,14 @@ async function keep(bookmarks) {
 }
 
 const fileName = (path) => path.split(/[\\/]/).pop();
+const MAX = 120;
+
+/** A row's label: the kept words, cut at a word when they were cut. */
+function labelOf(mark) {
+  if (!(mark.cut ?? mark.text.length >= MAX)) return mark.text;
+  const at = mark.text.lastIndexOf(" ");
+  return (at > MAX / 2 ? mark.text.slice(0, at) : mark.text).trimEnd() + "…";
+}
 
 /** Textus AI's tool: the bookmarks, documents by their path in the open
  *  folder (in full when outside it). */
@@ -98,11 +106,13 @@ exports.activate = function (context) {
       const there = new Set((vault || []).map((mark) => mark.ctime));
       const marks = (await all()).filter((mark) => !vault || !ours(mark) || there.has(mark.ctime));
       const mine = new Set(marks.map((mark) => mark.ctime).filter(Boolean));
-      return marks.map((mark, i) => ({
+      const where = (mark) => (root && folderPaths.rel(root, mark.path)) ?? mark.path;
+      // One group per document; time order kept inside it.
+      const sorted = marks.map((mark) => [where(mark), mark]).sort(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0));
+      return sorted.map(([group, mark], i) => ({
         id: String(mark.id),
-        label: mark.text,
-        group: fileName(mark.path),
-        detail: mark.path,
+        label: labelOf(mark),
+        group,
         icon: "star",
         location: { path: mark.path, text: mark.text },
         actions: [
@@ -131,15 +141,15 @@ exports.activate = function (context) {
       const path = await editor.getPath();
       if (!path) return textus.ui.message(t("saveFirst"));
       const selection = await editor.getSelection();
-      const text = selection && selection.text.trim().slice(0, 120);
-      if (!text) return textus.ui.notice(t("select"));
-      const mark = { id: Date.now(), path, text };
+      const full = selection ? selection.text.trim() : "";
+      if (!full) return textus.ui.notice(t("select"));
+      const mark = { id: Date.now(), path, text: full.slice(0, MAX), cut: full.length > MAX };
       const file = await vaultFile();
       const rel = file && folderPaths.rel(file.root, path);
       if (rel) {
         const blocks = (await editor.getBlocks()) || [];
         let found = obsidianBookmarks.markFor(blocks, selection.markdown || selection.text);
-        if (found && found.markdown && !(await editor.edit({ action: "replace", block: found.block.id, text: found.markdown })))
+        if (found && found.markdown && !(await editor.edit({ action: "replace", block: found.block.id, text: found.markdown }).catch(() => false)))
           found = null;
         const entry = Object.assign({ type: "file" }, found && found.entry);
         const written = { type: entry.type, ctime: mark.id, path: rel };

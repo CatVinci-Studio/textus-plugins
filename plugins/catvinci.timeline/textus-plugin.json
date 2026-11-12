@@ -1,7 +1,7 @@
 {
   "id": "catvinci.timeline",
   "name": "%name%",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "publisher": "catvinci",
   "author": "CatVinci Studio",
   "description": "%description%",
@@ -42,51 +42,61 @@
   },
   "l10n": {
     "en": {
+      "noEvents": "No events yet: write one per line, when | what | more.",
       "name": "Timeline",
       "description": "Events in order, a line each: when | what | more.",
       "tool.check_timeline": "Checks the source of a ```timeline block - one event per line, written when | what | more - before it goes into a document, without drawing it. Returns ok, or the problems to fix first. Pass the source without its fence."
     },
     "zh": {
+      "noEvents": "还没有事件：每行写一个，时间 | 事件 | 说明。",
       "name": "时间轴图",
       "description": "按顺序排列的事件，每行一个：时间 | 事件 | 说明。",
       "tool.check_timeline": "在把 ```timeline 块写进文档之前检查它的源码（每行一个事件，写成 时间 | 事件 | 补充），不实际绘制。返回 ok，或需要先修正的问题。传入时不带代码围栏。"
     },
     "zh-Hant": {
+      "noEvents": "還沒有事件：每行寫一個，時間 | 事件 | 說明。",
       "name": "時間軸圖",
       "description": "依序排列的事件，每行一個：時間 | 事件 | 說明。",
       "tool.check_timeline": "在把 ```timeline 區塊寫進文件之前檢查它的原始碼（每行一個事件，寫成 時間 | 事件 | 補充），不實際繪製。回傳 ok，或需要先修正的問題。傳入時不帶程式碼圍欄。"
     },
     "ja": {
+      "noEvents": "出来事がまだありません：1 行に 1 つ、いつ | 何が | 補足 と書いてください。",
       "name": "タイムライン",
       "description": "出来事を順に、1 行に 1 つ：いつ | 何が | 補足。",
       "tool.check_timeline": "```timeline ブロックのソース（一行に一つの出来事を いつ | 何が | 補足 と書いたもの）を、文書に入れる前に描画せずに検査します。ok か、先に直すべき問題を返します。フェンスを除いたソースを渡してください。"
     },
     "ko": {
+      "noEvents": "아직 사건이 없습니다: 한 줄에 하나씩 언제 | 무엇 | 설명 으로 쓰세요.",
       "name": "타임라인",
       "description": "순서대로 놓인 사건, 한 줄에 하나: 언제 | 무엇 | 설명.",
       "tool.check_timeline": "```timeline 블록의 소스(한 줄에 사건 하나를 언제 | 무엇 | 덧붙임 으로 쓴 것)를 문서에 넣기 전에 그리지 않고 검사합니다. ok나 먼저 고칠 문제를 돌려줍니다. 펜스 없이 소스만 넘기세요."
     },
     "es": {
+      "noEvents": "Aún no hay hechos: escribe uno por línea, cuándo | qué | más.",
       "name": "Cronología",
       "description": "Hechos en orden, uno por línea: cuándo | qué | más.",
       "tool.check_timeline": "Revisa el código de un bloque ```timeline - un suceso por línea, escrito cuándo | qué | más - antes de que entre en un documento, sin dibujarlo. Devuelve ok, o los problemas que hay que corregir antes. Pasa el código sin su valla."
     },
     "fr": {
+      "noEvents": "Aucun événement pour l’instant : écrivez-en un par ligne, quand | quoi | détails.",
       "name": "Chronologie",
       "description": "Des événements dans l’ordre, un par ligne : quand | quoi | détails.",
       "tool.check_timeline": "Vérifie la source d'un bloc ```timeline - un événement par ligne, écrit quand | quoi | plus - avant qu'il n'entre dans un document, sans le dessiner. Renvoie ok, ou les problèmes à corriger d'abord. Passez la source sans sa clôture."
     },
     "de": {
+      "noEvents": "Noch keine Ereignisse: eines pro Zeile schreiben, wann | was | mehr.",
       "name": "Zeitleiste",
       "description": "Ereignisse der Reihe nach, eines pro Zeile: wann | was | mehr.",
       "tool.check_timeline": "Prüft die Quelle eines ```timeline-Blocks - ein Ereignis pro Zeile, geschrieben als wann | was | mehr -, bevor er in ein Dokument kommt, ohne ihn zu zeichnen. Gibt ok zurück oder die Probleme, die zuerst zu beheben sind. Die Quelle ohne ihren Zaun übergeben."
     },
     "ru": {
+      "noEvents": "Событий пока нет: пишите по одному в строке, когда | что | подробности.",
       "name": "Хронология",
       "description": "События по порядку, по одному в строке: когда | что | подробности.",
       "tool.check_timeline": "Проверяет исходный текст блока ```timeline - по событию в строке, записанному как когда | что | подробнее - до того, как он попадёт в документ, не рисуя его. Возвращает ok или проблемы, которые нужно сначала исправить. Передавайте текст без ограждения."
     },
     "pt": {
+      "noEvents": "Ainda não há eventos: escreva um por linha, quando | o quê | mais.",
       "name": "Linha do tempo",
       "description": "Eventos em ordem, um por linha: quando | o quê | mais.",
       "tool.check_timeline": "Verifica o código de um bloco ```timeline - um acontecimento por linha, escrito quando | o quê | mais - antes de entrar num documento, sem o desenhar. Devolve ok, ou os problemas a corrigir primeiro. Passe o código sem a cerca."

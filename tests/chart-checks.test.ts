@@ -78,9 +78,10 @@ describe("chart checks", () => {
         "{ signal: [{ name: 'clk', wave: 'p.k.' }, { name: 'd', wave: 'x=x', data: ['a', 'b'] }] }",
       ),
     ).toEqual([
-      "signal[0].wave “p.k.”: k isn't a wave character (p n P N h l H L 0 1 = 2-9 x z u d . |).",
+      "signal[0].wave “p.k.”: k isn't a wave character (p n P N h l H L 0 1 = 2-9 x z u d . | < >).",
       "signal[1] has 2 data labels for 1 value bricks (= or 2-9) in its wave.",
     ]);
+    expect(await check("{ signal: [{ name: 'g', wave: 'p.<hl>.' }] }")).toEqual([]);
     expect(await check("{ reg: [{ bits: 8, name: 'IPO' }] }")).toEqual([]);
     expect(await check("{ lanes: [] }")).toHaveLength(1);
   });
@@ -110,6 +111,24 @@ describe("chart checks", () => {
     ]);
   });
 
+  it("function-plot: checks over the x range the fence gives", async () => {
+    const tool = loadPlugin("catvinci.function-plot").tools.get(
+      "check_function_plot",
+    )!;
+    expect(await tool({ source: "sqrt(x - 100)", meta: "xmin=100 xmax=200" }))
+      .toEqual({ ok: true });
+    expect(
+      await tool({ source: "```function-plot xmin=100 xmax=200\nsqrt(x - 100)\n```" }),
+    ).toEqual({ ok: true });
+    expect(await tool({ source: "sqrt(-x)", meta: { xmin: "1", xmax: "5" } }))
+      .toEqual({
+        ok: false,
+        problems: [
+          "“sqrt(-x)” has no value from x = 1 to 5: set xmin and xmax on the fence (```function-plot xmin=0 xmax=100).",
+        ],
+      });
+  });
+
   it("abc: a header ending in K:, and notes", async () => {
     const check = checker("abc");
     expect(
@@ -120,11 +139,20 @@ describe("chart checks", () => {
     expect(await check("X:1\nT:No key\nabc")).toEqual([
       "No K: line: the header ends with the key, as K:C or K:Am, before the music.",
     ]);
-    expect(await check("X:1\nM:4\nK:Hmaj\nab[c|d]]e $|")).toEqual([
+    expect(await check("X:1\nM:4\nK:Hmaj\nab[c|d]]e #|")).toEqual([
       "Line 2: “4” is not a meter (M:4/4, M:6/8, M:C).",
       "Line 3: “Hmaj” is not a key (K:C, K:F#m, K:Bb, K:Ddor).",
-      "Line 4: $ isn't ABC notation.",
+      "Line 4: # isn't ABC notation.",
       "Line 4: a chord's [ ] don't pair up.",
+    ]);
+    // Full mode names, any note length, empty or clef-only keys, +: lines,
+    // beam spacers, score line-breaks and CRLF are all valid ABC.
+    for (const key of ["Ddorian", "Gmixolydian", "", "clef=bass"]) {
+      expect(await check("X:1\nL:3/8\nK:" + key + "\nA`B c$|\n+:d e|")).toEqual([]);
+    }
+    expect(await check("X:1\r\nK:C\r\nCDE|\r\nw: la la")).toEqual([]);
+    expect(await check("X:1\nK:Cmx\nC|")).toEqual([
+      "Line 2: “Cmx” is not a key (K:C, K:F#m, K:Bb, K:Ddor).",
     ]);
   });
 

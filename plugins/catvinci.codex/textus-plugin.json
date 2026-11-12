@@ -1,7 +1,7 @@
 {
   "id": "catvinci.codex",
   "name": "%name%",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "publisher": "catvinci",
   "author": "CatVinci Studio",
   "description": "%description%",
@@ -27,7 +27,8 @@
           "-y",
           "@agentclientprotocol/codex-acp@2.6.0"
         ],
-        "setup": "%setup%"
+        "setup": "%setup%",
+        "provider": "openai"
       }
     ]
   },

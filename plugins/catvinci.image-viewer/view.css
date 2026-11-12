@@ -14,6 +14,11 @@ body {
   border-bottom: 1px solid var(--ui-border);
 }
 #info {
+  flex: 0 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
   color: var(--ui-muted);
   font-size: var(--text-footnote);
 }
@@ -23,10 +28,8 @@ body {
   overflow: auto;
   display: grid;
   place-items: center;
-  /* A checkerboard behind the picture, so transparency shows. */
-  background-color: var(--ui-bg);
-  background: var(--transparency-checker);
-  background-size: var(--space-5) var(--space-5);
+  container-type: size;
+  background: var(--ui-bg);
 }
 #stage[hidden] {
   display: none;
@@ -38,8 +41,23 @@ body {
 }
 /* Turned a quarter, it fits the stage the other way round. */
 #stage.fit.sideways img {
-  max-width: 100vh;
-  max-height: 100vw;
+  max-width: 100cqh;
+  max-height: 100cqw;
+}
+/* Fitted, the picture sits in the stage itself; zoomed, in a frame of the
+   turned size, centred in it. */
+#stage.fit #frame {
+  display: contents;
+}
+#stage:not(.fit) #frame {
+  position: relative;
+}
+#stage:not(.fit) img {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  translate: -50% -50%;
+  max-width: none;
 }
 #stage:not(.fit) {
   cursor: grab;
@@ -48,11 +66,13 @@ body {
   cursor: grabbing;
 }
 #image {
-  transition: transform var(--dur-fast) var(--ease-standard);
+  display: block;
+  /* A checkerboard behind the picture only, so transparency shows. */
+  background: var(--transparency-checker);
+  background-size: var(--space-5) var(--space-5);
 }
-#zoom {
-  min-width: 3.5em;
-  text-align: center;
+#image.settled {
+  transition: rotate var(--dur-fast) var(--ease-standard);
 }
 #code {
   flex: 1;

@@ -25,6 +25,7 @@ Das Plugin fragt nur nach einer Berechtigung: um Textus AI das unten aufgeführt
 
 ## Änderungen
 
+- **0.3.2** - Diagramme passen sich an, wenn sich die Breite des Bereichs ändert; Text und Standardhöhe folgen Zoom und Schrift der App.
 - **0.3.1** - Die Beschreibung nennt keine Karten mehr, die ein Block nicht laden kann.
 - **0.3.0** - Textus AI kann einen `echarts`-Block prüfen, bevor es ihn schreibt.
 - **0.2.0** - Die Farben der Serien kommen aus den Tönen des Themes. Benötigt Textus 1.3.2.

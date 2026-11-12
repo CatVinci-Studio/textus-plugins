@@ -46,6 +46,7 @@ sort by due
 
 ## 更新紀錄
 
+- **0.4.3** - 帶 HTML 註解的待辦現在也能勾選，勾選不成時會提示原因。`group by status` 分組順序正確，任務區塊在窄面板裡自動換行，截止日期樣式與側欄一致，打字更順暢。
 - **0.4.2** - 說明和空狀態文字更簡短。
 - **0.4.1** - Its bars, lists and controls are Textus's own, grow with the interface and follow every theme; needs Textus 1.3.12. A new setting, **Move finished tasks to the end of their list**: a task ticked in a document or in the list goes after the open ones (it asks once to read and edit the document in front).
 - **0.4.0** - 使用 Textus 1.3.10 內建的日期功能，因此需要 Textus 1.3.10。
@@ -62,7 +63,7 @@ sort by due
 
 裝上這個外掛後，Textus AI 在對話中可以使用：
 
-- `list_tasks`：列出開啟的資料夾中各文件裡的 Markdown 任務（- [ ] ...），預設只列未完成的；每項附文字、截止日期、文件路徑和行號。可依狀態、文件、標籤、截止日期和關鍵字篩選。 不含看板卡片（用 read_board）和定時提醒（用 list_reminders）。
-- `add_task`：在開啟的資料夾中的某份文件裡新增一條任務（- [ ] ...）：加在文末，或某個標題下那一節的末尾；可附截止日期。文件不存在時會新建。回傳任務所在位置。 要到點通知的用 add_reminder；看板上的卡片用 add_card，資料庫的一列用 add_row，寫進今天日記的用 append_to_daily_note。
+- `list_tasks`：列出開啟的資料夾中各文件裡的 Markdown 任務（- [ ] ...），預設只列未完成的；每項附文字、截止日期、文件路徑和行號。可依狀態、文件、標籤、截止日期和關鍵字篩選。不含看板卡片（用 read_board）和定時提醒（用 list_reminders）。
+- `add_task`：在開啟的資料夾中的某份文件裡新增一條任務（- [ ] ...）：加在文末，或某個標題下那一節的末尾；可附截止日期。文件不存在時會新建。回傳任務所在位置。要到點通知的用 add_reminder；看板上的卡片用 add_card，資料庫的一列用 add_row，寫進今天日記的用 append_to_daily_note。
 - `complete_task`：依 list_tasks 給出的文件路徑和行號，把一條任務勾為完成（- [x]）；done 為 false 時則改回未完成。會像 Obsidian Tasks 一樣寫上完成日期（✅ YYYY-MM-DD）；重複任務（🔁 every …）會在上一行加上下一次。
 <!-- /ai-tools -->

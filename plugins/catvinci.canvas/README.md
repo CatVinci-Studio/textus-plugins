@@ -15,6 +15,7 @@ The plugin asks only to read files (to show the notes and pictures on a canvas).
 
 ## Changes
 
+- **0.1.4** - An empty or unreadable canvas now shows one clear message across the page. Card labels stay readable in every theme, and dragging no longer stops when the pointer leaves the canvas.
 - **0.1.3** - Shorter help and empty-state text. Its bar keeps Textus's one order: what it shows, then find and zoom.
 - **0.1.2** - Its bars, lists and controls are Textus's own, grow with the interface and follow every theme; needs Textus 1.3.12.
 - **0.1.1** - Its page now says in one sentence what it does, what it can do, and what changed in each version.

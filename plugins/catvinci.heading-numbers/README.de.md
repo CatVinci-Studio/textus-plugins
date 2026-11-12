@@ -12,6 +12,7 @@ Das Plugin liest die Überschriften des offenen Dokuments (Berechtigung, den Edi
 
 ## Änderungen
 
+- **0.2.3** - Front Matter und Codeblöcke bekommen keine falschen Nummern mehr, und Exporte nummerieren wie der Editor nur Überschriften der obersten Ebene.
 - **0.2.2** - Seine Seite sagt jetzt in einem Satz, was es tut, was es kann und was sich in jeder Version geändert hat.
 - **0.2.1** - Keine Nummern bei einem von Hand nummerierten Dokument oder einem mit `number headings: off` in den Eigenschaften.
 - **0.2.0** - Textus AI kann Nummern in die Überschriften eines Markdown-Texts schreiben oder sie entfernen.

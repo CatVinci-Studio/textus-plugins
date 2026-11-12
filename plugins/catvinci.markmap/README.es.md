@@ -25,6 +25,7 @@ El plugin usa [markmap](https://markmap.js.org). Pide un solo permiso, para dar 
 
 ## Cambios
 
+- **0.3.3** - Al desplazarte sobre un mapa mental ahora se desplaza la nota; pellizca o usa Ctrl y la rueda para hacer zoom. El mapa usa la fuente y los colores de tu tema, también en modo oscuro, y se abre ajustado entero.
 - **0.3.2** - Su página dice ahora en una frase qué hace, qué puede hacer y qué cambió en cada versión.
 - **0.3.1** - Un mapa mental fuera de la vista se exporta como imagen y no como código.
 - **0.3.0** - Textus AI puede revisar un bloque `markmap` antes de escribirlo.

@@ -10,7 +10,7 @@ Desenha diagramas de tempo digitais e campos de registradores a partir de WaveJS
 - JSON escrito à mão funciona: chaves sem aspas, aspas simples, vírgulas no fim e comentários `//`.
 - Um erro no código é indicado abaixo do bloco.
 - `height=400` depois da linguagem define a altura do desenho.
-- Num tema escuro, usa a aparência escura do WaveDrom. Ao exportar para HTML, PDF ou Word, o diagrama vai como imagem, desenhado nas cores da exportação.
+- Em um tema escuro, usa a aparência escura do WaveDrom. Ao exportar para HTML, PDF ou Word, o diagrama vai como imagem, desenhado nas cores da exportação.
 
 ## Exemplo
 
@@ -27,7 +27,8 @@ Pede apenas **Ferramentas para o Textus AI**, para que o Textus AI possa verific
 
 ## Alterações
 
-- **0.3.1** - Sua página agora diz numa frase o que ele faz, o que pode fazer e o que mudou em cada versão.
+- **0.3.2** - Os diagramas usam a fonte e a cor de linha do tema, acompanham o zoom do documento, e `height=` agora muda o tamanho do próprio diagrama.
+- **0.3.1** - Sua página agora diz em uma frase o que ele faz, o que pode fazer e o que mudou em cada versão.
 - **0.3.0** - uma ferramenta para o Textus AI, `check_wavedrom`
 - **0.2.0** - redesenhado quando o tema muda, com a página de gráficos do Textus 1.3.2
 - **0.1.3** - texto nas cores do tema no Textus 1.3
@@ -39,5 +40,5 @@ Pede apenas **Ferramentas para o Textus AI**, para que o Textus AI possa verific
 
 Com o plugin instalado, o Textus AI pode usá-las numa conversa:
 
-- `check_wavedrom`: Verifica o código de um bloco ```wavedrom - WaveJSON: faixas de sinal com as suas strings wave e data, ou os campos de um registo - antes de entrar num documento, sem o desenhar. Devolve ok, ou os problemas a corrigir primeiro. Passe o código sem a cerca.
+- `check_wavedrom`: Verifica o código de um bloco ```wavedrom - WaveJSON: faixas de sinal com suas strings wave e data, ou os campos de um registro - antes de entrar num documento, sem desenhá-lo. Retorna ok, ou os problemas a corrigir primeiro. Passe o código sem a cerca.
 <!-- /ai-tools -->

@@ -28,6 +28,7 @@ Bob --> Alice : Hi!
 
 ## Änderungen
 
+- **0.2.4** - `!theme` funktioniert; keine leere Lücke in einer schmalen Spalte; im Servermodus erscheint der Fehler von PlantUML selbst, dunkle Themes bekommen ein dunkles Bild.
 - **0.2.3** - Kürzere Hilfe- und Leertexte.
 - **0.2.2** - Seine Seite sagt jetzt in einem Satz, was es tut, was es kann und was sich in jeder Version geändert hat.
 - **0.2.1** - Enthält die aktualisierte gemeinsame Diagrammseite; Diagramme werden wie bisher gezeichnet.

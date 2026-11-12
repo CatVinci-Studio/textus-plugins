@@ -83,11 +83,7 @@ function showStatus() {
     status = null;
     return;
   }
-  status = textus.ui.statusItem("mode", {
-    text: label(),
-    tooltip: textus.l10n.t("statusTip"),
-    command: "catvinci.vim.toggle",
-  });
+  status = textus.ui.statusItem("mode", { text: label() });
 }
 
 function captureFor(m) {
@@ -220,7 +216,10 @@ async function vaultVimrc() {
     var found = await textus.files.conventions().catch(function () {
       return null;
     });
-    var vault = found && (found.sources || []).find(function (s) {
+    var sources = found
+      ? (found.sources || []).concat((found.detected && found.detected.sources) || [])
+      : [];
+    var vault = sources.find(function (s) {
       return s.app === "obsidian";
     });
     if (vault && typeof vault.root === "string") root = vault.root;
@@ -243,6 +242,10 @@ exports.activate = async function () {
   textus.files.onDidChangeRoot(settingsChanged);
   textus.files.onDidChange(function (event) {
     if (/[\\/]\.obsidian\.vimrc$/.test(event.path)) settingsChanged();
+  });
+  // Edits made in another app aren't file events: read again on return.
+  textus.app.onDidChangeState(function (state) {
+    if (state === "active") settingsChanged();
   });
   textus.editor.keys.onKey(handle);
   textus.commands.register("catvinci.vim.toggle", function () {

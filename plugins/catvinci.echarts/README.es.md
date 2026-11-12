@@ -25,6 +25,7 @@ El plugin pide un solo permiso, para dar a Textus AI la herramienta `check_echar
 
 ## Cambios
 
+- **0.3.2** - Los gráficos se redibujan al cambiar el ancho del panel, y su texto y altura por defecto siguen el zoom y la fuente de la app.
 - **0.3.1** - Su descripción ya no menciona mapas, que un bloque no puede cargar.
 - **0.3.0** - Textus AI puede revisar un bloque `echarts` antes de escribirlo.
 - **0.2.0** - Los colores de las series salen de los tonos del tema. Requiere Textus 1.3.2.

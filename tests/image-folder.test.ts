@@ -48,6 +48,7 @@ function setup(
   blockText: string,
   others: string[] = [],
   attachments: { value: string; app: string; root: string } | null = null,
+  opts: { truncated?: boolean; docRule?: { value: string; app: string; root: string } } = {},
 ) {
   const f = folder(files);
   const edits: unknown[] = [];
@@ -70,7 +71,10 @@ function setup(
             delete files[k];
           }
       },
-      conventions: async () => ({ ...(await f.conventions()), attachments }),
+      conventions: async (p: string) => ({
+        ...(await f.conventions()),
+        attachments: p === doc && opts.docRule ? opts.docRule : attachments,
+      }),
       onDidCreate: (fn: typeof created) => ((created = fn), { dispose() {} }),
       onDidRename: (fn: typeof renamed) => ((renamed = fn), { dispose() {} }),
     },
@@ -82,7 +86,10 @@ function setup(
       edit: async (changes: unknown[]) => void edits.push(...changes),
     },
     metadata: {
-      search: async () => ({ hits: others.map((p) => ({ path: p })) }),
+      search: async () => ({
+        hits: others.map((p) => ({ path: p })),
+        truncated: !!opts.truncated,
+      }),
     },
   });
   return {
@@ -136,6 +143,17 @@ describe("the plugin", () => {
     expect(files["Old.assets/a.png"]).toBe("PNG");
     expect(files["New.md"]).toBe("![](Old.assets/a.png)");
   });
+
+  it("leaves the folder when the link search was cut short", async () => {
+    const files: Record<string, string> = {
+      "New.md": "![](Old.assets/a.png)",
+      "Old.assets/a.png": "PNG",
+    };
+    const self = Array(20).fill("/root/New.md");
+    const { rename } = setup(files, "/root/New.md", "", self, null, { truncated: true });
+    await rename("/root/Old.md", "/root/New.md");
+    expect(files["Old.assets/a.png"]).toBe("PNG");
+  });
 });
 
 describe("in a folder whose app places pictures", () => {
@@ -144,6 +162,7 @@ describe("in a folder whose app places pictures", () => {
     expect(rules.appPlaces(obsidian, { attachmentFolderPath: "Attachments" })).toBe(true);
     expect(rules.appPlaces(obsidian, {})).toBe(false);
     expect(rules.appPlaces({ value: "assets", app: "logseq", root: "/r" }, null)).toBe(true);
+    expect(rules.appPlaces({ value: "./img", app: "typora", root: "/r" }, null)).toBe(true);
     expect(rules.appPlaces({ value: "./img", app: "textus", root: "/r" }, null)).toBe(false);
     expect(rules.appPlaces(null, null)).toBe(false);
   });
@@ -177,5 +196,18 @@ describe("in a folder whose app places pictures", () => {
     });
     await create("/root/Notes/p.png");
     expect(files["Notes/Note.assets/p.png"]).toBe("PNG");
+  });
+
+  it("leaves a picture where the document's Typora front matter put it", async () => {
+    const files: Record<string, string> = {
+      "Notes/Note.md": "---\ntypora-copy-images-to: img\n---\nx",
+      "Notes/img/p.png": "PNG",
+    };
+    const { create, edits } = setup(files, "/root/Notes/Note.md", "See ![](img/p.png).", [], null, {
+      docRule: { value: "./img", app: "typora", root: "/root/Notes" },
+    });
+    await create("/root/Notes/img/p.png");
+    expect(files["Notes/img/p.png"]).toBe("PNG");
+    expect(edits).toEqual([]);
   });
 });

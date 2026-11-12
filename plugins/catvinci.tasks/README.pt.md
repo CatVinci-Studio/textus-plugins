@@ -46,6 +46,7 @@ O plugin lê os documentos da pasta para achar as tarefas, e só escreve num doc
 
 ## Alterações
 
+- **0.4.3** - Agora dá para marcar tarefas com um comentário HTML, e quando a marcação é recusada você vê o motivo. `group by status` ordena certo, os blocos de tarefas cabem em painéis estreitos, as datas de vencimento ficam iguais às da barra lateral e digitar ficou mais leve.
 - **0.4.2** - Textos de ajuda e de estado vazio mais curtos.
 - **0.4.1** - Suas barras, listas e controles agora são os do Textus, crescem com a interface e seguem cada tema; requer Textus 1.3.12. Nova opção **Mover tarefas concluídas para o fim da lista**: uma tarefa marcada vai para depois das abertas (pede uma vez para ler e editar o documento).
 - **0.4.0** - Usa as datas embutidas no Textus 1.3.10, que agora é necessário.

@@ -1,6 +1,5 @@
-/* The History tab: a sidebar panel (design-language.md 5.7) - the
-   versions by day, kept up to date as the document is saved; the open one
-   with its changes. */
+/* The History tab: the versions by day; the open one a card with its
+   changes. */
 #versions {
   padding: 0 var(--space-1);
 }
@@ -8,9 +7,17 @@
   display: block;
   margin: var(--space-1) 0;
   padding: var(--space-2) var(--space-3);
-  background: var(--ui-surface);
 }
+/* The open card's head: the row's button, laid out as its head. */
 .row-head {
+  width: 100%;
+  padding: 0;
+  border: none;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
   display: flex;
   flex: 1;
   align-items: baseline;
@@ -18,7 +25,7 @@
   min-width: 0;
 }
 .delta {
-  font-size: var(--text-caption);
+  font-size: var(--text-footnote);
   font-family: var(--font-mono);
 }
 .delta .plus {
@@ -53,6 +60,12 @@
 }
 .actions {
   display: flex;
+  flex-wrap: wrap;
   justify-content: flex-end;
   gap: var(--space-2);
+}
+.full {
+  margin: var(--space-1) var(--space-2);
+  color: var(--ui-muted);
+  font-size: var(--text-footnote);
 }

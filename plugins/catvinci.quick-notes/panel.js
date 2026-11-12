@@ -14,7 +14,7 @@
   };
   $("filter").placeholder = t("search");
   $("filter").setAttribute("aria-label", t("search"));
-  // The search shows once there are enough notes to look through.
+  $("no-match").textContent = t("noMatch");
   let all = [];
   $("filter").addEventListener("input", () => render(all));
   const timers = new Map();
@@ -30,6 +30,11 @@
   }
   $("new").onclick = () => {
     flush();
+    // A search would hide the new, empty note.
+    if ($("filter").value) {
+      $("filter").value = "";
+      render(all);
+    }
     api.postMessage({ type: "new" });
   };
   const when = (at) =>
@@ -42,18 +47,22 @@
     });
 
   /** A note's actions, in Textus's own menu: from its more button or a
-   *  right-click on it. */
-  async function actions(id, at) {
-    const type = await api.menu(
-      [
-        { label: t("insert"), value: "insert" },
-        { label: t("open"), value: "open" },
-        "separator",
-        { label: t("delete"), value: "delete", danger: true },
-      ],
-      at,
-    );
+   *  right-click on it; inside its text, the text actions come first. */
+  async function actions(id, at, field) {
+    const own = [
+      { label: t("insert"), value: "insert" },
+      { label: t("open"), value: "open" },
+      "separator",
+      { label: t("delete"), value: "delete", danger: true },
+    ];
+    const text = field ? await api.textItems(field) : [];
+    const items = text.length ? [...text, "separator", ...own] : own;
+    const type = await api.menu(items, at);
     if (type === null) return;
+    if (!own.some((item) => item.value === type)) {
+      if (field) await api.editText(field, type);
+      return;
+    }
     flush();
     api.postMessage({ type: type, id: id });
   }
@@ -69,6 +78,7 @@
     // A note being typed in keeps its box, caret and all.
     const typing = document.activeElement && document.activeElement.dataset.id;
     $("empty").hidden = all.length > 0;
+    $("no-match").hidden = !all.length || notes.length > 0;
     const keep = new Set(notes.map((n) => n.id));
     for (const li of [...list.children])
       if (!keep.has(li.dataset.id)) li.remove();
@@ -80,7 +90,11 @@
         li.dataset.id = note.id;
         li.addEventListener("contextmenu", (e) => {
           e.preventDefault();
-          actions(note.id, { x: e.clientX, y: e.clientY });
+          actions(
+            note.id,
+            { x: e.clientX, y: e.clientY },
+            e.target.closest("textarea"),
+          );
         });
         const area = document.createElement("textarea");
         area.className = "tx-inline-input";

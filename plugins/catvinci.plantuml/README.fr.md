@@ -28,6 +28,7 @@ Bob --> Alice : Hi!
 
 ## Changements
 
+- **0.2.4** - `!theme` fonctionne ; plus d'espace vide dans une colonne étroite ; en mode serveur, l'erreur de PlantUML s'affiche et les thèmes sombres ont un dessin sombre.
 - **0.2.3** - Textes d'aide et d'état vide plus courts.
 - **0.2.2** - Sa page dit maintenant en une phrase ce qu'il fait, ce qu'il permet et ce qui a changé à chaque version.
 - **0.2.1** - Contient la page de graphiques partagée mise à jour ; les diagrammes sont dessinés comme avant.

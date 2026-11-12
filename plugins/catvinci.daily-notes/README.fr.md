@@ -23,6 +23,7 @@ L'extension lit et écrit des fichiers du dossier ouvert pour trouver et créer 
 
 ## Changements
 
+- **0.7.3** - Les dates impossibles comme le 30 février sont refusées, le calendrier garde une largeur confortable dans les panneaux larges et se redessine quand les réglages de dossiers changent, et les réglages hebdomadaires et mensuels n'apparaissent que si ces notes sont activées.
 - **0.7.2** - Textes d'aide et d'état vide plus courts.
 - **0.7.1** - Ses barres, listes et contrôles sont désormais ceux de Textus, grandissent avec l’interface et suivent chaque thème ; nécessite Textus 1.3.12.
 - **0.7.0** - Les dates et les modèles sont remplis par Textus lui-même, comme dans l'extension Modèles ; demande Textus 1.3.10.

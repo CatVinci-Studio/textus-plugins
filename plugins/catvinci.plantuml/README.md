@@ -28,6 +28,7 @@ Bob --> Alice : Hi!
 
 ## Changes
 
+- **0.2.4** - `!theme` works; no empty gap in a narrow column; server mode shows PlantUML's own error and draws dark in dark themes.
 - **0.2.3** - Shorter help and empty-state text.
 - **0.2.2** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
 - **0.2.1** - Ships the updated shared chart page; diagrams are drawn as before.

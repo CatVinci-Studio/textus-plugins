@@ -6,15 +6,6 @@
 
 /* global database, dataview, folderPaths, activatePages, linkStyle */
 const t = (key, ...args) => textus.l10n.t(key, ...args);
-const STRINGS = [
-  "table", "board", "calendar", "gallery", "list", "page", "add", "count", "empty",
-  "noValue", "noGroup", "noDate", "today", "prev", "next", "missing", "locale",
-  "filter", "sort", "addFilter", "addSort", "ascending", "descending", "remove",
-  "is", "isNot", "contains", "notContains", "isEmpty", "notEmpty", "greater", "less",
-  "value", "search", "create", "clear", "clearSelection", "untitled", "newProperty", "propertyName",
-  "type", "rename", "hide", "deleteProperty", "showAll", "open", "addView", "renameView", "deleteView", "deleteRow", "pickDate", "insertRowBelow", "insertColumnRight", "rowGroup", "columnGroup", "skipped", "notBase", "unknownView",
-  "type.text", "type.number", "type.select", "type.tags", "type.date", "type.checkbox", "type.url",
-];
 
 let root = null;
 /** The bases on screen, each sending itself again. */
@@ -60,8 +51,8 @@ async function setObsidianType(key, kind) {
 async function snapshot(target, index) {
   root = await textus.files.root();
   const parsed = database.parseBase(target.source());
-  if (parsed.error) return { error: t("notBase"), detail: parsed.error, strings: strings() };
-  if (!root) return { missing: true, strings: strings() };
+  if (parsed.error) return { error: t("notBase"), detail: parsed.error };
+  if (!root) return { missing: true };
   const base = parsed.base;
   const i = Math.min(Math.max(0, index | 0), base.views.length - 1);
   const spec = database.viewSpec(base, i);
@@ -94,12 +85,7 @@ async function snapshot(target, index) {
     date: database.dateKey(spec, types),
     end: spec.end || Object.keys(types).find((k) => types[k] === "date" && /end|until|due/i.test(k)) || null,
     skipped: skipped.concat(spec.filters.filter((f) => f.raw !== undefined).map((f) => f.raw)),
-    strings: strings(),
   };
-}
-
-function strings() {
-  return Object.fromEntries(STRINGS.map((k) => [k, t(k)]));
 }
 
 /** A new note in `folder`, its front matter `props`; its title typed in
@@ -197,7 +183,7 @@ function draw(target, webview, context) {
     let sent = 0;
     const send = async () => {
       const mine = ++sent;
-      const data = await snapshot(target, index).catch((err) => ({ error: String((err && err.message) || err), strings: strings() }));
+      const data = await snapshot(target, index).catch((err) => ({ error: String((err && err.message) || err) }));
       if (mine === sent) webview.postMessage({ type: "data", data });
     };
     // Each reader's view, on this device only: not in the file.

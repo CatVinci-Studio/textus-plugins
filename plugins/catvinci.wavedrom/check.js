@@ -34,7 +34,7 @@ function checkBlock(source) {
       if (typeof lane.wave !== "string") return problems.push(here + ".wave must be a string.");
       const odd = [...new Set(lane.wave.replace(WAVE, ""))];
       if (odd.length)
-        problems.push(here + ".wave “" + lane.wave + "”: " + odd.join(" ") + " isn't a wave character (p n P N h l H L 0 1 = 2-9 x z u d . |).");
+        problems.push(here + ".wave “" + lane.wave + "”: " + odd.join(" ") + " isn't a wave character (p n P N h l H L 0 1 = 2-9 x z u d . | < >).");
       const values = (lane.wave.match(/[=2-9]/g) || []).length;
       const data = typeof lane.data === "string" ? lane.data.split(/\s+/).filter(Boolean) : lane.data;
       if (Array.isArray(data) && data.length > values)

@@ -7,6 +7,10 @@ const t = (key, ...args) => textus.l10n.t(key, ...args);
 
 let list = null;
 
+// Tags match in any letter case, as the app counts them: #Draft is #draft.
+const same = (a, b) => a.toLowerCase() === b.toLowerCase();
+const within = (name, tag) => same(name, tag) || name.toLowerCase().startsWith(tag.toLowerCase() + "/");
+
 /** A tag's node: nested tags (#project/alpha) are a tree, as in Obsidian. */
 function tagNode(tag, count, nested) {
   return {
@@ -24,18 +28,20 @@ function tagNode(tag, count, nested) {
 /** The tags one level under `prefix` ("" for the top), each counting the
  *  notes of its sub-tags too. */
 function level(tags, prefix) {
-  const counts = new Map();
-  const nested = new Set();
+  const nodes = new Map();
   for (const { tag, count } of tags) {
-    if (prefix && !tag.startsWith(prefix + "/")) continue;
+    if (prefix && (same(tag, prefix) || !within(tag, prefix))) continue;
     const rest = prefix ? tag.slice(prefix.length + 1) : tag;
     const name = (prefix ? prefix + "/" : "") + rest.split("/")[0];
-    counts.set(name, (counts.get(name) || 0) + count);
-    if (rest.includes("/")) nested.add(name);
+    const key = name.toLowerCase();
+    const node = nodes.get(key) || { name, count: 0, nested: false };
+    node.count += count;
+    node.nested = node.nested || rest.includes("/");
+    nodes.set(key, node);
   }
-  return [...counts.entries()]
-    .sort((a, b) => b[1] - a[1] || nameOrder.compareNames(a[0], b[0]))
-    .map(([tag, count]) => tagNode(tag, count, nested.has(tag)));
+  return [...nodes.values()]
+    .sort((a, b) => b.count - a.count || nameOrder.compareNames(a.name, b.name))
+    .map((n) => tagNode(n.name, n.count, n.nested));
 }
 
 async function items(parent) {
@@ -48,7 +54,7 @@ async function items(parent) {
   if (!parent) return level(tags, "");
   const { tag, nested } = parent.data;
   const docs = (await textus.metadata.all())
-    .filter((d) => d.tags.includes(tag))
+    .filter((d) => d.tags.some((name) => same(name, tag)))
     .map((d) => ({
       id: "note:" + tag + ":" + d.path,
       label: d.title,
@@ -59,7 +65,7 @@ async function items(parent) {
   return (nested ? level(tags, tag) : []).concat(docs);
 }
 
-/** Renames `from` in every note of the folder that has it. */
+/** Renames `from` and the tags nested in it in every note that has them. */
 async function rename(from) {
   const typed = await textus.ui.input({ prompt: t("renameTitle", "#" + from), value: from });
   const to = typed && typed.trim().replace(/^#/, "");
@@ -68,10 +74,12 @@ async function rename(from) {
     textus.ui.notice(t("invalid"), { tone: "warning" });
     return;
   }
-  const docs = (await textus.metadata.all()).filter((d) => d.tags.includes(from));
+  const docs = (await textus.metadata.all()).filter((d) =>
+    d.tags.some((name) => within(name, from)),
+  );
   for (const doc of docs)
     await textus.files.process(doc.path, (text) => tagEdit.renameTag(text, from, to));
-  textus.ui.notice(t("renamed", "#" + from, "#" + to, docs.length));
+  textus.ui.notice(t(docs.length === 1 ? "renamedOne" : "renamed", "#" + from, "#" + to, docs.length));
 }
 
 // Textus AI's tools.
@@ -85,7 +93,7 @@ async function notesWithTag(input) {
   if (!(await textus.files.root())) return { error: "No folder is open." };
   const tag = String(input.tag || "").trim().replace(/^#/, "");
   // Nested tags count for their parent: #project/alpha is a #project note.
-  const has = (d) => d.tags.some((name) => name === tag || name.startsWith(tag + "/"));
+  const has = (d) => d.tags.some((name) => within(name, tag));
   const docs = (await textus.metadata.all()).filter(has);
   return { tag: tag, notes: docs.map((d) => ({ title: d.title, path: d.rel, tags: d.tags })) };
 }

@@ -20,6 +20,8 @@ var MAX_KILLS = 60;
 var lastWasKill = false; // consecutive kills append to the newest
 var yanked = -1; // the kill C-y or M-y put in, while M-y may follow
 var status = null;
+var held = false; // the editor gave us the keys (another plugin may hold them)
+var captures = 0;
 
 // Keys and what they do. A motion is a move op's unit; "repeat" moves that
 // many times.
@@ -85,12 +87,26 @@ function taken() {
   return keys;
 }
 
+/** Takes the keys; the status shows only while the editor gave them. */
 function capture() {
-  if (!on) return textus.editor.keys.capture(null);
   // After C-x every key is Emacs's: the one that finishes the command, or
-  // any other, which cancels it.
-  if (prefix) return textus.editor.keys.capture({ mode: "all", keys: [] });
-  return textus.editor.keys.capture({ mode: "some", keys: taken() });
+  // any other, which cancels it. C-s and C-g are named, or "all" leaves
+  // Ctrl chords to the app on Windows and Linux.
+  var want = !on
+    ? null
+    : prefix
+      ? { mode: "all", keys: ["ctrl+s", "ctrl+g"] }
+      : { mode: "some", keys: taken() };
+  var n = ++captures;
+  return Promise.resolve(textus.editor.keys.capture(want))
+    .then(function (ok) {
+      if (n !== captures) return;
+      held = !!want && ok !== false;
+      showStatus();
+    })
+    .catch(function (err) {
+      console.error(err);
+    });
 }
 
 function exec(op) {
@@ -98,7 +114,7 @@ function exec(op) {
 }
 
 function showStatus() {
-  if (!on) {
+  if (!on || !held) {
     if (status) status.dispose();
     status = null;
     return;
@@ -106,11 +122,13 @@ function showStatus() {
   var text = "Emacs";
   if (mark) text += " · " + textus.l10n.t("mark");
   if (prefix) text += " C-x-";
-  status = textus.ui.statusItem("mode", {
-    text: text,
-    tooltip: textus.l10n.t("statusTip"),
-    command: "catvinci.emacs.toggle",
-  });
+  if (status) status.update({ text: text });
+  else
+    status = textus.ui.statusItem("mode", {
+      text: text,
+      tooltip: textus.l10n.t("statusTip"),
+      command: "catvinci.emacs.toggle",
+    });
 }
 
 function setMark(active) {
@@ -129,12 +147,14 @@ function keep(text) {
 }
 
 async function move(motion) {
-  var times = motion.repeat || 1;
-  for (var n = 0; n < times; n++) {
-    await exec({ op: "move", unit: motion.unit, select: mark });
-    if (motion.after)
-      await exec({ op: "move", unit: "rightInsert", select: mark });
-  }
+  await exec({
+    op: "move",
+    unit: motion.unit,
+    count: motion.repeat || 1,
+    select: mark,
+  });
+  if (motion.after)
+    await exec({ op: "move", unit: "rightInsert", select: mark });
 }
 
 /** Kills from the cursor through what `select` selects. */
@@ -166,8 +186,7 @@ async function key(name) {
       await exec({ op: "move", unit: "docEnd", select: true });
       capture();
       showStatus();
-    } else if (name === "ctrl+s")
-      await textus.commands.execute("textus.save");
+    } else if (name === "ctrl+s") await textus.commands.execute("textus.save");
     lastWasKill = false;
     return;
   }
@@ -319,8 +338,7 @@ exports.activate = async function () {
     capture();
     showStatus();
   });
-  capture();
-  showStatus();
+  await capture();
 };
 
 exports.deactivate = function () {

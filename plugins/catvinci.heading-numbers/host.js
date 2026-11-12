@@ -38,26 +38,17 @@ function numbers(blocks, start) {
   return out;
 }
 
-/** The export's numbers: CSS counters from `start` to h6. */
+/** The export's numbers: CSS counters from `start` to h6, on top-level
+ *  headings only, as the editor numbers them. */
 function exportCss(start) {
   let css = "";
   for (let level = start; level <= 6; level++) {
-    const name = "tx-h" + level;
+    const h = ".ProseMirror > h" + level;
     const own = [];
     for (let l = start; l <= level; l++) own.push("counter(tx-h" + l + ")");
-    css +=
-      "h" +
-      level +
-      " { counter-increment: " +
-      name +
-      ";" +
-      (level < 6 ? " counter-reset: tx-h" + (level + 1) + ";" : "") +
-      " }\n" +
-      "h" +
-      level +
-      "::before { content: " +
-      own.join(' "." ') +
-      ' " "; }\n';
+    const reset = level < 6 ? " counter-reset: tx-h" + (level + 1) + ";" : "";
+    css += h + " { counter-increment: tx-h" + level + ";" + reset + " }\n";
+    css += h + "::before { content: " + own.join(' "." ') + ' " "; }\n';
   }
   return ".milkdown { counter-reset: tx-h" + start + "; }\n" + css;
 }
@@ -104,9 +95,17 @@ function numberHeadings(input) {
   const lines = String(input.text || "").split("\n");
   const blocks = [];
   let fence = null;
+  // Front matter's `# comment` lines are YAML, not headings.
+  const frontEnd = /^---\s*$/.test(lines[0])
+    ? lines.findIndex((l, i) => i > 0 && /^(?:---|\.\.\.)\s*$/.test(l))
+    : -1;
   lines.forEach((line, i) => {
-    const f = /^\s{0,3}(`{3,}|~{3,})/.exec(line);
-    if (f && (!fence || f[1][0] === fence[0])) fence = fence ? null : f[1];
+    if (i <= frontEnd) return;
+    const f = /^\s{0,3}(`{3,}|~{3,})(.*)$/.exec(line);
+    // A fence closes only on a bare one of its character, at least as long.
+    const closes = f && fence && f[1][0] === fence[0] && f[1].length >= fence.length && !f[2].trim();
+    if (closes) fence = null;
+    else if (f && !fence) fence = f[1];
     else if (!fence && /^#{1,6}\s/.test(line)) {
       const [, marks, words] = /^(#+\s+)(.*)$/.exec(line);
       blocks.push({ id: i, kind: "heading", marks: marks, words: words });

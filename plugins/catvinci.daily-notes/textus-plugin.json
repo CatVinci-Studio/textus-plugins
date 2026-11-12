@@ -1,7 +1,7 @@
 {
   "id": "catvinci.daily-notes",
   "name": "%name%",
-  "version": "0.7.2",
+  "version": "0.7.3",
   "publisher": "catvinci",
   "author": "CatVinci Studio",
   "description": "%description%",
@@ -96,12 +96,14 @@
       },
       {
         "key": "weeklyFolder",
+        "when": "weekly",
         "type": "string",
         "default": "Weekly",
         "title": "%weeklyFolder%"
       },
       {
         "key": "weeklyFormat",
+        "when": "weekly",
         "type": "string",
         "default": "gggg-[W]ww",
         "title": "%weeklyFormat%",
@@ -109,6 +111,7 @@
       },
       {
         "key": "weeklyTemplate",
+        "when": "weekly",
         "type": "string",
         "default": "# {{date}}\\n\\n",
         "title": "%weeklyTemplate%",
@@ -122,12 +125,14 @@
       },
       {
         "key": "monthlyFolder",
+        "when": "monthly",
         "type": "string",
         "default": "Monthly",
         "title": "%monthlyFolder%"
       },
       {
         "key": "monthlyFormat",
+        "when": "monthly",
         "type": "string",
         "default": "YYYY-MM",
         "title": "%monthlyFormat%",
@@ -135,6 +140,7 @@
       },
       {
         "key": "monthlyTemplate",
+        "when": "monthly",
         "type": "string",
         "default": "# {{date}}\\n\\n",
         "title": "%monthlyTemplate%",

@@ -14,6 +14,9 @@ body {
   padding: 0 var(--space-3);
   border-bottom: 1px solid var(--ui-border);
 }
+#bar[hidden] {
+  display: none;
+}
 #zoom {
   min-width: 3.5em;
 }

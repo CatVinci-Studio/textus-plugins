@@ -1,6 +1,6 @@
 // Writing Stats: the document in front, the selection, today's writing
 // against a daily goal, the run of days it was met, and - when opened - the
-// whole folder. Today counts the words added to any document today.
+// whole folder. Today counts the words typed into any document today.
 
 /* global folderPaths, writingCount */
 const t = (key, ...args) => textus.l10n.t(key, ...args);
@@ -32,18 +32,31 @@ async function streak(goal, todayWords) {
   return run;
 }
 
-async function onChange() {
+/** The goal in words; 0 (or anything below) for none. */
+async function goalWords() {
+  return Math.max(0, Number(await textus.settings.get("goal")) || 0);
+}
+
+/** Only the user's own typing adds to today; any other call (another
+ *  document in front, AI, disk, undo) just moves the baseline. */
+let queue = Promise.resolve();
+function onChange(source) {
+  queue = queue.then(() => tally(source)).catch(() => {});
+  return queue;
+}
+
+async function tally(source) {
   const path = (await textus.editor.getPath()) || "(unsaved)";
   const text = await textus.editor.getText();
   if (text === null) return;
   const words = writingCount.count(text).words;
   const before = lastWords.get(path);
   lastWords.set(path, words);
-  if (before !== undefined && words > before) {
+  if (source === "user" && before !== undefined && words > before) {
     const d = await day();
     d.words += words - before;
     await store.set("day", d);
-    const goal = Number(await textus.settings.get("goal")) || 0;
+    const goal = await goalWords();
     if (goal && d.words >= goal) {
       const met = (await store.get("met")) || [];
       if (!met.includes(d.date)) await store.set("met", met.concat(d.date).slice(-400));
@@ -56,15 +69,33 @@ function row(id, label, value, icon) {
   return { id: id, label: label, description: value, icon: icon };
 }
 
+/** The folder's documents and each one's counts, read again only for the
+ *  paths metadata reports changed. */
+const folder = { root: null, docs: null, counts: new Map(), changed: new Set() };
+
 async function folderItems() {
-  const docs = await textus.metadata.all();
+  const root = await textus.files.root();
+  if (root !== folder.root) {
+    Object.assign(folder, { root: root, docs: null });
+    folder.counts.clear();
+  }
+  if (!folder.docs || folder.changed.size) folder.docs = await textus.metadata.all();
+  const live = new Set(folder.docs.map((d) => d.path));
+  for (const path of folder.counts.keys()) if (!live.has(path)) folder.counts.delete(path);
+  for (const path of folder.changed) folder.counts.delete(path);
+  folder.changed.clear();
   let words = 0;
   let characters = 0;
-  for (const doc of docs) {
-    const c = writingCount.count(await textus.files.readText(doc.path).catch(() => ""));
+  for (const doc of folder.docs) {
+    let c = folder.counts.get(doc.path);
+    if (!c) {
+      c = writingCount.count(await textus.files.readText(doc.path).catch(() => ""));
+      folder.counts.set(doc.path, c);
+    }
     words += c.words;
     characters += c.characters;
   }
+  const docs = folder.docs;
   return [
     row("folder:words", t("words"), fmt(words)),
     row("folder:chars", t("characters"), fmt(characters)),
@@ -80,7 +111,7 @@ async function items(parent) {
     const c = writingCount.count(text);
     const g = t("document");
     out.push(
-      Object.assign(row("doc:words", t("words"), fmt(c.words), "file"), { group: g }),
+      Object.assign(row("doc:words", t("words"), fmt(c.words)), { group: g }),
       Object.assign(row("doc:chars", t("characters"), fmt(c.characters)), { group: g }),
       Object.assign(row("doc:read", t("reading"), t("minutes", writingCount.readingMinutes(c))), { group: g }),
     );
@@ -93,7 +124,7 @@ async function items(parent) {
     );
   }
   const d = await day();
-  const goal = Number(await textus.settings.get("goal")) || 0;
+  const goal = await goalWords();
   const g = t("today");
   out.push(
     Object.assign(row("day:words", t("written"), goal ? t("ofGoal", fmt(d.words), fmt(goal)) : fmt(d.words), "clock"), {
@@ -152,6 +183,8 @@ async function countWords(input) {
   };
 }
 
+let folderTimer = 0;
+
 exports.activate = function (ctx) {
   store = ctx.storage.global;
   list = textus.views.registerList("catvinci.writing-stats.panel", {
@@ -160,13 +193,20 @@ exports.activate = function (ctx) {
   });
   ctx.subscriptions.push(
     list,
-    textus.editor.onDidChange(onChange),
+    textus.editor.onDidChange((e) => onChange(e && e.source)),
     textus.editor.onDidChangeActive(() => onChange()),
     textus.editor.onDidChangeSelection((e) => {
       selection = e.text || "";
       list.refresh();
     }),
     textus.settings.onDidChange(() => list.refresh()),
+    textus.metadata.onDidChange((e) => {
+      const paths = (e && e.paths) || [];
+      for (const path of paths) folder.changed.add(path);
+      if (!paths.length) Object.assign(folder, { docs: null }).counts.clear();
+      clearTimeout(folderTimer);
+      folderTimer = setTimeout(() => list.refresh(), 500);
+    }),
     textus.ai.registerTool("count_words", countWords),
   );
   void onChange();

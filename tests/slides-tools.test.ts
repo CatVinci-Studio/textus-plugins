@@ -25,3 +25,24 @@ it("asks for a saved document when there is none", async () => {
   const { tools } = loadPlugin("catvinci.slides");
   expect(await tools.get("export_slides")!({})).toHaveProperty("error");
 });
+
+it("renders nothing on edits while no slides tab is open", async () => {
+  const listeners: Array<() => unknown> = [];
+  let reads = 0;
+  const editor = {
+    getPath: async () => "/root/Talk.md",
+    getText: async () => (reads++, "# One"),
+    onDidChange: (run: () => unknown) => (
+      listeners.push(run),
+      { dispose() {} }
+    ),
+    onDidChangeActive: (run: () => unknown) => (
+      listeners.push(run),
+      { dispose() {} }
+    ),
+  };
+  loadPlugin("catvinci.slides", { editor });
+  for (const run of listeners) await run();
+  expect(listeners).toHaveLength(2);
+  expect(reads).toBe(0);
+});

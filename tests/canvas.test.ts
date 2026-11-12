@@ -57,6 +57,7 @@ describe("canvas files", () => {
     expect(jc.color("6").line).toBe("var(--tone-purple)");
     expect(jc.color("#FF8800").line).toBe("#FF8800");
     expect(jc.color("#FF8800").fill).toContain("color-mix");
+    expect(jc.color("#1e1e1e").text).toBeNull();
     expect(jc.color("")).toBeNull();
     expect(jc.color("7")).toBeNull();
     expect(jc.color("red; background: url(x)")).toBeNull();

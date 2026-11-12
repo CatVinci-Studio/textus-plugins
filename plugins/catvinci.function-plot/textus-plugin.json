@@ -1,7 +1,7 @@
 {
   "id": "catvinci.function-plot",
   "name": "%name%",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "publisher": "catvinci",
   "author": "CatVinci Studio",
   "description": "%description%",
@@ -34,6 +34,10 @@
             "source": {
               "type": "string",
               "description": "The block's source, without its ``` fence."
+            },
+            "meta": {
+              "type": "string",
+              "description": "The fence's words after the language, such as xmin=100 xmax=200; x runs from -10 to 10 without them."
             }
           }
         }
@@ -44,52 +48,52 @@
     "en": {
       "name": "Function Plot",
       "description": "Graphs of functions, one per line: sin(x), x^2 - 1.",
-      "tool.check_function_plot": "Checks the source of a ```function-plot block - functions of x, one per line, with + - * / ^, brackets, pi, e and the usual functions - before it goes into a document, without drawing it. Returns ok, or the problems to fix first. Pass the source without its fence."
+      "tool.check_function_plot": "Checks the source of a ```function-plot block - functions of x, one per line, with + - * / ^, brackets, pi, e and the usual functions - before it goes into a document, without drawing it. Returns ok, or the problems to fix first. Pass the source without its fence, and the fence's words (xmin=0 xmax=100) as meta."
     },
     "zh": {
       "name": "函数图像",
       "description": "画函数图像，每行一个：sin(x)、x^2 - 1。",
-      "tool.check_function_plot": "在把 ```function-plot 块写进文档之前检查它的源码（关于 x 的函数，每行一个，可用 + - * / ^、括号、pi、e 和常用函数），不实际绘制。返回 ok，或需要先修正的问题。传入时不带代码围栏。"
+      "tool.check_function_plot": "在把 ```function-plot 块写进文档之前检查它的源码（关于 x 的函数，每行一个，可用 + - * / ^、括号、pi、e 和常用函数），不实际绘制。返回 ok，或需要先修正的问题。传入时不带代码围栏，围栏上的参数（xmin=0 xmax=100）放在 meta 里。"
     },
     "zh-Hant": {
       "name": "函數圖形",
       "description": "畫函數圖形，每行一個：sin(x)、x^2 - 1。",
-      "tool.check_function_plot": "在把 ```function-plot 區塊寫進文件之前檢查它的原始碼（關於 x 的函數，每行一個，可用 + - * / ^、括號、pi、e 和常用函數），不實際繪製。回傳 ok，或需要先修正的問題。傳入時不帶程式碼圍欄。"
+      "tool.check_function_plot": "在把 ```function-plot 區塊寫進文件之前檢查它的原始碼（關於 x 的函數，每行一個，可用 + - * / ^、括號、pi、e 和常用函數），不實際繪製。回傳 ok，或需要先修正的問題。傳入時不帶程式碼圍欄，圍欄上的參數（xmin=0 xmax=100）放在 meta 裡。"
     },
     "ja": {
       "name": "関数グラフ",
       "description": "関数のグラフを 1 行に 1 つ：sin(x)、x^2 - 1。",
-      "tool.check_function_plot": "```function-plot ブロックのソース（x の関数を一行に一つ。+ - * / ^、括弧、pi、e とよく使う関数が使えます）を、文書に入れる前に描画せずに検査します。ok か、先に直すべき問題を返します。フェンスを除いたソースを渡してください。"
+      "tool.check_function_plot": "```function-plot ブロックのソース（x の関数を一行に一つ。+ - * / ^、括弧、pi、e とよく使う関数が使えます）を、文書に入れる前に描画せずに検査します。ok か、先に直すべき問題を返します。フェンスを除いたソースを渡し、フェンスの指定（xmin=0 xmax=100）は meta に入れてください。"
     },
     "ko": {
       "name": "함수 그래프",
       "description": "함수 그래프를 한 줄에 하나씩: sin(x), x^2 - 1.",
-      "tool.check_function_plot": "```function-plot 블록의 소스(한 줄에 하나씩 쓴 x의 함수. + - * / ^, 괄호, pi, e와 흔한 함수를 쓸 수 있습니다)를 문서에 넣기 전에 그리지 않고 검사합니다. ok나 먼저 고칠 문제를 돌려줍니다. 펜스 없이 소스만 넘기세요."
+      "tool.check_function_plot": "```function-plot 블록의 소스(한 줄에 하나씩 쓴 x의 함수. + - * / ^, 괄호, pi, e와 흔한 함수를 쓸 수 있습니다)를 문서에 넣기 전에 그리지 않고 검사합니다. ok나 먼저 고칠 문제를 돌려줍니다. 펜스 없이 소스만 넘기고, 펜스의 설정(xmin=0 xmax=100)은 meta로 넘기세요."
     },
     "es": {
       "name": "Gráfica de funciones",
       "description": "Gráficas de funciones, una por línea: sin(x), x^2 - 1.",
-      "tool.check_function_plot": "Revisa el código de un bloque ```function-plot - funciones de x, una por línea, con + - * / ^, paréntesis, pi, e y las funciones habituales - antes de que entre en un documento, sin dibujarlo. Devuelve ok, o los problemas que hay que corregir antes. Pasa el código sin su valla."
+      "tool.check_function_plot": "Revisa el código de un bloque ```function-plot - funciones de x, una por línea, con + - * / ^, paréntesis, pi, e y las funciones habituales - antes de que entre en un documento, sin dibujarlo. Devuelve ok, o los problemas que hay que corregir antes. Pasa el código sin su valla, y las palabras de la valla (xmin=0 xmax=100) como meta."
     },
     "fr": {
       "name": "Tracé de fonctions",
       "description": "Des courbes de fonctions, une par ligne : sin(x), x^2 - 1.",
-      "tool.check_function_plot": "Vérifie la source d'un bloc ```function-plot - des fonctions de x, une par ligne, avec + - * / ^, parenthèses, pi, e et les fonctions usuelles - avant qu'il n'entre dans un document, sans le dessiner. Renvoie ok, ou les problèmes à corriger d'abord. Passez la source sans sa clôture."
+      "tool.check_function_plot": "Vérifie la source d'un bloc ```function-plot - des fonctions de x, une par ligne, avec + - * / ^, parenthèses, pi, e et les fonctions usuelles - avant qu'il n'entre dans un document, sans le dessiner. Renvoie ok, ou les problèmes à corriger d'abord. Passez la source sans sa clôture, et les mots de la clôture (xmin=0 xmax=100) dans meta."
     },
     "de": {
       "name": "Funktionsgraph",
       "description": "Funktionsgraphen, einer pro Zeile: sin(x), x^2 - 1.",
-      "tool.check_function_plot": "Prüft die Quelle eines ```function-plot-Blocks - Funktionen von x, eine pro Zeile, mit + - * / ^, Klammern, pi, e und den üblichen Funktionen -, bevor er in ein Dokument kommt, ohne ihn zu zeichnen. Gibt ok zurück oder die Probleme, die zuerst zu beheben sind. Die Quelle ohne ihren Zaun übergeben."
+      "tool.check_function_plot": "Prüft die Quelle eines ```function-plot-Blocks - Funktionen von x, eine pro Zeile, mit + - * / ^, Klammern, pi, e und den üblichen Funktionen -, bevor er in ein Dokument kommt, ohne ihn zu zeichnen. Gibt ok zurück oder die Probleme, die zuerst zu beheben sind. Die Quelle ohne ihren Zaun übergeben, die Angaben des Zauns (xmin=0 xmax=100) als meta."
     },
     "ru": {
       "name": "Графики функций",
       "description": "Графики функций, по одной в строке: sin(x), x^2 - 1.",
-      "tool.check_function_plot": "Проверяет исходный текст блока ```function-plot - функции от x, по одной в строке, с + - * / ^, скобками, pi, e и обычными функциями - до того, как он попадёт в документ, не рисуя его. Возвращает ok или проблемы, которые нужно сначала исправить. Передавайте текст без ограждения."
+      "tool.check_function_plot": "Проверяет исходный текст блока ```function-plot - функции от x, по одной в строке, с + - * / ^, скобками, pi, e и обычными функциями - до того, как он попадёт в документ, не рисуя его. Возвращает ok или проблемы, которые нужно сначала исправить. Передавайте текст без ограждения, а параметры ограждения (xmin=0 xmax=100) — в meta."
     },
     "pt": {
       "name": "Gráfico de funções",
       "description": "Gráficos de funções, uma por linha: sin(x), x^2 - 1.",
-      "tool.check_function_plot": "Verifica o código de um bloco ```function-plot - funções de x, uma por linha, com + - * / ^, parênteses, pi, e e as funções habituais - antes de entrar num documento, sem o desenhar. Devolve ok, ou os problemas a corrigir primeiro. Passe o código sem a cerca."
+      "tool.check_function_plot": "Verifica o código de um bloco ```function-plot - funções de x, uma por linha, com + - * / ^, parênteses, pi, e e as funções habituais - antes de entrar num documento, sem o desenhar. Devolve ok, ou os problemas a corrigir primeiro. Passe o código sem a cerca, e as palavras da cerca (xmin=0 xmax=100) como meta."
     }
   }
 }

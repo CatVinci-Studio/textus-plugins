@@ -16,6 +16,7 @@ Behält jedes Speichern eines Dokuments als Version, damit Sie sehen, was sich g
 
 ## Änderungen
 
+- **0.3.5** - Eine geöffnete Version bleibt offen, wenn das automatische Speichern sie aktualisiert, und Wiederherstellen findet sie immer. Ist der Speicher voll, machen ältere Versionen anderer Dokumente Platz, und das Feld sagt, wenn ein Speichern nicht behalten werden konnte. Zeilen gehen per Tastatur; Schaltflächen brechen in einer schmalen Seitenleiste um.
 - **0.3.4** - In der Seitenleiste zeigt das Feld keinen eigenen Titel mehr, wie die anderen Tabs dort. Kürzere Hilfe- und Leertexte. Seitenleiste und Seite folgen dem Layout von Textus 1.3.13.
 - **0.3.3** - Leisten, Listen und Steuerelemente sind jetzt die von Textus, wachsen mit der Oberfläche und folgen jedem Theme; braucht Textus 1.3.12.
 - **0.3.2** - Seine Seite sagt jetzt in einem Satz, was es tut, was es kann und was sich in jeder Version geändert hat.

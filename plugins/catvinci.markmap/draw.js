@@ -1,6 +1,40 @@
 // A Markdown outline drawn as a mind map (markmap).
 var SVG = "http://www.w3.org/2000/svg";
 var transformer = new window.markmap.Transformer();
+// Code, link and highlight colours for a picture in the other appearance.
+var FIXED = {
+  light: { code: "#f2f3f5", accent: "#4081d2", mark: "#fff3b0" },
+  dark: { code: "#2a2d33", accent: "#7aaeef", mark: "#5c4f1f" },
+};
+
+// markmap's own CSS as literal values from the theme, so an export keeps them.
+function themeVars(svg, c, dark) {
+  var fixed = FIXED[dark ? "dark" : "light"];
+  var own = dark === (document.documentElement.dataset.theme === "dark");
+  var css = getComputedStyle(document.documentElement);
+  var v = function (name, fallback) {
+    return (own && css.getPropertyValue(name).trim()) || fallback;
+  };
+  var probe = document.createElement("span");
+  probe.style.cssText =
+    "position:absolute;visibility:hidden;font-family:var(--doc-font,var(--font-sans,sans-serif));font-size:var(--text-body,1em)";
+  document.body.append(probe);
+  var font = getComputedStyle(probe);
+  var size = parseFloat(font.fontSize) || 16;
+  var family = font.fontFamily;
+  probe.remove();
+  var set = {
+    "--markmap-font": "400 " + size + "px/" + Math.round(size * 1.25) + "px " + family,
+    "--markmap-text-color": c.ink,
+    "--markmap-circle-open-bg": c.bg,
+    "--markmap-code-bg": v("--doc-code-bg", fixed.code),
+    "--markmap-code-color": c.ink,
+    "--markmap-a-color": v("--doc-accent", fixed.accent),
+    "--markmap-a-hover-color": v("--doc-accent", fixed.accent),
+    "--markmap-highlight-bg": v("--doc-highlight-bg", fixed.mark),
+  };
+  for (var name in set) svg.style.setProperty(name, set[name]);
+}
 
 function mindMap(el, source, meta, dark) {
   var svg = document.createElementNS(SVG, "svg");
@@ -9,24 +43,27 @@ function mindMap(el, source, meta, dark) {
   var c = chartColors(dark);
   var seen = new Map();
   svg.style.color = c.ink;
+  themeVars(svg, c, dark);
   el.replaceChildren(svg);
   var root = transformer.transform(source).root;
-  var map = window.markmap.Markmap.create(
-    svg,
-    {
-      autoFit: true,
-      duration: 0,
-      // Branches in the theme's tones, in the order they are met, as
-      // markmap's own ordinal colours are.
-      color: function (node) {
-        var key = String((node.state && node.state.path) || "");
-        if (!seen.has(key)) seen.set(key, seen.size);
-        return c.tones[seen.get(key) % c.tones.length];
-      },
+  var map = window.markmap.Markmap.create(svg, {
+    autoFit: true,
+    duration: 0,
+    maxInitialScale: 1,
+    // Plain wheel scrolls the note; ctrl or pinch zooms, drag pans.
+    pan: false,
+    scrollForPan: true,
+    // Branches in the theme's tones, in the order they are met, as
+    // markmap's own ordinal colours are.
+    color: function (node) {
+      var key = String((node.state && node.state.path) || "");
+      if (!seen.has(key)) seen.set(key, seen.size);
+      return c.tones[seen.get(key) % c.tones.length];
     },
-    root,
-  );
-  return map.fit();
+  });
+  return map.setData(root).then(function () {
+    return map.fit();
+  });
 }
 
 drawChartBlock({

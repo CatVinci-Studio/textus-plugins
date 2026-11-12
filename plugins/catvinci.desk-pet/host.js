@@ -35,25 +35,38 @@ const CHARACTERS = [
 /** The service Textus AI uses, to the LLM-chan who comes with it. */
 const BY_PROVIDER = {
   openai: "gpt",
-  "openai-codex": "gpt",
-  chatgpt: "gpt",
   anthropic: "claude",
-  claude: "claude",
   google: "gemini",
-  gemini: "gemini",
-  vertex: "gemini",
   deepseek: "deepseek",
   moonshot: "kimi",
-  kimi: "kimi",
   zhipu: "glm",
   qwen: "qwen",
-  dashscope: "qwen",
   doubao: "doubao",
-  volcengine: "doubao",
   minimax: "minimax",
   "minimax-intl": "minimax",
   xai: "grok",
 };
+/** Through a gateway (OpenRouter, Ollama, ...) the model's name says who. */
+const BY_MODEL = [
+  ["claude", "claude"],
+  ["gpt", "gpt"],
+  ["gemini", "gemini"],
+  ["deepseek", "deepseek"],
+  ["kimi", "kimi"],
+  ["qwen", "qwen"],
+  ["doubao", "doubao"],
+  ["glm", "glm"],
+  ["minimax", "minimax"],
+  ["grok", "grok"],
+  ["ernie", "wenxin"],
+];
+
+function guestOf(model) {
+  if (!model) return null;
+  if (BY_PROVIDER[model.provider]) return BY_PROVIDER[model.provider];
+  const name = String(model.id || "").toLowerCase().split("/").pop();
+  return BY_MODEL.find(([prefix]) => name.startsWith(prefix))?.[1] ?? null;
+}
 
 
 /** Every pose is drawn looking left: on the left she turns to look in. */
@@ -87,6 +100,8 @@ let lastTyped = 0;
 let awaySince = 0;
 /** False while folded to a dot. */
 let visible = true;
+/** Her last line and when, for a page that loads after it was sent. */
+let bubble = null;
 /** Whether Textus AI proposed an edit in the request under way. */
 let proposed = false;
 let lines = null;
@@ -126,16 +141,18 @@ function page(character) {
   img.on { opacity: 1; animation: breathe 3.6s ease-in-out infinite; }
   img.hop { animation: hop 0.5s var(--ease-spring-bouncy, ease-out), breathe 3.6s ease-in-out 0.5s infinite; }
   @keyframes breathe { 0%, 100% { transform: scale(1, 1); } 50% { transform: scale(1.012, 1.02); } }
-  @keyframes hop { 0%, 100% { transform: translateY(0); } 40% { transform: translateY(-10px); } }
+  @keyframes hop { 0%, 100% { transform: translateY(0); } 40% { transform: translateY(-5%); } }
   body.paused img { animation-play-state: paused; }
   .stage.turned img { scale: -1 1; }
   .stage.end img { left: auto; right: 0; }
   /* A small pet's line shrinks with it, to a floor still readable, and
      wraps into even lines rather than a word left alone. */
   body { container-type: inline-size; }
-  .bubble { position: absolute; top: 0; left: 50%; box-sizing: border-box; max-width: calc(100% - var(--space-2)); width: max-content; transform: translateX(-50%);
+  /* Anchored over her middle, its tail at the same share of its width. */
+  .bubble { --at: 35%; --tail-at: var(--at); position: absolute; top: 0; left: var(--at); box-sizing: border-box; max-width: calc(100% - var(--space-2)); width: max-content; transform: translateX(calc(-1 * var(--at)));
     font-size: clamp(var(--text-caption), 7cqi, var(--text-secondary)); line-height: 1.4; text-align: center; text-wrap: balance;
     opacity: 0; transition: opacity var(--dur-base) var(--ease-standard); pointer-events: none; }
+  .stage.end ~ .bubble { --at: 65%; }
   .bubble.on { opacity: 1; }
   @media (prefers-reduced-motion: reduce) { img.on, img.hop { animation: none; } }
 </style></head><body>
@@ -164,6 +181,7 @@ function page(character) {
     }
   });
   show(${JSON.stringify(pose)}, false);
+  api.postMessage({ ready: true });
   document.querySelector(".stage").classList.toggle("turned", ${JSON.stringify(turned())});
   document.querySelector(".stage").classList.toggle("end", ${JSON.stringify(side === "right")});
 </script></body></html>`;
@@ -185,6 +203,13 @@ async function placed() {
   if (!here) return;
   if (here.side) side = here.side;
   visible = here.visible;
+}
+
+/** A page that just loaded: what it missed while the old one was showing. */
+function replay() {
+  webview?.postMessage({ pose });
+  stillness();
+  if (bubble && Date.now() - bubble.at < 4000) webview?.postMessage({ say: bubble.line });
 }
 
 /** Still while folded or while Textus is away: nothing to draw for. */
@@ -221,6 +246,7 @@ async function say(moment) {
     Math.floor(Math.random() * (pick.length || choices.length))
   ];
   lastLine[key] = line;
+  bubble = { line, at: Date.now() };
   webview.postMessage({ say: line });
 }
 
@@ -279,16 +305,17 @@ function saved() {
 
 async function aiChanged(state) {
   const busy = state && state.state !== "idle";
-  const provider = state && state.model ? state.model.provider : null;
   if (busy) {
     clearTimeout(timers.guest);
     const arriving = !aiBusy;
     aiBusy = true;
     if (arriving) proposed = false;
     if (state.state === "proposing") proposed = true;
-    guest = BY_PROVIDER[provider] || null;
+    guest = guestOf(state.model);
+    // The pose first, so a page rebuilt for the guest starts in it.
+    pose = arriving ? "surprised" : "curious";
     await refresh();
-    set(arriving ? "surprised" : "curious", { hop: arriving });
+    set(pose, { hop: arriving });
     if (arriving) {
       void say("guest");
       later("lean", 1500, () => aiBusy && set("curious"));
@@ -349,6 +376,8 @@ function touched(touch) {
 
 exports.activate = function (ctx) {
   context = ctx;
+  away = textus.app.state !== "active";
+  if (away) pose = "asleep";
   void loadLines();
   ctx.subscriptions.push(
     textus.views.registerWebview(VIEW, {
@@ -358,6 +387,7 @@ exports.activate = function (ctx) {
         // Where she was left: the page starts facing the right side.
         await placed();
         await refresh();
+        view.onDidReceiveMessage((m) => m && m.ready && view === webview && replay());
         view.onDidDispose(() => {
           if (webview === view) webview = null;
         });
@@ -367,6 +397,7 @@ exports.activate = function (ctx) {
           await store.set("hello", today());
           void say("hello");
         }
+        stillness();
         settle();
       },
     }),
