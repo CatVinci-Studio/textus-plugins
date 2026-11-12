@@ -2,7 +2,7 @@
 
 在 Textus AI 里和 DeepSeek 官方的 agent DeepSeek Harness 对话。它会读打开的文件夹、写和改笔记，每次改动前先问你：Textus 会显示它想做什么，由你决定是否允许。它改过的地方在文档里有标记，一步就能撤销。
 
-1. 如果这台电脑还没有 [Node.js](https://nodejs.org)，先安装。
+1. 如果这台电脑还没有 [Node.js](https://nodejs.org) 24 或更新版本，先安装。
 2. 先给它一次 DeepSeek API key：在终端运行 `npx @deepseek-ai/dsh web`，在打开的页面里填好 key（也可以设置 `DEEPSEEK_API_KEY`）。
 3. 点窗口右上角 Textus AI 旁边的 DeepSeek Harness 按钮。
 

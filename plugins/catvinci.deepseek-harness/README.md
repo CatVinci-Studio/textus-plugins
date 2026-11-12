@@ -2,7 +2,7 @@
 
 Talk to DeepSeek Harness, DeepSeek's own agent, in Textus AI. It reads the open folder, writes and edits your notes, and asks before each change: Textus shows what it wants to do, and you allow it or not. What it changed is marked in the document, one undo away.
 
-1. Install [Node.js](https://nodejs.org) if it isn't on this computer.
+1. Install [Node.js](https://nodejs.org) 24 or later if this computer doesn't have it.
 2. Give it your DeepSeek API key once: run `npx @deepseek-ai/dsh web` in a terminal and add the key in the page it opens (or set `DEEPSEEK_API_KEY`).
 3. Click the DeepSeek Harness button at the top right of the window, beside Textus AI's.
 
