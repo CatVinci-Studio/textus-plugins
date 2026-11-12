@@ -1,7 +1,7 @@
 {
   "id": "catvinci.tasks",
   "name": "%name%",
-  "version": "0.4.3",
+  "version": "0.4.4",
   "publisher": "catvinci",
   "author": "CatVinci Studio",
   "description": "%description%",
@@ -40,7 +40,8 @@
     "codeBlocks": [
       {
         "language": "tasks",
-        "title": "%query.title%"
+        "title": "%query.title%",
+        "size": "interface"
       }
     ],
     "settings": [

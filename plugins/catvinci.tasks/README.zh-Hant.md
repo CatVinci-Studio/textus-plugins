@@ -46,6 +46,7 @@ sort by due
 
 ## 更新紀錄
 
+- **0.4.4** - 文件裡的任務查詢按介面文字大小顯示，欄位變寬時顯示更多內容，而不是把字放大（Textus 1.4.1）。
 - **0.4.3** - 帶 HTML 註解的待辦現在也能勾選，勾選不成時會提示原因。`group by status` 分組順序正確，任務區塊在窄面板裡自動換行，截止日期樣式與側欄一致，打字更順暢。
 - **0.4.2** - 說明和空狀態文字更簡短。
 - **0.4.1** - Its bars, lists and controls are Textus's own, grow with the interface and follow every theme; needs Textus 1.3.12. A new setting, **Move finished tasks to the end of their list**: a task ticked in a document or in the list goes after the open ones (it asks once to read and edit the document in front).

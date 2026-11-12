@@ -11,17 +11,16 @@ L’onglet **Signets** de la barre latérale les liste par document. Cliquez sur
 Quand le dossier ouvert est un coffre Obsidian (il contient un dossier `.obsidian`) :
 
 - Les signets d’Obsidian, dans `.obsidian/bookmarks.json`, apparaissent aussi dans l’onglet, sous **Signets d’Obsidian**, avec leurs groupes. Ceux des notes, des titres et des blocs sont listés ; recherches, dossiers et autres ne le sont pas.
-- Un nouveau signet est aussi écrit dans `bookmarks.json`, pour qu’Obsidian l’ait. Sur un titre, c’est un signet de titre ; ailleurs, un signet de bloc, et le bloc reçoit un identifiant comme `^a1b2c3` (celui qu’il a déjà est repris).
-- Supprimer un signet ici, ou renommer son document, modifie aussi `bookmarks.json`. Le reste du fichier ne change pas.
 
 ## Autorisations
 
-- Lire et modifier le document : pour lire la sélection et ajouter l’identifiant d’un bloc dans un coffre.
-- Lire et écrire des fichiers : pour le `bookmarks.json` d’Obsidian.
+- Lire le document : pour lire la sélection.
+- Lire des fichiers : pour le `bookmarks.json` d’Obsidian.
 - Outils pour Textus AI : pour que Textus AI puisse lister vos signets.
 
 ## Changements
 
+- **0.4.4** - Les signets d’Obsidian sont toujours listés, mais plus écrits : depuis Textus 1.4, les plugins ne modifient pas `.obsidian`. Nécessite Textus 1.4.0.
 - **0.4.3** - La liste est groupée par chemin du document dans le dossier, un groupe par document ; les longs passages s'arrêtent sur un mot avec « … » ; si l'id de bloc échoue dans un coffre, le signet est quand même gardé.
 - **0.4.2** - Textes d'aide et d'état vide plus courts.
 - **0.4.1** - Sa page dit maintenant en une phrase ce qu'il fait, ce qu'il permet et ce qui a changé à chaque version.

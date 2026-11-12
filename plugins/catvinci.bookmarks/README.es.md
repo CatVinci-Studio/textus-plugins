@@ -11,17 +11,16 @@ La pestaña **Marcadores** de la barra lateral los lista por documento. Haz clic
 Cuando la carpeta abierta es una bóveda de Obsidian (tiene una carpeta `.obsidian`):
 
 - Los marcadores propios de Obsidian, en `.obsidian/bookmarks.json`, también aparecen en la pestaña, bajo **Marcadores de Obsidian** y con sus grupos. Se listan los de notas, encabezados y bloques; búsquedas, carpetas y similares no.
-- Cada marcador nuevo se escribe también en `bookmarks.json`, así Obsidian lo tiene. En un encabezado es un marcador de encabezado; en cualquier otro sitio es de bloque, y el bloque recibe un id como `^a1b2c3` (si ya tiene uno, se usa ese).
-- Quitar un marcador aquí, o renombrar su documento, cambia también `bookmarks.json`. El resto del archivo queda como estaba.
 
 ## Permisos
 
-- Leer y editar el documento: para leer la selección y añadir el id de un bloque en una bóveda.
-- Leer y escribir archivos: para el `bookmarks.json` de Obsidian.
+- Leer el documento: para leer la selección.
+- Leer archivos: para el `bookmarks.json` de Obsidian.
 - Herramientas para Textus AI: para que Textus AI pueda listar tus marcadores.
 
 ## Cambios
 
+- **0.4.4** - Los marcadores de Obsidian se siguen listando, pero ya no se escriben: desde Textus 1.4 los plugins no cambian `.obsidian`. Necesita Textus 1.4.0.
 - **0.4.3** - La lista se agrupa por la ruta del documento en la carpeta, un grupo por documento; los pasajes largos terminan en una palabra con "…"; si falla el id de bloque en una bóveda, el marcador se guarda igual.
 - **0.4.2** - Textos de ayuda y de estado vacío más breves.
 - **0.4.1** - Su página dice ahora en una frase qué hace, qué puede hacer y qué cambió en cada versión.

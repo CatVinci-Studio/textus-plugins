@@ -23,28 +23,12 @@ function plain(value) {
   return value;
 }
 
-// Obsidian's property types, .obsidian/types.json, when the folder is a vault.
-const TYPES_FILE = ".obsidian/types.json";
+// Obsidian's property types (its types.json), read when the folder is a
+// vault. Textus keeps plugins out of .obsidian, so a type set here is kept in
+// the base itself.
 async function obsidianTypes() {
-  try {
-    const parsed = JSON.parse(await textus.files.readText(join(root, TYPES_FILE)));
-    return parsed && parsed.types && typeof parsed.types === "object" ? parsed.types : {};
-  } catch {
-    return {};
-  }
-}
-/** A property's type kept where Obsidian keeps it; false when the folder isn't a vault. */
-async function setObsidianType(key, kind) {
-  if (!(await textus.files.stat(join(root, ".obsidian")))) return false;
-  let parsed = {};
-  try {
-    parsed = JSON.parse(await textus.files.readText(join(root, TYPES_FILE)));
-  } catch {
-    parsed = {};
-  }
-  parsed.types = { ...(parsed.types || {}), [key]: database.TO_OBSIDIAN[kind] || "text" };
-  await textus.files.writeText(join(root, TYPES_FILE), JSON.stringify(parsed, null, 2) + "\n");
-  return true;
+  const parsed = await textus.files.appSettings("obsidian", "types.json").catch(() => null);
+  return parsed && parsed.types && typeof parsed.types === "object" ? parsed.types : {};
 }
 
 /** What a base's page draws: view `index` of `target`'s base. */
@@ -162,15 +146,6 @@ async function changeBase(target, change) {
   await target.setSource(database.writeBase(change(parsed.base)));
 }
 
-/** A view's kinds of property: those Obsidian keeps in its types file go
- *  there when the folder is a vault, the rest (select, url) in the base. */
-async function kindsOf(types) {
-  const kinds = {};
-  for (const [key, kind] of Object.entries(types))
-    kinds[key] = kind === "select" || kind === "url" || !(await setObsidianType(key, kind)) ? kind : null;
-  return kinds;
-}
-
 /**
  * Draws `target` - a ```base block, or a .base file - in `webview`.
  * `target`: { path, source(), setSource(text), onDidChange(fn) }.
@@ -261,7 +236,7 @@ function draw(target, webview, context) {
         case "spec": {
           const spec = { ...m.spec };
           if (spec.types) {
-            spec.kinds = await kindsOf(spec.types);
+            spec.kinds = spec.types;
             delete spec.types;
           }
           return set(spec);
@@ -278,7 +253,7 @@ function draw(target, webview, context) {
           if (!name) return;
           const columns = m.columns.includes(name) ? m.columns : m.columns.concat([name]);
           const spec = { columns };
-          if (m.kind !== "text") spec.kinds = await kindsOf({ [name]: m.kind });
+          if (m.kind !== "text") spec.kinds = { [name]: m.kind };
           return set(spec);
         }
         case "addFilter": {
