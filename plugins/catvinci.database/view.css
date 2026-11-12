@@ -119,6 +119,22 @@ body {
   overflow-wrap: anywhere;
   cursor: default;
 }
+/* Tags wrap within their column, never over the next one. */
+.tx-table td .tags {
+  display: flex;
+  flex-wrap: wrap;
+  padding: var(--space-1) 0;
+}
+/* A link keeps to one line, cut short, rather than breaking at every letter. */
+.tx-table td.cell-url {
+  min-width: clamp(6em, 12vw, 14em);
+}
+.tx-table td.cell-url a {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
 .tx-table td.cell-text,
 .tx-table td.cell-number,
 .tx-table td.cell-date,
@@ -211,102 +227,6 @@ body {
   align-self: flex-start;
 }
 
-/* Calendar */
-.month-bar {
-  margin-bottom: var(--space-2);
-}
-.month {
-  display: grid;
-  grid-template-columns: repeat(7, minmax(0, 1fr));
-  overflow: hidden;
-  border: 1px solid var(--doc-border, var(--ui-border));
-  border-radius: var(--doc-radius, var(--shape-s));
-}
-.weekday,
-.day {
-  border-right: 1px solid var(--doc-border, var(--ui-border));
-  border-bottom: 1px solid var(--doc-border, var(--ui-border));
-}
-.month > :nth-child(7n) {
-  border-right: none;
-}
-.weekday {
-  padding: var(--space-1);
-  background: var(--doc-code-bg, var(--ui-subtle));
-  color: var(--ui-muted);
-  font-size: var(--text-secondary);
-  text-align: center;
-}
-.day {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  min-height: calc(var(--control-height) * 3);
-  padding: var(--space-1);
-  overflow: hidden;
-}
-.day.weekend,
-.day.other {
-  background: var(--ui-subtle);
-}
-.day.other .num {
-  color: var(--ui-muted);
-}
-.day .num {
-  align-self: flex-end;
-  min-width: 1.5em;
-  height: 1.5em;
-  border-radius: var(--shape-pill);
-  font-size: var(--text-secondary);
-  line-height: 1.5em;
-  text-align: center;
-}
-.day.today .num {
-  background: var(--ui-accent-fill, var(--ui-accent));
-  color: var(--ui-on-fill, var(--ui-bg));
-}
-.chip {
-  overflow: hidden;
-  width: 100%;
-  padding: 0 var(--space-1);
-  border: 1px solid var(--ui-border);
-  border-radius: var(--shape-xs);
-  background: var(--ui-surface);
-  color: var(--ui-text);
-  font: inherit;
-  font-size: var(--text-secondary);
-  text-align: left;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  cursor: pointer;
-}
-.chip.cont {
-  color: var(--ui-muted);
-}
-
-/* Gallery */
-.gallery {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(12em, 1fr));
-  gap: var(--space-3);
-}
-.tile {
-  overflow: hidden;
-}
-.tile .cover {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 6em;
-  background: var(--ui-subtle) center / cover no-repeat;
-  font-size: 2.5em;
-}
-.tile .text {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-1);
-  padding: var(--space-3);
-}
 .problem {
   color: var(--ui-danger);
 }

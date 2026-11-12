@@ -6,6 +6,7 @@ Bases are written in **Obsidian's Bases format** (` ```base ` blocks and `.base`
 
 ## Pages
 
+- **0.7.9** - In a table, a cell's tags wrap within their column instead of running over the next ones, and a link keeps to one line, cut short, rather than breaking at every letter.
 - **0.7.8** - Setting a column's type (number, date, checkbox, list) works again in every folder: the type is kept in the base, and Obsidian's own types are still read. A base in a document draws at the interface's text size, so a wider column shows more of it rather than larger text; Cut, Copy and Paste in a cell's right-click menu work with Textus 1.4.1.
 - **A page with sub-pages is a folder**: `Plans/Plans.md` is the page, and its sub-pages sit beside it in `Plans/` - the same as Obsidian's folder notes. Type `/` and choose **New Sub-page…**, or use **Plugins › New Sub-page…**. The first sub-page moves `Plans.md` into its folder for you, and links to it follow.
 - **The Pages tab** in the sidebar shows the folder as a tree of pages. Right-click a page to make a sub-page, rename it, give it an icon or move it to the Trash (with the pages under it, after asking). Drag a page onto another to make it that page's sub-page. Links follow every move.
