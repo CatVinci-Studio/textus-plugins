@@ -7,8 +7,9 @@
 const t = (key, ...args) => textus.l10n.t(key, ...args);
 const views = new Set();
 
+let marp = null;
 function render(markdown) {
-  const marp = new Marp({ html: false, math: "katex", script: false });
+  marp = marp || new Marp({ html: false, math: "katex", script: false });
   return marp.render(markdown || "");
 }
 
@@ -54,6 +55,7 @@ const pictures = new Map();
 async function inlinePictures(html, doc) {
   if (!doc) return html;
   const urls = {};
+  const used = new Set();
   for (const src of slideEmbeds.localSources(html)) {
     let rel;
     try {
@@ -75,24 +77,38 @@ async function inlinePictures(html, doc) {
       kept = { modifiedMs: stat.modifiedMs, url: "data:" + (MIME[ext] || "image/" + ext) + ";base64," + btoa(binary) };
       pictures.set(path, kept);
     }
+    used.add(path);
     urls[src] = kept.url;
   }
+  // Pictures the deck no longer shows go.
+  for (const path of pictures.keys()) if (!used.has(path)) pictures.delete(path);
   return slideEmbeds.inline(html, urls);
 }
 
-/** The last deck, kept while the slides' own tab is in front. */
+/** The last deck, kept while the slides' own tab is in front, and the
+ *  document and text it was made from. */
 let deck = null;
+let madeFrom = null;
 
-/** Renders only while a slides tab is open: no deck work on other edits. */
-async function update() {
+/** Renders only while a slides tab is open: no deck work on other edits,
+ *  and none when the text is as it was. `to` is a page that just opened. */
+async function update(to) {
   if (!views.size) return;
   const text = await textus.editor.getText();
+  let changed = false;
   if (text !== null) {
     const doc = await textus.editor.getPath();
-    const shown = render(await withPictures(text, doc));
-    deck = { html: await inlinePictures(shown.html, doc), css: shown.css };
+    const from = doc + "\0" + text;
+    if (from !== madeFrom || !deck) {
+      const shown = render(await withPictures(text, doc));
+      const next = { html: await inlinePictures(shown.html, doc), css: shown.css };
+      madeFrom = from;
+      changed = !deck || next.html !== deck.html || next.css !== deck.css;
+      if (changed) deck = next;
+    }
   }
-  if (deck) for (const view of views) void view.postMessage(deck);
+  if (!deck) return;
+  for (const view of changed ? views : to ? [to] : []) void view.postMessage(deck);
 }
 
 /** A page that presents itself: the slides, ← → and Space to move, F for
@@ -154,10 +170,12 @@ exports.activate = function (ctx) {
         views.add(webview);
         webview.onDidDispose(() => {
           views.delete(webview);
-          if (!views.size) pictures.clear();
+          if (views.size) return;
+          pictures.clear();
+          deck = madeFrom = null;
         });
         webview.onDidReceiveMessage((message) => {
-          if (message === "ready") void update();
+          if (message === "ready") void update(webview);
           if (message === "export") void exportHtml();
         });
       },
@@ -168,7 +186,7 @@ exports.activate = function (ctx) {
     ),
     textus.commands.register("catvinci.slides.export", exportHtml),
     textus.ai.registerTool("export_slides", exportSlides),
-    textus.editor.onDidChange(update),
-    textus.editor.onDidChangeActive(update),
+    textus.editor.onDidChange(() => update()),
+    textus.editor.onDidChangeActive(() => update()),
   );
 };
