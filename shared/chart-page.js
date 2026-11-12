@@ -1,7 +1,8 @@
 // The page side of a chart code block (chart-host.js): the block's source
 // and meta come in, `draw` puts the chart in #chart, a mistake in the
 // source shows as a line under it rather than an empty frame, and a change
-// of theme draws it again. An export asks for a picture (onExport): the
+// of theme, or of the block's width (an island giving way), draws it
+// again. An export asks for a picture (onExport): the
 // chart's SVG, or `picture` when the plugin has a better one (a canvas, a
 // light version for paper). Shared by the chart plugins as lib/chart-page.js.
 /* exported drawChartBlock, chartColors */
@@ -36,7 +37,7 @@
     };
     return {
       bg: v("--doc-bg", fixed.bg),
-      ink: v("--ui-text", fixed.ink),
+      ink: v("--doc-text", fixed.ink),
       muted: v("--ui-muted", fixed.muted),
       grid: v("--ui-border", fixed.grid),
       tones: TONES.map(function (name, i) {
@@ -108,6 +109,18 @@
         characterData: true,
         subtree: true,
       });
+    // Another width: drawn again to fit it, once it has settled.
+    var width = 0;
+    var resizing = 0;
+    new ResizeObserver(function () {
+      var now = Math.round(el.clientWidth);
+      if (!now || now === width) return;
+      var first = width === 0;
+      width = now;
+      if (first) return;
+      clearTimeout(resizing);
+      resizing = setTimeout(draw, 120);
+    }).observe(el);
     api.onExport(async function (options) {
       await drawing;
       if (!last || !problem.hidden) return null;
