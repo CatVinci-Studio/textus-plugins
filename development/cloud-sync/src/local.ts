@@ -10,6 +10,16 @@ import {
   type LocalFiles,
 } from "./model";
 
+/** What a file was found to hold, by folder and path, with the size and
+ *  time it had: a later sync reads again only what changed since. */
+const described = new Map<
+  string,
+  Map<string, { size: number; modifiedMs: number; at: number; entry: Entry }>
+>();
+/** A file changed this close to when it was read may change again within
+ *  the same tick of its clock: read again (as Git's racy check does). */
+const SETTLED_MS = 2000;
+
 export class Workspace implements LocalFiles {
   private reservations: Reservations;
   /** Paths this run trashed or renamed, so their file events start no new sync. */
@@ -93,9 +103,32 @@ export class Workspace implements LocalFiles {
   async scan(): Promise<Record<string, Entry>> {
     const files: Record<string, Entry> = Object.create(null);
     let visits = 0;
-    const add = async (rel: string) => {
+    const known = described.get(this.root) ?? new Map();
+    const seen = new Map();
+    const add = async (
+      rel: string,
+      stat: { size: number; modifiedMs: number | null } | null,
+    ) => {
+      const was = known.get(rel);
+      const at = stat?.modifiedMs;
+      if (
+        was &&
+        stat &&
+        at != null &&
+        was.size === stat.size &&
+        was.modifiedMs === at &&
+        at < was.at - SETTLED_MS &&
+        !(await this.reservations.get(rel))
+      ) {
+        files[rel] = was.entry;
+        seen.set(rel, was);
+        return;
+      }
       const bytes = await this.read(rel);
-      if (bytes) files[rel] = await describe(bytes);
+      if (!bytes) return;
+      files[rel] = await describe(bytes);
+      if (stat && at != null)
+        seen.set(rel, { size: stat.size, modifiedMs: at, at: Date.now(), entry: files[rel] });
     };
     const walk = async (relative = "") => {
       await this.check();
@@ -112,7 +145,7 @@ export class Workspace implements LocalFiles {
             await walk(rel);
         } else if (inScope(rel)) {
           if (++visits > MAX_FILES) throw new SyncError("tooManyFiles");
-          await add(rel);
+          await add(rel, entry);
         }
       }
     };
@@ -121,12 +154,14 @@ export class Workspace implements LocalFiles {
     // documented project data, never plugin state, credentials or arbitrary dotfiles.
     for (const name of ["agent.md", "style.md", "style.previous.md"]) {
       const rel = `.textus/${name}`;
-      if (await this.api.files.stat(this.path(rel))) await add(rel);
+      const stat = await this.api.files.stat(this.path(rel));
+      if (stat) await add(rel, stat);
     }
     for (const name of ["library", "memory", "skills"]) {
       if ((await this.api.files.stat(`${this.root}/.textus/${name}`))?.isDir)
         await walk(`.textus/${name}`);
     }
+    described.set(this.root, seen);
     return files;
   }
   private async holds(relative: string, expected: string) {

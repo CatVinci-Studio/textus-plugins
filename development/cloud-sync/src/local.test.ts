@@ -195,3 +195,23 @@ it("remembers the paths it trashed and renamed", async () => {
   await f.local.remove("b.md", before);
   expect([...f.local.touched]).toEqual(["/notes/a.md", "/notes/b.md"]);
 });
+
+it("reads again only a file whose size or time changed since the last sync", async () => {
+  const { api, files, storage } = fixture();
+  let modifiedMs = Date.now() - 60_000;
+  api.files.list = async () => [
+    { name: "a.md", isDir: false, size: files.get("/notes/a.md")!.length, modifiedMs },
+  ] as never;
+  const read = vi.spyOn(api.files, "read");
+  const scan = () =>
+    new Workspace(api as unknown as Textus.Api, "/notes", storage).scan();
+  const first = await scan();
+  const again = await scan();
+  expect(read).toHaveBeenCalledTimes(1);
+  expect(again["a.md"]).toEqual(first["a.md"]);
+  files.set("/notes/a.md", new TextEncoder().encode("after!"));
+  modifiedMs += 1000;
+  const changed = await scan();
+  expect(read).toHaveBeenCalledTimes(2);
+  expect(changed["a.md"].hash).not.toBe(first["a.md"].hash);
+});
