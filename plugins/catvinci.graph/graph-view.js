@@ -420,9 +420,12 @@
         if (!nodes.length) return;
         const xs = nodes.map((n) => n.x);
         const ys = nodes.map((n) => n.y);
-        const w = Math.max(...xs) - Math.min(...xs) + 80;
-        const h = Math.max(...ys) - Math.min(...ys) + 80;
-        view.k = Math.min(2, Math.max(0.15, Math.min(size.w / w, size.h / h)));
+        // The notes spread over the pane, a label's room kept at its edges:
+        // labels keep their size, so a small graph zoomed in reads apart.
+        const w = Math.max(...xs) - Math.min(...xs) || 1;
+        const h = Math.max(...ys) - Math.min(...ys) || 1;
+        const k = Math.min((size.w - 180) / w, (size.h - 80) / h);
+        view.k = Math.min(4, Math.max(0.15, k));
         view.x = -(Math.max(...xs) + Math.min(...xs)) / 2;
         view.y = -(Math.max(...ys) + Math.min(...ys)) / 2;
         draw();

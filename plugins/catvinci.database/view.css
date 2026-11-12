@@ -35,7 +35,9 @@ body {
    stays where it is when a wide table is scrolled sideways. */
 .tx-table-frame {
   overflow: clip;
-  width: max-content;
+  /* As wide as the block when the columns can wrap to it; wider, and the
+     page scrolls, only when they can't. */
+  width: fit-content;
   min-width: 100%;
   box-sizing: border-box;
 }
@@ -111,7 +113,7 @@ body {
   /* Proportional to the block, within a readable range: a long value (a
      paper's title, a note) wraps rather than stretching its column. A width
      set by dragging the column's edge goes on the cells themselves. */
-  min-width: clamp(6em, 10vw, 12em);
+  min-width: clamp(4.5em, 8vw, 12em);
   max-width: clamp(12em, 24vw, 22em);
   white-space: normal;
   overflow-wrap: anywhere;
@@ -125,7 +127,7 @@ body {
 }
 .tx-table td.title {
   position: relative;
-  min-width: clamp(9em, 18vw, 20em);
+  min-width: clamp(8em, 16vw, 20em);
   max-width: clamp(14em, 34vw, 30em);
   white-space: normal;
   overflow-wrap: anywhere;

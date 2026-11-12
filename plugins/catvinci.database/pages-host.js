@@ -35,8 +35,9 @@ function item(node) {
   const path = node.rel ? join(root, node.rel) : null;
   return {
     id: node.rel || "dir:" + node.dir,
-    label: label(node),
-    icon: node.rel ? "file" : "folder",
+    label: node.name,
+    // A page's own icon in place of the file's.
+    icon: node.icon || (node.rel ? "file" : "folder"),
     location: path ? { path: path } : undefined,
     children: node.children.length > 0,
     data: node,
