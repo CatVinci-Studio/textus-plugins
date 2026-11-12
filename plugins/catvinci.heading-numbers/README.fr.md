@@ -12,6 +12,7 @@ Le plugin lit les titres du document ouvert (permission de lire l’éditeur) et
 
 ## Changements
 
+- **0.2.4** - Avec deux documents ouverts côte à côte, les deux affichent les numéros de leurs titres, pas seulement celui où vous écrivez.
 - **0.2.3** - Les propriétés et les blocs de code ne reçoivent plus de numéros par erreur, et les exports ne numérotent que les titres de premier niveau, comme l'éditeur.
 - **0.2.2** - Sa page dit maintenant en une phrase ce qu'il fait, ce qu'il permet et ce qui a changé à chaque version.
 - **0.2.1** - Pas de numéros sur un document numéroté à la main, ni sur un document dont les propriétés disent `number headings: off`.

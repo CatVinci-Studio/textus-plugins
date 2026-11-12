@@ -12,6 +12,7 @@ The plugin reads the open document's headings (permission to read the editor) an
 
 ## Changes
 
+- **0.2.4** - With two documents open side by side, both show their heading numbers, not only the one you are typing in.
 - **0.2.3** - Front matter and code blocks no longer get numbers by mistake, and exports number only top-level headings, like the editor.
 - **0.2.2** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
 - **0.2.1** - No numbers on a document numbered by hand, or one whose front matter says `number headings: off`.
