@@ -12,4 +12,5 @@ Textus 用 `npx` 运行 [DeepSeek Harness](https://github.com/deepseek-ai/deepse
 
 ## 更新
 
+- **0.1.1** - 需要 Textus 1.4.2 或更新版本，以使用新的助手界面。
 - **0.1.0** - 第一个版本：在 Textus AI 里用 DeepSeek Harness。

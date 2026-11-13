@@ -1,7 +1,7 @@
 {
   "id": "catvinci.claude-code",
   "name": "%name%",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "publisher": "catvinci",
   "author": "CatVinci Studio",
   "description": "%description%",
@@ -9,7 +9,7 @@
   "license": "MIT",
   "repository": "https://github.com/CatVinci-Studio/textus-plugins",
   "engines": {
-    "textus": ">=1.4.0"
+    "textus": ">=1.4.2"
   },
   "platforms": [
     "desktop"
@@ -25,7 +25,7 @@
         "command": "npx",
         "args": [
           "-y",
-          "@agentclientprotocol/claude-agent-acp@0.104.1"
+          "@agentclientprotocol/claude-agent-acp@0.107.0"
         ],
         "setup": "%setup%",
         "provider": "anthropic"

@@ -12,5 +12,6 @@ It works on the desktop and needs Textus 1.3.13 or later. It asks for one permis
 
 ## Changes
 
+- **0.1.2** - Needs Textus 1.4.2 or later, for its new agent views.
 - **0.1.1** - While Codex answers, other plugins (such as the desk pet) know which AI is at work.
 - **0.1.0** - First version: Codex in Textus AI.

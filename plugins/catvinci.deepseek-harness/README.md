@@ -12,4 +12,5 @@ It works on the desktop and needs Textus 1.4 or later. It asks for one permissio
 
 ## Changes
 
+- **0.1.1** - Needs Textus 1.4.2 or later, for its new agent views.
 - **0.1.0** - First version: DeepSeek Harness in Textus AI.
