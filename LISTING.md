@@ -2,6 +2,10 @@
 
 **Settings › Extensions › Get more** in Textus lists three kinds of things, each from its own repository: plugins and skills from this one, themes from [textus-themes](https://github.com/CatVinci-Studio/textus-themes). This page says what gets listed and how.
 
+## Official and community
+
+**Official** plugins live in [`plugins/`](plugins/) and CatVinci Studio maintains them: ones about writing, that most people would use, and that we're willing to keep working for years. Everything else is welcome as a **community** plugin: it lives in its author's repository, and only a one-file listing sits in [`community/`](community/). Community plugins are listed just as visibly in **Get more**.
+
 ## What every listing must be
 
 - **Useful to people who write.** Something a writer, a student, a researcher or a team would reach for - not a demo, not a duplicate of something already listed or built in.
@@ -12,7 +16,7 @@
 
 ## Plugins
 
-A plugin is a folder with a `textus-plugin.json` manifest ([Writing plugins](https://github.com/CatVinci-Studio/Textus/blob/main/docs/dev/writing-plugins.md)). CatVinci Studio's own are in [`plugins/`](plugins/) here; yours lives in a repository of your own, and a one-file listing in [`community/`](community/) points to it.
+A plugin is a folder with a `textus-plugin.json` manifest ([Writing plugins](https://github.com/CatVinci-Studio/Textus/blob/main/docs/dev/plugins/guide.md)). CatVinci Studio's own are in [`plugins/`](plugins/) here; yours lives in a repository of your own, and a one-file listing in [`community/`](community/) points to it.
 
 - **Permissions it needs, and no more.** Each permission in the manifest is asked for before the plugin runs; one that the plugin's purpose doesn't explain is a reason not to list it. `network:` names the hosts it talks to - `network:*` only for a plugin whose purpose is the open web (a web view) or a server the user types in (their own sync or storage), which it reaches over HTTPS and names in its README.
 - **Works offline,** apart from what plainly needs the network (Zotero's local API, a web page), and says so when it can't reach something.
@@ -24,7 +28,7 @@ A plugin is a folder with a `textus-plugin.json` manifest ([Writing plugins](htt
 
 ## Skills
 
-A skill is one Markdown file in [`skills/`](skills/), named after the skill (`press-release.md`), with front matter like the built-in skills' ([AGENTS.md › Skills](https://github.com/CatVinci-Studio/Textus/blob/main/AGENTS.md)): `name` (the file's name), `description` (what it does and when to use it - Textus AI reads it to decide), and `metadata` with `textus-version`, `textus-invocation`, `textus-category` and `textus-modes` - the panel modes it works in, one or more of `write`, `review` and `create` - and, for each UI language, `textus-label-<code>` and `textus-hint-<code>` (its name and one line on what it does) and `textus-aliases-<code>` (other words typed after `/`).
+A skill is one Markdown file in [`skills/`](skills/), named after the skill (`press-release.md`), with front matter like the built-in skills' ([Skills](https://github.com/CatVinci-Studio/Textus/blob/main/docs/design/ai-concepts.md#skills-name)): `name` (the file's name), `description` (what it does and when to use it - Textus AI reads it to decide), and `metadata` with `textus-version`, `textus-invocation`, `textus-category` and `textus-modes` - the panel modes it works in, one or more of `write`, `review` and `create` - and, for each UI language, `textus-label-<code>` and `textus-hint-<code>` (its name and one line on what it does) and `textus-aliases-<code>` (other words typed after `/`).
 
 - **A procedure, not a one-off.** A kind of task people do again and again, with the steps that make it come out right.
 - **Never invents.** A skill that writes from the user's material says what to do when the material is missing a detail (leave a placeholder, ask) - never to make it up.

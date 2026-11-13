@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: A bug in Textus itself / Textus 本身的问题
+    url: https://github.com/CatVinci-Studio/Textus/issues/new/choose
+    about: Problems outside a plugin go to the Textus repository. 插件以外的问题请到 Textus 仓库。
+  - name: Questions and chat / 交流
+    url: https://textus.md/discord
+    about: Discord (English); QQ and WeChat groups at textus.md/zh/community.
