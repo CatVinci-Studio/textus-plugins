@@ -46,6 +46,7 @@ El plugin lee los documentos de la carpeta para encontrar sus tareas, y escribe 
 
 ## Cambios
 
+- **0.4.5** - Una tarea que la IA añade bajo un encabezado ya no cae dentro de un bloque de código, y «Mover las tareas terminadas al final de su lista» funciona en notas con saltos de línea de Windows (CRLF).
 - **0.4.4** - Una consulta de tareas en un documento se dibuja al tamaño de texto de la interfaz: una columna más ancha muestra más en lugar de letra más grande (Textus 1.4.1).
 - **0.4.3** - Ya se pueden marcar tareas con un comentario HTML, y si no se puede marcar una, se avisa del motivo. `group by status` ordena bien, los bloques de tareas caben en paneles estrechos, las fechas de vencimiento se ven como en la barra lateral y escribir es más ligero.
 - **0.4.2** - Textos de ayuda y de estado vacío más breves.

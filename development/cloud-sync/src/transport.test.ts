@@ -294,9 +294,9 @@ describe("storage protocols over HTTP", () => {
 
   // README's request table: each sync as the plugin runs it, with a new store.
   it.each([
-    ["s3", [8, 17, 14]],
-    ["webdav", [16, 32, 26]],
-    ["nutstore", [16, 32, 26]],
+    ["s3", [8, 20, 20]],
+    ["webdav", [16, 35, 32]],
+    ["nutstore", [16, 35, 32]],
   ] as const)("counts %s requests per sync", async (provider, expected) => {
     mode = "normal";
     const prefix = `notes/${crypto.randomUUID()}`;
@@ -317,7 +317,13 @@ describe("storage protocols over HTTP", () => {
       // refused MKCOL is checked with one more PROPFIND. Not counted.
       return recorded
         .slice(start)
-        .filter((r) => !(r.method === "PROPFIND" && /\/blocks\/[0-9a-f]{2}\/?$/.test(r.path))).length;
+        .filter(
+          (r) =>
+            !(
+              r.method === "PROPFIND" &&
+              /\/blocks\/[0-9a-f]{2}\/?$/.test(r.path)
+            ),
+        ).length;
     };
     const idle = await measure();
     local.files.set("a.md", bytes("edited"));

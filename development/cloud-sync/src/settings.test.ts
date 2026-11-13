@@ -30,6 +30,7 @@ function fixture() {
 const config = normalizeConfig({
   provider: "webdav",
   endpoint: "https://dav.example",
+  encrypt: true,
 });
 const encryption = {
   syncPassword: "test-only long passphrase",
@@ -163,4 +164,18 @@ it("does not reuse a service credential as the sync password", async () => {
     }),
   ).rejects.toThrow("syncPasswordSeparate");
   expect(f.secrets.size).toBe(0);
+});
+it("needs no sync password without encryption, and reads settings from before 0.5 as encrypted", async () => {
+  const f = fixture();
+  const plain = { ...config, encrypt: false };
+  await f.settings.save("/notes", plain, { account: "alice", secret: "s" });
+  expect(await f.settings.password("/notes", plain)).toBe("");
+  expect((await f.settings.load("/notes")).encrypt).toBe(false);
+  const scope = [...f.global.keys()].find((k) => k.startsWith("config:"))!;
+  const { encrypt: _, keepDays: __, ...before } = config;
+  f.global.set(scope, before);
+  expect(await f.settings.load("/notes")).toMatchObject({
+    encrypt: true,
+    keepDays: 90,
+  });
 });

@@ -85,7 +85,7 @@ export function review({ entry, pkg, source, previous = null, libs = {} }) {
     add("fail", "package", `The manifest says ${manifest.version}, the listing ${entry.version}.`);
   if (!VERSION.test(manifest.version ?? ""))
     add("fail", "package", `"${manifest.version}" isn't a version (x.y.z).`);
-  for (const key of ["name", "publisher", "description", "main"])
+  for (const key of ["name", "publisher", "description"])
     if (typeof manifest[key] !== "string" || !manifest[key])
       add("fail", "package", `The manifest has no ${key}.`);
   if (typeof manifest.engines?.textus !== "string")
@@ -103,8 +103,12 @@ export function review({ entry, pkg, source, previous = null, libs = {} }) {
       (manifest.requires ?? []).some((r) => r.setting === "runInBackground"))
   )
     add("fail", "package", "It works in the background, which iOS has none of: its platforms can't name ios.");
-  if (manifest.main && !pkg.has(manifest.main))
-    add("fail", "package", `Its main, ${manifest.main}, isn't in the zip.`);
+  // One file, a list run in order, or none (a plugin of agents only).
+  const main = [].concat(manifest.main ?? []);
+  if (main.some((f) => typeof f !== "string" || !f))
+    add("fail", "package", "Its main isn't a file or a list of files.");
+  for (const file of main.filter((f) => typeof f === "string" && f))
+    if (!pkg.has(file)) add("fail", "package", `Its main, ${file}, isn't in the zip.`);
   if (manifest.publisher === "catvinci" || entry.id.startsWith("catvinci."))
     add("fail", "package", "catvinci is CatVinci Studio's own name.");
   if (previous && compareVersions(manifest.version, previous.version) <= 0)

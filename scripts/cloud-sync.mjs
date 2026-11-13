@@ -5,11 +5,12 @@ import { fileURLToPath } from "node:url";
 
 const root = fileURLToPath(new URL("..", import.meta.url));
 const check = process.argv.includes("--check");
-for (const [name, format] of [
+for (const [name, format, out = name] of [
   ["host", "cjs"],
   ["panel", "iife"],
+  ["history-page", "iife", "history"],
 ]) {
-  const outfile = `plugins/catvinci.cloud-sync/${name}.js`;
+  const outfile = `plugins/catvinci.cloud-sync/${out}.js`;
   const result = await build({
     absWorkingDir: root,
     entryPoints: [`development/cloud-sync/src/${name}.ts`],
@@ -32,5 +33,5 @@ for (const [name, format] of [
   } else await writeFile(path, bytes);
 }
 console.log(
-  `Cloud Sync: ${check ? "verified" : "updated"} readable host and panel.`,
+  `Cloud Sync: ${check ? "verified" : "updated"} readable host and pages.`,
 );

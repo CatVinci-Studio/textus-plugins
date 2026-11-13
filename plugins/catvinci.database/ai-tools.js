@@ -12,7 +12,7 @@ function sortOf(text) {
 
 /** A row: a note in `folder` named for it, its properties in its front matter. */
 async function makeRow(folder, row) {
-  const title = fileName(String(row.name || ""));
+  const title = pages.fileName(String(row.name || ""));
   if (!title) return false;
   const file = join(root, (folder ? folder + "/" : "") + title + ".md");
   if (await textus.files.stat(file)) return false;
@@ -64,7 +64,7 @@ async function addRowTool(input) {
   await textus.files.createFolder(join(root, db.folder)).catch(() => {});
   if (!(await makeRow(db.folder, input)))
     return { error: input.name ? "A row named " + input.name + " is there already." : "The row has no name." };
-  return { database: db.folder, path: db.folder + "/" + fileName(String(input.name)) + ".md" };
+  return { database: db.folder, path: db.folder + "/" + pages.fileName(String(input.name)) + ".md" };
 }
 
 /** Textus AI's tool: a folder unit of notes with these properties, its
@@ -76,7 +76,7 @@ async function createDatabase(input) {
   const docRel = relOf(doc);
   const dir = docRel && docRel.includes("/") ? docRel.slice(0, docRel.lastIndexOf("/")) : "";
   const title = String(input.name || "Database").trim();
-  const name = fileName(title);
+  const name = pages.fileName(title);
   const folder = (dir ? dir + "/" : "") + name;
   await textus.files.createFolder(join(root, folder)).catch(() => {});
   let made = 0;

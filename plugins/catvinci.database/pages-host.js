@@ -129,23 +129,27 @@ async function toUnits() {
 const holderOf = (rel) => (pages.isUnit(rel) ? rel.slice(0, rel.lastIndexOf("/")) : rel);
 
 /** A page renamed: its file, its unit's folder with it, and links to it. */
-async function renamePage(path) {
+/** A page renamed: its file (a unit's folder), the links to it, and its own
+ *  heading. `given`, the new title, else asked for. */
+async function renamePage(path, given) {
   root = await textus.files.root();
   const rel = relOf(typeof path === "string" ? path : await textus.editor.getPath());
   if (!rel) return;
   const name = pages.nameOf(rel);
-  const title = ((await textus.ui.input({ prompt: t("renamePage"), value: name })) || "").trim();
+  const title = String(typeof given === "string" ? given : (await textus.ui.input({ prompt: t("renamePage"), value: name })) || "").trim();
   const next = pages.fileName(title);
   if (!next || next === name) return;
   const dir = rel.includes("/") ? rel.slice(0, rel.lastIndexOf("/")) : "";
+  const unitTaken = pages.isUnit(rel) && (await textus.files.stat(join(root, (dir.includes("/") ? dir.slice(0, dir.lastIndexOf("/") + 1) : "") + next)));
+  const pageTaken = !pages.isUnit(rel) && (await textus.files.stat(join(root, (dir ? dir + "/" : "") + next + ".md")));
+  if (unitTaken || pageTaken) return textus.ui.message(t("exists", title));
+  await textus.files.process(join(root, rel), (text) => pages.retitle(text, name, title));
   if (pages.isUnit(rel)) {
     const up = dir.includes("/") ? dir.slice(0, dir.lastIndexOf("/") + 1) : "";
-    if (await textus.files.stat(join(root, up + next))) return textus.ui.message(t("exists", title));
     // The folder first; its page follows it (onDidRename below).
     await textus.files.rename(join(root, dir), join(root, up + next), { updateLinks: true });
   } else {
     const to = (dir ? dir + "/" : "") + next + ".md";
-    if (await textus.files.stat(join(root, to))) return textus.ui.message(t("exists", title));
     await textus.files.rename(join(root, rel), join(root, to), { updateLinks: true });
     // Its sub-pages beside it in the older layout keep with it.
     const old = (dir ? dir + "/" : "") + name;

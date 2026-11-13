@@ -1,4 +1,4 @@
-import { SyncError, type Config } from "./model";
+import { KEEP_DAYS, SyncError, type Config, type KeepDays } from "./model";
 
 export const defaults: Config = {
   provider: "s3",
@@ -9,6 +9,11 @@ export const defaults: Config = {
   pathStyle: true,
   automatic: false,
   interval: 5,
+  exclude: "",
+  gitignore: false,
+  obsidian: false,
+  encrypt: false,
+  keepDays: 90,
 };
 // saveGap keeps syncs after saves within a provider's request quota.
 export const providers = {
@@ -97,6 +102,13 @@ export function normalizeConfig(input: Partial<Config>): Config {
   c.endpoint = url.toString().replace(/\/+$/, "");
   c.pathStyle = c.pathStyle !== false;
   c.automatic = c.automatic === true;
+  c.exclude = String(c.exclude ?? "").slice(0, 20_000);
+  c.gitignore = c.gitignore === true;
+  c.obsidian = c.obsidian === true;
+  c.encrypt = c.encrypt === true;
+  c.keepDays = Number(c.keepDays) as KeepDays;
+  if (!KEEP_DAYS.includes(c.keepDays)) c.keepDays = defaults.keepDays;
+  c.keepPending = c.keepPending === true;
   c.interval = Number(c.interval);
   if (!Number.isInteger(c.interval) || c.interval < 5 || c.interval > 1440)
     throw new SyncError("invalidInterval");
@@ -120,9 +132,24 @@ const attachments =
   /\.(png|jpe?g|gif|webp|svg|avif|bmp|ico|heic|pdf|docx?|xlsx?|pptx?|odt|ods|odp|mp3|wav|m4a|ogg|mp4|mov|webm)$/i;
 const ignored = new Set(["node_modules", "dist", "build", "target", "vendor"]);
 export const isText = (path: string) =>
-  documents.test(path) || /\.svg$/i.test(path);
+  documents.test(path) || /\.svg$/i.test(path) || isObsidianSetting(path);
+/** Obsidian's own settings a sync may carry, when asked: none of its
+ *  plugins' code, nor what differs per machine (workspace.json). */
+export const OBSIDIAN_SETTINGS = [
+  "app.json",
+  "appearance.json",
+  "hotkeys.json",
+  "bookmarks.json",
+  "graph.json",
+  "core-plugins.json",
+  "types.json",
+];
+export const isObsidianSetting = (path: string) =>
+  path.startsWith(".obsidian/") &&
+  OBSIDIAN_SETTINGS.includes(path.slice(".obsidian/".length));
 export function inScope(path: string): boolean {
   if (!relativePath(path)) return false;
+  if (isObsidianSetting(path)) return true;
   const parts = path.split("/");
   if (parts[0] === ".textus") {
     return (

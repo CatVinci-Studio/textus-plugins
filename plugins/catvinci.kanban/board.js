@@ -228,6 +228,7 @@
       clearTimeout(timer);
       board = md.parse(message.text);
       render();
+      $("state").textContent = message.refused ? t("changedElsewhere") : "";
     }
     if (message.type === "saved") $("state").textContent = t("saved");
     if (message.type === "error") $("state").textContent = message.message;

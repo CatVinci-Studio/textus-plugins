@@ -46,6 +46,7 @@ Das Plugin liest die Dokumente des Ordners, um ihre Aufgaben zu finden, und schr
 
 ## Änderungen
 
+- **0.4.5** - Eine Aufgabe, die die KI unter einer Überschrift anlegt, landet nie mehr in einem Codeblock, und „Erledigte Aufgaben ans Ende der Liste“ wirkt auch in Notizen mit Windows-Zeilenenden (CRLF).
 - **0.4.4** - Eine Aufgabenabfrage im Dokument erscheint in der Schriftgröße der Oberfläche: Eine breitere Spalte zeigt mehr davon statt größerer Schrift (Textus 1.4.1).
 - **0.4.3** - Aufgaben mit einem HTML-Kommentar lassen sich jetzt abhaken, und ein verweigertes Abhaken sagt, warum. `group by status` sortiert richtig, Aufgabenblöcke passen in schmale Bereiche, Fälligkeitsdaten sehen aus wie in der Seitenleiste, und das Tippen bleibt leichter.
 - **0.4.2** - Kürzere Hilfe- und Leertexte.

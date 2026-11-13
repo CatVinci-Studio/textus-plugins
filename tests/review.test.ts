@@ -47,6 +47,13 @@ describe("review", () => {
     ).toContain("### ✅ jane.word-count 0.2.0");
   });
 
+  it("passes a main list, or no main, as the app takes them", () => {
+    const listed = plugin({ main: ["lib/a.js", "host.js"] }, { "lib/a.js": "" });
+    expect(verdict(review(listed))).toBe("pass");
+    expect(verdict(review(plugin({ main: undefined })))).toBe("pass");
+    expect(verdict(review(plugin({ main: ["lib/gone.js", "host.js"] })))).toBe("fail");
+  });
+
   it("fails a zip that isn't the repository at the tag", () => {
     const p = plugin();
     p.pkg.set(

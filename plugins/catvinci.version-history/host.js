@@ -49,16 +49,39 @@ async function versionsOf(path) {
 /** Set when the last save couldn't be kept even alone. */
 let full = false;
 
+/** A document with no versions yet, as it was on disk when it came to the
+ *  front: its first save keeps that too (the last few opened). */
+const opened = new Map();
+async function rememberOpened() {
+  const path = await textus.editor.getPath();
+  if (!path || opened.has(path) || (await versionsOf(path)).length) return;
+  const text = await textus.files.readText(path).catch(() => null);
+  if (text === null || text.length > MAX_TEXT) return;
+  opened.set(path, { at: Date.now(), text: text });
+  if (opened.size > 20) opened.delete(opened.keys().next().value);
+}
+
 async function record(saved) {
   if (!saved.path || saved.text.length > MAX_TEXT) return;
   const list = await versionsOf(saved.path);
+  const before = opened.get(saved.path);
+  opened.delete(saved.path);
   if (list[0] && list[0].text === saved.text) return;
+  const key = keyOf(saved.path);
+  full = false;
+  if (!list.length && before && before.text !== saved.text) {
+    await keepVersions(key, saved.path, [before]);
+    await keep(key + NOW, key, {
+      path: saved.path,
+      version: { at: Date.now(), text: saved.text },
+    });
+    return show();
+  }
   // Saves close together - autosave's every few seconds - are one
   // version: the newest is brought up to date until EVERY has passed
   // since it was first kept, and only it is written.
   const now = Date.now();
   const newest = list[0];
-  const key = keyOf(saved.path);
   full = false;
   if (newest && now - idOf(newest) < EVERY) {
     await keep(key + NOW, key, {
@@ -230,12 +253,58 @@ async function diffVersions(input) {
   };
 }
 
+/** A document or folder renamed or moved: its documents' versions follow. */
+async function follow(change) {
+  const store = ctx.storage.global;
+  const moved = (path) =>
+    path === change.from
+      ? change.to
+      : path.startsWith(change.from + "/") || path.startsWith(change.from + "\\")
+        ? change.to + path.slice(change.from.length)
+        : null;
+  // A document's two keys move together, or not at all.
+  const paths = new Set();
+  for (const k of await store.keys()) {
+    if (!k.startsWith("v:") || k.endsWith(NOW)) continue;
+    const value = await store.get(k);
+    if (value && typeof value.path === "string" && moved(value.path)) paths.add(value.path);
+  }
+  for (const k of await store.keys()) {
+    if (!k.startsWith("v:") || !k.endsWith(NOW)) continue;
+    const value = await store.get(k);
+    if (value && typeof value.path === "string" && moved(value.path)) paths.add(value.path);
+  }
+  for (const from of paths) {
+    const to = moved(from);
+    const keys = [keyOf(from), keyOf(from) + NOW];
+    const targets = [keyOf(to), keyOf(to) + NOW];
+    // Never over the versions a document already has there.
+    if ((await Promise.all(targets.map((k) => store.get(k)))).some(Boolean)) continue;
+    for (let i = 0; i < 2; i++) {
+      const value = await store.get(keys[i]);
+      if (!value || value.path !== from) continue;
+      await store.set(targets[i], Object.assign({}, value, { path: to }));
+      await store.delete(keys[i]);
+    }
+  }
+  await show();
+}
+
 exports.activate = function (context) {
   ctx = context;
   textus.ai.registerTool("list_versions", listVersions);
   textus.ai.registerTool("diff_versions", diffVersions);
   textus.files.onDidSave(record);
-  textus.editor.onDidChangeActive(show);
+  // One rename after another: a unit's folder, then its page.
+  let following = Promise.resolve();
+  textus.files.onDidRename((change) => {
+    following = following.then(() => follow(change)).catch(() => {});
+  });
+  textus.editor.onDidChangeActive(() => {
+    void rememberOpened();
+    return show();
+  });
+  void rememberOpened();
   textus.views.registerWebview("catvinci.version-history.panel", {
     resolve: async function (webview) {
       panel = webview;

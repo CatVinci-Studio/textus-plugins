@@ -81,8 +81,10 @@
           }
           var open = /^\s*(```+|~~~+)/.exec(line);
           if (open && !html && !comment) {
-            if (!fence) fence = open[1][0];
-            else if (open[1][0] === fence) fence = null;
+            // Closed only by a bare run of its own character, as long or longer.
+            if (!fence) fence = open[1];
+            else if (open[1][0] === fence[0] && open[1].length >= fence.length && /^\s*[`~]+\s*$/.test(line))
+              fence = null;
             return true;
           }
           if (fence) return true;

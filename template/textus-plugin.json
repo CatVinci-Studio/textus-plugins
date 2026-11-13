@@ -8,6 +8,7 @@
   "engines": {
     "textus": ">=1.3.0-beta.2"
   },
+  "platforms": ["desktop", "ios"],
   "main": "host.js",
   "permissions": ["editor.read"],
   "contributes": {

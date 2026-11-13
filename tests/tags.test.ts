@@ -51,6 +51,18 @@ describe("renaming a tag", () => {
     ).toBe("---\ntags:\n  - 写作\n  - b\n---\n");
   });
 
+  it("leaves heading links and a ``` line inside a ~~~ block", () => {
+    const doc =
+      "See [[#Ideas]] and [[#Ideas|list]].\n~~~\n```\n#ideas in code\n~~~\nafter #ideas\n";
+    expect(tagEdit.renameTag(doc, "ideas", "thoughts")).toBe(
+      doc.replace("after #ideas", "after #thoughts"),
+    );
+    const four = "````\n```\n#ideas in code\n````\n#ideas\n";
+    expect(tagEdit.renameTag(four, "ideas", "thoughts")).toBe(
+      four.replace(/#ideas$/m, "#thoughts"),
+    );
+  });
+
   it("renames any letter case, and leaves longer front-matter tags", () => {
     expect(
       tagEdit.renameTag("---\ntags: [project-x, X]\n---\n#X and #x/sub", "x", "y"),

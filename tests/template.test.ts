@@ -1,5 +1,6 @@
-import { readFileSync } from "node:fs";
+import { readFileSync, readdirSync } from "node:fs";
 import { describe, expect, it, vi } from "vitest";
+import { review } from "../scripts/review-lib.mjs";
 
 /**
  * The plugin template (template/): its manifest names what its code
@@ -49,6 +50,18 @@ function fakeTextus(text: string) {
 }
 
 describe("the plugin template", () => {
+  it("passes the catalog's own package checks as it is", () => {
+    const pkg = new Map(
+      readdirSync(ROOT).map((f) => [f, readFileSync(ROOT + f)] as const),
+    );
+    const failed = review({
+      entry: { id: "your-name.hello", version: manifest.version },
+      pkg,
+      source: new Map([...pkg, ["LICENSE", Buffer.from("MIT License\n")]]),
+    }).filter((r: { level: string; check: string }) => r.level === "fail" && r.check === "package");
+    expect(failed).toEqual([]);
+  });
+
   it("registers what its manifest names, and counts and lists", async () => {
     const { textus, registered } = fakeTextus("Hello there 你好");
     // Run as the sandbox runs it: `exports` and `textus` given.

@@ -160,7 +160,7 @@
     };
     const views = base.views.map((v) => {
       const n = { ...v };
-      if (Array.isArray(n.order)) n.order = n.order.map(swap);
+      if (Array.isArray(n.order)) n.order = [...new Set(n.order.map(swap))];
       if (Array.isArray(n.sort)) n.sort = n.sort.map((s) => ({ ...s, property: swap(s.property) }));
       if (n.groupBy && n.groupBy.property) n.groupBy = { ...n.groupBy, property: swap(n.groupBy.property) };
       for (const k of ["date", "end"]) if (n[k]) n[k] = swap(n[k]);
@@ -170,7 +170,8 @@
     const next = { ...base, views };
     if (base.properties && base.properties[idOf(from)]) {
       const props = { ...base.properties };
-      props[idOf(to)] = props[idOf(from)];
+      // A name already there keeps its own display.
+      props[idOf(to)] = props[idOf(to)] || props[idOf(from)];
       delete props[idOf(from)];
       next.properties = props;
     }

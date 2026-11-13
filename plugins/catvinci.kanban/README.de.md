@@ -36,7 +36,7 @@ kanban-plugin: board
 
 ## Änderungen
 
-- **0.4.8** - Die Store-Beschreibung beginnt jetzt mit dem, was das Plugin tut.
+- **0.4.8** - Ein Board mit Windows-Zeilenenden (CRLF) behält sie, und ein Board, das während der Bearbeitung anderswo geändert wurde, zeigt diese Änderung, statt sie zu überschreiben. Die Store-Beschreibung beginnt jetzt mit dem, was das Plugin tut.
 - **0.4.7** - Eine Leerzeile in einer Karte teilt sie nicht mehr, und Escape hinterlässt keine leere Karte mehr. Die KI lässt normale Notizen in Ruhe, und das Board passt in schmale Bereiche.
 - **0.4.6** - Das Board blendet an den Rändern aus, wo Listen über das Fenster hinausreichen.
 - **0.4.5** - Eine gezogene Karte oder Liste bleibt direkt unter dem Zeiger und hebt sich wie alles, was in Textus gezogen wird. Leisten, Listen und Steuerelemente sind jetzt die von Textus, wachsen mit der Oberfläche und folgen jedem Theme; braucht Textus 1.3.12.

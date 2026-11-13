@@ -1,5 +1,5 @@
 // Renaming a #tag (and its nested tags) in a note's text, any letter case: in
-// the body and front matter's tags, never in code, a link's address or a longer tag.
+// the body and front matter's tags, never in code, a link's target or a longer tag.
 
 (function (root) {
   const TAG = "[\\p{L}\\p{N}_\\-/]";
@@ -22,7 +22,8 @@
       "(^|[\\s(\\[{,;:!?，。；：！？、])#" + escape(from) + "(?!" + MORE + ")",
       "giu",
     );
-    let inFence = false;
+    // The fence's character: a ``` inside a ~~~ block doesn't close it.
+    let fence = null;
     let inFront = false;
     let inTagList = false;
     const lines = text.split("\n");
@@ -42,14 +43,17 @@
           const isTags = /^\s*tags?\s*:/.test(line) || (inTagList && /^\s*-\s/.test(line));
           return isTags ? renameInFrontMatter(line, from, to) : line;
         }
-        if (/^\s*(```|~~~)/.test(line)) {
-          inFence = !inFence;
+        const open = /^\s*(```+|~~~+)/.exec(line);
+        if (open) {
+          if (!fence) fence = open[1];
+          else if (open[1][0] === fence[0] && open[1].length >= fence.length && /^\s*[`~]+\s*$/.test(line))
+            fence = null;
           return line;
         }
-        if (inFence) return line;
-        // Inline code and link addresses are kept as they are.
+        if (fence) return line;
+        // Inline code, [[links]] and link addresses are kept as they are.
         return line
-          .split(/(`[^`]*`|\]\([^)]*\))/)
+          .split(/(`[^`]*`|\[\[[^\]\n]*\]\]|\]\([^)]*\))/)
           .map((part, k) => (k % 2 ? part : part.replace(body, "$1#" + to)))
           .join("");
       })

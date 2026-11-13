@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="textus-resource:panel.css" />
+  </head>
+  <body>
+    <main>
+      <p id="status" class="hint" role="status" aria-live="polite" data-t="loading"></p>
+      <div id="head" class="tx-row start" hidden>
+        <button type="button" class="tx-button" id="back" data-t="deletedFiles"></button>
+      </div>
+      <h2 class="tx-group-title" id="title" hidden></h2>
+      <div class="tx-list" id="list" role="listbox" hidden></div>
+      <section id="preview" hidden>
+        <div class="form-end">
+          <p id="preview-note" class="hint"></p>
+          <button type="button" class="tx-button primary" id="restore" data-t="restore"></button>
+        </div>
+        <pre id="preview-text" class="preview" hidden></pre>
+      </section>
+    </main>
+    <script src="textus-resource:history.js"></script>
+  </body>
+</html>

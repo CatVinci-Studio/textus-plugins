@@ -1,7 +1,7 @@
 {
   "id": "catvinci.database",
   "name": "%name%",
-  "version": "0.7.9",
+  "version": "0.7.10",
   "publisher": "catvinci",
   "author": "CatVinci Studio",
   "description": "%description%",
@@ -260,6 +260,7 @@
   },
   "l10n": {
     "en": {
+      "changedElsewhere": "This file changed elsewhere: it shows that version now; make your change again.",
       "name": "Wiki",
       "description": "Pages within pages, and bases of your notes as tables, boards, calendars, galleries and lists - in Obsidian's Bases format, so Obsidian opens the same databases. All plain Markdown files.",
       "new": "New Base…",
@@ -321,6 +322,7 @@
       "type.date": "Date",
       "type.checkbox": "Checkbox",
       "type.url": "URL",
+      "renameBoth": "{2} pages already have “{1}”. They keep their own “{1}”, and “{0}” stays in them. Rename anyway?",
       "deleteAsk": "Delete “{0}” from {1} pages?",
       "open": "Open",
       "tool.query_rows": "Reads a database's rows - the notes its base chooses, by default those in its folder - each with its name, path and properties, filtered and sorted.",
@@ -372,6 +374,7 @@
       "dataviewLeftOut": "Converted. Left out: {0}"
     },
     "zh": {
+      "changedElsewhere": "这个文件在别处改过了：现在显示的是那个版本，请再改一次。",
       "name": "知识库",
       "description": "页面里套页面，再把笔记做成表格、看板、日历、画廊和列表形式的知识库。知识库使用 Obsidian 的 Bases 格式，在 Obsidian 里也能打开同一个知识库。全部是普通 Markdown 文件。",
       "new": "新建知识库…",
@@ -432,6 +435,7 @@
       "type.date": "日期",
       "type.checkbox": "复选框",
       "type.url": "网址",
+      "renameBoth": "已有 {2} 个页面有“{1}”。它们保留自己的“{1}”，“{0}”也留在其中。仍要重命名吗？",
       "deleteAsk": "要从 {1} 个页面中删除“{0}”吗？",
       "open": "打开",
       "pages.name": "页面树",
@@ -484,6 +488,7 @@
       "dataviewLeftOut": "已转换。未保留：{0}"
     },
     "zh-Hant": {
+      "changedElsewhere": "這個檔案在別處改過了：現在顯示的是那個版本，請再改一次。",
       "name": "知識庫",
       "description": "頁面裡套頁面，再把筆記做成表格、看板、日曆、畫廊和清單形式的知識庫。知識庫使用 Obsidian 的 Bases 格式，在 Obsidian 裡也能開啟同一個知識庫。全部是一般的 Markdown 檔案。",
       "new": "新增知識庫…",
@@ -544,6 +549,7 @@
       "type.date": "日期",
       "type.checkbox": "核取方塊",
       "type.url": "網址",
+      "renameBoth": "已有 {2} 個頁面有「{1}」。它們保留自己的「{1}」，「{0}」也留在其中。仍要重新命名嗎？",
       "deleteAsk": "要從 {1} 個頁面中刪除「{0}」嗎？",
       "open": "打開",
       "pages.name": "頁面樹",
@@ -596,6 +602,7 @@
       "dataviewLeftOut": "已轉換。未保留：{0}"
     },
     "ja": {
+      "changedElsewhere": "このファイルは別の場所で変更されました。その版を表示しています。もう一度変更してください。",
       "name": "Wiki",
       "description": "ページの中にページを、そしてノートを表・ボード・カレンダー・ギャラリー・リストのデータベースに。Obsidian の Bases 形式なので、Obsidian でも同じデータベースが開けます。すべて普通の Markdown ファイルです。",
       "new": "新しいデータベース…",
@@ -656,6 +663,7 @@
       "type.date": "日付",
       "type.checkbox": "チェックボックス",
       "type.url": "URL",
+      "renameBoth": "{2} ページにはすでに「{1}」があります。それらは自身の「{1}」を残し、「{0}」もそのまま残ります。名前を変更しますか？",
       "deleteAsk": "{1} ページから「{0}」を削除しますか？",
       "open": "開く",
       "pages.name": "ページ",
@@ -708,6 +716,7 @@
       "dataviewLeftOut": "変換しました。省いたもの：{0}"
     },
     "ko": {
+      "changedElsewhere": "이 파일이 다른 곳에서 바뀌었습니다. 지금 그 버전을 보여 주니 다시 변경해 주세요.",
       "name": "위키",
       "description": "페이지 안의 페이지, 그리고 노트를 표·보드·캘린더·갤러리·목록 데이터베이스로. Obsidian의 Bases 형식이라 Obsidian에서도 같은 데이터베이스가 열립니다. 모두 일반 Markdown 파일입니다.",
       "new": "새 데이터베이스…",
@@ -768,6 +777,7 @@
       "type.date": "날짜",
       "type.checkbox": "체크박스",
       "type.url": "URL",
+      "renameBoth": "{2}개 페이지에 이미 “{1}”이(가) 있습니다. 해당 페이지는 자신의 “{1}”을(를) 유지하고 “{0}”도 그대로 남습니다. 그래도 이름을 바꿀까요?",
       "deleteAsk": "{1}개 페이지에서 “{0}”을(를) 삭제할까요?",
       "open": "열기",
       "pages.name": "페이지",
@@ -820,6 +830,7 @@
       "dataviewLeftOut": "변환했습니다. 빠진 부분: {0}"
     },
     "de": {
+      "changedElsewhere": "Diese Datei wurde anderswo geändert: Jetzt wird diese Fassung gezeigt; nimm deine Änderung noch einmal vor.",
       "name": "Wiki",
       "description": "Seiten in Seiten und Datenbanken deiner Notizen als Tabellen, Boards, Kalender, Galerien und Listen – im Bases-Format von Obsidian, sodass Obsidian dieselben Datenbanken öffnet. Alles einfache Markdown-Dateien.",
       "new": "Neue Datenbank …",
@@ -880,6 +891,7 @@
       "type.date": "Datum",
       "type.checkbox": "Kontrollkästchen",
       "type.url": "URL",
+      "renameBoth": "{2} Seiten haben schon „{1}“. Sie behalten ihr eigenes „{1}“, und „{0}“ bleibt in ihnen. Trotzdem umbenennen?",
       "deleteAsk": "„{0}“ aus {1} Seiten löschen?",
       "open": "Öffnen",
       "pages.name": "Seiten",
@@ -932,6 +944,7 @@
       "dataviewLeftOut": "Umgewandelt. Weggelassen: {0}"
     },
     "es": {
+      "changedElsewhere": "Este archivo cambió en otro sitio: ahora muestra esa versión; vuelve a hacer tu cambio.",
       "name": "Wiki",
       "description": "Páginas dentro de páginas y bases de datos de tus notas como tablas, tableros, calendarios, galerías y listas, en el formato Bases de Obsidian, para que Obsidian abra las mismas bases de datos. Todo son archivos Markdown normales.",
       "new": "Nueva base de datos…",
@@ -992,6 +1005,7 @@
       "type.date": "Fecha",
       "type.checkbox": "Casilla",
       "type.url": "URL",
+      "renameBoth": "{2} páginas ya tienen «{1}». Conservan su propio «{1}» y «{0}» se queda en ellas. ¿Cambiar el nombre de todos modos?",
       "deleteAsk": "¿Eliminar «{0}» de {1} páginas?",
       "open": "Abrir",
       "pages.name": "Páginas",
@@ -1044,6 +1058,7 @@
       "dataviewLeftOut": "Convertida. Se omitió: {0}"
     },
     "fr": {
+      "changedElsewhere": "Ce fichier a été modifié ailleurs : cette version est affichée ; refaites votre modification.",
       "name": "Wiki",
       "description": "Des pages dans des pages, et des bases de données de vos notes en tableaux, tableaux kanban, calendriers, galeries et listes – au format Bases d'Obsidian, pour qu'Obsidian ouvre les mêmes bases. Rien que des fichiers Markdown.",
       "new": "Nouvelle base de données…",
@@ -1104,6 +1119,7 @@
       "type.date": "Date",
       "type.checkbox": "Case à cocher",
       "type.url": "URL",
+      "renameBoth": "{2} pages ont déjà « {1} ». Elles gardent leur propre « {1} », et « {0} » y reste. Renommer quand même ?",
       "deleteAsk": "Supprimer « {0} » de {1} pages ?",
       "open": "Ouvrir",
       "pages.name": "Pages",
@@ -1156,6 +1172,7 @@
       "dataviewLeftOut": "Convertie. Laissé de côté : {0}"
     },
     "pt": {
+      "changedElsewhere": "Este arquivo mudou em outro lugar: agora mostra essa versão; faça sua alteração de novo.",
       "name": "Wiki",
       "description": "Páginas dentro de páginas e bancos de dados das suas notas como tabelas, quadros, calendários, galerias e listas – no formato Bases do Obsidian, para que o Obsidian abra os mesmos bancos. Tudo em arquivos Markdown simples.",
       "new": "Novo banco de dados…",
@@ -1216,6 +1233,7 @@
       "type.date": "Data",
       "type.checkbox": "Caixa de seleção",
       "type.url": "URL",
+      "renameBoth": "{2} páginas já têm “{1}”. Elas mantêm o próprio “{1}”, e “{0}” continua nelas. Renomear mesmo assim?",
       "deleteAsk": "Excluir “{0}” de {1} páginas?",
       "open": "Abrir",
       "pages.name": "Páginas",
@@ -1268,6 +1286,7 @@
       "dataviewLeftOut": "Convertida. Ficou de fora: {0}"
     },
     "ru": {
+      "changedElsewhere": "Этот файл изменили в другом месте: сейчас показана та версия; внесите изменение ещё раз.",
       "name": "Вики",
       "description": "Страницы внутри страниц и базы данных из ваших заметок: таблицы, доски, календари, галереи и списки – в формате Bases из Obsidian, так что Obsidian открывает те же базы. Только обычные файлы Markdown.",
       "new": "Новая база данных…",
@@ -1328,6 +1347,7 @@
       "type.date": "Дата",
       "type.checkbox": "Флажок",
       "type.url": "URL",
+      "renameBoth": "На страницах ({2}) уже есть «{1}». Они сохранят своё «{1}», а «{0}» останется в них. Всё равно переименовать?",
       "deleteAsk": "Удалить «{0}» из страниц ({1})?",
       "open": "Открыть",
       "pages.name": "Страницы",

@@ -16,6 +16,7 @@ Behält jedes Speichern eines Dokuments als Version, damit Sie sehen, was sich g
 
 ## Änderungen
 
+- **0.3.7** - Der Text eines Dokuments vor dem ersten Speichern bleibt ebenfalls als Version erhalten, und die Versionen folgen einem Dokument, wenn es umbenannt oder verschoben wird.
 - **0.3.6** - Das automatische Speichern beim Schreiben schreibt nur die neueste Version, nicht jede Version des Dokuments, sodass lange Dokumente mit viel weniger Aufwand speichern.
 - **0.3.5** - Eine geöffnete Version bleibt offen, wenn das automatische Speichern sie aktualisiert, und Wiederherstellen findet sie immer. Ist der Speicher voll, machen ältere Versionen anderer Dokumente Platz, und das Feld sagt, wenn ein Speichern nicht behalten werden konnte. Zeilen gehen per Tastatur; Schaltflächen brechen in einer schmalen Seitenleiste um.
 - **0.3.4** - In der Seitenleiste zeigt das Feld keinen eigenen Titel mehr, wie die anderen Tabs dort. Kürzere Hilfe- und Leertexte. Seitenleiste und Seite folgen dem Layout von Textus 1.3.13.

@@ -71,6 +71,8 @@
       }
     }
     return {
+      // A CRLF board is written back as one.
+      eol: /\r\n/.test(String(text)) ? "\r\n" : "\n",
       front: front,
       preamble: preamble.join("\n").trim(),
       lists: lists,
@@ -97,7 +99,8 @@
       parts.push(head + (cards.length ? "\n\n" + cards.join("\n") : ""));
     }
     if (board.postamble) parts.push(board.postamble);
-    return parts.join("\n\n") + "\n";
+    const out = parts.join("\n\n") + "\n";
+    return board.eol === "\r\n" ? out.replace(/\n/g, "\r\n") : out;
   }
 
   root.kanbanMarkdown = { parse: parse, serialize: serialize };

@@ -1,9 +1,9 @@
 # Cloud Sync
 
-Keep a folder the same on your computers through your own S3-compatible storage, WebDAV or Nutstore, encrypted before it leaves each device.
+Keep a folder the same on your computers through your own S3-compatible storage, WebDAV or Nutstore, with older versions kept in the cloud and, if you choose, encrypted before it leaves each device.
 
-The storage service sees neither the contents of your files nor their names.
-Cloud Sync needs Textus 1.3.2 or later on the desktop.
+With end-to-end encryption on, the storage service sees neither the contents of your files nor their names.
+Cloud Sync needs Textus 1.4.1 or later on the desktop.
 
 ## Getting started
 
@@ -11,12 +11,14 @@ Cloud Sync needs Textus 1.3.2 or later on the desktop.
    (or **Connection settings…** in its sidebar tab).
 2. Pick the storage service and enter its server address and sign-in. Nutstore
    needs only your email and an app password from Account › Security.
-3. Set a **sync password** of at least 12 characters and keep it in your
-   password manager: it can't be reset.
+3. To encrypt, turn on **End-to-end encryption** and set a **sync password**
+   of at least 12 characters; keep it in your password manager: it can't be
+   reset. Decide this once per remote folder: switching later needs a new,
+   empty one.
 4. Choose **Save connection**, then **Sync now**.
 
-On another device, open the matching folder and enter the same service, the
-same remote folder and the same sync password. Turn on **Sync automatically
+On another device, open the matching folder and enter the same service and
+the same remote folder (and, for an encrypted one, the same sync password). Turn on **Sync automatically
 while Textus is open**: it then syncs a few seconds after you save or rename a
 file, and also every 5 minutes in case nothing triggered it (you can set 5 to
 1,440 minutes). A file you delete goes out with the next sync. **Plugins › Sync
@@ -28,6 +30,27 @@ open the panel.
 
 When both devices changed the same file, both versions stay: yours in place,
 the other device's in `Sync conflicts/`.
+
+## Cloud history
+
+Each time a sync replaces or deletes a file, its earlier content stays in the
+remote folder. Right-click a file and choose **Cloud History…** to see its
+versions (when, from which device, how big), read one and **Restore This
+Version**: it becomes the current file and syncs, and the version it replaces
+stays in the history. If the file there has edits not yet synced, or is open,
+the version is written beside it instead (`Note (3f2a9c1b).md`). **Plugins › Cloud History…** lists the files deleted from
+the folder; open one to bring it back.
+
+**Keep cloud history** sets how long, counted from when a version was
+replaced: 30, 90 (the default) or 365 days, or always. One setting holds for
+the folder: the last one chosen on any device, which the others then show.
+For the first day one version an hour is kept, then one a day, at most 200 per
+file; if the history outgrows 8 MB of records, the oldest versions go first.
+Each sync that changes something, and once a day otherwise, lets expired
+versions go and deletes the blocks only they used. Space taken before 0.5
+(older snapshots) isn't reclaimed. Update every device to 0.5: what a 0.4
+device changes joins the history only at the next 0.5 sync, and its own
+deletions aren't listed until then.
 
 **Permissions:** read and write the open folder (to scan it and apply what
 comes down), and reach any website (only the HTTPS server you enter). No
@@ -63,6 +86,14 @@ plugins' data, arbitrary dotfiles and build/dependency folders are excluded.
 Only files inside the open workspace can be accessed. Files outside it,
 including linked attachments outside the folder, are not uploaded.
 
+In Settings you can leave out more: one rule per line, written as in a
+`.gitignore` (`drafts/`, `*.pdf`, `!keep.pdf`). A switch applies the folder's
+own `.gitignore` as well. Files left out stay as they are on every device:
+nothing is uploaded, downloaded or deleted for them. Another switch carries
+Obsidian's shared settings (`.obsidian/app.json`, `appearance.json`,
+`hotkeys.json`, `bookmarks.json`, `graph.json`, `core-plugins.json`,
+`types.json`); its per-device files such as `workspace.json` stay local.
+
 The current limits are 128 MiB per file, 20,000 visited files/folders,
 48 directory levels, and an 8 MiB manifest. Empty directories are not synced.
 Paths that are unsafe on supported platforms, or differ only in case or
@@ -84,12 +115,11 @@ shared blocks are reused; ETags are not treated as content hashes.
   plugin API has no conditional binary replacement operation.
 - A file deleted on one device is deleted on the others at their next sync,
   and the other devices move it to the system Trash, where you can restore it.
-  The remote lists deleted files in its encrypted manifest for 30 days (the
-  newest 2,000); there is no way to restore from that list in the app yet.
-  A rename reaches the other devices as a rename.
-- There is no remote garbage collection yet: a deleted file's encrypted
-  blocks and old snapshots stay on the server, and anyone with the sync
-  password can still recover it from there. To remove content for good, use
+  The deleted file stays in the cloud history for as long as it keeps
+  versions. A rename reaches the other devices as a rename.
+- Content leaves the server only when the history lets it go: until then a
+  deleted file can be read by anyone who can read the remote folder (and, if
+  it's encrypted, knows the sync password). To remove content for good, use
   a fresh remote folder for a cleaned workspace.
 - An edit wins over a deletion: if one device deleted a file the other edited
   since they last synced, the edited file comes back everywhere.
@@ -99,7 +129,8 @@ shared blocks are reused; ETags are not treated as content hashes.
 - Update every device to 0.4 before relying on deletions: an older device puts
   a file deleted elsewhere back.
 
-Content and filenames are **encrypted before upload**, with HTTPS in transit.
+With **Encrypt** on, content and filenames are encrypted before upload; either
+way everything travels over HTTPS.
 Use a private S3 bucket or WebDAV folder. The service account
 needs read, write and delete permission in the dedicated remote folder
 (delete is needed for temporary objects and locks).
@@ -113,8 +144,8 @@ more on S3):
 | Sync                                  | S3  | WebDAV / Nutstore |
 | ------------------------------------- | --- | ----------------- |
 | Nothing changed                       | 8   | 16                |
-| One edited document (one 2 MiB block) | 17  | 32                |
-| One deleted file                      | 14  | 26                |
+| One edited document (one 2 MiB block) | 20  | 35                |
+| One deleted file                      | 20  | 32                |
 
 Each further changed block adds 3 requests on S3, up to 5 on WebDAV. WebDAV
 costs more because it creates folders and takes the lock with an upload and a
@@ -124,8 +155,7 @@ under its 550 requests per 30 minutes.
 
 ## End-to-end encryption
 
-Cloud Sync always encrypts; there is no plaintext fallback or encryption-off switch.
-File contents, paths, content hashes and snapshots are authenticated and encrypted
+With **End-to-end encryption** on, file contents, paths, content hashes and snapshots are authenticated and encrypted
 using AES-256-GCM through Web Crypto. Each encryption uses a fresh 96-bit nonce and
 a 128-bit tag. Authentication binds the repository's encryption header and the
 logical object key, preventing substitution between blocks, manifests and snapshots.
@@ -159,9 +189,16 @@ impossible. A full backup must include the descriptor and encrypted objects.
 - `v1/head.json`: the public encryption descriptor (`textus-cloud-sync-e2ee/1`).
   The old path is intentional: v0.1 clients reject this format before uploading files.
 - `v1/lock.json`: shared exclusion with old and new clients; no document data.
-- `v2/head.bin`: encrypted current manifest, with the trash of deleted files.
+- `v2/head.bin`: encrypted current manifest.
+- `v2/history.bin`: encrypted history (each file's older versions and origins).
 - `v2/blocks/<prefix>/<HMAC>`: encrypted content blocks.
-- `v2/snapshots/<revision>.bin`: immutable encrypted manifests.
+- `v2/snapshots/<revision>.bin`: encrypted manifests of the current and the
+  previous revision.
+
+Without encryption the same objects are stored as JSON and raw blocks:
+`v1/head.json`, `v1/history.json`, `v1/blocks/<prefix>/<SHA-256>` and
+`v1/snapshots/<revision>.json`. One remote folder is either encrypted or not;
+the plugin refuses to mix them.
 
 Encrypted objects contain `TCS2`, a 12-byte nonce, then ciphertext and its 16-byte
 GCM tag. AAD is UTF-8 of the canonical JSON header (`format`, `repositoryId`, `kdf`,
@@ -173,17 +210,18 @@ UTF-8 logical `v1/blocks/<hash-prefix>/<SHA-256>` key. The verification plaintex
 is hex-encoded in `verifier`. These choices are verified against Node's independent
 PBKDF2, HKDF, HMAC and AES-GCM APIs in tests.
 
-### Upgrading from v0.1
+### Moving a folder to encryption
 
-An existing plaintext remote is refused without changing it. First ensure one local
-workspace contains all the files and conflict copies you need, then select a **new,
-empty remote folder** and set a sync password. Sync that complete workspace first;
-other devices can then join using an encrypted version and the same password and remote folder.
+A remote folder isn't converted in place. First ensure one local workspace
+contains all the files and conflict copies you need, then select a **new, empty
+remote folder**, turn on encryption and set a sync password. Sync that complete
+workspace first; other devices can then join with the same password and remote
+folder.
 
-Old remote data, including provider version history and backups, remains unencrypted.
-The plugin does not automatically delete or migrate it. Manage old copies through
-your provider after verifying the encrypted workspace. In-place password rotation
-is not supported; use another new remote folder to change passwords.
+The old remote data, including the provider's own version history and backups,
+stays unencrypted. Manage old copies through your provider after verifying the
+encrypted workspace. In-place password rotation is not supported; use another
+new remote folder to change passwords.
 
 ## Interrupted sync
 
@@ -245,6 +283,8 @@ and `THIRD_PARTY_NOTICES.md`. The storage design was informed by Petrichor/Sylva
 
 ## Changes
 
+- **0.5.0** - Older versions stay in the cloud: right-click a file › **Cloud History…** to read and restore one, and **Plugins › Cloud History…** brings back deleted files. **Keep cloud history** sets 30, 90 or 365 days, or always, and old versions are cleaned up by themselves. End-to-end encryption is now a switch, off for new connections; connections set up before keep it. Also brings 0.4.7's changes. Needs Textus 1.4.1.
+- **0.4.7** - A sync reads again only the files whose size or time changed since the last one, so syncing a big folder while you write takes far less work. Your own rules can leave out more files (written as in a `.gitignore`), the folder's `.gitignore` can count too, and Obsidian's shared settings can sync. A picture or other attachment changed on another device now replaces the one here instead of being kept twice. Needs Textus 1.4.1.
 - **0.4.6** - Every language now has the whole page translated, not just a few lines. In a narrow panel the status and the connection hint keep a readable width and the buttons move to their own line.
 - **0.4.5** - The sidebar keeps to the sync status and **Sync now**; **Connection settings…** there opens the plugin's own page, where the connection is set up. The sidebar page draws no title of its own, as the sidebar's other tabs. Needs Textus 1.3.13. Shorter help and empty-state text. Its sidebar panel and page follow Textus 1.3.13's layout.
 - **0.4.4** - A Cloud Sync tab in the sidebar shows at a glance how sync stands - connected or not, the last sync, any error, which service and remote folder - with the whole connection form below; Settings shows the same page. The service is picked from a dropdown, and a long name, path or error wraps inside the page.

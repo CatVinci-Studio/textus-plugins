@@ -8,6 +8,7 @@ import {
 import { hash } from "./content";
 import {
   HEAD,
+  HISTORY,
   LOCK,
   SyncError,
   checkAbort,
@@ -37,6 +38,7 @@ export class EncryptedStore implements ObjectStore {
   private async physical(key: string) {
     if (key === LOCK) return LOCK;
     if (key === HEAD) return ENCRYPTED_HEAD;
+    if (key === HISTORY) return "v2/history.bin";
     if (/^v1\/blocks\/[a-f0-9]{2}\/[a-f0-9]{64}$/.test(key)) {
       const id = await this.cipher.name(key);
       return `v2/blocks/${id.slice(0, 2)}/${id}`;

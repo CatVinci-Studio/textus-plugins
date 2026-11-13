@@ -36,8 +36,11 @@ var MAX_MANIFEST_SIZE = 8 * 1024 * 1024;
 var MAX_FILES = 2e4;
 var HEAD = "v1/head.json";
 var LOCK = "v1/lock.json";
+var HISTORY = "v1/history.json";
+var MAX_HISTORY_SIZE = 8 * 1024 * 1024;
 var TRASH_DAYS = 30;
 var MAX_TRASH = 2e3;
+var KEEP_DAYS = [30, 90, 365, 0];
 var SyncError = class extends Error {
   constructor(code, args = []) {
     super(code);
@@ -47,6 +50,7 @@ var SyncError = class extends Error {
   }
 };
 var encode = (value) => new TextEncoder().encode(JSON.stringify(value));
+var snapshotKey = (revision) => `v1/snapshots/${revision}.json`;
 var blockKey = (hash3) => `v1/blocks/${hash3.slice(0, 2)}/${hash3}`;
 function checkAbort(signal) {
   if (signal?.aborted) throw new SyncError("cancelled");
@@ -61,7 +65,12 @@ var defaults = {
   prefix: "textus/my-workspace",
   pathStyle: true,
   automatic: false,
-  interval: 5
+  interval: 5,
+  exclude: "",
+  gitignore: false,
+  obsidian: false,
+  encrypt: false,
+  keepDays: 90
 };
 var providers = {
   s3: { transport: "s3", endpoint: "", requestLimit: Infinity, saveGap: 0 },
@@ -122,6 +131,13 @@ function normalizeConfig(input) {
   c.endpoint = url.toString().replace(/\/+$/, "");
   c.pathStyle = c.pathStyle !== false;
   c.automatic = c.automatic === true;
+  c.exclude = String(c.exclude ?? "").slice(0, 2e4);
+  c.gitignore = c.gitignore === true;
+  c.obsidian = c.obsidian === true;
+  c.encrypt = c.encrypt === true;
+  c.keepDays = Number(c.keepDays);
+  if (!KEEP_DAYS.includes(c.keepDays)) c.keepDays = defaults.keepDays;
+  c.keepPending = c.keepPending === true;
   c.interval = Number(c.interval);
   if (!Number.isInteger(c.interval) || c.interval < 5 || c.interval > 1440)
     throw new SyncError("invalidInterval");
@@ -140,9 +156,20 @@ function identity(c) {
 var documents = /\.(md|markdown|mdown|mkd|txt|csv|base|canvas)$/i;
 var attachments = /\.(png|jpe?g|gif|webp|svg|avif|bmp|ico|heic|pdf|docx?|xlsx?|pptx?|odt|ods|odp|mp3|wav|m4a|ogg|mp4|mov|webm)$/i;
 var ignored = /* @__PURE__ */ new Set(["node_modules", "dist", "build", "target", "vendor"]);
-var isText = (path) => documents.test(path) || /\.svg$/i.test(path);
+var isText = (path) => documents.test(path) || /\.svg$/i.test(path) || isObsidianSetting(path);
+var OBSIDIAN_SETTINGS = [
+  "app.json",
+  "appearance.json",
+  "hotkeys.json",
+  "bookmarks.json",
+  "graph.json",
+  "core-plugins.json",
+  "types.json"
+];
+var isObsidianSetting = (path) => path.startsWith(".obsidian/") && OBSIDIAN_SETTINGS.includes(path.slice(".obsidian/".length));
 function inScope(path) {
   if (!relativePath(path)) return false;
+  if (isObsidianSetting(path)) return true;
   const parts = path.split("/");
   if (parts[0] === ".textus") {
     return /^\.textus\/(agent|style|style\.previous)\.md$/.test(path) || /^\.textus\/(library|memory|skills)\/.+\.md$/i.test(path) && parts.slice(1).every((p) => !p.startsWith("."));
@@ -211,8 +238,10 @@ function parseManifest(raw) {
 function parseBase(raw) {
   if (raw == null) return { format: FORMAT, files: /* @__PURE__ */ Object.create(null) };
   const b = raw;
-  if (b.format !== FORMAT || !b.files || Array.isArray(b.files) || Object.entries(b.files).some(
-    ([p, h]) => !inScope(p) || !/^[a-f0-9]{64}$/.test(h)
+  if (b.format !== FORMAT || !b.files || Array.isArray(b.files) || [b.files, b.parked ?? {}].some(
+    (map) => Array.isArray(map) || Object.entries(map).some(
+      ([p, h]) => !inScope(p) || !/^[a-f0-9]{64}$/.test(h)
+    )
   ))
     throw new SyncError("invalidBase");
   return b;
@@ -228,7 +257,11 @@ function plan(local, remote, base) {
     ])
   ].sort().map((path) => {
     const l = local[path]?.hash, r = remote[path]?.hash, b = base[path];
-    const kind = l === r ? l ? "equal" : "forget" : !l ? r === b ? "deleteRemote" : "download" : !r ? l === b ? "deleteLocal" : "upload" : l === b ? "download" : r === b ? "upload" : "conflict";
+    const kind = l === r ? l ? "equal" : "forget" : !l ? r === b ? "deleteRemote" : "download" : !r ? l === b ? "deleteLocal" : "upload" : l === b ? "download" : r === b ? "upload" : (
+      // Obsidian's settings have no copy to keep: the synced
+      // one wins.
+      isObsidianSetting(path) ? "download" : "conflict"
+    );
     return { path, kind };
   });
 }
@@ -252,6 +285,172 @@ function conflictPath(path, hash3) {
   const dot = safe.lastIndexOf(".");
   const end = dot > safe.lastIndexOf("/") + 1 ? dot : safe.length;
   return `Sync conflicts/${safe.slice(0, end)} (${hash3.slice(0, 8)})${safe.slice(end)}`;
+}
+
+// development/cloud-sync/src/history.ts
+var HOUR = 36e5;
+var DAY = 24 * HOUR;
+var MAX_VERSIONS = 200;
+var time = (iso) => iso ? Date.parse(iso) : NaN;
+var retiredAt = (v) => time(v.until ?? v.at);
+var emptyHistory = () => ({
+  format: FORMAT,
+  current: /* @__PURE__ */ Object.create(null),
+  versions: /* @__PURE__ */ Object.create(null)
+});
+var checkOrigin = (o) => {
+  if (!o || !Number.isFinite(Date.parse(o.at)) || o.device !== void 0 && (typeof o.device !== "string" || o.device.length > 64))
+    throw new Error();
+};
+function parseHistory(raw) {
+  try {
+    if (raw.length > MAX_HISTORY_SIZE) throw new Error();
+    const h = JSON.parse(new TextDecoder("utf-8", { fatal: true }).decode(raw));
+    if (h.format !== FORMAT || !h.current || Array.isArray(h.current) || !h.versions || Array.isArray(h.versions) || h.previous !== void 0 && typeof h.previous !== "string" || h.head !== void 0 && typeof h.head !== "string" || h.keep !== void 0 && (!KEEP_DAYS.includes(h.keep.days) || !Number.isFinite(time(h.keep.at))))
+      throw new Error();
+    for (const [path, o] of Object.entries(h.current)) {
+      if (!inScope(path)) throw new Error();
+      checkOrigin(o);
+    }
+    for (const [path, list] of Object.entries(h.versions)) {
+      if (!inScope(path) || !Array.isArray(list)) throw new Error();
+      for (const v of list) {
+        checkEntry(v);
+        checkOrigin(v);
+        if (v.until !== void 0 && !Number.isFinite(time(v.until)))
+          throw new Error();
+      }
+    }
+    return h;
+  } catch {
+    throw new SyncError("invalidHistory");
+  }
+}
+function retire(history, remote, next, origin) {
+  const current = /* @__PURE__ */ Object.create(null);
+  const versions = /* @__PURE__ */ Object.create(null);
+  for (const [path, list] of Object.entries(history.versions))
+    versions[path] = [...list];
+  const was = (path) => history.current[path] ?? { at: remote.updatedAt || origin.at };
+  for (const [path, entry] of Object.entries(next.files))
+    current[path] = remote.files[path]?.hash === entry.hash ? was(path) : origin;
+  for (const [path, entry] of Object.entries(remote.files)) {
+    if (next.files[path]?.hash === entry.hash) continue;
+    versions[path] = [
+      { ...entry, ...was(path), until: origin.at },
+      ...versions[path] ?? []
+    ];
+  }
+  return { ...history, current, versions };
+}
+function thin(versions, now, keepDays, cap = MAX_VERSIONS) {
+  const dropped = [];
+  for (const [path, list] of Object.entries(versions)) {
+    const seen = /* @__PURE__ */ new Set();
+    const kept = [];
+    for (const v of [...list].sort((a, b) => retiredAt(b) - retiredAt(a))) {
+      const at = retiredAt(v);
+      const age = now - at;
+      const bucket = age < DAY ? `h${Math.floor(at / HOUR)}` : `d${Math.floor(at / DAY)}`;
+      const expired = keepDays !== 0 && age > keepDays * DAY;
+      if (expired || seen.has(bucket) || kept.length >= cap) dropped.push(v);
+      else {
+        seen.add(bucket);
+        kept.push(v);
+      }
+    }
+    if (kept.length) versions[path] = kept;
+    else delete versions[path];
+  }
+  return dropped;
+}
+function fit(history, limit = MAX_HISTORY_SIZE) {
+  let size = encode(history).length;
+  if (size <= limit) return [];
+  const all = Object.entries(history.versions).flatMap(([path, list]) => list.map((v) => ({ path, v }))).sort((a, b) => retiredAt(a.v) - retiredAt(b.v));
+  const dropped = [];
+  for (const { path, v } of all) {
+    if (size <= limit) break;
+    size -= encode(v).length + 1;
+    const list = history.versions[path].filter((x) => x !== v);
+    if (list.length) history.versions[path] = list;
+    else {
+      delete history.versions[path];
+      size -= encode(path).length + 3;
+    }
+    dropped.push(v);
+  }
+  if (encode(history).length > limit) throw new SyncError("tooManyFiles");
+  return dropped;
+}
+var blocksOf = (entries, into) => {
+  for (const e of entries) for (const b of e.blocks) into.add(b.hash);
+  return into;
+};
+function unusedBlocks(candidates, next, previous, history) {
+  const used = blocksOf(Object.values(next.files), /* @__PURE__ */ new Set());
+  blocksOf(Object.values(previous.files), used);
+  for (const list of Object.values(history.versions)) blocksOf(list, used);
+  blocksOf((next.trash ?? []).map((t) => t.entry), used);
+  return [...blocksOf(candidates, /* @__PURE__ */ new Set())].filter((h) => !used.has(h));
+}
+
+// development/cloud-sync/src/publish.ts
+async function publish(p) {
+  const { store, remote, next } = p;
+  const changed = !p.raw || JSON.stringify([next.files, next.trash]) !== JSON.stringify([remote.files, remote.trash ?? []]);
+  if (!changed && !p.cleanupDue && !p.keep.chosen) return false;
+  const stored = await store.get(HISTORY);
+  const before = stored ? parseHistory(stored) : emptyHistory();
+  const skipped = before.head && remote.revision && before.head !== remote.revision ? await store.get(snapshotKey(before.head)) : null;
+  let history = skipped ? retire(before, parseManifest(skipped), remote, { at: remote.updatedAt }) : structuredClone(before);
+  if (changed) history = retire(history, remote, next, p.origin);
+  history.keep = p.keep.chosen || !before.keep ? { days: p.keep.days, at: p.origin.at } : before.keep;
+  const dropped = thin(
+    history.versions,
+    Date.parse(p.origin.at),
+    history.keep.days
+  );
+  dropped.push(...fit(history));
+  const keepMoved = JSON.stringify(history.keep) !== JSON.stringify(before.keep);
+  if (!changed && !skipped && !keepMoved && !dropped.length) {
+    await p.onKeep?.(history.keep);
+    return false;
+  }
+  next.revision = crypto.randomUUID();
+  next.updatedAt = p.origin.at;
+  history.previous = remote.revision || void 0;
+  history.head = next.revision;
+  const document = encode(next);
+  if (document.length > MAX_MANIFEST_SIZE) throw new SyncError("tooManyFiles");
+  parseManifest(document);
+  await store.put(snapshotKey(next.revision), document);
+  await p.ownLock();
+  await store.put(HISTORY, encode(history));
+  await p.ownLock();
+  await store.put(HEAD, document);
+  const committed = await store.get(HEAD);
+  if (!committed || await hash(committed) !== await hash(document))
+    throw new SyncError("integrityError");
+  await p.onKeep?.(history.keep);
+  await clean(p, before.previous, dropped, history);
+  return true;
+}
+async function clean(p, stale, dropped, history) {
+  try {
+    const candidates = [...dropped];
+    const old = stale && stale !== p.remote.revision ? await p.store.get(snapshotKey(stale)) : null;
+    if (old) candidates.push(...Object.values(parseManifest(old).files));
+    const unused = unusedBlocks(candidates, p.next, p.remote, history);
+    if (!old && !unused.length) return;
+    await p.ownLock();
+    if (old) await p.store.remove(snapshotKey(stale));
+    for (let i = 0; i < unused.length; i++) {
+      if (i && i % 50 === 0) await p.ownLock();
+      await p.store.remove(blockKey(unused[i]));
+    }
+  } catch {
+  }
 }
 
 // development/cloud-sync/src/engine.ts
@@ -312,7 +511,7 @@ async function synchronize(options) {
       updatedAt: "",
       files: /* @__PURE__ */ Object.create(null)
     };
-    if (!raw && Object.keys(options.base.files).length)
+    if (!raw && (Object.keys(options.base.files).length || Object.keys(options.base.parked ?? {}).length))
       throw new SyncError("remoteMissing");
     progress("scanning", 0, 0);
     const files = await local.scan();
@@ -326,7 +525,22 @@ async function synchronize(options) {
         (t) => Date.parse(t.deletedAt) > cutoff
       )
     };
-    const base = { format: FORMAT, files: { ...options.base.files } };
+    const ours = (from) => Object.fromEntries(
+      Object.entries(from).filter(([path]) => local.wants(path))
+    );
+    const lastSynced = { ...options.base.parked, ...options.base.files };
+    const base = {
+      format: FORMAT,
+      files: Object.fromEntries(
+        Object.entries(lastSynced).filter(
+          ([path]) => local.wants(path) && (path in options.base.files || path in files)
+        )
+      )
+    };
+    const parked = Object.fromEntries(
+      Object.entries(lastSynced).filter(([path]) => !local.wants(path))
+    );
+    if (Object.keys(parked).length) base.parked = parked;
     const known = /* @__PURE__ */ new Set();
     const result = {
       uploaded: 0,
@@ -337,8 +551,14 @@ async function synchronize(options) {
       deferred: [],
       unchanged: 0
     };
-    const actions = plan(files, remote.files, base.files);
-    const names = /* @__PURE__ */ new Map();
+    const ourBase = { ...base.files };
+    const actions = plan(files, ours(remote.files), ourBase);
+    const names = new Map(
+      Object.keys(remote.files).map((p) => [
+        p.normalize("NFC").toLowerCase(),
+        p
+      ])
+    );
     for (const a of actions) {
       const folded = a.path.normalize("NFC").toLowerCase();
       if (names.has(folded) && names.get(folded) !== a.path)
@@ -365,7 +585,7 @@ async function synchronize(options) {
       throw new SyncError("localChanged");
     };
     const done = /* @__PURE__ */ new Set();
-    for (const [to, from] of moves(actions, files, remote.files, base.files)) {
+    for (const [to, from] of moves(actions, files, remote.files, ourBase)) {
       checkAbort(signal);
       await local.check();
       if (!await local.move(from, to, files[from].hash)) continue;
@@ -392,7 +612,6 @@ async function synchronize(options) {
       }
       if (kind === "deleteRemote") {
         delete next.files[path];
-        next.trash.push({ path, deletedAt: now.toISOString(), entry: r });
         delete base.files[path];
         result.removed++;
         continue;
@@ -418,6 +637,23 @@ async function synchronize(options) {
           result.downloaded++;
           continue;
         }
+        if (applied === false && kind === "download" && l) {
+          const gone = await local.remove(path, l.hash);
+          if (gone === "deferred") {
+            result.deferred.push(path);
+            continue;
+          }
+          const placed = gone && await local.apply(path, bytes, null);
+          if (placed === true) {
+            base.files[path] = r.hash;
+            result.downloaded++;
+            continue;
+          }
+          if (gone || isObsidianSetting(path)) {
+            result.deferred.push(path);
+            continue;
+          }
+        }
         await keepRemote(path, r, bytes);
         if (kind === "download" && !l) {
           result.deferred.push(path);
@@ -439,20 +675,17 @@ async function synchronize(options) {
     await ownLock();
     progress("publishing", actions.length, actions.length);
     next.trash = next.trash.slice(-MAX_TRASH);
-    if (!raw || JSON.stringify([next.files, next.trash]) !== JSON.stringify([remote.files, remote.trash ?? []])) {
-      next.revision = crypto.randomUUID();
-      next.updatedAt = (/* @__PURE__ */ new Date()).toISOString();
-      const document = encode(next);
-      if (document.length > MAX_MANIFEST_SIZE)
-        throw new SyncError("tooManyFiles");
-      parseManifest(document);
-      await store.put(`v1/snapshots/${next.revision}.json`, document);
-      await ownLock();
-      await store.put(HEAD, document);
-      const committed = await store.get(HEAD);
-      if (!committed || await hash(committed) !== await hash(document))
-        throw new SyncError("integrityError");
-    }
+    await publish({
+      store,
+      raw,
+      remote,
+      next,
+      origin: { at: (/* @__PURE__ */ new Date()).toISOString(), device: options.device },
+      keep: options.keep,
+      onKeep: options.onKeep,
+      cleanupDue: options.cleanupDue ?? false,
+      ownLock
+    });
     await options.saveBase(base);
     completed = true;
     return result;
@@ -464,6 +697,134 @@ async function synchronize(options) {
       if (completed) throw new SyncError("unlockFailed");
     }
   }
+}
+
+// development/cloud-sync/src/scope.ts
+var PIECE = /(^\*\*\/|\/\*\*\/|\/\*\*$|\*+|\?|\[!?\]?[^\]]*\]|\\.)/u;
+var char = (c) => ({ k: "char", c, low: c.toLowerCase() });
+function stepsOf(part) {
+  if (part === "**/") return [{ k: "dirs" }];
+  if (part === "/**/") return [char("/"), { k: "dirs" }];
+  if (part === "/**") return [char("/"), { k: "all" }];
+  if (/^\*+$/.test(part)) return [{ k: "run" }];
+  if (part === "?") return [{ k: "one" }];
+  if (part.startsWith("\\")) return [char([...part.slice(1)][0])];
+  if (part.length > 2 && part.startsWith("[") && part.endsWith("]")) {
+    const inner = part.slice(1, -1);
+    const not = inner.startsWith("!");
+    const body = (not ? inner.slice(1) : inner).replace(/\\/g, "\\\\").replace(/^\]/, "\\]");
+    return [
+      { k: "class", test: new RegExp(`^[${not ? "^" : ""}${body}]$`, "iu") }
+    ];
+  }
+  return [...part].map(char);
+}
+function matches(steps, path) {
+  const s = [...path];
+  const low = s.map((c) => c.toLowerCase());
+  const n = s.length;
+  let next = new Uint8Array(n + 1);
+  next[n] = 1;
+  for (let j = steps.length - 1; j >= 0; j--) {
+    const step = steps[j];
+    const row2 = new Uint8Array(n + 1);
+    let after = 0;
+    for (let i = n; i >= 0; i--) {
+      const ch = s[i];
+      const one = i < n && ch !== "/";
+      switch (step.k) {
+        case "char":
+          row2[i] = i < n && low[i] === step.low ? next[i + 1] : 0;
+          break;
+        case "one":
+          row2[i] = one ? next[i + 1] : 0;
+          break;
+        case "class":
+          row2[i] = one && step.test.test(ch) ? next[i + 1] : 0;
+          break;
+        case "run":
+          row2[i] = next[i] || (one ? row2[i + 1] : 0);
+          break;
+        case "all":
+          row2[i] = next[i] || (i < n ? row2[i + 1] : 0);
+          break;
+        case "dirs":
+          after = i < n && (ch === "/" && next[i + 1] || after) ? 1 : 0;
+          row2[i] = next[i] || after;
+          break;
+      }
+    }
+    next = row2;
+  }
+  return next[0] === 1;
+}
+function patternTest(pattern) {
+  const anchored = pattern.replace(/\/$/, "").includes("/");
+  const steps = pattern.replace(/(^|\/)(?:\*\*\/){2,}/g, "$1**/").replace(/(?:\/\*\*)+(?=\/|$)/g, "/**").replace(/^\//, "").replace(/\/$/, "").split(PIECE).filter(Boolean).flatMap(stepsOf);
+  const all = anchored ? steps : [{ k: "dirs" }, ...steps];
+  const open = all.filter(
+    (st) => st.k === "run" || st.k === "all" || st.k === "dirs"
+  );
+  if (open.length > 2) return { test: (path) => matches(all, path) };
+  const re = new RegExp(`^${all.map(stepSource).join("")}$`, "isu");
+  return { test: (path) => re.test(path) };
+}
+function stepSource(step) {
+  switch (step.k) {
+    case "char":
+      return step.c.replace(/[.*+?^${}()|[\]\\/]/g, "\\$&");
+    case "one":
+      return "[^/]";
+    case "run":
+      return "[^/]*";
+    case "all":
+      return ".*";
+    case "dirs":
+      return "(?:.*/)?";
+    case "class":
+      return `(?=[^/])${step.test.source.slice(1, -1)}`;
+  }
+}
+var RULES_CAP = 4e4;
+var RULE_COUNT_CAP = 1e3;
+var LINE_CAP = 256;
+function readRules(text) {
+  return text.slice(0, RULES_CAP).split(/\r?\n/).flatMap((raw) => {
+    const line = raw.replace(/(?<!\\)\s+$/, "").replace(/\\ $/, " ");
+    if (!line || line.startsWith("#")) return [];
+    const negate = line.startsWith("!");
+    const pattern = negate ? line.slice(1) : line;
+    if (!pattern || pattern === "/" || pattern.length > LINE_CAP) return [];
+    try {
+      const test = patternTest(pattern);
+      return [{ test, negate, dirOnly: pattern.endsWith("/") }];
+    } catch {
+      return [];
+    }
+  }).slice(0, RULE_COUNT_CAP);
+}
+function ruledOut(rules, path, dir) {
+  const parts = path.split("/");
+  for (let i = 1; i <= parts.length; i++) {
+    const at = parts.slice(0, i).join("/");
+    const isDir = i < parts.length || dir;
+    let out = false;
+    for (const rule of rules)
+      if ((!rule.dirOnly || isDir) && rule.test.test(at)) out = !rule.negate;
+    if (out) return true;
+  }
+  return false;
+}
+function scopeOf(config, gitignore = "") {
+  const rules = [
+    ...config.gitignore ? readRules(gitignore) : [],
+    ...readRules(config.exclude)
+  ];
+  return {
+    wants: (path) => inScope(path) && (config.obsidian || !isObsidianSetting(path)) && !ruledOut(rules, path, false),
+    enters: (dir) => descend(dir) && !ruledOut(rules, dir, true),
+    obsidian: config.obsidian
+  };
 }
 
 // development/cloud-sync/src/encryption.ts
@@ -633,7 +994,7 @@ async function unlockEncryption(raw, password, pin) {
   return { cipher, metadata, fingerprint };
 }
 
-// node_modules/aws4fetch/dist/aws4fetch.esm.mjs
+// ../textus-plugins/node_modules/aws4fetch/dist/aws4fetch.esm.mjs
 /**
  * @license MIT <https://opensource.org/licenses/MIT>
  * @copyright Michael Hart 2024
@@ -1043,8 +1404,8 @@ async function testConnection(store) {
     if (!created) throw new SyncError("unsafeServer");
     if (await store.create(key, new Uint8Array([9])))
       throw new SyncError("unsafeServer");
-    const read = await store.get(key);
-    if (!read || await hash(read) !== await hash(original))
+    const read2 = await store.get(key);
+    if (!read2 || await hash(read2) !== await hash(original))
       throw new SyncError("unsafeServer");
   } finally {
     if (created) await store.remove(key);
@@ -1068,6 +1429,7 @@ var EncryptedStore = class {
   async physical(key) {
     if (key === LOCK) return LOCK;
     if (key === HEAD) return ENCRYPTED_HEAD;
+    if (key === HISTORY) return "v2/history.bin";
     if (/^v1\/blocks\/[a-f0-9]{2}\/[a-f0-9]{64}$/.test(key)) {
       const id = await this.cipher.name(key);
       return `v2/blocks/${id.slice(0, 2)}/${id}`;
@@ -1154,6 +1516,20 @@ async function openEncryptedStore(raw, password, options = {}) {
   }
 }
 
+// development/cloud-sync/src/plain-store.ts
+async function openPlainStore(raw) {
+  const head = await raw.get(HEAD);
+  let format;
+  try {
+    format = head && JSON.parse(new TextDecoder().decode(head))?.format;
+  } catch {
+    format = void 0;
+  }
+  if (format === ENCRYPTION_FORMAT || await raw.has(ENCRYPTED_HEAD))
+    throw new SyncError("remoteEncrypted");
+  return raw;
+}
+
 // development/cloud-sync/src/reservations.ts
 var Reservations = class {
   constructor(storage, root) {
@@ -1198,15 +1574,25 @@ var Reservations = class {
 };
 
 // development/cloud-sync/src/local.ts
+var described = /* @__PURE__ */ new Map();
+var SETTLED_MS = 2e3;
 var Workspace = class {
-  constructor(api, root, storage, signal) {
+  constructor(api, root, storage, signal, scope = scopeOf({
+    exclude: "",
+    gitignore: false,
+    obsidian: false
+  })) {
     this.api = api;
     this.root = root;
     this.signal = signal;
+    this.scope = scope;
     __publicField(this, "reservations");
     /** Paths this run trashed or renamed, so their file events start no new sync. */
     __publicField(this, "touched", /* @__PURE__ */ new Set());
     this.reservations = new Reservations(storage, root);
+  }
+  wants(path) {
+    return this.scope.wants(path);
   }
   async check() {
     checkAbort(this.signal);
@@ -1277,9 +1663,26 @@ var Workspace = class {
   async scan() {
     const files = /* @__PURE__ */ Object.create(null);
     let visits = 0;
-    const add = async (rel) => {
+    const known = described.get(this.root) ?? /* @__PURE__ */ new Map();
+    const seen = /* @__PURE__ */ new Map();
+    const add = async (rel, stat) => {
+      const was = known.get(rel);
+      const at = stat?.modifiedMs;
+      if (was && stat && at != null && was.size === stat.size && was.modifiedMs === at && at < was.at - SETTLED_MS && !await this.reservations.get(rel)) {
+        files[rel] = was.entry;
+        seen.set(rel, was);
+        return;
+      }
       const bytes = await this.read(rel);
-      if (bytes) files[rel] = await describe(bytes);
+      if (!bytes) return;
+      files[rel] = await describe(bytes);
+      if (stat && at != null)
+        seen.set(rel, {
+          size: stat.size,
+          modifiedMs: at,
+          at: Date.now(),
+          entry: files[rel]
+        });
     };
     const walk = async (relative = "") => {
       await this.check();
@@ -1289,23 +1692,32 @@ var Workspace = class {
       for (const entry of await this.api.files.list(dir)) {
         const rel = relative ? `${relative}/${entry.name}` : entry.name;
         if (entry.isDir) {
-          if (descend(rel) || /^\.textus\/(library|memory|skills)(\/|$)/.test(rel))
+          if (this.scope.enters(rel) || /^\.textus\/(library|memory|skills)(\/|$)/.test(rel))
             await walk(rel);
-        } else if (inScope(rel)) {
+        } else if (this.scope.wants(rel)) {
           if (++visits > MAX_FILES) throw new SyncError("tooManyFiles");
-          await add(rel);
+          await add(rel, entry);
         }
       }
     };
     await walk();
     for (const name of ["agent.md", "style.md", "style.previous.md"]) {
       const rel = `.textus/${name}`;
-      if (await this.api.files.stat(this.path(rel))) await add(rel);
+      const stat = await this.api.files.stat(this.path(rel));
+      if (stat) await add(rel, stat);
     }
+    if (this.scope.obsidian)
+      for (const name of OBSIDIAN_SETTINGS) {
+        const rel = `.obsidian/${name}`;
+        if (!this.scope.wants(rel)) continue;
+        const stat = await this.api.files.stat(this.path(rel));
+        if (stat && !stat.isDir) await add(rel, stat);
+      }
     for (const name of ["library", "memory", "skills"]) {
       if ((await this.api.files.stat(`${this.root}/.textus/${name}`))?.isDir)
         await walk(`.textus/${name}`);
     }
+    described.set(this.root, seen);
     return files;
   }
   async holds(relative, expected) {
@@ -1446,7 +1858,9 @@ var Settings = class {
     const raw = await this.ctx.storage.global.get(
       `config:${await this.scope(root)}`
     );
-    return raw ? normalizeConfig(raw) : { ...defaults };
+    if (!raw) return { ...defaults };
+    const saved = raw;
+    return normalizeConfig({ ...saved, encrypt: saved.encrypt ?? true });
   }
   async secretKey(root, config) {
     return `connection:${await hash(new TextEncoder().encode(root + identity(config)))}`;
@@ -1464,13 +1878,20 @@ var Settings = class {
       throw new SyncError("credentialsRequired");
     }
   }
+  /** The sync password, for an encrypted folder only. */
   async password(root, config) {
+    if (!config.encrypt) return "";
     const password = (await this.credentials(root, config)).syncPassword ?? "";
     validatePassword(password);
     return password;
   }
   async save(root, input, incoming) {
     const config = normalizeConfig(input);
+    const before = await this.load(root).catch(() => null);
+    if (!config.keepPending && before) {
+      config.keepDays = before.keepDays;
+      config.keepPending = before.keepPending;
+    }
     const key = await this.secretKey(root, config);
     let previous = { account: "", secret: "" };
     try {
@@ -1483,12 +1904,14 @@ var Settings = class {
     if (account !== previous.account && !incoming.secret)
       throw new SyncError("credentialsRequired");
     const syncPassword = String(incoming.syncPassword ?? "") || previous.syncPassword || "";
-    validatePassword(syncPassword);
-    if ((incoming.syncPassword || incoming.confirmPassword) && incoming.syncPassword !== incoming.confirmPassword)
-      throw new SyncError("syncPasswordMismatch");
     const sessionToken = String(incoming.sessionToken ?? "") || (incoming.secret ? "" : previous.sessionToken);
-    if ([account, secret, sessionToken].includes(syncPassword))
-      throw new SyncError("syncPasswordSeparate");
+    if (config.encrypt) {
+      validatePassword(syncPassword);
+      if ((incoming.syncPassword || incoming.confirmPassword) && incoming.syncPassword !== incoming.confirmPassword)
+        throw new SyncError("syncPasswordMismatch");
+      if ([account, secret, sessionToken].includes(syncPassword))
+        throw new SyncError("syncPasswordSeparate");
+    }
     await this.ctx.secrets.set(
       key,
       JSON.stringify({
@@ -1503,6 +1926,17 @@ var Settings = class {
       config
     );
     return config;
+  }
+  /** The folder's keep setting, as a sync left it, taken as this one's. */
+  async adoptKeep(root, keep) {
+    const key = `config:${await this.scope(root)}`;
+    const saved = await this.ctx.storage.global.get(key);
+    if (!saved) return;
+    await this.ctx.storage.global.set(key, {
+      ...saved,
+      keepDays: keep.days,
+      keepPending: false
+    });
   }
   async baseKey(root, config) {
     const { account } = await this.credentials(root, config);
@@ -1530,6 +1964,128 @@ function statusText(s, now, t, language) {
     unit[0]
   );
   return t("statusSynced", when);
+}
+
+// development/cloud-sync/src/history-host.ts
+var LABELS = {
+  macos: "Mac",
+  windows: "Windows",
+  linux: "Linux"
+};
+async function deviceName(ctx, api) {
+  const saved = await ctx.storage.global.get("device");
+  if (typeof saved === "string") return saved;
+  const name = `${LABELS[api.env.platform] ?? api.env.platform} ${crypto.randomUUID().slice(0, 4)}`;
+  await ctx.storage.global.set("device", name);
+  return name;
+}
+var beside = (path, tag) => {
+  const dot = path.lastIndexOf(".");
+  const cut = dot > path.lastIndexOf("/") + 1 ? dot : path.length;
+  return `${path.slice(0, cut)} (${tag.slice(0, 8)})${path.slice(cut)}`;
+};
+async function restoreInto(local, store, { path, version }) {
+  const bytes = await download(store, version);
+  const current = await local.read(path);
+  const now = current ? await hash(current) : null;
+  const head = await store.get(HEAD);
+  const synced = head ? parseManifest(head).files[path]?.hash : void 0;
+  if (now === (synced ?? null) && await local.apply(path, bytes, now) === true)
+    return;
+  for (const tag of [version.hash, crypto.randomUUID()]) {
+    if (await local.apply(beside(path, tag), bytes, null) === true) return;
+  }
+  throw new SyncError("localWriteError", [path]);
+}
+async function read(store) {
+  const head = await store.get(HEAD);
+  const stored = await store.get(HISTORY);
+  return {
+    files: head ? parseManifest(head).files : {},
+    history: stored ? parseHistory(stored) : emptyHistory()
+  };
+}
+var row = (v) => ({
+  hash: v.hash,
+  size: v.size,
+  at: v.at,
+  until: v.until,
+  device: v.device ?? ""
+});
+function registerHistory(api, source) {
+  const relative = (root, path) => path.startsWith(root) ? path.slice(root.length).replace(/^[/\\]/, "") : path;
+  async function list(path) {
+    const { files, history } = await read((await source.remote()).store);
+    if (path)
+      return {
+        path,
+        current: files[path] ? { size: files[path].size, ...history.current[path] } : null,
+        versions: (history.versions[path] ?? []).map(row)
+      };
+    const deleted = Object.entries(history.versions).filter(([p]) => !files[p]).map(([p, list2]) => ({ path: p, ...row(list2[0]) })).sort((a, b) => retiredAt(b) - retiredAt(a));
+    return { path: null, deleted };
+  }
+  async function version(path, wanted) {
+    const { store } = await source.remote();
+    const { history } = await read(store);
+    const v = history.versions[path]?.find((x) => x.hash === wanted);
+    if (!v) throw new SyncError("versionGone");
+    return { store, v };
+  }
+  async function preview(path, wanted) {
+    const { store, v } = await version(path, wanted);
+    if (v.size > 512 * 1024) return { binary: true };
+    try {
+      const text = new TextDecoder("utf-8", { fatal: true }).decode(
+        await download(store, v)
+      );
+      return { text };
+    } catch {
+      return { binary: true };
+    }
+  }
+  const resolve = (view, state) => {
+    const path = state?.path?.replace(/\\/g, "/") ?? null;
+    const reply = (m) => void view.postMessage(m).catch(() => {
+    });
+    view.onDidReceiveMessage(async (raw) => {
+      const m = raw;
+      try {
+        if (m.type === "ready" || m.type === "open")
+          reply({ type: "list", ...await list(m.path ?? path) });
+        else if (m.type === "preview" && m.path && m.hash)
+          reply({ type: "preview", hash: m.hash, ...await preview(m.path, m.hash) });
+        else if (m.type === "restore" && m.path && m.hash) {
+          const { v } = await version(m.path, m.hash);
+          const failed = await source.operation("sync", {
+            path: m.path,
+            version: v
+          });
+          if (failed) throw new SyncError(failed);
+          reply({ type: "restored", path: m.path });
+        }
+      } catch (e) {
+        const code = e instanceof SyncError ? e.code : "unknownError";
+        reply({ type: "error", message: api.l10n.t(code) });
+      }
+    });
+    return source.page("history.html").then((html) => {
+      view.html = html;
+    });
+  };
+  return [
+    api.views.registerWebview(`${ID}.history`, {
+      resolve: (view, context) => resolve(view, context?.state)
+    }),
+    api.commands.register(`${ID}.history`, async (path) => {
+      const root = await api.files.root();
+      const rel = typeof path === "string" && root ? relative(root, path) : null;
+      await api.layout.openView(`${ID}.history`, {
+        title: rel ? api.l10n.t("historyOf", rel.split("/").pop()) : api.l10n.t("deletedFiles"),
+        state: { path: rel }
+      });
+    })
+  ];
 }
 
 // development/cloud-sync/src/host.ts
@@ -1562,6 +2118,7 @@ var Controller = class {
       progress: null
     });
     __publicField(this, "t", (key, ...args) => this.api.l10n.t(key, ...args));
+    __publicField(this, "page", (name) => this.ctx.plugin.readText(name));
     this.settings = new Settings(ctx);
   }
   send(view, message) {
@@ -1596,6 +2153,7 @@ var Controller = class {
     const e = error instanceof SyncError ? error : new SyncError("unknownError");
     this.message(e.code, true, ...e.args);
     this.ctx.log.warn(e.code);
+    return e.code;
   }
   async refresh() {
     const root = await this.api.files.root();
@@ -1673,8 +2231,42 @@ var Controller = class {
     await store.remove(LOCK);
     this.message("unlocked");
   }
-  async operation(kind) {
-    if (this.state.busy || this.disposed) return;
+  /** The remote folder, opened plain or encrypted as the folder is set up. */
+  async open(root, config, store, { test = false, quiet = false } = {}) {
+    const key = await this.settings.baseKey(root, config);
+    const pin = await this.ctx.storage.global.get(`vault:${key}`);
+    if (pin != null && (typeof pin !== "string" || !/^[a-f0-9]{64}$/.test(pin)))
+      throw new SyncError("invalidBase");
+    let opened;
+    if (config.encrypt) {
+      if (!quiet) this.message("unlockingEncryption");
+      const encrypted = await openEncryptedStore(
+        store,
+        await this.settings.password(root, config),
+        {
+          pin,
+          signal: this.abort?.signal
+        }
+      );
+      await this.ctx.storage.global.set(
+        `vault:${key}`,
+        encrypted.fingerprint
+      );
+      opened = encrypted;
+    } else opened = await openPlainStore(store);
+    if (test || !this.tested.has(key)) await testConnection(opened);
+    this.tested.add(key);
+    checkAbort(this.abort?.signal);
+    return { key, opened };
+  }
+  /** The remote folder as the history page reads it. */
+  async remote() {
+    const { root, config, store } = await this.store();
+    return { root, store: (await this.open(root, config, store, { quiet: true })).opened };
+  }
+  /** Runs one operation; resolves to its error's code, null when it went well. */
+  async operation(kind, restore) {
+    if (this.state.busy || this.disposed) return "busy";
     this.state.busy = true;
     this.state.progress = null;
     this.abort = new AbortController();
@@ -1683,41 +2275,43 @@ var Controller = class {
       const { root, config, store } = await this.store();
       if (kind === "unlock") {
         await this.recover(store);
-        return;
+        return null;
       }
-      const key = await this.settings.baseKey(root, config);
-      const pin = await this.ctx.storage.global.get(`vault:${key}`);
-      if (pin != null && (typeof pin !== "string" || !/^[a-f0-9]{64}$/.test(pin)))
-        throw new SyncError("invalidBase");
-      this.message("unlockingEncryption");
-      const encrypted = await openEncryptedStore(
-        store,
-        await this.settings.password(root, config),
-        {
-          pin,
-          signal: this.abort.signal
-        }
-      );
-      await this.ctx.storage.global.set(`vault:${key}`, encrypted.fingerprint);
-      if (kind === "test" || !this.tested.has(key))
-        await testConnection(encrypted);
-      this.tested.add(key);
-      checkAbort(this.abort.signal);
+      const { key, opened } = await this.open(root, config, store, {
+        test: kind === "test"
+      });
       if (kind === "test") {
         this.message("tested");
-        return;
+        return null;
       }
       const base = parseBase(await this.ctx.storage.global.get(key));
       this.pacer.started();
+      const gitignore = config.gitignore ? await this.api.files.read(`${root.replace(/[/\\]$/, "")}/.gitignore`).then((bytes) => new TextDecoder().decode(bytes)).catch(async (err) => {
+        if (await this.api.files.stat(`${root.replace(/[/\\]$/, "")}/.gitignore`).catch(() => true))
+          throw err;
+        return "";
+      }) : "";
       this.workspace = new Workspace(
         this.api,
         root,
         this.ctx.storage.global,
-        this.abort.signal
+        this.abort.signal,
+        scopeOf(config, gitignore)
       );
+      if (restore) await restoreInto(this.workspace, opened, restore);
+      const cleaned = `cleaned:${key}`;
+      const cleanupDue = Date.now() - Number(await this.ctx.storage.global.get(cleaned) ?? 0) > 864e5;
       const result = await synchronize({
-        store: encrypted,
+        store: opened,
         local: this.workspace,
+        keep: { days: config.keepDays, chosen: !!config.keepPending },
+        // The folder's setting, once published, is this device's too.
+        onKeep: async (keep) => {
+          if (keep.days === config.keepDays && !config.keepPending) return;
+          await this.settings.adoptKeep(root, keep);
+        },
+        device: await deviceName(this.ctx, this.api),
+        cleanupDue,
         base,
         signal: this.abort.signal,
         saveBase: (next) => this.ctx.storage.global.set(key, next),
@@ -1728,9 +2322,10 @@ var Controller = class {
       });
       const at = (/* @__PURE__ */ new Date()).toISOString();
       await this.ctx.storage.global.set(`last:${key}`, { at, result });
+      if (cleanupDue) await this.ctx.storage.global.set(cleaned, Date.now());
       if (await this.api.files.root() !== root) {
         await this.refresh();
-        return;
+        return null;
       }
       this.state.result = result;
       this.state.lastRun = at;
@@ -1745,8 +2340,9 @@ var Controller = class {
       if (parts.length)
         this.message("done", false, parts.join(this.t("listSeparator")));
       else this.message("unchanged");
+      return null;
     } catch (error) {
-      this.fail(error);
+      return this.fail(error);
     } finally {
       this.state.busy = false;
       this.state.progress = null;
@@ -1829,6 +2425,7 @@ var Controller = class {
       api.views.registerSettingsPage({
         resolve: (view) => this.resolve(view, "settings")
       }),
+      ...registerHistory(api, this),
       api.files.onDidSave(() => this.pacer.saved()),
       api.files.onDidDelete(({ path }) => this.changed(path)),
       api.files.onDidRename(({ from }) => this.changed(from)),

@@ -36,7 +36,7 @@ kanban-plugin: board
 
 ## 更新紀錄
 
-- **0.4.8** - 商店簡介改為開頭一句就說明外掛做什麼。
+- **0.4.8** - 使用 Windows（CRLF）換行的看板會保留換行方式；編輯時看板在別處被修改，會顯示那次修改，不再覆蓋它。商店簡介改為開頭一句就說明外掛做什麼。
 - **0.4.7** - 卡片裡的空行不再把卡片拆開，按 Esc 也不會留下空白卡片。AI 不再更動一般筆記，看板在窄面板裡也放得下。
 - **0.4.6** - 列表超出視窗時，看板兩邊漸隱。
 - **0.4.5** - A dragged card or list stays right under the pointer and lifts like everything dragged in Textus. Its bars, lists and controls are Textus's own, grow with the interface and follow every theme; needs Textus 1.3.12.

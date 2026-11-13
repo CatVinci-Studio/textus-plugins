@@ -1,5 +1,12 @@
 "use strict";
 (() => {
+  // development/cloud-sync/src/model.ts
+  var CHUNK_SIZE = 2 * 1024 * 1024;
+  var MAX_FILE_SIZE = 128 * 1024 * 1024;
+  var MAX_MANIFEST_SIZE = 8 * 1024 * 1024;
+  var MAX_HISTORY_SIZE = 8 * 1024 * 1024;
+  var KEEP_DAYS = [30, 90, 365, 0];
+
   // development/cloud-sync/src/panel.ts
   var api = acquireTextusApi();
   var element = (id) => document.getElementById(id);
@@ -46,8 +53,28 @@
     dirty = true;
     toggles();
   };
+  var KEEP = KEEP_DAYS.map(String);
+  var keepLabel = (days) => days === "0" ? api.t("keepForever") : api.t("keepDays", days);
+  var keepPick = element("keep-pick");
+  var keepPicked = false;
+  keepPick.onclick = async () => {
+    const now = input("keepDays").value;
+    const chosen = await api.menu(
+      KEEP.map((d) => ({ label: keepLabel(d), value: d, checked: d === now })),
+      keepPick
+    );
+    if (typeof chosen !== "string" || chosen === now) return;
+    input("keepDays").value = chosen;
+    keepPicked = true;
+    dirty = true;
+    toggles();
+  };
   function toggles() {
     const provider = input("provider").value;
+    element("keep-name").textContent = keepLabel(input("keepDays").value);
+    const encrypt = input("encrypt").checked;
+    element("password-field").hidden = !encrypt;
+    element("confirm-field").hidden = !encrypt;
     element("provider-name").textContent = api.t(provider);
     element("bucket-field").hidden = provider !== "s3";
     element("s3-more").hidden = provider !== "s3";
@@ -61,21 +88,33 @@
       input("endpoint").value = "https://dav.jianguoyun.com/dav";
     input("bucket").required = provider === "s3";
     element("interval-field").hidden = !input("automatic").checked;
+    for (const id of ["password-field", "confirm-field", "interval-field"])
+      for (const field of element(id).querySelectorAll("input"))
+        field.disabled = element(id).hidden;
     for (const id of buttons)
       element(id).disabled = busy || !root || !configured || dirty;
     document.body.dataset.ready = String(!!root && configured);
   }
   function fill(config) {
+    keepPicked = false;
     for (const id of [
       "provider",
       "endpoint",
       "region",
       "bucket",
       "prefix",
-      "interval"
+      "interval",
+      "keepDays"
     ])
       input(id).value = String(config[id]);
-    for (const id of ["pathStyle", "automatic"])
+    element("exclude").value = config.exclude;
+    for (const id of [
+      "pathStyle",
+      "automatic",
+      "gitignore",
+      "obsidian",
+      "encrypt"
+    ])
       input(id).checked = config[id];
     toggles();
   }
@@ -90,6 +129,7 @@
   function save() {
     if (busy) return;
     if (!element("connection").reportValidity()) return;
+    const encrypt = input("encrypt").checked;
     const config = {
       provider: input("provider").value,
       endpoint: input("endpoint").value,
@@ -98,7 +138,13 @@
       prefix: input("prefix").value,
       pathStyle: input("pathStyle").checked,
       automatic: input("automatic").checked,
-      interval: Number(input("interval").value)
+      interval: input("automatic").checked ? Number(input("interval").value) : Math.min(Math.max(Number(input("interval").value) || 5, 5), 1440),
+      exclude: element("exclude").value,
+      gitignore: input("gitignore").checked,
+      obsidian: input("obsidian").checked,
+      encrypt,
+      keepDays: Number(input("keepDays").value),
+      keepPending: keepPicked
     };
     api.postMessage({
       type: "save",
@@ -107,8 +153,8 @@
         account: input("account").value,
         secret: input("secret").value,
         sessionToken: input("token").value,
-        syncPassword: input("sync-password").value,
-        confirmPassword: input("confirm-password").value
+        syncPassword: encrypt ? input("sync-password").value : "",
+        confirmPassword: encrypt ? input("confirm-password").value : ""
       }
     });
   }

@@ -183,10 +183,13 @@ exports.activate = function (context) {
         known = text;
         webview.postMessage({ type: "file", text: text });
       };
-      const watching = textus.files.onDidChange(function (e) {
-        if (e.path === document.path) send().catch(() => {});
-      });
-      webview.onDidDispose(() => watching.dispose());
+      // Written by a plugin, or saved in a tab as Markdown.
+      const watching = [textus.files.onDidChange, textus.files.onDidSave].map((on) =>
+        on(function (e) {
+          if (e && e.path === document.path) send().catch(() => {});
+        }),
+      );
+      webview.onDidDispose(() => watching.forEach((w) => w.dispose()));
       webview.onDidReceiveMessage(async function (message) {
         if (message.type === "ready") {
           known = null;
@@ -194,6 +197,14 @@ exports.activate = function (context) {
         }
         if (message.type === "save") {
           try {
+            // Changed elsewhere since the board last showed it: the board
+            // gets the newer text, which isn't written over.
+            const now = await document.readText();
+            if (known !== null && now !== known) {
+              known = now;
+              webview.postMessage({ type: "file", text: now, refused: true });
+              return;
+            }
             known = message.text;
             await document.writeText(message.text);
             webview.postMessage({ type: "saved" });

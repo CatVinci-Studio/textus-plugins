@@ -66,6 +66,8 @@
   "catvinci.cjk-spacing/lib/markdown-keep.js": "./shared/markdown-keep.js",
   "catvinci.markdown-lint/lib/markdown-keep.js": "./shared/markdown-keep.js",
   "catvinci.tasks/lib/text-lines.js": "./shared/text-lines.js",
+  "catvinci.tasks/lib/markdown-keep.js": "./shared/markdown-keep.js",
+  "catvinci.backlinks/lib/markdown-keep.js": "./shared/markdown-keep.js",
   "catvinci.backlinks/lib/text-lines.js": "./shared/text-lines.js",
   "catvinci.templates/lib/conventions.js": "./shared/conventions.js",
   "catvinci.daily-notes/lib/conventions.js": "./shared/conventions.js",

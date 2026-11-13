@@ -5,8 +5,10 @@ import {
   type Entry,
   type LocalFiles,
   type ObjectStore,
+  type KeepChoice,
+  type KeepDays,
 } from "./model";
-import { synchronize } from "./engine";
+import { synchronize, type Options } from "./engine";
 
 export const bytes = (text: string) => new TextEncoder().encode(text);
 export const text = (value: Uint8Array | null | undefined) =>
@@ -40,13 +42,19 @@ export class MemoryLocal implements LocalFiles {
   trashed: [string, Uint8Array][] = [];
   base: Base = emptyBase();
   beforeApply?: () => void;
+  /** What this device leaves out, as the user's rules would. */
+  leaves = (_path: string) => false;
+  wants(path: string) {
+    return !this.leaves(path);
+  }
   constructor(files: Record<string, string> = {}) {
     for (const [p, t] of Object.entries(files)) this.files.set(p, bytes(t));
   }
   async check() {}
   async scan() {
     const entries: Record<string, Entry> = {};
-    for (const [p, value] of this.files) entries[p] = await describe(value);
+    for (const [p, value] of this.files)
+      if (this.wants(p)) entries[p] = await describe(value);
     return entries;
   }
   async read(path: string) {
@@ -85,15 +93,27 @@ export class MemoryLocal implements LocalFiles {
     this.files.delete(from);
     return true;
   }
-  async sync(store: ObjectStore, signal?: AbortSignal) {
+  async sync(
+    store: ObjectStore,
+    signal?: AbortSignal,
+    extra: Partial<Options> = {},
+  ) {
     return synchronize({
       local: this,
       store,
       base: this.base,
       signal,
+      keep: keep(90),
+      ...extra,
       saveBase: async (base) => {
         this.base = base;
       },
     });
   }
 }
+
+/** A keep setting; `chosen`: just picked on this device. */
+export const keep = (days: KeepDays, chosen = false): KeepChoice => ({
+  days,
+  chosen,
+});

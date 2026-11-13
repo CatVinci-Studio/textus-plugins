@@ -8,9 +8,23 @@ const t = (key, ...args) => textus.l10n.t(key, ...args);
 const views = new Set();
 
 let marp = null;
+/** The deck, needing nothing from the web: emoji as text, KaTeX in the
+ *  system's fonts, and no theme font from a font service. */
 function render(markdown) {
-  marp = marp || new Marp({ html: false, math: "katex", script: false });
-  return marp.render(markdown || "");
+  marp =
+    marp ||
+    new Marp({
+      html: false,
+      script: false,
+      emoji: { shortcode: true, unicode: false },
+      math: { lib: "katex", katexFontPath: false },
+    });
+  const out = marp.render(markdown || "");
+  out.css = out.css.replace(
+    /@import\s+(?:url\(\s*)?(["'])https?:[^"']*\1\s*\)?[^;]*;|@import\s+url\(\s*https?:[^)]*\)[^;]*;/g,
+    "",
+  );
+  return out;
 }
 
 const { slash, native } = folderPaths;

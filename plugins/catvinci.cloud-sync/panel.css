@@ -43,6 +43,12 @@ form + .tx-group-title {
   flex-direction: column;
   gap: 2px;
 }
+/* A long line under the name wraps beside the control, as the app's rows do,
+   instead of pushing the control onto a line of its own. */
+.tx-row:not(.stack) > .row-text > .hint {
+  contain: inline-size;
+  min-width: 18ch;
+}
 .tx-row > label,
 .row-text > label {
   color: var(--ui-text);
@@ -60,7 +66,17 @@ form + .tx-group-title {
 .tx-row.start {
   justify-content: flex-start;
 }
-#provider-pick {
+/* A field too wide for the row's end (the rules left out): under its name. */
+.tx-row.stack {
+  flex-direction: column;
+  align-items: stretch;
+}
+.tx-row.stack > textarea {
+  resize: vertical;
+  font-family: var(--font-mono);
+}
+#provider-pick,
+#keep-pick {
   justify-content: space-between;
 }
 #provider-name {
@@ -208,4 +224,17 @@ body[data-place="sidebar"] #results,
 body[data-place="sidebar"] #progress {
   align-self: stretch;
   text-align: start;
+}
+/* The history page: a version's text below its list. */
+pre.preview {
+  margin: var(--space-4) 0 0;
+  padding: var(--space-4);
+  border: 1px solid var(--ui-border);
+  border-radius: var(--shape-m);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  font-family: var(--font-mono);
+  font-size: var(--text-footnote);
+  max-height: 60vh;
+  overflow-y: auto;
 }

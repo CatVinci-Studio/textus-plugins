@@ -16,6 +16,7 @@ Garde chaque enregistrement d’un document comme une version, pour voir ce qui 
 
 ## Changements
 
+- **0.3.7** - Le texte d'un document avant son premier enregistrement est lui aussi gardé comme version, et les versions suivent le document quand il est renommé ou déplacé.
 - **0.3.6** - L'enregistrement automatique pendant la saisie n'écrit que la version la plus récente, et non toutes les versions du document : les longs documents s'enregistrent avec bien moins de travail.
 - **0.3.5** - Une version ouverte reste ouverte quand l’enregistrement automatique la met à jour, et Restaurer la retrouve toujours. Quand le stockage est plein, les anciennes versions des autres documents font de la place, et le panneau prévient si un enregistrement n’a pas pu être gardé. Les lignes s’utilisent au clavier ; les boutons passent à la ligne dans une barre latérale étroite.
 - **0.3.4** - Dans la barre latérale, le panneau n’affiche plus son propre titre, comme les autres onglets. Textes d'aide et d'état vide plus courts. Son panneau latéral et sa page suivent la mise en page de Textus 1.3.13.
