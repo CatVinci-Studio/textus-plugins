@@ -32,6 +32,7 @@ const DEFAULTS = {
   search: "",
   tags: false,
   existingOnly: false,
+  attachments: false,
   orphans: true,
   groups: [],
 };
@@ -218,7 +219,13 @@ exports.activate = function (context) {
   textus.files.onDidChange(function (event) {
     if (/[\\/]\.obsidian[\\/]graph\.json$/.test(event.path)) changed();
   });
-  textus.editor.onDidChangeActive(sendAll);
+  // Another document in front: the whole graph only marks it; the local
+  // one is the new document's.
+  textus.editor.onDidChangeActive(async function () {
+    const focus = await focusPath().catch(() => null);
+    for (const view of views) view.postMessage({ type: "focus", focus: focus });
+    sendLocal().catch(() => {});
+  });
   textus.commands.register("catvinci.graph.open", function () {
     return textus.layout.openView("catvinci.graph.global");
   });

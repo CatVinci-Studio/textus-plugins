@@ -16,6 +16,7 @@ Keeps each save of a document as a version, so you can see what changed and brin
 
 ## Changes
 
+- **0.3.6** - Autosave while you type writes only the newest version, not every version of the document, so long documents save with much less work.
 - **0.3.5** - An open version stays open while autosave updates it, and Restore always finds it. When storage is full, older versions of other documents make room, and the panel says when a save couldn't be kept. Rows work from the keyboard; buttons wrap in a narrow sidebar.
 - **0.3.4** - In the sidebar the panel draws no title of its own, as the sidebar's other tabs. Shorter help and empty-state text. Its sidebar panel and page follow Textus 1.3.13's layout.
 - **0.3.3** - Its bars, lists and controls are Textus's own, grow with the interface and follow every theme; needs Textus 1.3.12.

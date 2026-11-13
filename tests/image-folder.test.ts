@@ -56,6 +56,8 @@ function setup(
   let renamed: ((e: { from: string; to: string }) => Promise<void>) | null =
     null;
   const rel = (p: string) => p.slice("/root/".length);
+  let changed: (() => void) | null = null;
+  const text = { now: blockText, reads: 0 };
   loadPlugin("catvinci.image-folder", {
     files: {
       ...f,
@@ -80,10 +82,12 @@ function setup(
     },
     editor: {
       getPath: async () => doc,
-      getBlocks: async () => [
-        { id: "b1", kind: "paragraph", markdown: blockText },
-      ],
+      getBlocks: async () => (
+        text.reads++, [{ id: "b1", kind: "paragraph", markdown: text.now }]
+      ),
       edit: async (changes: unknown[]) => void edits.push(...changes),
+      onDidChange: (fn: () => void) => ((changed = fn), { dispose() {} }),
+      onDidChangeActive: () => ({ dispose() {} }),
     },
     metadata: {
       search: async () => ({
@@ -96,6 +100,8 @@ function setup(
     create: (p: string) => created!({ path: p }),
     rename: (from: string, to: string) => renamed!({ from, to }),
     edits,
+    text,
+    change: () => changed!(),
   };
 }
 
@@ -118,6 +124,26 @@ describe("the plugin", () => {
     expect(edits).toEqual([
       { action: "replace", block: "b1", text: "See ![](Note.assets/p-1.png)." },
     ]);
+  });
+
+  it("waits for the link without polling, one read for every picture", async () => {
+    const files: Record<string, string> = { "Notes/Note.md": "x" };
+    const names = Array.from({ length: 20 }, (_, i) => `p${i}.png`);
+    for (const n of names) files[`Notes/assets/${n}`] = "PNG";
+    const { create, edits, text, change } = setup(
+      files,
+      "/root/Notes/Note.md",
+      "Nothing yet.",
+    );
+    const moved = Promise.all(names.map((n) => create(`/root/Notes/assets/${n}`)));
+    await new Promise((r) => setTimeout(r, 400));
+    const before = text.reads;
+    expect(before).toBeLessThanOrEqual(3);
+    text.now = names.map((n) => `![](assets/${n})`).join(" ");
+    change();
+    await moved;
+    expect(text.reads - before).toBeLessThanOrEqual(2);
+    expect(edits).toHaveLength(20);
   });
 
   it("renames the picture folder with its document, links kept byte for byte otherwise", async () => {

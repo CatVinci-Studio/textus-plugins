@@ -5,23 +5,56 @@
 // Where Typora front matter or an Obsidian, Logseq or Dendron setting says where pictures go, they stay.
 /* global imageFolder, folderPaths, freeName */
 const WAIT_MS = 3000;
-const STEP_MS = 150;
 
 const { slash, native } = folderPaths;
-const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+/** Pictures waiting for the editor to write their link: all answered from
+ *  one read of the document on each change, not one poll per picture. */
+const waiting = new Set();
+let checking = false;
+let again = false;
+
+async function check() {
+  if (checking) return void (again = true);
+  checking = true;
+  try {
+    do {
+      again = false;
+      if (!waiting.size) return;
+      const doc = slash(await textus.editor.getPath());
+      const blocks = (await textus.editor.getBlocks()) || [];
+      for (const wait of [...waiting]) {
+        // Another document came to the front: no link to wait for.
+        if (wait.doc !== doc) wait.done(null);
+        else {
+          const block = blocks.find((b) => imageFolder.relink(b.markdown, wait.forms, "\0") !== b.markdown);
+          if (block) wait.done(block);
+        }
+      }
+    } while (again);
+  } finally {
+    checking = false;
+  }
+}
 
 /** The block of the document in front linking to one of `forms`, once the
  *  editor has written the link; null when it doesn't within a few seconds
  *  or another document comes to the front. */
-async function blockLinking(doc, forms) {
-  for (let waited = 0; waited <= WAIT_MS; waited += STEP_MS) {
-    if (slash(await textus.editor.getPath()) !== doc) return null;
-    const blocks = (await textus.editor.getBlocks()) || [];
-    const block = blocks.find((b) => imageFolder.relink(b.markdown, forms, "\0") !== b.markdown);
-    if (block) return block;
-    await sleep(STEP_MS);
-  }
-  return null;
+function blockLinking(doc, forms) {
+  return new Promise((resolve) => {
+    const wait = {
+      doc,
+      forms,
+      done: (block) => {
+        if (!waiting.delete(wait)) return;
+        clearTimeout(timer);
+        resolve(block);
+      },
+    };
+    const timer = setTimeout(() => wait.done(null), WAIT_MS);
+    waiting.add(wait);
+    void check().catch(() => {});
+  });
 }
 
 /** A path in `dir` for `name` no file has: "a.png", "a-1.png"… */
@@ -97,5 +130,7 @@ exports.activate = function (ctx) {
   ctx.subscriptions.push(
     textus.files.onDidCreate((e) => onCreate(e).catch(() => {})),
     textus.files.onDidRename((e) => onRename(e).catch(() => {})),
+    textus.editor.onDidChange(() => void check().catch(() => {})),
+    textus.editor.onDidChangeActive(() => void check().catch(() => {})),
   );
 };

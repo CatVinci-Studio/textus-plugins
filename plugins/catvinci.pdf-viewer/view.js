@@ -107,6 +107,12 @@
     if (!div.dataset.drawn) return;
     delete div.dataset.drawn;
     div.replaceChildren();
+    // pdf.js keeps a drawn page's operators and pictures until told.
+    const doc = pdf;
+    void doc
+      ?.getPage(Number(div.dataset.page))
+      .then((page) => page.cleanup())
+      .catch(() => {});
   }
 
   async function layout() {

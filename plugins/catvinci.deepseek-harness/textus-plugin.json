@@ -1,0 +1,89 @@
+{
+  "id": "catvinci.deepseek-harness",
+  "name": "%name%",
+  "version": "0.1.0",
+  "publisher": "catvinci",
+  "author": "CatVinci Studio",
+  "description": "%description%",
+  "icon": "icon.svg",
+  "license": "MIT",
+  "repository": "https://github.com/CatVinci-Studio/textus-plugins",
+  "engines": {
+    "textus": ">=1.4.0"
+  },
+  "platforms": [
+    "desktop"
+  ],
+  "permissions": [
+    "agents"
+  ],
+  "contributes": {
+    "agents": [
+      {
+        "id": "catvinci.deepseek-harness.dsh",
+        "name": "DeepSeek Harness",
+        "command": "npx",
+        "args": [
+          "-y",
+          "@deepseek-ai/dsh@0.2.2-rc.1",
+          "--profile",
+          "acp"
+        ],
+        "setup": "%setup%",
+        "provider": "deepseek"
+      }
+    ]
+  },
+  "l10n": {
+    "en": {
+      "name": "DeepSeek Harness",
+      "description": "DeepSeek Harness in Textus AI: DeepSeek's own agent reads your folder, writes and edits your notes, and asks before it changes anything.",
+      "setup": "Needs Node.js 24+ and a DeepSeek API key: run npx @deepseek-ai/dsh web once and add the key there."
+    },
+    "zh": {
+      "name": "DeepSeek Harness",
+      "description": "在 Textus AI 里用 DeepSeek Harness：DeepSeek 官方的 agent 读你的文件夹、写和改笔记，改动前先征得你同意。",
+      "setup": "需要 Node.js 24+ 和 DeepSeek API key：先运行一次 npx @deepseek-ai/dsh web，在里面填好 key。"
+    },
+    "zh-Hant": {
+      "name": "DeepSeek Harness",
+      "description": "在 Textus AI 裡用 DeepSeek Harness：DeepSeek 官方的 agent 讀你的資料夾、寫和改筆記，改動前先徵得你同意。",
+      "setup": "需要 Node.js 24+ 和 DeepSeek API key：先執行一次 npx @deepseek-ai/dsh web，在裡面填好 key。"
+    },
+    "ja": {
+      "name": "DeepSeek Harness",
+      "description": "Textus AI で DeepSeek Harness を使う：DeepSeek 公式のエージェントがフォルダを読み、ノートを書いて直し、変更の前に確認します。",
+      "setup": "Node.js 24+ と DeepSeek の API キーが必要です。npx @deepseek-ai/dsh web を一度実行してキーを登録してください。"
+    },
+    "ko": {
+      "name": "DeepSeek Harness",
+      "description": "Textus AI에서 DeepSeek Harness 사용: DeepSeek 공식 에이전트가 폴더를 읽고 노트를 쓰고 고치며, 바꾸기 전에 먼저 묻습니다.",
+      "setup": "Node.js 24+와 DeepSeek API 키가 필요합니다. npx @deepseek-ai/dsh web을 한 번 실행해 키를 넣으세요."
+    },
+    "de": {
+      "name": "DeepSeek Harness",
+      "description": "DeepSeek Harness in Textus AI: DeepSeeks eigener Agent liest deinen Ordner, schreibt und überarbeitet Notizen und fragt vor jeder Änderung.",
+      "setup": "Braucht Node.js 24+ und einen DeepSeek-API-Schlüssel: einmal npx @deepseek-ai/dsh web ausführen und den Schlüssel dort eintragen."
+    },
+    "fr": {
+      "name": "DeepSeek Harness",
+      "description": "DeepSeek Harness dans Textus AI : l’agent de DeepSeek lit votre dossier, écrit et révise vos notes, et demande avant tout changement.",
+      "setup": "Nécessite Node.js 24+ et une clé d’API DeepSeek : lancez une fois npx @deepseek-ai/dsh web et ajoutez-y la clé."
+    },
+    "es": {
+      "name": "DeepSeek Harness",
+      "description": "DeepSeek Harness en Textus AI: el agente propio de DeepSeek lee tu carpeta, escribe y edita tus notas y pregunta antes de cambiar nada.",
+      "setup": "Necesita Node.js 24+ y una clave de API de DeepSeek: ejecuta una vez npx @deepseek-ai/dsh web y añade la clave allí."
+    },
+    "pt": {
+      "name": "DeepSeek Harness",
+      "description": "DeepSeek Harness no Textus AI: o agente da própria DeepSeek lê sua pasta, escreve e edita suas notas e pergunta antes de mudar algo.",
+      "setup": "Precisa do Node.js 24+ e de uma chave de API da DeepSeek: rode uma vez npx @deepseek-ai/dsh web e coloque a chave lá."
+    },
+    "ru": {
+      "name": "DeepSeek Harness",
+      "description": "DeepSeek Harness в Textus AI: собственный агент DeepSeek читает папку, пишет и правит заметки и спрашивает перед каждым изменением.",
+      "setup": "Нужны Node.js 24+ и ключ API DeepSeek: один раз запустите npx @deepseek-ai/dsh web и введите ключ там."
+    }
+  }
+}

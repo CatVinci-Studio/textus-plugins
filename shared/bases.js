@@ -314,12 +314,12 @@
 
   /** A select's or list's choices, in the order first met. */
   function options(rows, key) {
-    const seen = [];
+    const seen = new Set();
     for (const row of rows) {
       const value = row.props[key];
-      for (const v of (Array.isArray(value) ? value : [value]).map(text)) if (v && !seen.includes(v)) seen.push(v);
+      for (const v of (Array.isArray(value) ? value : [value]).map(text)) if (v) seen.add(v);
     }
-    return seen;
+    return [...seen];
   }
 
   /** The columns: the view's, else every property in the order first met. */

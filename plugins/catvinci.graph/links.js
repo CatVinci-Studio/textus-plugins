@@ -8,6 +8,10 @@
 (function (root) {
   "use strict";
 
+  // A picture, PDF or other file a note links to, not a note.
+  const ATTACHMENT =
+    /\.(png|jpe?g|gif|webp|svg|avif|bmp|heic|pdf|docx?|xlsx?|pptx?|csv|zip|mp3|wav|m4a|mp4|mov|webm)$/i;
+
   const stem = (path) =>
     path
       .split(/[\\/]/)
@@ -56,6 +60,8 @@
         if (!l.missing) continue;
         const id = "missing:" + l.missing.toLowerCase();
         node(id, stem(l.missing), "missing");
+        // A picture or other file, not a note: shown only when asked for.
+        if (ATTACHMENT.test(stem(l.missing))) extra.get(id).attachment = true;
         link(doc.path, id);
       }
       if (withTags)
@@ -111,6 +117,7 @@
     let nodes = graph.nodes.filter(
       (n) =>
         (n.kind !== "missing" || !settings.existingOnly) &&
+        (!n.attachment || settings.attachments) &&
         (n.kind !== "tag" || settings.tags) &&
         (n.kind === "tag" || match(n)),
     );

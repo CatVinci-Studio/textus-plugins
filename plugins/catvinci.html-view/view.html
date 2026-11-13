@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="{{lang}}">
+  <head>
+    <link rel="stylesheet" href="textus-resource:view.css" />
+  </head>
+  <body>
+    <div class="tx-bar" id="bar">
+      <span class="tx-spacer"></span>
+      <button class="tx-button small" id="edit"></button>
+    </div>
+    <!-- The page's own scripts run, kept to the frame: no same origin, no
+         network beyond what the plugin page allows (none). -->
+    <iframe id="page" sandbox="allow-scripts allow-popups" referrerpolicy="no-referrer"></iframe>
+    <p id="status" class="tx-empty"></p>
+    <script src="textus-resource:view.js"></script>
+  </body>
+</html>

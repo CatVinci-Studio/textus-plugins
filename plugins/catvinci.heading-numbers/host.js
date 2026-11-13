@@ -124,9 +124,12 @@ function numberHeadings(input) {
 exports.activate = function () {
   textus.ai.registerTool("number_headings", numberHeadings);
   textus.editor.registerDecorations({
-    decorate: async function (inSight) {
-      const blocks = (await textus.editor.getBlocks()) || [];
-      const all = drawn(await textus.editor.getText(), blocks);
+    // The document the blocks are of comes with them (Textus 1.4.1): it
+    // can be beside the one in front. Older hosts read the one in front.
+    decorate: async function (inSight, doc) {
+      const blocks = doc ? doc.blocks : (await textus.editor.getBlocks()) || [];
+      const head = doc ? (blocks[0] || {}).markdown : await textus.editor.getText();
+      const all = drawn(head, blocks);
       return inSight
         .filter((block) => all[block.id])
         .map((block) => ({

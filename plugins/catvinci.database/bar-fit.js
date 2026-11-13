@@ -36,9 +36,17 @@ window.databaseBarFit = function ($) {
     }
   };
   // Measured again whenever what it holds or its room may have changed:
-  // the page's width, the tabs drawn, the fonts arriving.
+  // the page's width, the tabs drawn, the fonts arriving. Only the width:
+  // the bar's own change of height must not ask again, or a scroll bar
+  // coming and going with it would swap the two ways forever.
   const refit = () => requestAnimationFrame(fit);
-  new ResizeObserver(refit).observe(document.body);
+  let width = -1;
+  new ResizeObserver(() => {
+    const now = document.body.clientWidth;
+    if (now === width) return;
+    width = now;
+    refit();
+  }).observe(document.body);
   new MutationObserver(refit).observe($("views"), { childList: true });
   new MutationObserver(refit).observe($("rules"), { childList: true });
   if (document.fonts) document.fonts.ready.then(refit);

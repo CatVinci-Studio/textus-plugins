@@ -15,6 +15,7 @@
 
 ## 更新紀錄
 
+- **0.2.5** - 從頭捲到尾的長 PDF 佔用記憶體少得多：看不到的頁面也會釋放其中的圖片。
 - **0.2.4** - 窄面板中工具列會換行；尋找不再混入上一個詞的結果。
 - **0.2.3** - 工具列依 Textus 統一的順序排列：先是內容資訊，再是尋找和縮放。
 - **0.2.2** - Its bars, lists and controls are Textus's own, grow with the interface and follow every theme; needs Textus 1.3.12.

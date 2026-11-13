@@ -28,15 +28,24 @@ function keyOf(path) {
   );
 }
 
-async function versionsOf(path) {
-  if (!path) return [];
-  const kept = await ctx.storage.global.get(keyOf(path));
-  // Two paths with one hash: not this document's.
-  return kept && kept.path === path ? kept.versions : [];
-}
+/** The key of a document's newest version, kept apart from the rest so
+ *  autosaves that bring it up to date write it alone. */
+const NOW = ":now";
 
 /** A version's id: when it was first kept, which later merged saves keep. */
 const idOf = (v) => v.since || v.at;
+
+async function versionsOf(path) {
+  if (!path) return [];
+  const store = ctx.storage.global;
+  const kept = await store.get(keyOf(path));
+  const now = await store.get(keyOf(path) + NOW);
+  // Two paths with one hash: not this document's.
+  const list = kept && kept.path === path ? kept.versions : [];
+  const head = now && now.path === path ? now.version : null;
+  if (!head) return list;
+  return [head].concat(list.filter((v) => idOf(v) !== idOf(head)));
+}
 /** Set when the last save couldn't be kept even alone. */
 let full = false;
 
@@ -46,20 +55,50 @@ async function record(saved) {
   if (list[0] && list[0].text === saved.text) return;
   // Saves close together - autosave's every few seconds - are one
   // version: the newest is brought up to date until EVERY has passed
-  // since it was first kept.
+  // since it was first kept, and only it is written.
   const now = Date.now();
   const newest = list[0];
-  if (newest && now - idOf(newest) < EVERY)
-    list[0] = { at: now, since: idOf(newest), text: saved.text };
-  else list.unshift({ at: now, text: saved.text });
   const key = keyOf(saved.path);
-  let versions = list.slice(0, KEEP);
-  // The storage full: older versions of any document go, until this fits.
   full = false;
+  if (newest && now - idOf(newest) < EVERY) {
+    await keep(key + NOW, key, {
+      path: saved.path,
+      version: { at: now, since: idOf(newest), text: saved.text },
+    });
+  } else {
+    // A new version: the ones before it are kept as they were.
+    if (newest) await keepVersions(key, saved.path, list.slice(0, KEEP - 1));
+    await keep(key + NOW, key, {
+      path: saved.path,
+      version: { at: now, text: saved.text },
+    });
+  }
+  await show();
+}
+
+/** Writes `value` at `at`, making room from other documents' versions
+ *  when the storage is full. */
+async function keep(at, key, value) {
   for (;;) {
     try {
-      await ctx.storage.global.set(key, { path: saved.path, versions });
-      break;
+      await ctx.storage.global.set(at, value);
+      return;
+    } catch (e) {
+      const isFull = /full/i.test(String((e && e.message) || e));
+      if (isFull && (await freeOther(key, value.version.at))) continue;
+      full = true;
+      return;
+    }
+  }
+}
+
+/** Writes the versions before the newest, fewer when they don't fit. */
+async function keepVersions(key, path, versions) {
+  // The storage full: older versions of any document go, until this fits.
+  for (;;) {
+    try {
+      await ctx.storage.global.set(key, { path: path, versions: versions });
+      return;
     } catch (e) {
       // Only a full storage makes room from other documents' versions.
       const isFull = /full/i.test(String((e && e.message) || e));
@@ -67,12 +106,11 @@ async function record(saved) {
         continue;
       if (versions.length <= 1) {
         full = true;
-        break;
+        return;
       }
       versions = versions.slice(0, Math.ceil(versions.length / 2));
     }
   }
-  await show();
 }
 
 /** Halves the versions of the other document whose oldest one is oldest,
@@ -81,7 +119,7 @@ async function freeOther(key, before) {
   const store = ctx.storage.global;
   let pick = null;
   for (const k of await store.keys()) {
-    if (k === key || !k.startsWith("v:")) continue;
+    if (k === key || !k.startsWith("v:") || k.endsWith(NOW)) continue;
     const kept = await store.get(k);
     const list = (kept && kept.versions) || [];
     const oldest = list.length ? list[list.length - 1].at : -Infinity;

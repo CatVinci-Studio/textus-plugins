@@ -115,3 +115,32 @@ it("finds a standard link to no document as one, from the note's folder, and ask
   expect(asked.sort()).toEqual(["Week45/Nov%208.md", "[[Nov 8]]"]);
   expect(near.notes).toEqual([{ name: "Nov 8", path: null, kind: "missing", distance: 1 }]);
 });
+
+it("tells an open graph only the new front document on a tab switch", async () => {
+  let active: (() => Promise<void>) | null = null;
+  let resolve: ((view: unknown) => Promise<void>) | null = null;
+  let path = "/root/A.md";
+  const posted: { type: string; focus?: string }[] = [];
+  loadPlugin("catvinci.graph", {
+    files: { root: async () => "/root" },
+    metadata: { all: async () => [] },
+    editor: {
+      getPath: async () => path,
+      onDidChangeActive: (fn: typeof active) => ((active = fn), { dispose() {} }),
+    },
+    views: {
+      registerWebview: (id: string, p: { resolve: typeof resolve }) => {
+        if (id === "catvinci.graph.global") resolve = p.resolve;
+        return { dispose() {} };
+      },
+    },
+  });
+  await resolve!({
+    postMessage: (m: { type: string }) => posted.push(m),
+    onDidReceiveMessage: () => ({ dispose() {} }),
+    onDidDispose: () => ({ dispose() {} }),
+  });
+  path = "/root/B.md";
+  await active!();
+  expect(posted).toEqual([{ type: "focus", focus: "/root/B.md" }]);
+});

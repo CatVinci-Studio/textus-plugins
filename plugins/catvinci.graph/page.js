@@ -33,6 +33,7 @@
         ["search", "search"],
         ["tags", "toggle"],
         ["existingOnly", "toggle"],
+        ["attachments", "toggle"],
         ["orphans", "toggle"],
       ],
     ],
@@ -188,6 +189,7 @@
       );
       return render();
     }
+    if (message.type === "focus") return view.setFocus(message.focus || null);
     if (message.type !== "graph") return;
     const graph = message.graph;
     // While the panel is being typed in, what it holds is newer.
@@ -214,7 +216,9 @@
       : "";
     if (first && data.nodes.length) {
       first = false;
-      setTimeout(() => view.zoomToFit(), 1200);
+      view.zoomToFit();
+      // Too big to lay out at once: fitted again once it has settled.
+      if (view.moving()) setTimeout(() => view.zoomToFit(), 1200);
     }
   });
   api.postMessage({ type: "ready" });

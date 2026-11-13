@@ -36,7 +36,18 @@ function themeVars(svg, c, dark) {
   for (var name in set) svg.style.setProperty(name, set[name]);
 }
 
+/** The map drawn in each box: let go before the next, or each redraw
+ *  would keep its observer, hooks and tree. */
+var maps = new WeakMap();
+
+function forget(el) {
+  var map = maps.get(el);
+  if (map) map.destroy();
+  maps.delete(el);
+}
+
 function mindMap(el, source, meta, dark) {
+  forget(el);
   var svg = document.createElementNS(SVG, "svg");
   svg.style.width = "100%";
   svg.style.height = (Number(meta.height) || 360) + "px";
@@ -61,6 +72,7 @@ function mindMap(el, source, meta, dark) {
       return c.tones[seen.get(key) % c.tones.length];
     },
   });
+  maps.set(el, map);
   return map.setData(root).then(function () {
     return map.fit();
   });
@@ -82,6 +94,7 @@ drawChartBlock({
       svg.setAttribute("height", String(Number(meta.height) || 360));
       return new XMLSerializer().serializeToString(svg);
     } finally {
+      forget(box);
       box.remove();
     }
   },

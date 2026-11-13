@@ -15,6 +15,7 @@ Es braucht keine Berechtigungen: Textus übergibt ihm das PDF, das Sie öffnen.
 
 ## Änderungen
 
+- **0.2.5** - Ein langes PDF, durchgeblättert bis zum Ende, belegt viel weniger Speicher: Seiten außer Sicht geben auch ihre Bilder frei.
 - **0.2.4** - Die Leiste bricht in einem schmalen Bereich um, und die Suche mischt keine Treffer eines früheren Worts mehr ein.
 - **0.2.3** - Die Leiste folgt der Reihenfolge von Textus: was sie zeigt, dann Suche und Zoom.
 - **0.2.2** - Leisten, Listen und Steuerelemente sind jetzt die von Textus, wachsen mit der Oberfläche und folgen jedem Theme; braucht Textus 1.3.12.

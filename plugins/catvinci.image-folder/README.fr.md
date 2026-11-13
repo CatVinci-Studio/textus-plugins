@@ -13,6 +13,7 @@ Elle prend en charge les images PNG, JPEG, GIF, WebP, AVIF, BMP, SVG, ICO, HEIC 
 
 ## Changements
 
+- **0.1.6** - Ajouter beaucoup d’images d’un coup (une synchronisation, un dossier copié) ne relit plus sans cesse le document ouvert.
 - **0.1.5** - Dans un coffre Obsidian, les images restent de nouveau là où le réglage des pièces jointes du coffre les place : le réglage est lu par Textus.
 - **0.1.4** - Laisse les images là où les met le réglage de dossier d'images Typora d'un document, et ne déplace plus un dossier tant que des liens vers lui peuvent rester non vérifiés.
 - **0.1.3** - Sa page dit maintenant en une phrase ce qu'il fait, ce qu'il permet et ce qui a changé à chaque version.

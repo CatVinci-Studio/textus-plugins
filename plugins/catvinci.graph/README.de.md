@@ -25,6 +25,7 @@ In einem Obsidian-Vault färben auch die in Obsidians `graph.json` gespeicherten
 
 ## Änderungen
 
+- **0.5.6** - Zahlen und Schaltflächen oben im Graph-Tab bleiben sichtbar: Scrollen oder Zoomen über dem Graphen schiebt sie nicht mehr nach oben unter den Tab. Beschriftungen stapeln sich nicht mehr: Die am stärksten verlinkten Notizen behalten ihre, die übrigen erscheinen beim Hineinzoomen. Ein großer Ordner öffnet sich bereits angeordnet, statt sich zu entfalten, und Bilder und andere Anhänge, auf die eine Notiz verlinkt, bleiben außerhalb des Graphen, bis du in den Einstellungen Anhänge einschaltest. Beim Wechsel des Dokuments oder beim Speichern gerät nicht mehr der ganze Graph in Bewegung.
 - **0.5.5** - Normale Markdown-Links auf noch nicht geschriebene Notizen landen dort, wo Textus sie anlegt, und fallen mit [[Links]] auf dieselbe Notiz zusammen. Strg/Cmd-Klick öffnet eine Notiz neben der vorderen. Beschriftungen folgen der Textgröße der Oberfläche, Ordnerfarben dem Theme. Der Graph in der Seitenleiste hat keine eigenen Einstellungen mehr.
 - **0.5.4** - Ein Trackpad-Pinch zoomt fließend, im Takt der Geste; mit Textus 1.3.13 zoomt ein Pinch auf dem Mac den Graphen, nicht das Dokument dahinter. Kürzere Hilfe- und Leertexte. Seitenleiste und Seite folgen dem Layout von Textus 1.3.13.
 - **0.5.3** - Leisten, Listen und Steuerelemente sind jetzt die von Textus, wachsen mit der Oberfläche und folgen jedem Theme; braucht Textus 1.3.12.

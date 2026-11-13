@@ -156,10 +156,17 @@ function draw(target, webview, context) {
     // The view in front: the page keeps it (each reader's own), and says.
     let index = 0;
     let sent = 0;
-    const send = async () => {
+    // What the page last drew: a file event that changes none of it (a
+    // save anywhere in the folder) draws nothing again.
+    let last = null;
+    const send = async (fresh) => {
       const mine = ++sent;
       const data = await snapshot(target, index).catch((err) => ({ error: String((err && err.message) || err) }));
-      if (mine === sent) webview.postMessage({ type: "data", data });
+      if (mine !== sent) return;
+      const text = JSON.stringify(data);
+      if (fresh !== true && text === last) return;
+      last = text;
+      webview.postMessage({ type: "data", data });
     };
     // Each reader's view, on this device only: not in the file.
     const store = context.storage.global;
@@ -173,7 +180,7 @@ function draw(target, webview, context) {
     };
     live.add(send);
     webview.onDidDispose(() => live.delete(send));
-    target.onDidChange(send);
+    target.onDidChange(() => send());
     webview.onDidReceiveMessage(async (m) => {
       if (!m) return;
       // View `at` (the one in front unless a menu named another) set to `spec`.
@@ -183,7 +190,7 @@ function draw(target, webview, context) {
           const kept = await remembered();
           index = typeof kept.index === "number" ? kept.index : m.index | 0;
           webview.postMessage({ type: "selected", index });
-          return send();
+          return send(true);
         }
         case "select":
           index = m.index | 0;
@@ -192,8 +199,15 @@ function draw(target, webview, context) {
         // A row opens in a tab, as a file does.
         case "open":
           return textus.layout.open(join(root, m.rel));
+        // Sent again even when it reads the same ("05" saved as 5): the
+        // page waits for it to redraw the cell it edited.
         case "set":
-          return setProp(m.rel, m.key, m.value);
+          try {
+            await setProp(m.rel, m.key, m.value);
+          } finally {
+            await send(true);
+          }
+          return;
         case "add":
           return addRow(m.folder, m.props, m.title);
         case "view":
@@ -245,8 +259,14 @@ function draw(target, webview, context) {
           return renameProp(target, m.from, m.to);
         case "deleteProp":
           return deleteProp(target, m.key);
+        // Refused or failed too, the page hears back and lets the cell go.
         case "renamePage":
-          return renamePage(m.rel, m.title);
+          try {
+            await renamePage(m.rel, m.title);
+          } finally {
+            await send(true);
+          }
+          return;
         // What a menu can't hold - a name, a value - asked in Textus's own field.
         case "addProp": {
           const name = ((await textus.ui.input({ prompt: t("propertyName") })) || "").trim();

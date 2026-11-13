@@ -95,16 +95,28 @@ function withPanel(storage: ReturnType<typeof smallStorage>, path: string) {
 describe("version history keeps saves", () => {
   it("finds a version by its id after autosave merges into it", async () => {
     const now = vi.spyOn(Date, "now").mockReturnValue(1_000_000);
-    const p = withPanel(smallStorage(1e6), "/root/A.md");
+    const storage = smallStorage(1e6);
+    const p = withPanel(storage, "/root/A.md");
     await p.ready;
     await p.save("one");
-    const id = p.shown.at(-1)!.versions[0].id;
-    now.mockReturnValue(1_060_000);
+    now.mockReturnValue(1_000_000 + 20 * 60000);
     await p.save("one two");
-    expect(p.shown.at(-1)!.versions).toHaveLength(1);
+    const id = p.shown.at(-1)!.versions[0].id;
+    // An autosave inside the merge window writes the newest version alone,
+    // not the list before it.
+    const writes: string[] = [];
+    const set = storage.set;
+    storage.set = async (key, value) => {
+      writes.push(key);
+      return set(key, value);
+    };
+    now.mockReturnValue(1_000_000 + 21 * 60000);
+    await p.save("one two three");
+    expect(writes).toEqual([expect.stringMatching(/:now$/)]);
+    expect(p.shown.at(-1)!.versions).toHaveLength(2);
     expect(p.shown.at(-1)!.versions[0].id).toBe(id);
     await p.post({ type: "open", id });
-    expect(p.opened).toEqual(["one two"]);
+    expect(p.opened).toEqual(["one two three"]);
     now.mockRestore();
   });
 
@@ -121,11 +133,18 @@ describe("version history keeps saves", () => {
     await p.save("z".repeat(150));
     expect(p.shown.at(-1)!.full).toBe(false);
     expect(p.shown.at(-1)!.versions.map((v) => v.text[0])).toEqual(["z"]);
-    // The old document lost its oldest version, not all of them.
-    const old = [...storage.values.values()].find(
-      (v) => (v as { path: string }).path === "/root/Old.md",
-    ) as { versions: { text: string }[] };
-    expect(old.versions.map((v) => v.text[0])).toEqual(["y"]);
+    // The old document lost its oldest version, not all of them: its
+    // newest is kept apart from the rest.
+    const old = [...storage.values.values()]
+      .filter((v) => (v as { path: string }).path === "/root/Old.md")
+      .flatMap((v) => {
+        const kept = v as {
+          versions?: { text: string }[];
+          version?: { text: string };
+        };
+        return kept.versions ?? (kept.version ? [kept.version] : []);
+      });
+    expect(old.map((v) => v.text[0])).toEqual(["y"]);
     now.mockRestore();
   });
 
