@@ -109,7 +109,11 @@ export async function synchronize(options: Options): Promise<Result> {
           files: Object.create(null),
         };
     // A previously joined folder must never silently recreate a missing repository.
-    if (!raw && Object.keys(options.base.files).length)
+    if (
+      !raw &&
+      (Object.keys(options.base.files).length ||
+        Object.keys(options.base.parked ?? {}).length)
+    )
       throw new SyncError("remoteMissing");
     progress("scanning", 0, 0);
     const files = await local.scan();

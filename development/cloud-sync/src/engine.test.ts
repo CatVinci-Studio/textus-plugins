@@ -246,6 +246,14 @@ suite("workspace synchronization", () => {
     remote.values.delete(HEAD);
     await expect(a.sync(remote)).rejects.toThrow("remoteMissing");
     expect(await remote.has(HEAD)).toBe(false);
+    // Also with everything synced since left out here.
+    const store = new MemoryStore(),
+      b = new MemoryLocal({ "a.md": "first" });
+    await b.sync(store);
+    b.leaves = () => true;
+    await b.sync(store);
+    store.values.delete(HEAD);
+    await expect(b.sync(store)).rejects.toThrow("remoteMissing");
   });
   it("refuses case-colliding paths before any download", async () => {
     const remote = new MemoryStore();

@@ -118,6 +118,9 @@ describe("connection and data boundaries", () => {
       ["**/**/x.md", "x.md", false],
       ["a/**/**/b.md", "a/b.md", false],
       ["[z-a].md", "b.md", true],
+      ["📚 Private/", "📚 Private/a.md", false],
+      ["📚?.md", "📚x.md", false],
+      ["a**/**/b.md", "ab/c/b.md", false],
     ];
     for (const [exclude, path, wanted] of cases)
       expect([
@@ -132,6 +135,15 @@ describe("connection and data boundaries", () => {
       obsidian: false,
     }).wants("a".repeat(80) + ".md");
     expect(Date.now() - started).toBeLessThan(200);
+    // An everyday .gitignore stays quick over many paths.
+    const node = scopeOf(
+      { exclude: "", gitignore: true, obsidian: false },
+      "logs\n*.log\nnpm-debug.log*\nnode_modules/\n.env\ndist/\n*.tgz\n.cache/\ncoverage/\n*.pid",
+    );
+    const quick = Date.now();
+    for (let i = 0; i < 10_000; i++)
+      node.wants(`notes/project ${i % 50}/chapter ${i}/draft ${i}.md`);
+    expect(Date.now() - quick).toBeLessThan(1000);
     // A big .gitignore never pushes out the user's own rules.
     expect(
       scopeOf(

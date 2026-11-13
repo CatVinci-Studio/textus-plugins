@@ -335,7 +335,7 @@ async function synchronize(options) {
       updatedAt: "",
       files: /* @__PURE__ */ Object.create(null)
     };
-    if (!raw && Object.keys(options.base.files).length)
+    if (!raw && (Object.keys(options.base.files).length || Object.keys(options.base.parked ?? {}).length))
       throw new SyncError("remoteMissing");
     progress("scanning", 0, 0);
     const files = await local.scan();
@@ -535,19 +535,20 @@ function stepsOf(part) {
   if (part === "/**") return [{ k: "char", c: "/" }, { k: "all" }];
   if (/^\*+$/.test(part)) return [{ k: "run" }];
   if (part === "?") return [{ k: "one" }];
-  if (part.startsWith("\\")) return [{ k: "char", c: part[1].toLowerCase() }];
+  if (part.startsWith("\\"))
+    return [{ k: "char", c: [...part.slice(1)][0].toLowerCase() }];
   if (part.length > 2 && part.startsWith("[") && part.endsWith("]")) {
     const inner = part.slice(1, -1);
     const not = inner.startsWith("!");
     const body = (not ? inner.slice(1) : inner).replace(/\\/g, "\\\\").replace(/^\]/, "\\]");
     return [
-      { k: "class", test: new RegExp(`^[${not ? "^" : ""}${body}]$`, "i") }
+      { k: "class", test: new RegExp(`^[${not ? "^" : ""}${body}]$`, "iu") }
     ];
   }
   return [...part.toLowerCase()].map((c) => ({ k: "char", c }));
 }
 function matches(steps, path) {
-  const s = path.toLowerCase();
+  const s = [...path.toLowerCase()];
   const n = s.length;
   let next = new Uint8Array(n + 1);
   next[n] = 1;
@@ -586,12 +587,33 @@ function matches(steps, path) {
 }
 function patternTest(pattern) {
   const anchored = pattern.replace(/\/$/, "").includes("/");
-  const steps = pattern.replace(/(?:\*\*\/){2,}/g, "**/").replace(/(?:\/\*\*)+(?=\/|$)/g, "/**").replace(/^\//, "").replace(/\/$/, "").split(PIECE).filter(Boolean).flatMap(stepsOf);
+  const steps = pattern.replace(/(^|\/)(?:\*\*\/){2,}/g, "$1**/").replace(/(?:\/\*\*)+(?=\/|$)/g, "/**").replace(/^\//, "").replace(/\/$/, "").split(PIECE).filter(Boolean).flatMap(stepsOf);
   const all = anchored ? steps : [{ k: "dirs" }, ...steps];
-  return { test: (path) => matches(all, path) };
+  const open = all.filter(
+    (st) => st.k === "run" || st.k === "all" || st.k === "dirs"
+  );
+  if (open.length > 3) return { test: (path) => matches(all, path) };
+  const re = new RegExp(`^${all.map(stepSource).join("")}$`, "iu");
+  return { test: (path) => re.test(path) };
+}
+function stepSource(step) {
+  switch (step.k) {
+    case "char":
+      return step.c.replace(/[.*+?^${}()|[\]\\/]/g, "\\$&");
+    case "one":
+      return "[^/]";
+    case "run":
+      return "[^/]*";
+    case "all":
+      return ".*";
+    case "dirs":
+      return "(?:.*/)?";
+    case "class":
+      return `(?=[^/])${step.test.source.slice(1, -1)}`;
+  }
 }
 var RULES_CAP = 4e4;
-var LINE_CAP = 1e3;
+var LINE_CAP = 256;
 function readRules(text) {
   return text.slice(0, RULES_CAP).split(/\r?\n/).flatMap((raw) => {
     const line = raw.replace(/(?<!\\)\s+$/, "").replace(/\\ $/, " ");

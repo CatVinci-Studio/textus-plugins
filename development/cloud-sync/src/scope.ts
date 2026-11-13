@@ -32,7 +32,8 @@ function stepsOf(part: string): Step[] {
   if (part === "/**") return [{ k: "char", c: "/" }, { k: "all" }];
   if (/^\*+$/.test(part)) return [{ k: "run" }];
   if (part === "?") return [{ k: "one" }];
-  if (part.startsWith("\\")) return [{ k: "char", c: part[1].toLowerCase() }];
+  if (part.startsWith("\\"))
+    return [{ k: "char", c: [...part.slice(1)][0].toLowerCase() }];
   if (part.length > 2 && part.startsWith("[") && part.endsWith("]")) {
     const inner = part.slice(1, -1);
     const not = inner.startsWith("!");
@@ -41,7 +42,7 @@ function stepsOf(part: string): Step[] {
       .replace(/\\/g, "\\\\")
       .replace(/^\]/, "\\]");
     return [
-      { k: "class", test: new RegExp(`^[${not ? "^" : ""}${body}]$`, "i") },
+      { k: "class", test: new RegExp(`^[${not ? "^" : ""}${body}]$`, "iu") },
     ];
   }
   return [...part.toLowerCase()].map((c) => ({ k: "char", c }));
@@ -50,7 +51,8 @@ function stepsOf(part: string): Step[] {
 /** Whether `path` matches `steps`, in time path × pattern: no backtracking,
  *  however many stars. */
 function matches(steps: Step[], path: string): boolean {
-  const s = path.toLowerCase();
+  // By whole characters, as the steps are: an emoji is one.
+  const s = [...path.toLowerCase()];
   const n = s.length;
   // Each row: from character i on, whether steps j.. match.
   let next = new Uint8Array(n + 1);
@@ -96,8 +98,8 @@ function patternTest(pattern: string): { test(path: string): boolean } {
   // With a slash before its end it is anchored to the top; else any level.
   const anchored = pattern.replace(/\/$/, "").includes("/");
   const steps = pattern
-    // "**/**/" is one "**/".
-    .replace(/(?:\*\*\/){2,}/g, "**/")
+    // "**/**/" is one "**/", where a "**" stands alone between slashes.
+    .replace(/(^|\/)(?:\*\*\/){2,}/g, "$1**/")
     .replace(/(?:\/\*\*)+(?=\/|$)/g, "/**")
     .replace(/^\//, "")
     .replace(/\/$/, "")
@@ -105,13 +107,37 @@ function patternTest(pattern: string): { test(path: string): boolean } {
     .filter(Boolean)
     .flatMap(stepsOf);
   const all: Step[] = anchored ? steps : [{ k: "dirs" }, ...steps];
-  return { test: (path) => matches(all, path) };
+  // A few open-ended steps: a regular expression, fast and with little to
+  // try again. More: the linear matcher, which never blows up.
+  const open = all.filter(
+    (st) => st.k === "run" || st.k === "all" || st.k === "dirs",
+  );
+  if (open.length > 3) return { test: (path) => matches(all, path) };
+  const re = new RegExp(`^${all.map(stepSource).join("")}$`, "iu");
+  return { test: (path) => re.test(path) };
+}
+
+function stepSource(step: Step): string {
+  switch (step.k) {
+    case "char":
+      return step.c.replace(/[.*+?^${}()|[\]\\/]/g, "\\$&");
+    case "one":
+      return "[^/]";
+    case "run":
+      return "[^/]*";
+    case "all":
+      return ".*";
+    case "dirs":
+      return "(?:.*/)?";
+    case "class":
+      return `(?=[^/])${step.test.source.slice(1, -1)}`;
+  }
 }
 
 /** Rules past this many characters are not read: a .gitignore is small. */
 const RULES_CAP = 40_000;
-/** A longer line is left out. */
-const LINE_CAP = 1000;
+/** A longer line is left out: no real rule is, and each costs a path. */
+const LINE_CAP = 256;
 
 export function readRules(text: string): Rule[] {
   return text
