@@ -169,6 +169,7 @@ function draw(target, webview, context) {
       index = i;
       void remember({ index });
       webview.postMessage({ type: "selected", index });
+      return send();
     };
     live.add(send);
     webview.onDidDispose(() => live.delete(send));

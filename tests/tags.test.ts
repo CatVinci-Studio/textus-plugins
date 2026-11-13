@@ -8,6 +8,7 @@ let tagEdit: {
 };
 
 beforeAll(async () => {
+  await import(/* @vite-ignore */ "../shared/markdown-keep.js");
   const script = "../plugins/catvinci.tags/tag-edit.js";
   await import(/* @vite-ignore */ script);
   tagEdit = (globalThis as unknown as { tagEdit: typeof tagEdit }).tagEdit;

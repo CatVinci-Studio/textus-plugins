@@ -17,6 +17,7 @@
   ],
   "main": [
     "lib/name-order.js",
+    "lib/markdown-keep.js",
     "tag-edit.js",
     "host.js"
   ],

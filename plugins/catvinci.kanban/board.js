@@ -9,18 +9,16 @@
   $("markdown").onclick = () => api.postMessage({ type: "markdown" });
 
   let board = null;
+  // Set while an edit waits out the save delay.
   let timer = 0;
-  // An edit waiting out the save delay.
-  let pending = false;
   const cardLists = () => [...document.querySelectorAll(".cards")];
   const cardsOf = (ul) => [...ul.children].filter((n) => n.classList.contains("card"));
 
   function save() {
     $("state").textContent = t("saving");
     clearTimeout(timer);
-    pending = true;
     timer = setTimeout(() => {
-      pending = false;
+      timer = 0;
       api.postMessage({ type: "save", text: md.serialize(board) });
     }, 300);
   }
@@ -228,9 +226,9 @@
   api.onMessage((message) => {
     if (message.type === "file") {
       // Changed elsewhere: what is there now wins over an unsaved move.
+      const dropped = timer !== 0;
       clearTimeout(timer);
-      const dropped = pending;
-      pending = false;
+      timer = 0;
       board = md.parse(message.text);
       render();
       $("state").textContent =

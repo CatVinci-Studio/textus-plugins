@@ -22,7 +22,6 @@
       "(^|[\\s(\\[{,;:!?，。；：！？、])#" + escape(from) + "(?!" + MORE + ")",
       "giu",
     );
-    // The open fence's run: only a bare run of its character, as long or longer, closes it.
     let fence = null;
     let inFront = false;
     let inTagList = false;
@@ -43,14 +42,9 @@
           const isTags = /^\s*tags?\s*:/.test(line) || (inTagList && /^\s*-\s/.test(line));
           return isTags ? renameInFrontMatter(line, from, to) : line;
         }
-        const open = /^\s*(```+|~~~+)/.exec(line);
-        if (open) {
-          if (!fence) fence = open[1];
-          else if (open[1][0] === fence[0] && open[1].length >= fence.length && /^\s*[`~]+\s*$/.test(line))
-            fence = null;
-          return line;
-        }
-        if (fence) return line;
+        const was = fence;
+        fence = root.markdownKeep.fenceStep(fence, line);
+        if (was || fence) return line;
         // Inline code, [[links]] and link addresses are kept as they are.
         return line
           .split(/(`[^`]*`|\[\[[^\]\n]*\]\]|\]\([^)]*\))/)

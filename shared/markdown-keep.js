@@ -2,6 +2,7 @@
 // both leave the same things alone - Obsidian's own syntax too. Each lists
 // this as lib/markdown-keep.js in libs.json and runs it before its own code.
 (function (root) {
+  "use strict";
   var FENCE_LINE = /^\s*(```+|~~~+)/;
   /** The open fence after `line`: a fence opens one, and only a bare run
    *  of its own character, as long or longer, closes it. */
@@ -10,10 +11,9 @@
     if (!open) return fence;
     if (!fence) return open[1];
     var closes = open[1][0] === fence[0] && open[1].length >= fence.length;
-    return closes && /^\s*[`~]+\s*$/.test(line) ? null : fence;
+    return closes && line.trim() === open[1] ? null : fence;
   }
 
-  "use strict";
   // Obsidian Tasks' field marks: dates, recurrence, ids, priorities.
   var TASK_MARKS = "📅|⏳|🛫|✅|❌|➕|🔁|🆔|⛔|🏁|⏫|🔼|🔽|⏬|🔺";
   // Spans inside a line.
