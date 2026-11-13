@@ -89,11 +89,14 @@ async function inlinePictures(html, doc) {
  *  document and text it was made from. */
 let deck = null;
 let madeFrom = null;
+/** Each update's turn: one that finishes after a later one is dropped. */
+let turn = 0;
 
 /** Renders only while a slides tab is open: no deck work on other edits,
  *  and none when the text is as it was. `to` is a page that just opened. */
 async function update(to) {
   if (!views.size) return;
+  const mine = ++turn;
   const text = await textus.editor.getText();
   let changed = false;
   if (text !== null) {
@@ -102,6 +105,7 @@ async function update(to) {
     if (from !== madeFrom || !deck) {
       const shown = render(await withPictures(text, doc));
       const next = { html: await inlinePictures(shown.html, doc), css: shown.css };
+      if (mine !== turn) return;
       madeFrom = from;
       changed = !deck || next.html !== deck.html || next.css !== deck.css;
       if (changed) deck = next;
@@ -187,6 +191,11 @@ exports.activate = function (ctx) {
     textus.commands.register("catvinci.slides.export", exportHtml),
     textus.ai.registerTool("export_slides", exportSlides),
     textus.editor.onDidChange(() => update()),
-    textus.editor.onDidChangeActive(() => update()),
+    // Another document, or back to this one: made again, its pictures read
+    // anew (one changed on disk meanwhile).
+    textus.editor.onDidChangeActive(() => {
+      madeFrom = null;
+      return update();
+    }),
   );
 };

@@ -109,6 +109,7 @@
       }
       focus = focusId || null;
       if (dragging) dragging = byId.get(dragging.id) || null;
+      if (hover) hover = byId.get(hover.id) || null;
       // Mostly new (the first data, another folder): laid out before it is
       // drawn, so it shows where it ends up rather than unfolding there.
       const fresh = nodes.filter((n) => !old.has(n.id)).length;

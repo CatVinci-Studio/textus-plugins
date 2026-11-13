@@ -90,19 +90,52 @@ suite("workspace synchronization", () => {
     await b.sync(remote);
     expect(text(b.files.get("note.md"))).toBe("new");
   });
-  it("treats binary replacement as keep-both instead of overwriting the attachment", async () => {
+  it("replaces an attachment changed elsewhere, the old one to the trash, and both devices agree", async () => {
     const remote = new MemoryStore();
     const a = new MemoryLocal({ "a.png": "base" }),
       b = new MemoryLocal();
     await a.sync(remote);
     await b.sync(remote);
     a.files.set("a.png", bytes("new"));
-    await a.sync(remote);
+    a.binary.add("a.png");
     b.binary.add("a.png");
+    await a.sync(remote);
+    const result = await b.sync(remote);
+    expect(result.conflicts).toHaveLength(0);
+    expect(text(b.files.get("a.png"))).toBe("new");
+    expect(b.trashed.map(([path]) => path)).toContain("a.png");
+    // Nothing goes back: another round changes nothing on either side.
+    expect((await a.sync(remote)).downloaded).toBe(0);
+    expect((await b.sync(remote)).uploaded).toBe(0);
+    expect(text(a.files.get("a.png"))).toBe("new");
+  });
+  it("carries Obsidian's settings without conflict copies: the synced one wins", async () => {
+    const remote = new MemoryStore();
+    const a = new MemoryLocal({ ".obsidian/app.json": '{"a":1}' }),
+      b = new MemoryLocal({ ".obsidian/app.json": '{"b":1}' });
+    await a.sync(remote);
+    expect((await b.sync(remote)).conflicts).toEqual([]);
+    expect(text(b.files.get(".obsidian/app.json"))).toBe('{"a":1}');
+    b.files.set(".obsidian/app.json", bytes('{"b":2}'));
+    await b.sync(remote);
+    await a.sync(remote);
+    expect(text(a.files.get(".obsidian/app.json"))).toBe('{"b":2}');
+  });
+  it("keeps both versions of an attachment changed on both devices", async () => {
+    const remote = new MemoryStore();
+    const a = new MemoryLocal({ "a.png": "base" }),
+      b = new MemoryLocal();
+    await a.sync(remote);
+    await b.sync(remote);
+    a.files.set("a.png", bytes("A"));
+    b.files.set("a.png", bytes("B"));
+    a.binary.add("a.png");
+    b.binary.add("a.png");
+    await a.sync(remote);
     const result = await b.sync(remote);
     expect(result.conflicts).toHaveLength(1);
-    expect(text(b.files.get("a.png"))).toBe("base");
-    expect(text(b.files.get(result.conflicts[0]))).toBe("new");
+    expect(text(b.files.get("a.png"))).toBe("B");
+    expect(text(b.files.get(result.conflicts[0]))).toBe("A");
   });
   it("publishes no partial manifest or baseline when a block upload fails, then resumes", async () => {
     const remote = new MemoryStore(),
@@ -254,5 +287,20 @@ suite("workspace synchronization", () => {
     expect(text(c.files.get("drafts/x.md"))).toBe("theirs, edited");
     expect(c.files.has("drafts/y.md")).toBe(false);
     expect(text(b.files.get("drafts/y.md"))).toBe("mine");
+    // Synced, then left out and removed here, then included again: the
+    // file is fetched back, not deleted everywhere.
+    b.leaves = () => false;
+    await b.sync(remote);
+    b.leaves = (path) => path.startsWith("drafts/");
+    b.files.delete("drafts/x.md");
+    await b.sync(remote);
+    b.leaves = () => false;
+    expect((await b.sync(remote)).removed).toBe(0);
+    expect(text(b.files.get("drafts/x.md"))).toBe("theirs, edited");
+    // A twin left out here still clashes with an upload of the other.
+    b.leaves = (path) => path === "drafts/x.md";
+    b.files.delete("drafts/x.md");
+    b.files.set("drafts/X.md", bytes("twin"));
+    await expect(b.sync(remote)).rejects.toThrow("caseCollision");
   });
 });

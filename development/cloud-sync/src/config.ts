@@ -126,7 +126,7 @@ const attachments =
   /\.(png|jpe?g|gif|webp|svg|avif|bmp|ico|heic|pdf|docx?|xlsx?|pptx?|odt|ods|odp|mp3|wav|m4a|ogg|mp4|mov|webm)$/i;
 const ignored = new Set(["node_modules", "dist", "build", "target", "vendor"]);
 export const isText = (path: string) =>
-  documents.test(path) || /\.svg$/i.test(path);
+  documents.test(path) || /\.svg$/i.test(path) || isObsidianSetting(path);
 /** Obsidian's own settings a sync may carry, when asked: none of its
  *  plugins' code, nor what differs per machine (workspace.json). */
 export const OBSIDIAN_SETTINGS = [

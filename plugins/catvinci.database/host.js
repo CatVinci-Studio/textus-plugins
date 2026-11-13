@@ -199,8 +199,11 @@ function draw(target, webview, context) {
         // A row opens in a tab, as a file does.
         case "open":
           return textus.layout.open(join(root, m.rel));
+        // Sent again even when it reads the same ("05" saved as 5): the
+        // page waits for it to redraw the cell it edited.
         case "set":
-          return setProp(m.rel, m.key, m.value);
+          await setProp(m.rel, m.key, m.value);
+          return send(true);
         case "add":
           return addRow(m.folder, m.props, m.title);
         case "view":

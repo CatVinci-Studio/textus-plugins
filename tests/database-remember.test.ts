@@ -44,3 +44,41 @@ it("remembers each block's view on this device", async () => {
   await other.send({ type: "ready", index: 0 });
   expect(other.posted).toContainEqual({ type: "selected", index: 0 });
 });
+
+it("draws the edited cell again even when the saved value reads the same", async () => {
+  let render: (block: Any, webview: Any) => Promise<void> = async () => {};
+  const updated: string[] = [];
+  loadPlugin("catvinci.database", {
+    plugin: { readText: async () => "<html></html>" },
+    files: {
+      root: async () => "/root",
+      frontmatter: { update: async (path: string) => void updated.push(path) },
+    },
+    views: {
+      registerCodeBlock: (_lang: string, p: Any) => ((render = p.render), { dispose() {} }),
+    },
+  });
+  const posted: Any[] = [];
+  let receive: (m: Any) => Promise<void> = async () => {};
+  await render(
+    {
+      path: "/root/Note.md",
+      block: 0,
+      source: "views:\n  - type: table\n",
+      setSource: async () => {},
+      onDidChange: () => {},
+    },
+    {
+      html: "",
+      postMessage: (m: Any) => posted.push(m),
+      onDidDispose: () => {},
+      onDidReceiveMessage: (f: Any) => (receive = f),
+    },
+  );
+  await receive({ type: "ready", index: 0 });
+  const data = () => posted.filter((m) => m.type === "data").length;
+  await vi.waitFor(() => expect(data()).toBe(1));
+  await receive({ type: "set", rel: "a.md", key: "n", value: "05" });
+  expect(updated).toHaveLength(1);
+  await vi.waitFor(() => expect(data()).toBe(2));
+});

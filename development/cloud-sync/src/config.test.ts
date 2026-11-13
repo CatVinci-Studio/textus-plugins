@@ -92,13 +92,37 @@ describe("connection and data boundaries", () => {
     expect(scope.enters("notes")).toBe(true);
     // Nothing comes back from inside a folder left out.
     expect(
-      scopeOf({ exclude: "a/\n!a/b.md", gitignore: false, obsidian: false })
-        .wants("a/b.md"),
+      scopeOf({
+        exclude: "a/\n!a/b.md",
+        gitignore: false,
+        obsidian: false,
+      }).wants("a/b.md"),
     ).toBe(false);
+    // Git's finer points: classes, escapes, case, where ** stands.
+    const cases: [string, string, boolean][] = [
+      ["note[0-9].md", "note3.md", false],
+      ["note[!0-9].md", "note3.md", true],
+      ["\\#x.md", "#x.md", false],
+      ["drafts/", "Drafts/a.md", false],
+      ["foo/**\n!foo/keep.md", "foo/keep.md", true],
+      ["foo/**", "foo/a.md", false],
+      ["logs/**.md", "logs.md", true],
+      ["logs/**.md", "logs/a/b.md", true],
+      ["a/**/b.md", "a/b.md", false],
+      ["a.md\\ ", "a.md ", false],
+      ["a.md   ", "a.md", false],
+      ["[", "a.md", true],
+    ];
+    for (const [exclude, path, wanted] of cases)
+      expect([
+        exclude,
+        scopeOf({ exclude, gitignore: false, obsidian: false }).wants(path),
+      ]).toEqual([exclude, wanted]);
     // The folder's .gitignore counts only when asked for.
     expect(
-      scopeOf({ exclude: "", gitignore: false, obsidian: false }, "out/")
-        .wants("out/a.md"),
+      scopeOf({ exclude: "", gitignore: false, obsidian: false }, "out/").wants(
+        "out/a.md",
+      ),
     ).toBe(true);
   });
   it("carries Obsidian's shared settings only when asked, never its per-device files", () => {

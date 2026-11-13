@@ -15,42 +15,65 @@ interface Rule {
   dirOnly: boolean;
 }
 
-/** One pattern as a test of a path from the folder's top. */
+/** A glob's pieces: `**` at the start, middle or end, `*`, `?`, a `[...]`
+ *  class, an escaped character; plain text between. Any other `**` is a `*`. */
+const PIECE = /(^\*\*\/|\/\*\*\/|\/\*\*$|\*+|\?|\[!?\]?[^\]]*\]|\\.)/;
+
+function pieceSource(part: string): string {
+  if (part === "**/") return "(?:.*/)?";
+  if (part === "/**/") return "/(?:.*/)?";
+  if (part === "/**") return "/.*";
+  if (/^\*+$/.test(part)) return "[^/]*";
+  if (part === "?") return "[^/]";
+  if (part.startsWith("\\"))
+    return part.slice(1).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  if (part.length > 2 && part.startsWith("[") && part.endsWith("]")) {
+    const inner = part.slice(1, -1).replace(/^!/, "^").replace(/\\/g, "\\\\");
+    return `[${inner}]`;
+  }
+  return part.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+/** One pattern as a test of a path from the folder's top, letter case
+ *  ignored as Git does on macOS and Windows. */
 function patternTest(pattern: string): RegExp {
   // With a slash before its end it is anchored to the top; else any level.
   const anchored = pattern.replace(/\/$/, "").includes("/");
   const body = pattern
     .replace(/^\//, "")
     .replace(/\/$/, "")
-    .split(/(\*\*\/|\/\*\*|\*\*|\*|\?)/)
-    .map((part) =>
-      part === "**/"
-        ? "(?:.*/)?"
-        : part === "/**"
-          ? "(?:/.*)?"
-          : part === "**"
-            ? ".*"
-            : part === "*"
-              ? "[^/]*"
-              : part === "?"
-                ? "[^/]"
-                : part.replace(/[.+^${}()|[\]\\]/g, "\\$&"),
-    )
+    .split(PIECE)
+    .map(pieceSource)
     .join("");
-  return new RegExp(`^${anchored ? "" : "(?:.*/)?"}${body}$`);
+  return new RegExp(`^${anchored ? "" : "(?:.*/)?"}${body}$`, "i");
 }
 
+/** Rules past this many characters are not read: a .gitignore is small. */
+const RULES_CAP = 40_000;
+
 export function readRules(text: string): Rule[] {
-  return text.split(/\r?\n/).flatMap((raw) => {
-    const line = raw.trim();
-    if (!line || line.startsWith("#")) return [];
-    const negate = line.startsWith("!");
-    const pattern = negate ? line.slice(1) : line;
-    if (!pattern || pattern === "/") return [];
-    return [
-      { test: patternTest(pattern), negate, dirOnly: pattern.endsWith("/") },
-    ];
-  });
+  return text
+    .slice(0, RULES_CAP)
+    .split(/\r?\n/)
+    .flatMap((raw) => {
+      // Trailing spaces go unless escaped, as in Git; leading ones stay.
+      const line = raw.replace(/(?<!\\)\s+$/, "").replace(/\\ $/, " ");
+      if (!line || line.startsWith("#")) return [];
+      const negate = line.startsWith("!");
+      const pattern = negate ? line.slice(1) : line;
+      if (!pattern || pattern === "/") return [];
+      try {
+        return [
+          {
+            test: patternTest(pattern),
+            negate,
+            dirOnly: pattern.endsWith("/"),
+          },
+        ];
+      } catch {
+        return [];
+      }
+    });
 }
 
 /** Whether `rules` leave out `path` (a folder when `dir`), or a folder

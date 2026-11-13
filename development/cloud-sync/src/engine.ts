@@ -122,7 +122,14 @@ export async function synchronize(options: Options): Promise<Result> {
         (t) => Date.parse(t.deletedAt) > cutoff,
       ),
     };
-    const base: Base = { format: FORMAT, files: { ...options.base.files } };
+    // What this device leaves out stays as it is, here and there, and has
+    // no last-synced state: included again, a missing file is fetched, never
+    // taken for a deletion.
+    const ours = <T>(from: Record<string, T>) =>
+      Object.fromEntries(
+        Object.entries(from).filter(([path]) => local.wants(path)),
+      );
+    const base: Base = { format: FORMAT, files: ours(options.base.files) };
     const known = new Set<string>();
     const result: Result = {
       uploaded: 0,
@@ -133,16 +140,15 @@ export async function synchronize(options: Options): Promise<Result> {
       deferred: [],
       unchanged: 0,
     };
-    // What this device leaves out stays as it is, here and there.
-    const ours = (from: Record<string, Entry>) =>
-      Object.fromEntries(
-        Object.entries(from).filter(([path]) => local.wants(path)),
-      );
-    const ourBase = Object.fromEntries(
-      Object.entries(base.files).filter(([path]) => local.wants(path)),
-    );
+    const ourBase = { ...base.files };
     const actions = plan(files, ours(remote.files), ourBase);
-    const names = new Map<string, string>();
+    // Twins left out here still clash with an upload of the other.
+    const names = new Map(
+      Object.keys(remote.files).map((p) => [
+        p.normalize("NFC").toLowerCase(),
+        p,
+      ]),
+    );
     for (const a of actions) {
       const folded = a.path.normalize("NFC").toLowerCase();
       if (names.has(folded) && names.get(folded) !== a.path)
@@ -235,7 +241,23 @@ export async function synchronize(options: Options): Promise<Result> {
           result.downloaded++;
           continue;
         }
-        // Binary replacements and concurrent edits are also kept as two files.
+        // An attachment changed elsewhere and not here: the old one goes to
+        // the trash and the new one takes its place (it can't be rewritten
+        // in place). Kept as two files, it was sent back over the new one.
+        if (applied === false && kind === "download" && l) {
+          const gone = await local.remove(path, l.hash);
+          if (gone === "deferred") {
+            result.deferred.push(path);
+            continue;
+          }
+          const placed = gone && (await local.apply(path, bytes, null));
+          if (placed === true) {
+            base.files[path] = r.hash;
+            result.downloaded++;
+            continue;
+          }
+        }
+        // Concurrent edits are kept as two files.
         await keepRemote(path, r, bytes);
         if (kind === "download" && !l) {
           result.deferred.push(path);

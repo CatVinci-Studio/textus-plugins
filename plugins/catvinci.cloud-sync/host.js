@@ -146,7 +146,7 @@ function identity(c) {
 var documents = /\.(md|markdown|mdown|mkd|txt|csv|base|canvas)$/i;
 var attachments = /\.(png|jpe?g|gif|webp|svg|avif|bmp|ico|heic|pdf|docx?|xlsx?|pptx?|odt|ods|odp|mp3|wav|m4a|ogg|mp4|mov|webm)$/i;
 var ignored = /* @__PURE__ */ new Set(["node_modules", "dist", "build", "target", "vendor"]);
-var isText = (path) => documents.test(path) || /\.svg$/i.test(path);
+var isText = (path) => documents.test(path) || /\.svg$/i.test(path) || isObsidianSetting(path);
 var OBSIDIAN_SETTINGS = [
   "app.json",
   "appearance.json",
@@ -245,7 +245,11 @@ function plan(local, remote, base) {
     ])
   ].sort().map((path) => {
     const l = local[path]?.hash, r = remote[path]?.hash, b = base[path];
-    const kind = l === r ? l ? "equal" : "forget" : !l ? r === b ? "deleteRemote" : "download" : !r ? l === b ? "deleteLocal" : "upload" : l === b ? "download" : r === b ? "upload" : "conflict";
+    const kind = l === r ? l ? "equal" : "forget" : !l ? r === b ? "deleteRemote" : "download" : !r ? l === b ? "deleteLocal" : "upload" : l === b ? "download" : r === b ? "upload" : (
+      // Obsidian's settings have no copy to keep: the synced
+      // one wins.
+      isObsidianSetting(path) ? "download" : "conflict"
+    );
     return { path, kind };
   });
 }
@@ -343,7 +347,10 @@ async function synchronize(options) {
         (t) => Date.parse(t.deletedAt) > cutoff
       )
     };
-    const base = { format: FORMAT, files: { ...options.base.files } };
+    const ours = (from) => Object.fromEntries(
+      Object.entries(from).filter(([path]) => local.wants(path))
+    );
+    const base = { format: FORMAT, files: ours(options.base.files) };
     const known = /* @__PURE__ */ new Set();
     const result = {
       uploaded: 0,
@@ -354,14 +361,14 @@ async function synchronize(options) {
       deferred: [],
       unchanged: 0
     };
-    const ours = (from) => Object.fromEntries(
-      Object.entries(from).filter(([path]) => local.wants(path))
-    );
-    const ourBase = Object.fromEntries(
-      Object.entries(base.files).filter(([path]) => local.wants(path))
-    );
+    const ourBase = { ...base.files };
     const actions = plan(files, ours(remote.files), ourBase);
-    const names = /* @__PURE__ */ new Map();
+    const names = new Map(
+      Object.keys(remote.files).map((p) => [
+        p.normalize("NFC").toLowerCase(),
+        p
+      ])
+    );
     for (const a of actions) {
       const folded = a.path.normalize("NFC").toLowerCase();
       if (names.has(folded) && names.get(folded) !== a.path)
@@ -441,6 +448,19 @@ async function synchronize(options) {
           result.downloaded++;
           continue;
         }
+        if (applied === false && kind === "download" && l) {
+          const gone = await local.remove(path, l.hash);
+          if (gone === "deferred") {
+            result.deferred.push(path);
+            continue;
+          }
+          const placed = gone && await local.apply(path, bytes, null);
+          if (placed === true) {
+            base.files[path] = r.hash;
+            result.downloaded++;
+            continue;
+          }
+        }
         await keepRemote(path, r, bytes);
         if (kind === "download" && !l) {
           result.deferred.push(path);
@@ -490,23 +510,45 @@ async function synchronize(options) {
 }
 
 // development/cloud-sync/src/scope.ts
+var PIECE = /(^\*\*\/|\/\*\*\/|\/\*\*$|\*+|\?|\[!?\]?[^\]]*\]|\\.)/;
+function pieceSource(part) {
+  if (part === "**/") return "(?:.*/)?";
+  if (part === "/**/") return "/(?:.*/)?";
+  if (part === "/**") return "/.*";
+  if (/^\*+$/.test(part)) return "[^/]*";
+  if (part === "?") return "[^/]";
+  if (part.startsWith("\\"))
+    return part.slice(1).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  if (part.length > 2 && part.startsWith("[") && part.endsWith("]")) {
+    const inner = part.slice(1, -1).replace(/^!/, "^").replace(/\\/g, "\\\\");
+    return `[${inner}]`;
+  }
+  return part.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
 function patternTest(pattern) {
   const anchored = pattern.replace(/\/$/, "").includes("/");
-  const body = pattern.replace(/^\//, "").replace(/\/$/, "").split(/(\*\*\/|\/\*\*|\*\*|\*|\?)/).map(
-    (part) => part === "**/" ? "(?:.*/)?" : part === "/**" ? "(?:/.*)?" : part === "**" ? ".*" : part === "*" ? "[^/]*" : part === "?" ? "[^/]" : part.replace(/[.+^${}()|[\]\\]/g, "\\$&")
-  ).join("");
-  return new RegExp(`^${anchored ? "" : "(?:.*/)?"}${body}$`);
+  const body = pattern.replace(/^\//, "").replace(/\/$/, "").split(PIECE).map(pieceSource).join("");
+  return new RegExp(`^${anchored ? "" : "(?:.*/)?"}${body}$`, "i");
 }
+var RULES_CAP = 4e4;
 function readRules(text) {
-  return text.split(/\r?\n/).flatMap((raw) => {
-    const line = raw.trim();
+  return text.slice(0, RULES_CAP).split(/\r?\n/).flatMap((raw) => {
+    const line = raw.replace(/(?<!\\)\s+$/, "").replace(/\\ $/, " ");
     if (!line || line.startsWith("#")) return [];
     const negate = line.startsWith("!");
     const pattern = negate ? line.slice(1) : line;
     if (!pattern || pattern === "/") return [];
-    return [
-      { test: patternTest(pattern), negate, dirOnly: pattern.endsWith("/") }
-    ];
+    try {
+      return [
+        {
+          test: patternTest(pattern),
+          negate,
+          dirOnly: pattern.endsWith("/")
+        }
+      ];
+    } catch {
+      return [];
+    }
   });
 }
 function ruledOut(rules, path, dir) {
@@ -1811,7 +1853,11 @@ var Controller = class {
       }
       const base = parseBase(await this.ctx.storage.global.get(key));
       this.pacer.started();
-      const gitignore = config.gitignore ? await this.api.files.read(`${root.replace(/[/\\]$/, "")}/.gitignore`).then((bytes) => new TextDecoder().decode(bytes)).catch(() => "") : "";
+      const gitignore = config.gitignore ? await this.api.files.read(`${root.replace(/[/\\]$/, "")}/.gitignore`).then((bytes) => new TextDecoder().decode(bytes)).catch(async (err) => {
+        if (await this.api.files.stat(`${root.replace(/[/\\]$/, "")}/.gitignore`).catch(() => null))
+          throw err;
+        return "";
+      }) : "";
       this.workspace = new Workspace(
         this.api,
         root,

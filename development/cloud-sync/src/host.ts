@@ -236,7 +236,17 @@ class Controller {
         ? await this.api.files
             .read(`${root.replace(/[/\\]$/, "")}/.gitignore`)
             .then((bytes) => new TextDecoder().decode(bytes))
-            .catch(() => "")
+            // None there: no rules. Unreadable: no sync, rather than one
+            // without the rules the user asked for.
+            .catch(async (err: unknown) => {
+              if (
+                await this.api.files
+                  .stat(`${root.replace(/[/\\]$/, "")}/.gitignore`)
+                  .catch(() => null)
+              )
+                throw err;
+              return "";
+            })
         : "";
       this.workspace = new Workspace(
         this.api,
