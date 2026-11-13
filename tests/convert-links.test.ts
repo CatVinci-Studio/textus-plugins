@@ -95,6 +95,9 @@ describe("converting a note's links", () => {
     expect(out.text).toBe(
       "```\n```\nSee [Plans](Plans.md)\n```\n[[Nov 8]]\n```\nAfter [Plans](Plans.md)\n",
     );
+    // A longer run closes it too.
+    const longer = await run("```\nx\n````\n[[Plans]]\n", "/v/Life/Week45.md", "markdown");
+    expect(longer.text).toBe("```\nx\n````\n[Plans](Plans.md)\n");
   });
 
   it("writes standard links to notes as [[wiki links]], pictures and web links kept", async () => {

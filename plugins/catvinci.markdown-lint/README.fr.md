@@ -39,6 +39,7 @@ Espacement CJK, l’extension qui met des espaces entre texte chinois et latin, 
 
 ## Changements
 
+- **0.4.1** - Supprimer les lignes vides et changer de liste laissent intact un bloc de code dans une clôture plus longue (```` contenant ```).
 - **0.4.0** - Passer les lignes sélectionnées en liste à puces, numérotée ou de tâches (numérotée à partir de 1 à chaque niveau ; une tâche garde sa coche).
 - **0.3.2** - Textes d'aide et d'état vide plus courts.
 - **0.3.1** - Sa page dit maintenant en une phrase ce qu'il fait, ce qu'il permet et ce qui a changé à chaque version.

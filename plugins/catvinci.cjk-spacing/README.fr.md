@@ -21,6 +21,7 @@ Met une espace entre le texte chinois ou japonais et les lettres latines ou les 
 
 ## Changements
 
+- **0.2.4** - Un bloc de code dans une clôture plus longue (```` contenant ```) reste intact.
 - **0.2.3** - L'outil pour Textus AI dit ce qu'il fait : chinois et japonais, pas coréen.
 - **0.2.2** - laisse tels quels les identifiants de bloc, champs Dataview, surlignages et champs Tasks d’Obsidian
 - **0.2.1** - laisse tels quels les #tags, rappels et commentaires %% ; à l’enregistrement, seuls les blocs de texte changent

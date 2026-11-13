@@ -44,7 +44,7 @@
    *  where place(i) is the line i (from 0) moved to; null when nothing moves. */
   function orderAround(text, at) {
     // Each place keeps its own line ending: a mixed note stays as it was.
-    const all = textLines.split(text);
+    const all = root.textLines.split(text);
     const lines = all.map((r) => r.text);
     if (!lines[at] || !ITEM.test(lines[at])) return null;
     const inList = (l) => l.trim() !== "" && (ITEM.test(l) || /^\s/.test(l));
@@ -59,7 +59,7 @@
     if (ordered.every((r, i) => r === rows[i])) return null;
     const moved = new Map(ordered.map((r, i) => [r.was, from + i]));
     return {
-      text: textLines.join(all.map((r, i) => (i >= from && i < to ? { text: ordered[i - from].text, eol: r.eol } : r))),
+      text: root.textLines.join(all.map((r, i) => (i >= from && i < to ? { text: ordered[i - from].text, eol: r.eol } : r))),
       place: (i) => (moved.has(i) ? moved.get(i) : i),
     };
   }

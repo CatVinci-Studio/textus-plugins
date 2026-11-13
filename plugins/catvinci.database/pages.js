@@ -116,8 +116,8 @@
    *  reading `old` - given `title`; anything else left as it is. */
   function retitle(text, old, title) {
     const top = /^(?:---\r?\n[\s\S]*?\r?\n(?:---|\.\.\.)[ \t]*(?:\r?\n|$))?(?:[ \t]*\r?\n)*/.exec(text)[0];
-    const line = /^#[ \t]+(.*?)[ \t#]*(?=\r?\n|$)/.exec(text.slice(top.length));
-    if (!line || fileName(line[1]) !== old) return text;
+    const line = /^#[ \t]+(.*?)(?:[ \t]+#+)?[ \t]*(?=\r?\n|$)/.exec(text.slice(top.length));
+    if (!line || (line[1] !== old && fileName(line[1]) !== old)) return text;
     return top + "# " + title + text.slice(top.length + line[0].length);
   }
 

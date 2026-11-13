@@ -21,6 +21,7 @@ Puts a space between Chinese or Japanese text and Latin letters or numbers.
 
 ## Changes
 
+- **0.2.4** - A code block inside a longer fence (```` holding ```) is left alone.
 - **0.2.3** - Its Textus AI tool says what it does: Chinese and Japanese, not Korean.
 - **0.2.2** - leaves Obsidian's block ids, Dataview fields, highlights and Tasks fields as written
 - **0.2.1** - leaves #tags, reminders and %% comments alone; on save only prose blocks change

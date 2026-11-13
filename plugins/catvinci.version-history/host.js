@@ -82,7 +82,6 @@ async function record(saved) {
   // since it was first kept, and only it is written.
   const now = Date.now();
   const newest = list[0];
-  full = false;
   if (newest && now - idOf(newest) < EVERY) {
     await keep(key + NOW, key, {
       path: saved.path,
@@ -265,12 +264,7 @@ async function follow(change) {
   // A document's two keys move together, or not at all.
   const paths = new Set();
   for (const k of await store.keys()) {
-    if (!k.startsWith("v:") || k.endsWith(NOW)) continue;
-    const value = await store.get(k);
-    if (value && typeof value.path === "string" && moved(value.path)) paths.add(value.path);
-  }
-  for (const k of await store.keys()) {
-    if (!k.startsWith("v:") || !k.endsWith(NOW)) continue;
+    if (!k.startsWith("v:")) continue;
     const value = await store.get(k);
     if (value && typeof value.path === "string" && moved(value.path)) paths.add(value.path);
   }

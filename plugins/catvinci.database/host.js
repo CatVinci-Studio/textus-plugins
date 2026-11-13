@@ -122,19 +122,20 @@ async function deleteProp(target, key) {
   if (!base) return;
   const using = rows.filter((r) => key in r.props);
   if (using.length && !(await textus.ui.confirm(t("deleteAsk", key, using.length), { okLabel: t("deleteProperty"), danger: true }))) return;
+  // The base first, as in renameProp.
+  if (!(await target.setSource(database.writeBase(database.dropKey(base, key))))) return;
   for (const row of using)
     await textus.files.frontmatter.update(join(root, row.rel), (fm) => {
       delete fm[key];
       return fm;
     });
-  await target.setSource(database.writeBase(database.dropKey(base, key)));
 }
 
-/** The base changed by `change(base)`, written back. */
+/** The base changed by `change(base)`, written back; false when refused. */
 async function changeBase(target, change) {
   const parsed = database.parseBase(target.source());
-  if (parsed.error) return;
-  await target.setSource(database.writeBase(change(parsed.base)));
+  if (parsed.error) return false;
+  return target.setSource(database.writeBase(change(parsed.base)));
 }
 
 /**
@@ -203,11 +204,16 @@ function draw(target, webview, context) {
           return addRow(m.folder, m.props, m.title);
         case "view":
           return set({ view: m.view }, m.index ?? index);
-        case "addView":
-          return changeBase(target, (base) => {
-            select(base.views.length);
+        // The view in front moves only once the base is written.
+        case "addView": {
+          let next = index;
+          const added = (base) => {
+            next = base.views.length;
             return database.addView(base, m.view, database.viewName(m.view));
-          });
+          };
+          if (await changeBase(target, added)) select(next);
+          return;
+        }
         case "renameView": {
           const name = ((await textus.ui.input({ prompt: t("renameView"), value: m.name || "" })) || "").trim();
           return name && set({ name }, m.index ?? index);
@@ -216,27 +222,33 @@ function draw(target, webview, context) {
         case "deleteRow":
           return textus.commands.execute("catvinci.database.deletePage", join(root, m.rel));
         // A view's tab dragged to another place; the one in front stays in front.
-        case "moveView":
-          return changeBase(target, (base) => {
+        case "moveView": {
+          let next = index;
+          const moved = (base) => {
             const from = Math.min(m.from | 0, base.views.length - 1);
             const to = Math.min(m.to | 0, base.views.length - 1);
             if (from === to) return base;
             const views = base.views.slice();
-            const [moved] = views.splice(from, 1);
-            views.splice(to, 0, moved);
+            views.splice(to, 0, ...views.splice(from, 1));
             const order = base.views.map((_, n) => n);
-            const [i] = order.splice(from, 1);
-            order.splice(to, 0, i);
-            select(order.indexOf(index));
+            order.splice(to, 0, ...order.splice(from, 1));
+            next = order.indexOf(index);
             return { ...base, views };
-          });
-        case "deleteView":
-          return changeBase(target, (base) => {
+          };
+          if (await changeBase(target, moved)) select(next);
+          return;
+        }
+        case "deleteView": {
+          let next = index;
+          const deleted = (base) => {
             if (base.views.length < 2) return base;
             const gone = Math.min(m.index ?? index, base.views.length - 1);
-            if (gone <= index) select(Math.max(0, index - 1));
+            if (gone <= index) next = Math.max(0, index - 1);
             return { ...base, views: base.views.filter((_, n) => n !== gone) };
-          });
+          };
+          if (await changeBase(target, deleted)) select(next);
+          return;
+        }
         // Filters, sorts, columns, grouping, the board's order, as the view's menus set them.
         case "spec": {
           const spec = { ...m.spec };

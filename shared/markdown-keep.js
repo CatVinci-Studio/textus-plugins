@@ -2,6 +2,17 @@
 // both leave the same things alone - Obsidian's own syntax too. Each lists
 // this as lib/markdown-keep.js in libs.json and runs it before its own code.
 (function (root) {
+  var FENCE_LINE = /^\s*(```+|~~~+)/;
+  /** The open fence after `line`: a fence opens one, and only a bare run
+   *  of its own character, as long or longer, closes it. */
+  function fenceStep(fence, line) {
+    var open = FENCE_LINE.exec(line);
+    if (!open) return fence;
+    if (!fence) return open[1];
+    var closes = open[1][0] === fence[0] && open[1].length >= fence.length;
+    return closes && /^\s*[`~]+\s*$/.test(line) ? null : fence;
+  }
+
   "use strict";
   // Obsidian Tasks' field marks: dates, recurrence, ids, priorities.
   var TASK_MARKS = "📅|⏳|🛫|✅|❌|➕|🔁|🆔|⛔|🏁|⏫|🔼|🔽|⏬|🔺";
@@ -79,12 +90,8 @@
             if (i > 0 && /^(---|\.\.\.)\s*$/.test(line)) front = false;
             return true;
           }
-          var open = /^\s*(```+|~~~+)/.exec(line);
-          if (open && !html && !comment) {
-            // Closed only by a bare run of its own character, as long or longer.
-            if (!fence) fence = open[1];
-            else if (open[1][0] === fence[0] && open[1].length >= fence.length && /^\s*[`~]+\s*$/.test(line))
-              fence = null;
+          if (FENCE_LINE.test(line) && !html && !comment) {
+            fence = fenceStep(fence, line);
             return true;
           }
           if (fence) return true;
@@ -146,6 +153,7 @@
   }
 
   root.markdownKeep = {
+    fenceStep: fenceStep,
     SPANS: SPANS,
     proseLines: proseLines,
     SKIP_KINDS: SKIP_KINDS,

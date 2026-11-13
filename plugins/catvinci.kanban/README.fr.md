@@ -36,7 +36,7 @@ kanban-plugin: board
 
 ## Changements
 
-- **0.4.8** - Un tableau aux fins de ligne Windows (CRLF) les garde, et un tableau modifié ailleurs pendant que vous l'éditez affiche ce changement au lieu de l'écraser. La description de la boutique commence désormais par ce que fait le plugin.
+- **0.4.8** - Un tableau aux fins de ligne Windows (CRLF) les garde, et un tableau modifié ailleurs pendant que vous l'éditez affiche ce changement au lieu de l'écraser, et le signale. La description de la boutique commence désormais par ce que fait le plugin.
 - **0.4.7** - Une ligne vide dans une carte ne la coupe plus, et Échap ne laisse plus de carte vide. L’IA laisse les notes ordinaires tranquilles, et le tableau tient dans les panneaux étroits.
 - **0.4.6** - Le tableau s’estompe sur les bords quand des listes dépassent la fenêtre.
 - **0.4.5** - Une carte ou une liste glissée reste juste sous le pointeur et se soulève comme tout ce qu’on glisse dans Textus. Ses barres, listes et contrôles sont désormais ceux de Textus, grandissent avec l’interface et suivent chaque thème ; nécessite Textus 1.3.12.

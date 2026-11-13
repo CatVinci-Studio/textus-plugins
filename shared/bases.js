@@ -160,7 +160,10 @@
     };
     const views = base.views.map((v) => {
       const n = { ...v };
-      if (Array.isArray(n.order)) n.order = [...new Set(n.order.map(swap))];
+      if (Array.isArray(n.order))
+        n.order = n.order.map(swap).filter((id, i, all) => all.findIndex((x) => keyOf(x) === keyOf(id)) === i);
+      if (n.columnSize && typeof n.columnSize === "object")
+        n.columnSize = Object.fromEntries(Object.entries(n.columnSize).map(([id, px]) => [swap(id), px]));
       if (Array.isArray(n.sort)) n.sort = n.sort.map((s) => ({ ...s, property: swap(s.property) }));
       if (n.groupBy && n.groupBy.property) n.groupBy = { ...n.groupBy, property: swap(n.groupBy.property) };
       for (const k of ["date", "end"]) if (n[k]) n[k] = swap(n[k]);
@@ -168,11 +171,14 @@
       return n;
     });
     const next = { ...base, views };
-    if (base.properties && base.properties[idOf(from)]) {
+    // Whichever way the base wrote the property.
+    const was = Object.keys(base.properties || {}).find((id) => keyOf(id) === from);
+    if (was) {
       const props = { ...base.properties };
+      const there = Object.keys(props).find((id) => keyOf(id) === to);
       // A name already there keeps its own display.
-      props[idOf(to)] = props[idOf(to)] || props[idOf(from)];
-      delete props[idOf(from)];
+      if (!there) props[idOf(to)] = props[was];
+      delete props[was];
       next.properties = props;
     }
     return next;
@@ -184,6 +190,8 @@
     const views = base.views.map((v) => {
       const n = { ...v };
       if (Array.isArray(n.order)) n.order = n.order.filter(keep);
+      if (n.columnSize && typeof n.columnSize === "object")
+        n.columnSize = Object.fromEntries(Object.entries(n.columnSize).filter(([id]) => keep(id)));
       if (Array.isArray(n.sort)) n.sort = n.sort.filter((s) => keep(s.property));
       if (n.groupBy && !keep(n.groupBy.property)) delete n.groupBy;
       for (const k of ["date", "end"]) if (n[k] && !keep(n[k])) delete n[k];
@@ -192,9 +200,10 @@
       return n;
     });
     const next = { ...base, views };
-    if (base.properties && base.properties[idOf(key)]) {
+    const was = Object.keys(base.properties || {}).filter((id) => keyOf(id) === key);
+    if (was.length) {
       const props = { ...base.properties };
-      delete props[idOf(key)];
+      for (const id of was) delete props[id];
       next.properties = props;
     }
     return next;

@@ -39,6 +39,7 @@ Espaciado CJK, el complemento que pone espacios entre texto chino y latino, tamb
 
 ## Cambios
 
+- **0.4.1** - Quitar líneas en blanco y cambiar de lista dejan intacto un bloque de código dentro de una valla más larga (```` con ``` dentro).
 - **0.4.0** - Cambia las líneas seleccionadas a lista con viñetas, numerada o de tareas (numera desde 1 en cada nivel; una tarea conserva su marca).
 - **0.3.2** - Textos de ayuda y de estado vacío más breves.
 - **0.3.1** - Su página dice ahora en una frase qué hace, qué puede hacer y qué cambió en cada versión.

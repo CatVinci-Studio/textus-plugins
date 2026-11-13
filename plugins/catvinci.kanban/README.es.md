@@ -36,7 +36,7 @@ kanban-plugin: board
 
 ## Cambios
 
-- **0.4.8** - Un tablero con saltos de línea de Windows (CRLF) los conserva, y un tablero cambiado en otro sitio mientras lo editas muestra ese cambio en vez de sobrescribirlo. La descripción de la tienda empieza ahora por lo que hace el plugin.
+- **0.4.8** - Un tablero con saltos de línea de Windows (CRLF) los conserva, y un tablero cambiado en otro sitio mientras lo editas muestra ese cambio en vez de sobrescribirlo, y lo avisa. La descripción de la tienda empieza ahora por lo que hace el plugin.
 - **0.4.7** - Una línea en blanco dentro de una tarjeta ya no la divide, y Escape ya no deja una tarjeta vacía. La IA no toca las notas normales y el tablero cabe en paneles estrechos.
 - **0.4.6** - El tablero se difumina en los bordes cuando las listas pasan de la ventana.
 - **0.4.5** - Una tarjeta o lista arrastrada se queda justo bajo el puntero y se eleva como todo lo que se arrastra en Textus. Sus barras, listas y controles son ahora los de Textus, crecen con la interfaz y siguen cada tema; necesita Textus 1.3.12.

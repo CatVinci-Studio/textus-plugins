@@ -39,6 +39,7 @@ CJK-Abstände, das Plugin für Leerzeichen zwischen chinesischem und lateinische
 
 ## Änderungen
 
+- **0.4.1** - Leerzeilen entfernen und Listen umstellen lassen einen Codeblock in einem längeren Zaun (```` mit ``` darin) unverändert.
 - **0.4.0** - Ausgewählte Zeilen zur Aufzählung, nummerierten Liste oder Aufgabenliste umstellen (Nummern je Ebene ab 1; erledigte Aufgaben bleiben abgehakt).
 - **0.3.2** - Kürzere Hilfe- und Leertexte.
 - **0.3.1** - Seine Seite sagt jetzt in einem Satz, was es tut, was es kann und was sich in jeder Version geändert hat.

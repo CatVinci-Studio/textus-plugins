@@ -73,6 +73,9 @@ describe("pages", () => {
     );
     // No title heading first: left as it is, a later one too.
     expect(p.retitle("Intro\n\n# Agenda\n", "Agenda", "Standup")).toBe("Intro\n\n# Agenda\n");
+    // A real name holding what fileName would replace, and a closing #.
+    expect(p.retitle("# C# basics\n", "C# basics", "Go")).toBe("# Go\n");
+    expect(p.retitle("# C#\n", "C-", "Go")).toBe("# Go\n");
   });
 
   it("makes a sub-page beside its page", () => {

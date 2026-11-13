@@ -10,16 +10,19 @@
 
   let board = null;
   let timer = 0;
+  // An edit waiting out the save delay.
+  let pending = false;
   const cardLists = () => [...document.querySelectorAll(".cards")];
   const cardsOf = (ul) => [...ul.children].filter((n) => n.classList.contains("card"));
 
   function save() {
     $("state").textContent = t("saving");
     clearTimeout(timer);
-    timer = setTimeout(
-      () => api.postMessage({ type: "save", text: md.serialize(board) }),
-      300,
-    );
+    pending = true;
+    timer = setTimeout(() => {
+      pending = false;
+      api.postMessage({ type: "save", text: md.serialize(board) });
+    }, 300);
   }
   function changed() {
     render();
@@ -226,9 +229,12 @@
     if (message.type === "file") {
       // Changed elsewhere: what is there now wins over an unsaved move.
       clearTimeout(timer);
+      const dropped = pending;
+      pending = false;
       board = md.parse(message.text);
       render();
-      $("state").textContent = message.refused ? t("changedElsewhere") : "";
+      $("state").textContent =
+        message.refused || dropped ? t("changedElsewhere") : "";
     }
     if (message.type === "saved") $("state").textContent = t("saved");
     if (message.type === "error") $("state").textContent = message.message;

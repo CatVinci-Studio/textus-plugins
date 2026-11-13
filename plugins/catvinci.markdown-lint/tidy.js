@@ -136,12 +136,9 @@
     var fence = null;
     for (var i = 0; i < lines.length; i++) {
       var line = lines[i];
-      var open = /^\s*(```+|~~~+)/.exec(line);
-      if (open) {
-        if (!fence) fence = open[1][0];
-        else if (open[1][0] === fence) fence = null;
-      }
-      var blank = !fence && /^\s*(&nbsp;|<br\s*\/?>|\\)?\s*$/i.test(line);
+      var inside = fence;
+      fence = keep.fenceStep(fence, line);
+      var blank = !inside && !fence && /^\s*(&nbsp;|<br\s*\/?>|\\)?\s*$/i.test(line);
       if (!blank) {
         // A ^block-id line names the list or table above only after a blank line.
         if (BLOCK_ID_LINE.test(line) && out.length && out[out.length - 1] !== "" && /^\s*$/.test(lines[i - 1])) out.push("");
@@ -180,7 +177,6 @@
   }
 
   var LIST_LINE = /^(\s*)(?:(?:[-*+]|\d+[.)])\s+(\[[ xX]\]\s+)?)?(.*)$/;
-  var FENCE = /^\s*(`{3,}|~{3,})/;
 
   /** The lines as one kind of list - "bullet", "ordered" or "task" - each
    *  keeping its indent and its words; a plain line becomes an item, a
@@ -192,15 +188,9 @@
     return String(text)
       .split("\n")
       .map(function (line) {
-        var f = FENCE.exec(line);
-        if (fence) {
-          if (f && f[1][0] === fence[0] && f[1].length >= fence.length) fence = null;
-          return line;
-        }
-        if (f) {
-          fence = f[1];
-          return line;
-        }
+        var was = fence;
+        fence = keep.fenceStep(fence, line);
+        if (was || fence) return line;
         if (line.trim() === "") return line;
         var m = LIST_LINE.exec(line);
         var indent = m[1];

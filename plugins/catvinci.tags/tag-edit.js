@@ -22,7 +22,7 @@
       "(^|[\\s(\\[{,;:!?，。；：！？、])#" + escape(from) + "(?!" + MORE + ")",
       "giu",
     );
-    // The fence's character: a ``` inside a ~~~ block doesn't close it.
+    // The open fence's run: only a bare run of its character, as long or longer, closes it.
     let fence = null;
     let inFront = false;
     let inTagList = false;
