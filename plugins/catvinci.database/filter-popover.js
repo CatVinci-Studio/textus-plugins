@@ -4,7 +4,7 @@
 // the filter off. view.js's rules row opens it; loaded before view.js.
 window.databaseFilterPopover = function (page) {
   "use strict";
-  const { el, s, setSpec, label, typeOf } = page;
+  const { api, el, s, setSpec, label, typeOf } = page;
 
   /** The rule's verbs for a property: "any of" and "none of" (by equality,
    *  or by contains for tags), and whether it is empty. */
@@ -67,20 +67,24 @@ window.databaseFilterPopover = function (page) {
       if (rule && index === undefined) index = rest.length;
       setSpec({ filters: rule ? rest.slice(0, index).concat([rule], rest.slice(index)) : rest });
     };
+    // The verb is the app's menu button, not the system's dropdown.
+    const verbName = el("span", {});
     const verb = el(
-      "select",
-      { class: "tx-select", "aria-label": s("filter") },
-      ...verbs(key).map((v) => el("option", { value: v.op }, v.label)),
+      "button",
+      { type: "button", class: "tx-select", "aria-label": s("filter"), "aria-haspopup": "menu" },
+      verbName,
+      el("span", { class: "tx-icon", "data-icon": "chevron" }),
     );
-    verb.value = state.op;
+    const named = () => (verbName.textContent = verbs(key).find((v) => v.op === state.op)?.label || "");
+    named();
     const boxes = el("div", { class: "filter-boxes" });
     const draw = () => {
-      const empty = verb.value === "empty" || verb.value === "!empty";
+      const empty = state.op === "empty" || state.op === "!empty";
       boxes.replaceChildren(
         ...(empty
           ? []
           : choices(key).map((value) => {
-              const box = el("input", { type: "checkbox" });
+              const box = el("input", { type: "checkbox", class: "ui-check" });
               box.checked = state.values.includes(value);
               box.addEventListener("change", () => {
                 state.values = state.values.filter((v) => v !== value);
@@ -91,8 +95,14 @@ window.databaseFilterPopover = function (page) {
             })),
       );
     };
-    verb.addEventListener("change", () => {
-      state.op = verb.value;
+    verb.addEventListener("click", async () => {
+      const chosen = await api.menu(
+        verbs(key).map((v) => ({ label: v.label, value: v.op, checked: v.op === state.op })),
+        verb,
+      );
+      if (typeof chosen !== "string" || chosen === state.op) return;
+      state.op = chosen;
+      named();
       const empty = state.op === "empty" || state.op === "!empty";
       if (empty) write({ key, op: state.op, value: "" });
       else if (state.values.length) write({ key, op: state.op, value: state.values });
