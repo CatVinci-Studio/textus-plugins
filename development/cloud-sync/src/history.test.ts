@@ -19,14 +19,16 @@ import { MemoryLocal, MemoryStore, bytes, keep } from "./test-fixtures";
 
 const DAY = 86_400_000;
 const head = async (s: ObjectStore) => parseManifest((await s.get(HEAD))!);
-const history = async (s: ObjectStore) =>
-  parseHistory((await s.get(HISTORY))!);
+const history = async (s: ObjectStore) => parseHistory((await s.get(HISTORY))!);
 const at = (iso: string) => vi.setSystemTime(new Date(iso));
 
 /** Every block anything kept refers to is still in the store. */
 async function intact(store: MemoryStore) {
   const h = await head(store);
-  const kept = [...Object.values(h.files), ...(h.trash ?? []).map((t) => t.entry)];
+  const kept = [
+    ...Object.values(h.files),
+    ...(h.trash ?? []).map((t) => t.entry),
+  ];
   const hist = await history(store);
   kept.push(...Object.values(hist.versions).flat());
   if (hist.previous) {
@@ -125,7 +127,10 @@ suite("cloud history", () => {
     );
     const h = await head(remote);
     expect(snapshots.sort()).toEqual(
-      [snapshotKey(h.revision), snapshotKey((await history(remote)).previous!)].sort(),
+      [
+        snapshotKey(h.revision),
+        snapshotKey((await history(remote)).previous!),
+      ].sort(),
     );
   });
 
@@ -164,6 +169,30 @@ suite("cloud history", () => {
     expect((await history(remote)).versions["b.md"]?.[0].hash).toBe(
       (await describe(bytes("b"))).hash,
     );
+  });
+
+  it("shows no phantom versions after a run died between the history and the head", async () => {
+    const remote = new MemoryStore();
+    const a = new MemoryLocal({ "a.md": "1", "b.md": "b" });
+    await a.sync(remote);
+    // The run wrote its history (a new head, the old one as previous) and
+    // its snapshot, then died before writing the head itself.
+    const current = await head(remote);
+    const ghost: Manifest = structuredClone(current);
+    const entry = await describe(bytes("never"));
+    await remote.put(blockKey(entry.blocks[0].hash), bytes("never"));
+    ghost.files["b.md"] = entry;
+    ghost.revision = crypto.randomUUID();
+    await remote.put(snapshotKey(ghost.revision), encode(ghost));
+    const written = await history(remote);
+    await remote.put(
+      HISTORY,
+      encode({ ...written, head: ghost.revision, previous: current.revision }),
+    );
+    a.files.set("a.md", bytes("2"));
+    await a.sync(remote);
+    const versions = (await history(remote)).versions["b.md"] ?? [];
+    expect(versions.map((v) => v.hash)).not.toContain(entry.hash);
   });
 
   it("restores in place only over the synced file, else beside it", async () => {
@@ -262,7 +291,9 @@ suite("cloud history", () => {
     const limit = encode(h).length / 2;
     const dropped = fit(h, limit);
     expect(encode(h).length).toBeLessThanOrEqual(limit);
-    const kept = Object.values(h.versions).flat().map((v) => v.at);
+    const kept = Object.values(h.versions)
+      .flat()
+      .map((v) => v.at);
     expect(Math.min(...kept.map(Date.parse))).toBeGreaterThan(
       Math.max(...dropped.map((v) => Date.parse(v.at))),
     );

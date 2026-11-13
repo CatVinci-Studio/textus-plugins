@@ -402,7 +402,7 @@ async function publish(p) {
   if (!changed && !p.cleanupDue && !p.keep.chosen) return false;
   const stored = await store.get(HISTORY);
   const before = stored ? parseHistory(stored) : emptyHistory();
-  const skipped = before.head && remote.revision && before.head !== remote.revision ? await store.get(snapshotKey(before.head)) : null;
+  const skipped = before.head && remote.revision && before.head !== remote.revision && before.previous !== remote.revision ? await store.get(snapshotKey(before.head)) : null;
   let history = skipped ? retire(before, parseManifest(skipped), remote, { at: remote.updatedAt }) : structuredClone(before);
   if (changed) history = retire(history, remote, next, p.origin);
   history.keep = p.keep.chosen || !before.keep ? { days: p.keep.days, at: p.origin.at } : before.keep;
