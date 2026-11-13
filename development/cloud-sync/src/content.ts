@@ -97,12 +97,8 @@ export function parseBase(raw: unknown): Base {
     b.format !== FORMAT ||
     !b.files ||
     Array.isArray(b.files) ||
-    [b.files, b.parked ?? {}].some(
-      (map) =>
-        Array.isArray(map) ||
-        Object.entries(map).some(
-          ([p, h]) => !inScope(p) || !/^[a-f0-9]{64}$/.test(h),
-        ),
+    Object.entries(b.files).some(
+      ([p, h]) => !inScope(p) || !/^[a-f0-9]{64}$/.test(h),
     )
   )
     throw new SyncError("invalidBase");

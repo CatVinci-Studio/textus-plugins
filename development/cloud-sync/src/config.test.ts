@@ -1,7 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { inScope, normalizeConfig, relativePath } from "./config";
 import { parseManifest } from "./content";
-import { scopeOf } from "./scope";
 import { FORMAT, encode } from "./model";
 
 describe("connection and data boundaries", () => {
@@ -66,119 +65,6 @@ describe("connection and data boundaries", () => {
       "script.js",
     ])
       expect(inScope(path)).toBe(false);
-  });
-  it("leaves out what the user's rules and .gitignore leave out, as Git reads them", () => {
-    const scope = scopeOf(
-      {
-        exclude: "drafts/\n*.pdf\n!keep.pdf\n/top.md\nnotes/**/old-?.md",
-        gitignore: true,
-        obsidian: false,
-      },
-      "# build\nout/\n",
-    );
-    for (const path of ["a.md", "keep.pdf", "sub/top.md", "notes/old.md"])
-      expect(scope.wants(path)).toBe(true);
-    for (const path of [
-      "drafts/a.md",
-      "x/drafts/a.md",
-      "manual.pdf",
-      "top.md",
-      "notes/a/b/old-1.md",
-      "out/a.md",
-      ".obsidian/app.json",
-    ])
-      expect(scope.wants(path)).toBe(false);
-    expect(scope.enters("drafts")).toBe(false);
-    expect(scope.enters("notes")).toBe(true);
-    // Nothing comes back from inside a folder left out.
-    expect(
-      scopeOf({
-        exclude: "a/\n!a/b.md",
-        gitignore: false,
-        obsidian: false,
-      }).wants("a/b.md"),
-    ).toBe(false);
-    // Git's finer points: classes, escapes, case, where ** stands.
-    const cases: [string, string, boolean][] = [
-      ["note[0-9].md", "note3.md", false],
-      ["note[!0-9].md", "note3.md", true],
-      ["\\#x.md", "#x.md", false],
-      ["drafts/", "Drafts/a.md", false],
-      ["foo/**\n!foo/keep.md", "foo/keep.md", true],
-      ["foo/**", "foo/a.md", false],
-      ["logs/**.md", "logs.md", true],
-      ["logs/**.md", "logs/a/b.md", true],
-      ["a/**/b.md", "a/b.md", false],
-      ["a.md\\ ", "a.md ", false],
-      ["a.md   ", "a.md", false],
-      ["[", "a.md", true],
-      ["[]a].md", "].md", false],
-      ["[!]a].md", "b.md", false],
-      ["[!]a].md", "xa].md", true],
-      ["**/**/x.md", "x.md", false],
-      ["a/**/**/b.md", "a/b.md", false],
-      ["[z-a].md", "b.md", true],
-      ["📚 Private/", "📚 Private/a.md", false],
-      ["📚?.md", "📚x.md", false],
-      ["a**/**/b.md", "ab/c/b.md", false],
-      ["İ.md", "İ.md", false],
-      ["\\😀.md", "😀.md", false],
-      ["*.md", "x\ny/b.md", false],
-      ["[A-z].md", "_.md", false],
-      ["[Z-a].md", "_.md", false],
-      ["ΑΣ*", "ΑΣ.md", false],
-      ["*Σ/", "ΤΕΛΟΣ/a.md", false],
-      ["*a*b*c*Σ.md", "xaybzcΣ.md", false],
-    ];
-    for (const [exclude, path, wanted] of cases)
-      expect([
-        exclude,
-        scopeOf({ exclude, gitignore: false, obsidian: false }).wants(path),
-      ]).toEqual([exclude, wanted]);
-    // Many stars cost no more than few: no backtracking.
-    const started = Date.now();
-    scopeOf({
-      exclude: "*a*a*a*a*a*a*a*a*b",
-      gitignore: false,
-      obsidian: false,
-    }).wants("a".repeat(80) + ".md");
-    expect(Date.now() - started).toBeLessThan(200);
-    // An everyday .gitignore stays quick over many paths.
-    const node = scopeOf(
-      { exclude: "", gitignore: true, obsidian: false },
-      "logs\n*.log\nnpm-debug.log*\nnode_modules/\n.env\ndist/\n*.tgz\n.cache/\ncoverage/\n*.pid",
-    );
-    const quick = Date.now();
-    for (let i = 0; i < 10_000; i++)
-      node.wants(`notes/project ${i % 50}/chapter ${i}/draft ${i}.md`);
-    expect(Date.now() - quick).toBeLessThan(1000);
-    // Thousands of costly rules: only the first thousand are read.
-    const hostile = scopeOf(
-      { exclude: "", gitignore: true, obsidian: false },
-      "/*a*a*a\n".repeat(4999),
-    );
-    const capped = Date.now();
-    hostile.wants("a".repeat(200) + ".md");
-    expect(Date.now() - capped).toBeLessThan(2000);
-    // A big .gitignore never pushes out the user's own rules.
-    expect(
-      scopeOf(
-        { exclude: "secret.md", gitignore: true, obsidian: false },
-        "#".repeat(50_000),
-      ).wants("secret.md"),
-    ).toBe(false);
-    // The folder's .gitignore counts only when asked for.
-    expect(
-      scopeOf({ exclude: "", gitignore: false, obsidian: false }, "out/").wants(
-        "out/a.md",
-      ),
-    ).toBe(true);
-  });
-  it("carries Obsidian's shared settings only when asked, never its per-device files", () => {
-    const scope = scopeOf({ exclude: "", gitignore: false, obsidian: true });
-    expect(scope.wants(".obsidian/app.json")).toBe(true);
-    expect(scope.wants(".obsidian/workspace.json")).toBe(false);
-    expect(scope.wants(".obsidian/plugins/x/data.json")).toBe(false);
   });
   it.each([
     "../escape.md",

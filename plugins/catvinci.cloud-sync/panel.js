@@ -75,8 +75,7 @@
       "interval"
     ])
       input(id).value = String(config[id]);
-    element("exclude").value = config.exclude;
-    for (const id of ["pathStyle", "automatic", "gitignore", "obsidian"])
+    for (const id of ["pathStyle", "automatic"])
       input(id).checked = config[id];
     toggles();
   }
@@ -99,10 +98,7 @@
       prefix: input("prefix").value,
       pathStyle: input("pathStyle").checked,
       automatic: input("automatic").checked,
-      interval: Number(input("interval").value),
-      exclude: element("exclude").value,
-      gitignore: input("gitignore").checked,
-      obsidian: input("obsidian").checked
+      interval: Number(input("interval").value)
     };
     api.postMessage({
       type: "save",

@@ -1,4 +1,3 @@
-import { isObsidianSetting } from "./config";
 import type { Entry } from "./model";
 
 export type Action = {
@@ -49,11 +48,7 @@ export function plan(
                 ? "download"
                 : r === b
                   ? "upload"
-                  : // Obsidian's settings have no copy to keep: the synced
-                    // one wins.
-                    isObsidianSetting(path)
-                    ? "download"
-                    : "conflict";
+                  : "conflict";
       return { path, kind };
     });
 }

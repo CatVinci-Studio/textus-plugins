@@ -1,7 +1,6 @@
 import { defaults, providers } from "./config";
 import { parseBase } from "./content";
 import { synchronize } from "./engine";
-import { scopeOf } from "./scope";
 import { openEncryptedStore } from "./encrypted-store";
 import { Workspace } from "./local";
 import { Pacer } from "./pacer";
@@ -231,30 +230,11 @@ class Controller {
       }
       const base = parseBase(await this.ctx.storage.global.get(key));
       this.pacer.started();
-      // The folder's .gitignore, read each sync: it changes as Git's does.
-      const gitignore = config.gitignore
-        ? await this.api.files
-            .read(`${root.replace(/[/\\]$/, "")}/.gitignore`)
-            .then((bytes) => new TextDecoder().decode(bytes))
-            // None there: no rules. Unreadable: no sync, rather than one
-            // without the rules the user asked for.
-            .catch(async (err: unknown) => {
-              if (
-                await this.api.files
-                  .stat(`${root.replace(/[/\\]$/, "")}/.gitignore`)
-                  // Refused is there: only a missing one has no rules.
-                  .catch(() => true)
-              )
-                throw err;
-              return "";
-            })
-        : "";
       this.workspace = new Workspace(
         this.api,
         root,
         this.ctx.storage.global,
         this.abort.signal,
-        scopeOf(config, gitignore),
       );
       const result = await synchronize({
         store: encrypted,

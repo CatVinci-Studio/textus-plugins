@@ -19,12 +19,6 @@ export interface Config {
   pathStyle: boolean;
   automatic: boolean;
   interval: number;
-  /** Paths left out, a rule a line, as a .gitignore writes them. */
-  exclude: string;
-  /** The folder's .gitignore is followed too. */
-  gitignore: boolean;
-  /** Obsidian's own settings (OBSIDIAN_SETTINGS) are carried too. */
-  obsidian: boolean;
 }
 export interface Credentials {
   account: string;
@@ -60,9 +54,6 @@ export interface Manifest {
 export interface Base {
   format: typeof FORMAT;
   files: Record<string, string>;
-  /** Last-synced hashes of files this device leaves out, kept for when
-   *  they're included again. */
-  parked?: Record<string, string>;
 }
 export interface ObjectStore {
   get(key: string): Promise<Uint8Array | null>;
@@ -73,9 +64,6 @@ export interface ObjectStore {
 }
 export interface LocalFiles {
   scan(): Promise<Record<string, Entry>>;
-  /** Whether this device syncs `path`: a path it leaves out is neither
-   *  sent, fetched nor deleted, wherever it is. */
-  wants(path: string): boolean;
   read(path: string): Promise<Uint8Array | null>;
   /** False leaves the destination untouched (open, changed, or binary). */
   apply(

@@ -5,10 +5,7 @@ import { activate, deactivate } from "./host";
 type Resolve = (view: unknown) => void | Promise<void>;
 const manifest = JSON.parse(
   readFileSync(
-    new URL(
-      "../../../plugins/catvinci.cloud-sync/textus-plugin.json",
-      import.meta.url,
-    ),
+    new URL("../../../plugins/catvinci.cloud-sync/textus-plugin.json", import.meta.url),
     "utf8",
   ),
 );
@@ -36,8 +33,7 @@ it("shows the whole page in the tab and Settings, its status in the sidebar", as
     ui: { statusItem: () => ({ ...disposable(), update() {} }) },
     views: {
       registerWebview: register,
-      registerSettingsPage: (p: { resolve: Resolve }) =>
-        register("settings", p),
+      registerSettingsPage: (p: { resolve: Resolve }) => register("settings", p),
     },
   };
   await activate({
@@ -48,10 +44,7 @@ it("shows the whole page in the tab and Settings, its status in the sidebar", as
     plugin: {
       readText: async (file: string) =>
         readFileSync(
-          new URL(
-            `../../../plugins/catvinci.cloud-sync/${file}`,
-            import.meta.url,
-          ),
+          new URL(`../../../plugins/catvinci.cloud-sync/${file}`, import.meta.url),
           "utf8",
         ),
     },

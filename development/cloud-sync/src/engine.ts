@@ -1,4 +1,3 @@
-import { isObsidianSetting } from "./config";
 import { describe, hash, parseManifest } from "./content";
 import { conflictPath, moves, plan } from "./planner";
 import {
@@ -109,11 +108,7 @@ export async function synchronize(options: Options): Promise<Result> {
           files: Object.create(null),
         };
     // A previously joined folder must never silently recreate a missing repository.
-    if (
-      !raw &&
-      (Object.keys(options.base.files).length ||
-        Object.keys(options.base.parked ?? {}).length)
-    )
+    if (!raw && Object.keys(options.base.files).length)
       throw new SyncError("remoteMissing");
     progress("scanning", 0, 0);
     const files = await local.scan();
@@ -127,28 +122,7 @@ export async function synchronize(options: Options): Promise<Result> {
         (t) => Date.parse(t.deletedAt) > cutoff,
       ),
     };
-    // What this device leaves out stays as it is, here and there; its
-    // last-synced state is parked. Included again, it counts only while the
-    // file is still here: a missing one is fetched, never taken for a
-    // deletion, and one changed elsewhere meanwhile is downloaded.
-    const ours = <T>(from: Record<string, T>) =>
-      Object.fromEntries(
-        Object.entries(from).filter(([path]) => local.wants(path)),
-      );
-    const lastSynced = { ...options.base.parked, ...options.base.files };
-    const base: Base = {
-      format: FORMAT,
-      files: Object.fromEntries(
-        Object.entries(lastSynced).filter(
-          ([path]) =>
-            local.wants(path) && (path in options.base.files || path in files),
-        ),
-      ),
-    };
-    const parked = Object.fromEntries(
-      Object.entries(lastSynced).filter(([path]) => !local.wants(path)),
-    );
-    if (Object.keys(parked).length) base.parked = parked;
+    const base: Base = { format: FORMAT, files: { ...options.base.files } };
     const known = new Set<string>();
     const result: Result = {
       uploaded: 0,
@@ -159,15 +133,8 @@ export async function synchronize(options: Options): Promise<Result> {
       deferred: [],
       unchanged: 0,
     };
-    const ourBase = { ...base.files };
-    const actions = plan(files, ours(remote.files), ourBase);
-    // Twins left out here still clash with an upload of the other.
-    const names = new Map(
-      Object.keys(remote.files).map((p) => [
-        p.normalize("NFC").toLowerCase(),
-        p,
-      ]),
-    );
+    const actions = plan(files, remote.files, base.files);
+    const names = new Map<string, string>();
     for (const a of actions) {
       const folded = a.path.normalize("NFC").toLowerCase();
       if (names.has(folded) && names.get(folded) !== a.path)
@@ -204,7 +171,7 @@ export async function synchronize(options: Options): Promise<Result> {
       throw new SyncError("localChanged");
     };
     const done = new Set<string>();
-    for (const [to, from] of moves(actions, files, remote.files, ourBase)) {
+    for (const [to, from] of moves(actions, files, remote.files, base.files)) {
       checkAbort(signal);
       await local.check();
       if (!(await local.move(from, to, files[from].hash))) continue;
@@ -260,29 +227,7 @@ export async function synchronize(options: Options): Promise<Result> {
           result.downloaded++;
           continue;
         }
-        // An attachment changed elsewhere and not here: the old one goes to
-        // the trash and the new one takes its place (it can't be rewritten
-        // in place). Kept as two files, it was sent back over the new one.
-        if (applied === false && kind === "download" && l) {
-          const gone = await local.remove(path, l.hash);
-          if (gone === "deferred") {
-            result.deferred.push(path);
-            continue;
-          }
-          const placed = gone && (await local.apply(path, bytes, null));
-          if (placed === true) {
-            base.files[path] = r.hash;
-            result.downloaded++;
-            continue;
-          }
-          // Trashed but not placed (a tab opened on it), or a setting
-          // Obsidian rewrote meanwhile: fetched next time, no copy made.
-          if (gone || isObsidianSetting(path)) {
-            result.deferred.push(path);
-            continue;
-          }
-        }
-        // Concurrent edits are kept as two files.
+        // Binary replacements and concurrent edits are also kept as two files.
         await keepRemote(path, r, bytes);
         if (kind === "download" && !l) {
           result.deferred.push(path);

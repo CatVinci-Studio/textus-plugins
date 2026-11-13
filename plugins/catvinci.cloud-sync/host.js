@@ -61,10 +61,7 @@ var defaults = {
   prefix: "textus/my-workspace",
   pathStyle: true,
   automatic: false,
-  interval: 5,
-  exclude: "",
-  gitignore: false,
-  obsidian: false
+  interval: 5
 };
 var providers = {
   s3: { transport: "s3", endpoint: "", requestLimit: Infinity, saveGap: 0 },
@@ -125,9 +122,6 @@ function normalizeConfig(input) {
   c.endpoint = url.toString().replace(/\/+$/, "");
   c.pathStyle = c.pathStyle !== false;
   c.automatic = c.automatic === true;
-  c.exclude = String(c.exclude ?? "").slice(0, 2e4);
-  c.gitignore = c.gitignore === true;
-  c.obsidian = c.obsidian === true;
   c.interval = Number(c.interval);
   if (!Number.isInteger(c.interval) || c.interval < 5 || c.interval > 1440)
     throw new SyncError("invalidInterval");
@@ -146,20 +140,9 @@ function identity(c) {
 var documents = /\.(md|markdown|mdown|mkd|txt|csv|base|canvas)$/i;
 var attachments = /\.(png|jpe?g|gif|webp|svg|avif|bmp|ico|heic|pdf|docx?|xlsx?|pptx?|odt|ods|odp|mp3|wav|m4a|ogg|mp4|mov|webm)$/i;
 var ignored = /* @__PURE__ */ new Set(["node_modules", "dist", "build", "target", "vendor"]);
-var isText = (path) => documents.test(path) || /\.svg$/i.test(path) || isObsidianSetting(path);
-var OBSIDIAN_SETTINGS = [
-  "app.json",
-  "appearance.json",
-  "hotkeys.json",
-  "bookmarks.json",
-  "graph.json",
-  "core-plugins.json",
-  "types.json"
-];
-var isObsidianSetting = (path) => path.startsWith(".obsidian/") && OBSIDIAN_SETTINGS.includes(path.slice(".obsidian/".length));
+var isText = (path) => documents.test(path) || /\.svg$/i.test(path);
 function inScope(path) {
   if (!relativePath(path)) return false;
-  if (isObsidianSetting(path)) return true;
   const parts = path.split("/");
   if (parts[0] === ".textus") {
     return /^\.textus\/(agent|style|style\.previous)\.md$/.test(path) || /^\.textus\/(library|memory|skills)\/.+\.md$/i.test(path) && parts.slice(1).every((p) => !p.startsWith("."));
@@ -228,10 +211,8 @@ function parseManifest(raw) {
 function parseBase(raw) {
   if (raw == null) return { format: FORMAT, files: /* @__PURE__ */ Object.create(null) };
   const b = raw;
-  if (b.format !== FORMAT || !b.files || Array.isArray(b.files) || [b.files, b.parked ?? {}].some(
-    (map) => Array.isArray(map) || Object.entries(map).some(
-      ([p, h]) => !inScope(p) || !/^[a-f0-9]{64}$/.test(h)
-    )
+  if (b.format !== FORMAT || !b.files || Array.isArray(b.files) || Object.entries(b.files).some(
+    ([p, h]) => !inScope(p) || !/^[a-f0-9]{64}$/.test(h)
   ))
     throw new SyncError("invalidBase");
   return b;
@@ -247,11 +228,7 @@ function plan(local, remote, base) {
     ])
   ].sort().map((path) => {
     const l = local[path]?.hash, r = remote[path]?.hash, b = base[path];
-    const kind = l === r ? l ? "equal" : "forget" : !l ? r === b ? "deleteRemote" : "download" : !r ? l === b ? "deleteLocal" : "upload" : l === b ? "download" : r === b ? "upload" : (
-      // Obsidian's settings have no copy to keep: the synced
-      // one wins.
-      isObsidianSetting(path) ? "download" : "conflict"
-    );
+    const kind = l === r ? l ? "equal" : "forget" : !l ? r === b ? "deleteRemote" : "download" : !r ? l === b ? "deleteLocal" : "upload" : l === b ? "download" : r === b ? "upload" : "conflict";
     return { path, kind };
   });
 }
@@ -335,7 +312,7 @@ async function synchronize(options) {
       updatedAt: "",
       files: /* @__PURE__ */ Object.create(null)
     };
-    if (!raw && (Object.keys(options.base.files).length || Object.keys(options.base.parked ?? {}).length))
+    if (!raw && Object.keys(options.base.files).length)
       throw new SyncError("remoteMissing");
     progress("scanning", 0, 0);
     const files = await local.scan();
@@ -349,22 +326,7 @@ async function synchronize(options) {
         (t) => Date.parse(t.deletedAt) > cutoff
       )
     };
-    const ours = (from) => Object.fromEntries(
-      Object.entries(from).filter(([path]) => local.wants(path))
-    );
-    const lastSynced = { ...options.base.parked, ...options.base.files };
-    const base = {
-      format: FORMAT,
-      files: Object.fromEntries(
-        Object.entries(lastSynced).filter(
-          ([path]) => local.wants(path) && (path in options.base.files || path in files)
-        )
-      )
-    };
-    const parked = Object.fromEntries(
-      Object.entries(lastSynced).filter(([path]) => !local.wants(path))
-    );
-    if (Object.keys(parked).length) base.parked = parked;
+    const base = { format: FORMAT, files: { ...options.base.files } };
     const known = /* @__PURE__ */ new Set();
     const result = {
       uploaded: 0,
@@ -375,14 +337,8 @@ async function synchronize(options) {
       deferred: [],
       unchanged: 0
     };
-    const ourBase = { ...base.files };
-    const actions = plan(files, ours(remote.files), ourBase);
-    const names = new Map(
-      Object.keys(remote.files).map((p) => [
-        p.normalize("NFC").toLowerCase(),
-        p
-      ])
-    );
+    const actions = plan(files, remote.files, base.files);
+    const names = /* @__PURE__ */ new Map();
     for (const a of actions) {
       const folded = a.path.normalize("NFC").toLowerCase();
       if (names.has(folded) && names.get(folded) !== a.path)
@@ -409,7 +365,7 @@ async function synchronize(options) {
       throw new SyncError("localChanged");
     };
     const done = /* @__PURE__ */ new Set();
-    for (const [to, from] of moves(actions, files, remote.files, ourBase)) {
+    for (const [to, from] of moves(actions, files, remote.files, base.files)) {
       checkAbort(signal);
       await local.check();
       if (!await local.move(from, to, files[from].hash)) continue;
@@ -462,23 +418,6 @@ async function synchronize(options) {
           result.downloaded++;
           continue;
         }
-        if (applied === false && kind === "download" && l) {
-          const gone = await local.remove(path, l.hash);
-          if (gone === "deferred") {
-            result.deferred.push(path);
-            continue;
-          }
-          const placed = gone && await local.apply(path, bytes, null);
-          if (placed === true) {
-            base.files[path] = r.hash;
-            result.downloaded++;
-            continue;
-          }
-          if (gone || isObsidianSetting(path)) {
-            result.deferred.push(path);
-            continue;
-          }
-        }
         await keepRemote(path, r, bytes);
         if (kind === "download" && !l) {
           result.deferred.push(path);
@@ -525,134 +464,6 @@ async function synchronize(options) {
       if (completed) throw new SyncError("unlockFailed");
     }
   }
-}
-
-// development/cloud-sync/src/scope.ts
-var PIECE = /(^\*\*\/|\/\*\*\/|\/\*\*$|\*+|\?|\[!?\]?[^\]]*\]|\\.)/u;
-var char = (c) => ({ k: "char", c, low: c.toLowerCase() });
-function stepsOf(part) {
-  if (part === "**/") return [{ k: "dirs" }];
-  if (part === "/**/") return [char("/"), { k: "dirs" }];
-  if (part === "/**") return [char("/"), { k: "all" }];
-  if (/^\*+$/.test(part)) return [{ k: "run" }];
-  if (part === "?") return [{ k: "one" }];
-  if (part.startsWith("\\")) return [char([...part.slice(1)][0])];
-  if (part.length > 2 && part.startsWith("[") && part.endsWith("]")) {
-    const inner = part.slice(1, -1);
-    const not = inner.startsWith("!");
-    const body = (not ? inner.slice(1) : inner).replace(/\\/g, "\\\\").replace(/^\]/, "\\]");
-    return [
-      { k: "class", test: new RegExp(`^[${not ? "^" : ""}${body}]$`, "iu") }
-    ];
-  }
-  return [...part].map(char);
-}
-function matches(steps, path) {
-  const s = [...path];
-  const low = s.map((c) => c.toLowerCase());
-  const n = s.length;
-  let next = new Uint8Array(n + 1);
-  next[n] = 1;
-  for (let j = steps.length - 1; j >= 0; j--) {
-    const step = steps[j];
-    const row = new Uint8Array(n + 1);
-    let after = 0;
-    for (let i = n; i >= 0; i--) {
-      const ch = s[i];
-      const one = i < n && ch !== "/";
-      switch (step.k) {
-        case "char":
-          row[i] = i < n && low[i] === step.low ? next[i + 1] : 0;
-          break;
-        case "one":
-          row[i] = one ? next[i + 1] : 0;
-          break;
-        case "class":
-          row[i] = one && step.test.test(ch) ? next[i + 1] : 0;
-          break;
-        case "run":
-          row[i] = next[i] || (one ? row[i + 1] : 0);
-          break;
-        case "all":
-          row[i] = next[i] || (i < n ? row[i + 1] : 0);
-          break;
-        case "dirs":
-          after = i < n && (ch === "/" && next[i + 1] || after) ? 1 : 0;
-          row[i] = next[i] || after;
-          break;
-      }
-    }
-    next = row;
-  }
-  return next[0] === 1;
-}
-function patternTest(pattern) {
-  const anchored = pattern.replace(/\/$/, "").includes("/");
-  const steps = pattern.replace(/(^|\/)(?:\*\*\/){2,}/g, "$1**/").replace(/(?:\/\*\*)+(?=\/|$)/g, "/**").replace(/^\//, "").replace(/\/$/, "").split(PIECE).filter(Boolean).flatMap(stepsOf);
-  const all = anchored ? steps : [{ k: "dirs" }, ...steps];
-  const open = all.filter(
-    (st) => st.k === "run" || st.k === "all" || st.k === "dirs"
-  );
-  if (open.length > 2) return { test: (path) => matches(all, path) };
-  const re = new RegExp(`^${all.map(stepSource).join("")}$`, "isu");
-  return { test: (path) => re.test(path) };
-}
-function stepSource(step) {
-  switch (step.k) {
-    case "char":
-      return step.c.replace(/[.*+?^${}()|[\]\\/]/g, "\\$&");
-    case "one":
-      return "[^/]";
-    case "run":
-      return "[^/]*";
-    case "all":
-      return ".*";
-    case "dirs":
-      return "(?:.*/)?";
-    case "class":
-      return `(?=[^/])${step.test.source.slice(1, -1)}`;
-  }
-}
-var RULES_CAP = 4e4;
-var RULE_COUNT_CAP = 1e3;
-var LINE_CAP = 256;
-function readRules(text) {
-  return text.slice(0, RULES_CAP).split(/\r?\n/).flatMap((raw) => {
-    const line = raw.replace(/(?<!\\)\s+$/, "").replace(/\\ $/, " ");
-    if (!line || line.startsWith("#")) return [];
-    const negate = line.startsWith("!");
-    const pattern = negate ? line.slice(1) : line;
-    if (!pattern || pattern === "/" || pattern.length > LINE_CAP) return [];
-    try {
-      const test = patternTest(pattern);
-      return [{ test, negate, dirOnly: pattern.endsWith("/") }];
-    } catch {
-      return [];
-    }
-  }).slice(0, RULE_COUNT_CAP);
-}
-function ruledOut(rules, path, dir) {
-  const parts = path.split("/");
-  for (let i = 1; i <= parts.length; i++) {
-    const at = parts.slice(0, i).join("/");
-    const isDir = i < parts.length || dir;
-    let out = false;
-    for (const rule of rules)
-      if ((!rule.dirOnly || isDir) && rule.test.test(at)) out = !rule.negate;
-    if (out) return true;
-  }
-  return false;
-}
-function scopeOf(config, gitignore = "") {
-  const rules = [
-    ...config.gitignore ? readRules(gitignore) : [],
-    ...readRules(config.exclude)
-  ];
-  return {
-    wants: (path) => inScope(path) && (config.obsidian || !isObsidianSetting(path)) && !ruledOut(rules, path, false),
-    enters: (dir) => descend(dir) && !ruledOut(rules, dir, true),
-    obsidian: config.obsidian
-  };
 }
 
 // development/cloud-sync/src/encryption.ts
@@ -1387,25 +1198,15 @@ var Reservations = class {
 };
 
 // development/cloud-sync/src/local.ts
-var described = /* @__PURE__ */ new Map();
-var SETTLED_MS = 2e3;
 var Workspace = class {
-  constructor(api, root, storage, signal, scope = scopeOf({
-    exclude: "",
-    gitignore: false,
-    obsidian: false
-  })) {
+  constructor(api, root, storage, signal) {
     this.api = api;
     this.root = root;
     this.signal = signal;
-    this.scope = scope;
     __publicField(this, "reservations");
     /** Paths this run trashed or renamed, so their file events start no new sync. */
     __publicField(this, "touched", /* @__PURE__ */ new Set());
     this.reservations = new Reservations(storage, root);
-  }
-  wants(path) {
-    return this.scope.wants(path);
   }
   async check() {
     checkAbort(this.signal);
@@ -1476,26 +1277,9 @@ var Workspace = class {
   async scan() {
     const files = /* @__PURE__ */ Object.create(null);
     let visits = 0;
-    const known = described.get(this.root) ?? /* @__PURE__ */ new Map();
-    const seen = /* @__PURE__ */ new Map();
-    const add = async (rel, stat) => {
-      const was = known.get(rel);
-      const at = stat?.modifiedMs;
-      if (was && stat && at != null && was.size === stat.size && was.modifiedMs === at && at < was.at - SETTLED_MS && !await this.reservations.get(rel)) {
-        files[rel] = was.entry;
-        seen.set(rel, was);
-        return;
-      }
+    const add = async (rel) => {
       const bytes = await this.read(rel);
-      if (!bytes) return;
-      files[rel] = await describe(bytes);
-      if (stat && at != null)
-        seen.set(rel, {
-          size: stat.size,
-          modifiedMs: at,
-          at: Date.now(),
-          entry: files[rel]
-        });
+      if (bytes) files[rel] = await describe(bytes);
     };
     const walk = async (relative = "") => {
       await this.check();
@@ -1505,32 +1289,23 @@ var Workspace = class {
       for (const entry of await this.api.files.list(dir)) {
         const rel = relative ? `${relative}/${entry.name}` : entry.name;
         if (entry.isDir) {
-          if (this.scope.enters(rel) || /^\.textus\/(library|memory|skills)(\/|$)/.test(rel))
+          if (descend(rel) || /^\.textus\/(library|memory|skills)(\/|$)/.test(rel))
             await walk(rel);
-        } else if (this.scope.wants(rel)) {
+        } else if (inScope(rel)) {
           if (++visits > MAX_FILES) throw new SyncError("tooManyFiles");
-          await add(rel, entry);
+          await add(rel);
         }
       }
     };
     await walk();
     for (const name of ["agent.md", "style.md", "style.previous.md"]) {
       const rel = `.textus/${name}`;
-      const stat = await this.api.files.stat(this.path(rel));
-      if (stat) await add(rel, stat);
+      if (await this.api.files.stat(this.path(rel))) await add(rel);
     }
-    if (this.scope.obsidian)
-      for (const name of OBSIDIAN_SETTINGS) {
-        const rel = `.obsidian/${name}`;
-        if (!this.scope.wants(rel)) continue;
-        const stat = await this.api.files.stat(this.path(rel));
-        if (stat && !stat.isDir) await add(rel, stat);
-      }
     for (const name of ["library", "memory", "skills"]) {
       if ((await this.api.files.stat(`${this.root}/.textus/${name}`))?.isDir)
         await walk(`.textus/${name}`);
     }
-    described.set(this.root, seen);
     return files;
   }
   async holds(relative, expected) {
@@ -1934,17 +1709,11 @@ var Controller = class {
       }
       const base = parseBase(await this.ctx.storage.global.get(key));
       this.pacer.started();
-      const gitignore = config.gitignore ? await this.api.files.read(`${root.replace(/[/\\]$/, "")}/.gitignore`).then((bytes) => new TextDecoder().decode(bytes)).catch(async (err) => {
-        if (await this.api.files.stat(`${root.replace(/[/\\]$/, "")}/.gitignore`).catch(() => true))
-          throw err;
-        return "";
-      }) : "";
       this.workspace = new Workspace(
         this.api,
         root,
         this.ctx.storage.global,
-        this.abort.signal,
-        scopeOf(config, gitignore)
+        this.abort.signal
       );
       const result = await synchronize({
         store: encrypted,
