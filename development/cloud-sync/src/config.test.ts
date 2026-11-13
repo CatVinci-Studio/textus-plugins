@@ -121,6 +121,9 @@ describe("connection and data boundaries", () => {
       ["📚 Private/", "📚 Private/a.md", false],
       ["📚?.md", "📚x.md", false],
       ["a**/**/b.md", "ab/c/b.md", false],
+      ["İ.md", "İ.md", false],
+      ["\\😀.md", "😀.md", false],
+      ["*.md", "x\ny/b.md", false],
     ];
     for (const [exclude, path, wanted] of cases)
       expect([
@@ -144,6 +147,14 @@ describe("connection and data boundaries", () => {
     for (let i = 0; i < 10_000; i++)
       node.wants(`notes/project ${i % 50}/chapter ${i}/draft ${i}.md`);
     expect(Date.now() - quick).toBeLessThan(1000);
+    // Thousands of costly rules: only the first thousand are read.
+    const hostile = scopeOf(
+      { exclude: "", gitignore: true, obsidian: false },
+      "/*a*a*a\n".repeat(4999),
+    );
+    const capped = Date.now();
+    hostile.wants("a".repeat(200) + ".md");
+    expect(Date.now() - capped).toBeLessThan(2000);
     // A big .gitignore never pushes out the user's own rules.
     expect(
       scopeOf(

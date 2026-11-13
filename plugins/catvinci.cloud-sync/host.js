@@ -528,7 +528,7 @@ async function synchronize(options) {
 }
 
 // development/cloud-sync/src/scope.ts
-var PIECE = /(^\*\*\/|\/\*\*\/|\/\*\*$|\*+|\?|\[!?\]?[^\]]*\]|\\.)/;
+var PIECE = /(^\*\*\/|\/\*\*\/|\/\*\*$|\*+|\?|\[!?\]?[^\]]*\]|\\.)/u;
 function stepsOf(part) {
   if (part === "**/") return [{ k: "dirs" }];
   if (part === "/**/") return [{ k: "char", c: "/" }, { k: "dirs" }];
@@ -592,9 +592,9 @@ function patternTest(pattern) {
   const open = all.filter(
     (st) => st.k === "run" || st.k === "all" || st.k === "dirs"
   );
-  if (open.length > 3) return { test: (path) => matches(all, path) };
-  const re = new RegExp(`^${all.map(stepSource).join("")}$`, "iu");
-  return { test: (path) => re.test(path) };
+  if (open.length > 2) return { test: (path) => matches(all, path) };
+  const re = new RegExp(`^${all.map(stepSource).join("")}$`, "su");
+  return { test: (path) => re.test(path.toLowerCase()) };
 }
 function stepSource(step) {
   switch (step.k) {
@@ -609,10 +609,11 @@ function stepSource(step) {
     case "dirs":
       return "(?:.*/)?";
     case "class":
-      return `(?=[^/])${step.test.source.slice(1, -1)}`;
+      return `(?=[^/])${step.test.source.slice(1, -1).toLowerCase()}`;
   }
 }
 var RULES_CAP = 4e4;
+var RULE_COUNT_CAP = 1e3;
 var LINE_CAP = 256;
 function readRules(text) {
   return text.slice(0, RULES_CAP).split(/\r?\n/).flatMap((raw) => {
@@ -627,7 +628,7 @@ function readRules(text) {
     } catch {
       return [];
     }
-  });
+  }).slice(0, RULE_COUNT_CAP);
 }
 function ruledOut(rules, path, dir) {
   const parts = path.split("/");

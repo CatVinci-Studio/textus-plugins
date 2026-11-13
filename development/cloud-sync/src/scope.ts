@@ -17,7 +17,7 @@ interface Rule {
 
 /** A glob's pieces: `**` at the start, middle or end, `*`, `?`, a `[...]`
  *  class, an escaped character; plain text between. Any other `**` is a `*`. */
-const PIECE = /(^\*\*\/|\/\*\*\/|\/\*\*$|\*+|\?|\[!?\]?[^\]]*\]|\\.)/;
+const PIECE = /(^\*\*\/|\/\*\*\/|\/\*\*$|\*+|\?|\[!?\]?[^\]]*\]|\\.)/u;
 
 /** One step of a pattern: a character, any one but "/", a run of them,
  *  any folders ("dir/" any times, or none), anything at all, a class. */
@@ -112,9 +112,10 @@ function patternTest(pattern: string): { test(path: string): boolean } {
   const open = all.filter(
     (st) => st.k === "run" || st.k === "all" || st.k === "dirs",
   );
-  if (open.length > 3) return { test: (path) => matches(all, path) };
-  const re = new RegExp(`^${all.map(stepSource).join("")}$`, "iu");
-  return { test: (path) => re.test(path) };
+  if (open.length > 2) return { test: (path) => matches(all, path) };
+  // Lower-cased as the linear matcher does, so both read a rule alike.
+  const re = new RegExp(`^${all.map(stepSource).join("")}$`, "su");
+  return { test: (path) => re.test(path.toLowerCase()) };
 }
 
 function stepSource(step: Step): string {
@@ -130,12 +131,14 @@ function stepSource(step: Step): string {
     case "dirs":
       return "(?:.*/)?";
     case "class":
-      return `(?=[^/])${step.test.source.slice(1, -1)}`;
+      return `(?=[^/])${step.test.source.slice(1, -1).toLowerCase()}`;
   }
 }
 
-/** Rules past this many characters are not read: a .gitignore is small. */
+/** Rules past this many characters, or this many rules, are not read: a
+ *  .gitignore is small, and each rule costs every path. */
 const RULES_CAP = 40_000;
+const RULE_COUNT_CAP = 1000;
 /** A longer line is left out: no real rule is, and each costs a path. */
 const LINE_CAP = 256;
 
@@ -156,7 +159,8 @@ export function readRules(text: string): Rule[] {
       } catch {
         return [];
       }
-    });
+    })
+    .slice(0, RULE_COUNT_CAP);
 }
 
 /** Whether `rules` leave out `path` (a folder when `dir`), or a folder
