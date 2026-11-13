@@ -242,7 +242,8 @@ class Controller {
               if (
                 await this.api.files
                   .stat(`${root.replace(/[/\\]$/, "")}/.gitignore`)
-                  .catch(() => null)
+                  // Refused is there: only a missing one has no rules.
+                  .catch(() => true)
               )
                 throw err;
               return "";

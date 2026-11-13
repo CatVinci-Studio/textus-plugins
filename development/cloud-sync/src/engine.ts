@@ -1,3 +1,4 @@
+import { isObsidianSetting } from "./config";
 import { describe, hash, parseManifest } from "./content";
 import { conflictPath, moves, plan } from "./planner";
 import {
@@ -122,14 +123,28 @@ export async function synchronize(options: Options): Promise<Result> {
         (t) => Date.parse(t.deletedAt) > cutoff,
       ),
     };
-    // What this device leaves out stays as it is, here and there, and has
-    // no last-synced state: included again, a missing file is fetched, never
-    // taken for a deletion.
+    // What this device leaves out stays as it is, here and there; its
+    // last-synced state is parked. Included again, it counts only while the
+    // file is still here: a missing one is fetched, never taken for a
+    // deletion, and one changed elsewhere meanwhile is downloaded.
     const ours = <T>(from: Record<string, T>) =>
       Object.fromEntries(
         Object.entries(from).filter(([path]) => local.wants(path)),
       );
-    const base: Base = { format: FORMAT, files: ours(options.base.files) };
+    const lastSynced = { ...options.base.parked, ...options.base.files };
+    const base: Base = {
+      format: FORMAT,
+      files: Object.fromEntries(
+        Object.entries(lastSynced).filter(
+          ([path]) =>
+            local.wants(path) && (path in options.base.files || path in files),
+        ),
+      ),
+    };
+    const parked = Object.fromEntries(
+      Object.entries(lastSynced).filter(([path]) => !local.wants(path)),
+    );
+    if (Object.keys(parked).length) base.parked = parked;
     const known = new Set<string>();
     const result: Result = {
       uploaded: 0,
@@ -254,6 +269,12 @@ export async function synchronize(options: Options): Promise<Result> {
           if (placed === true) {
             base.files[path] = r.hash;
             result.downloaded++;
+            continue;
+          }
+          // Trashed but not placed (a tab opened on it), or a setting
+          // Obsidian rewrote meanwhile: fetched next time, no copy made.
+          if (gone || isObsidianSetting(path)) {
+            result.deferred.push(path);
             continue;
           }
         }

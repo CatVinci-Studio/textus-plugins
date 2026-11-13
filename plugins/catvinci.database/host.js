@@ -202,8 +202,12 @@ function draw(target, webview, context) {
         // Sent again even when it reads the same ("05" saved as 5): the
         // page waits for it to redraw the cell it edited.
         case "set":
-          await setProp(m.rel, m.key, m.value);
-          return send(true);
+          try {
+            await setProp(m.rel, m.key, m.value);
+          } finally {
+            await send(true);
+          }
+          return;
         case "add":
           return addRow(m.folder, m.props, m.title);
         case "view":
@@ -255,8 +259,14 @@ function draw(target, webview, context) {
           return renameProp(target, m.from, m.to);
         case "deleteProp":
           return deleteProp(target, m.key);
+        // Refused or failed too, the page hears back and lets the cell go.
         case "renamePage":
-          return renamePage(m.rel, m.title);
+          try {
+            await renamePage(m.rel, m.title);
+          } finally {
+            await send(true);
+          }
+          return;
         // What a menu can't hold - a name, a value - asked in Textus's own field.
         case "addProp": {
           const name = ((await textus.ui.input({ prompt: t("propertyName") })) || "").trim();

@@ -9,7 +9,7 @@ import type { Config } from "./model";
  */
 
 interface Rule {
-  test: RegExp;
+  test: { test(path: string): boolean };
   negate: boolean;
   /** Ends in "/": a folder only. */
   dirOnly: boolean;
@@ -19,37 +19,99 @@ interface Rule {
  *  class, an escaped character; plain text between. Any other `**` is a `*`. */
 const PIECE = /(^\*\*\/|\/\*\*\/|\/\*\*$|\*+|\?|\[!?\]?[^\]]*\]|\\.)/;
 
-function pieceSource(part: string): string {
-  if (part === "**/") return "(?:.*/)?";
-  if (part === "/**/") return "/(?:.*/)?";
-  if (part === "/**") return "/.*";
-  if (/^\*+$/.test(part)) return "[^/]*";
-  if (part === "?") return "[^/]";
-  if (part.startsWith("\\"))
-    return part.slice(1).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+/** One step of a pattern: a character, any one but "/", a run of them,
+ *  any folders ("dir/" any times, or none), anything at all, a class. */
+type Step =
+  | { k: "char"; c: string }
+  | { k: "one" | "run" | "dirs" | "all" }
+  | { k: "class"; test: RegExp };
+
+function stepsOf(part: string): Step[] {
+  if (part === "**/") return [{ k: "dirs" }];
+  if (part === "/**/") return [{ k: "char", c: "/" }, { k: "dirs" }];
+  if (part === "/**") return [{ k: "char", c: "/" }, { k: "all" }];
+  if (/^\*+$/.test(part)) return [{ k: "run" }];
+  if (part === "?") return [{ k: "one" }];
+  if (part.startsWith("\\")) return [{ k: "char", c: part[1].toLowerCase() }];
   if (part.length > 2 && part.startsWith("[") && part.endsWith("]")) {
-    const inner = part.slice(1, -1).replace(/^!/, "^").replace(/\\/g, "\\\\");
-    return `[${inner}]`;
+    const inner = part.slice(1, -1);
+    const not = inner.startsWith("!");
+    // A "]" first is one of the class, as in Git.
+    const body = (not ? inner.slice(1) : inner)
+      .replace(/\\/g, "\\\\")
+      .replace(/^\]/, "\\]");
+    return [
+      { k: "class", test: new RegExp(`^[${not ? "^" : ""}${body}]$`, "i") },
+    ];
   }
-  return part.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  return [...part.toLowerCase()].map((c) => ({ k: "char", c }));
+}
+
+/** Whether `path` matches `steps`, in time path × pattern: no backtracking,
+ *  however many stars. */
+function matches(steps: Step[], path: string): boolean {
+  const s = path.toLowerCase();
+  const n = s.length;
+  // Each row: from character i on, whether steps j.. match.
+  let next = new Uint8Array(n + 1);
+  next[n] = 1;
+  for (let j = steps.length - 1; j >= 0; j--) {
+    const step = steps[j];
+    const row = new Uint8Array(n + 1);
+    let after = 0;
+    for (let i = n; i >= 0; i--) {
+      const ch = s[i];
+      const one = i < n && ch !== "/";
+      switch (step.k) {
+        case "char":
+          row[i] = i < n && ch === step.c ? next[i + 1] : 0;
+          break;
+        case "one":
+          row[i] = one ? next[i + 1] : 0;
+          break;
+        case "class":
+          row[i] = one && step.test.test(ch) ? next[i + 1] : 0;
+          break;
+        case "run":
+          row[i] = next[i] || (one ? row[i + 1] : 0);
+          break;
+        case "all":
+          row[i] = next[i] || (i < n ? row[i + 1] : 0);
+          break;
+        case "dirs":
+          // Ends just past some "/" from here on, or takes nothing.
+          after = i < n && ((ch === "/" && next[i + 1]) || after) ? 1 : 0;
+          row[i] = next[i] || after;
+          break;
+      }
+    }
+    next = row;
+  }
+  return next[0] === 1;
 }
 
 /** One pattern as a test of a path from the folder's top, letter case
  *  ignored as Git does on macOS and Windows. */
-function patternTest(pattern: string): RegExp {
+function patternTest(pattern: string): { test(path: string): boolean } {
   // With a slash before its end it is anchored to the top; else any level.
   const anchored = pattern.replace(/\/$/, "").includes("/");
-  const body = pattern
+  const steps = pattern
+    // "**/**/" is one "**/".
+    .replace(/(?:\*\*\/){2,}/g, "**/")
+    .replace(/(?:\/\*\*)+(?=\/|$)/g, "/**")
     .replace(/^\//, "")
     .replace(/\/$/, "")
     .split(PIECE)
-    .map(pieceSource)
-    .join("");
-  return new RegExp(`^${anchored ? "" : "(?:.*/)?"}${body}$`, "i");
+    .filter(Boolean)
+    .flatMap(stepsOf);
+  const all: Step[] = anchored ? steps : [{ k: "dirs" }, ...steps];
+  return { test: (path) => matches(all, path) };
 }
 
 /** Rules past this many characters are not read: a .gitignore is small. */
 const RULES_CAP = 40_000;
+/** A longer line is left out. */
+const LINE_CAP = 1000;
 
 export function readRules(text: string): Rule[] {
   return text
@@ -61,15 +123,10 @@ export function readRules(text: string): Rule[] {
       if (!line || line.startsWith("#")) return [];
       const negate = line.startsWith("!");
       const pattern = negate ? line.slice(1) : line;
-      if (!pattern || pattern === "/") return [];
+      if (!pattern || pattern === "/" || pattern.length > LINE_CAP) return [];
       try {
-        return [
-          {
-            test: patternTest(pattern),
-            negate,
-            dirOnly: pattern.endsWith("/"),
-          },
-        ];
+        const test = patternTest(pattern);
+        return [{ test, negate, dirOnly: pattern.endsWith("/") }];
       } catch {
         return [];
       }
@@ -103,9 +160,11 @@ export function scopeOf(
   config: Pick<Config, "exclude" | "gitignore" | "obsidian">,
   gitignore = "",
 ): Scope {
-  const rules = readRules(
-    (config.gitignore ? gitignore + "\n" : "") + config.exclude,
-  );
+  // Each capped on its own: a big .gitignore never pushes out the user's.
+  const rules = [
+    ...(config.gitignore ? readRules(gitignore) : []),
+    ...readRules(config.exclude),
+  ];
   return {
     wants: (path) =>
       inScope(path) &&

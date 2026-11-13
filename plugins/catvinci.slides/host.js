@@ -91,11 +91,14 @@ let deck = null;
 let madeFrom = null;
 /** Each update's turn: one that finishes after a later one is dropped. */
 let turn = 0;
+/** Pages that opened and still wait for the deck, whichever update ends. */
+const waiting = new Set();
 
 /** Renders only while a slides tab is open: no deck work on other edits,
  *  and none when the text is as it was. `to` is a page that just opened. */
 async function update(to) {
   if (!views.size) return;
+  if (to) waiting.add(to);
   const mine = ++turn;
   const text = await textus.editor.getText();
   let changed = false;
@@ -112,7 +115,8 @@ async function update(to) {
     }
   }
   if (!deck) return;
-  for (const view of changed ? views : to ? [to] : []) void view.postMessage(deck);
+  for (const view of changed ? views : waiting) void view.postMessage(deck);
+  waiting.clear();
 }
 
 /** A page that presents itself: the slides, ← → and Space to move, F for
@@ -174,6 +178,7 @@ exports.activate = function (ctx) {
         views.add(webview);
         webview.onDidDispose(() => {
           views.delete(webview);
+          waiting.delete(webview);
           if (views.size) return;
           pictures.clear();
           deck = madeFrom = null;

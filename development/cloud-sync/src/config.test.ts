@@ -112,12 +112,33 @@ describe("connection and data boundaries", () => {
       ["a.md\\ ", "a.md ", false],
       ["a.md   ", "a.md", false],
       ["[", "a.md", true],
+      ["[]a].md", "].md", false],
+      ["[!]a].md", "b.md", false],
+      ["[!]a].md", "xa].md", true],
+      ["**/**/x.md", "x.md", false],
+      ["a/**/**/b.md", "a/b.md", false],
+      ["[z-a].md", "b.md", true],
     ];
     for (const [exclude, path, wanted] of cases)
       expect([
         exclude,
         scopeOf({ exclude, gitignore: false, obsidian: false }).wants(path),
       ]).toEqual([exclude, wanted]);
+    // Many stars cost no more than few: no backtracking.
+    const started = Date.now();
+    scopeOf({
+      exclude: "*a*a*a*a*a*a*a*a*b",
+      gitignore: false,
+      obsidian: false,
+    }).wants("a".repeat(80) + ".md");
+    expect(Date.now() - started).toBeLessThan(200);
+    // A big .gitignore never pushes out the user's own rules.
+    expect(
+      scopeOf(
+        { exclude: "secret.md", gitignore: true, obsidian: false },
+        "#".repeat(50_000),
+      ).wants("secret.md"),
+    ).toBe(false);
     // The folder's .gitignore counts only when asked for.
     expect(
       scopeOf({ exclude: "", gitignore: false, obsidian: false }, "out/").wants(

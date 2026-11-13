@@ -297,6 +297,16 @@ suite("workspace synchronization", () => {
     b.leaves = () => false;
     expect((await b.sync(remote)).removed).toBe(0);
     expect(text(b.files.get("drafts/x.md"))).toBe("theirs, edited");
+    // Left out while another device edits it, then included again with
+    // the old copy still here: the newer one comes down, no conflict.
+    b.leaves = (path) => path.startsWith("drafts/");
+    await b.sync(remote);
+    a.files.set("drafts/x.md", bytes("theirs, v3"));
+    await a.sync(remote);
+    b.leaves = () => false;
+    const back = await b.sync(remote);
+    expect(back.conflicts).toEqual([]);
+    expect(text(b.files.get("drafts/x.md"))).toBe("theirs, v3");
     // A twin left out here still clashes with an upload of the other.
     b.leaves = (path) => path === "drafts/x.md";
     b.files.delete("drafts/x.md");

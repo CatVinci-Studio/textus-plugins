@@ -60,6 +60,9 @@ export interface Manifest {
 export interface Base {
   format: typeof FORMAT;
   files: Record<string, string>;
+  /** Last-synced hashes of files this device leaves out, kept for when
+   *  they're included again. */
+  parked?: Record<string, string>;
 }
 export interface ObjectStore {
   get(key: string): Promise<Uint8Array | null>;
