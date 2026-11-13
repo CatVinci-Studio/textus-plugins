@@ -11,6 +11,7 @@ Le plugin demande à lire l’éditeur (pour savoir quel lien vous pointez) et �
 
 ## Changements
 
+- **0.2.3** - La description de la boutique commence désormais par ce que fait le plugin.
 - **0.2.2** - Un lien vers un titre imbriqué (`[[Note#A#B]]`) montre la section de ce titre, celle qu'ouvre un clic. Nécessite Textus 1.4.0.
 - **0.2.1** - Sa page dit maintenant en une phrase ce qu'il fait, ce qu'il permet et ce qui a changé à chaque version.
 - **0.2.0** - Un lien vers un bloc (`#^id`) affiche ce bloc. Nécessite Textus 1.3.9.

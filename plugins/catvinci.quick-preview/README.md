@@ -11,6 +11,7 @@ The plugin asks to read the editor (to see which link you point at) and to read 
 
 ## Changes
 
+- **0.2.3** - The store description now opens with what the plugin does.
 - **0.2.2** - A link to a nested heading (`[[Note#A#B]]`) shows that heading's section, as a click opens it. Needs Textus 1.4.0.
 - **0.2.1** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
 - **0.2.0** - A link to a block (`#^id`) shows that block. Needs Textus 1.3.9.

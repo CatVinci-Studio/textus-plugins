@@ -19,6 +19,7 @@ It works on desktop and iPhone and needs Textus 1.3.10 or later. It asks to read
 
 ## Changes
 
+- **0.5.3** - The store description now opens with what the plugin does.
 - **0.5.2** - Templates in a hidden or lowercase templates folder, and in its subfolders, now show up. After Insert, the caret lands right after the template.
 - **0.5.1** - **New from Template…** from a file's or folder's right-click menu makes the document in that folder.
 - **0.5.0** - Templates are filled in by Textus itself, the same way as daily notes; needs Textus 1.3.10.

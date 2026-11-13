@@ -13,6 +13,7 @@ It handles PNG, JPEG, GIF, WebP, AVIF, BMP, SVG, ICO, HEIC and TIFF pictures. It
 
 ## Changes
 
+- **0.1.7** - The store description now opens with what the plugin does.
 - **0.1.6** - Adding many pictures at once (a sync, a folder copied in) no longer reads the open document over and over.
 - **0.1.5** - In an Obsidian vault, pictures stay where the vault's attachment setting puts them again: the setting is read through Textus.
 - **0.1.4** - Leaves pictures where a document's Typora image folder setting puts them, and no longer moves a folder while some links to it may still be unchecked.

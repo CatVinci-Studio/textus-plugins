@@ -25,27 +25,27 @@ The plugins for [Textus](https://textus.md), the Markdown editor. None of them c
 | Heading Numbers | Numbers headings as you write - 1, 1.1, 1.2 - without changing the text; exports can carry the numbers too. |
 | HTML View | See .html files as the pages they are, in a tab. Edit source opens one as text. |
 | Image Viewer | Open pictures and SVG files in a tab: zoom, fit, and an SVG's source. |
-| Images Follow Document | Keeps each document's pictures beside it, in a folder of its name - Note.assets/ for Note.md - as Typora and VS Code do. |
+| Images Follow Document | Each document's pictures in a folder beside it: Note.assets/ for Note.md, as Typora and VS Code keep them. |
 | Keenable Search | Lets Textus AI search the web with Keenable, with no key needed; set a Keenable API key for its full search. Searches go to Keenable only while Textus AI uses this tool. |
-| LaTeX Completion | In a formula, type a backslash and the start of a command - \fr, \alp - to pick from the LaTeX commands that begin so, each with what it draws. Enter or Tab writes it, with the caret inside its braces. |
+| LaTeX Completion | LaTeX command completion in formulas: type a backslash and the start of a command - \fr, \alp - to pick from the commands that begin so, each with what it draws. Enter or Tab writes it, with the caret inside its braces. |
 | Link Cards | A link as a card with its page's title, description and picture - or a Bilibili video playing in place. Kept in the document as text. |
 | Marp | Present a document as slides, the Marp way: a new slide at each ---, themes and layout by Marp directives. The deck follows your writing in a tab beside it, and saves as one HTML file to present from any browser. |
 | Mind Map | Draws a Markdown outline - headings and lists - as a mind map. |
 | Notion Import | Brings in a Notion export (the .zip or its folder) as plain Markdown notes: pages within pages as folders, databases in Obsidian's Bases format, pictures and files beside their pages. Pair it with Wiki to see the pages tree and the databases. |
 | OpenCode | OpenCode in Textus AI: any model it is set up with reads your folder, writes and edits your notes, and asks before it changes anything. |
-| Openverse Pictures | Lets Textus AI find openly licensed pictures on Openverse (Flickr, museums and more) - CC BY, CC BY-SA, CC0 and public domain only - each with the credit its licence asks for. No account or key; Openverse allows about 200 searches a day. |
+| Openverse Pictures | Openly licensed pictures for Textus AI: it finds them on Openverse (Flickr, museums and more) - CC BY, CC BY-SA, CC0 and public domain only - each with the credit its licence asks for. No account or key; Openverse allows about 200 searches a day. |
 | PDF Viewer | Open PDFs in a tab beside your notes: pages, zoom, and text to select and copy. |
 | PlantUML | UML and other diagrams from PlantUML text, drawn on your computer - or by the PlantUML server, if you choose. Drawing on your computer takes about 100 MB more memory; the PlantUML server takes none. |
 | Pomodoro | A focus timer floating over the window or the desktop: 25 minutes of work, 5 of rest, a notification at each end. |
 | Quick Insert | Type / for headings, lists, tables, formulas and more, : for emoji, @ for a date (@tomorrow, @next friday), and turn a paragraph into another kind of block. |
 | Quick Notes | Jot something down without leaving the document: notes in the sidebar, kept in Inbox.md or today's daily note, to insert later or open as a document. |
-| Quick Preview | Rest the pointer on a link to another document - a Markdown link or a [[wikilink]] - to read its opening, or the section or block the link names, in a card beside it. Pin keeps the card open while you write. |
-| Reminders | Write (@2026-11-02 09:00) in a line and be reminded of it then, with a notification - even with Textus's windows closed in background mode. A click opens the line. |
+| Quick Preview | Preview a linked document without opening it: rest the pointer on a Markdown link or a [[wikilink]] to read its opening, or the section or block it names, in a card beside it. Pin keeps the card open while you write. |
+| Reminders | Reminders for the lines you date: write (@2026-11-02 09:00) in a line and a notification brings it back then - even with Textus's windows closed in background mode. A click opens the line. |
 | Sheet Music (ABC) | Sheet music from ABC notation. |
 | Tags | Every #tag in the open folder in the sidebar, with how many notes use it: open one for its notes, rename a tag everywhere, or merge two by renaming one to the other. |
-| Task Board | Boards of cards in lists, kept as a Markdown file (a .md with kanban-plugin in its front matter, as Obsidian's Kanban writes it) - a list per heading, a card per task. |
+| Task Board | Kanban boards kept in Markdown: a list per heading, a card per task, in a .md with kanban-plugin in its front matter, as Obsidian's Kanban writes it. |
 | Tasks | Every task (- [ ]) in the open folder's documents, in one list: tick one off there, or go to it. |
-| Templates | New documents and snippets from templates of your own, with the date, time and title filled in, as Obsidian and Templater fill them. |
+| Templates | Documents and snippets from your own templates: the date, time and title filled in, as Obsidian and Templater fill them. |
 | Tidy | Tidy text and Markdown: underlines what breaks common Markdown rules and fixes it in one go, removes blank lines and trailing spaces, switches punctuation between Chinese and English, turns full-width letters into ASCII and joins lines - leaving code, math, front matter and Obsidian's own syntax as written. |
 | Timeline | Events in order, a line each: when \| what \| more. |
 | Two-way Links | Two-way links: type [[ to link a note, a heading or a block, and ![[ to embed one; in the sidebar, the notes that link to the document in front, the ones that name it without a link - linked in one click - and the notes it links to. |
@@ -56,7 +56,7 @@ The plugins for [Textus](https://textus.md), the Markdown editor. None of them c
 | Web View | Open web pages in a tab beside your notes. |
 | Wiki | Pages within pages, and bases of your notes as tables, boards, calendars, galleries and lists - in Obsidian's Bases format, so Obsidian opens the same databases. All plain Markdown files. |
 | Word Reader | Read Word documents as they look in Word, in a tab. Edit as Markdown turns one into a document of yours. |
-| Writing Stats | Words and characters in the document and the selection, reading time, what you wrote today against a daily goal, the days in a row you met it, and the whole folder - CJK counted by character. |
+| Writing Stats | Word counts and a daily writing goal: words and characters in the document and the selection, reading time, what you wrote today, the days in a row you met your goal, and the whole folder - CJK counted by character. |
 | Zotero | Cite from your Zotero library while you write. Needs Zotero running, with Settings › Advanced › Allow other applications on this computer to communicate with Zotero on. |
 <!-- /plugins -->
 

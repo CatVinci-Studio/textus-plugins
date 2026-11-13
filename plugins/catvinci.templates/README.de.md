@@ -19,6 +19,7 @@ Läuft auf dem Desktop und auf dem iPhone und braucht Textus 1.3.10 oder neuer. 
 
 ## Änderungen
 
+- **0.5.3** - Die Store-Beschreibung beginnt jetzt mit dem, was das Plugin tut.
 - **0.5.2** - Vorlagen in einem versteckten oder kleingeschriebenen Vorlagenordner und in seinen Unterordnern erscheinen jetzt. Nach dem Einfügen steht der Cursor direkt hinter der Vorlage.
 - **0.5.1** - **Neu aus Vorlage …** im Kontextmenü einer Datei oder eines Ordners legt das Dokument in diesem Ordner an.
 - **0.5.0** - Vorlagen füllt Textus selbst aus, genauso wie Tagesnotizen; braucht Textus 1.3.10.

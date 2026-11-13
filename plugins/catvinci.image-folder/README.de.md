@@ -13,6 +13,7 @@ Es verarbeitet PNG-, JPEG-, GIF-, WebP-, AVIF-, BMP-, SVG-, ICO-, HEIC- und TIFF
 
 ## Änderungen
 
+- **0.1.7** - Die Store-Beschreibung beginnt jetzt mit dem, was das Plugin tut.
 - **0.1.6** - Viele Bilder auf einmal (eine Synchronisierung, ein kopierter Ordner) lesen das offene Dokument nicht mehr immer wieder.
 - **0.1.5** - In einem Obsidian-Vault bleiben Bilder wieder dort, wo die Anhang-Einstellung des Vaults sie ablegt: Die Einstellung wird über Textus gelesen.
 - **0.1.4** - Lässt Bilder dort, wo die Typora-Bildordner-Einstellung eines Dokuments sie ablegt, und verschiebt keinen Ordner mehr, solange Links darauf noch ungeprüft sein könnten.

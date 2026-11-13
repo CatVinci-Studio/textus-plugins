@@ -11,6 +11,7 @@ Funciona no computador e no iPhone e precisa do Textus 1.3.0 ou mais recente. Pe
 
 ## Alterações
 
+- **0.1.5** - A descrição da loja agora começa pelo que o plugin faz.
 - **0.1.4** - Um comando digitado por inteiro vem primeiro, então Enter o mantém (\in continua \in); um comando sem chaves é escrito com um espaço depois; com o Textus 1.3.13 a lista fecha assim que o comando é escrito.
 - **0.1.3** - Sua página agora diz numa frase o que ele faz, o que pode fazer e o que mudou em cada versão.
 - **0.1.2** - Indica onde funciona: computador e iPhone.
