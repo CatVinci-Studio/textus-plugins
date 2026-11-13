@@ -234,7 +234,7 @@ api.onMessage((value) => {
     );
     initialized = true;
     dirty = false;
-  }
+  } else if (!keepPicked) input("keepDays").value = String(m.config.keepDays);
   root = m.root;
   element("status").textContent = m.message || api.t("loading");
   element("status").dataset.error = String(m.error);

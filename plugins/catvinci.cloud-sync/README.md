@@ -43,7 +43,7 @@ the folder; open one to bring it back.
 
 **Keep cloud history** sets how long, counted from when a version was
 replaced: 30, 90 (the default) or 365 days, or always. One setting holds for
-the folder: the last one chosen on any device, which the others then show.
+the folder: the last one synced from any device, which the others then show.
 For the first day one version an hour is kept, then one a day, at most 200 per
 file; if the history outgrows 8 MB of records, the oldest versions go first.
 Each sync that changes something, and once a day otherwise, lets expired

@@ -229,8 +229,23 @@ suite("cloud history", () => {
     expect((await history(remote)).versions["a.md"]).toHaveLength(1);
     await laptop.sync(remote, undefined, { keep: keep(30, true) });
     expect((await history(remote)).versions).toEqual({});
+    // A written head shares the pick even when reading it back fails.
+    const written = remote.puts.length;
+    const get = remote.get.bind(remote);
+    remote.get = async (key) => {
+      if (key === HEAD && remote.puts.slice(written).includes(HEAD))
+        throw new Error("offline");
+      return get(key);
+    };
+    told = null;
+    await expect(
+      laptop.sync(remote, undefined, {
+        keep: keep(365, true),
+        onKeep: (k) => void (told = k),
+      }),
+    ).rejects.toThrow();
+    expect(told).toMatchObject({ days: 365 });
   });
-
 
   it("drops the oldest versions of any file when the history outgrows its size", () => {
     const h = emptyHistory();

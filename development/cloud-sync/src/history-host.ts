@@ -80,7 +80,6 @@ const row = (v: Version) => ({
   device: v.device ?? "",
 });
 
-
 /** The history page: one file's versions, or the deleted files. */
 export function registerHistory(api: Textus.Api, source: Source) {
   const relative = (root: string, path: string) =>

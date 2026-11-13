@@ -296,11 +296,17 @@ class Controller {
       const result = await synchronize({
         store: opened,
         local: this.workspace,
-        keep: { days: config.keepDays, chosen: !!config.keepPending },
+        keep: { days: config.keepDays, chosen: config.keepPending === true },
         // The folder's setting, once published, is this device's too.
         onKeep: async (keep) => {
           if (keep.days === config.keepDays && !config.keepPending) return;
           await this.settings.adoptKeep(root, keep);
+          if (this.state.root === root)
+            this.state.config = {
+              ...this.state.config,
+              keepDays: keep.days,
+              keepPending: false,
+            };
         },
         device: await deviceName(this.ctx, this.api),
         cleanupDue,

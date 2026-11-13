@@ -429,10 +429,10 @@ async function publish(p) {
   await store.put(HISTORY, encode(history));
   await p.ownLock();
   await store.put(HEAD, document);
+  await p.onKeep?.(history.keep);
   const committed = await store.get(HEAD);
   if (!committed || await hash(committed) !== await hash(document))
     throw new SyncError("integrityError");
-  await p.onKeep?.(history.keep);
   await clean(p, before.previous, dropped, history);
   return true;
 }
@@ -2304,11 +2304,17 @@ var Controller = class {
       const result = await synchronize({
         store: opened,
         local: this.workspace,
-        keep: { days: config.keepDays, chosen: !!config.keepPending },
+        keep: { days: config.keepDays, chosen: config.keepPending === true },
         // The folder's setting, once published, is this device's too.
         onKeep: async (keep) => {
           if (keep.days === config.keepDays && !config.keepPending) return;
           await this.settings.adoptKeep(root, keep);
+          if (this.state.root === root)
+            this.state.config = {
+              ...this.state.config,
+              keepDays: keep.days,
+              keepPending: false
+            };
         },
         device: await deviceName(this.ctx, this.api),
         cleanupDue,

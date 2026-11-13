@@ -88,10 +88,11 @@ export async function publish(p: Publish): Promise<boolean> {
   await store.put(HISTORY, encode(history));
   await p.ownLock();
   await store.put(HEAD, document);
+  // Shared once the head is written, whatever the read-back says.
+  await p.onKeep?.(history.keep);
   const committed = await store.get(HEAD);
   if (!committed || (await hash(committed)) !== (await hash(document)))
     throw new SyncError("integrityError");
-  await p.onKeep?.(history.keep);
   await clean(p, before.previous, dropped, history);
   return true;
 }
