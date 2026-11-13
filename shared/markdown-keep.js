@@ -3,6 +3,17 @@
 // this as lib/markdown-keep.js in libs.json and runs it before its own code.
 (function (root) {
   "use strict";
+  var FENCE_LINE = /^\s*(```+|~~~+)/;
+  /** The open fence after `line`: a fence opens one, and only a bare run
+   *  of its own character, as long or longer, closes it. */
+  function fenceStep(fence, line) {
+    var open = FENCE_LINE.exec(line);
+    if (!open) return fence;
+    if (!fence) return open[1];
+    var closes = open[1][0] === fence[0] && open[1].length >= fence.length;
+    return closes && line.trim() === open[1] ? null : fence;
+  }
+
   // Obsidian Tasks' field marks: dates, recurrence, ids, priorities.
   var TASK_MARKS = "📅|⏳|🛫|✅|❌|➕|🔁|🆔|⛔|🏁|⏫|🔼|🔽|⏬|🔺";
   // Spans inside a line.
@@ -79,10 +90,8 @@
             if (i > 0 && /^(---|\.\.\.)\s*$/.test(line)) front = false;
             return true;
           }
-          var open = /^\s*(```+|~~~+)/.exec(line);
-          if (open && !html && !comment) {
-            if (!fence) fence = open[1][0];
-            else if (open[1][0] === fence) fence = null;
+          if (FENCE_LINE.test(line) && !html && !comment) {
+            fence = fenceStep(fence, line);
             return true;
           }
           if (fence) return true;
@@ -144,6 +153,7 @@
   }
 
   root.markdownKeep = {
+    fenceStep: fenceStep,
     SPANS: SPANS,
     proseLines: proseLines,
     SKIP_KINDS: SKIP_KINDS,

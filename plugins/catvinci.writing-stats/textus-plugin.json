@@ -1,7 +1,7 @@
 {
   "id": "catvinci.writing-stats",
   "name": "%name%",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "publisher": "catvinci",
   "author": "CatVinci Studio",
   "description": "%description%",
@@ -11,7 +11,10 @@
   "engines": {
     "textus": ">=1.3.0-beta.6"
   },
-  "platforms": ["desktop", "ios"],
+  "platforms": [
+    "desktop",
+    "ios"
+  ],
   "main": [
     "lib/folder-paths.js",
     "count.js",
@@ -59,7 +62,7 @@
   "l10n": {
     "en": {
       "name": "Writing Stats",
-      "description": "Words and characters in the document and the selection, reading time, what you wrote today against a daily goal, the days in a row you met it, and the whole folder - CJK counted by character.",
+      "description": "Word counts and a daily writing goal: words and characters in the document and the selection, reading time, what you wrote today, the days in a row you met your goal, and the whole folder - CJK counted by character.",
       "goal": "Daily goal (words, 0 for none)",
       "words": "Words",
       "characters": "Characters",
@@ -81,7 +84,7 @@
     },
     "zh": {
       "name": "写作统计",
-      "description": "当前文档和选中内容的字数与字符数、阅读时间，今天写了多少（对照每日目标）、连续达成的天数，以及整个文件夹的总数；中日韩文字按字计数。",
+      "description": "字数统计和每日写作目标：当前文档和选中内容的字数与字符数、阅读时间，今天写了多少、连续达成目标的天数，以及整个文件夹的总数；中日韩文字按字计数。",
       "goal": "每日目标（字数，0 为不设）",
       "words": "字数",
       "characters": "字符数",
@@ -103,7 +106,7 @@
     },
     "zh-Hant": {
       "name": "寫作統計",
-      "description": "目前文件和選取內容的字數與字元數、閱讀時間，今天寫了多少（對照每日目標）、連續達成的天數，以及整個資料夾的總數；中日韓文字按字計數。",
+      "description": "字數統計和每日寫作目標：目前文件和選取內容的字數與字元數、閱讀時間，今天寫了多少、連續達成目標的天數，以及整個資料夾的總數；中日韓文字按字計數。",
       "goal": "每日目標（字數，0 為不設）",
       "words": "字數",
       "characters": "字元數",
@@ -125,7 +128,7 @@
     },
     "ja": {
       "name": "執筆統計",
-      "description": "文書と選択範囲の語数・文字数、読了時間、今日書いた量（1日の目標と比べて）、連続達成日数、フォルダ全体の合計。日中韓の文字は1字1語で数えます。",
+      "description": "文字数カウントと毎日の執筆目標：文書と選択範囲の語数・文字数、読了時間、今日書いた量、目標の連続達成日数、フォルダ全体の合計。日中韓の文字は1字1語で数えます。",
       "goal": "1日の目標（語数、0で設定なし）",
       "words": "語数",
       "characters": "文字数",
@@ -147,7 +150,7 @@
     },
     "ko": {
       "name": "글쓰기 통계",
-      "description": "문서와 선택 영역의 단어 수와 글자 수, 읽는 시간, 오늘 쓴 양(하루 목표 대비), 연속 달성 일수, 폴더 전체 합계. 한중일 문자는 글자 하나를 한 단어로 셉니다.",
+      "description": "글자 수 세기와 하루 쓰기 목표: 문서와 선택 영역의 단어 수와 글자 수, 읽는 시간, 오늘 쓴 양, 목표 연속 달성 일수, 폴더 전체 합계. 한중일 문자는 글자 하나를 한 단어로 셉니다.",
       "goal": "하루 목표(단어 수, 0이면 없음)",
       "words": "단어",
       "characters": "글자",
@@ -169,7 +172,7 @@
     },
     "de": {
       "name": "Schreibstatistik",
-      "description": "Wörter und Zeichen im Dokument und in der Auswahl, Lesezeit, was du heute geschrieben hast gegenüber einem Tagesziel, die Tage in Folge, an denen du es erreicht hast, und der ganze Ordner - CJK nach Zeichen gezählt.",
+      "description": "Wortzählung und ein tägliches Schreibziel: Wörter und Zeichen im Dokument und in der Auswahl, Lesezeit, was du heute geschrieben hast, die Tage in Folge, an denen du dein Ziel erreicht hast, und der ganze Ordner - CJK nach Zeichen gezählt.",
       "goal": "Tagesziel (Wörter, 0 für keins)",
       "words": "Wörter",
       "characters": "Zeichen",
@@ -191,7 +194,7 @@
     },
     "fr": {
       "name": "Statistiques d'écriture",
-      "description": "Mots et caractères du document et de la sélection, temps de lecture, ce que vous avez écrit aujourd'hui face à un objectif quotidien, les jours d'affilée où vous l'avez atteint, et tout le dossier - le CJK compté par caractère.",
+      "description": "Compteur de mots et objectif d’écriture quotidien : mots et caractères du document et de la sélection, temps de lecture, ce que vous avez écrit aujourd’hui, les jours d’affilée où vous avez atteint l’objectif, et tout le dossier - le CJK compté par caractère.",
       "goal": "Objectif quotidien (mots, 0 pour aucun)",
       "words": "Mots",
       "characters": "Caractères",
@@ -213,7 +216,7 @@
     },
     "es": {
       "name": "Estadísticas de escritura",
-      "description": "Palabras y caracteres del documento y de la selección, tiempo de lectura, lo que escribiste hoy frente a una meta diaria, los días seguidos que la cumpliste y toda la carpeta; el CJK se cuenta por carácter.",
+      "description": "Recuento de palabras y meta diaria de escritura: palabras y caracteres del documento y de la selección, tiempo de lectura, lo que escribiste hoy, los días seguidos que cumpliste la meta y toda la carpeta; el CJK se cuenta por carácter.",
       "goal": "Meta diaria (palabras, 0 para ninguna)",
       "words": "Palabras",
       "characters": "Caracteres",
@@ -235,7 +238,7 @@
     },
     "pt": {
       "name": "Estatísticas de escrita",
-      "description": "Palavras e caracteres do documento e da seleção, tempo de leitura, o que você escreveu hoje frente a uma meta diária, os dias seguidos em que a cumpriu e a pasta toda; CJK contado por caractere.",
+      "description": "Contagem de palavras e meta diária de escrita: palavras e caracteres do documento e da seleção, tempo de leitura, o que você escreveu hoje, os dias seguidos em que cumpriu a meta e a pasta toda; CJK contado por caractere.",
       "goal": "Meta diária (palavras, 0 para nenhuma)",
       "words": "Palavras",
       "characters": "Caracteres",
@@ -257,7 +260,7 @@
     },
     "ru": {
       "name": "Статистика письма",
-      "description": "Слова и символы в документе и в выделении, время чтения, сколько вы написали сегодня по сравнению с дневной целью, сколько дней подряд вы её достигали, и вся папка; CJK считается по иероглифам.",
+      "description": "Подсчёт слов и дневная цель: слова и символы в документе и в выделении, время чтения, сколько вы написали сегодня, сколько дней подряд вы достигали цели, и вся папка; CJK считается по иероглифам.",
       "goal": "Дневная цель (слов, 0 — без цели)",
       "words": "Слова",
       "characters": "Символы",

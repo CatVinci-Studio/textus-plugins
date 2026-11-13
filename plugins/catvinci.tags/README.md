@@ -15,6 +15,7 @@ Lists every `#tag` in the open folder in the sidebar, with how many notes use it
 
 ## Changes
 
+- **0.3.4** - Renaming leaves `[[#Heading]]` links alone, and a ``` line inside a `~~~` block no longer ends the code.
 - **0.3.3** - Tags match in any letter case, as their counts do; renaming a tag moves its nested tags too and no longer touches link addresses or front-matter tags like `project-x`; tags like `a/` or `a//b` are refused.
 - **0.3.2** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
 - **0.3.1** - Tags used equally often are listed in natural name order ("Week2" before "Week10").

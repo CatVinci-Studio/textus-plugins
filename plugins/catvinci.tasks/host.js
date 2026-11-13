@@ -8,7 +8,7 @@
 // line still says what was listed, the way Obsidian Tasks writes it
 // (obsidian-tasks.js): a done date, and a recurring task's next one.
 
-/* global obsidianTasks, tasksQuery, folderPaths */
+/* global obsidianTasks, tasksQuery, folderPaths, markdownKeep */
 /** How far ahead "Due soon" looks. */
 const SOON_DAYS = 7;
 // A Kanban board's cards are tasks in Markdown but live on the board.
@@ -298,15 +298,18 @@ function placeFor(lines, heading) {
   let start = 0;
   let end = lines.length;
   if (heading) {
+    // A "# comment" in code or front matter is no heading.
+    const prose = markdownKeep.proseLines(lines.join("\n"));
+    const level = (i) => prose[i] && HEADING.exec(lines[i]);
     const wanted = String(heading).replace(/^#+\s*/, "").trim().toLowerCase();
-    const at = lines.findIndex((l) => {
-      const m = HEADING.exec(l);
+    const at = lines.findIndex((l, i) => {
+      const m = level(i);
       return m && m[2].toLowerCase() === wanted;
     });
     if (at < 0) return -1;
-    const level = HEADING.exec(lines[at])[1].length;
+    const depth = level(at)[1].length;
     start = at + 1;
-    end = lines.findIndex((l, i) => i > at && HEADING.test(l) && HEADING.exec(l)[1].length <= level);
+    end = lines.findIndex((l, i) => i > at && level(i) && level(i)[1].length <= depth);
     if (end < 0) end = lines.length;
   }
   let last = end - 1;

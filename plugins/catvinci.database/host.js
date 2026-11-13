@@ -4,7 +4,7 @@
 // view go to those notes' front matter, or to the base's own views; New
 // makes a note. Also Textus AI's tools for databases.
 
-/* global database, dataview, folderPaths, activatePages, linkStyle */
+/* global database, dataview, folderPaths, activatePages, linkStyle, pages */
 const t = (key, ...args) => textus.l10n.t(key, ...args);
 
 let root = null;
@@ -13,7 +13,6 @@ const live = new Set();
 
 const join = folderPaths.abs;
 const relOf = (path) => folderPaths.rel(root, path);
-const fileName = (title) => title.trim().replace(/[\\/:*?"<>|#^[\]]/g, "-");
 const empty = (v) => v === null || v === undefined || v === "" || (Array.isArray(v) && !v.length);
 
 /** Front matter values as the page can show them: dates as their day. */
@@ -77,7 +76,7 @@ async function snapshot(target, index) {
 async function addRow(folder, props, typed) {
   const title = typed || (await textus.ui.input({ prompt: t("newTitle") }));
   if (!title || !title.trim()) return;
-  const file = join(root, (folder ? folder + "/" : "") + fileName(title) + ".md");
+  const file = join(root, (folder ? folder + "/" : "") + pages.fileName(title) + ".md");
   if (await textus.files.stat(file)) return textus.ui.message(t("exists", title.trim()));
   if (folder) await textus.files.createFolder(join(root, folder)).catch(() => {});
   await textus.files.create(file, "# " + title.trim() + "\n");
@@ -106,12 +105,16 @@ async function renameProp(target, from, to) {
   if (!to || to === from) return;
   const { base, rows } = await rowsOfBase(target);
   if (!base) return;
+  // A row holding both keeps its own `to`, never one value over the other.
+  const both = rows.filter((r) => from in r.props && to in r.props).length;
+  if (both && !(await textus.ui.confirm(t("renameBoth", from, to, both), { okLabel: t("rename") }))) return;
+  // The base first: refused (changed elsewhere), no note is touched.
+  if (!(await target.setSource(database.writeBase(database.renameKey(base, from, to))))) return;
   for (const row of rows)
-    if (from in row.props)
+    if (from in row.props && !(to in row.props))
       await textus.files.frontmatter.update(join(root, row.rel), (fm) =>
         Object.fromEntries(Object.entries(fm).map(([k, v]) => [k === from ? to : k, v])),
       );
-  await target.setSource(database.writeBase(database.renameKey(base, from, to)));
 }
 
 async function deleteProp(target, key) {
@@ -119,31 +122,20 @@ async function deleteProp(target, key) {
   if (!base) return;
   const using = rows.filter((r) => key in r.props);
   if (using.length && !(await textus.ui.confirm(t("deleteAsk", key, using.length), { okLabel: t("deleteProperty"), danger: true }))) return;
+  // The base first, as in renameProp.
+  if (!(await target.setSource(database.writeBase(database.dropKey(base, key))))) return;
   for (const row of using)
     await textus.files.frontmatter.update(join(root, row.rel), (fm) => {
       delete fm[key];
       return fm;
     });
-  await target.setSource(database.writeBase(database.dropKey(base, key)));
 }
 
-/** A page renamed in the view: its file, the links to it, and its title. */
-async function renamePage(rel, title) {
-  title = title.trim();
-  const dir = rel.includes("/") ? rel.slice(0, rel.lastIndexOf("/") + 1) : "";
-  const old = rel.slice(dir.length).replace(/\.md$/i, "");
-  if (!title || title === old) return;
-  const to = join(root, dir + fileName(title) + ".md");
-  if (await textus.files.stat(to)) return textus.ui.message(t("exists", title));
-  await textus.files.rename(join(root, rel), to, { updateLinks: true });
-  await textus.files.process(to, (text) => text.replace(/^(---\n[\s\S]*?\n---\n+)?# .*$/m, (line, fm) => (fm || "") + "# " + title));
-}
-
-/** The base changed by `change(base)`, written back. */
+/** The base changed by `change(base)`, written back; false when refused. */
 async function changeBase(target, change) {
   const parsed = database.parseBase(target.source());
-  if (parsed.error) return;
-  await target.setSource(database.writeBase(change(parsed.base)));
+  if (parsed.error) return false;
+  return target.setSource(database.writeBase(change(parsed.base)));
 }
 
 /**
@@ -177,6 +169,7 @@ function draw(target, webview, context) {
       index = i;
       void remember({ index });
       webview.postMessage({ type: "selected", index });
+      return send();
     };
     live.add(send);
     webview.onDidDispose(() => live.delete(send));
@@ -212,11 +205,16 @@ function draw(target, webview, context) {
           return addRow(m.folder, m.props, m.title);
         case "view":
           return set({ view: m.view }, m.index ?? index);
-        case "addView":
-          return changeBase(target, (base) => {
-            select(base.views.length);
+        // The view in front moves only once the base is written.
+        case "addView": {
+          let next = index;
+          const added = (base) => {
+            next = base.views.length;
             return database.addView(base, m.view, database.viewName(m.view));
-          });
+          };
+          if (await changeBase(target, added)) select(next);
+          return;
+        }
         case "renameView": {
           const name = ((await textus.ui.input({ prompt: t("renameView"), value: m.name || "" })) || "").trim();
           return name && set({ name }, m.index ?? index);
@@ -225,27 +223,33 @@ function draw(target, webview, context) {
         case "deleteRow":
           return textus.commands.execute("catvinci.database.deletePage", join(root, m.rel));
         // A view's tab dragged to another place; the one in front stays in front.
-        case "moveView":
-          return changeBase(target, (base) => {
+        case "moveView": {
+          let next = index;
+          const moved = (base) => {
             const from = Math.min(m.from | 0, base.views.length - 1);
             const to = Math.min(m.to | 0, base.views.length - 1);
             if (from === to) return base;
             const views = base.views.slice();
-            const [moved] = views.splice(from, 1);
-            views.splice(to, 0, moved);
+            views.splice(to, 0, ...views.splice(from, 1));
             const order = base.views.map((_, n) => n);
-            const [i] = order.splice(from, 1);
-            order.splice(to, 0, i);
-            select(order.indexOf(index));
+            order.splice(to, 0, ...order.splice(from, 1));
+            next = order.indexOf(index);
             return { ...base, views };
-          });
-        case "deleteView":
-          return changeBase(target, (base) => {
+          };
+          if (await changeBase(target, moved)) select(next);
+          return;
+        }
+        case "deleteView": {
+          let next = index;
+          const deleted = (base) => {
             if (base.views.length < 2) return base;
             const gone = Math.min(m.index ?? index, base.views.length - 1);
-            if (gone <= index) select(Math.max(0, index - 1));
+            if (gone <= index) next = Math.max(0, index - 1);
             return { ...base, views: base.views.filter((_, n) => n !== gone) };
-          });
+          };
+          if (await changeBase(target, deleted)) select(next);
+          return;
+        }
         // Filters, sorts, columns, grouping, the board's order, as the view's menus set them.
         case "spec": {
           const spec = { ...m.spec };
@@ -262,7 +266,7 @@ function draw(target, webview, context) {
         // Refused or failed too, the page hears back and lets the cell go.
         case "renamePage":
           try {
-            await renamePage(m.rel, m.title);
+            await textus.commands.execute("catvinci.database.renamePage", join(root, m.rel), m.title);
           } finally {
             await send(true);
           }
@@ -308,12 +312,17 @@ function blockTarget(block) {
     // Its place among the note's blocks: a reader's view is kept by it.
     key: () => block.path + "#" + (block.block ?? 0),
     source: () => block.source,
-    setSource: (text) => block.setSource(text.replace(/\n$/, "")),
+    setSource: async (text) => {
+      await block.setSource(text.replace(/\n$/, ""));
+      return true;
+    },
     onDidChange: (fn) => block.onDidChange(fn),
   };
 }
 
-/** A .base file as a target: `this` is the file itself, as in Obsidian. */
+/** A .base file as a target: `this` is the file itself, as in Obsidian.
+ *  Changed elsewhere, it is read again; a change made from an older text
+ *  isn't written over the newer one, and setSource says false. */
 function fileTarget(file) {
   let text = "";
   const listeners = [];
@@ -321,18 +330,31 @@ function fileTarget(file) {
     text = await file.readText();
     listeners.forEach((fn) => fn());
   };
+  const same = (path) => typeof path === "string" && folderPaths.slash(path) === folderPaths.slash(file.path);
+  // Written by a plugin, or saved in a tab.
+  const watching = [textus.files.onDidChange, textus.files.onDidSave].map((on) =>
+    on((e) => {
+      if (same(e && e.path)) void reload();
+    }),
+  );
   return {
     path: file.path,
     key: () => file.path,
     ready: reload(),
     source: () => text,
     setSource: async (next) => {
+      if ((await file.readText()) !== text) {
+        await reload();
+        await textus.ui.notice(t("changedElsewhere"), { tone: "warning" });
+        return false;
+      }
       text = next;
       await file.writeText(next);
       listeners.forEach((fn) => fn());
+      return true;
     },
     onDidChange: (fn) => listeners.push(fn),
-    reload,
+    dispose: () => watching.forEach((w) => w.dispose()),
   };
 }
 
@@ -365,8 +387,8 @@ async function newDatabase() {
   if (!name || !name.trim()) return;
   const docRel = relOf(doc);
   const dir = docRel.includes("/") ? docRel.slice(0, docRel.lastIndexOf("/")) : "";
-  const folder = (dir ? dir + "/" : "") + fileName(name);
-  const page = folder + "/" + fileName(name) + ".md";
+  const folder = (dir ? dir + "/" : "") + pages.fileName(name);
+  const page = folder + "/" + pages.fileName(name) + ".md";
   await textus.files.createFolder(join(root, folder)).catch(() => {});
   if (!(await textus.files.stat(join(root, page))))
     await textus.files.create(join(root, page), "# " + name.trim() + "\n\n```base\n" + database.writeBase(database.unitBase("table")) + "```\n");
@@ -408,6 +430,7 @@ exports.activate = function (ctx) {
     textus.views.registerFileEditor("catvinci.database.base", {
       resolve: async (file, webview) => {
         const target = fileTarget(file);
+        webview.onDidDispose(() => target.dispose());
         await target.ready;
         return draw(target, webview, ctx);
       },

@@ -112,5 +112,14 @@
       .map((rel) => ({ from: rel, to: unitOf(rel) }));
   }
 
-  root.pages = { tree, ancestors, subpage, nameOf, fileName, isUnit, unitOf, oldUnits };
+  /** The page's own heading - its first line after the front matter, an H1
+   *  reading `old` - given `title`; anything else left as it is. */
+  function retitle(text, old, title) {
+    const top = /^(?:---\r?\n[\s\S]*?\r?\n(?:---|\.\.\.)[ \t]*(?:\r?\n|$))?(?:[ \t]*\r?\n)*/.exec(text)[0];
+    const line = /^#[ \t]+(.*?)(?:[ \t]+#+)?[ \t]*(?=\r?\n|$)/.exec(text.slice(top.length));
+    if (!line || (line[1] !== old && fileName(line[1]) !== old)) return text;
+    return top + "# " + title + text.slice(top.length + line[0].length);
+  }
+
+  root.pages = { tree, ancestors, subpage, nameOf, fileName, isUnit, unitOf, oldUnits, retitle };
 })(typeof window !== "undefined" ? window : globalThis);

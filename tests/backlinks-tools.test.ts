@@ -7,6 +7,8 @@ it("lists a document's backlinks, unlinked mentions and links, lines from 1, as 
     "Plan.md": "# Plan\n\nSee [[Ideas]] and [[Gone]].\n",
     "Ideas.md": "# Ideas\n",
     "Log.md": "# Log\n\nWorked on the Plan today.\nMore in [[Plan]].\n",
+    // Front matter and code name it too, but aren't mentions.
+    "Notes.md": "---\nup: Plan\n---\n```\nthe Plan\n```\n",
   };
   const docs = [
     {
@@ -53,6 +55,8 @@ it("lists a document's backlinks, unlinked mentions and links, lines from 1, as 
           line: 4,
           text: "More in [[Plan]].",
         },
+        { path: "/root/Notes.md", rel: "Notes.md", line: 2, text: "up: Plan" },
+        { path: "/root/Notes.md", rel: "Notes.md", line: 5, text: "the Plan" },
       ],
     }),
   };

@@ -31,6 +31,7 @@ Everything happens on your device: the plugin reads and writes files in the open
 
 ## Changes
 
+- **0.7.7** - Bundles the Wiki plugin's newer base code; importing works as before.
 - **0.7.6** - Importing a database with many rows is quicker.
 - **0.7.5** - Page icons now come through from an unzipped HTML export too, and such an export shows up when you pick where the icons come from.
 - **0.7.4** - Shares the database's updated filter code: a filter ticking several values reads the same in both. Shorter help and empty-state text.

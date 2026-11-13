@@ -48,6 +48,12 @@ describe("tasks' tools", () => {
     await tools.get("add_task")!({ text: "Four", path: "Inbox/New", heading: "Inbox" });
     expect(files["Inbox/New.md"]).toBe("## Inbox\n\n- [ ] Four\n");
     expect(await tools.get("add_task")!({ text: "x", path: "../out.md" })).toHaveProperty("error");
+    // A "# comment" in code is no heading.
+    files["Setup.md"] = "## Setup\n\n- [ ] install\n\n```sh\n# install deps\nnpm ci\n```\n";
+    await tools.get("add_task")!({ text: "test", path: "Setup.md", heading: "Setup" });
+    expect(files["Setup.md"]).toBe(
+      "## Setup\n\n- [ ] install\n\n```sh\n# install deps\nnpm ci\n```\n\n- [ ] test\n",
+    );
   });
 
   it("tick off a task by its line, and refuse a line that isn't one", async () => {

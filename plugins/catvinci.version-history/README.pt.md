@@ -16,6 +16,7 @@ Guarda cada salvamento de um documento como uma versão, para ver o que mudou e 
 
 ## Alterações
 
+- **0.3.7** - O texto de um documento antes do primeiro salvamento também fica como versão, e as versões acompanham o documento quando ele é renomeado ou movido.
 - **0.3.6** - O salvamento automático enquanto você digita grava só a versão mais recente, não todas as versões do documento, então documentos longos salvam com muito menos trabalho.
 - **0.3.5** - Uma versão aberta continua aberta quando o salvamento automático a atualiza, e Restaurar sempre a encontra. Com o armazenamento cheio, versões antigas de outros documentos liberam espaço, e o painel avisa quando um salvamento não pôde ser mantido. As linhas funcionam pelo teclado; os botões quebram linha numa barra lateral estreita.
 - **0.3.4** - Na barra lateral o painel não mostra mais um título próprio, como as outras abas. Textos de ajuda e de estado vazio mais curtos. O painel lateral e a página seguem o layout do Textus 1.3.13.

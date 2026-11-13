@@ -1,7 +1,7 @@
 {
   "id": "catvinci.kanban",
   "name": "%name%",
-  "version": "0.4.7",
+  "version": "0.4.8",
   "publisher": "catvinci",
   "author": "CatVinci Studio",
   "description": "%description%",
@@ -140,8 +140,9 @@
   },
   "l10n": {
     "en": {
+      "changedElsewhere": "This file changed elsewhere: it shows that version now; make your change again.",
       "name": "Task Board",
-      "description": "Boards of cards in lists, kept as a Markdown file (a .md with kanban-plugin in its front matter, as Obsidian's Kanban writes it) - a list per heading, a card per task.",
+      "description": "Kanban boards kept in Markdown: a list per heading, a card per task, in a .md with kanban-plugin in its front matter, as Obsidian's Kanban writes it.",
       "new": "New Task Board…",
       "needsFolder": "Open a folder first: the board is kept in it.",
       "boardName": "Board name",
@@ -163,8 +164,9 @@
       "tool.move_card": "Moves a card on a Kanban board to another list, or to another place in its own."
     },
     "zh": {
+      "changedElsewhere": "这个文件在别处改过了：现在显示的是那个版本，请再改一次。",
       "name": "任务看板",
-      "description": "把卡片按列表排成看板，保存为一个 Markdown 文件（开头属性里带 kanban-plugin 的 .md，和 Obsidian 的看板插件通用）：每个标题是一列，每个任务是一张卡片。",
+      "description": "用 Markdown 保存的看板：每个标题是一列，每个任务是一张卡片；文件是开头属性里带 kanban-plugin 的 .md，和 Obsidian 的看板插件通用。",
       "new": "新建任务看板…",
       "needsFolder": "先打开一个文件夹，看板会存在里面。",
       "boardName": "看板名称",
@@ -186,8 +188,9 @@
       "tool.move_card": "把看板上的一张卡片移到另一个列表，或移到所在列表的另一个位置。"
     },
     "zh-Hant": {
+      "changedElsewhere": "這個檔案在別處改過了：現在顯示的是那個版本，請再改一次。",
       "name": "任務看板",
-      "description": "把卡片按清單排成看板，儲存為一個 Markdown 檔案（開頭屬性裡帶 kanban-plugin 的 .md，與 Obsidian 的看板外掛通用）：每個標題是一欄，每個任務是一張卡片。",
+      "description": "用 Markdown 儲存的看板：每個標題是一欄，每個任務是一張卡片；檔案是開頭屬性裡帶 kanban-plugin 的 .md，與 Obsidian 的看板外掛通用。",
       "new": "新增任務看板…",
       "needsFolder": "請先開啟一個資料夾，看板會存在裡面。",
       "boardName": "看板名稱",
@@ -209,8 +212,9 @@
       "tool.move_card": "把看板上的一張卡片移到另一個列表，或移到所在列表的另一個位置。"
     },
     "ja": {
+      "changedElsewhere": "このファイルは別の場所で変更されました。その版を表示しています。もう一度変更してください。",
       "name": "タスクボード",
-      "description": "リストに並んだカードのボード。Markdown ファイル（フロントマターに kanban-plugin がある .md。Obsidian の Kanban と同じ形式）として保存され、見出しごとにリスト、タスクごとにカードになります。",
+      "description": "Markdown で保存するカンバンボード：見出しごとにリスト、タスクごとにカード。フロントマターに kanban-plugin がある .md で、Obsidian の Kanban と同じ形式です。",
       "new": "新しいタスクボード…",
       "needsFolder": "先にフォルダを開いてください。ボードはその中に保存されます。",
       "boardName": "ボード名",
@@ -232,8 +236,9 @@
       "tool.move_card": "カンバンボードのカードを別のリストへ、または同じリストの別の位置へ移します。"
     },
     "ko": {
+      "changedElsewhere": "이 파일이 다른 곳에서 바뀌었습니다. 지금 그 버전을 보여 주니 다시 변경해 주세요.",
       "name": "작업 보드",
-      "description": "목록별로 카드를 놓은 보드를 Markdown 파일 (머리말에 kanban-plugin이 있는 .md, Obsidian Kanban과 같은 형식)로 보관합니다. 제목 하나가 목록 하나, 할 일 하나가 카드 하나입니다.",
+      "description": "Markdown으로 보관하는 칸반 보드: 제목 하나가 목록 하나, 할 일 하나가 카드 하나입니다. 머리말에 kanban-plugin이 있는 .md로, Obsidian Kanban과 같은 형식입니다.",
       "new": "새 작업 보드…",
       "needsFolder": "먼저 폴더를 여세요. 보드는 그 안에 보관됩니다.",
       "boardName": "보드 이름",
@@ -255,8 +260,9 @@
       "tool.move_card": "칸반 보드의 카드를 다른 목록으로, 또는 같은 목록의 다른 위치로 옮깁니다."
     },
     "es": {
+      "changedElsewhere": "Este archivo cambió en otro sitio: ahora muestra esa versión; vuelve a hacer tu cambio.",
       "name": "Tablero de tareas",
-      "description": "Tableros de tarjetas en listas, guardados como un archivo Markdown (un .md con kanban-plugin en su front matter, como el Kanban de Obsidian): una lista por encabezado, una tarjeta por tarea.",
+      "description": "Tableros kanban guardados en Markdown: una lista por encabezado, una tarjeta por tarea, en un .md con kanban-plugin en su front matter, como el Kanban de Obsidian.",
       "new": "Nuevo tablero de tareas…",
       "needsFolder": "Abre primero una carpeta: el tablero se guarda en ella.",
       "boardName": "Nombre del tablero",
@@ -278,8 +284,9 @@
       "tool.move_card": "Mueve una tarjeta de un tablero Kanban a otra lista, o a otro lugar de la suya."
     },
     "fr": {
+      "changedElsewhere": "Ce fichier a été modifié ailleurs : cette version est affichée ; refaites votre modification.",
       "name": "Tableau de tâches",
-      "description": "Des tableaux de cartes en listes, enregistrés dans un fichier Markdown (un .md avec kanban-plugin dans son front matter, comme le Kanban d'Obsidian) : une liste par titre, une carte par tâche.",
+      "description": "Des tableaux kanban enregistrés en Markdown : une liste par titre, une carte par tâche, dans un .md avec kanban-plugin dans son front matter, comme le Kanban d’Obsidian.",
       "new": "Nouveau tableau de tâches…",
       "needsFolder": "Ouvrez d’abord un dossier : le tableau y est enregistré.",
       "boardName": "Nom du tableau",
@@ -301,8 +308,9 @@
       "tool.move_card": "Déplace une carte d'un tableau Kanban vers une autre liste, ou à une autre place dans la sienne."
     },
     "de": {
+      "changedElsewhere": "Diese Datei wurde anderswo geändert: Jetzt wird diese Fassung gezeigt; nimm deine Änderung noch einmal vor.",
       "name": "Aufgaben-Board",
-      "description": "Boards aus Karten in Listen, gespeichert als Markdown-Datei (eine .md mit kanban-plugin im Front Matter, wie Obsidians Kanban) – eine Liste pro Überschrift, eine Karte pro Aufgabe.",
+      "description": "Kanban-Boards in Markdown: eine Liste pro Überschrift, eine Karte pro Aufgabe, in einer .md mit kanban-plugin im Front Matter – wie Obsidians Kanban.",
       "new": "Neues Aufgaben-Board…",
       "needsFolder": "Öffne zuerst einen Ordner: Das Board wird darin abgelegt.",
       "boardName": "Name des Boards",
@@ -324,8 +332,9 @@
       "tool.move_card": "Verschiebt eine Karte eines Kanban-Boards in eine andere Liste oder an eine andere Stelle ihrer eigenen."
     },
     "ru": {
+      "changedElsewhere": "Этот файл изменили в другом месте: сейчас показана та версия; внесите изменение ещё раз.",
       "name": "Доска задач",
-      "description": "Доски с карточками в списках, сохранённые как файл Markdown (.md с kanban-plugin во front matter, как у Kanban в Obsidian): список на каждый заголовок, карточка на каждую задачу.",
+      "description": "Канбан-доски в Markdown: список на каждый заголовок, карточка на каждую задачу, в .md с kanban-plugin во front matter, как у Kanban в Obsidian.",
       "new": "Новая доска задач…",
       "needsFolder": "Сначала откройте папку: доска хранится в ней.",
       "boardName": "Название доски",
@@ -347,8 +356,9 @@
       "tool.move_card": "Перемещает карточку на канбан-доске в другой список или на другое место в её собственном."
     },
     "pt": {
+      "changedElsewhere": "Este arquivo mudou em outro lugar: agora mostra essa versão; faça sua alteração de novo.",
       "name": "Quadro de tarefas",
-      "description": "Quadros de cartões em listas, guardados como um arquivo Markdown (um .md com kanban-plugin no front matter, como o Kanban do Obsidian): uma lista por título, um cartão por tarefa.",
+      "description": "Quadros kanban guardados em Markdown: uma lista por título, um cartão por tarefa, num .md com kanban-plugin no front matter, como o Kanban do Obsidian.",
       "new": "Novo quadro de tarefas…",
       "needsFolder": "Abra uma pasta primeiro: o quadro fica guardado nela.",
       "boardName": "Nome do quadro",

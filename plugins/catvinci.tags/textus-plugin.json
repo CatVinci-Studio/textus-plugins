@@ -1,7 +1,7 @@
 {
   "id": "catvinci.tags",
   "name": "%name%",
-  "version": "0.3.3",
+  "version": "0.3.4",
   "publisher": "catvinci",
   "author": "CatVinci Studio",
   "description": "%description%",
@@ -17,6 +17,7 @@
   ],
   "main": [
     "lib/name-order.js",
+    "lib/markdown-keep.js",
     "tag-edit.js",
     "host.js"
   ],

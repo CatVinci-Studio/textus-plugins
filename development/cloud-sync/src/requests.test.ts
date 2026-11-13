@@ -39,7 +39,7 @@ it("counts the S3 requests of an idle sync, a saved edit and a deletion", async 
   };
   expect(await measure()).toBe(8);
   a.files.set("a.md", bytes("edited"));
-  expect(await measure()).toBe(17);
+  expect(await measure()).toBe(20);
   a.files.delete("b.md");
-  expect(await measure()).toBe(14);
+  expect(await measure()).toBe(20);
 });

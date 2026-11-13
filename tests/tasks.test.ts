@@ -6,6 +6,7 @@ import { beforeAll, describe, expect, it } from "vitest";
 let ot: any, tq: any, order: any;
 
 beforeAll(async () => {
+  await import(/* @vite-ignore */ "../shared/text-lines.js");
   for (const file of ["obsidian-tasks.js", "task-order.js", "query.js"])
     await import(/* @vite-ignore */ "../plugins/catvinci.tasks/" + file);
   const g = globalThis as unknown as {
@@ -299,6 +300,12 @@ describe("finished tasks last", () => {
       "# Day\n\n- [ ] b\n- [x] a\n\nText\n\n- [x] c\n- [ ] d\n",
     );
     expect([moved.place(2), moved.place(3), moved.place(8)]).toEqual([3, 2, 8]);
+    expect(order.orderAround(text.replace(/\n/g, "\r\n"), 2).text).toBe(
+      moved.text.replace(/\n/g, "\r\n"),
+    );
+    // Mixed endings stay at their places.
+    const mixed = "# Day\r\n\n- [x] a\r\n- [ ] b\n";
+    expect(order.orderAround(mixed, 2).text).toBe("# Day\r\n\n- [ ] b\r\n- [x] a\n");
   });
 
   it("tells a tick from other typing", () => {

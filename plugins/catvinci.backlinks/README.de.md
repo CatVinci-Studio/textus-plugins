@@ -39,6 +39,7 @@ Der Tab **Bidirektionale Links** in der Seitenleiste zeigt, was auf das geöffne
 
 ## Änderungen
 
+- **0.4.4** - Links umwandeln lässt Links in einem Codeblock unverändert und wandelt die danach um; Unverlinkte Erwähnungen zeigt und verlinkt keine Namen mehr in Front Matter oder Code.
 - **0.4.3** - Standardlinks auf noch nicht vorhandene Notizen erscheinen jetzt unter Ausgehende Links, Links auf Überschriften derselben Notiz führen die Notiz nicht mehr selbst auf, und das Ziehen einer Trennlinie zeichnet das Panel nicht mehr neu.
 - **0.4.2** - Kürzere Hilfe- und Leertexte. Seitenleiste und Seite folgen dem Layout von Textus 1.3.13.
 - **0.4.1** - In einer Notiz ohne Links schreibt [[ einen Standardlink: Das gerade getippte [[ galt als Wikilink, den die Notiz schon hatte.

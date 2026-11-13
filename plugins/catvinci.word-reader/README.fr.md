@@ -13,6 +13,7 @@ Le plugin ne demande aucune permission : il lit seulement le fichier que vous ou
 
 ## Changements
 
+- **0.2.5** - Le bouton de fermeture de la barre de recherche a un nom pour les lecteurs d'écran et affiche une infobulle.
 - **0.2.4** - S'ouvre à la largeur de l'onglet ; un pincement ou Ctrl+molette (⌘ sur Mac) zoome les pages ; une page plus large que l'onglet défile jusqu'aux deux bords ; les barres passent à la ligne dans un onglet étroit et le zoom reste après un changement de langue.
 - **0.2.3** - Sa barre suit l'ordre de Textus : ce qu'elle montre, puis recherche et zoom.
 - **0.2.2** - Ses barres, listes et contrôles sont désormais ceux de Textus, grandissent avec l’interface et suivent chaque thème ; nécessite Textus 1.3.12.

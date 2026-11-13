@@ -1,7 +1,7 @@
 {
   "id": "catvinci.templates",
   "name": "%name%",
-  "version": "0.5.2",
+  "version": "0.5.3",
   "publisher": "catvinci",
   "author": "CatVinci Studio",
   "description": "%description%",
@@ -11,9 +11,24 @@
   "engines": {
     "textus": ">=1.3.10"
   },
-  "platforms": ["desktop", "ios"],
-  "main": ["lib/folder-paths.js", "lib/free-name.js", "lib/conventions.js", "lib/name-order.js", "host.js"],
-  "permissions": ["files.read", "files.write", "editor.read", "editor.write", "ai.tools"],
+  "platforms": [
+    "desktop",
+    "ios"
+  ],
+  "main": [
+    "lib/folder-paths.js",
+    "lib/free-name.js",
+    "lib/conventions.js",
+    "lib/name-order.js",
+    "host.js"
+  ],
+  "permissions": [
+    "files.read",
+    "files.write",
+    "editor.read",
+    "editor.write",
+    "ai.tools"
+  ],
   "contributes": {
     "commands": [
       {
@@ -91,7 +106,7 @@
   "l10n": {
     "en": {
       "name": "Templates",
-      "description": "New documents and snippets from templates of your own, with the date, time and title filled in, as Obsidian and Templater fill them.",
+      "description": "Documents and snippets from your own templates: the date, time and title filled in, as Obsidian and Templater fill them.",
       "new": "New from Template…",
       "insert": "Insert Template…",
       "save": "Save as Template…",
@@ -112,7 +127,7 @@
     },
     "zh": {
       "name": "模板",
-      "description": "用自己的模板新建文档或插入片段，自动填好日期、时间和标题，和 Obsidian、Templater 填的一样。",
+      "description": "用自己的模板新建文档和插入片段：自动填好日期、时间和标题，和 Obsidian、Templater 填的一样。",
       "new": "从模板新建…",
       "insert": "插入模板…",
       "save": "存为模板…",
@@ -133,7 +148,7 @@
     },
     "zh-Hant": {
       "name": "範本",
-      "description": "用自己的範本新增文件或插入片段，自動填好日期、時間和標題，和 Obsidian、Templater 填的一樣。",
+      "description": "用自己的範本新增文件和插入片段：自動填好日期、時間和標題，和 Obsidian、Templater 填的一樣。",
       "new": "從範本新增…",
       "insert": "插入範本…",
       "save": "存為範本…",
@@ -154,7 +169,7 @@
     },
     "ja": {
       "name": "テンプレート",
-      "description": "自分のテンプレートから文書や断片を作ります。日付・時刻・表題は Obsidian や Templater と同じように入ります。",
+      "description": "自分のテンプレートから文書や断片を作成：日付・時刻・表題は Obsidian や Templater と同じように入ります。",
       "new": "テンプレートから新規作成…",
       "insert": "テンプレートを挿入…",
       "save": "テンプレートとして保存…",
@@ -175,7 +190,7 @@
     },
     "ko": {
       "name": "템플릿",
-      "description": "내 템플릿으로 새 문서나 조각을 만들고, 날짜·시간·제목을 Obsidian과 Templater처럼 채워 넣습니다.",
+      "description": "내 템플릿으로 문서와 조각 만들기: 날짜·시간·제목을 Obsidian과 Templater처럼 채워 넣습니다.",
       "new": "템플릿으로 새로 만들기…",
       "insert": "템플릿 넣기…",
       "save": "템플릿으로 저장…",
@@ -196,7 +211,7 @@
     },
     "es": {
       "name": "Plantillas",
-      "description": "Documentos y fragmentos nuevos a partir de tus plantillas, con fecha, hora y título rellenados como lo hacen Obsidian y Templater.",
+      "description": "Documentos y fragmentos a partir de tus plantillas: con fecha, hora y título rellenados como lo hacen Obsidian y Templater.",
       "new": "Nuevo desde plantilla…",
       "insert": "Insertar plantilla…",
       "save": "Guardar como plantilla…",
@@ -217,7 +232,7 @@
     },
     "fr": {
       "name": "Modèles",
-      "description": "De nouveaux documents et extraits à partir de vos modèles, avec la date, l’heure et le titre remplis comme le font Obsidian et Templater.",
+      "description": "Des documents et extraits à partir de vos modèles : la date, l’heure et le titre remplis comme le font Obsidian et Templater.",
       "new": "Nouveau depuis un modèle…",
       "insert": "Insérer un modèle…",
       "save": "Enregistrer comme modèle…",
@@ -238,7 +253,7 @@
     },
     "de": {
       "name": "Vorlagen",
-      "description": "Neue Dokumente und Bausteine aus eigenen Vorlagen, mit Datum, Uhrzeit und Titel so ausgefüllt wie in Obsidian und Templater.",
+      "description": "Dokumente und Bausteine aus eigenen Vorlagen: Datum, Uhrzeit und Titel so ausgefüllt wie in Obsidian und Templater.",
       "new": "Neu aus Vorlage …",
       "insert": "Vorlage einfügen …",
       "save": "Als Vorlage speichern …",
@@ -259,7 +274,7 @@
     },
     "ru": {
       "name": "Шаблоны",
-      "description": "Новые документы и фрагменты из ваших шаблонов — с датой, временем и названием, как их заполняют Obsidian и Templater.",
+      "description": "Документы и фрагменты из ваших шаблонов: дата, время и название заполняются так же, как в Obsidian и Templater.",
       "new": "Создать из шаблона…",
       "insert": "Вставить шаблон…",
       "save": "Сохранить как шаблон…",
@@ -280,7 +295,7 @@
     },
     "pt": {
       "name": "Modelos",
-      "description": "Novos documentos e trechos a partir dos seus modelos, com data, hora e título preenchidos como o Obsidian e o Templater fazem.",
+      "description": "Documentos e trechos a partir dos seus modelos: data, hora e título preenchidos como o Obsidian e o Templater fazem.",
       "new": "Novo a partir de modelo…",
       "insert": "Inserir modelo…",
       "save": "Salvar como modelo…",

@@ -4,7 +4,7 @@
 // (complete.js); and the notes, sections and blocks ![[embeds]] show. What
 // Textus knows of the folder (textus.metadata) says where links go.
 
-/* global backlinkMentions, completeLinks, convertLinks, folderPaths, noteParts, linkStyle, textLines */
+/* global backlinkMentions, completeLinks, convertLinks, folderPaths, noteParts, linkStyle, textLines, markdownKeep */
 const t = (key, ...args) => textus.l10n.t(key, ...args);
 /** Unlinked mentions are looked for up to this many lines. */
 const SEARCH_LIMIT = 300;
@@ -32,8 +32,13 @@ async function linesOf(path, cache) {
     cache.set(
       path,
       textus.files.readText(path).then(
-        (text) => text.split(/\r?\n/),
-        () => [],
+        (text) => {
+          const lines = text.split(/\r?\n/);
+          // Front matter and code aren't prose: no mention is found there.
+          lines.prose = markdownKeep.proseLines(text.replace(/\r\n/g, "\n"));
+          return lines;
+        },
+        () => Object.assign([], { prose: [] }),
       ),
     );
   return cache.get(path);
@@ -81,8 +86,9 @@ async function gather(focus, doc) {
       const line = hit.line - 1;
       const key = hit.path + ":" + line;
       if (hit.path === focus || linkedLines.has(key) || seen.has(key)) continue;
-      const text = (await linesOf(hit.path, files))[line];
-      if (text === undefined || backlinkMentions.findMention(text, name) < 0)
+      const lines = await linesOf(hit.path, files);
+      const text = lines[line];
+      if (text === undefined || !lines.prose[line] || backlinkMentions.findMention(text, name) < 0)
         continue;
       seen.add(key);
       unlinked.push({ path: hit.path, line: line, text: text, name: name });

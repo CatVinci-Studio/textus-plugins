@@ -1,7 +1,7 @@
 {
   "id": "catvinci.backlinks",
   "name": "%name%",
-  "version": "0.4.3",
+  "version": "0.4.4",
   "publisher": "catvinci",
   "author": "CatVinci Studio",
   "description": "%description%",
@@ -17,6 +17,7 @@
     "lib/link-style.js",
     "lib/note-parts.js",
     "lib/text-lines.js",
+    "lib/markdown-keep.js",
     "mentions.js",
     "complete.js",
     "convert.js",

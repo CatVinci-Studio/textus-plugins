@@ -15,6 +15,7 @@ let p: {
   link: (rel: string, rels: string[]) => string;
   unitOf: (rel: string) => string | null;
   oldUnits: (rels: string[]) => { from: string; to: string }[];
+  retitle: (text: string, old: string, title: string) => string;
 };
 
 beforeAll(async () => {
@@ -64,6 +65,17 @@ describe("pages", () => {
       "Life/2026 Calendar.md",
     ]);
     expect(p.ancestors("Life.md", rels)).toEqual([]);
+  });
+
+  it("renames only the page's own heading", () => {
+    expect(p.retitle("---\na: 1\n...\n\n# Q1: Goals\r\nbody", "Q1- Goals", "Plan")).toBe(
+      "---\na: 1\n...\n\n# Plan\r\nbody",
+    );
+    // No title heading first: left as it is, a later one too.
+    expect(p.retitle("Intro\n\n# Agenda\n", "Agenda", "Standup")).toBe("Intro\n\n# Agenda\n");
+    // A real name holding what fileName would replace, and a closing #.
+    expect(p.retitle("# C# basics\n", "C# basics", "Go")).toBe("# Go\n");
+    expect(p.retitle("# C#\n", "C-", "Go")).toBe("# Go\n");
   });
 
   it("makes a sub-page beside its page", () => {

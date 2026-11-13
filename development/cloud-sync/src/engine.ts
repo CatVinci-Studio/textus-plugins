@@ -1,10 +1,11 @@
-import { describe, hash, parseManifest } from "./content";
+import { isObsidianSetting } from "./config";
+import { hash, parseManifest } from "./content";
 import { conflictPath, moves, plan } from "./planner";
+import { publish } from "./publish";
 import {
   FORMAT,
   HEAD,
   LOCK,
-  MAX_MANIFEST_SIZE,
   MAX_TRASH,
   SyncError,
   TRASH_DAYS,
@@ -13,6 +14,8 @@ import {
   checkAbort,
   type Base,
   type Entry,
+  type Keep,
+  type KeepChoice,
   type LocalFiles,
   type Manifest,
   type ObjectStore,
@@ -20,16 +23,22 @@ import {
 } from "./model";
 
 type Progress = (phase: string, current: number, total: number) => void;
-interface Options {
+export interface Options {
   local: LocalFiles;
   store: ObjectStore;
   base: Base;
   saveBase: (base: Base) => Promise<void>;
+  keep: KeepChoice;
+  onKeep?: (keep: Keep) => void | Promise<void>;
+  /** This device's name in the history. */
+  device?: string;
+  /** Thin and clean the history even when no file changed. */
+  cleanupDue?: boolean;
   signal?: AbortSignal;
   progress?: Progress;
 }
 
-async function download(
+export async function download(
   store: ObjectStore,
   entry: Entry,
   signal?: AbortSignal,
@@ -108,7 +117,11 @@ export async function synchronize(options: Options): Promise<Result> {
           files: Object.create(null),
         };
     // A previously joined folder must never silently recreate a missing repository.
-    if (!raw && Object.keys(options.base.files).length)
+    if (
+      !raw &&
+      (Object.keys(options.base.files).length ||
+        Object.keys(options.base.parked ?? {}).length)
+    )
       throw new SyncError("remoteMissing");
     progress("scanning", 0, 0);
     const files = await local.scan();
@@ -122,7 +135,28 @@ export async function synchronize(options: Options): Promise<Result> {
         (t) => Date.parse(t.deletedAt) > cutoff,
       ),
     };
-    const base: Base = { format: FORMAT, files: { ...options.base.files } };
+    // What this device leaves out stays as it is, here and there; its
+    // last-synced state is parked. Included again, it counts only while the
+    // file is still here: a missing one is fetched, never taken for a
+    // deletion, and one changed elsewhere meanwhile is downloaded.
+    const ours = <T>(from: Record<string, T>) =>
+      Object.fromEntries(
+        Object.entries(from).filter(([path]) => local.wants(path)),
+      );
+    const lastSynced = { ...options.base.parked, ...options.base.files };
+    const base: Base = {
+      format: FORMAT,
+      files: Object.fromEntries(
+        Object.entries(lastSynced).filter(
+          ([path]) =>
+            local.wants(path) && (path in options.base.files || path in files),
+        ),
+      ),
+    };
+    const parked = Object.fromEntries(
+      Object.entries(lastSynced).filter(([path]) => !local.wants(path)),
+    );
+    if (Object.keys(parked).length) base.parked = parked;
     const known = new Set<string>();
     const result: Result = {
       uploaded: 0,
@@ -133,8 +167,15 @@ export async function synchronize(options: Options): Promise<Result> {
       deferred: [],
       unchanged: 0,
     };
-    const actions = plan(files, remote.files, base.files);
-    const names = new Map<string, string>();
+    const ourBase = { ...base.files };
+    const actions = plan(files, ours(remote.files), ourBase);
+    // Twins left out here still clash with an upload of the other.
+    const names = new Map(
+      Object.keys(remote.files).map((p) => [
+        p.normalize("NFC").toLowerCase(),
+        p,
+      ]),
+    );
     for (const a of actions) {
       const folded = a.path.normalize("NFC").toLowerCase();
       if (names.has(folded) && names.get(folded) !== a.path)
@@ -171,7 +212,7 @@ export async function synchronize(options: Options): Promise<Result> {
       throw new SyncError("localChanged");
     };
     const done = new Set<string>();
-    for (const [to, from] of moves(actions, files, remote.files, base.files)) {
+    for (const [to, from] of moves(actions, files, remote.files, ourBase)) {
       checkAbort(signal);
       await local.check();
       if (!(await local.move(from, to, files[from].hash))) continue;
@@ -198,8 +239,8 @@ export async function synchronize(options: Options): Promise<Result> {
         continue;
       }
       if (kind === "deleteRemote") {
+        // Its content stays in the history.
         delete next.files[path];
-        next.trash!.push({ path, deletedAt: now.toISOString(), entry: r });
         delete base.files[path];
         result.removed++;
         continue;
@@ -227,7 +268,29 @@ export async function synchronize(options: Options): Promise<Result> {
           result.downloaded++;
           continue;
         }
-        // Binary replacements and concurrent edits are also kept as two files.
+        // An attachment changed elsewhere and not here: the old one goes to
+        // the trash and the new one takes its place (it can't be rewritten
+        // in place). Kept as two files, it was sent back over the new one.
+        if (applied === false && kind === "download" && l) {
+          const gone = await local.remove(path, l.hash);
+          if (gone === "deferred") {
+            result.deferred.push(path);
+            continue;
+          }
+          const placed = gone && (await local.apply(path, bytes, null));
+          if (placed === true) {
+            base.files[path] = r.hash;
+            result.downloaded++;
+            continue;
+          }
+          // Trashed but not placed (a tab opened on it), or a setting
+          // Obsidian rewrote meanwhile: fetched next time, no copy made.
+          if (gone || isObsidianSetting(path)) {
+            result.deferred.push(path);
+            continue;
+          }
+        }
+        // Concurrent edits are kept as two files.
         await keepRemote(path, r, bytes);
         if (kind === "download" && !l) {
           result.deferred.push(path);
@@ -249,25 +312,17 @@ export async function synchronize(options: Options): Promise<Result> {
     await ownLock();
     progress("publishing", actions.length, actions.length);
     next.trash = next.trash!.slice(-MAX_TRASH);
-    if (
-      !raw ||
-      JSON.stringify([next.files, next.trash]) !==
-        JSON.stringify([remote.files, remote.trash ?? []])
-    ) {
-      next.revision = crypto.randomUUID();
-      next.updatedAt = new Date().toISOString();
-      const document = encode(next);
-      if (document.length > MAX_MANIFEST_SIZE)
-        throw new SyncError("tooManyFiles");
-      parseManifest(document);
-      // Content and the immutable recovery manifest land before the shared head.
-      await store.put(`v1/snapshots/${next.revision}.json`, document);
-      await ownLock();
-      await store.put(HEAD, document);
-      const committed = await store.get(HEAD);
-      if (!committed || (await hash(committed)) !== (await hash(document)))
-        throw new SyncError("integrityError");
-    }
+    await publish({
+      store,
+      raw,
+      remote,
+      next,
+      origin: { at: new Date().toISOString(), device: options.device },
+      keep: options.keep,
+      onKeep: options.onKeep,
+      cleanupDue: options.cleanupDue ?? false,
+      ownLock,
+    });
     await options.saveBase(base);
     completed = true;
     return result;
@@ -283,4 +338,3 @@ export async function synchronize(options: Options): Promise<Result> {
   }
 }
 
-export { describe };

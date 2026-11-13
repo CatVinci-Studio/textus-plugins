@@ -39,6 +39,7 @@ Espaçamento CJK, o plugin que põe espaços entre texto chinês e latino, tamb�
 
 ## Alterações
 
+- **0.4.1** - Remover linhas em branco e trocar de lista deixam intacto um bloco de código dentro de uma cerca mais longa (```` com ``` dentro).
 - **0.4.0** - Troca as linhas selecionadas para lista com marcadores, numerada ou de tarefas (numera a partir de 1 em cada nível; uma tarefa mantém a marca).
 - **0.3.2** - Textos de ajuda e de estado vazio mais curtos.
 - **0.3.1** - Sua página agora diz numa frase o que ele faz, o que pode fazer e o que mudou em cada versão.

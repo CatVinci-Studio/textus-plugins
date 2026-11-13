@@ -10,6 +10,7 @@
     ["zoom-out", "zoomOut"],
     ["zoom-in", "zoomIn"],
     ["find-open", "find"],
+    ["find-close", "closeFind"],
   ])
     for (const attr of ["aria-label", "title"])
       $(id).setAttribute(attr, t(key));

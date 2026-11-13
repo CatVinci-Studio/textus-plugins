@@ -8,6 +8,7 @@ let tagEdit: {
 };
 
 beforeAll(async () => {
+  await import(/* @vite-ignore */ "../shared/markdown-keep.js");
   const script = "../plugins/catvinci.tags/tag-edit.js";
   await import(/* @vite-ignore */ script);
   tagEdit = (globalThis as unknown as { tagEdit: typeof tagEdit }).tagEdit;
@@ -49,6 +50,18 @@ describe("renaming a tag", () => {
     expect(
       tagEdit.renameTag("---\ntags:\n  - draft\n  - b\n---\n", "draft", "写作"),
     ).toBe("---\ntags:\n  - 写作\n  - b\n---\n");
+  });
+
+  it("leaves heading links and a ``` line inside a ~~~ block", () => {
+    const doc =
+      "See [[#Ideas]] and [[#Ideas|list]].\n~~~\n```\n#ideas in code\n~~~\nafter #ideas\n";
+    expect(tagEdit.renameTag(doc, "ideas", "thoughts")).toBe(
+      doc.replace("after #ideas", "after #thoughts"),
+    );
+    const four = "````\n```\n#ideas in code\n````\n#ideas\n";
+    expect(tagEdit.renameTag(four, "ideas", "thoughts")).toBe(
+      four.replace(/#ideas$/m, "#thoughts"),
+    );
   });
 
   it("renames any letter case, and leaves longer front-matter tags", () => {

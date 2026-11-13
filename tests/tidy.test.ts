@@ -78,6 +78,9 @@ describe("blank lines", () => {
     expect(tidy.removeBlankLines("```\nx\n\ny\n```", true)).toBe(
       "```\nx\n\ny\n```",
     );
+    // A shorter run inside a longer fence doesn't close it.
+    const inner = "````md\n```\na\n\n\nb\n```\n````\n";
+    expect(tidy.removeBlankLines(inner)).toBe(inner);
   });
 });
 

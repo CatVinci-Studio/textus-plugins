@@ -1,7 +1,7 @@
 {
   "id": "catvinci.image-folder",
   "name": "%name%",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "publisher": "catvinci",
   "author": "CatVinci Studio",
   "description": "%description%",
@@ -14,7 +14,12 @@
   "platforms": [
     "desktop"
   ],
-  "main": ["lib/folder-paths.js", "lib/free-name.js", "folder.js", "host.js"],
+  "main": [
+    "lib/folder-paths.js",
+    "lib/free-name.js",
+    "folder.js",
+    "host.js"
+  ],
   "permissions": [
     "files.read",
     "files.write",
@@ -28,43 +33,43 @@
   "l10n": {
     "en": {
       "name": "Images Follow Document",
-      "description": "Keeps each document's pictures beside it, in a folder of its name - Note.assets/ for Note.md - as Typora and VS Code do."
+      "description": "Each document's pictures in a folder beside it: Note.assets/ for Note.md, as Typora and VS Code keep them."
     },
     "zh": {
       "name": "图片跟随文档",
-      "description": "把每篇文档的图片放在它旁边、以它命名的文件夹里（Note.md 的图片在 Note.assets/），和 Typora、VS Code 一样。"
+      "description": "图片存进文档旁的同名文件夹：Note.md 的图片放在 Note.assets/，和 Typora、VS Code 一样。"
     },
     "zh-Hant": {
       "name": "圖片跟隨文件",
-      "description": "把每篇文件的圖片放在它旁邊、以它命名的資料夾裡（Note.md 的圖片在 Note.assets/），和 Typora、VS Code 一樣。"
+      "description": "圖片存進文件旁的同名資料夾：Note.md 的圖片放在 Note.assets/，和 Typora、VS Code 一樣。"
     },
     "ja": {
       "name": "画像を文書のそばに",
-      "description": "文書の画像を、その横の文書名のフォルダ（Note.md なら Note.assets/）に置きます。Typora や VS Code と同じです。"
+      "description": "画像を文書の横の同名フォルダに保存：Note.md なら Note.assets/ に置きます。Typora や VS Code と同じです。"
     },
     "ko": {
       "name": "이미지를 문서 곁에",
-      "description": "문서의 그림을 그 옆, 문서 이름의 폴더(Note.md라면 Note.assets/)에 둡니다. Typora, VS Code와 같습니다."
+      "description": "그림을 문서 옆 같은 이름 폴더에 저장: Note.md라면 Note.assets/에 둡니다. Typora, VS Code와 같습니다."
     },
     "es": {
       "name": "Imágenes junto al documento",
-      "description": "Guarda las imágenes de cada documento a su lado, en una carpeta con su nombre (Note.assets/ para Note.md), como Typora y VS Code."
+      "description": "Las imágenes de cada documento en una carpeta a su lado: Note.assets/ para Note.md, como Typora y VS Code."
     },
     "fr": {
       "name": "Images avec le document",
-      "description": "Range les images de chaque document à côté de lui, dans un dossier à son nom (Note.assets/ pour Note.md), comme Typora et VS Code."
+      "description": "Les images de chaque document dans un dossier à côté de lui : Note.assets/ pour Note.md, comme Typora et VS Code."
     },
     "de": {
       "name": "Bilder beim Dokument",
-      "description": "Legt die Bilder jedes Dokuments daneben in einen Ordner mit seinem Namen (Note.assets/ für Note.md) – wie Typora und VS Code."
+      "description": "Die Bilder jedes Dokuments in einem Ordner daneben: Note.assets/ für Note.md – wie Typora und VS Code."
     },
     "ru": {
       "name": "Картинки рядом с документом",
-      "description": "Хранит картинки документа рядом с ним, в папке с его именем (Note.assets/ для Note.md), как Typora и VS Code."
+      "description": "Картинки документа в папке рядом с ним: Note.assets/ для Note.md, как в Typora и VS Code."
     },
     "pt": {
       "name": "Imagens junto ao documento",
-      "description": "Guarda as imagens de cada documento ao lado dele, numa pasta com o nome dele (Note.assets/ para Note.md), como o Typora e o VS Code."
+      "description": "As imagens de cada documento numa pasta ao lado dele: Note.assets/ para Note.md, como o Typora e o VS Code."
     }
   }
 }

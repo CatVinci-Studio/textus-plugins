@@ -36,6 +36,7 @@ kanban-plugin: board
 
 ## Alterações
 
+- **0.4.8** - Um quadro com quebras de linha do Windows (CRLF) as mantém, e um quadro alterado em outro lugar enquanto você edita mostra essa mudança em vez de sobrescrevê-la, e avisa. A descrição da loja agora começa pelo que o plugin faz.
 - **0.4.7** - Uma linha em branco dentro de um cartão não o divide mais, e Esc não deixa mais um cartão vazio. A IA não mexe em notas comuns, e o quadro cabe em painéis estreitos.
 - **0.4.6** - O quadro esmaece nas bordas quando as listas passam da janela.
 - **0.4.5** - Um cartão ou lista arrastado fica logo abaixo do ponteiro e se eleva como tudo o que se arrasta no Textus. Suas barras, listas e controles agora são os do Textus, crescem com a interface e seguem cada tema; requer Textus 1.3.12.

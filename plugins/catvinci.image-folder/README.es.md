@@ -13,6 +13,7 @@ Trabaja con imágenes PNG, JPEG, GIF, WebP, AVIF, BMP, SVG, ICO, HEIC y TIFF. Fu
 
 ## Cambios
 
+- **0.1.7** - La descripción de la tienda empieza ahora por lo que hace el plugin.
 - **0.1.6** - Añadir muchas imágenes a la vez (una sincronización, una carpeta copiada) ya no lee una y otra vez el documento abierto.
 - **0.1.5** - En una bóveda de Obsidian, las imágenes vuelven a quedar donde las pone el ajuste de adjuntos de la bóveda: el ajuste se lee a través de Textus.
 - **0.1.4** - Deja las imágenes donde las pone la carpeta de imágenes de Typora de un documento y ya no mueve una carpeta si aún puede haber enlaces a ella sin revisar.

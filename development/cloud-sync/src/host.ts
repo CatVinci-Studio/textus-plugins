@@ -1,12 +1,15 @@
 import { defaults, providers } from "./config";
 import { parseBase } from "./content";
 import { synchronize } from "./engine";
+import { scopeOf } from "./scope";
 import { openEncryptedStore } from "./encrypted-store";
+import { openPlainStore } from "./plain-store";
 import { Workspace } from "./local";
 import { Pacer } from "./pacer";
 import { Settings } from "./settings";
 import { statusText } from "./status";
 import { RemoteStore, testConnection } from "./transport";
+import { deviceName, registerHistory, restoreInto, type Restore } from "./history-host";
 import {
   ID,
   LOCK,
@@ -14,6 +17,7 @@ import {
   checkAbort,
   type Config,
   type ConnectionInput,
+  type ObjectStore,
   type Result,
 } from "./model";
 
@@ -99,6 +103,7 @@ class Controller {
     this.message(e.code, true, ...e.args);
     // Provider response bodies and raw network errors can contain credentials.
     this.ctx.log.warn(e.code);
+    return e.code;
   }
   async refresh() {
     const root = await this.api.files.root();
@@ -191,8 +196,54 @@ class Controller {
     await store.remove(LOCK);
     this.message("unlocked");
   }
-  async operation(kind: "sync" | "test" | "unlock") {
-    if (this.state.busy || this.disposed) return;
+  /** The remote folder, opened plain or encrypted as the folder is set up. */
+  private async open(
+    root: string,
+    config: Config,
+    store: RemoteStore,
+    { test = false, quiet = false } = {},
+  ) {
+    const key = await this.settings.baseKey(root, config);
+    const pin = await this.ctx.storage.global.get(`vault:${key}`);
+    if (
+      pin != null &&
+      (typeof pin !== "string" || !/^[a-f0-9]{64}$/.test(pin))
+    )
+      throw new SyncError("invalidBase");
+    let opened: ObjectStore;
+    if (config.encrypt) {
+      if (!quiet) this.message("unlockingEncryption");
+      const encrypted = await openEncryptedStore(
+        store,
+        await this.settings.password(root, config),
+        {
+          pin: pin as string | undefined,
+          signal: this.abort?.signal,
+        },
+      );
+      await this.ctx.storage.global.set(
+        `vault:${key}`,
+        encrypted.fingerprint,
+      );
+      opened = encrypted;
+    } else opened = await openPlainStore(store);
+    if (test || !this.tested.has(key)) await testConnection(opened);
+    this.tested.add(key);
+    checkAbort(this.abort?.signal);
+    return { key, opened };
+  }
+  page = (name: string) => this.ctx.plugin.readText(name);
+  /** The remote folder as the history page reads it. */
+  async remote() {
+    const { root, config, store } = await this.store();
+    return { root, store: (await this.open(root, config, store, { quiet: true })).opened };
+  }
+  /** Runs one operation; resolves to its error's code, null when it went well. */
+  async operation(
+    kind: "sync" | "test" | "unlock",
+    restore?: Restore,
+  ): Promise<string | null> {
+    if (this.state.busy || this.disposed) return "busy";
     this.state.busy = true;
     this.state.progress = null;
     this.abort = new AbortController();
@@ -201,44 +252,64 @@ class Controller {
       const { root, config, store } = await this.store();
       if (kind === "unlock") {
         await this.recover(store);
-        return;
+        return null;
       }
-      const key = await this.settings.baseKey(root, config);
-      const pin = await this.ctx.storage.global.get(`vault:${key}`);
-      if (
-        pin != null &&
-        (typeof pin !== "string" || !/^[a-f0-9]{64}$/.test(pin))
-      )
-        throw new SyncError("invalidBase");
-      this.message("unlockingEncryption");
-      const encrypted = await openEncryptedStore(
-        store,
-        await this.settings.password(root, config),
-        {
-          pin: pin as string | undefined,
-          signal: this.abort.signal,
-        },
-      );
-      await this.ctx.storage.global.set(`vault:${key}`, encrypted.fingerprint);
-      if (kind === "test" || !this.tested.has(key))
-        await testConnection(encrypted);
-      this.tested.add(key);
-      checkAbort(this.abort.signal);
+      const { key, opened } = await this.open(root, config, store, {
+        test: kind === "test",
+      });
       if (kind === "test") {
         this.message("tested");
-        return;
+        return null;
       }
       const base = parseBase(await this.ctx.storage.global.get(key));
       this.pacer.started();
+      // The folder's .gitignore, read each sync: it changes as Git's does.
+      const gitignore = config.gitignore
+        ? await this.api.files
+            .read(`${root.replace(/[/\\]$/, "")}/.gitignore`)
+            .then((bytes) => new TextDecoder().decode(bytes))
+            // None there: no rules. Unreadable: no sync, rather than one
+            // without the rules the user asked for.
+            .catch(async (err: unknown) => {
+              if (
+                await this.api.files
+                  .stat(`${root.replace(/[/\\]$/, "")}/.gitignore`)
+                  // Refused is there: only a missing one has no rules.
+                  .catch(() => true)
+              )
+                throw err;
+              return "";
+            })
+        : "";
       this.workspace = new Workspace(
         this.api,
         root,
         this.ctx.storage.global,
         this.abort.signal,
+        scopeOf(config, gitignore),
       );
+      if (restore) await restoreInto(this.workspace, opened, restore);
+      const cleaned = `cleaned:${key}`;
+      const cleanupDue =
+        Date.now() - Number((await this.ctx.storage.global.get(cleaned)) ?? 0) >
+        86_400_000;
       const result = await synchronize({
-        store: encrypted,
+        store: opened,
         local: this.workspace,
+        keep: { days: config.keepDays, chosen: config.keepPending === true },
+        // The folder's setting, once published, is this device's too.
+        onKeep: async (keep) => {
+          if (keep.days === config.keepDays && !config.keepPending) return;
+          await this.settings.adoptKeep(root, keep);
+          if (this.state.root === root)
+            this.state.config = {
+              ...this.state.config,
+              keepDays: keep.days,
+              keepPending: false,
+            };
+        },
+        device: await deviceName(this.ctx, this.api),
+        cleanupDue,
         base,
         signal: this.abort.signal,
         saveBase: (next) => this.ctx.storage.global.set(key, next),
@@ -249,9 +320,10 @@ class Controller {
       });
       const at = new Date().toISOString();
       await this.ctx.storage.global.set(`last:${key}`, { at, result });
+      if (cleanupDue) await this.ctx.storage.global.set(cleaned, Date.now());
       if ((await this.api.files.root()) !== root) {
         await this.refresh();
-        return;
+        return null;
       }
       this.state.result = result;
       this.state.lastRun = at;
@@ -271,8 +343,9 @@ class Controller {
       if (parts.length)
         this.message("done", false, parts.join(this.t("listSeparator")));
       else this.message("unchanged");
+      return null;
     } catch (error) {
-      this.fail(error);
+      return this.fail(error);
     } finally {
       this.state.busy = false;
       this.state.progress = null;
@@ -365,6 +438,7 @@ class Controller {
       api.views.registerSettingsPage({
         resolve: (view) => this.resolve(view, "settings"),
       }),
+      ...registerHistory(api, this),
       api.files.onDidSave(() => this.pacer.saved()),
       api.files.onDidDelete(({ path }) => this.changed(path)),
       api.files.onDidRename(({ from }) => this.changed(from)),

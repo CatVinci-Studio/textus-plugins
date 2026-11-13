@@ -1,11 +1,21 @@
 import { afterEach, describe as suite, expect, it, vi } from "vitest";
 import { parseManifest } from "./content";
 import { openEncryptedStore } from "./encrypted-store";
-import { HEAD, MAX_TRASH, encode } from "./model";
+import { parseHistory } from "./history";
+import { HEAD, HISTORY, MAX_TRASH, encode, type ObjectStore } from "./model";
 import { MemoryLocal, MemoryStore, bytes, text } from "./test-fixtures";
 
-const manifest = async (store: MemoryStore) =>
+const manifest = async (store: ObjectStore) =>
   parseManifest((await store.get(HEAD))!);
+const history = async (store: ObjectStore) =>
+  parseHistory((await store.get(HISTORY))!);
+/** Trash entries as a client before 0.5 left them in the head. */
+async function oldTrash(store: MemoryStore, entries: [string, string][]) {
+  const head = await manifest(store);
+  const entry = Object.values(head.files)[0];
+  head.trash = entries.map(([path, deletedAt]) => ({ path, deletedAt, entry }));
+  await store.put(HEAD, encode(head));
+}
 async function pair(files: Record<string, string>) {
   const remote = new MemoryStore(),
     a = new MemoryLocal(files),
@@ -19,13 +29,14 @@ suite("deletions and renames", () => {
   afterEach(() => {
     vi.useRealTimers();
   });
-  it("moves a local deletion to the remote trash and the other device's system trash", async () => {
+  it("keeps a local deletion in the remote history and moves it to the other device's system trash", async () => {
     const { remote, a, b } = await pair({ "gone.md": "old", "keep.md": "k" });
     a.files.delete("gone.md");
     expect((await a.sync(remote)).removed).toBe(1);
     const head = await manifest(remote);
     expect(head.files["gone.md"]).toBeUndefined();
-    expect(head.trash?.map((t) => t.path)).toEqual(["gone.md"]);
+    expect(head.trash).toEqual([]);
+    expect(Object.keys((await history(remote)).versions)).toEqual(["gone.md"]);
     expect((await b.sync(remote)).removed).toBe(1);
     expect(b.files.has("gone.md")).toBe(false);
     expect(b.trashed.map(([p, v]) => [p, text(v)])).toEqual([
@@ -95,35 +106,29 @@ suite("deletions and renames", () => {
     expect((await b.sync(remote)).removed).toBe(1);
     expect([...b.files.keys()]).toEqual(["new.md"]);
   });
-  it("purges remote trash entries after 30 days", async () => {
+  it("purges trash entries older clients left after 30 days, and keeps at most the newest", async () => {
     vi.useFakeTimers({ toFake: ["Date"] });
-    vi.setSystemTime(new Date("2026-01-01T00:00:00Z"));
-    const { remote, a } = await pair({ "a.md": "a", "b.md": "b" });
-    a.files.delete("a.md");
-    await a.sync(remote);
     vi.setSystemTime(new Date("2026-01-30T00:00:00Z"));
-    a.files.delete("b.md");
+    const { remote, a } = await pair({ "keep.md": "k" });
+    await oldTrash(remote, [
+      ["a.md", "2026-01-01T00:00:00Z"],
+      ["b.md", "2026-01-29T00:00:00Z"],
+    ]);
+    vi.setSystemTime(new Date("2026-02-01T00:00:00Z"));
     a.files.set("c.md", bytes("c"));
     await a.sync(remote);
     expect((await manifest(remote)).trash?.map((t) => t.path)).toEqual([
-      "a.md",
       "b.md",
     ]);
-    vi.setSystemTime(new Date("2026-02-01T00:00:00Z"));
-    await a.sync(remote);
-    expect((await manifest(remote)).trash?.map((t) => t.path)).toEqual([
-      "b.md",
-    ]);
-  });
-  it("keeps only the newest trash entries", async () => {
-    const files = Object.fromEntries(
-      Array.from({ length: MAX_TRASH + 1 }, (_, i) => [`${i}.md`, `${i}`]),
+    await oldTrash(
+      remote,
+      Array.from({ length: MAX_TRASH + 1 }, (_, i) => [
+        `${i}.md`,
+        "2026-01-31T00:00:00Z",
+      ]),
     );
-    const { remote, a } = await pair({ ...files, "keep.md": "k" });
-    a.files.delete("0.md");
+    a.files.set("d.md", bytes("d"));
     await a.sync(remote);
-    for (let i = 1; i <= MAX_TRASH; i++) a.files.delete(`${i}.md`);
-    expect((await a.sync(remote)).removed).toBe(MAX_TRASH);
     const trash = (await manifest(remote)).trash!;
     expect(trash).toHaveLength(MAX_TRASH);
     expect(trash[0].path).toBe("1.md");
@@ -162,8 +167,9 @@ suite("deletions and renames", () => {
     await a.sync(store);
     a.files.delete("secret-name.md");
     await a.sync(store);
-    const head = parseManifest((await store.get(HEAD))!);
-    expect(head.trash?.map((t) => t.path)).toEqual(["secret-name.md"]);
+    expect(Object.keys((await history(store)).versions)).toEqual([
+      "secret-name.md",
+    ]);
     const everything = [...raw.values].map(([k, v]) => k + text(v)).join("\n");
     expect(everything).not.toContain("secret-name");
   });

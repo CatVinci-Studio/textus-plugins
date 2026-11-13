@@ -123,6 +123,14 @@ describe("a base", () => {
     const renamed = db.renameKey(base, "status", "stage");
     expect(renamed.views[0].groupBy.property).toBe("stage");
     expect(renamed.properties).toEqual({ stage: { displayName: "Status" } });
+    // Written as note.<key>, a column still shows once and keeps its width.
+    const noted = db.renameKey(
+      { views: [{ type: "table", order: ["file.name", "note.status", "note.state"], columnSize: { "note.state": 120 } }] },
+      "state",
+      "status",
+    );
+    expect(noted.views[0].order).toEqual(["file.name", "note.status"]);
+    expect(noted.views[0].columnSize).toEqual({ status: 120 });
     const dropped = db.dropKey(base, "tags");
     expect(dropped.views[0].filters.and).not.toContain('tags.contains("work")');
   });

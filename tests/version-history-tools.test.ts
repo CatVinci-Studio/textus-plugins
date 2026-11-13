@@ -64,11 +64,22 @@ function withPanel(storage: ReturnType<typeof smallStorage>, path: string) {
     [];
   const opened: string[] = [];
   const doc = { path };
+  const disk: Record<string, string> = {};
+  let rename: (c: { from: string; to: string }) => void = () => {};
+  let active: () => Promise<void> = async () => {};
   loadPlugin(
     "catvinci.version-history",
     {
-      files: { onDidSave: (fn: typeof save) => void (save = fn) },
-      editor: { getPath: async () => doc.path, getText: async () => "" },
+      files: {
+        onDidSave: (fn: typeof save) => void (save = fn),
+        onDidRename: (fn: typeof rename) => void (rename = fn),
+        readText: async (p: string) => disk[p] ?? Promise.reject(new Error("none")),
+      },
+      editor: {
+        getPath: async () => doc.path,
+        getText: async () => "",
+        onDidChangeActive: (fn: () => Promise<void>) => void (active = fn),
+      },
       layout: { openUntitled: async (text: string) => void opened.push(text) },
       views: {
         registerWebview: (_id: string, view: { resolve: typeof resolve }) =>
@@ -84,6 +95,9 @@ function withPanel(storage: ReturnType<typeof smallStorage>, path: string) {
   });
   return {
     save: (text: string) => save({ path: doc.path, text }),
+    rename: (from: string, to: string) => rename({ from, to }),
+    focus: () => active(),
+    disk,
     post: (m: unknown) => receive(m),
     shown,
     opened,
@@ -93,6 +107,25 @@ function withPanel(storage: ReturnType<typeof smallStorage>, path: string) {
 }
 
 describe("version history keeps saves", () => {
+  it("keeps the text from before the first save, and follows a rename", async () => {
+    const storage = smallStorage(1e6);
+    const p = withPanel(storage, "/root/A.md");
+    await p.ready;
+    p.disk["/root/A.md"] = "the original";
+    await p.focus();
+    await new Promise((r) => setTimeout(r));
+    await p.save("half of it");
+    expect(p.shown.at(-1)!.versions.map((v) => v.text)).toEqual([
+      "half of it",
+      "the original",
+    ]);
+    await p.rename("/root/A.md", "/root/Notes/B.md");
+    await new Promise((r) => setTimeout(r));
+    p.doc.path = "/root/Notes/B.md";
+    await p.focus();
+    expect(p.shown.at(-1)!.versions).toHaveLength(2);
+  });
+
   it("finds a version by its id after autosave merges into it", async () => {
     const now = vi.spyOn(Date, "now").mockReturnValue(1_000_000);
     const storage = smallStorage(1e6);

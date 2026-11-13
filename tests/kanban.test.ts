@@ -36,6 +36,8 @@ it("keeps Obsidian Kanban's archive and settings as written, not as cards", () =
   expect(board.lists.map((l) => l.title)).toEqual(["Todo"]);
   expect(board.lists[0].cards.map((c) => c.text)).toEqual(["Write"]);
   expect(md.serialize(board)).toBe(text);
+  const crlf = text.replace(/\n/g, "\r\n");
+  expect(md.serialize(md.parse(crlf))).toBe(crlf);
 });
 
 it("keeps Obsidian's mark of a done list, not as a card", () => {

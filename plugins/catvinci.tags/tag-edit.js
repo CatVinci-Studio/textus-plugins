@@ -1,5 +1,5 @@
 // Renaming a #tag (and its nested tags) in a note's text, any letter case: in
-// the body and front matter's tags, never in code, a link's address or a longer tag.
+// the body and front matter's tags, never in code, a link's target or a longer tag.
 
 (function (root) {
   const TAG = "[\\p{L}\\p{N}_\\-/]";
@@ -22,7 +22,7 @@
       "(^|[\\s(\\[{,;:!?，。；：！？、])#" + escape(from) + "(?!" + MORE + ")",
       "giu",
     );
-    let inFence = false;
+    let fence = null;
     let inFront = false;
     let inTagList = false;
     const lines = text.split("\n");
@@ -42,14 +42,12 @@
           const isTags = /^\s*tags?\s*:/.test(line) || (inTagList && /^\s*-\s/.test(line));
           return isTags ? renameInFrontMatter(line, from, to) : line;
         }
-        if (/^\s*(```|~~~)/.test(line)) {
-          inFence = !inFence;
-          return line;
-        }
-        if (inFence) return line;
-        // Inline code and link addresses are kept as they are.
+        const was = fence;
+        fence = root.markdownKeep.fenceStep(fence, line);
+        if (was || fence) return line;
+        // Inline code, [[links]] and link addresses are kept as they are.
         return line
-          .split(/(`[^`]*`|\]\([^)]*\))/)
+          .split(/(`[^`]*`|\[\[[^\]\n]*\]\]|\]\([^)]*\))/)
           .map((part, k) => (k % 2 ? part : part.replace(body, "$1#" + to)))
           .join("");
       })

@@ -11,6 +11,7 @@ El plugin pide leer el editor (para saber qué enlace señalas) y leer archivos 
 
 ## Cambios
 
+- **0.2.3** - La descripción de la tienda empieza ahora por lo que hace el plugin.
 - **0.2.2** - Un enlace a un encabezado anidado (`[[Nota#A#B]]`) muestra la sección de ese encabezado, la misma que abre un clic. Necesita Textus 1.4.0.
 - **0.2.1** - Su página dice ahora en una frase qué hace, qué puede hacer y qué cambió en cada versión.
 - **0.2.0** - Un enlace a un bloque (`#^id`) muestra ese bloque. Requiere Textus 1.3.9.

@@ -46,6 +46,7 @@ Le plugin lit les documents du dossier pour trouver leurs tâches, et n’écrit
 
 ## Changements
 
+- **0.4.5** - Une tâche que l'IA ajoute sous un titre n'atterrit plus dans un bloc de code, et « Placer les tâches terminées en fin de liste » fonctionne dans les notes aux fins de ligne Windows (CRLF).
 - **0.4.4** - Une requête de tâches dans un document s’affiche à la taille du texte de l’interface : une colonne plus large en montre davantage au lieu d’agrandir le texte (Textus 1.4.1).
 - **0.4.3** - Les tâches contenant un commentaire HTML se cochent désormais, et une coche refusée en donne la raison. `group by status` trie dans le bon ordre, les blocs de tâches tiennent dans les panneaux étroits, les échéances ressemblent à celles de la barre latérale et la frappe reste plus légère.
 - **0.4.2** - Textes d'aide et d'état vide plus courts.

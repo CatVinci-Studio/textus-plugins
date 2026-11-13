@@ -67,7 +67,9 @@ describe("converting a note's links", () => {
       "`[[Nov 8]]` in code.",
       "```",
       "[[Nov 8]]",
+      "second [[Plans]]",
       "```",
+      "After [[Plans]].",
     ].join("\n");
     const out = await run(text, "/v/Life/Week45.md", "markdown");
     expect(out.text).toBe(
@@ -79,10 +81,23 @@ describe("converting a note's links", () => {
         "`[[Nov 8]]` in code.",
         "```",
         "[[Nov 8]]",
+        "second [[Plans]]",
         "```",
+        "After [Plans](Plans.md).",
       ].join("\n"),
     );
     expect(out.left).toBe(1);
+  });
+
+  it("reads past an empty code block", async () => {
+    const text = "```\n```\nSee [[Plans]]\n```\n[[Nov 8]]\n```\nAfter [[Plans]]\n";
+    const out = await run(text, "/v/Life/Week45.md", "markdown");
+    expect(out.text).toBe(
+      "```\n```\nSee [Plans](Plans.md)\n```\n[[Nov 8]]\n```\nAfter [Plans](Plans.md)\n",
+    );
+    // A longer run closes it too.
+    const longer = await run("```\nx\n````\n[[Plans]]\n", "/v/Life/Week45.md", "markdown");
+    expect(longer.text).toBe("```\nx\n````\n[Plans](Plans.md)\n");
   });
 
   it("writes standard links to notes as [[wiki links]], pictures and web links kept", async () => {

@@ -105,6 +105,20 @@
           <div class="tx-group">
             <div class="tx-row">
               <div class="row-text">
+                <label id="encrypt-label" for="encrypt" data-t="encrypt"></label>
+                <p class="hint" id="encrypt-help" data-t="encryptHelp"></p>
+              </div>
+              <input
+                id="encrypt"
+                type="checkbox"
+                role="switch"
+                class="tx-switch"
+                aria-labelledby="encrypt-label"
+                aria-describedby="encrypt-help"
+              />
+            </div>
+            <div class="tx-row" id="password-field">
+              <div class="row-text">
                 <label for="sync-password" data-t="syncPassword"></label>
                 <p class="hint" id="encryption-help" data-t="encryptionHelp"></p>
               </div>
@@ -117,7 +131,7 @@
                 aria-describedby="encryption-help"
               />
             </div>
-            <div class="tx-row">
+            <div class="tx-row" id="confirm-field">
               <label for="confirm-password" data-t="confirmPassword"></label>
               <input
                 id="confirm-password"
@@ -138,6 +152,17 @@
                 aria-labelledby="automatic-label"
               />
             </div>
+            <div class="tx-row">
+              <div class="row-text">
+                <label for="keep-pick" data-t="keepHistory"></label>
+                <p class="hint" id="keep-help" data-t="keepHistoryHelp"></p>
+              </div>
+              <button type="button" class="tx-select" id="keep-pick" aria-describedby="keep-help">
+                <span id="keep-name"></span
+                ><span class="tx-icon" data-icon="chevron"></span>
+              </button>
+            </div>
+            <input id="keepDays" type="hidden" value="90" />
             <div class="tx-row" id="interval-field">
               <label for="interval" data-t="interval"></label
               ><input
@@ -148,6 +173,41 @@
                 max="1440"
                 step="1"
                 required
+              />
+            </div>
+          </div>
+          <div class="tx-group">
+            <div class="tx-row stack">
+              <div class="row-text">
+                <label for="exclude" data-t="exclude"></label>
+                <p id="exclude-hint" class="hint" data-t="excludeHint"></p>
+              </div>
+              <textarea
+                id="exclude"
+                rows="3"
+                maxlength="20000"
+                spellcheck="false"
+                aria-describedby="exclude-hint"
+              ></textarea>
+            </div>
+            <div class="tx-row">
+              <label id="gitignore-label" for="gitignore" data-t="gitignore"></label>
+              <input
+                id="gitignore"
+                type="checkbox"
+                role="switch"
+                class="tx-switch"
+                aria-labelledby="gitignore-label"
+              />
+            </div>
+            <div class="tx-row">
+              <label id="obsidian-label" for="obsidian" data-t="obsidian"></label>
+              <input
+                id="obsidian"
+                type="checkbox"
+                role="switch"
+                class="tx-switch"
+                aria-labelledby="obsidian-label"
               />
             </div>
           </div>
