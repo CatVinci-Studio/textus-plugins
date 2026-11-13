@@ -1,0 +1,26 @@
+name: Plugin idea / 插件点子
+description: A feature that could be a plugin. 一个可以做成插件的功能。
+labels: ["plugin idea"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Search [open ideas](https://github.com/CatVinci-Studio/textus-plugins/issues?q=is%3Aopen+label%3A%22plugin+idea%22) first; a 👍 on one helps. Anyone may build an idea, as an official or a community plugin ([CONTRIBUTING.md](https://github.com/CatVinci-Studio/textus-plugins/blob/main/CONTRIBUTING.md)).
+        请先搜索已有的点子，给相同的点 👍。任何人都可以把点子做成插件。
+  - type: textarea
+    id: need
+    attributes:
+      label: What you want to do / 想做什么
+      description: The situation and what gets in the way today. 场景，以及现在哪里不方便。
+    validations:
+      required: true
+  - type: textarea
+    id: idea
+    attributes:
+      label: What the plugin would do / 插件会做什么
+  - type: checkboxes
+    id: build
+    attributes:
+      label: Building it / 谁来做
+      options:
+        - label: I'd like to build it myself. 我想自己做。

@@ -1,0 +1,29 @@
+name: Plugin bug / 插件问题
+description: Something in an official plugin doesn't work. 官方插件出了问题。
+labels: ["bug"]
+body:
+  - type: input
+    id: plugin
+    attributes:
+      label: Plugin and version / 插件和版本
+      description: From Settings › Extensions › Plugins. 在“设置 › 扩展 › 插件”里查看。
+      placeholder: Cloud Sync 0.5.0
+    validations:
+      required: true
+  - type: input
+    id: textus
+    attributes:
+      label: Textus version and system / Textus 版本和系统
+      placeholder: 1.4.1, macOS 26
+    validations:
+      required: true
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened, and the steps to see it / 发生了什么，怎么复现
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What you expected / 期望的结果

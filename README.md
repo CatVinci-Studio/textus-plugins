@@ -70,9 +70,22 @@ Each plugin's folder in [`plugins/`](plugins/) is packaged by `npm run build` in
 
 ## Writing a plugin
 
-A plugin is a folder with a `textus-plugin.json` and its code, run in a sandbox. Start from [`template/`](template/), a small plugin that works; the guide is [Writing plugins](https://github.com/CatVinci-Studio/Textus/blob/main/docs/dev/writing-plugins.md) in the Textus repository, and the plugins here are complete examples. To try yours, use **Settings › Extensions › Plugins › Load a plugin folder…**; to publish it, **Export for Publishing…** on its page lays it out as a repository of its own with a release workflow.
+A plugin is a folder with a `textus-plugin.json` and its code, run in a sandbox. Start from [`template/`](template/), a small plugin that works; the guide is [Writing plugins](https://github.com/CatVinci-Studio/Textus/blob/main/docs/dev/plugins/guide.md) in the Textus repository, and the plugins here are complete examples. To try yours, use **Settings › Extensions › Plugins › Load a plugin folder…**; to publish it, **Export for Publishing…** on its page lays it out as a repository of its own with a release workflow.
 
 Plugins from other repositories are listed through [`community/`](community/): one file naming the repository and version, reviewed on its pull request. See [Listing in the Textus market](LISTING.md) - for a skill in [`skills/`](skills/) too.
+
+## Contributing
+
+Fixes, new official plugins, community listings and skills are all welcome: [CONTRIBUTING.md](CONTRIBUTING.md) says which way each goes. A new feature for Textus that can be a plugin belongs here rather than in the app.
+
+## Workflows
+
+| Workflow | Runs | Does |
+| --- | --- | --- |
+| [test.yml](.github/workflows/test.yml) | every pull request | `npm run check`, the version check, the build |
+| [review.yml](.github/workflows/review.yml) | a pull request to `community/` | reviews the listed package and posts what it found |
+| [updates.yml](.github/workflows/updates.yml) | daily | finds new community versions and opens their pull requests |
+| [release.yml](.github/workflows/release.yml) | a push to `main`, and daily | publishes changed plugins and the catalog |
 
 ## Developing these plugins
 
