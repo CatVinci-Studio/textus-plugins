@@ -22,18 +22,20 @@ const PIECE = /(^\*\*\/|\/\*\*\/|\/\*\*$|\*+|\?|\[!?\]?[^\]]*\]|\\.)/u;
 /** One step of a pattern: a character, any one but "/", a run of them,
  *  any folders ("dir/" any times, or none), anything at all, a class. */
 type Step =
-  | { k: "char"; c: string }
+  /** `c` as written, `low` lower-cased on its own (never by neighbours). */
+  | { k: "char"; c: string; low: string }
   | { k: "one" | "run" | "dirs" | "all" }
   | { k: "class"; test: RegExp };
 
+const char = (c: string): Step => ({ k: "char", c, low: c.toLowerCase() });
+
 function stepsOf(part: string): Step[] {
   if (part === "**/") return [{ k: "dirs" }];
-  if (part === "/**/") return [{ k: "char", c: "/" }, { k: "dirs" }];
-  if (part === "/**") return [{ k: "char", c: "/" }, { k: "all" }];
+  if (part === "/**/") return [char("/"), { k: "dirs" }];
+  if (part === "/**") return [char("/"), { k: "all" }];
   if (/^\*+$/.test(part)) return [{ k: "run" }];
   if (part === "?") return [{ k: "one" }];
-  if (part.startsWith("\\"))
-    return [{ k: "char", c: [...part.slice(1)][0].toLowerCase() }];
+  if (part.startsWith("\\")) return [char([...part.slice(1)][0])];
   if (part.length > 2 && part.startsWith("[") && part.endsWith("]")) {
     const inner = part.slice(1, -1);
     const not = inner.startsWith("!");
@@ -45,14 +47,16 @@ function stepsOf(part: string): Step[] {
       { k: "class", test: new RegExp(`^[${not ? "^" : ""}${body}]$`, "iu") },
     ];
   }
-  return [...part.toLowerCase()].map((c) => ({ k: "char", c }));
+  return [...part].map(char);
 }
 
 /** Whether `path` matches `steps`, in time path × pattern: no backtracking,
  *  however many stars. */
 function matches(steps: Step[], path: string): boolean {
-  // By whole characters, as the steps are: an emoji is one.
-  const s = [...path.toLowerCase()];
+  // By whole characters, as the steps are: an emoji is one; each
+  // lower-cased on its own, as a rule's are.
+  const s = [...path];
+  const low = s.map((c) => c.toLowerCase());
   const n = s.length;
   // Each row: from character i on, whether steps j.. match.
   let next = new Uint8Array(n + 1);
@@ -66,7 +70,7 @@ function matches(steps: Step[], path: string): boolean {
       const one = i < n && ch !== "/";
       switch (step.k) {
         case "char":
-          row[i] = i < n && ch === step.c ? next[i + 1] : 0;
+          row[i] = i < n && low[i] === step.low ? next[i + 1] : 0;
           break;
         case "one":
           row[i] = one ? next[i + 1] : 0;
@@ -113,9 +117,8 @@ function patternTest(pattern: string): { test(path: string): boolean } {
     (st) => st.k === "run" || st.k === "all" || st.k === "dirs",
   );
   if (open.length > 2) return { test: (path) => matches(all, path) };
-  // Lower-cased as the linear matcher does, so both read a rule alike.
-  const re = new RegExp(`^${all.map(stepSource).join("")}$`, "su");
-  return { test: (path) => re.test(path.toLowerCase()) };
+  const re = new RegExp(`^${all.map(stepSource).join("")}$`, "isu");
+  return { test: (path) => re.test(path) };
 }
 
 function stepSource(step: Step): string {
@@ -131,7 +134,7 @@ function stepSource(step: Step): string {
     case "dirs":
       return "(?:.*/)?";
     case "class":
-      return `(?=[^/])${step.test.source.slice(1, -1).toLowerCase()}`;
+      return `(?=[^/])${step.test.source.slice(1, -1)}`;
   }
 }
 

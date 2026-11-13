@@ -529,14 +529,14 @@ async function synchronize(options) {
 
 // development/cloud-sync/src/scope.ts
 var PIECE = /(^\*\*\/|\/\*\*\/|\/\*\*$|\*+|\?|\[!?\]?[^\]]*\]|\\.)/u;
+var char = (c) => ({ k: "char", c, low: c.toLowerCase() });
 function stepsOf(part) {
   if (part === "**/") return [{ k: "dirs" }];
-  if (part === "/**/") return [{ k: "char", c: "/" }, { k: "dirs" }];
-  if (part === "/**") return [{ k: "char", c: "/" }, { k: "all" }];
+  if (part === "/**/") return [char("/"), { k: "dirs" }];
+  if (part === "/**") return [char("/"), { k: "all" }];
   if (/^\*+$/.test(part)) return [{ k: "run" }];
   if (part === "?") return [{ k: "one" }];
-  if (part.startsWith("\\"))
-    return [{ k: "char", c: [...part.slice(1)][0].toLowerCase() }];
+  if (part.startsWith("\\")) return [char([...part.slice(1)][0])];
   if (part.length > 2 && part.startsWith("[") && part.endsWith("]")) {
     const inner = part.slice(1, -1);
     const not = inner.startsWith("!");
@@ -545,10 +545,11 @@ function stepsOf(part) {
       { k: "class", test: new RegExp(`^[${not ? "^" : ""}${body}]$`, "iu") }
     ];
   }
-  return [...part.toLowerCase()].map((c) => ({ k: "char", c }));
+  return [...part].map(char);
 }
 function matches(steps, path) {
-  const s = [...path.toLowerCase()];
+  const s = [...path];
+  const low = s.map((c) => c.toLowerCase());
   const n = s.length;
   let next = new Uint8Array(n + 1);
   next[n] = 1;
@@ -561,7 +562,7 @@ function matches(steps, path) {
       const one = i < n && ch !== "/";
       switch (step.k) {
         case "char":
-          row[i] = i < n && ch === step.c ? next[i + 1] : 0;
+          row[i] = i < n && low[i] === step.low ? next[i + 1] : 0;
           break;
         case "one":
           row[i] = one ? next[i + 1] : 0;
@@ -593,8 +594,8 @@ function patternTest(pattern) {
     (st) => st.k === "run" || st.k === "all" || st.k === "dirs"
   );
   if (open.length > 2) return { test: (path) => matches(all, path) };
-  const re = new RegExp(`^${all.map(stepSource).join("")}$`, "su");
-  return { test: (path) => re.test(path.toLowerCase()) };
+  const re = new RegExp(`^${all.map(stepSource).join("")}$`, "isu");
+  return { test: (path) => re.test(path) };
 }
 function stepSource(step) {
   switch (step.k) {
@@ -609,7 +610,7 @@ function stepSource(step) {
     case "dirs":
       return "(?:.*/)?";
     case "class":
-      return `(?=[^/])${step.test.source.slice(1, -1).toLowerCase()}`;
+      return `(?=[^/])${step.test.source.slice(1, -1)}`;
   }
 }
 var RULES_CAP = 4e4;

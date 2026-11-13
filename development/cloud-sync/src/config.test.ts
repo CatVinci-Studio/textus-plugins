@@ -124,6 +124,11 @@ describe("connection and data boundaries", () => {
       ["İ.md", "İ.md", false],
       ["\\😀.md", "😀.md", false],
       ["*.md", "x\ny/b.md", false],
+      ["[A-z].md", "_.md", false],
+      ["[Z-a].md", "_.md", false],
+      ["ΑΣ*", "ΑΣ.md", false],
+      ["*Σ/", "ΤΕΛΟΣ/a.md", false],
+      ["*a*b*c*Σ.md", "xaybzcΣ.md", false],
     ];
     for (const [exclude, path, wanted] of cases)
       expect([
