@@ -516,7 +516,7 @@ async function synchronize(options) {
     progress("scanning", 0, 0);
     const files = await local.scan();
     checkAbort(signal);
-    const now = /* @__PURE__ */ new Date();
+    const now = new Date(store.now?.() ?? Date.now());
     const cutoff = now.getTime() - TRASH_DAYS * 864e5;
     const next = {
       ...remote,
@@ -680,7 +680,10 @@ async function synchronize(options) {
       raw,
       remote,
       next,
-      origin: { at: (/* @__PURE__ */ new Date()).toISOString(), device: options.device },
+      origin: {
+        at: new Date(store.now?.() ?? Date.now()).toISOString(),
+        device: options.device
+      },
       keep: options.keep,
       onKeep: options.onKeep,
       cleanupDue: options.cleanupDue ?? false,
@@ -1239,9 +1242,14 @@ var RemoteStore = class {
     this.fetch = fetch2;
     this.sleep = sleep;
     __publicField(this, "dirs", /* @__PURE__ */ new Set());
+    /** The server's clock minus ours, from its last answer's Date. */
+    __publicField(this, "skew", 0);
     __publicField(this, "cache", /* @__PURE__ */ new Map());
     if (!credentials.account || !credentials.secret || providers[config.provider].transport === "dav" && credentials.account.includes(":"))
       throw new SyncError("credentialsRequired");
+  }
+  now() {
+    return Date.now() + this.skew;
   }
   target(key) {
     if (!relativePath(key)) throw new SyncError("invalidPath");
@@ -1297,6 +1305,8 @@ var RemoteStore = class {
       } catch {
         throw new SyncError("networkError");
       }
+      const date = Date.parse(response.headers["date"] ?? "");
+      if (Number.isFinite(date)) this.skew = date - Date.now();
       if (![429, 502, 503, 504].includes(response.status) || attempt >= 2 || !["GET", "HEAD", "PUT"].includes(method))
         return response;
       const retry = Number(response.headers["retry-after"] ?? "0");
@@ -1419,6 +1429,9 @@ var EncryptedStore = class {
     this.raw = raw;
     this.cipher = cipher;
     this.fingerprint = fingerprint;
+  }
+  now() {
+    return this.raw.now?.() ?? Date.now();
   }
   async verifyDescriptor() {
     const descriptor = await this.raw.get(HEAD);

@@ -111,6 +111,10 @@ export interface Base {
   parked?: Record<string, string>;
 }
 export interface ObjectStore {
+  /** The server's time as its last answer gave it, where it says: what ages
+   *  out trash and old versions, so one device's wrong clock can't drop
+   *  what the others keep. */
+  now?(): number;
   get(key: string): Promise<Uint8Array | null>;
   has(key: string): Promise<boolean>;
   put(key: string, bytes: Uint8Array): Promise<void>;
