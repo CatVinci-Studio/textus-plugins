@@ -18,10 +18,11 @@ Einstellungen unter **Einstellungen › Erweiterungen › Plugins › Vim**:
 
 Obsidian: In einem Obsidian-Vault wird auch dessen `.obsidian.vimrc` (die des Plugins Vimrc Support) gelesen, nach Ihren eigenen Zeilen, und neu gelesen, wenn sie sich ändert. Öffnen Sie den Vault selbst, keinen Ordner darin.
 
-Das Plugin fragt nach der Berechtigung, Tasten im Editor anzunehmen (um Vims Tasten auszuführen), und Dateien zu lesen (nur um `.obsidian.vimrc` zu lesen). Es läuft auf dem Desktop sowie auf iPhone und iPad.
+Das Plugin fragt nach der Berechtigung, Tasten im Editor anzunehmen (um Vims Tasten auszuführen), und Dateien zu lesen (nur um `.obsidian.vimrc` zu lesen). Es läuft auf dem Desktop.
 
 ## Änderungen
 
+- **0.2.8** - Nur noch auf dem Desktop: Die Bildschirmtastatur eines Telefons tippt die Buchstaben in den Text, statt sie als Vim-Tasten auszuführen.
 - **0.2.7** - Der Modus in der Statusleiste öffnet ein Menü, das Vim ausschaltet; `.obsidian.vimrc` wird neu gelesen, wenn Sie zu Textus zurückkehren; **:** verlässt den visuellen Modus immer.
 - **0.2.6** - Kürzere Hilfe- und Leertexte.
 - **0.2.5** - Sein Code ist nach Aufgaben in kleinere Dateien aufgeteilt; in der Nutzung ändert sich nichts.
