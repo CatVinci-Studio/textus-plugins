@@ -23,6 +23,7 @@ Das Plugin liest und schreibt Dateien im geöffneten Ordner, um die Notizen zu f
 
 ## Änderungen
 
+- **0.7.4** - In einer schmalen Leiste, etwa auf dem Handy, zeigt der Kalender den kurzen Monatsnamen, statt den langen abzuschneiden.
 - **0.7.3** - Unmögliche Daten wie der 30. Februar werden abgelehnt, der Kalender bleibt in breiten Bereichen angenehm schmal und zeichnet sich neu, wenn sich Ordnereinstellungen ändern, und Wochen- und Monatseinstellungen erscheinen nur, wenn diese Notizen an sind.
 - **0.7.2** - Kürzere Hilfe- und Leertexte.
 - **0.7.1** - Leisten, Listen und Steuerelemente sind jetzt die von Textus, wachsen mit der Oberfläche und folgen jedem Theme; braucht Textus 1.3.12.

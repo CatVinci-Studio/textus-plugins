@@ -30,8 +30,15 @@
       year: "numeric",
       month: "long",
     });
-    $("month").textContent = name;
-    $("month").disabled = !monthNotes;
+    const month = $("month");
+    month.textContent = name;
+    // A narrow bar (a phone) takes the short name before it cuts the long.
+    if (month.scrollWidth > month.clientWidth)
+      month.textContent = shown.toLocaleDateString(api.language, {
+        year: "numeric",
+        month: "short",
+      });
+    month.disabled = !monthNotes;
     // The full name even when the bar cuts it short.
     $("month").title = monthNotes ? name + " · " + api.t("openMonth") : name;
     $("nofolder").hidden = hasFolder;
@@ -118,5 +125,7 @@
     render();
   });
   render();
+  // The panel widened or narrowed: the month's long or short name again.
+  addEventListener("resize", render);
   api.postMessage({ type: "ready" });
 })();

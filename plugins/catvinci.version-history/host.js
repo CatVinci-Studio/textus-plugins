@@ -71,9 +71,11 @@ async function record(saved) {
   full = false;
   if (!list.length && before && before.text !== saved.text) {
     await keepVersions(key, saved.path, [before]);
+    // A version's time is its id: a save in the same millisecond as the
+    // opening must not pass for the text from before it.
     await keep(key + NOW, key, {
       path: saved.path,
-      version: { at: Date.now(), text: saved.text },
+      version: { at: Math.max(Date.now(), before.at + 1), text: saved.text },
     });
     return show();
   }
