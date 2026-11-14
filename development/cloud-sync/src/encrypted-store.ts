@@ -26,6 +26,9 @@ export class EncryptedStore implements ObjectStore {
     private cipher: Cipher,
     readonly fingerprint: string,
   ) {}
+  now(): number {
+    return this.raw.now?.() ?? Date.now();
+  }
   private async verifyDescriptor() {
     const descriptor = await this.raw.get(HEAD);
     if (!descriptor) throw new SyncError("encryptionMetadataMissing");

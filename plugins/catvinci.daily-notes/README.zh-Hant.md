@@ -23,6 +23,7 @@
 
 ## 更新紀錄
 
+- **0.7.4** - 在手機等較窄的面板裡，日曆改用月份的簡稱，不再把完整名稱截斷。
 - **0.7.3** - 不再接受 2 月 30 日這類不存在的日期；寬面板裡日曆維持合適寬度，資料夾設定變更後會立即重繪；每週和每月的設定只在開啟對應筆記時顯示。
 - **0.7.2** - 說明和空狀態文字更簡短。
 - **0.7.1** - Its bars, lists and controls are Textus's own, grow with the interface and follow every theme; needs Textus 1.3.12.

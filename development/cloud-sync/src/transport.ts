@@ -18,6 +18,8 @@ const pause = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 export class RemoteStore implements ObjectStore {
   private dirs = new Set<string>();
+  /** The server's clock minus ours, from its last answer's Date. */
+  private skew = 0;
   private cache = new Map<string, ArrayBuffer>();
   constructor(
     private config: Config,
@@ -32,6 +34,9 @@ export class RemoteStore implements ObjectStore {
         credentials.account.includes(":"))
     )
       throw new SyncError("credentialsRequired");
+  }
+  now(): number {
+    return Date.now() + this.skew;
   }
   private target(key: string): string {
     if (!relativePath(key)) throw new SyncError("invalidPath");
@@ -97,6 +102,8 @@ export class RemoteStore implements ObjectStore {
       } catch {
         throw new SyncError("networkError");
       }
+      const date = Date.parse(response.headers["date"] ?? "");
+      if (Number.isFinite(date)) this.skew = date - Date.now();
       // Only reads and idempotent PUTs retry; a MOVE may already have succeeded.
       if (
         ![429, 502, 503, 504].includes(response.status) ||

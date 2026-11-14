@@ -18,10 +18,11 @@ Settings, in **Settings › Extensions › Plugins › Vim**:
 
 Obsidian: in an Obsidian vault, its `.obsidian.vimrc` (from the Vimrc Support plugin) is read too, after your own lines, and read again when it changes. Open the vault itself, not a folder inside it.
 
-The plugin asks to take keys in the editor (to run Vim's keys) and to read files (only to read `.obsidian.vimrc`). It works on the desktop and on iPhone and iPad.
+The plugin asks to take keys in the editor (to run Vim's keys) and to read files (only to read `.obsidian.vimrc`). It works on the desktop.
 
 ## Changes
 
+- **0.2.8** - Desktop only: a phone's on-screen keyboard types its letters into the text instead of running them as Vim keys.
 - **0.2.7** - The status bar's mode opens a menu that turns Vim off; `.obsidian.vimrc` is read again when you come back to Textus; leaving visual mode with **:** always works.
 - **0.2.6** - Shorter help and empty-state text.
 - **0.2.5** - Its code is split into smaller files by what each part does; nothing changes in use.

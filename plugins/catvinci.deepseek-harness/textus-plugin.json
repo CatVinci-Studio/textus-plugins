@@ -1,7 +1,7 @@
 {
   "id": "catvinci.deepseek-harness",
   "name": "%name%",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "publisher": "catvinci",
   "author": "CatVinci Studio",
   "description": "%description%",
@@ -9,7 +9,7 @@
   "license": "MIT",
   "repository": "https://github.com/CatVinci-Studio/textus-plugins",
   "engines": {
-    "textus": ">=1.4.0"
+    "textus": ">=1.4.2"
   },
   "platforms": [
     "desktop"

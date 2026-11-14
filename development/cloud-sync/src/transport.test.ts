@@ -153,6 +153,26 @@ describe("storage protocols over HTTP", () => {
       expect(objects.size).toBe(count);
     },
   );
+  it("tells the time by the server's clock, not this device's", async () => {
+    const ahead = Date.now() + 86_400_000;
+    const store = new RemoteStore(
+      normalizeConfig({ provider: "webdav", endpoint: "https://store.example/dav" }),
+      { account, secret },
+      async () => ({
+        status: 404,
+        ok: false,
+        headers: { date: new Date(ahead).toUTCString() },
+        bytes: async () => new Uint8Array(),
+        text: async () => "",
+        json: async () => null,
+      }),
+      async () => {},
+    );
+    expect(Math.abs(store.now() - Date.now())).toBeLessThan(1000);
+    await store.has("missing");
+    expect(Math.abs(store.now() - ahead)).toBeLessThan(2000);
+  });
+
   it("signs S3 requests correctly with the payload digest and regional credential scope", async () => {
     const store = make("s3", { region: "ap-southeast-1" });
     await store.put("文件/space + sign.bin", bytes("payload"));

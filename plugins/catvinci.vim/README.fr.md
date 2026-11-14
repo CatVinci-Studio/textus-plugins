@@ -18,10 +18,11 @@ Réglages, dans **Réglages › Extensions › Modules › Vim** :
 
 Obsidian : dans un coffre Obsidian, son `.obsidian.vimrc` (celui du plugin Vimrc Support) est lu aussi, après vos propres lignes, et relu quand il change. Ouvrez le coffre lui-même, pas un dossier à l’intérieur.
 
-Le plugin demande à recevoir les touches dans l’éditeur (pour exécuter celles de Vim) et à lire les fichiers (seulement pour lire `.obsidian.vimrc`). Il fonctionne sur ordinateur, iPhone et iPad.
+Le plugin demande à recevoir les touches dans l’éditeur (pour exécuter celles de Vim) et à lire les fichiers (seulement pour lire `.obsidian.vimrc`). Il fonctionne sur ordinateur.
 
 ## Changements
 
+- **0.2.8** - Sur ordinateur seulement : le clavier à l’écran d’un téléphone tape les lettres dans le texte au lieu de les exécuter comme des touches Vim.
 - **0.2.7** - Le mode dans la barre d’état ouvre un menu qui coupe Vim ; `.obsidian.vimrc` est relu quand vous revenez dans Textus ; quitter le mode visuel avec **:** marche toujours.
 - **0.2.6** - Textes d'aide et d'état vide plus courts.
 - **0.2.5** - Son code est réparti en fichiers plus petits selon le rôle de chaque partie ; rien ne change à l'usage.

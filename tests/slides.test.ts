@@ -18,5 +18,7 @@ describe("the bundled Marp", () => {
     ) as { html: string; css: string };
     expect(html.match(/<svg/g)).toHaveLength(2);
     expect(css.length).toBeGreaterThan(1000);
+    // How host.js knows a deck has formulas, to add KaTeX's fonts.
+    expect(html).toContain('class="katex"');
   });
 });

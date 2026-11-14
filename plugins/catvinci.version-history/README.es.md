@@ -16,6 +16,7 @@ Guarda cada guardado de un documento como una versión, para ver qué cambió y 
 
 ## Cambios
 
+- **0.3.8** - El texto de antes del primer guardado ya no se pierde cuando ese guardado llega justo al abrir el documento.
 - **0.3.7** - El texto que tenía un documento antes de guardarlo por primera vez también se conserva como versión, y las versiones siguen al documento al cambiarle el nombre o moverlo.
 - **0.3.6** - El guardado automático mientras escribes solo escribe la versión más reciente, no todas las versiones del documento, así que los documentos largos se guardan con mucho menos trabajo.
 - **0.3.5** - Una versión abierta sigue abierta cuando el autoguardado la actualiza, y Restaurar siempre la encuentra. Con el almacenamiento lleno, las versiones antiguas de otros documentos dejan sitio, y el panel avisa si un guardado no se pudo conservar. Las filas se usan con el teclado; los botones pasan a otra línea en una barra lateral estrecha.

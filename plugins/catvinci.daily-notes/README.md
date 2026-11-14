@@ -23,6 +23,7 @@ The plugin reads and writes files in the open folder to find and make the notes,
 
 ## Changes
 
+- **0.7.4** - In a narrow panel, such as on a phone, the calendar shows the month's short name instead of cutting the long one off.
 - **0.7.3** - Impossible dates such as February 30 are refused, the calendar stays a comfortable width in wide panels and redraws when folder settings change, and weekly and monthly settings show only when those notes are on.
 - **0.7.2** - Shorter help and empty-state text.
 - **0.7.1** - Its bars, lists and controls are Textus's own, grow with the interface and follow every theme; needs Textus 1.3.12.

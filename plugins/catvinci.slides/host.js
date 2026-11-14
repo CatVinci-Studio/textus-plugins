@@ -8,8 +8,8 @@ const t = (key, ...args) => textus.l10n.t(key, ...args);
 const views = new Set();
 
 let marp = null;
-/** The deck, needing nothing from the web: emoji as text, KaTeX in the
- *  system's fonts, and no theme font from a font service. */
+/** The deck, needing nothing from the web: emoji as text, KaTeX's fonts
+ *  from Textus (withMath), and no theme font from a font service. */
 function render(markdown) {
   marp =
     marp ||
@@ -25,6 +25,15 @@ function render(markdown) {
     "",
   );
   return out;
+}
+
+let mathCss = null;
+/** `css` with KaTeX's fonts inline when `html` has formulas: Textus 1.4.2
+ *  hands them over; before it, formulas keep the system's fonts. */
+async function withMath(html, css) {
+  if (!html.includes('class="katex"') || !textus.export.mathCss) return css;
+  mathCss = mathCss || textus.export.mathCss().catch(() => "");
+  return css + (await mathCss);
 }
 
 const { slash, native } = folderPaths;
@@ -121,7 +130,10 @@ async function update(to) {
     const from = doc + "\0" + text;
     if (from !== madeFrom || !deck) {
       const shown = render(await withPictures(text, doc));
-      const next = { html: await inlinePictures(shown.html, doc), css: shown.css };
+      const next = {
+        html: await inlinePictures(shown.html, doc),
+        css: await withMath(shown.html, shown.css),
+      };
       if (mine !== turn) return;
       madeFrom = from;
       changed = !deck || next.html !== deck.html || next.css !== deck.css;
@@ -162,7 +174,7 @@ async function writeDeck() {
   const { html, css } = render(await withPictures(text, path));
   const target = path.replace(/\.(md|markdown)$/i, "") + ".slides.html";
   const name = path.split(/[\\/]/).pop();
-  await textus.files.writeText(target, standalone(name, html, css));
+  await textus.files.writeText(target, standalone(name, html, await withMath(html, css)));
   return { path: target, slides: (html.match(/<svg[^>]*data-marpit-svg/g) || []).length };
 }
 

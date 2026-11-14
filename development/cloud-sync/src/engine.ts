@@ -126,7 +126,7 @@ export async function synchronize(options: Options): Promise<Result> {
     progress("scanning", 0, 0);
     const files = await local.scan();
     checkAbort(signal);
-    const now = new Date();
+    const now = new Date(store.now?.() ?? Date.now());
     const cutoff = now.getTime() - TRASH_DAYS * 86_400_000;
     const next: Manifest = {
       ...remote,
@@ -317,7 +317,10 @@ export async function synchronize(options: Options): Promise<Result> {
       raw,
       remote,
       next,
-      origin: { at: new Date().toISOString(), device: options.device },
+      origin: {
+        at: new Date(store.now?.() ?? Date.now()).toISOString(),
+        device: options.device,
+      },
       keep: options.keep,
       onKeep: options.onKeep,
       cleanupDue: options.cleanupDue ?? false,
