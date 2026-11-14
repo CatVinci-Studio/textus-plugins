@@ -1,0 +1,43 @@
+{
+  "id": "your-name.plan",
+  "name": "%name%",
+  "version": "0.1.0",
+  "publisher": "your-name",
+  "description": "%description%",
+  "license": "MIT",
+  "engines": {
+    "textus": ">=1.4.3"
+  },
+  "platforms": ["desktop", "ios"],
+  "main": "host.js",
+  "permissions": [],
+  "contributes": {
+    "sidebarTabs": [
+      {
+        "id": "your-name.plan.page",
+        "title": "%title%",
+        "type": "webview"
+      }
+    ]
+  },
+  "l10n": {
+    "en": {
+      "name": "Plan",
+      "description": "A sidebar page of steps you put in order by dragging, each with a date.",
+      "title": "Plan",
+      "add": "Add a step",
+      "date": "Date",
+      "remove": "Remove",
+      "empty": "No steps yet."
+    },
+    "zh": {
+      "name": "计划",
+      "description": "侧栏里的一页步骤：拖动排顺序，每步可选日期。",
+      "title": "计划",
+      "add": "添加一步",
+      "date": "日期",
+      "remove": "删除",
+      "empty": "还没有步骤。"
+    }
+  }
+}

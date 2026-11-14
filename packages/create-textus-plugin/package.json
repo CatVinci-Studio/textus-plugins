@@ -1,0 +1,11 @@
+{
+  "name": "create-textus-plugin",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Makes a new Textus plugin from an example: npm create textus-plugin my-plugin.",
+  "license": "MIT",
+  "type": "module",
+  "bin": { "create-textus-plugin": "index.mjs" },
+  "files": ["index.mjs", "examples"],
+  "scripts": { "prepack": "node prepack.mjs" }
+}

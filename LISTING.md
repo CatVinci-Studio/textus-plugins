@@ -16,7 +16,7 @@
 
 ## Plugins
 
-A plugin is a folder with a `textus-plugin.json` manifest ([Writing plugins](https://github.com/CatVinci-Studio/Textus/blob/main/docs/dev/plugins/guide.md)). CatVinci Studio's own are in [`plugins/`](plugins/) here; yours lives in a repository of your own, and a one-file listing in [`community/`](community/) points to it.
+A plugin is a folder with a `textus-plugin.json` manifest ([Writing plugins](https://textus.md/developers/guide/)). CatVinci Studio's own are in [`plugins/`](plugins/) here; yours lives in a repository of your own, and a one-file listing in [`community/`](community/) points to it.
 
 - **Permissions it needs, and no more.** Each permission in the manifest is asked for before the plugin runs; one that the plugin's purpose doesn't explain is a reason not to list it. `network:` names the hosts it talks to - `network:*` only for a plugin whose purpose is the open web (a web view) or a server the user types in (their own sync or storage), which it reaches over HTTPS and names in its README.
 - **Works offline,** apart from what plainly needs the network (Zotero's local API, a web page), and says so when it can't reach something.

@@ -20,7 +20,7 @@ it("checks and packages the first community listing using its release filename",
   try {
     for (const dir of ["scripts", "plugins", "skills", "community"])
       mkdirSync(join(fixture, dir));
-    for (const file of ["build.mjs", "community.mjs"])
+    for (const file of ["build.mjs", "community.mjs", "history.mjs"])
       copyFileSync(join(root, "scripts", file), join(fixture, "scripts", file));
     writeFileSync(join(fixture, "libs.json"), "{}");
     writeFileSync(join(fixture, "removed.json"), '{"plugins":[]}');
@@ -48,6 +48,8 @@ it("checks and packages the first community listing using its release filename",
       `
       globalThis.fetch = async (url) => {
         if (process.argv.includes("--check")) throw new Error("check must not download");
+        // No catalog published yet: no earlier versions.
+        if (url.endsWith("/catalog/index.json")) return new Response("", { status: 404 });
         if (url !== ${JSON.stringify(url)}) throw new Error("unexpected release URL: " + url);
         return new Response(Buffer.from(${JSON.stringify(zip.toString("base64"))}, "base64"));
       };

@@ -24,8 +24,8 @@ npm ci
 npm run check
 ```
 
-Start a new plugin from [`template/`](template/), and read the
-[plugin guide](https://github.com/CatVinci-Studio/Textus/blob/main/docs/dev/plugins/guide.md).
+Start a new plugin from [`examples/`](examples/), and read the
+[plugin guide](https://textus.md/developers/guide/).
 Try it in Textus with **Settings › Extensions › Plugins › Load a plugin
 folder…**, and show what it looks like in the pull request.
 

@@ -15,7 +15,7 @@ To make it yours:
    publisher name, and `hello` to your plugin's.
 2. Write what it does in `host.js` - every call is in
    [textus.d.ts](https://github.com/CatVinci-Studio/Textus/blob/main/docs/dev/textus.d.ts),
-   and [Writing plugins](https://github.com/CatVinci-Studio/Textus/blob/main/docs/dev/writing-plugins.md)
+   and [Writing plugins](https://textus.md/developers/guide/)
    walks through them.
 3. Say what it does and how to use it in `README.md`: the market shows it
    on the plugin's page, and it is the guide once installed. Add

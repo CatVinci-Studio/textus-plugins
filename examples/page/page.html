@@ -1,0 +1,61 @@
+<!doctype html>
+<html>
+  <body>
+    <!-- Textus's own controls and styles come with the page: tx-button,
+         data-t for strings, tooltips, arrow keys, textus.drag and the rest
+         (docs: Pages). -->
+    <ul class="plan" role="list"></ul>
+    <p class="plan-empty" data-t="empty" hidden></p>
+    <button class="tx-button" data-t="add"></button>
+    <script>
+      const api = acquireTextusApi();
+      const list = document.querySelector(".plan");
+      let steps = [];
+      const save = () => api.postMessage({ steps });
+
+      function draw() {
+        list.replaceChildren(
+          ...steps.map((step, i) => {
+            const row = document.createElement("li");
+            const text = document.createElement("input");
+            text.className = "tx-input";
+            text.value = step.text;
+            text.onchange = () => ((steps[i].text = text.value), save());
+            const date = document.createElement("button");
+            date.className = "tx-button";
+            date.textContent = step.date ?? api.t("date");
+            date.onclick = async () => {
+              const picked = await api.pickDate(step.date ?? null, date);
+              if (picked) (steps[i].date = picked), save();
+            };
+            const remove = document.createElement("button");
+            remove.className = "tx-button";
+            remove.textContent = "×";
+            remove.setAttribute("data-t-label", "remove");
+            remove.onclick = () => (steps.splice(i, 1), save());
+            row.append(text, date, remove);
+            return row;
+          }),
+        );
+        document.querySelector(".plan-empty").hidden = steps.length > 0;
+      }
+
+      // Rows dragged into a new order, the app's way.
+      api.drag.reorder(list, {
+        items: "li",
+        onDrop(from, to) {
+          steps.splice(to, 0, ...steps.splice(from, 1));
+          save();
+        },
+      });
+      document.querySelector("[data-t=add]").onclick = () => {
+        steps.push({ text: "", date: null });
+        save();
+      };
+      api.onDidReceiveMessage((message) => {
+        steps = message.steps;
+        draw();
+      });
+    </script>
+  </body>
+</html>

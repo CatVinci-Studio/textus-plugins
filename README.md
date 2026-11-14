@@ -70,7 +70,7 @@ Each plugin's folder in [`plugins/`](plugins/) is packaged by `npm run build` in
 
 ## Writing a plugin
 
-A plugin is a folder with a `textus-plugin.json` and its code, run in a sandbox. Start from [`template/`](template/), a small plugin that works; the guide is [Writing plugins](https://github.com/CatVinci-Studio/Textus/blob/main/docs/dev/plugins/guide.md) in the Textus repository, and the plugins here are complete examples. To try yours, use **Settings › Extensions › Plugins › Load a plugin folder…**; to publish it, **Export for Publishing…** on its page lays it out as a repository of its own with a release workflow.
+A plugin is a folder with a `textus-plugin.json` and its code, run in a sandbox. Start from one of [`examples/`](examples/) - small plugins that work, made into a folder of yours by `packages/create-textus-plugin` - and check it with `packages/textus-plugin`'s `check`; the guide is [Writing plugins](https://textus.md/developers/guide/) in the Textus repository, and the plugins here are complete examples. To try yours, use **Settings › Extensions › Plugins › Load a plugin folder…**; to publish it, **Export for Publishing…** on its page lays it out as a repository of its own with a release workflow.
 
 Plugins from other repositories are listed through [`community/`](community/): one file naming the repository and version, reviewed on its pull request. See [Listing in the Textus market](LISTING.md) - for a skill in [`skills/`](skills/) too.
 

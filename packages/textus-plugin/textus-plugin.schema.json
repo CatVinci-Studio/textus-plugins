@@ -1,0 +1,597 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/CatVinci-Studio/Textus/main/docs/dev/textus-plugin.schema.json",
+  "title": "textus-plugin.json",
+  "description": "A Textus plugin's manifest, as src/plugins/store/manifest.ts reads it. docs/dev/plugins/guide.md says what each field does.",
+  "type": "object",
+  "required": ["id", "name", "version", "publisher", "engines"],
+  "properties": {
+    "$schema": {
+      "type": "string"
+    },
+    "id": {
+      "description": "publisher.name, lowercase.",
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9-]{0,63}\\.[a-z0-9][a-z0-9-]{0,63}$"
+    },
+    "name": {
+      "type": "string",
+      "description": "Or %key% of l10n."
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+(-[0-9A-Za-z.-]+)?$"
+    },
+    "publisher": {
+      "type": "string"
+    },
+    "author": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "icon": {
+      "type": "string"
+    },
+    "license": {
+      "type": "string"
+    },
+    "repository": {
+      "type": "string"
+    },
+    "engines": {
+      "type": "object",
+      "required": ["textus"],
+      "properties": {
+        "textus": {
+          "type": "string",
+          "description": "^1.3.0, >=1.3.0, 1.3.x or an exact version. A range naming a pre-release (>=1.3.0-beta.2) tells the betas apart."
+        }
+      }
+    },
+    "platforms": {
+      "description": "Where it runs: desktop (macOS, Windows, Linux) and ios (iPhone, iPad). Left out, everywhere - unless it works in the background (background code, or requiring runInBackground), which only the desktop does. Textus elsewhere doesn't list or load it.",
+      "type": "array",
+      "items": { "enum": ["desktop", "ios"] },
+      "uniqueItems": true
+    },
+    "main": {
+      "description": "The host code, or several files run in order.",
+      "oneOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1
+        }
+      ]
+    },
+    "background": {
+      "description": "Code that scheduled jobs with `run` call, with no editor or UI (API 1.1). Needs the \"background\" permission.",
+      "type": "string"
+    },
+    "activationEvents": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "When the plugin starts. Left out, Textus starts it the first time something it adds is used; [\"onStartupFinished\"] starts it with Textus, [\"onHover\"] on the first hover over a link, [\"onEditor\"] once a document is open (a plugin that marks the text)."
+    },
+    "permissions": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "anyOf": [
+          {
+            "enum": [
+              "editor.read",
+              "editor.write",
+              "editor.propose",
+              "editor.input",
+              "files.read",
+              "files.write",
+              "clipboard",
+              "project.data",
+              "ai.tools",
+              "notifications",
+              "background",
+              "agents",
+              "appearance"
+            ]
+          },
+          {
+            "pattern": "^network:.+"
+          },
+          {
+            "pattern": "^commands:[a-z0-9][a-z0-9-]*\\.[a-z0-9][a-z0-9-]*$"
+          }
+        ]
+      }
+    },
+    "requires": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["setting"],
+        "properties": {
+          "setting": {
+            "enum": ["runInBackground"]
+          },
+          "reason": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "contributes": {
+      "type": "object",
+      "properties": {
+        "commands": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["command", "title"],
+            "properties": {
+              "command": {
+                "type": "string"
+              },
+              "title": {
+                "type": "string"
+              },
+              "runs": {
+                "type": "object",
+                "description": "Runs one of Textus's commands (\"textus.…\") with these arguments, at once and with no code of the plugin's - for a / item or a key that must act before the next key comes. Textus 1.3.0-beta.8.",
+                "required": ["command"],
+                "additionalProperties": false,
+                "properties": {
+                  "command": {
+                    "type": "string",
+                    "pattern": "^textus\\."
+                  },
+                  "args": {
+                    "type": "array"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "keybindings": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["command", "key"],
+            "properties": {
+              "command": {
+                "type": "string"
+              },
+              "key": {
+                "type": "string",
+                "description": "mod+alt+w"
+              }
+            }
+          }
+        },
+        "menus": {
+          "type": "object",
+          "propertyNames": {
+            "enum": [
+              "editor/context",
+              "editor/slash",
+              "file/context",
+              "tab/context",
+              "view/title",
+              "floating/context",
+              "app/plugins",
+              "app/tray"
+            ]
+          },
+          "additionalProperties": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["command"],
+              "properties": {
+                "command": {
+                  "type": "string"
+                },
+                "when": {
+                  "type": "string",
+                  "description": "editorHasSelection, documentOpen, folderOpen, fileExtension == .pdf, view == <view id>; && || ! and ( ) (src/plugins/contributions/when.ts)"
+                },
+                "icon": {
+                  "type": "string",
+                  "description": "view/title: an icon in place of the title"
+                }
+              }
+            }
+          }
+        },
+        "sidebarTabs": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "title"],
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "title": {
+                "type": "string"
+              },
+              "icon": {
+                "type": "string"
+              },
+              "type": {
+                "enum": ["webview", "list"],
+                "description": "list: drawn by Textus from views.registerList's items; webview (the default): a page of the plugin's"
+              }
+            }
+          }
+        },
+        "floatingViews": {
+          "type": "array",
+          "description": "Small transparent pages that float on the desktop or in Textus's window - a desk pet, a timer. Shown with layout.openFloating; the user moves, folds and closes them. Textus 1.3.6 and later.",
+          "items": {
+            "type": "object",
+            "required": ["id", "title"],
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "title": {
+                "type": "string"
+              },
+              "width": {
+                "type": "number",
+                "minimum": 64,
+                "maximum": 480,
+                "description": "Points; 160 when left out"
+              },
+              "height": {
+                "type": "number",
+                "minimum": 64,
+                "maximum": 480,
+                "description": "Points; 160 when left out"
+              },
+              "place": {
+                "enum": ["either", "desktop", "window"],
+                "description": "Where it may float: over the desktop, in Textus's window, or either as the user picks (the default)"
+              }
+            }
+          }
+        },
+        "views": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "title"],
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "title": {
+                "type": "string"
+              },
+              "type": {
+                "enum": ["webview", "list"],
+                "description": "list: drawn by Textus from views.registerList's items; webview (the default): a page of the plugin's"
+              }
+            }
+          }
+        },
+        "customEditors": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["viewType", "displayName"],
+            "anyOf": [
+              { "required": ["filenamePatterns"] },
+              { "required": ["frontMatter"] }
+            ],
+            "properties": {
+              "viewType": {
+                "type": "string"
+              },
+              "displayName": {
+                "type": "string"
+              },
+              "filenamePatterns": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "minItems": 1
+              },
+              "frontMatter": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "minItems": 1
+              },
+              "priority": {
+                "enum": ["default", "option"]
+              }
+            }
+          }
+        },
+        "settings": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["key", "type", "title"],
+            "properties": {
+              "key": {
+                "type": "string"
+              },
+              "type": {
+                "enum": [
+                  "boolean",
+                  "string",
+                  "number",
+                  "enum",
+                  "color",
+                  "list",
+                  "button"
+                ]
+              },
+              "title": {
+                "type": "string"
+              },
+              "description": {
+                "type": "string"
+              },
+              "default": {},
+              "options": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["value", "label"],
+                  "properties": {
+                    "value": {
+                      "type": "string"
+                    },
+                    "label": {
+                      "type": "string"
+                    }
+                  }
+                }
+              },
+              "group": {
+                "type": "string",
+                "description": "A heading the setting goes under, shared by the ones after it."
+              },
+              "when": {
+                "type": "string",
+                "description": "Shown only while another setting is so: \"key\", \"!key\", \"key == value\", \"key != value\"."
+              },
+              "multiline": {
+                "type": "boolean"
+              },
+              "min": {
+                "type": "number"
+              },
+              "max": {
+                "type": "number"
+              },
+              "command": {
+                "type": "string",
+                "description": "For a button: the command it runs."
+              }
+            }
+          }
+        },
+        "settingsPage": {
+          "type": "object",
+          "required": ["title"],
+          "properties": {
+            "title": {
+              "type": "string"
+            }
+          }
+        },
+        "aiTools": {
+          "type": "array",
+          "description": "Tools Textus AI may call (ai.tools), run by textus.ai.registerTool.",
+          "items": {
+            "type": "object",
+            "required": ["name", "description"],
+            "properties": {
+              "name": {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9_-]{1,40}$"
+              },
+              "description": {
+                "type": "string"
+              },
+              "parameters": {
+                "type": "object",
+                "description": "A JSON schema of its arguments."
+              }
+            }
+          }
+        },
+        "completions": {
+          "type": "array",
+          "description": "Completions suggested as you type (editor.read), answered by textus.editor.registerCompletion(id).",
+          "items": {
+            "type": "object",
+            "required": ["id", "pattern"],
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "Starts with the plugin's id and a dot."
+              },
+              "where": {
+                "enum": ["math", "text", "any"],
+                "description": "In a formula, in the text, or both (the default)."
+              },
+              "pattern": {
+                "type": "string",
+                "description": "A regular expression the text before the caret must end with, such as \\\\[A-Za-z]*."
+              },
+              "title": {
+                "type": "string",
+                "description": "The / panel group's heading (\"%notes%\"); the plugin's name without it."
+              }
+            }
+          }
+        },
+        "embeds": {
+          "type": "array",
+          "description": "![[...]] embeds whose content the plugin gives as Markdown (files.read), answered by textus.views.registerEmbed(id); Textus draws it read-only. One plugin draws each kind.",
+          "items": {
+            "type": "object",
+            "required": ["id", "targets"],
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "Starts with the plugin's id and a dot."
+              },
+              "targets": {
+                "type": "array",
+                "description": "A whole note, a heading's section, a ^id block; a kind this Textus doesn't know is left out.",
+                "items": { "type": "string" }
+              }
+            }
+          }
+        },
+        "agents": {
+          "type": "array",
+          "description": "AI agents on the user's computer that Textus AI's model menu offers (Agent Client Protocol over stdio): Claude Agent, Codex... Needs the agents permission; desktop only. Textus starts the command itself, from this manifest.",
+          "items": {
+            "type": "object",
+            "required": ["id", "name", "command"],
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "Starts with the plugin's id and a dot."
+              },
+              "name": {
+                "type": "string",
+                "description": "As the model menu lists it; may be %key% for l10n."
+              },
+              "command": {
+                "type": "string",
+                "description": "The program, found on the PATH a terminal would have (npx, gemini...) or a path; {pluginDir} is the plugin's folder."
+              },
+              "args": {
+                "type": "array",
+                "items": { "type": "string" },
+                "description": "Its arguments; {pluginDir} is the plugin's folder."
+              },
+              "env": {
+                "type": "object",
+                "additionalProperties": { "type": "string" },
+                "description": "Extra environment variables."
+              },
+              "setup": {
+                "type": "string",
+                "description": "How to install it and sign in, shown when it can't start; may be %key% for l10n."
+              },
+              "provider": {
+                "type": "string",
+                "description": "The provider whose models it runs (\"anthropic\", \"openai\"), told to plugins as the AI at work."
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "hovers": {
+          "type": "array",
+          "description": "The hover cards the plugin gives (textus.editor.registerHover).",
+          "items": { "type": "string" }
+        },
+        "links": {
+          "type": "array",
+          "description": "Links the plugin opens when one is Ctrl/Cmd+clicked in a document, instead of the browser: the command runs with the URL.",
+          "items": {
+            "type": "object",
+            "required": ["pattern", "command"],
+            "properties": {
+              "pattern": {
+                "type": "string",
+                "description": "A regular expression the link's URL must match, such as ^https?://."
+              },
+              "command": {
+                "type": "string",
+                "description": "One of the plugin's contributes.commands; it is given the URL."
+              }
+            }
+          }
+        },
+        "statusItems": {
+          "type": "array",
+          "description": "Statuses in the window bar shown while the plugin is on, before its code starts (Textus 1.4.2); textus.ui.statusItem with the same id takes one over.",
+          "items": {
+            "type": "object",
+            "required": ["id", "text"],
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "The id its code's statusItem uses."
+              },
+              "text": {
+                "type": "string",
+                "description": "A short status, up to 40 characters; may be %localized%."
+              },
+              "tooltip": { "type": "string" },
+              "command": {
+                "type": "string",
+                "description": "One of the plugin's contributes.commands, run on click (starting the plugin)."
+              }
+            }
+          }
+        },
+        "codeBlocks": {
+          "type": "array",
+          "description": "Code blocks of a language the plugin draws in the document, answered by textus.views.registerCodeBlock(language).",
+          "items": {
+            "type": "object",
+            "required": ["language"],
+            "properties": {
+              "language": {
+                "type": "string",
+                "pattern": "^[a-z][a-z0-9-]{0,31}$"
+              },
+              "title": {
+                "type": "string"
+              },
+              "frame": {
+                "enum": ["none"],
+                "description": "\"none\": drawn on the page without the box round a figure, for a block that reads as part of the document (a table)."
+              },
+              "size": {
+                "enum": ["interface"],
+                "description": "\"interface\": drawn at the interface's text size, not the document's and its zoom, for an overview (a table, a board) that shows more as the column widens."
+              }
+            }
+          }
+        },
+        "suggestFor": {
+          "type": "array",
+          "description": "What a document can hold that the plugin works with. An official plugin is suggested on the suggestion card for a document that holds one when no installed plugin works with it.",
+          "items": {
+            "enum": ["wikilinks"]
+          }
+        }
+      }
+    },
+    "l10n": {
+      "type": "object",
+      "description": "Strings by language: { \"en\": { \"key\": \"text\" }, \"zh\": {...} }.",
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}
