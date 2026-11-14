@@ -23,7 +23,7 @@ window.databaseTabs = function (page) {
           viewMenu(e.currentTarget, v);
         },
         onpointerdown: (e) => moveTab(e, v),
-      }, icon(VIEW_ICONS[v.view] || "table"), v.name || s(v.view)));
+      }, icon(VIEW_ICONS[v.view] || "table"), el("span", { class: "tx-segment-label" }, v.name || s(v.view))));
     const add = el("button", { type: "button", class: "tx-icon-button", "aria-label": s("addView"), onclick: (e) => addViewMenu(e.currentTarget) }, icon("plus"));
     return tabs.concat([add]);
   }

@@ -32,13 +32,21 @@ function drop(path) {
   for (const key of [...byPath.keys()]) if (under(key, path)) byPath.delete(key);
 }
 
+/** The documents that may hold a reminder: those Textus's index finds
+ *  "(@" in, or every one when its answer was cut short. */
+async function withMarks() {
+  const found = await textus.metadata.search("(@", { limit: 5000 }).catch(() => null);
+  if (!found || found.truncated) return (await textus.files.find()).map((d) => d.path);
+  return [...new Set(found.hits.map((h) => h.path))];
+}
+
 /** Every reminder in the folder's documents; read in full once a folder. */
 async function readAll(root) {
   if (cachedRoot !== root) {
     byPath.clear();
     cachedRoot = root;
     loading = (async () => {
-      for (const doc of await textus.files.find()) await readOne(doc.path, root);
+      for (const path of await withMarks()) await readOne(path, root);
     })();
   }
   await loading;

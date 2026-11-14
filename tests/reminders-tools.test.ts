@@ -25,6 +25,28 @@ describe("reminders' tools", () => {
     });
   });
 
+  it("read only the documents the index finds a mark in", async () => {
+    const files = folder({
+      "Plan.md": "- [ ] Call (@2999-01-02 10:30)\n",
+      "Big.md": "No marks here.\n",
+    });
+    const read: string[] = [];
+    const readText = files.readText;
+    files.readText = async (path: string) => (read.push(path), readText(path));
+    const { tools } = loadPlugin("catvinci.reminders", {
+      files,
+      metadata: {
+        search: async () => ({
+          truncated: false,
+          hits: [{ path: "/root/Plan.md", rel: "Plan.md", line: 1, text: "" }],
+        }),
+      },
+    });
+    const { reminders } = await tools.get("list_reminders")!({});
+    expect(reminders.map((r: { text: string }) => r.text)).toEqual(["Call"]);
+    expect(read).toEqual(["/root/Plan.md"]);
+  });
+
   it("add one to the end of the document in front", async () => {
     const edit = vi.fn(async () => true);
     const { tools } = loadPlugin("catvinci.reminders", { editor: { edit } });

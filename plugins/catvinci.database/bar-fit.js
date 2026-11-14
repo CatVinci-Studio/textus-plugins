@@ -14,6 +14,11 @@ window.databaseBarFit = function ($) {
     return !(
       tabs.some((n) => row(n) !== row(tabs[0])) ||
       $("views").scrollWidth > $("views").clientWidth + 1 ||
+      // A tab squeezed until its name is cut ("Calenda") doesn't fit either.
+      tabs.some((n) => {
+        const label = n.querySelector(".tx-segment-label");
+        return label && label.scrollWidth > label.clientWidth + 1;
+      }) ||
       (bar.contains($("rules")) && $("rules").scrollWidth > $("rules").clientWidth + 1) ||
       shown.some((n) => row(n) > row(shown[0]) + shown[0].offsetHeight / 2) ||
       bar.scrollWidth > bar.clientWidth + 1

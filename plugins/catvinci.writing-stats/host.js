@@ -39,6 +39,16 @@ async function goalWords() {
 
 /** Only the user's own typing adds to today; any other call (another
  *  document in front, AI, disk, undo) just moves the baseline. */
+/** Words and characters as the status bar counts them (textus.text, from
+ *  Textus 1.4.3), else our own count. */
+async function counted(text) {
+  const own = writingCount.count(text);
+  const app = textus.text ? await textus.text.count(text).catch(() => null) : null;
+  return typeof app?.words === "number"
+    ? { ...own, words: app.words, characters: app.characters }
+    : own;
+}
+
 let queue = Promise.resolve();
 function onChange(source) {
   queue = queue.then(() => tally(source)).catch(() => {});
@@ -49,7 +59,7 @@ async function tally(source) {
   const path = (await textus.editor.getPath()) || "(unsaved)";
   const text = await textus.editor.getText();
   if (text === null) return;
-  const words = writingCount.count(text).words;
+  const words = (await counted(text)).words;
   const before = lastWords.get(path);
   lastWords.set(path, words);
   if (source === "user" && before !== undefined && words > before) {
@@ -89,7 +99,7 @@ async function folderItems() {
   for (const doc of folder.docs) {
     let c = folder.counts.get(doc.path);
     if (!c) {
-      c = writingCount.count(await textus.files.readText(doc.path).catch(() => ""));
+      c = await counted(await textus.files.readText(doc.path).catch(() => ""));
       folder.counts.set(doc.path, c);
     }
     words += c.words;
@@ -108,7 +118,7 @@ async function items(parent) {
   const out = [];
   const text = await textus.editor.getText();
   if (text !== null) {
-    const c = writingCount.count(text);
+    const c = await counted(text);
     const g = t("document");
     out.push(
       Object.assign(row("doc:words", t("words"), fmt(c.words)), { group: g }),
@@ -117,7 +127,7 @@ async function items(parent) {
     );
   }
   if (selection) {
-    const s = writingCount.count(selection);
+    const s = await counted(selection);
     out.push(
       Object.assign(row("sel:words", t("words"), fmt(s.words)), { group: t("selection") }),
       Object.assign(row("sel:chars", t("characters"), fmt(s.characters)), { group: t("selection") }),
@@ -146,8 +156,8 @@ async function items(parent) {
 async function countWords(input) {
   const root = await textus.files.root();
   const total = { words: 0, characters: 0, cjk: 0 };
-  const add = (text) => {
-    const c = writingCount.count(text);
+  const add = async (text) => {
+    const c = await counted(text);
     for (const key in total) total[key] += c[key];
   };
   let target;
@@ -155,7 +165,7 @@ async function countWords(input) {
   if (input.path === undefined || input.path === null) {
     const text = await textus.editor.getText();
     if (text === null) return { error: "No document is open." };
-    add(text);
+    await add(text);
     target = folderPaths.rel(root, await textus.editor.getPath()) || "the document in front";
   } else {
     if (!root) return { error: "No folder is open." };
@@ -169,7 +179,7 @@ async function countWords(input) {
       : all.filter((d) => !rel || d.rel.startsWith(rel + "/"));
     if (!inside.length) inside = all.filter((d) => d.rel === rel + ".md");
     if (!inside.length) return { error: "No documents at " + rel + "." };
-    for (const doc of inside) add(await textus.files.readText(doc.path).catch(() => ""));
+    for (const doc of inside) await add(await textus.files.readText(doc.path).catch(() => ""));
     const one = inside.length === 1 && [rel, rel + ".md"].includes(inside[0].rel);
     target = one ? inside[0].rel : rel || "/";
     documents = inside.length;

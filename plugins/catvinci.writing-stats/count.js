@@ -10,6 +10,7 @@
    *  addresses, or heading, list and quote marks. */
   function plain(markdown) {
     return markdown
+      .replace(/\r\n?/g, "\n")
       .replace(/^---\n[\s\S]*?\n(---|\.\.\.)\n/, "")
       .replace(/^\s*(```|~~~).*$/gm, "")
       .replace(/!?\[([^\]]*)\]\([^)]*\)/g, "$1")
