@@ -22,6 +22,7 @@ The plugins for [Textus](https://textus.md), the Markdown editor. None of them c
 | Emacs | Emacs keys in the editor: C-f C-b C-n C-p, C-a C-e, M-f M-b, M-< M->, the mark (C-SPC) and the region, C-k and C-w into a kill ring, C-y and M-y, C-/ undo and C-x prefixes. |
 | Function Plot | Graphs of functions, one per line: sin(x), x^2 - 1. |
 | Gemini CLI | Gemini CLI in Textus AI: Google's Gemini models read your folder, write and edit your notes, and ask before they change anything. |
+| GitHub Copilot CLI | GitHub Copilot CLI in Textus AI: the models of your Copilot plan read your folder, write and edit your notes, and ask before they change anything. |
 | Graph View | Your notes and the links between them as a graph - for the whole folder, or around the document in front - with filters and colour groups. |
 | Heading Numbers | Numbers headings as you write - 1, 1.1, 1.2 - without changing the text; exports can carry the numbers too. |
 | HTML View | See .html files as the pages they are, in a tab. Edit source opens one as text. |
@@ -41,6 +42,7 @@ The plugins for [Textus](https://textus.md), the Markdown editor. None of them c
 | Quick Insert | Type / for headings, lists, tables, formulas and more, : for emoji, @ for a date (@tomorrow, @next friday), and turn a paragraph into another kind of block. |
 | Quick Notes | Jot something down without leaving the document: notes in the sidebar, kept in Inbox.md or today's daily note, to insert later or open as a document. |
 | Quick Preview | Preview a linked document without opening it: rest the pointer on a Markdown link or a [[wikilink]] to read its opening, or the section or block it names, in a card beside it. Pin keeps the card open while you write. |
+| Qwen Code | Qwen Code in Textus AI: Alibaba's Qwen models read your folder, write and edit your notes, and ask before they change anything. |
 | Reminders | Reminders for the lines you date: write (@2026-11-02 09:00) in a line and a notification brings it back then - even with Textus's windows closed in background mode. A click opens the line. |
 | Sheet Music (ABC) | Sheet music from ABC notation. |
 | Tags | Every #tag in the open folder in the sidebar, with how many notes use it: open one for its notes, rename a tag everywhere, or merge two by renaming one to the other. |

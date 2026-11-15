@@ -1,0 +1,88 @@
+{
+  "id": "catvinci.copilot-cli",
+  "name": "%name%",
+  "version": "0.1.0",
+  "publisher": "catvinci",
+  "author": "CatVinci Studio",
+  "description": "%description%",
+  "icon": "icon.svg",
+  "license": "MIT",
+  "repository": "https://github.com/CatVinci-Studio/textus-plugins",
+  "engines": {
+    "textus": ">=1.4.2"
+  },
+  "platforms": [
+    "desktop"
+  ],
+  "permissions": [
+    "agents"
+  ],
+  "contributes": {
+    "agents": [
+      {
+        "id": "catvinci.copilot-cli.copilot",
+        "name": "GitHub Copilot CLI",
+        "command": "npx",
+        "args": [
+          "-y",
+          "@github/copilot@1.0.112",
+          "--acp"
+        ],
+        "setup": "%setup%",
+        "provider": "github"
+      }
+    ]
+  },
+  "l10n": {
+    "en": {
+      "name": "GitHub Copilot CLI",
+      "description": "GitHub Copilot CLI in Textus AI: the models of your Copilot plan read your folder, write and edit your notes, and ask before they change anything.",
+      "setup": "Needs Node.js and a GitHub Copilot plan. Once, in a terminal: npx @github/copilot login."
+    },
+    "zh": {
+      "name": "GitHub Copilot CLI",
+      "description": "在 Textus AI 里用 GitHub Copilot CLI：用你 Copilot 订阅里的模型读你的文件夹、写和改笔记，改动前先征得你同意。",
+      "setup": "需要 Node.js 和 GitHub Copilot 订阅。先在终端里运行一次：npx @github/copilot login。"
+    },
+    "zh-Hant": {
+      "name": "GitHub Copilot CLI",
+      "description": "在 Textus AI 裡用 GitHub Copilot CLI：用你 Copilot 訂閱裡的模型讀你的資料夾、寫和改筆記，改動前先徵得你同意。",
+      "setup": "需要 Node.js 和 GitHub Copilot 訂閱。先在終端機裡執行一次：npx @github/copilot login。"
+    },
+    "ja": {
+      "name": "GitHub Copilot CLI",
+      "description": "Textus AI で GitHub Copilot CLI を使う：Copilot プランのモデルがフォルダを読み、ノートを書いて直し、変更の前に確認します。",
+      "setup": "Node.js と GitHub Copilot のプランが必要です。一度ターミナルで：npx @github/copilot login。"
+    },
+    "ko": {
+      "name": "GitHub Copilot CLI",
+      "description": "Textus AI에서 GitHub Copilot CLI 사용: Copilot 요금제의 모델이 폴더를 읽고 노트를 쓰고 고치며, 바꾸기 전에 먼저 묻습니다.",
+      "setup": "Node.js와 GitHub Copilot 요금제가 필요합니다. 터미널에서 한 번: npx @github/copilot login."
+    },
+    "de": {
+      "name": "GitHub Copilot CLI",
+      "description": "GitHub Copilot CLI in Textus AI: die Modelle deines Copilot-Abos lesen deinen Ordner, schreiben und bearbeiten deine Notizen und fragen vor jeder Änderung.",
+      "setup": "Braucht Node.js und ein GitHub-Copilot-Abo. Einmal im Terminal: npx @github/copilot login."
+    },
+    "fr": {
+      "name": "GitHub Copilot CLI",
+      "description": "GitHub Copilot CLI dans Textus AI : les modèles de votre abonnement Copilot lisent votre dossier, écrivent et modifient vos notes, et demandent avant tout changement.",
+      "setup": "Nécessite Node.js et un abonnement GitHub Copilot. Une fois, dans un terminal : npx @github/copilot login."
+    },
+    "es": {
+      "name": "GitHub Copilot CLI",
+      "description": "GitHub Copilot CLI en Textus AI: los modelos de tu plan de Copilot leen tu carpeta, escriben y editan tus notas, y preguntan antes de cambiar nada.",
+      "setup": "Necesita Node.js y un plan de GitHub Copilot. Una vez, en una terminal: npx @github/copilot login."
+    },
+    "pt": {
+      "name": "GitHub Copilot CLI",
+      "description": "GitHub Copilot CLI no Textus AI: os modelos do seu plano Copilot leem a sua pasta, escrevem e editam as suas notas e perguntam antes de mudar algo.",
+      "setup": "Precisa do Node.js e de um plano GitHub Copilot. Uma vez, num terminal: npx @github/copilot login."
+    },
+    "ru": {
+      "name": "GitHub Copilot CLI",
+      "description": "GitHub Copilot CLI в Textus AI: модели вашей подписки Copilot читают папку, пишут и правят заметки и спрашивают перед любым изменением.",
+      "setup": "Нужны Node.js и подписка GitHub Copilot. Один раз в терминале: npx @github/copilot login."
+    }
+  }
+}

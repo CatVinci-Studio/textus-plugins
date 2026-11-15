@@ -1,0 +1,15 @@
+# Qwen Code
+
+在 Textus AI 里和 Qwen Code 对话，用阿里的通义千问模型。它会读打开的文件夹、写和改笔记，每次改动前先问你：Textus 会显示它想做什么，由你决定是否允许。它改过的地方在文档里有标记，一步就能撤销。它的模式（先询问、自动接受修改、自己判断、全部接受、计划）、模型和思考强度在 Textus AI 模型菜单旁边的菜单里。
+
+1. 如果电脑上没有，先安装 [Node.js](https://nodejs.org) 22 或更新版本。
+2. 在终端里运行一次 `npx @qwen-code/qwen-code`，再用 `/auth` 填入 API 密钥（阿里云百炼，或任何兼容 OpenAI 的服务）。
+3. 点窗口右上角 Textus AI 按钮旁边的 Qwen Code 按钮。
+
+Textus 用 `npx` 运行 [Qwen Code](https://github.com/QwenLM/qwen-code) 的 `qwen --acp`（它的 Agent Client Protocol 服务）。密钥和用量都归你的服务商；Textus 不保存它的密钥。
+
+只在电脑上可用，需要 Textus 1.4.2 或更新版本；模式和模型菜单需要 Textus 1.4.3。它只要一个权限：在这台电脑上启动这个助手。
+
+## 更新
+
+- **0.1.0** - 第一个版本：在 Textus AI 里用 Qwen Code。

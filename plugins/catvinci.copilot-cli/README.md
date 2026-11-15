@@ -1,0 +1,15 @@
+# GitHub Copilot CLI
+
+Talk to GitHub Copilot CLI in Textus AI, with the models of your Copilot plan. It reads the open folder, writes and edits your notes, and asks before each change: Textus shows what it wants to do, and you allow it or not. What it changed is marked in the document, one undo away. Its mode (agent, plan, autopilot), model and "allow all" switch are in the menu beside Textus AI's model menu; "allow all" starts off.
+
+1. Install [Node.js](https://nodejs.org) if it isn't on this computer. You need a GitHub Copilot plan.
+2. Once, in a terminal: `npx @github/copilot login`.
+3. Click the GitHub Copilot CLI button at the top right of the window, beside Textus AI's.
+
+Textus starts [GitHub Copilot CLI](https://github.com/github/copilot-cli) with `copilot --acp`, its Agent Client Protocol server, run with `npx`. Copilot CLI is GitHub's own software under its own licence; your account and its usage are GitHub's, and Textus keeps no token for it.
+
+It works on the desktop and needs Textus 1.4.2 or later; its mode and model menus need Textus 1.4.3. It asks for one permission: to start this agent on this computer.
+
+## Changes
+
+- **0.1.0** - First version: GitHub Copilot CLI in Textus AI.
