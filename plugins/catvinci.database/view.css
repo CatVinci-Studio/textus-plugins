@@ -66,28 +66,29 @@ body {
   user-select: none;
   -webkit-user-select: none;
 }
-/* A column being dragged rides over the others, which slide aside. It keeps
-   its own colours - only its shadow says it is lifted - and where it will
-   land is a dashed outline, as anything dragged leaves. */
-.col-moving {
-  position: relative;
+/* A column's grip, the editor tables' pill, inside its head's top edge
+   while the pointer is on the head; the head itself drags too. Pulled,
+   the column lifts (.tx-cell-lifted) and the others slide aside
+   (.tx-making-room), its head staying over the rows. */
+.tx-table th .tx-grip {
+  position: absolute;
+  top: var(--space-1);
+  left: 50%;
+  margin-left: -10px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--dur-fast) var(--ease-standard);
 }
-.col-moving :is(th, td)[data-key] {
-  transition: transform var(--dur-fast) var(--ease-standard);
+.tx-table th:hover .tx-grip {
+  opacity: 1;
+  pointer-events: auto;
 }
-.col-moving :is(th, td).col-lifted {
-  position: relative;
-  z-index: 3;
-  transition: none;
+.tx-making-room .tx-table th .tx-grip {
+  opacity: 0;
 }
-/* Cells are see-through; lifted, they hide what slides under them. */
-.col-moving td.col-lifted {
-  background: var(--doc-bg, var(--ui-bg));
-}
-.col-moving th.col-lifted {
+.tx-making-room th.tx-cell-lifted {
   position: sticky;
   z-index: 4;
-  box-shadow: var(--shadow-popover);
 }
 /* A column's width: its head's right edge, dragged. */
 .col-resize {
