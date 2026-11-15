@@ -53,7 +53,7 @@ The plugins for [Textus](https://textus.md), the Markdown editor. None of them c
 | Tidy | Tidy text and Markdown: underlines what breaks common Markdown rules and fixes it in one go, removes blank lines and trailing spaces, switches punctuation between Chinese and English, turns full-width letters into ASCII and joins lines - leaving code, math, front matter and Obsidian's own syntax as written. |
 | Timeline | Events in order, a line each: when \| what \| more. |
 | Two-way Links | Two-way links: type [[ to link a note, a heading or a block, and ![[ to embed one; in the sidebar, the notes that link to the document in front, the ones that name it without a link - linked in one click - and the notes it links to. |
-| Version History | Each save of a document kept as a version: see what changed since, and bring an old one back. |
+| Version History | Each save of a document kept as a version, older ones thinned out by age: compare any two, bring back a whole version or one change, and name or pin the ones to keep. Changes made outside Textus are kept too. |
 | Vim | Vim's modes and keys in the editor: normal, insert and visual, motions, operators, counts, registers and dot repeat, the command line (:w, :q, :wq, :12), key mappings as in a vimrc - and flash: s and a letter, then a label, to jump anywhere on screen. |
 | WakaTime | Sends your writing time in Textus to your WakaTime account, beside your coding - only while Textus is in front and you are writing; time in the background doesn't count. Works offline: heartbeats wait and go later. Nothing is sent until you set your API key. |
 | WaveDrom | Digital timing diagrams from WaveJSON. |

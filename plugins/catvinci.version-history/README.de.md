@@ -2,9 +2,10 @@
 
 Behält jedes Speichern eines Dokuments als Version, damit Sie sehen, was sich geändert hat, und eine alte zurückholen können.
 
-- Bei jedem Speichern wird der Text des Dokuments als Version behalten. Kurz aufeinanderfolgende Speichervorgänge (das automatische Speichern alle paar Sekunden) zählen als eine, mit höchstens alle 15 Minuten einer neuen Version. Die letzten 50 Versionen jedes Dokuments bleiben erhalten.
+- Bei jedem Speichern wird der Text des Dokuments als Version behalten. Kurz aufeinanderfolgende Speichervorgänge (das automatische Speichern alle paar Sekunden) zählen als eine, mit höchstens alle 15 Minuten einer neuen Version. Der letzte Tag bleibt ganz, danach eine pro Stunde für eine Woche, eine pro Tag für drei Monate und davor eine pro Woche.
 - Der Reiter **Verlauf** in der Seitenleiste listet die Versionen des geöffneten Dokuments, die neueste oben, nach Tagen gruppiert: Heute, Gestern, dann das Datum.
 - Wählen Sie eine, um Zeile für Zeile zu sehen, was sich seitdem geändert hat.
+- Vergleiche sie mit dem Dokument jetzt oder mit jeder anderen Version, die geänderten Wörter markiert. **Wiederherstellen** neben einer Änderung holt nur diese zurück; **Mehr** benennt oder heftet eine Version an, die dann immer bleibt, oder öffnet sie als neues Dokument. Auch Änderungen außerhalb von Textus (eine andere App, eine Synchronisierung, git) bleiben: der Text davor und danach.
 - **Diese Version wiederherstellen** bietet den alten Text als Änderung am Dokument an, die Sie wie jede andere annehmen oder ablehnen. **Als neues Dokument öffnen** öffnet sie stattdessen daneben.
 - Die Versionen liegen in Textus, nicht in Ihrem Ordner. Dokumente über 2 MB werden nicht behalten, und ist der Speicher voll, gehen die ältesten Versionen zuerst.
 
@@ -16,6 +17,7 @@ Behält jedes Speichern eines Dokuments als Version, damit Sie sehen, was sich g
 
 ## Änderungen
 
+- **0.4.0** - Versionen werden mit dem Alter lichter, statt nur die letzten 50 zu behalten; jeder Text wird einmal gespeichert; die Versionen eines gelöschten Dokuments gehen nach einem Monat. Zwei beliebige Versionen Wort für Wort vergleichen, eine einzelne Änderung zurückholen, Versionen benennen und anheften; Änderungen außerhalb von Textus bleiben. Versionen aus 0.3 ziehen von selbst um. Braucht Textus 1.4.3.
 - **0.3.8** - Der Text vor dem ersten Speichern geht nicht mehr verloren, wenn dieses Speichern direkt beim Öffnen kommt.
 - **0.3.7** - Der Text eines Dokuments vor dem ersten Speichern bleibt ebenfalls als Version erhalten, und die Versionen folgen einem Dokument, wenn es umbenannt oder verschoben wird.
 - **0.3.6** - Das automatische Speichern beim Schreiben schreibt nur die neueste Version, nicht jede Version des Dokuments, sodass lange Dokumente mit viel weniger Aufwand speichern.

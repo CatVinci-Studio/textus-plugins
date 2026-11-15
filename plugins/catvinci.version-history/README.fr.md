@@ -2,9 +2,10 @@
 
 Garde chaque enregistrement d’un document comme une version, pour voir ce qui a changé et revenir à une ancienne.
 
-- À chaque enregistrement, le texte du document est gardé comme version. Des enregistrements rapprochés (l’enregistrement automatique toutes les quelques secondes) comptent pour un, avec au plus une nouvelle version toutes les 15 minutes. Les 50 dernières versions de chaque document sont gardées.
+- À chaque enregistrement, le texte du document est gardé comme version. Des enregistrements rapprochés (l’enregistrement automatique toutes les quelques secondes) comptent pour un, avec au plus une nouvelle version toutes les 15 minutes. Tout le dernier jour est gardé, puis une par heure pendant une semaine, une par jour pendant trois mois, et une par semaine avant.
 - L’onglet **Historique** de la barre latérale liste les versions du document ouvert, la plus récente en haut, groupées par jour : Aujourd’hui, Hier, puis la date.
 - Choisissez-en une pour voir, ligne par ligne, ce qui a changé depuis.
+- Comparez-la au document actuel ou à n’importe quelle autre version, les mots modifiés étant marqués. **Rétablir** à côté d’une modification ne reprend que celle-ci ; **Plus** nomme ou épingle une version, alors gardée pour de bon, ou l’ouvre comme nouveau document. Les modifications faites hors de Textus (une autre app, une synchronisation, git) sont gardées aussi : le texte d’avant et celui d’après.
 - **Restaurer cette version** propose l’ancien texte comme une modification du document, que vous acceptez ou refusez comme les autres. **Ouvrir comme nouveau document** l’ouvre à côté.
 - Les versions sont gardées dans Textus, pas dans votre dossier. Les documents de plus de 2 Mo ne sont pas gardés, et quand le stockage est plein, les plus anciennes versions partent d’abord.
 
@@ -16,6 +17,7 @@ Garde chaque enregistrement d’un document comme une version, pour voir ce qui 
 
 ## Changements
 
+- **0.4.0** - Les versions s’espacent avec l’âge au lieu de ne garder que les 50 dernières ; chaque texte est stocké une fois ; les versions d’un document supprimé partent un mois plus tard. Comparez deux versions mot à mot, reprenez une seule modification, nommez et épinglez des versions ; les modifications faites hors de Textus sont gardées. Les versions de 0.3 sont reprises d’elles-mêmes. Nécessite Textus 1.4.3.
 - **0.3.8** - Le texte d'avant le premier enregistrement n'est plus perdu quand cet enregistrement arrive dès l'ouverture du document.
 - **0.3.7** - Le texte d'un document avant son premier enregistrement est lui aussi gardé comme version, et les versions suivent le document quand il est renommé ou déplacé.
 - **0.3.6** - L'enregistrement automatique pendant la saisie n'écrit que la version la plus récente, et non toutes les versions du document : les longs documents s'enregistrent avec bien moins de travail.
