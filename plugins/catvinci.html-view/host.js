@@ -18,12 +18,7 @@ exports.activate = function (context) {
         }
         if (message.type === "edit") await textus.layout.open(document.path, { asDocument: true });
       });
-      const html = await ctx.plugin.readText("view.html");
-      webview.html = html.replace("{{lang}}", textus.env.language);
-      const relabel = textus.env.onDidChangeLanguage(() => {
-        webview.html = html.replace("{{lang}}", textus.env.language);
-      });
-      webview.onDidDispose(() => relabel.dispose());
+      webview.html = await ctx.plugin.readText("view.html");
     },
   });
 };

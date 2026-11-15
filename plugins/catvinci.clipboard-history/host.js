@@ -18,6 +18,15 @@ async function keep(entries) {
   if (list) list.refresh();
 }
 
+/** When it was copied: the time today, else the day and time. */
+const copiedAt = (at) => {
+  const when = new Date(at);
+  const today = when.toDateString() === new Date().toDateString();
+  return when.toLocaleString(textus.env.language, today
+    ? { hour: "2-digit", minute: "2-digit" }
+    : { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" });
+};
+
 const preview = (text) => {
   const flat = text.replace(/\s+/g, " ").trim();
   return flat.length > PREVIEW ? flat.slice(0, PREVIEW) + "…" : flat;
@@ -31,6 +40,7 @@ exports.activate = function (context) {
       return (await all()).map((entry) => ({
         id: String(entry.at),
         label: preview(entry.text),
+        detail: copiedAt(entry.at),
         command: { id: "catvinci.clipboard-history.insert", args: [entry.at] },
         actions: [
           { label: t("copy"), command: "catvinci.clipboard-history.copy", args: [entry.at] },

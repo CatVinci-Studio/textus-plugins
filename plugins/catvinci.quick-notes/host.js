@@ -350,13 +350,7 @@ exports.activate = function (context) {
       webview.onDidReceiveMessage(function (message) {
         return serial(() => handle(webview, message)).catch(() => {});
       });
-      const html = await ctx.plugin.readText("panel.html");
-      webview.html = html.replace("{{lang}}", textus.env.language);
-      // Drawn again in the interface's language when that changes.
-      const relabel = textus.env.onDidChangeLanguage(() => {
-        webview.html = html.replace("{{lang}}", textus.env.language);
-      });
-      webview.onDidDispose(() => relabel.dispose());
+      webview.html = await ctx.plugin.readText("panel.html");
     },
   });
   // Stored notes move into the folder's document as soon as there is one.

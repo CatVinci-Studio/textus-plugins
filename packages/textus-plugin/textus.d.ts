@@ -1053,6 +1053,12 @@ declare global {
        *  the app's is whole. */
       onDidCreate: Event<{ path: string }>;
       onDidChange: Event<{ path: string }>;
+      /** An open document's file was changed by something else - another
+       *  app, a sync, git, an AI agent - and its tab took the new text:
+       *  `before` is what it had saved, `after` what is on disk now, so a
+       *  plugin keeping versions can record both. Its whole path. Files no
+       *  tab holds aren't watched. From 1.4.3. */
+      onDidChangeOnDisk: Event<{ path: string; before: string; after: string }>;
       onDidRename: Event<{ from: string; to: string }>;
       /** A file or folder a plugin moved to the Trash, and from 1.4.2 one
        *  the sidebar did (its whole path). */
@@ -1651,10 +1657,12 @@ declare global {
        *  or null when closed without one. */
       pickDate(value: string | null, anchor: Element): Promise<string | null>;
       /** From 1.7: a month's 42 days from the week's first day in the UI
-       *  language, for a calendar a page draws itself (`tx-calendar`). */
+       *  language (or `weekStart`, 0 Sunday to 6 Saturday: a vault's own),
+       *  for a calendar a page draws itself (`tx-calendar`). */
       monthDays(
         year: number,
         month: number,
+        options?: { weekStart?: number },
       ): { date: string; day: number; inMonth: boolean; today: boolean }[];
       /** From 1.7: an edge dragged (or moved with the arrow keys) to resize
        *  something: `get` the size now, `set` it as it moves, `done` at the

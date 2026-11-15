@@ -107,8 +107,14 @@
   "catvinci.slides/lib/folder-paths.js": "./shared/folder-paths.js",
   "catvinci.kanban/lib/drag.js": "./shared/drag.js",
   "catvinci.database/lib/drag.js": "./shared/drag.js",
+  "catvinci.kanban/lib/inline-field.js": "./shared/inline-field.js",
+  "catvinci.database/lib/inline-field.js": "./shared/inline-field.js",
   "catvinci.database/lib/link-style.js": "./shared/link-style.js",
   "catvinci.backlinks/lib/link-style.js": "./shared/link-style.js",
   "catvinci.quick-insert/lib/link-style.js": "./shared/link-style.js",
-  "catvinci.notion-import/lib/link-style.js": "./shared/link-style.js"
+  "catvinci.notion-import/lib/link-style.js": "./shared/link-style.js",
+  "catvinci.mdx/lib/mdx.js": "./vendor/mdx.js",
+  "catvinci.version-history/lib/text-diff.js": "./shared/text-diff.js",
+  "catvinci.git/lib/text-diff.js": "./shared/text-diff.js",
+  "catvinci.git/lib/folder-paths.js": "./shared/folder-paths.js"
 }

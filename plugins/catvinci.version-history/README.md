@@ -2,9 +2,10 @@
 
 Keeps each save of a document as a version, so you can see what changed and bring an old one back.
 
-- Each time you save, the document's text is kept as a version. Saves close together - autosave's every few seconds - count as one, with a new version at most every 15 minutes. The last 50 versions of each document are kept.
+- Each time you save, the document's text is kept as a version. Saves close together - autosave's every few seconds - count as one, with a new version at most every 15 minutes. All of the last day is kept, then one an hour for a week, one a day for three months, and one a week before that.
 - The **History** tab in the sidebar lists the versions of the document in front, newest first, grouped by day: Today, Yesterday, then the date.
 - Pick one to see what changed since, line by line.
+- Compare it with the document now or with any other version, the changed words marked. **Restore** beside a change takes back that change alone; **More** names or pins a version, which is then always kept, or opens it as a new document. Changes from outside Textus - another app, a sync, git - are kept too: the text before and after.
 - **Restore This Version** offers the old text as an edit to the document, which you accept or reject like any other. **Open as a New Document** opens it beside instead.
 - Versions are kept inside Textus, not in your folder. Documents over 2 MB are not kept, and when the storage is full the oldest versions go first.
 
@@ -16,6 +17,7 @@ Keeps each save of a document as a version, so you can see what changed and brin
 
 ## Changes
 
+- **0.4.0** - Versions thin out with age instead of the last 50 going; each text is stored once; a deleted document's versions go a month later. Compare any two versions, word by word; take back one change; name and pin versions; changes made outside Textus are kept. Versions from 0.3 move over by themselves. Needs Textus 1.4.3. In a Git folder on the desktop, the document's commits show under its versions.
 - **0.3.8** - The text from before the first save is no longer lost when that save comes right as the document opens.
 - **0.3.7** - The text a document had before its first save is kept as a version too, and a document's versions follow it when it is renamed or moved.
 - **0.3.6** - Autosave while you type writes only the newest version, not every version of the document, so long documents save with much less work.

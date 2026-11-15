@@ -98,14 +98,10 @@ window.databaseViews = function (page) {
       el("button", { type: "button", class: "tx-button small", onclick: () => { month = null; render(); } }, s("today")),
       el("button", { type: "button", class: "tx-icon-button", "aria-label": s("next"), onclick: () => shift(1) }, icon("right")));
     // Monday first; six weeks always, so the block keeps its height.
-    const start = new Date(month);
-    start.setDate(1 - ((month.getDay() + 6) % 7));
-    const names = [];
-    for (let i = 0; i < 7; i++) {
-      const d = new Date(start);
-      d.setDate(start.getDate() + i);
-      names.push(el("div", { class: "weekday" }, new Intl.DateTimeFormat(lang, { weekday: "short" }).format(d)));
-    }
+    const grid = window.textus.monthDays(month.getFullYear(), month.getMonth(), { weekStart: 1 });
+    const dateOf = (g) => new Date(g.date + "T00:00");
+    const names = grid.slice(0, 7).map((g) =>
+      el("div", { class: "weekday" }, new Intl.DateTimeFormat(lang, { weekday: "short" }).format(dateOf(g))));
     const on = new Map();
     for (const row of page.data.rows) {
       const from = parseDay(row.props[key]);
@@ -118,22 +114,19 @@ window.databaseViews = function (page) {
         on.get(k).push({ row, first: day(d) === day(from) });
       }
     }
-    const today = day(new Date());
     const days = [];
-    for (let i = 0; i < 42; i++) {
-      const d = new Date(start);
-      d.setDate(start.getDate() + i);
-      const k = day(d);
+    grid.forEach((g, i) => {
+      const k = g.date;
       const weekend = i % 7 >= 5;
-      const node = el("div", { class: "day" + (d.getMonth() !== month.getMonth() ? " other" : "") + (weekend ? " weekend" : "") + (k === today ? " today" : "") },
-        el("span", { class: "num" }, String(d.getDate())),
+      const node = el("div", { class: "day" + (g.inMonth ? "" : " other") + (weekend ? " weekend" : "") + (g.today ? " today" : "") },
+        el("span", { class: "num" }, String(g.day)),
         (on.get(k) || []).map((x) =>
           el("button", { type: "button", class: "chip" + (x.first ? "" : " cont"), title: x.row.name, "data-rel": x.row.rel, onclick: () => post({ type: "open", rel: x.row.rel }) }, x.row.name)));
       node.addEventListener("dblclick", (e) => {
         if (e.target === node || e.target.classList.contains("num")) post({ type: "add", folder: page.data.folder, props: { [key]: k } });
       });
       days.push(node);
-    }
+    });
     return el("div", null, nav, el("div", { class: "month" }, names, days));
   }
 

@@ -56,14 +56,7 @@ window.databaseRules = function (page) {
       if (ok && input.value.trim() !== "") post({ type: "addFilter", key, op, value: input.value.trim(), replace });
       render();
     };
-    input.addEventListener("keydown", (e) => {
-      // An input method's Enter picks its words; it doesn't end the edit.
-      if (e.isComposing || e.keyCode === 229) return;
-      if (e.key === "Enter") finish(true);
-      if (e.key === "Escape") finish(false);
-    });
-    // Not while Textus's text menu is open over it (data-menu-open).
-    input.addEventListener("blur", () => input.hasAttribute("data-menu-open") || finish(true));
+    window.inlineField(input, finish);
     input.focus();
     if (input.openMonth) input.openMonth();
   }

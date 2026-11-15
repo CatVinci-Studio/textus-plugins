@@ -6,6 +6,12 @@ window.databaseTabs = function (page) {
   const { api, $, el, icon, s, post, render, choose } = page;
   const VIEWS = ["table", "board", "calendar", "gallery", "list"];
   const VIEW_ICONS = { table: "table", board: "board", calendar: "calendar", gallery: "gallery", list: "list" };
+  // A tab dragged along the others to a new place, kept in the base.
+  window.textus.drag.reorder($("views"), {
+    items: '[role="tab"]',
+    axis: "x",
+    onDrop: (from, to) => post({ type: "moveView", from: page.data.views[from].index, to }),
+  });
 
   /** The base's views, one tab each, and the +. */
   function viewTabs() {
@@ -22,24 +28,12 @@ window.databaseTabs = function (page) {
           e.preventDefault();
           viewMenu(e.currentTarget, v);
         },
-        onpointerdown: (e) => moveTab(e, v),
+        // No text selected from the press: in WebKit a selection starts a
+        // drag of its own and the tab never moves.
+        onpointerdown: (e) => e.pointerType === "mouse" && e.preventDefault(),
       }, icon(VIEW_ICONS[v.view] || "table"), el("span", { class: "tx-segment-label" }, v.name || s(v.view))));
     const add = el("button", { type: "button", class: "tx-icon-button", "aria-label": s("addView"), onclick: (e) => addViewMenu(e.currentTarget) }, icon("plus"));
     return tabs.concat([add]);
-  }
-
-  /** A tab dragged along the others to a new place, kept in the base: it
-   *  slides as the sidebar's icons do (drag.reorder). */
-  function moveTab(e, v) {
-    // No text selected from the press: in WebKit a selection starts a drag
-    // of its own and the tab never moves.
-    if (e.pointerType === "mouse") e.preventDefault();
-    drag.reorder(e, {
-      item: e.currentTarget,
-      axis: "x",
-      items: () => [...$("views").querySelectorAll('[role="tab"]')],
-      onDrop: (to) => to !== v.index && post({ type: "moveView", from: v.index, to }),
-    });
   }
 
   async function viewMenu(at, v) {

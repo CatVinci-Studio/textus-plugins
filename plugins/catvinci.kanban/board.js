@@ -44,15 +44,7 @@
       else if (cancel) cancel();
       else render();
     };
-    field.addEventListener("blur", () => finish(true));
-    field.addEventListener("keydown", (e) => {
-      if (e.isComposing) return;
-      if (e.key === "Escape") finish(false);
-      if (e.key === "Enter" && (!multiline || e.metaKey || e.ctrlKey)) {
-        e.preventDefault();
-        finish(true);
-      }
-    });
+    window.inlineField(field, finish, multiline);
   }
 
   // A card's words with its [[wiki links]] as links to the notes they

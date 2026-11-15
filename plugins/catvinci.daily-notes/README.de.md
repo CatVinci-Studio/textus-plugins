@@ -23,6 +23,7 @@ Das Plugin liest und schreibt Dateien im geöffneten Ordner, um die Notizen zu f
 
 ## Änderungen
 
+- **0.7.6** - Die Seite folgt der Sprache von Textus von selbst. Benötigt Textus 1.4.3.
 - **0.7.5** - Der Monatstitel im Kalender beginnt links und endet in einer schmalen Seitenleiste mit Auslassungspunkten, statt an beiden Enden abgeschnitten zu werden.
 - **0.7.4** - In einer schmalen Leiste, etwa auf dem Handy, zeigt der Kalender den kurzen Monatsnamen, statt den langen abzuschneiden.
 - **0.7.3** - Unmögliche Daten wie der 30. Februar werden abgelehnt, der Kalender bleibt in breiten Bereichen angenehm schmal und zeichnet sich neu, wenn sich Ordnereinstellungen ändern, und Wochen- und Monatseinstellungen erscheinen nur, wenn diese Notizen an sind.

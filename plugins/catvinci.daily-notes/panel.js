@@ -31,13 +31,7 @@
       month: "long",
     });
     const month = $("month");
-    month.textContent = name;
-    // A narrow bar (a phone) takes the short name before it cuts the long.
-    if (month.scrollWidth > month.clientWidth)
-      month.textContent = shown.toLocaleDateString(api.language, {
-        year: "numeric",
-        month: "short",
-      });
+    fitMonth();
     month.disabled = !monthNotes;
     // The full name even when the bar cuts it short.
     $("month").title = monthNotes ? name + " · " + api.t("openMonth") : name;
@@ -46,34 +40,29 @@
     grid.textContent = "";
     grid.classList.toggle("weeks", !!week);
     if (week) grid.append(document.createElement("div"));
-    const first = weekStart === "sunday" ? 0 : 1;
-    for (let i = 0; i < 7; i++) {
-      const day = new Date(2024, 0, 7 + first + i); // 2024-01-07 is a Sunday
+    // Textus's month: whole weeks from the vault's first weekday; a sixth
+    // row only when the month reaches it.
+    const days = window.textus
+      .monthDays(shown.getFullYear(), shown.getMonth(), { weekStart: weekStart === "sunday" ? 0 : 1 })
+      .filter((g, i, all) => i < 35 || all.slice(35).some((x) => x.inMonth));
+    for (const g of days.slice(0, 7)) {
       const cell = document.createElement("div");
       cell.className = "tx-calendar-weekday";
-      cell.textContent = day.toLocaleDateString(api.language, {
+      cell.textContent = new Date(g.date + "T00:00:00").toLocaleDateString(api.language, {
         weekday: "narrow",
       });
       grid.append(cell);
     }
-    const lead = (shown.getDay() - first + 7) % 7;
-    const start = new Date(shown.getFullYear(), shown.getMonth(), 1 - lead);
-    const today = dateOf(new Date());
-    for (let i = 0; i < 42; i++) {
-      const day = new Date(
-        start.getFullYear(),
-        start.getMonth(),
-        start.getDate() + i,
-      );
-      if (i >= 35 && day.getMonth() !== shown.getMonth()) break;
+    days.forEach((g, i) => {
+      const day = new Date(g.date + "T00:00:00");
       if (week && i % 7 === 0) grid.append(weekButton(day));
-      const date = dateOf(day);
+      const date = g.date;
       const button = document.createElement("button");
       button.className = "tx-calendar-day";
-      if (day.getMonth() !== shown.getMonth()) button.classList.add("is-other");
-      if (date === today) button.classList.add("is-today");
+      if (!g.inMonth) button.classList.add("is-other");
+      if (g.today) button.classList.add("is-today");
       if (noted.has(date)) button.classList.add("is-marked");
-      button.textContent = String(day.getDate());
+      button.textContent = String(g.day);
       button.dataset.date = date;
       button.setAttribute(
         "aria-label",
@@ -81,8 +70,21 @@
       );
       button.onclick = () => api.postMessage({ type: "open", date: date });
       grid.append(button);
-    }
+    });
   }
+
+  /** The month's name, short when the bar is too narrow for the long one
+   *  (a sidebar, a phone): again whenever the bar's width changes. */
+  function fitMonth() {
+    const month = $("month");
+    const as = (style) => shown.toLocaleDateString(api.language, { year: "numeric", month: style });
+    month.textContent = as("long");
+    // The text's own width: a button reports no overflow of its own.
+    const text = document.createRange();
+    text.selectNodeContents(month);
+    if (text.getBoundingClientRect().width > month.clientWidth) month.textContent = as("short");
+  }
+  new ResizeObserver(() => fitMonth()).observe($("month").parentElement);
 
   /** The week number in front of a row: its weekly note. The row's middle
    *  day names it, whichever day the calendar starts its weeks on. */
@@ -125,7 +127,5 @@
     render();
   });
   render();
-  // The panel widened or narrowed: the month's long or short name again.
-  addEventListener("resize", render);
   api.postMessage({ type: "ready" });
 })();

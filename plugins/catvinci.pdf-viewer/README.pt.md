@@ -15,6 +15,7 @@ Não pede permissões: o Textus entrega a ele o PDF que você abre.
 
 ## Alterações
 
+- **0.2.7** - A página segue o idioma do Textus sozinha. Requer o Textus 1.4.3.
 - **0.2.6** - Os botões e teclas de zoom avançam 1,25× de cada vez, como nos outros visualizadores.
 - **0.2.5** - Um PDF longo percorrido até o fim ocupa muito menos memória: as páginas fora de vista também liberam suas imagens.
 - **0.2.4** - A barra quebra linha em um painel estreito, e a busca não mistura mais resultados de uma palavra anterior.

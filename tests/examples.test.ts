@@ -110,7 +110,12 @@ describe("every example", () => {
   it("passes textus-plugin check and registers what its manifest names", async () => {
     const { checkPlugin } = await import("../packages/textus-plugin/check.mjs");
     const { loadPlugin } = await import("../packages/textus-plugin/test.mjs");
-    expect(kinds.sort()).toEqual(["ai-tool", "code-block", "hello", "page"]);
+    expect(kinds.sort()).toEqual([
+      "ai-tool",
+      "code-block",
+      "hello",
+      "page",
+    ]);
     for (const kind of kinds) {
       const dir = EXAMPLES + kind;
       const files = new Map(

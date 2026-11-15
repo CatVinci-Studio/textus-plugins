@@ -1,0 +1,242 @@
+{
+  "id": "catvinci.mdx",
+  "name": "%name%",
+  "version": "0.1.0",
+  "publisher": "catvinci",
+  "author": "CatVinci Studio",
+  "description": "%description%",
+  "icon": "icon.svg",
+  "license": "MIT",
+  "repository": "https://github.com/CatVinci-Studio/textus-plugins",
+  "engines": {
+    "textus": ">=1.4.3"
+  },
+  "platforms": [
+    "desktop",
+    "ios"
+  ],
+  "main": [
+    "lib/mdx.js",
+    "host.js"
+  ],
+  "permissions": [
+    "editor.read",
+    "files.read",
+    "files.write",
+    "ai.tools"
+  ],
+  "activationEvents": [
+    "onEditor"
+  ],
+  "contributes": {
+    "commands": [
+      {
+        "command": "catvinci.mdx.preview",
+        "title": "%preview%"
+      },
+      {
+        "command": "catvinci.mdx.toMarkdown",
+        "title": "%toMarkdown%"
+      },
+      {
+        "command": "catvinci.mdx.toMdx",
+        "title": "%toMdx%"
+      }
+    ],
+    "menus": {
+      "app/plugins": [
+        {
+          "command": "catvinci.mdx.preview"
+        },
+        {
+          "command": "catvinci.mdx.toMarkdown"
+        },
+        {
+          "command": "catvinci.mdx.toMdx"
+        }
+      ],
+      "editor/context": [
+        {
+          "command": "catvinci.mdx.preview",
+          "when": "fileExtension == .mdx"
+        },
+        {
+          "command": "catvinci.mdx.toMarkdown",
+          "when": "fileExtension == .mdx"
+        },
+        {
+          "command": "catvinci.mdx.toMdx",
+          "when": "fileExtension == .md"
+        }
+      ]
+    },
+    "views": [
+      {
+        "id": "catvinci.mdx.preview",
+        "title": "%preview%",
+        "type": "webview"
+      }
+    ],
+    "aiTools": [
+      {
+        "name": "check_mdx",
+        "description": "%tool.check_mdx%",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "text": {
+              "type": "string",
+              "description": "MDX to check; left out, the file at path or the document in front."
+            },
+            "path": {
+              "type": "string",
+              "description": "An .mdx file in the open folder to check."
+            }
+          }
+        }
+      }
+    ]
+  },
+  "l10n": {
+    "en": {
+      "name": "MDX",
+      "description": "Write MDX documents (Docusaurus, Nextra…) with their problems underlined by MDX's own compiler, a preview beside them that runs none of their code, and conversion to Markdown and back.",
+      "preview": "Preview MDX",
+      "toMarkdown": "Save as Markdown",
+      "toMdx": "Save as MDX",
+      "tool.check_mdx": "Checks MDX with MDX's own compiler and gives the first problem with its line and column. Use it after writing or changing an .mdx document, before saying it works.",
+      "problem": "Line {0}: {1}",
+      "saveFirst": "Save the document first: the copy is saved beside it.",
+      "notMdx": "This isn't an MDX document.",
+      "notMarkdown": "This isn't a Markdown document.",
+      "unreadable": "It can't be read as MDX: line {0}, {1}",
+      "empty": "Open an MDX document to see it here."
+    },
+    "zh": {
+      "name": "MDX",
+      "description": "写 MDX 文档（Docusaurus、Nextra 等）：用 MDX 官方编译器检查并在出错处标出，旁边预览且不运行其中的代码，还能和 Markdown 互相转换。",
+      "preview": "预览 MDX",
+      "toMarkdown": "另存为 Markdown",
+      "toMdx": "另存为 MDX",
+      "tool.check_mdx": "用 MDX 官方编译器检查 MDX，给出第一个问题和它的行、列。写完或改完 .mdx 文档后、说它能用之前先查。",
+      "problem": "第 {0} 行：{1}",
+      "saveFirst": "请先保存文档：副本会存在它旁边。",
+      "notMdx": "这不是 MDX 文档。",
+      "notMarkdown": "这不是 Markdown 文档。",
+      "unreadable": "不能按 MDX 读：第 {0} 行，{1}",
+      "empty": "打开一个 MDX 文档，这里就会显示它。"
+    },
+    "zh-Hant": {
+      "name": "MDX",
+      "description": "撰寫 MDX 文件（Docusaurus、Nextra 等）：用 MDX 官方編譯器檢查並在出錯處標出，旁邊預覽且不執行其中的程式碼，還能和 Markdown 互相轉換。",
+      "preview": "預覽 MDX",
+      "toMarkdown": "另存為 Markdown",
+      "toMdx": "另存為 MDX",
+      "tool.check_mdx": "用 MDX 官方編譯器檢查 MDX，給出第一個問題和它的行、列。寫完或改完 .mdx 文件後、說它能用之前先查。",
+      "problem": "第 {0} 行：{1}",
+      "saveFirst": "請先儲存文件：副本會存在它旁邊。",
+      "notMdx": "這不是 MDX 文件。",
+      "notMarkdown": "這不是 Markdown 文件。",
+      "unreadable": "無法以 MDX 讀取：第 {0} 行，{1}",
+      "empty": "開啟一份 MDX 文件，這裡就會顯示它。"
+    },
+    "ja": {
+      "name": "MDX",
+      "description": "MDX 文書（Docusaurus、Nextra など）を書くためのプラグイン。MDX 公式のコンパイラで問題に下線を引き、コードを実行せずに横でプレビューし、Markdown との相互変換もできます。",
+      "preview": "MDX をプレビュー",
+      "toMarkdown": "Markdown として保存",
+      "toMdx": "MDX として保存",
+      "problem": "{0} 行目：{1}",
+      "saveFirst": "先に文書を保存してください。コピーはその隣に保存されます。",
+      "notMdx": "MDX 文書ではありません。",
+      "notMarkdown": "Markdown 文書ではありません。",
+      "unreadable": "MDX として読めません：{0} 行目、{1}",
+      "empty": "MDX 文書を開くと、ここに表示されます。",
+      "tool.check_mdx": "MDX 公式のコンパイラで MDX を検査し、最初の問題とその行・列を返します。.mdx 文書を書いたり変えたりしたあと、動くと言う前に使ってください。"
+    },
+    "ko": {
+      "name": "MDX",
+      "description": "MDX 문서(Docusaurus, Nextra 등) 작성: MDX 공식 컴파일러로 문제에 밑줄을 긋고, 코드를 실행하지 않고 옆에서 미리 보며, Markdown과 서로 변환합니다.",
+      "preview": "MDX 미리보기",
+      "toMarkdown": "Markdown으로 저장",
+      "toMdx": "MDX로 저장",
+      "problem": "{0}행: {1}",
+      "saveFirst": "먼저 문서를 저장하세요. 사본은 그 옆에 저장됩니다.",
+      "notMdx": "MDX 문서가 아닙니다.",
+      "notMarkdown": "Markdown 문서가 아닙니다.",
+      "unreadable": "MDX로 읽을 수 없습니다: {0}행, {1}",
+      "empty": "MDX 문서를 열면 여기에 표시됩니다.",
+      "tool.check_mdx": "MDX 공식 컴파일러로 MDX를 검사해 첫 번째 문제와 그 행·열을 알려 줍니다. .mdx 문서를 쓰거나 고친 뒤, 된다고 말하기 전에 사용하세요."
+    },
+    "es": {
+      "name": "MDX",
+      "description": "Escribe documentos MDX (Docusaurus, Nextra…): el compilador oficial de MDX subraya sus problemas, una vista previa al lado no ejecuta nada de su código, y se convierten a Markdown y de vuelta.",
+      "preview": "Vista previa de MDX",
+      "toMarkdown": "Guardar como Markdown",
+      "toMdx": "Guardar como MDX",
+      "problem": "Línea {0}: {1}",
+      "saveFirst": "Guarda primero el documento: la copia se guarda a su lado.",
+      "notMdx": "Este no es un documento MDX.",
+      "notMarkdown": "Este no es un documento Markdown.",
+      "unreadable": "No se puede leer como MDX: línea {0}, {1}",
+      "empty": "Abre un documento MDX para verlo aquí.",
+      "tool.check_mdx": "Comprueba MDX con el compilador oficial de MDX y da el primer problema con su línea y columna. Úsala tras escribir o cambiar un documento .mdx, antes de decir que funciona."
+    },
+    "fr": {
+      "name": "MDX",
+      "description": "Écrivez des documents MDX (Docusaurus, Nextra…) : le compilateur officiel de MDX souligne leurs problèmes, un aperçu à côté n’exécute rien de leur code, et ils se convertissent en Markdown et inversement.",
+      "preview": "Aperçu MDX",
+      "toMarkdown": "Enregistrer en Markdown",
+      "toMdx": "Enregistrer en MDX",
+      "problem": "Ligne {0} : {1}",
+      "saveFirst": "Enregistrez d’abord le document : la copie est enregistrée à côté.",
+      "notMdx": "Ce n’est pas un document MDX.",
+      "notMarkdown": "Ce n’est pas un document Markdown.",
+      "unreadable": "Illisible en MDX : ligne {0}, {1}",
+      "empty": "Ouvrez un document MDX pour le voir ici.",
+      "tool.check_mdx": "Vérifie du MDX avec le compilateur officiel de MDX et donne le premier problème avec sa ligne et sa colonne. À utiliser après avoir écrit ou modifié un document .mdx, avant de dire qu’il fonctionne."
+    },
+    "de": {
+      "name": "MDX",
+      "description": "MDX-Dokumente schreiben (Docusaurus, Nextra …): Der offizielle MDX-Compiler unterstreicht Probleme, eine Vorschau daneben führt keinen ihrer Codes aus, und sie lassen sich in Markdown und zurück umwandeln.",
+      "preview": "MDX-Vorschau",
+      "toMarkdown": "Als Markdown speichern",
+      "toMdx": "Als MDX speichern",
+      "problem": "Zeile {0}: {1}",
+      "saveFirst": "Speichere das Dokument zuerst: Die Kopie wird daneben gespeichert.",
+      "notMdx": "Das ist kein MDX-Dokument.",
+      "notMarkdown": "Das ist kein Markdown-Dokument.",
+      "unreadable": "Nicht als MDX lesbar: Zeile {0}, {1}",
+      "empty": "Öffne ein MDX-Dokument, um es hier zu sehen.",
+      "tool.check_mdx": "Prüft MDX mit dem offiziellen MDX-Compiler und nennt das erste Problem mit Zeile und Spalte. Nach dem Schreiben oder Ändern eines .mdx-Dokuments verwenden, bevor du sagst, dass es funktioniert."
+    },
+    "ru": {
+      "name": "MDX",
+      "description": "Пишите документы MDX (Docusaurus, Nextra…): официальный компилятор MDX подчёркивает ошибки, предпросмотр рядом не запускает их код, а документ можно перевести в Markdown и обратно.",
+      "preview": "Предпросмотр MDX",
+      "toMarkdown": "Сохранить как Markdown",
+      "toMdx": "Сохранить как MDX",
+      "problem": "Строка {0}: {1}",
+      "saveFirst": "Сначала сохраните документ: копия сохранится рядом.",
+      "notMdx": "Это не документ MDX.",
+      "notMarkdown": "Это не документ Markdown.",
+      "unreadable": "Не читается как MDX: строка {0}, {1}",
+      "empty": "Откройте документ MDX, чтобы увидеть его здесь.",
+      "tool.check_mdx": "Проверяет MDX официальным компилятором MDX и сообщает первую ошибку со строкой и столбцом. Используйте после того, как написали или изменили документ .mdx, прежде чем сказать, что он работает."
+    },
+    "pt": {
+      "name": "MDX",
+      "description": "Escreva documentos MDX (Docusaurus, Nextra…): o compilador oficial do MDX sublinha os problemas, uma pré-visualização ao lado não executa nada do seu código, e eles convertem-se para Markdown e de volta.",
+      "preview": "Pré-visualizar MDX",
+      "toMarkdown": "Guardar como Markdown",
+      "toMdx": "Guardar como MDX",
+      "problem": "Linha {0}: {1}",
+      "saveFirst": "Guarde primeiro o documento: a cópia é guardada ao lado.",
+      "notMdx": "Este não é um documento MDX.",
+      "notMarkdown": "Este não é um documento Markdown.",
+      "unreadable": "Não se lê como MDX: linha {0}, {1}",
+      "empty": "Abra um documento MDX para o ver aqui.",
+      "tool.check_mdx": "Verifica MDX com o compilador oficial do MDX e dá o primeiro problema com a sua linha e coluna. Use-a depois de escrever ou alterar um documento .mdx, antes de dizer que funciona."
+    }
+  }
+}

@@ -290,14 +290,7 @@
       if (changed) commit(input.value.trim());
       if (!changed || stale) render();
     };
-    input.addEventListener("keydown", (e) => {
-      // An input method's Enter picks its words; it doesn't end the edit.
-      if (e.isComposing || e.keyCode === 229) return;
-      if (e.key === "Enter") finish(true);
-      if (e.key === "Escape") finish(false);
-    });
-    // Not while Textus's text menu is open over it (data-menu-open).
-    input.addEventListener("blur", () => input.hasAttribute("data-menu-open") || finish(true));
+    window.inlineField(input, finish);
     td.replaceChildren(input);
     input.focus();
     if (kind === "text" || kind === "date") input.select();

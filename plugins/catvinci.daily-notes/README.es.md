@@ -23,6 +23,7 @@ El complemento lee y escribe archivos de la carpeta abierta para encontrar y cre
 
 ## Cambios
 
+- **0.7.6** - La página sigue el idioma de Textus por sí sola. Requiere Textus 1.4.3.
 - **0.7.5** - El título del mes del calendario empieza a la izquierda y termina en puntos suspensivos en una barra lateral estrecha.
 - **0.7.4** - En un panel estrecho, como en el móvil, el calendario muestra el nombre corto del mes en lugar de cortar el largo.
 - **0.7.3** - Se rechazan fechas imposibles como el 30 de febrero, el calendario mantiene un ancho cómodo en paneles anchos y se redibuja al cambiar los ajustes de carpetas, y los ajustes semanales y mensuales solo aparecen si esas notas están activadas.

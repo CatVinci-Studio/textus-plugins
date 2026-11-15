@@ -7,8 +7,6 @@ window.databaseDates = function (page) {
   /** A date as it is written in the note, the way the table shows it: the
    *  system's date field would show it in its own order (11/02/2026). */
   const DATE = /^\d{4}-\d{2}-\d{2}([ T]\d{2}:\d{2}(:\d{2})?)?$/;
-  const pad = (n) => String(n).padStart(2, "0");
-  const dayOf = (d) => d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate());
 
   /** The month to show for what the field holds: its own, else this one. */
   function monthOf(text) {
@@ -29,7 +27,6 @@ window.databaseDates = function (page) {
     function draw() {
       const typed = input.value.trim();
       const chosen = DATE.test(typed) ? typed.slice(0, 10) : "";
-      const today = dayOf(new Date());
       const shift = (n) => {
         month = new Date(month.getFullYear(), month.getMonth() + n, 1);
         draw();
@@ -38,21 +35,13 @@ window.databaseDates = function (page) {
         el("button", { type: "button", class: "tx-icon-button", "aria-label": s("prev"), onclick: () => shift(-1) }, icon("left")),
         el("strong", null, new Intl.DateTimeFormat(lang, { year: "numeric", month: "long" }).format(month)),
         el("button", { type: "button", class: "tx-icon-button", "aria-label": s("next"), onclick: () => shift(1) }, icon("right")));
-      // Monday first, as the calendar view.
-      const start = new Date(month);
-      start.setDate(1 - ((month.getDay() + 6) % 7));
-      const cells = [];
-      for (let i = 0; i < 7; i++) {
-        const d = new Date(start);
-        d.setDate(start.getDate() + i);
-        cells.push(el("span", { class: "date-pop-weekday" }, new Intl.DateTimeFormat(lang, { weekday: "narrow" }).format(d)));
-      }
-      for (let i = 0; i < 42; i++) {
-        const d = new Date(start);
-        d.setDate(start.getDate() + i);
-        const k = dayOf(d);
-        const cls = "date-pop-day" + (d.getMonth() !== month.getMonth() ? " other" : "") + (k === today ? " today" : "") + (k === chosen ? " chosen" : "");
-        cells.push(el("button", { type: "button", class: cls, "aria-pressed": String(k === chosen), onclick: () => pick(k) }, String(d.getDate())));
+      // Monday first, as the calendar view; Textus's month.
+      const days = window.textus.monthDays(month.getFullYear(), month.getMonth(), { weekStart: 1 });
+      const cells = days.slice(0, 7).map((g) =>
+        el("span", { class: "date-pop-weekday" }, new Intl.DateTimeFormat(lang, { weekday: "narrow" }).format(new Date(g.date + "T00:00:00"))));
+      for (const g of days) {
+        const cls = "date-pop-day" + (g.inMonth ? "" : " other") + (g.today ? " today" : "") + (g.date === chosen ? " chosen" : "");
+        cells.push(el("button", { type: "button", class: cls, "aria-pressed": String(g.date === chosen), onclick: () => pick(g.date) }, String(g.day)));
       }
       pop.replaceChildren(head, el("div", { class: "date-pop-grid" }, cells));
     }
