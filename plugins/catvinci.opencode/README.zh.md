@@ -1,6 +1,6 @@
 # OpenCode
 
-在 Textus AI 里和 OpenCode 对话，用你给它配置的任意模型。它会读打开的文件夹、写和改笔记，每次改动前先问你：Textus 会显示它想做什么，由你决定是否允许。它改过的地方在文档里有标记，一步就能撤销。
+在 Textus AI 里和 OpenCode 对话，用你给它配置的任意模型。它会读打开的文件夹、写和改笔记，每次改动前先问你：Textus 会显示它想做什么，由你决定是否允许。它改过的地方在文档里有标记，一步就能撤销。想让它不再询问，可在模型旁的菜单里选「全部允许」（需 Textus 1.4.3 或更新）。
 
 1. 如果这台电脑还没有 [Node.js](https://nodejs.org)，先安装。
 2. 在 OpenCode 里登录一次模型服务：在终端运行 `opencode auth login`。
@@ -12,5 +12,6 @@ Textus 用 `npx` 运行 [OpenCode](https://opencode.ai) 的 `opencode acp`（它
 
 ## 更新
 
+- **0.1.2** - 每次修改和运行命令前都会先问你，与说明一致：OpenCode 默认不询问就执行。
 - **0.1.1** - 需要 Textus 1.4.2 或更新版本，以使用新的助手界面。
 - **0.1.0** - 第一个版本：在 Textus AI 里用 OpenCode。
