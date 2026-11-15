@@ -10,5 +10,6 @@ The plugin asks for no permissions: it only reads the file you open in it.
 
 ## Changes
 
+- **0.1.2** - The page follows Textus's language by itself. Needs Textus 1.4.3.
 - **0.1.1** - The page listens only to Textus: scripts in the HTML file it shows can't change what it displays.
 - **0.1.0** - First version: .html files in a tab as pages, and Edit source.

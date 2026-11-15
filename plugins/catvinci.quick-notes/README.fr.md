@@ -28,6 +28,7 @@ Fonctionne sur ordinateur.
 
 ## Changements
 
+- **0.5.4** - La page suit la langue de Textus d’elle-même. Nécessite Textus 1.4.3.
 - **0.5.3** - Créer une note pendant une recherche efface celle-ci pour afficher la nouvelle note ; le clic droit dans le texte d'une note propose aussi annuler, couper, copier et coller ; une recherche sans résultat l'indique.
 - **0.5.2** - Dans la barre latérale, le panneau n’affiche plus son propre titre, comme les autres onglets. Textes d'aide et d'état vide plus courts. Son panneau latéral et sa page suivent la mise en page de Textus 1.3.13. Sans note, la liste explique son usage et propose Nouvelle ; la zone d'une note grandit avec son texte.
 - **0.5.1** - Ses barres, listes et contrôles sont désormais ceux de Textus, grandissent avec l’interface et suivent chaque thème ; nécessite Textus 1.3.12.

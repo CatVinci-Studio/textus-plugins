@@ -1,7 +1,7 @@
 {
   "id": "catvinci.slides",
   "name": "%name%",
-  "version": "0.3.8",
+  "version": "0.3.9",
   "publisher": "catvinci",
   "author": "CatVinci Studio",
   "description": "%description%",
@@ -9,7 +9,7 @@
   "license": "MIT",
   "repository": "https://github.com/CatVinci-Studio/textus-plugins",
   "engines": {
-    "textus": ">=1.4.0"
+    "textus": ">=1.4.3"
   },
   "platforms": ["desktop", "ios"],
   "main": [

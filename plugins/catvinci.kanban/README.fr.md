@@ -36,7 +36,7 @@ kanban-plugin: board
 
 ## Changements
 
-- **0.4.9** - Un clic droit sur une carte ou un nom de liste en cours d'édition (pour coller) ne termine plus l'édition, et la touche Entrée d'une méthode de saisie sur iPhone et iPad choisit les mots au lieu d'enregistrer.
+- **0.4.9** - Un clic droit sur une carte ou un nom de liste en cours d'édition (pour coller) ne termine plus l'édition, et la touche Entrée d'une méthode de saisie sur iPhone et iPad choisit les mots au lieu d'enregistrer. La page suit la langue de Textus d’elle-même. Nécessite Textus 1.4.3.
 - **0.4.8** - Un tableau aux fins de ligne Windows (CRLF) les garde, et un tableau modifié ailleurs pendant que vous l'éditez affiche ce changement au lieu de l'écraser, et le signale. La description de la boutique commence désormais par ce que fait le plugin.
 - **0.4.7** - Une ligne vide dans une carte ne la coupe plus, et Échap ne laisse plus de carte vide. L’IA laisse les notes ordinaires tranquilles, et le tableau tient dans les panneaux étroits.
 - **0.4.6** - Le tableau s’estompe sur les bords quand des listes dépassent la fenêtre.

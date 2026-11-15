@@ -13,6 +13,7 @@ The plugin asks for no permissions: it only reads the file you open in it. It wo
 
 ## Changes
 
+- **0.2.7** - The page follows Textus's language by itself. Needs Textus 1.4.3.
 - **0.2.6** - Zoom buttons and keys step by 1.25×, as the other viewers do.
 - **0.2.5** - The find bar's close button is named for screen readers and shows a tooltip.
 - **0.2.4** - Opens fitted to the tab's width; a pinch or Ctrl+wheel (⌘ on a Mac) zooms the pages; a page wider than the tab scrolls to both edges; the bars wrap in a narrow tab and the zoom is kept when the language changes.

@@ -23,6 +23,7 @@ L'extension lit et écrit des fichiers du dossier ouvert pour trouver et créer 
 
 ## Changements
 
+- **0.7.6** - La page suit la langue de Textus d’elle-même. Nécessite Textus 1.4.3.
 - **0.7.5** - Le titre du mois du calendrier commence à gauche et se termine par des points de suspension dans une barre latérale étroite.
 - **0.7.4** - Dans un panneau étroit, comme sur un téléphone, le calendrier affiche le nom court du mois au lieu de couper le nom long.
 - **0.7.3** - Les dates impossibles comme le 30 février sont refusées, le calendrier garde une largeur confortable dans les panneaux larges et se redessine quand les réglages de dossiers changent, et les réglages hebdomadaires et mensuels n'apparaissent que si ces notes sont activées.

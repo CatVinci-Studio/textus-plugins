@@ -15,6 +15,7 @@ It asks for no permissions: Textus hands it the PDF you open.
 
 ## Changes
 
+- **0.2.7** - The page follows Textus's language by itself. Needs Textus 1.4.3.
 - **0.2.6** - Zoom buttons and keys step by 1.25×, as the other viewers do.
 - **0.2.5** - A long PDF scrolled end to end holds far less memory: pages out of sight let go of their pictures too.
 - **0.2.4** - Its bar wraps in a narrow panel, and find no longer mixes in results for an earlier word.

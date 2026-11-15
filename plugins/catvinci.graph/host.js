@@ -170,13 +170,7 @@ function wire(webview, isLocal) {
 }
 
 async function page(webview, file) {
-  const html = await ctx.plugin.readText(file);
-  webview.html = html.replace("{{lang}}", textus.env.language);
-  // Drawn again in the interface's language when that changes.
-  const relabel = textus.env.onDidChangeLanguage(() => {
-    webview.html = html.replace("{{lang}}", textus.env.language);
-  });
-  webview.onDidDispose(() => relabel.dispose());
+  webview.html = await ctx.plugin.readText(file);
 }
 
 /** Textus AI's tool: the notes within `depth` links of one, either way,

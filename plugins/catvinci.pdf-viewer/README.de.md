@@ -15,6 +15,7 @@ Es braucht keine Berechtigungen: Textus übergibt ihm das PDF, das Sie öffnen.
 
 ## Änderungen
 
+- **0.2.7** - Die Seite folgt der Sprache von Textus von selbst. Benötigt Textus 1.4.3.
 - **0.2.6** - Zoom-Knöpfe und -Tasten gehen in Schritten von 1,25×, wie in den anderen Ansichten.
 - **0.2.5** - Ein langes PDF, durchgeblättert bis zum Ende, belegt viel weniger Speicher: Seiten außer Sicht geben auch ihre Bilder frei.
 - **0.2.4** - Die Leiste bricht in einem schmalen Bereich um, und die Suche mischt keine Treffer eines früheren Worts mehr ein.

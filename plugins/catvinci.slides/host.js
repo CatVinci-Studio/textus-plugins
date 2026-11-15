@@ -200,13 +200,7 @@ exports.activate = function (ctx) {
   ctx.subscriptions.push(
     textus.views.registerWebview("catvinci.slides.view", {
       async resolve(webview) {
-        const page = await ctx.plugin.readText("slides.html");
-        webview.html = page.replace("{{lang}}", textus.env.language);
-        // Drawn again in the interface's language when that changes.
-        const relabel = textus.env.onDidChangeLanguage(() => {
-          webview.html = page.replace("{{lang}}", textus.env.language);
-        });
-        webview.onDidDispose(() => relabel.dispose());
+        webview.html = await ctx.plugin.readText("slides.html");
         views.add(webview);
         webview.onDidDispose(() => {
           views.delete(webview);
