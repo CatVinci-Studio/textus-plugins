@@ -27,7 +27,7 @@ Pede apenas **Ferramentas para o Textus AI**, para que o Textus AI possa verific
 
 ## Alterações
 
-- **0.3.3** - Legível no modo escuro: linhas e texto nas cores do tema; o que foi desenhado com o bloco recolhido ajusta-se ao abrir.
+- **0.3.3** - Legível no modo escuro: linhas e texto nas cores do tema; o que foi desenhado com o bloco recolhido ajusta-se ao abrir. Um diagrama longo encolhe para a largura da coluna em vez de ser cortado.
 - **0.3.2** - Os diagramas usam a fonte e a cor de linha do tema, acompanham o zoom do documento, e `height=` agora muda o tamanho do próprio diagrama.
 - **0.3.1** - Sua página agora diz em uma frase o que ele faz, o que pode fazer e o que mudou em cada versão.
 - **0.3.0** - uma ferramenta para o Textus AI, `check_wavedrom`

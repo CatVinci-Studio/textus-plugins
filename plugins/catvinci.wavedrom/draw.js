@@ -44,6 +44,8 @@ function onScreen(svg, meta) {
   var height = parseFloat(meta.height);
   svg.style.height = height > 0 ? height + "px" : "auto";
   svg.style.width = height > 0 ? "auto" : "calc(" + width + "px * var(--ui-text-scale, 1))";
+  // A long one shrinks to the column rather than being cut.
+  svg.style.maxWidth = "100%";
 }
 
 drawChartBlock({
