@@ -113,7 +113,6 @@ describe("every example", () => {
     expect(kinds.sort()).toEqual([
       "ai-tool",
       "code-block",
-      "document-type",
       "hello",
       "page",
     ]);
