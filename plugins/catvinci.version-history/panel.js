@@ -17,6 +17,8 @@
   const when = (at) =>
     new Date(at).toLocaleString(api.language, { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" });
   const labelOf = (v) => v.name || when(v.at);
+  /** A row's time: its day is the heading above it. */
+  const timeOf = (at) => new Date(at).toLocaleTimeString(api.language, { hour: "2-digit", minute: "2-digit" });
   const el = (tag, className, text) => {
     const node = document.createElement(tag);
     if (className) node.className = className;
@@ -131,7 +133,7 @@
     const toggle = el("button", isOpen ? "row-head" : "tx-list-row");
     toggle.dataset.id = version.id;
     toggle.setAttribute("aria-expanded", String(isOpen));
-    const stamp = el("span", "when tx-list-label", when(version.at));
+    const stamp = el("span", "when tx-list-label", timeOf(version.at));
     if (version.name) stamp.prepend(el("strong", "name", version.name + " "));
     if (version.pinned) stamp.append(" ", el("span", "tx-tag", t("pinned")));
     const meta = el("span", "delta tx-list-meta");

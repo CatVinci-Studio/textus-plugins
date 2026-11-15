@@ -34,19 +34,19 @@
 .delta .minus {
   color: var(--tone-red-text);
 }
+/* Prose, read as prose: the page's font, a step down. */
 .diff {
   margin: var(--space-2) 0;
   max-height: 20em;
   overflow: auto;
-  font-family: var(--font-mono);
-  font-size: var(--text-caption);
-  line-height: 1.45;
+  font-size: var(--text-footnote);
+  line-height: 1.5;
   white-space: pre-wrap;
   word-break: break-word;
   border-radius: var(--shape-s);
 }
 .diff div {
-  padding: 0 var(--space-2);
+  padding: 1px var(--space-2);
 }
 .diff .added {
   background: var(--tone-green-tint);
