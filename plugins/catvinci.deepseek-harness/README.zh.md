@@ -8,12 +8,14 @@
 
 Textus 用 `npx` 运行 [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) 的 `dsh --profile acp`（它的 Agent Client Protocol 服务）。key 和用量都是 DeepSeek 的，Textus 不保存它的 key。DeepSeek Harness 还是预览版，行为可能会变。
 
+Textus 让它在只读沙盒里运行：读文件、搜索不问，写文件或跑会改东西的命令前先问你。
+
 DeepSeek Harness 默认会把会话记录发给 DeepSeek；可以在 `dsh web` 的 Settings › General 里关掉。Textus 关掉了它的使用统计。
 
 只在桌面版可用，需要 Textus 1.4.3 或更新版本。它只申请一项权限：在这台电脑上启动这个 agent。
 
 ## 更新
 
-- **0.1.2** - 关掉使用统计，安装说明写明版本和 Node.js 24.9。需要 Textus 1.4.3。
+- **0.1.2** - 写文件、跑会改东西的命令前先问你（以前两样都不问）。关掉使用统计，安装说明写明版本和 Node.js 24.9。需要 Textus 1.4.3。
 - **0.1.1** - 需要 Textus 1.4.2 或更新版本，以使用新的助手界面。
 - **0.1.0** - 第一个版本：在 Textus AI 里用 DeepSeek Harness。

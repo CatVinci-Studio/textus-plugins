@@ -32,6 +32,7 @@
         "setup": "%setup%",
         "provider": "deepseek",
         "env": {
+          "DSH_PERMISSION_MODE": "read-only",
           "DSH_TELEMETRY_DISABLED": "1"
         }
       }
