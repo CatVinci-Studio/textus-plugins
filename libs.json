@@ -116,8 +116,5 @@
   "catvinci.mdx/lib/mdx.js": "./vendor/mdx.js",
   "catvinci.version-history/lib/text-diff.js": "./shared/text-diff.js",
   "catvinci.git/lib/text-diff.js": "./shared/text-diff.js",
-  "catvinci.git/lib/folder-paths.js": "./shared/folder-paths.js",
-  "catvinci.ocr/lib/folder-paths.js": "./shared/folder-paths.js",
-  "catvinci.ocr/lib/pdf.min.mjs": "pdfjs-dist/legacy/build/pdf.min.mjs",
-  "catvinci.ocr/lib/pdf.worker.min.mjs": "pdfjs-dist/legacy/build/pdf.worker.min.mjs"
+  "catvinci.git/lib/folder-paths.js": "./shared/folder-paths.js"
 }

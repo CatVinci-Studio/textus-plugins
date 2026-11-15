@@ -88,8 +88,9 @@ async function commit() {
 /** A path the AI gave, in the open folder; else an error. */
 async function fileOf(input) {
   const root = await textus.files.root();
-  const file = folderPaths.resolve(root, input.path, false);
-  return file ? Object.assign({ root: root }, file) : { error: "path must be a file's path in the open folder." };
+  const rel = root && input.path && folderPaths.clean(root, input.path, false);
+  if (!rel) return { error: "path must be a file's path in the open folder." };
+  return { path: folderPaths.abs(root, rel), rel: rel, root: root };
 }
 
 async function gitChanges() {

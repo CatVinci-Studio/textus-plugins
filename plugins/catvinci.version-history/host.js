@@ -156,8 +156,9 @@ const CONTEXT = 2;
 async function documentOf(input) {
   const root = await textus.files.root();
   if (input.path) {
-    const doc = folderPaths.resolve(root, input.path, true);
-    return doc ? { path: doc.path, name: doc.rel } : { error: "path must be a document's path in the open folder." };
+    const rel = root && folderPaths.clean(root, input.path, true);
+    if (!rel) return { error: "path must be a document's path in the open folder." };
+    return { path: folderPaths.abs(root, rel), name: rel };
   }
   const path = await textus.editor.getPath();
   if (!path) return { error: "No document is open." };

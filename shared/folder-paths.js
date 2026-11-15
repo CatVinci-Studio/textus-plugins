@@ -40,15 +40,5 @@ var folderPaths = (function () {
     return p;
   }
 
-  /** A path Textus AI gave, in the folder: `{ path, rel }`; null when it
-   *  leaves the folder or there is none. */
-  function resolve(root, path, ext) {
-    var p = root && path ? clean(root, path, ext) : null;
-    return p ? { path: abs(root, p), rel: p } : null;
-  }
-
-  /** The last part of a path: a file's name. */
-  var name = (path) => String(path).split(/[\\/]/).pop();
-
-  return { abs: abs, rel: rel, clean: clean, resolve: resolve, name: name, slash: slash, native: native };
+  return { abs: abs, rel: rel, clean: clean, slash: slash, native: native };
 })();
