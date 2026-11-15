@@ -36,6 +36,7 @@ The plugins for [Textus](https://textus.md), the Markdown editor. None of them c
 | MDX | Write MDX documents (Docusaurus, Nextra…) with their problems underlined by MDX's own compiler, a preview beside them that runs none of their code, and conversion to Markdown and back. |
 | Mind Map | Draws a Markdown outline - headings and lists - as a mind map. |
 | Notion Import | Brings in a Notion export (the .zip or its folder) as plain Markdown notes: pages within pages as folders, databases in Obsidian's Bases format, pictures and files beside their pages. Pair it with Wiki to see the pages tree and the databases. |
+| OCR | Scanned PDFs and pictures read into Markdown by an OCR model on your computer (Xiaomi-OCR-0 through Ollama by default): right-click one to convert it, and Textus AI can read them too. The model is downloaded only when you say so. |
 | OpenCode | OpenCode in Textus AI: any model it is set up with reads your folder, writes and edits your notes, and asks before it changes anything. |
 | Openverse Pictures | Openly licensed pictures for Textus AI: it finds them on Openverse (Flickr, museums and more) - CC BY, CC BY-SA, CC0 and public domain only - each with the credit its licence asks for. No account or key; Openverse allows about 200 searches a day. |
 | PDF Viewer | Open PDFs in a tab beside your notes: pages, zoom, and text to select and copy. |

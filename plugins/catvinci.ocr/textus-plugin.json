@@ -1,0 +1,370 @@
+{
+  "id": "catvinci.ocr",
+  "name": "%name%",
+  "version": "0.1.0",
+  "publisher": "catvinci",
+  "author": "CatVinci Studio",
+  "description": "%description%",
+  "icon": "icon.svg",
+  "license": "MIT",
+  "repository": "https://github.com/CatVinci-Studio/textus-plugins",
+  "engines": {
+    "textus": ">=1.4.3"
+  },
+  "platforms": [
+    "desktop"
+  ],
+  "main": [
+    "lib/folder-paths.js",
+    "host.js"
+  ],
+  "permissions": [
+    "files.read",
+    "files.write",
+    "editor.read",
+    "ai.tools",
+    "network:localhost",
+    "network:127.0.0.1"
+  ],
+  "contributes": {
+    "commands": [
+      {
+        "command": "catvinci.ocr.convert",
+        "title": "%convert%"
+      }
+    ],
+    "menus": {
+      "file/context": [
+        {
+          "command": "catvinci.ocr.convert",
+          "when": "fileExtension == .pdf || fileExtension == .png || fileExtension == .jpg || fileExtension == .jpeg || fileExtension == .webp"
+        }
+      ],
+      "app/plugins": [
+        {
+          "command": "catvinci.ocr.convert"
+        }
+      ]
+    },
+    "views": [
+      {
+        "id": "catvinci.ocr.run",
+        "title": "OCR",
+        "type": "webview"
+      }
+    ],
+    "settings": [
+      {
+        "key": "server",
+        "type": "string",
+        "default": "http://localhost:11434",
+        "title": "%server%",
+        "description": "%serverHelp%"
+      },
+      {
+        "key": "model",
+        "type": "string",
+        "default": "richardyoung/xiaomi-ocr-0",
+        "title": "%model%",
+        "description": "%modelHelp%"
+      }
+    ],
+    "aiTools": [
+      {
+        "name": "read_with_ocr",
+        "description": "%tool.read_with_ocr%",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "path": {
+              "type": "string",
+              "description": "The PDF's or picture's path in the open folder."
+            },
+            "pages": {
+              "type": "array",
+              "items": {
+                "type": "number"
+              },
+              "description": "The PDF's page numbers to read, from 1; all when left out."
+            }
+          },
+          "required": [
+            "path"
+          ]
+        }
+      }
+    ]
+  },
+  "l10n": {
+    "en": {
+      "name": "OCR",
+      "description": "Scanned PDFs and pictures read into Markdown by an OCR model on your computer (Xiaomi-OCR-0 through Ollama by default): right-click one to convert it, and Textus AI can read them too. The model is downloaded only when you say so.",
+      "convert": "Convert to Markdown (OCR)",
+      "server": "OCR server",
+      "serverHelp": "Ollama's address, or any OpenAI-compatible server's (LM Studio, vLLM, llama.cpp).",
+      "model": "OCR model",
+      "modelHelp": "The model's name on the server.",
+      "noServer": "No OCR server answers at {0}. Install Ollama from ollama.com and start it, or set another server in this plugin's settings.",
+      "askDownload": "The OCR model {0} isn't on this computer yet. Download it now? It is about 1 GB, and stays on this computer.",
+      "download": "Download",
+      "downloading": "Downloading {0}…",
+      "downloadFailed": "{0} couldn't be downloaded: {1}",
+      "reading": "Reading {0}…",
+      "runTitle": "OCR: {0}",
+      "pageMark": "page {0}",
+      "notReadable": "OCR reads PDFs and PNG, JPEG or WebP pictures.",
+      "failed": "OCR stopped: {0}",
+      "nothingRead": "Nothing was read.",
+      "stop": "Stop",
+      "opening": "Opening…",
+      "readingPage": "Reading page {0} of {1}…",
+      "stoppedAt": "Stopped: the pages read so far are kept.",
+      "done": "Done.",
+      "gone": "This reading has ended.",
+      "tool.read_with_ocr": "Reads a scanned PDF or a picture (PNG, JPEG, WebP) of the open folder into Markdown with OCR on this computer. Use it when read_file gives a PDF's or a picture's text as empty or garbled. pages: the PDF's page numbers to read, all when left out; a long PDF takes a while per page."
+    },
+    "zh": {
+      "name": "OCR",
+      "description": "用你电脑上的 OCR 模型（默认通过 Ollama 运行 Xiaomi-OCR-0）把扫描版 PDF 和图片读成 Markdown：右键就能转换，Textus AI 也能读。模型只在你同意后才下载。",
+      "convert": "转成 Markdown（OCR）",
+      "server": "OCR 服务地址",
+      "serverHelp": "Ollama 的地址，或任何 OpenAI 兼容服务（LM Studio、vLLM、llama.cpp）的地址。",
+      "model": "OCR 模型",
+      "modelHelp": "模型在服务上的名字。",
+      "noServer": "{0} 没有 OCR 服务在运行。请从 ollama.com 安装并启动 Ollama，或在插件设置里换一个服务地址。",
+      "askDownload": "这台电脑上还没有 OCR 模型 {0}。现在下载吗？大约 1 GB，只存在这台电脑上。",
+      "download": "下载",
+      "downloading": "正在下载 {0}…",
+      "downloadFailed": "{0} 没能下载：{1}",
+      "reading": "正在识别 {0}…",
+      "runTitle": "OCR：{0}",
+      "pageMark": "第 {0} 页",
+      "notReadable": "OCR 能读 PDF 和 PNG、JPEG、WebP 图片。",
+      "failed": "OCR 停止了：{0}",
+      "nothingRead": "没有识别出内容。",
+      "stop": "停止",
+      "opening": "正在打开…",
+      "readingPage": "正在识别第 {0} 页，共 {1} 页…",
+      "stoppedAt": "已停止：已经识别的页面会保留。",
+      "done": "完成。",
+      "gone": "这次识别已经结束。",
+      "tool.read_with_ocr": "Reads a scanned PDF or a picture (PNG, JPEG, WebP) of the open folder into Markdown with OCR on this computer. Use it when read_file gives a PDF's or a picture's text as empty or garbled. pages: the PDF's page numbers to read, all when left out; a long PDF takes a while per page."
+    },
+    "zh-Hant": {
+      "name": "OCR",
+      "description": "用你電腦上的 OCR 模型（預設透過 Ollama 執行 Xiaomi-OCR-0）把掃描版 PDF 和圖片讀成 Markdown：按右鍵就能轉換，Textus AI 也能讀。模型只在你同意後才下載。",
+      "convert": "轉成 Markdown（OCR）",
+      "server": "OCR 服務位址",
+      "serverHelp": "Ollama 的位址，或任何 OpenAI 相容服務（LM Studio、vLLM、llama.cpp）的位址。",
+      "model": "OCR 模型",
+      "modelHelp": "模型在服務上的名稱。",
+      "noServer": "{0} 沒有 OCR 服務在執行。請從 ollama.com 安裝並啟動 Ollama，或在外掛設定中換一個服務位址。",
+      "askDownload": "這台電腦上還沒有 OCR 模型 {0}。現在下載嗎？大約 1 GB，只存在這台電腦上。",
+      "download": "下载",
+      "downloading": "正在下載 {0}…",
+      "downloadFailed": "{0} 無法下載：{1}",
+      "reading": "正在辨識 {0}…",
+      "runTitle": "OCR：{0}",
+      "pageMark": "第 {0} 页",
+      "notReadable": "OCR 能讀 PDF 和 PNG、JPEG、WebP 圖片。",
+      "failed": "OCR 停止了：{0}",
+      "nothingRead": "沒有辨識出內容。",
+      "stop": "停止",
+      "opening": "正在開啟…",
+      "readingPage": "正在辨識第 {0} 頁，共 {1} 頁…",
+      "stoppedAt": "已停止：已辨識的頁面會保留。",
+      "done": "完成。",
+      "gone": "這次辨識已經結束。",
+      "tool.read_with_ocr": "Reads a scanned PDF or a picture (PNG, JPEG, WebP) of the open folder into Markdown with OCR on this computer. Use it when read_file gives a PDF's or a picture's text as empty or garbled. pages: the PDF's page numbers to read, all when left out; a long PDF takes a while per page."
+    },
+    "ja": {
+      "name": "OCR",
+      "description": "パソコン上の OCR モデル（既定では Ollama で動く Xiaomi-OCR-0）で、スキャンした PDF や画像を Markdown に読み取ります。右クリックで変換でき、Textus AI も読めます。モデルは同意したときだけダウンロードします。",
+      "convert": "Markdown に変換（OCR）",
+      "server": "OCR サーバー",
+      "serverHelp": "Ollama のアドレス、または OpenAI 互換サーバー（LM Studio、vLLM、llama.cpp）のアドレス。",
+      "model": "OCR モデル",
+      "modelHelp": "サーバー上のモデル名。",
+      "noServer": "{0} で OCR サーバーが応答しません。ollama.com から Ollama をインストールして起動するか、プラグインの設定で別のサーバーを指定してください。",
+      "askDownload": "OCR モデル {0} はまだこのパソコンにありません。今ダウンロードしますか？約 1 GB で、このパソコンだけに保存されます。",
+      "download": "ダウンロード",
+      "downloading": "{0} をダウンロード中…",
+      "downloadFailed": "{0} をダウンロードできませんでした：{1}",
+      "reading": "{0} を読み取り中…",
+      "runTitle": "OCR: {0}",
+      "pageMark": "{0} ページ",
+      "notReadable": "OCR は PDF と PNG・JPEG・WebP の画像を読めます。",
+      "failed": "OCR が止まりました：{0}",
+      "nothingRead": "何も読み取れませんでした。",
+      "stop": "停止",
+      "opening": "開いています…",
+      "readingPage": "{1} ページ中 {0} ページ目を読み取り中…",
+      "stoppedAt": "停止しました：読み取ったページは残ります。",
+      "done": "完了。",
+      "gone": "この読み取りは終わりました。",
+      "tool.read_with_ocr": "Reads a scanned PDF or a picture (PNG, JPEG, WebP) of the open folder into Markdown with OCR on this computer. Use it when read_file gives a PDF's or a picture's text as empty or garbled. pages: the PDF's page numbers to read, all when left out; a long PDF takes a while per page."
+    },
+    "ko": {
+      "name": "OCR",
+      "description": "내 컴퓨터의 OCR 모델(기본은 Ollama로 실행하는 Xiaomi-OCR-0)로 스캔한 PDF와 그림을 Markdown으로 읽습니다. 오른쪽 클릭으로 변환하고, Textus AI도 읽을 수 있습니다. 모델은 동의할 때만 내려받습니다.",
+      "convert": "Markdown으로 변환(OCR)",
+      "server": "OCR 서버",
+      "serverHelp": "Ollama 주소, 또는 OpenAI 호환 서버(LM Studio, vLLM, llama.cpp) 주소.",
+      "model": "OCR 모델",
+      "modelHelp": "서버에서의 모델 이름.",
+      "noServer": "{0}에서 OCR 서버가 응답하지 않습니다. ollama.com에서 Ollama를 설치해 실행하거나, 플러그인 설정에서 다른 서버를 지정하세요.",
+      "askDownload": "OCR 모델 {0}이(가) 아직 이 컴퓨터에 없습니다. 지금 내려받을까요? 약 1GB이며 이 컴퓨터에만 저장됩니다.",
+      "download": "내려받기",
+      "downloading": "{0} 내려받는 중…",
+      "downloadFailed": "{0}을(를) 내려받지 못했습니다: {1}",
+      "reading": "{0} 읽는 중…",
+      "runTitle": "OCR: {0}",
+      "pageMark": "{0}쪽",
+      "notReadable": "OCR은 PDF와 PNG, JPEG, WebP 그림을 읽습니다.",
+      "failed": "OCR이 멈췄습니다: {0}",
+      "nothingRead": "읽은 내용이 없습니다.",
+      "stop": "멈추기",
+      "opening": "여는 중…",
+      "readingPage": "{1}쪽 중 {0}쪽 읽는 중…",
+      "stoppedAt": "멈췄습니다: 지금까지 읽은 쪽은 남습니다.",
+      "done": "완료.",
+      "gone": "이 읽기는 끝났습니다.",
+      "tool.read_with_ocr": "Reads a scanned PDF or a picture (PNG, JPEG, WebP) of the open folder into Markdown with OCR on this computer. Use it when read_file gives a PDF's or a picture's text as empty or garbled. pages: the PDF's page numbers to read, all when left out; a long PDF takes a while per page."
+    },
+    "de": {
+      "name": "OCR",
+      "description": "Gescannte PDFs und Bilder mit einem OCR-Modell auf Ihrem Computer (standardmäßig Xiaomi-OCR-0 über Ollama) in Markdown lesen: per Rechtsklick umwandeln, und Textus AI kann sie auch lesen. Das Modell wird nur heruntergeladen, wenn Sie zustimmen.",
+      "convert": "In Markdown umwandeln (OCR)",
+      "server": "OCR-Server",
+      "serverHelp": "Die Adresse von Ollama oder eines OpenAI-kompatiblen Servers (LM Studio, vLLM, llama.cpp).",
+      "model": "OCR-Modell",
+      "modelHelp": "Der Name des Modells auf dem Server.",
+      "noServer": "Unter {0} antwortet kein OCR-Server. Installieren und starten Sie Ollama von ollama.com, oder stellen Sie in den Einstellungen des Plugins einen anderen Server ein.",
+      "askDownload": "Das OCR-Modell {0} ist noch nicht auf diesem Computer. Jetzt herunterladen? Es ist etwa 1 GB groß und bleibt auf diesem Computer.",
+      "download": "Herunterladen",
+      "downloading": "{0} wird heruntergeladen…",
+      "downloadFailed": "{0} konnte nicht heruntergeladen werden: {1}",
+      "reading": "{0} wird gelesen…",
+      "runTitle": "OCR: {0}",
+      "pageMark": "Seite {0}",
+      "notReadable": "OCR liest PDFs sowie PNG-, JPEG- und WebP-Bilder.",
+      "failed": "OCR angehalten: {0}",
+      "nothingRead": "Nichts erkannt.",
+      "stop": "Anhalten",
+      "opening": "Wird geöffnet…",
+      "readingPage": "Seite {0} von {1} wird gelesen…",
+      "stoppedAt": "Angehalten: Die bisher gelesenen Seiten bleiben.",
+      "done": "Fertig.",
+      "gone": "Dieses Lesen ist beendet.",
+      "tool.read_with_ocr": "Reads a scanned PDF or a picture (PNG, JPEG, WebP) of the open folder into Markdown with OCR on this computer. Use it when read_file gives a PDF's or a picture's text as empty or garbled. pages: the PDF's page numbers to read, all when left out; a long PDF takes a while per page."
+    },
+    "fr": {
+      "name": "OCR",
+      "description": "Lit des PDF numérisés et des images en Markdown avec un modèle d’OCR sur votre ordinateur (Xiaomi-OCR-0 via Ollama par défaut) : clic droit pour convertir, et Textus AI peut les lire aussi. Le modèle n’est téléchargé que si vous le demandez.",
+      "convert": "Convertir en Markdown (OCR)",
+      "server": "Serveur d’OCR",
+      "serverHelp": "L’adresse d’Ollama, ou d’un serveur compatible OpenAI (LM Studio, vLLM, llama.cpp).",
+      "model": "Modèle d’OCR",
+      "modelHelp": "Le nom du modèle sur le serveur.",
+      "noServer": "Aucun serveur d’OCR ne répond à {0}. Installez et lancez Ollama depuis ollama.com, ou choisissez un autre serveur dans les réglages du plugin.",
+      "askDownload": "Le modèle d’OCR {0} n’est pas encore sur cet ordinateur. Le télécharger maintenant ? Il fait environ 1 Go et reste sur cet ordinateur.",
+      "download": "Télécharger",
+      "downloading": "Téléchargement de {0}…",
+      "downloadFailed": "{0} n’a pas pu être téléchargé : {1}",
+      "reading": "Lecture de {0}…",
+      "runTitle": "OCR: {0}",
+      "pageMark": "page {0}",
+      "notReadable": "L’OCR lit les PDF et les images PNG, JPEG ou WebP.",
+      "failed": "OCR arrêtée : {0}",
+      "nothingRead": "Rien n’a été lu.",
+      "stop": "Arrêter",
+      "opening": "Ouverture…",
+      "readingPage": "Lecture de la page {0} sur {1}…",
+      "stoppedAt": "Arrêté : les pages déjà lues sont gardées.",
+      "done": "Terminé.",
+      "gone": "Cette lecture est terminée.",
+      "tool.read_with_ocr": "Reads a scanned PDF or a picture (PNG, JPEG, WebP) of the open folder into Markdown with OCR on this computer. Use it when read_file gives a PDF's or a picture's text as empty or garbled. pages: the PDF's page numbers to read, all when left out; a long PDF takes a while per page."
+    },
+    "es": {
+      "name": "OCR",
+      "description": "Lee PDF escaneados e imágenes a Markdown con un modelo de OCR en tu ordenador (Xiaomi-OCR-0 con Ollama por defecto): clic derecho para convertir, y Textus AI también puede leerlos. El modelo solo se descarga cuando lo indicas.",
+      "convert": "Convertir a Markdown (OCR)",
+      "server": "Servidor de OCR",
+      "serverHelp": "La dirección de Ollama, o de un servidor compatible con OpenAI (LM Studio, vLLM, llama.cpp).",
+      "model": "Modelo de OCR",
+      "modelHelp": "El nombre del modelo en el servidor.",
+      "noServer": "Ningún servidor de OCR responde en {0}. Instala e inicia Ollama desde ollama.com, o elige otro servidor en los ajustes del plugin.",
+      "askDownload": "El modelo de OCR {0} aún no está en este ordenador. ¿Descargarlo ahora? Ocupa alrededor de 1 GB y se queda en este ordenador.",
+      "download": "Descargar",
+      "downloading": "Descargando {0}…",
+      "downloadFailed": "No se pudo descargar {0}: {1}",
+      "reading": "Leyendo {0}…",
+      "runTitle": "OCR: {0}",
+      "pageMark": "página {0}",
+      "notReadable": "El OCR lee PDF e imágenes PNG, JPEG o WebP.",
+      "failed": "El OCR se detuvo: {0}",
+      "nothingRead": "No se leyó nada.",
+      "stop": "Detener",
+      "opening": "Abriendo…",
+      "readingPage": "Leyendo la página {0} de {1}…",
+      "stoppedAt": "Detenido: las páginas leídas se conservan.",
+      "done": "Listo.",
+      "gone": "Esta lectura ha terminado.",
+      "tool.read_with_ocr": "Reads a scanned PDF or a picture (PNG, JPEG, WebP) of the open folder into Markdown with OCR on this computer. Use it when read_file gives a PDF's or a picture's text as empty or garbled. pages: the PDF's page numbers to read, all when left out; a long PDF takes a while per page."
+    },
+    "pt": {
+      "name": "OCR",
+      "description": "Lê PDFs digitalizados e imagens em Markdown com um modelo de OCR no seu computador (Xiaomi-OCR-0 via Ollama por padrão): clique com o botão direito para converter, e o Textus AI também os lê. O modelo só é baixado quando você autorizar.",
+      "convert": "Converter para Markdown (OCR)",
+      "server": "Servidor de OCR",
+      "serverHelp": "O endereço do Ollama, ou de um servidor compatível com OpenAI (LM Studio, vLLM, llama.cpp).",
+      "model": "Modelo de OCR",
+      "modelHelp": "O nome do modelo no servidor.",
+      "noServer": "Nenhum servidor de OCR responde em {0}. Instale e inicie o Ollama em ollama.com, ou defina outro servidor nas configurações do plugin.",
+      "askDownload": "O modelo de OCR {0} ainda não está neste computador. Baixar agora? Tem cerca de 1 GB e fica neste computador.",
+      "download": "Baixar",
+      "downloading": "Baixando {0}…",
+      "downloadFailed": "Não foi possível baixar {0}: {1}",
+      "reading": "Lendo {0}…",
+      "runTitle": "OCR: {0}",
+      "pageMark": "página {0}",
+      "notReadable": "O OCR lê PDFs e imagens PNG, JPEG ou WebP.",
+      "failed": "O OCR parou: {0}",
+      "nothingRead": "Nada foi lido.",
+      "stop": "Parar",
+      "opening": "Abrindo…",
+      "readingPage": "Lendo a página {0} de {1}…",
+      "stoppedAt": "Parado: as páginas já lidas ficam.",
+      "done": "Pronto.",
+      "gone": "Esta leitura terminou.",
+      "tool.read_with_ocr": "Reads a scanned PDF or a picture (PNG, JPEG, WebP) of the open folder into Markdown with OCR on this computer. Use it when read_file gives a PDF's or a picture's text as empty or garbled. pages: the PDF's page numbers to read, all when left out; a long PDF takes a while per page."
+    },
+    "ru": {
+      "name": "OCR",
+      "description": "Распознаёт отсканированные PDF и изображения в Markdown моделью OCR на вашем компьютере (по умолчанию Xiaomi-OCR-0 через Ollama): правый щелчок — и файл преобразован, Textus AI тоже может их читать. Модель загружается только с вашего согласия.",
+      "convert": "Преобразовать в Markdown (OCR)",
+      "server": "Сервер OCR",
+      "serverHelp": "Адрес Ollama или любого OpenAI-совместимого сервера (LM Studio, vLLM, llama.cpp).",
+      "model": "Модель OCR",
+      "modelHelp": "Имя модели на сервере.",
+      "noServer": "По адресу {0} не отвечает сервер OCR. Установите и запустите Ollama с ollama.com или укажите другой сервер в настройках плагина.",
+      "askDownload": "Модели OCR {0} ещё нет на этом компьютере. Загрузить сейчас? Около 1 ГБ, она останется только на этом компьютере.",
+      "download": "Загрузить",
+      "downloading": "Загрузка {0}…",
+      "downloadFailed": "Не удалось загрузить {0}: {1}",
+      "reading": "Распознаётся {0}…",
+      "runTitle": "OCR: {0}",
+      "pageMark": "страница {0}",
+      "notReadable": "OCR читает PDF и изображения PNG, JPEG и WebP.",
+      "failed": "OCR остановлено: {0}",
+      "nothingRead": "Ничего не распознано.",
+      "stop": "Остановить",
+      "opening": "Открывается…",
+      "readingPage": "Распознаётся страница {0} из {1}…",
+      "stoppedAt": "Остановлено: распознанные страницы сохранены.",
+      "done": "Готово.",
+      "gone": "Это распознавание закончено.",
+      "tool.read_with_ocr": "Reads a scanned PDF or a picture (PNG, JPEG, WebP) of the open folder into Markdown with OCR on this computer. Use it when read_file gives a PDF's or a picture's text as empty or garbled. pages: the PDF's page numbers to read, all when left out; a long PDF takes a while per page."
+    }
+  }
+}
