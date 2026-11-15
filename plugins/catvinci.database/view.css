@@ -70,7 +70,7 @@ body {
    while the pointer is on the head; the head itself drags too. Pulled,
    the column lifts (.tx-cell-lifted) and the others slide aside
    (.tx-making-room), its head staying over the rows. */
-.tx-table th .tx-grip {
+.tx-table th .tx-table-grip {
   position: absolute;
   top: var(--space-1);
   left: 50%;
@@ -79,11 +79,11 @@ body {
   pointer-events: none;
   transition: opacity var(--dur-fast) var(--ease-standard);
 }
-.tx-table th:hover .tx-grip {
+.tx-table th:hover .tx-table-grip {
   opacity: 1;
   pointer-events: auto;
 }
-.tx-making-room .tx-table th .tx-grip {
+.tx-making-room .tx-table th .tx-table-grip {
   opacity: 0;
 }
 .tx-making-room th.tx-cell-lifted {

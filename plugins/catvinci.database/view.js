@@ -149,7 +149,7 @@
         icon(TYPE_ICONS[typeOf(key)]), label(key), sorted(key), resizer(key));
       // A column but the title is dragged along the head, or by its grip, to a new place.
       if (key !== "name") {
-        node.append(el("span", { class: "tx-grip tx-grip-col", "aria-hidden": "true" }));
+        node.append(el("span", { class: "tx-table-grip tx-table-grip-col", "aria-hidden": "true" }));
         node.addEventListener("pointerdown", (e) => moveColumn(e, node, key));
       }
       return node;
