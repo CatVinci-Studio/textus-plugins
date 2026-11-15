@@ -21,6 +21,9 @@ export interface Config {
   pathStyle: boolean;
   automatic: boolean;
   interval: number;
+  /** Minutes to wait after a save before syncing (0 syncs once saving
+   *  settles). */
+  saveGap: number;
   /** Paths left out, a rule a line, as a .gitignore writes them. */
   exclude: string;
   /** The folder's .gitignore is followed too. */

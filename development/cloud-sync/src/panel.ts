@@ -1,4 +1,5 @@
 import { KEEP_DAYS, type Config, type Result } from "./model";
+import { providers } from "./config";
 
 const api = acquireTextusApi();
 const element = <T extends HTMLElement>(id: string) =>
@@ -51,6 +52,9 @@ providerPick.onclick = async () => {
   if (typeof chosen !== "string" || chosen === now) return;
   input("provider").value = chosen;
   input("endpoint").value = "";
+  input("saveGap").value = String(
+    providers[chosen as keyof typeof providers]?.saveGap ?? 0,
+  );
   for (const id of secretFields) input(id).value = "";
   dirty = true;
   toggles();
@@ -95,8 +99,14 @@ function toggles() {
     input("endpoint").value = "https://dav.jianguoyun.com/dav";
   input("bucket").required = provider === "s3";
   element("interval-field").hidden = !input("automatic").checked;
+  element("save-gap-field").hidden = !input("automatic").checked;
   // A field out of sight is neither checked nor sent.
-  for (const id of ["password-field", "confirm-field", "interval-field"])
+  for (const id of [
+    "password-field",
+    "confirm-field",
+    "interval-field",
+    "save-gap-field",
+  ])
     for (const field of element(id).querySelectorAll("input"))
       field.disabled = element(id).hidden;
   for (const id of buttons)
@@ -114,6 +124,7 @@ function fill(config: Config) {
     "bucket",
     "prefix",
     "interval",
+    "saveGap",
     "keepDays",
   ] as const)
     input(id).value = String(config[id]);
@@ -150,7 +161,10 @@ function save() {
     automatic: input("automatic").checked,
     interval: input("automatic").checked
       ? Number(input("interval").value)
-      : Math.min(Math.max(Number(input("interval").value) || 5, 5), 1440),
+      : Math.min(Math.max(Number(input("interval").value) || 5, 1), 1440),
+    saveGap: input("automatic").checked
+      ? Number(input("saveGap").value)
+      : Math.min(Math.max(Number(input("saveGap").value) || 0, 0), 60),
     exclude: element<HTMLTextAreaElement>("exclude").value,
     gitignore: input("gitignore").checked,
     obsidian: input("obsidian").checked,

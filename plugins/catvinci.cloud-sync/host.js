@@ -66,6 +66,7 @@ var defaults = {
   pathStyle: true,
   automatic: false,
   interval: 5,
+  saveGap: 0,
   exclude: "",
   gitignore: false,
   obsidian: false,
@@ -74,15 +75,11 @@ var defaults = {
 };
 var providers = {
   s3: { transport: "s3", endpoint: "", saveGap: 0 },
-  webdav: {
-    transport: "dav",
-    endpoint: "",
-    saveGap: 3e4
-  },
+  webdav: { transport: "dav", endpoint: "", saveGap: 0 },
   nutstore: {
     transport: "dav",
     endpoint: "https://dav.jianguoyun.com/dav",
-    saveGap: 18e4
+    saveGap: 3
   }
 };
 function relativePath(value) {
@@ -137,8 +134,11 @@ function normalizeConfig(input) {
   if (!KEEP_DAYS.includes(c.keepDays)) c.keepDays = defaults.keepDays;
   c.keepPending = c.keepPending === true;
   c.interval = Number(c.interval);
-  if (!Number.isInteger(c.interval) || c.interval < 5 || c.interval > 1440)
+  if (!Number.isInteger(c.interval) || c.interval < 1 || c.interval > 1440)
     throw new SyncError("invalidInterval");
+  c.saveGap = Number(input.saveGap ?? spec.saveGap);
+  if (!Number.isInteger(c.saveGap) || c.saveGap < 0 || c.saveGap > 60)
+    throw new SyncError("invalidSaveGap");
   return c;
 }
 function identity(c) {
@@ -2185,7 +2185,7 @@ var Controller = class {
     this.pacer.configure(
       !this.disposed && config.automatic && configured && root ? {
         settle: 5e3,
-        gap: providers[config.provider].saveGap,
+        gap: config.saveGap * 6e4,
         every: config.interval * 6e4
       } : null
     );
