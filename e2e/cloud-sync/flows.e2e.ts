@@ -1,4 +1,10 @@
-import { expect, test, type Browser, type Page } from "@playwright/test";
+import {
+  expect,
+  test,
+  type Browser,
+  type FrameLocator,
+  type Page,
+} from "@playwright/test";
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { resolve } from "node:path";
 import JSZip from "jszip";
@@ -199,6 +205,12 @@ async function pickProvider(
     page.frameLocator(".plugin-webview-frame").locator("#provider-name"),
   ).toHaveText(label[provider]);
 }
+/** Encryption is a switch, off for a new connection: the password fields
+ *  show once it is on. */
+async function encryptOn(panel: FrameLocator) {
+  const on = panel.locator("#encrypt");
+  if (await on.isVisible() && !(await on.isChecked())) await on.check();
+}
 async function configure(
   page: Page,
   provider: "s3" | "webdav" | "nutstore",
@@ -211,6 +223,7 @@ async function configure(
   if (provider === "s3") await panel.locator("#bucket").fill("test-bucket");
   await panel.locator("#account").fill("fixture-account");
   await panel.locator("#secret").fill("fixture-secret");
+  await encryptOn(panel);
   await panel.locator("#sync-password").fill(password);
   await panel.locator("#confirm-password").fill(password);
   await panel.locator("#save").click();
@@ -342,6 +355,7 @@ test("configuration errors preserve input and Chinese UI fits narrow and dark vi
   );
   await panel.locator("#account").fill("fixture-account");
   await panel.locator("#secret").fill("fixture-secret");
+  await encryptOn(panel);
   await panel.locator("#sync-password").fill(syncPassword);
   await panel.locator("#confirm-password").fill(syncPassword);
   await panel.locator("#prefix").fill("../unsafe");
@@ -452,6 +466,7 @@ test("a wrong sync password leaves both devices unchanged, then the correct pass
         () => (window as unknown as Record<string, unknown>).__devFs,
       ),
     ).toEqual({});
+    await encryptOn(panel);
     await panel.locator("#sync-password").fill(syncPassword);
     await panel.locator("#confirm-password").fill(syncPassword);
     await panel.locator("#save").click();
@@ -510,6 +525,7 @@ test("password confirmation errors retain input and an old plaintext directory i
   await panel.locator("#endpoint").fill("https://fixture.invalid/dav");
   await panel.locator("#account").fill("fixture-account");
   await panel.locator("#secret").fill("fixture-secret");
+  await encryptOn(panel);
   await panel.locator("#sync-password").fill(syncPassword);
   await panel.locator("#confirm-password").fill("a different password");
   await panel.locator("#save").click();
@@ -531,7 +547,7 @@ test("password confirmation errors retain input and an old plaintext directory i
   remote.files.set("/dav/textus/notes/v1/head.json", old);
   await panel.locator("#sync").click();
   await expect(panel.locator("#status")).toContainText(
-    "contains unencrypted v0.1 data",
+    "isn't encrypted",
   );
   expect([...remote.files]).toEqual([["/dav/textus/notes/v1/head.json", old]]);
 });

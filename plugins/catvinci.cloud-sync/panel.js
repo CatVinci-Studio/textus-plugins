@@ -9,13 +9,12 @@
 
   // development/cloud-sync/src/config.ts
   var providers = {
-    s3: { transport: "s3", endpoint: "", saveGap: 0, minInterval: 1 },
-    webdav: { transport: "dav", endpoint: "", saveGap: 0, minInterval: 1 },
+    s3: { transport: "s3", endpoint: "", saveGap: 0 },
+    webdav: { transport: "dav", endpoint: "", saveGap: 0 },
     nutstore: {
       transport: "dav",
       endpoint: "https://dav.jianguoyun.com/dav",
-      saveGap: 18e4,
-      minInterval: 5
+      saveGap: 3
     }
   };
 
@@ -61,6 +60,9 @@
     if (typeof chosen !== "string" || chosen === now) return;
     input("provider").value = chosen;
     input("endpoint").value = "";
+    input("saveGap").value = String(
+      providers[chosen]?.saveGap ?? 0
+    );
     for (const id of secretFields) input(id).value = "";
     dirty = true;
     toggles();
@@ -81,7 +83,6 @@
     dirty = true;
     toggles();
   };
-  var minInterval = (provider) => providers[provider]?.minInterval ?? 5;
   function toggles() {
     const provider = input("provider").value;
     element("keep-name").textContent = keepLabel(input("keepDays").value);
@@ -100,9 +101,14 @@
     if (provider === "nutstore")
       input("endpoint").value = "https://dav.jianguoyun.com/dav";
     input("bucket").required = provider === "s3";
-    input("interval").min = String(minInterval(provider));
     element("interval-field").hidden = !input("automatic").checked;
-    for (const id of ["password-field", "confirm-field", "interval-field"])
+    element("save-gap-field").hidden = !input("automatic").checked;
+    for (const id of [
+      "password-field",
+      "confirm-field",
+      "interval-field",
+      "save-gap-field"
+    ])
       for (const field of element(id).querySelectorAll("input"))
         field.disabled = element(id).hidden;
     for (const id of buttons)
@@ -118,6 +124,7 @@
       "bucket",
       "prefix",
       "interval",
+      "saveGap",
       "keepDays"
     ])
       input(id).value = String(config[id]);
@@ -152,13 +159,8 @@
       prefix: input("prefix").value,
       pathStyle: input("pathStyle").checked,
       automatic: input("automatic").checked,
-      interval: input("automatic").checked ? Number(input("interval").value) : Math.min(
-        Math.max(
-          Number(input("interval").value) || 5,
-          minInterval(input("provider").value)
-        ),
-        1440
-      ),
+      interval: input("automatic").checked ? Number(input("interval").value) : Math.min(Math.max(Number(input("interval").value) || 5, 1), 1440),
+      saveGap: input("automatic").checked ? Number(input("saveGap").value) : Math.min(Math.max(Number(input("saveGap").value) || 0, 0), 60),
       exclude: element("exclude").value,
       gitignore: input("gitignore").checked,
       obsidian: input("obsidian").checked,
