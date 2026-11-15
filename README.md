@@ -32,6 +32,7 @@ The plugins for [Textus](https://textus.md), the Markdown editor. None of them c
 | LaTeX Completion | LaTeX command completion in formulas: type a backslash and the start of a command - \fr, \alp - to pick from the commands that begin so, each with what it draws. Enter or Tab writes it, with the caret inside its braces. |
 | Link Cards | A link as a card with its page's title, description and picture - or a Bilibili video playing in place. Kept in the document as text. |
 | Marp | Present a document as slides, the Marp way: a new slide at each ---, themes and layout by Marp directives. The deck follows your writing in a tab beside it, and saves as one HTML file to present from any browser. |
+| MDX | Write MDX documents (Docusaurus, Nextra…) with their problems underlined by MDX's own compiler, a preview beside them that runs none of their code, and conversion to Markdown and back. |
 | Mind Map | Draws a Markdown outline - headings and lists - as a mind map. |
 | Notion Import | Brings in a Notion export (the .zip or its folder) as plain Markdown notes: pages within pages as folders, databases in Obsidian's Bases format, pictures and files beside their pages. Pair it with Wiki to see the pages tree and the databases. |
 | OpenCode | OpenCode in Textus AI: any model it is set up with reads your folder, writes and edits your notes, and asks before it changes anything. |

@@ -112,5 +112,6 @@
   "catvinci.database/lib/link-style.js": "./shared/link-style.js",
   "catvinci.backlinks/lib/link-style.js": "./shared/link-style.js",
   "catvinci.quick-insert/lib/link-style.js": "./shared/link-style.js",
-  "catvinci.notion-import/lib/link-style.js": "./shared/link-style.js"
+  "catvinci.notion-import/lib/link-style.js": "./shared/link-style.js",
+  "catvinci.mdx/lib/mdx.js": "./vendor/mdx.js"
 }

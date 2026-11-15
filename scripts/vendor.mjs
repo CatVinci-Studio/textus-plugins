@@ -45,3 +45,20 @@ await build({
   outfile: `${ROOT}vendor/marp-core.js`,
 });
 console.log("vendor/marp-core.js");
+
+// MDX's compiler, a reader that runs none of a document's code, and the
+// conversions (vendor-src/mdx.mjs), for catvinci.mdx.
+await build({
+  entryPoints: [`${ROOT}vendor-src/mdx.mjs`],
+  banner: { js: "(function (module, exports) {" },
+  footer: { js: "})();" },
+  bundle: true,
+  format: "iife",
+  // Not "browser": its entity decoding would need the host frame's page.
+  platform: "neutral",
+  mainFields: ["module", "main"],
+  minify: true,
+  legalComments: "eof",
+  outfile: `${ROOT}vendor/mdx.js`,
+});
+console.log("vendor/mdx.js");

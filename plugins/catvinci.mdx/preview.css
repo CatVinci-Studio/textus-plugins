@@ -1,0 +1,118 @@
+/* An MDX document drawn in a tab (design-language.md 5.4, tab view): the
+   document's own type and colours; components Textus knows in its look,
+   any other as a card naming it. */
+html,
+body {
+  margin: 0;
+  background: var(--doc-bg, var(--ui-bg));
+  color: var(--doc-text, var(--ui-text));
+}
+#problem {
+  margin: 0;
+  padding: var(--space-2) var(--space-4);
+  border-bottom: 1px solid var(--ui-border);
+  color: var(--tone-red);
+  font-size: var(--text-footnote);
+}
+.mdx-page {
+  max-width: 46em;
+  margin: 0 auto;
+  padding: var(--space-4) var(--space-5);
+  font-family: var(--doc-font, var(--font-sans));
+  font-size: var(--doc-font-size, var(--text-body));
+  line-height: var(--doc-line-height, 1.6);
+}
+.mdx-page a {
+  color: var(--doc-accent, var(--ui-accent));
+}
+.mdx-page code,
+.mdx-page pre {
+  font-family: var(--font-mono);
+  background: var(--doc-code-bg, var(--ui-subtle));
+  border-radius: var(--shape-xs);
+}
+.mdx-page pre {
+  padding: var(--space-3);
+  overflow-x: auto;
+}
+.mdx-page img {
+  max-width: 100%;
+}
+.mdx-page table {
+  border-collapse: collapse;
+}
+.mdx-page :is(th, td) {
+  padding: var(--space-1) var(--space-2);
+  border: 1px solid var(--doc-border, var(--ui-border));
+}
+/* What runs in the real site, shown as written. */
+.mdx-expression,
+.mdx-tag {
+  color: var(--doc-muted, var(--ui-muted));
+  font-size: 0.9em;
+}
+.mdx-component {
+  margin: var(--space-3) 0;
+  padding: var(--space-2) var(--space-3);
+  border: 1px dashed var(--doc-border, var(--ui-border));
+  border-radius: var(--shape-m);
+}
+.mdx-component.is-inline {
+  display: inline;
+  margin: 0;
+  padding: 0;
+  border: none;
+}
+.mdx-component > p:first-child {
+  margin-top: 0;
+}
+.mdx-callout {
+  --tone: var(--tone-blue);
+  margin: var(--space-3) 0;
+  padding: var(--space-2) var(--space-3);
+  border-left: 0.2em solid var(--tone);
+  border-radius: var(--shape-s);
+  background: color-mix(in srgb, var(--tone) 8%, transparent);
+}
+.mdx-callout[data-tone="success"] {
+  --tone: var(--tone-green);
+}
+.mdx-callout[data-tone="warning"] {
+  --tone: var(--tone-orange);
+}
+.mdx-callout[data-tone="danger"] {
+  --tone: var(--tone-red);
+}
+.mdx-callout[data-tone="accent"] {
+  --tone: var(--doc-accent, var(--ui-accent));
+}
+.mdx-callout-title {
+  margin: 0 0 var(--space-1);
+  font-weight: 600;
+}
+.mdx-callout > :last-child,
+.mdx-tab > :last-child,
+.mdx-component > :last-child {
+  margin-bottom: 0;
+}
+.mdx-tabs {
+  margin: var(--space-3) 0;
+  border: 1px solid var(--doc-border, var(--ui-border));
+  border-radius: var(--shape-m);
+}
+.mdx-tab {
+  padding: var(--space-2) var(--space-3);
+}
+.mdx-tab + .mdx-tab {
+  border-top: 1px solid var(--doc-border, var(--ui-border));
+}
+.mdx-tab-label {
+  margin: 0 0 var(--space-1);
+  color: var(--doc-muted, var(--ui-muted));
+  font-size: var(--text-footnote);
+  font-weight: 600;
+}
+.mdx-callout-title + *,
+.mdx-tab-label + * {
+  margin-top: 0;
+}
