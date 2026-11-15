@@ -74,15 +74,11 @@ body.in-tab #bar {
   user-select: none;
   -webkit-user-select: none;
 }
-/* A column's grip, the editor tables' pill, inside its head's top edge
-   while the pointer is on the head; the head itself drags too. Pulled,
+/* A column's grip, the editor tables' pill placed by the shared rule,
+   shown while the pointer is on the head; the head itself drags too. Pulled,
    the column lifts (.tx-cell-lifted) and the others slide aside
    (.tx-making-room), its head staying over the rows. */
 .tx-table th .tx-table-grip {
-  position: absolute;
-  top: var(--space-1);
-  left: 50%;
-  margin-left: -10px;
   opacity: 0;
   pointer-events: none;
   transition: opacity var(--dur-fast) var(--ease-standard);

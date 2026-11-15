@@ -6,6 +6,7 @@ Bases are written in **Obsidian's Bases format** (` ```base ` blocks and `.base`
 
 ## Pages
 
+- **0.7.14** - A column's grip is placed by Textus's shared rule, the same one as the document's tables. Needs Textus 1.4.3.
 - **0.7.13** - A column is pulled by the same grip as the document's tables, and lifts and slides the same way. Needs Textus 1.4.3.
 - **0.7.12** - A view tab whose name would be cut short ("Calenda") makes the bar give way a step instead. Menu words match the app's table menu (Title Case; German, Spanish and Portuguese row words).
 - **0.7.11** - A filter's verb (is, is not, is empty) is picked from Textus's own menu instead of the system's dropdown, and its option boxes are Textus's own checkboxes.
