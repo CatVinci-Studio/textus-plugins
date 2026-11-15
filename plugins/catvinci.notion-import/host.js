@@ -146,8 +146,12 @@ async function importNotion(arg) {
   if (iconSource && !report.stopped) report.icons = await addIcons(iconSource, target, report.byId);
   const suggestions = await stillMissing(notionImport.recommend(report.stats));
   await context.storage.global.set(RECOMMENDED, suggestions.map((s) => s.id));
-  const page = join(target, await freeName(t("reportName"), (name) => textus.files.stat(join(target, name)), { ext: ".md" }));
-  await textus.files.create(page, notionImport.reportPage(report, suggestions, t, { source: name, date: today() }));
+  const reportText = notionImport.reportPage(report, suggestions, t, { source: name, date: today() });
+  // From Textus 1.4.3 the free name is picked as it writes.
+  const page = textus.text
+    ? await textus.files.create(join(target, t("reportName") + ".md"), reportText, { unique: true })
+    : join(target, await freeName(t("reportName"), (name) => textus.files.stat(join(target, name)), { ext: ".md" }));
+  if (!textus.text) await textus.files.create(page, reportText);
   await textus.layout.open(page);
   const where = folderPaths.rel(root, target) || target;
   // Into what it made: the sidebar shows the import's folder,

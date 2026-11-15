@@ -39,6 +39,7 @@ A aba **Links bidirecionais** da barra lateral mostra o que aponta para o docume
 
 ## Alterações
 
+- **0.4.5** - Menções sem link abrem na linha certa, e o estilo de link é guardado pelo próprio Textus (Textus 1.4.3).
 - **0.4.4** - Converter links deixa os links de um bloco de código como estão e converte os que vêm depois; Menções sem link não lista nem cria links para nomes no front matter ou no código.
 - **0.4.3** - Links padrão para notas que ainda não existem agora aparecem em Links de saída, links para títulos da mesma nota não listam mais a própria nota e arrastar um divisor não redesenha mais o painel.
 - **0.4.2** - Textos de ajuda e de estado vazio mais curtos. O painel lateral e a página seguem o layout do Textus 1.3.13.

@@ -66,6 +66,11 @@ async function where() {
 async function createFree(dir, name, text) {
   const at = (candidate) => folderPaths.abs(dir, candidate + ".md");
   if ((await textus.files.readText(at(name)).catch(() => null)) === text) return name;
+  // From Textus 1.4.3 it picks the free name as it writes, no race.
+  if (textus.text) {
+    const path = await textus.files.create(at(name), text, { unique: true });
+    return path.split(/[\\/]/).pop().replace(/\.md$/, "");
+  }
   const free = await freeName(name, async (candidate) => !!(await textus.files.stat(at(candidate))));
   await textus.files.create(at(free), text);
   return free;
