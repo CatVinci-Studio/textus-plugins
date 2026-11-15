@@ -1,0 +1,88 @@
+{
+  "id": "catvinci.gemini-cli",
+  "name": "%name%",
+  "version": "0.1.0",
+  "publisher": "catvinci",
+  "author": "CatVinci Studio",
+  "description": "%description%",
+  "icon": "icon.svg",
+  "license": "MIT",
+  "repository": "https://github.com/CatVinci-Studio/textus-plugins",
+  "engines": {
+    "textus": ">=1.4.2"
+  },
+  "platforms": [
+    "desktop"
+  ],
+  "permissions": [
+    "agents"
+  ],
+  "contributes": {
+    "agents": [
+      {
+        "id": "catvinci.gemini-cli.gemini",
+        "name": "Gemini CLI",
+        "command": "npx",
+        "args": [
+          "-y",
+          "@google/gemini-cli@0.68.0",
+          "--acp"
+        ],
+        "setup": "%setup%",
+        "provider": "google"
+      }
+    ]
+  },
+  "l10n": {
+    "en": {
+      "name": "Gemini CLI",
+      "description": "Gemini CLI in Textus AI: Google's Gemini models read your folder, write and edit your notes, and ask before they change anything.",
+      "setup": "Needs Node.js. The first time, a browser opens to sign in with your Google account; an API key set as GEMINI_API_KEY works too."
+    },
+    "zh": {
+      "name": "Gemini CLI",
+      "description": "在 Textus AI 里用 Gemini CLI：用 Google 的 Gemini 模型读你的文件夹、写和改笔记，改动前先征得你同意。",
+      "setup": "需要 Node.js。第一次使用会打开浏览器，用 Google 账号登录；也可以用环境变量 GEMINI_API_KEY 设置 API 密钥。"
+    },
+    "zh-Hant": {
+      "name": "Gemini CLI",
+      "description": "在 Textus AI 裡用 Gemini CLI：用 Google 的 Gemini 模型讀你的資料夾、寫和改筆記，改動前先徵得你同意。",
+      "setup": "需要 Node.js。第一次使用會開啟瀏覽器，用 Google 帳號登入；也可以用環境變數 GEMINI_API_KEY 設定 API 金鑰。"
+    },
+    "ja": {
+      "name": "Gemini CLI",
+      "description": "Textus AI で Gemini CLI を使う：Google の Gemini モデルがフォルダを読み、ノートを書いて直し、変更の前に確認します。",
+      "setup": "Node.js が必要です。初回はブラウザが開き、Google アカウントでサインインします。環境変数 GEMINI_API_KEY の API キーでも使えます。"
+    },
+    "ko": {
+      "name": "Gemini CLI",
+      "description": "Textus AI에서 Gemini CLI 사용: Google의 Gemini 모델이 폴더를 읽고 노트를 쓰고 고치며, 바꾸기 전에 먼저 묻습니다.",
+      "setup": "Node.js가 필요합니다. 처음에는 브라우저가 열려 Google 계정으로 로그인합니다. 환경 변수 GEMINI_API_KEY의 API 키로도 됩니다."
+    },
+    "de": {
+      "name": "Gemini CLI",
+      "description": "Gemini CLI in Textus AI: Googles Gemini-Modelle lesen deinen Ordner, schreiben und bearbeiten deine Notizen und fragen vor jeder Änderung.",
+      "setup": "Braucht Node.js. Beim ersten Mal öffnet sich ein Browser zur Anmeldung mit deinem Google-Konto; ein API-Schlüssel in GEMINI_API_KEY geht auch."
+    },
+    "fr": {
+      "name": "Gemini CLI",
+      "description": "Gemini CLI dans Textus AI : les modèles Gemini de Google lisent votre dossier, écrivent et modifient vos notes, et demandent avant tout changement.",
+      "setup": "Nécessite Node.js. La première fois, un navigateur s’ouvre pour vous connecter avec votre compte Google ; une clé d’API dans GEMINI_API_KEY fonctionne aussi."
+    },
+    "es": {
+      "name": "Gemini CLI",
+      "description": "Gemini CLI en Textus AI: los modelos Gemini de Google leen tu carpeta, escriben y editan tus notas, y preguntan antes de cambiar nada.",
+      "setup": "Necesita Node.js. La primera vez se abre un navegador para iniciar sesión con tu cuenta de Google; también sirve una clave de API en GEMINI_API_KEY."
+    },
+    "pt": {
+      "name": "Gemini CLI",
+      "description": "Gemini CLI no Textus AI: os modelos Gemini do Google leem a sua pasta, escrevem e editam as suas notas, e perguntam antes de mudar algo.",
+      "setup": "Precisa de Node.js. Na primeira vez abre-se um navegador para entrar com a sua conta Google; uma chave de API em GEMINI_API_KEY também serve."
+    },
+    "ru": {
+      "name": "Gemini CLI",
+      "description": "Gemini CLI в Textus AI: модели Gemini от Google читают вашу папку, пишут и правят заметки и спрашивают перед каждым изменением.",
+      "setup": "Нужен Node.js. В первый раз откроется браузер для входа с аккаунтом Google; подойдёт и ключ API в GEMINI_API_KEY."
+    }
+  }
+}

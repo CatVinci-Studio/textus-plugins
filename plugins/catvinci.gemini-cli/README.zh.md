@@ -1,0 +1,14 @@
+# Gemini CLI
+
+在 Textus AI 里和 Gemini CLI 对话，用 Google 的 Gemini 模型。它会读打开的文件夹，写和改你的笔记，每次改动前先问你：Textus 会给你看它想做什么，由你决定是否允许。它改过的地方会在文档里标出来，撤销一次就能还原。它的模式（先问、自动改文件、全部自动、只做计划）和模型，在 Textus AI 模型菜单旁边的菜单里选。
+
+1. 如果这台电脑还没有 [Node.js](https://nodejs.org)，先装上。
+2. 点窗口右上角 Textus AI 旁边的 Gemini CLI 按钮。第一次会打开浏览器，用 Google 账号登录。想用 API 密钥的话，在启动 Textus 前设置环境变量 `GEMINI_API_KEY`。
+
+Textus 用 `gemini --acp`（它的 Agent Client Protocol 服务）通过 `npx` 启动 [Gemini CLI](https://github.com/google-gemini/gemini-cli)。账号和用量都是 Google 那边的，Textus 不保存它的密钥。
+
+只在电脑上可用，需要 Textus 1.4.2 或更高版本；模式和模型菜单需要 Textus 1.4.3。它只申请一个权限：在这台电脑上启动这个 AI 程序。
+
+## 更新记录
+
+- **0.1.0** - 第一版：在 Textus AI 里用 Gemini CLI。

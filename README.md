@@ -21,6 +21,7 @@ The plugins for [Textus](https://textus.md), the Markdown editor. None of them c
 | ECharts | Charts from an ECharts option - bars, lines, pies and more. |
 | Emacs | Emacs keys in the editor: C-f C-b C-n C-p, C-a C-e, M-f M-b, M-< M->, the mark (C-SPC) and the region, C-k and C-w into a kill ring, C-y and M-y, C-/ undo and C-x prefixes. |
 | Function Plot | Graphs of functions, one per line: sin(x), x^2 - 1. |
+| Gemini CLI | Gemini CLI in Textus AI: Google's Gemini models read your folder, write and edit your notes, and ask before they change anything. |
 | Graph View | Your notes and the links between them as a graph - for the whole folder, or around the document in front - with filters and colour groups. |
 | Heading Numbers | Numbers headings as you write - 1, 1.1, 1.2 - without changing the text; exports can carry the numbers too. |
 | HTML View | See .html files as the pages they are, in a tab. Edit source opens one as text. |
