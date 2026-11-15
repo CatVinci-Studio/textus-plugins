@@ -2,7 +2,6 @@ import { AwsV4Signer } from "aws4fetch";
 import { hash } from "./content";
 import { providers, relativePath } from "./config";
 import {
-  LOCK,
   SyncError,
   type Config,
   type Credentials,
@@ -11,7 +10,6 @@ import {
 
 export type Fetch = Textus.Net["fetch"];
 type Response = Awaited<ReturnType<Fetch>>;
-const requests = new Map<string, number[]>();
 const encodePath = (path: string) =>
   path.split("/").map(encodeURIComponent).join("/");
 const pause = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -51,27 +49,13 @@ export class RemoteStore implements ObjectStore {
       encodePath(s3 && c.pathStyle ? `${c.bucket}/${prefix}` : prefix);
     return url.toString();
   }
-  private reserve(cleanup: boolean) {
-    const cap = providers[this.config.provider].requestLimit;
-    if (!Number.isFinite(cap)) return;
-    const key = `${this.config.endpoint}:${this.credentials.account}`;
-    const recent = (requests.get(key) ?? []).filter(
-      (at) => at > Date.now() - 30 * 60_000,
-    );
-    // Leave bounded headroom for lock verification and temporary-object cleanup.
-    if (recent.length >= cap + (cleanup ? 20 : 0))
-      throw new SyncError("rateLimited");
-    requests.set(key, [...recent, Date.now()]);
-  }
   private async request(
     method: string,
     url: string,
     body?: Uint8Array,
     extra: Record<string, string> = {},
-    cleanup = false,
   ): Promise<Response> {
     for (let attempt = 0; ; attempt++) {
-      this.reserve(cleanup);
       let headers: Record<string, string> = { ...extra };
       if (providers[this.config.provider].transport === "s3") {
         const signed = await new AwsV4Signer({
@@ -155,7 +139,6 @@ export class RemoteStore implements ObjectStore {
       this.target(key),
       undefined,
       {},
-      key === LOCK,
     );
     if (res.status === 404) return null;
     this.require(res);
@@ -205,7 +188,6 @@ export class RemoteStore implements ObjectStore {
       this.target(key),
       undefined,
       {},
-      true,
     );
     if (res.status !== 404) this.require(res);
   }

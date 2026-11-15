@@ -17,17 +17,15 @@ export const defaults: Config = {
 };
 // saveGap keeps syncs after saves within a provider's request quota.
 export const providers = {
-  s3: { transport: "s3", endpoint: "", requestLimit: Infinity, saveGap: 0 },
+  s3: { transport: "s3", endpoint: "", saveGap: 0 },
   webdav: {
     transport: "dav",
     endpoint: "",
-    requestLimit: Infinity,
     saveGap: 30_000,
   },
   nutstore: {
     transport: "dav",
     endpoint: "https://dav.jianguoyun.com/dav",
-    requestLimit: 550,
     saveGap: 180_000,
   },
 } as const;
