@@ -62,6 +62,12 @@
     });
     return out;
   }
+  /** A diff as text: "+ " added, "- " removed, `context` lines around each
+   *  change, "…" for what is left out. */
+  const hunkText = (parts, context) =>
+    lineHunks(parts, context)
+      .map((p) => (p.kind === "gap" ? "…" : (p.kind === "added" ? "+ " : p.kind === "removed" ? "- " : "  ") + p.line))
+      .join("\n");
   /** The runs of changed lines: `[start, end)` indexes into `parts`. */
   function changeGroups(parts) {
     const groups = [];
@@ -118,6 +124,7 @@
   }
   root.lineDiff = lineDiff;
   root.lineHunks = lineHunks;
+  root.hunkText = hunkText;
   root.changeGroups = changeGroups;
   root.revertGroup = revertGroup;
   root.wordDiff = wordDiff;

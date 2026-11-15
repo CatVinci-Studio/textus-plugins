@@ -46,7 +46,7 @@
       api.postMessage({ type: "page", number: numbers[i], png: png });
       await read;
     }
-    say(stopped ? t("stoppedAt", numbers.length) : t("done"), total);
+    say(stopped ? t("stoppedAt") : t("done"), total);
     $("stop").hidden = true;
     api.postMessage({ type: stopped ? "stopped" : "done" });
   }
@@ -54,8 +54,9 @@
   api.onMessage((message) => {
     if (message.type === "pdf")
       run(message.bytes, message.pages).catch((e) => {
-        say(t("failed", String((e && e.message) || e)), 0);
-        api.postMessage({ type: "failed", message: String((e && e.message) || e) });
+        const text = String((e && e.message) || e);
+        say(t("failed", text), 0);
+        api.postMessage({ type: "failed", message: text });
       });
     if (message.type === "read" && next) next();
     if (message.type === "failed") {

@@ -6,6 +6,7 @@
 /* global folderPaths */
 let ctx;
 const t = (key, ...args) => textus.l10n.t(key, ...args);
+const errorText = (e) => String((e && e.message) || e);
 const IMAGES = { png: "image/png", jpg: "image/jpeg", jpeg: "image/jpeg", webp: "image/webp" };
 const PROMPT = "Convert this page to Markdown. Keep tables as Markdown tables and formulas as LaTeX.";
 const RUN_VIEW = "catvinci.ocr.run";
@@ -14,8 +15,9 @@ const extOf = (path) => (/\.([^./\\]+)$/.exec(path) || [])[1]?.toLowerCase() || 
 const readable = (path) => extOf(path) === "pdf" || extOf(path) in IMAGES;
 
 async function settings() {
-  const server = String((await textus.settings.get("server")) || "http://localhost:11434").replace(/\/+$/, "");
-  const model = String((await textus.settings.get("model")) || "richardyoung/xiaomi-ocr-0");
+  // The manifest holds the defaults.
+  const server = String((await textus.settings.get("server")) || "").replace(/\/+$/, "");
+  const model = String((await textus.settings.get("model")) || "");
   return { server, model };
 }
 
@@ -50,7 +52,7 @@ async function ready() {
     });
     return true;
   } catch (e) {
-    await textus.ui.message(t("downloadFailed", model, String((e && e.message) || e)), { tone: "error" });
+    await textus.ui.message(t("downloadFailed", model, errorText(e)), { tone: "error" });
     return false;
   }
 }
@@ -92,14 +94,14 @@ const runs = new Map();
 async function read(path, pages) {
   if (extOf(path) in IMAGES) {
     const bytes = await textus.files.read(path);
-    return textus.ui.withProgress(t("reading", path.split(/[\\/]/).pop()), () =>
+    return textus.ui.withProgress(t("reading", folderPaths.name(path)), () =>
       recognize(base64Of(bytes), IMAGES[extOf(path)]),
     );
   }
   return new Promise((resolve, reject) => {
     runs.set(path, { resolve: resolve, reject: reject, pages: pages || null, parts: [] });
     textus.layout
-      .openView(RUN_VIEW, { where: "beside", title: t("runTitle", path.split(/[\\/]/).pop()), state: { path: path } })
+      .openView(RUN_VIEW, { where: "beside", title: t("runTitle", folderPaths.name(path)), state: { path: path } })
       .catch(reject);
   });
 }
@@ -125,7 +127,7 @@ async function resolveRun(webview, state) {
       } catch (e) {
         runs.delete(path);
         run.reject(e);
-        webview.postMessage({ type: "failed", message: String((e && e.message) || e) });
+        webview.postMessage({ type: "failed", message: errorText(e) });
       }
     }
     if (message.type === "done" || message.type === "stopped") {
@@ -156,7 +158,7 @@ async function convert(path) {
   try {
     text = await read(target);
   } catch (e) {
-    return textus.ui.message(t("failed", String((e && e.message) || e)), { tone: "error" });
+    return textus.ui.message(t("failed", errorText(e)), { tone: "error" });
   }
   if (!text.trim()) return textus.ui.notice(t("nothingRead"));
   const md = target.replace(/\.[^./\\]+$/, "") + ".md";
@@ -166,10 +168,9 @@ async function convert(path) {
 
 /** Textus AI's tool: a scanned PDF or a picture of the open folder, read. */
 async function readWithOcr(input) {
-  const root = await textus.files.root();
-  const rel = root && input.path && folderPaths.clean(root, input.path, false);
-  if (!rel) return { error: "path must be a PDF's or a picture's path in the open folder." };
-  const path = folderPaths.abs(root, rel);
+  const file = folderPaths.resolve(await textus.files.root(), input.path, false);
+  if (!file) return { error: "path must be a PDF's or a picture's path in the open folder." };
+  const { path, rel } = file;
   if (!readable(path)) return { error: "OCR reads PDFs and PNG, JPEG or WebP pictures." };
   if (!(await ready())) return { error: "The OCR model isn't available; the user was told how to set it up." };
   const pages = Array.isArray(input.pages) ? input.pages.map(Number).filter((n) => n > 0) : null;

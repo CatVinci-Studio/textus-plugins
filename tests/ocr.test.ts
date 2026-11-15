@@ -1,5 +1,9 @@
 import { describe, expect, it } from "vitest";
 import { loadPlugin } from "./plugin-host";
+import manifest from "../plugins/catvinci.ocr/textus-plugin.json";
+
+/** What Textus gives for an unset setting: the manifest's default. */
+const defaults = Object.fromEntries(manifest.contributes.settings.map((s) => [s.key, s.default]));
 
 /** OCR (plugins/catvinci.ocr) over a fake Ollama: what it asks before a
  *  download, and a picture read into Markdown. */
@@ -10,7 +14,7 @@ function withServer(models: string[], answers: { confirm: boolean }) {
   const commands = new Map<string, (path?: string) => Promise<unknown>>();
   const respond = (body: unknown, ok = true) => ({ ok, status: ok ? 200 : 404, text: async () => JSON.stringify(body) });
   const plugin = loadPlugin("catvinci.ocr", {
-    settings: { get: async () => undefined },
+    settings: { get: async (key: string) => defaults[key] },
     net: {
       fetch: async (url: string, init?: { body?: string }) => {
         requests.push({ url, body: init?.body && JSON.parse(init.body) });

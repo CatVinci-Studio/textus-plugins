@@ -2,12 +2,13 @@
 // in the status bar, a command that commits what the user picks with their
 // own git, and tools for Textus AI to read the history and draft a commit
 // message. Nothing pushes, pulls or switches branches. Desktop only.
-/* global folderPaths, lineDiff, lineHunks */
+/* global folderPaths, lineDiff, hunkText */
 let ctx;
 let branchItem = null;
 /** The paths badged now, to take off the ones no longer changed. */
 let badged = new Set();
 const t = (key, ...args) => textus.l10n.t(key, ...args);
+const errorText = (e) => String((e && e.message) || e);
 
 const BADGES = {
   modified: { text: "M", tone: "warning" },
@@ -77,7 +78,7 @@ async function commit() {
     const hash = await textus.git.commit(message.trim(), picked);
     await textus.ui.notice(t("committed", hash.slice(0, 7), status.branch || t("detached")));
   } catch (e) {
-    await textus.ui.message(t("failed", String((e && e.message) || e)), { tone: "error" });
+    await textus.ui.message(t("failed", errorText(e)), { tone: "error" });
   }
   await refresh();
 }
@@ -87,9 +88,8 @@ async function commit() {
 /** A path the AI gave, in the open folder; else an error. */
 async function fileOf(input) {
   const root = await textus.files.root();
-  const rel = root && input.path && folderPaths.clean(root, input.path, false);
-  if (!rel) return { error: "path must be a file's path in the open folder." };
-  return { path: folderPaths.abs(root, rel), rel: rel, root: root };
+  const file = folderPaths.resolve(root, input.path, false);
+  return file ? Object.assign({ root: root }, file) : { error: "path must be a file's path in the open folder." };
 }
 
 async function gitChanges() {
@@ -106,10 +106,7 @@ async function gitChanges() {
       const now = await textus.files.readText(change.path).catch(() => null);
       const parts = before !== null && now !== null ? lineDiff(before, now) : null;
       if (parts) {
-        entry.diff = lineHunks(parts, 2)
-          .map((p) => (p.kind === "gap" ? "…" : (p.kind === "added" ? "+ " : p.kind === "removed" ? "- " : "  ") + p.line))
-          .join("\n")
-          .slice(0, room);
+        entry.diff = hunkText(parts, 2).slice(0, room);
         room -= entry.diff.length;
       }
     }

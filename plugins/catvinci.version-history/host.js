@@ -4,7 +4,7 @@
 // document or another version, comes back whole or one change at a time
 // as a proposal, accepted or rejected like any edit, opens as a new
 // document, or is named and pinned so it is always kept.
-/* global versionStore, folderPaths, lineDiff, lineHunks */
+/* global versionStore, folderPaths, lineDiff, hunkText */
 /** What activate was given: the plugin's storage and own files. */
 let ctx;
 let store;
@@ -48,8 +48,8 @@ async function onChangeOnDisk(change) {
   await show();
 }
 
-/** The document's Git commits when its folder is a repository (desktop,
- *  Textus 1.4.3), the last asked kept for their texts. */
+/** The document's Git commits when its folder is a repository (desktop),
+ *  the last asked kept for their texts. */
 let lastCommits = { path: null, commits: [] };
 async function commitsOf(path) {
   const none = { branch: null, commits: [] };
@@ -120,7 +120,6 @@ async function proposeText(text) {
 }
 
 async function onMessage(message) {
-  // After what is in turn (0.3's versions moved over at the start).
   if (message.type === "ready") return inTurn(show);
   const path = await textus.editor.getPath();
   if (message.type === "restoreText") return proposeText(String(message.text));
@@ -157,9 +156,8 @@ const CONTEXT = 2;
 async function documentOf(input) {
   const root = await textus.files.root();
   if (input.path) {
-    const rel = root && folderPaths.clean(root, input.path, true);
-    if (!rel) return { error: "path must be a document's path in the open folder." };
-    return { path: folderPaths.abs(root, rel), name: rel };
+    const doc = folderPaths.resolve(root, input.path, true);
+    return doc ? { path: doc.path, name: doc.rel } : { error: "path must be a document's path in the open folder." };
   }
   const path = await textus.editor.getPath();
   if (!path) return { error: "No document is open." };
@@ -183,13 +181,6 @@ async function listVersions(input) {
   };
 }
 
-/** A diff as text: "+ " added, "- " removed, CONTEXT lines around each
- *  change, "…" for what is left out. */
-const diffText = (parts) =>
-  lineHunks(parts, CONTEXT)
-    .map((p) => (p.kind === "gap" ? "…" : (p.kind === "added" ? "+ " : p.kind === "removed" ? "- " : "  ") + p.line))
-    .join("\n");
-
 async function diffVersions(input) {
   const doc = await documentOf(input);
   if (doc.error) return doc;
@@ -207,7 +198,7 @@ async function diffVersions(input) {
   const parts = lineDiff(from.text, to.text);
   if (!parts) return { error: "The two are too far apart to compare line by line." };
   const changed = parts.some((p) => p.kind !== "same");
-  return { document: doc.name, from: from.label, to: to.label, diff: changed ? diffText(parts) : "(no changes)" };
+  return { document: doc.name, from: from.label, to: to.label, diff: changed ? hunkText(parts, CONTEXT) : "(no changes)" };
 }
 
 exports.activate = function (context) {
