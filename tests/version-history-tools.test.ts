@@ -48,7 +48,7 @@ type Shown = {
 };
 
 /** The plugin with its History panel open on `path`. */
-function withPanel(storage: ReturnType<typeof place>, path: string) {
+function withPanel(storage: ReturnType<typeof place>, path: string, git?: unknown) {
   const on: Record<string, (e: never) => unknown> = {};
   const listen = (name: string) => (fn: (e: never) => unknown) => void (on[name] = fn);
   let resolve: (w: unknown) => Promise<void> = async () => {};
@@ -77,6 +77,7 @@ function withPanel(storage: ReturnType<typeof place>, path: string) {
         onDidChangeActive: listen("active"),
       },
       ui: { input: async () => "Sent to the editor" },
+      ...(git ? { git } : {}),
       layout: { openUntitled: async (text: string) => void opened.push(text) },
       views: {
         registerWebview: (_id: string, provider: { resolve: typeof resolve }) => void (resolve = provider.resolve),
@@ -269,6 +270,36 @@ describe("version history keeps saves", () => {
     await p.ready;
     await p.post({ type: "restoreText", text: "put back" });
     expect(p.proposed).toEqual(["put back"]);
+  });
+});
+
+describe("a document's Git commits", () => {
+  it("are listed under the branch, compared and restored as versions are", async () => {
+    const git = {
+      status: async () => ({ branch: "main", changes: [] }),
+      log: async () => [
+        { hash: "b2", at: 2000, author: "A", subject: "Second", path: "/root/A.md" },
+        { hash: "a1", at: 1000, author: "A", subject: "First", path: "/root/old.md" },
+      ],
+      show: async (hash: string, path: string) => (hash === "a1" && path === "/root/old.md" ? "first text\n" : "second text\n"),
+    };
+    const p = withPanel(place(), "/root/A.md", git);
+    await p.ready;
+    p.doc.text = "now";
+    const shown = p.latest() as Shown & { commits: { id: string; subject: string }[]; branch: string };
+    expect(shown.branch).toBe("main");
+    expect(shown.commits.map((c) => [c.id, c.subject])).toEqual([["git:b2", "Second"], ["git:a1", "First"]]);
+    // Its text as that commit had it, at the path it had then.
+    await p.post({ type: "load", id: "git:a1", against: "git:b2" });
+    expect(p.posted.findLast((m) => m.type === "texts")).toMatchObject({ from: "first text", to: "second text" });
+    await p.post({ type: "restore", id: "git:a1" });
+    expect(p.proposed).toEqual(["first text\n"]);
+  });
+
+  it("are none outside a repository", async () => {
+    const p = withPanel(place(), "/root/A.md", { status: async () => null });
+    await p.ready;
+    expect((p.latest() as Shown & { commits: unknown[] }).commits).toEqual([]);
   });
 });
 

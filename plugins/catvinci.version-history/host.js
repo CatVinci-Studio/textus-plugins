@@ -48,13 +48,37 @@ async function onChangeOnDisk(change) {
   await show();
 }
 
+/** The document's Git commits when its folder is a repository (desktop,
+ *  Textus 1.4.3), the last asked kept for their texts. */
+let lastCommits = { path: null, commits: [] };
+async function commitsOf(path) {
+  const none = { branch: null, commits: [] };
+  if (!path || !textus.git) return none;
+  const status = await textus.git.status().catch(() => null);
+  if (!status) return none;
+  const log = await textus.git.log(path, { limit: 50 }).catch(() => []);
+  const commits = log.map((c) => ({
+    id: "git:" + c.hash,
+    at: c.at,
+    subject: c.subject,
+    author: c.author,
+    hash: c.hash,
+    path: c.path,
+  }));
+  lastCommits = { path: path, commits: commits };
+  return { branch: status.branch, commits: commits };
+}
+
 async function show() {
   if (!panel) return;
   const path = await textus.editor.getPath();
+  const git = await commitsOf(path);
   panel.postMessage({
     type: "versions",
     path: path,
     versions: (await store.list(path)).map((v) => Object.assign({ id: store.idOf(v) }, v)),
+    commits: git.commits,
+    branch: git.branch,
     full: store.full,
   });
 }
@@ -63,17 +87,25 @@ async function versionOf(path, id) {
   return (await store.list(path)).find((v) => store.idOf(v) === id) || null;
 }
 
+/** A version's text, or a commit's (`git:<hash>`); null when it is gone. */
+async function textOf(path, id) {
+  if (typeof id === "string" && id.startsWith("git:")) {
+    const known = lastCommits.path === path ? lastCommits.commits : (await commitsOf(path)).commits;
+    const commit = known.find((c) => c.id === id);
+    return commit ? textus.git.show(commit.hash, commit.path).catch(() => null) : null;
+  }
+  const version = await versionOf(path, id);
+  return version ? store.text(version.hash) : null;
+}
+
 /** The texts a panel compares: a version and the document, or another. */
 async function texts(path, id, against) {
-  const version = await versionOf(path, id);
-  if (!version) return null;
-  const other = against === "current" ? null : await versionOf(path, against);
+  const from = await textOf(path, id);
+  if (from === null) return null;
+  const to = against === "current" ? await textus.editor.getText() : await textOf(path, against);
   // The editor's text ends without the file's last newline.
   const ends = (text) => String(text || "").replace(/\n+$/, "");
-  return {
-    from: ends(await store.text(version.hash)),
-    to: ends(other ? await store.text(other.hash) : await textus.editor.getText()),
-  };
+  return { from: ends(from), to: ends(to) };
 }
 
 /** The whole document replaced by `text`, proposed as an edit. */
@@ -92,14 +124,18 @@ async function onMessage(message) {
   if (message.type === "ready") return inTurn(show);
   const path = await textus.editor.getPath();
   if (message.type === "restoreText") return proposeText(String(message.text));
-  const version = await versionOf(path, message.id);
-  if (!version) return;
   if (message.type === "load") {
     const both = await texts(path, message.id, message.against);
     if (both && panel) panel.postMessage(Object.assign({ type: "texts", id: message.id, against: message.against }, both));
+    return;
   }
-  if (message.type === "restore") await proposeText(await store.text(version.hash));
-  if (message.type === "open") await textus.layout.openUntitled(await store.text(version.hash));
+  if (message.type === "restore" || message.type === "open") {
+    const text = await textOf(path, message.id);
+    if (text === null) return;
+    return message.type === "restore" ? proposeText(text) : textus.layout.openUntitled(text);
+  }
+  const version = await versionOf(path, message.id);
+  if (!version) return;
   // Only a version's name or pin changes the list.
   if (message.type === "pin") {
     await inTurn(() => store.mark(path, message.id, { pinned: !version.pinned }));

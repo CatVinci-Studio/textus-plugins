@@ -9,14 +9,17 @@
   const $ = (id) => document.getElementById(id);
   let opened = null;
   let against = "current";
-  let data = { path: null, versions: [] };
+  let data = { path: null, versions: [], commits: [] };
+  /** Versions and commits: what a card compares with, or picks. */
+  const everything = () => data.versions.concat(data.commits || []);
+  const isCommit = (item) => String(item.id).startsWith("git:");
   /** Texts the host sent, by version and what it is compared with. */
   const texts = new Map();
   const textKey = (id, other) => id + "|" + other;
 
   const when = (at) =>
     new Date(at).toLocaleString(api.language, { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" });
-  const labelOf = (v) => v.name || when(v.at);
+  const labelOf = (v) => v.subject || v.name || when(v.at);
   /** A row's time: its day is the heading above it. */
   const timeOf = (at) => new Date(at).toLocaleTimeString(api.language, { hour: "2-digit", minute: "2-digit" });
   const el = (tag, className, text) => {
@@ -96,7 +99,7 @@
   }
 
   async function chooseAgainst(version, button) {
-    const others = data.versions.filter((v) => v.id !== version.id);
+    const others = everything().filter((v) => v.id !== version.id);
     const picked = await api.menu(
       [{ label: t("now"), value: "current", checked: against === "current" }, "separator"].concat(
         others.map((v) => ({ label: labelOf(v), value: v.id, checked: against === v.id })),
@@ -110,14 +113,14 @@
   }
 
   async function more(version, button) {
-    const picked = await api.menu(
-      [
-        { label: t("nameVersion"), value: "name" },
-        { label: version.pinned ? t("unpin") : t("pin"), value: "pin" },
-        { label: t("open"), value: "open" },
-      ],
-      button,
-    );
+    const items = isCommit(version)
+      ? [{ label: t("open"), value: "open" }]
+      : [
+          { label: t("nameVersion"), value: "name" },
+          { label: version.pinned ? t("unpin") : t("pin"), value: "pin" },
+          { label: t("open"), value: "open" },
+        ];
+    const picked = await api.menu(items, button);
     if (picked) api.postMessage({ type: picked, id: version.id });
   }
 
@@ -133,13 +136,16 @@
     const toggle = el("button", isOpen ? "row-head" : "tx-list-row");
     toggle.dataset.id = version.id;
     toggle.setAttribute("aria-expanded", String(isOpen));
-    const stamp = el("span", "when tx-list-label", timeOf(version.at));
+    const stamp = el("span", "when tx-list-label", isCommit(version) ? version.subject : timeOf(version.at));
     if (version.name) stamp.prepend(el("strong", "name", version.name + " "));
     if (version.pinned) stamp.append(" ", el("span", "tx-tag", t("pinned")));
     const meta = el("span", "delta tx-list-meta");
-    if (version.source === "disk") meta.append(el("span", "outside", t("outside") + " "));
-    const change = (version.chars || 0) - (older ? older.chars || 0 : 0);
-    meta.append(el("span", change >= 0 ? "plus" : "minus", (change >= 0 ? "+" : "−") + Math.abs(change)));
+    if (isCommit(version)) meta.append(el("span", "outside", when(version.at)));
+    else {
+      if (version.source === "disk") meta.append(el("span", "outside", t("outside") + " "));
+      const change = (version.chars || 0) - (older ? older.chars || 0 : 0);
+      meta.append(el("span", change >= 0 ? "plus" : "minus", (change >= 0 ? "+" : "−") + Math.abs(change)));
+    }
     toggle.append(stamp, meta);
     toggle.onclick = () => {
       opened = isOpen ? null : version.id;
@@ -150,7 +156,7 @@
     li.append(toggle);
     if (!isOpen) return li;
     const compare = el("div", "compare");
-    const otherVersion = data.versions.find((v) => v.id === against);
+    const otherVersion = everything().find((v) => v.id === against);
     const select = el("button", "tx-select", otherVersion ? labelOf(otherVersion) : t("now"));
     select.append(el("span", "tx-icon", ""));
     select.lastChild.dataset.icon = "chevron";
@@ -188,7 +194,7 @@
     let lastDay = null;
     $("full").hidden = !data.full;
     $("full").textContent = t("full");
-    $("empty").hidden = !!(data.path && data.versions.length);
+    $("empty").hidden = !!(data.path && everything().length);
     $("empty").textContent = data.path ? t("none") : t("nodoc");
     data.versions.forEach((version, index) => {
       if (dayOf(version.at) !== lastDay) {
@@ -198,6 +204,12 @@
       }
       list.append(versionNode(version, data.versions[index + 1]));
     });
+    // The document's Git commits, under the branch's name.
+    if ((data.commits || []).length) {
+      const heading = t("commits") + (data.branch ? " · " + data.branch : "");
+      list.append(el("li", "tx-list-heading", heading));
+      data.commits.forEach((commit) => list.append(versionNode(commit)));
+    }
     const all = toggles();
     const stop = all.find((b) => b.dataset.id === String(opened)) || all[0];
     all.forEach((b) => (b.tabIndex = b === stop ? 0 : -1));
@@ -229,7 +241,7 @@
     data = message;
     // The document changed, or a version did: compared texts read again.
     texts.clear();
-    const open = data.versions.find((v) => v.id === opened);
+    const open = everything().find((v) => v.id === opened);
     if (open) load(open);
     // A refresh keeps the focused version's button focused.
     const focused = document.activeElement;

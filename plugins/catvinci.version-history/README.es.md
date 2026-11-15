@@ -17,7 +17,7 @@ Guarda cada guardado de un documento como una versión, para ver qué cambió y 
 
 ## Cambios
 
-- **0.4.0** - Las versiones se espacian con la edad en lugar de quedarse solo las últimas 50; cada texto se guarda una vez; las versiones de un documento borrado se van al mes. Compara dos versiones cualesquiera palabra por palabra, recupera un solo cambio, pon nombre y fija versiones, y se guardan los cambios hechos fuera de Textus. Las versiones de 0.3 pasan solas. Requiere Textus 1.4.3.
+- **0.4.0** - Las versiones se espacian con la edad en lugar de quedarse solo las últimas 50; cada texto se guarda una vez; las versiones de un documento borrado se van al mes. Compara dos versiones cualesquiera palabra por palabra, recupera un solo cambio, pon nombre y fija versiones, y se guardan los cambios hechos fuera de Textus. Las versiones de 0.3 pasan solas. Requiere Textus 1.4.3. En una carpeta Git en el escritorio, los commits del documento aparecen bajo sus versiones.
 - **0.3.8** - El texto de antes del primer guardado ya no se pierde cuando ese guardado llega justo al abrir el documento.
 - **0.3.7** - El texto que tenía un documento antes de guardarlo por primera vez también se conserva como versión, y las versiones siguen al documento al cambiarle el nombre o moverlo.
 - **0.3.6** - El guardado automático mientras escribes solo escribe la versión más reciente, no todas las versiones del documento, así que los documentos largos se guardan con mucho menos trabajo.

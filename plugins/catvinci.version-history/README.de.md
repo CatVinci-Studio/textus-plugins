@@ -17,7 +17,7 @@ Behält jedes Speichern eines Dokuments als Version, damit Sie sehen, was sich g
 
 ## Änderungen
 
-- **0.4.0** - Versionen werden mit dem Alter lichter, statt nur die letzten 50 zu behalten; jeder Text wird einmal gespeichert; die Versionen eines gelöschten Dokuments gehen nach einem Monat. Zwei beliebige Versionen Wort für Wort vergleichen, eine einzelne Änderung zurückholen, Versionen benennen und anheften; Änderungen außerhalb von Textus bleiben. Versionen aus 0.3 ziehen von selbst um. Braucht Textus 1.4.3.
+- **0.4.0** - Versionen werden mit dem Alter lichter, statt nur die letzten 50 zu behalten; jeder Text wird einmal gespeichert; die Versionen eines gelöschten Dokuments gehen nach einem Monat. Zwei beliebige Versionen Wort für Wort vergleichen, eine einzelne Änderung zurückholen, Versionen benennen und anheften; Änderungen außerhalb von Textus bleiben. Versionen aus 0.3 ziehen von selbst um. Braucht Textus 1.4.3. In einem Git-Ordner auf dem Desktop stehen die Commits des Dokuments unter seinen Versionen.
 - **0.3.8** - Der Text vor dem ersten Speichern geht nicht mehr verloren, wenn dieses Speichern direkt beim Öffnen kommt.
 - **0.3.7** - Der Text eines Dokuments vor dem ersten Speichern bleibt ebenfalls als Version erhalten, und die Versionen folgen einem Dokument, wenn es umbenannt oder verschoben wird.
 - **0.3.6** - Das automatische Speichern beim Schreiben schreibt nur die neueste Version, nicht jede Version des Dokuments, sodass lange Dokumente mit viel weniger Aufwand speichern.

@@ -11,25 +11,10 @@
   "engines": {
     "textus": ">=1.4.3"
   },
-  "platforms": [
-    "desktop",
-    "ios"
-  ],
-  "main": [
-    "lib/folder-paths.js",
-    "diff.js",
-    "store.js",
-    "host.js"
-  ],
-  "activationEvents": [
-    "onStartupFinished"
-  ],
-  "permissions": [
-    "files.read",
-    "editor.read",
-    "editor.propose",
-    "ai.tools"
-  ],
+  "platforms": ["desktop", "ios"],
+  "main": ["lib/folder-paths.js", "lib/text-diff.js", "store.js", "host.js"],
+  "activationEvents": ["onStartupFinished"],
+  "permissions": ["files.read", "editor.read", "editor.propose", "ai.tools"],
   "contributes": {
     "sidebarTabs": [
       {
@@ -99,7 +84,8 @@
       "namePrompt": "A name for this version, kept for good",
       "restorePart": "Restore",
       "outside": "Changed elsewhere",
-      "pinned": "Pinned"
+      "pinned": "Pinned",
+      "commits": "Commits"
     },
     "zh": {
       "name": "版本历史",
@@ -124,7 +110,8 @@
       "namePrompt": "给这个版本起个名字，它会一直保留",
       "restorePart": "恢复",
       "outside": "在别处改动",
-      "pinned": "已钉住"
+      "pinned": "已钉住",
+      "commits": "提交"
     },
     "zh-Hant": {
       "name": "版本紀錄",
@@ -149,7 +136,8 @@
       "namePrompt": "為這個版本取個名字，它會一直保留",
       "restorePart": "還原",
       "outside": "在別處修改",
-      "pinned": "已釘選"
+      "pinned": "已釘選",
+      "commits": "提交"
     },
     "ja": {
       "name": "バージョン履歴",
@@ -174,7 +162,8 @@
       "namePrompt": "この版の名前（ずっと残ります）",
       "restorePart": "戻す",
       "outside": "ほかの場所で変更",
-      "pinned": "ピン留め中"
+      "pinned": "ピン留め中",
+      "commits": "コミット"
     },
     "ko": {
       "name": "버전 기록",
@@ -199,7 +188,8 @@
       "namePrompt": "이 버전의 이름 (계속 보관됩니다)",
       "restorePart": "되돌리기",
       "outside": "다른 곳에서 변경",
-      "pinned": "고정됨"
+      "pinned": "고정됨",
+      "commits": "커밋"
     },
     "es": {
       "name": "Historial de versiones",
@@ -224,7 +214,8 @@
       "namePrompt": "Un nombre para esta versión, que se guardará siempre",
       "restorePart": "Restaurar",
       "outside": "Cambiado en otro lugar",
-      "pinned": "Fijada"
+      "pinned": "Fijada",
+      "commits": "Commits"
     },
     "fr": {
       "name": "Historique des versions",
@@ -249,7 +240,8 @@
       "namePrompt": "Un nom pour cette version, gardée pour de bon",
       "restorePart": "Rétablir",
       "outside": "Modifié ailleurs",
-      "pinned": "Épinglée"
+      "pinned": "Épinglée",
+      "commits": "Commits"
     },
     "de": {
       "name": "Versionsverlauf",
@@ -274,7 +266,8 @@
       "namePrompt": "Ein Name für diese Version, die dauerhaft bleibt",
       "restorePart": "Wiederherstellen",
       "outside": "Woanders geändert",
-      "pinned": "Angeheftet"
+      "pinned": "Angeheftet",
+      "commits": "Commits"
     },
     "ru": {
       "name": "История версий",
@@ -299,7 +292,8 @@
       "namePrompt": "Название этой версии — она сохранится навсегда",
       "restorePart": "Вернуть",
       "outside": "Изменено в другом месте",
-      "pinned": "Закреплена"
+      "pinned": "Закреплена",
+      "commits": "Коммиты"
     },
     "pt": {
       "name": "Histórico de versões",
@@ -324,7 +318,8 @@
       "namePrompt": "Um nome para esta versão, que fica guardada para sempre",
       "restorePart": "Repor",
       "outside": "Alterado noutro lado",
-      "pinned": "Fixada"
+      "pinned": "Fixada",
+      "commits": "Commits"
     }
   }
 }

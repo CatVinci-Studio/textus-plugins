@@ -17,7 +17,7 @@ Garde chaque enregistrement d’un document comme une version, pour voir ce qui 
 
 ## Changements
 
-- **0.4.0** - Les versions s’espacent avec l’âge au lieu de ne garder que les 50 dernières ; chaque texte est stocké une fois ; les versions d’un document supprimé partent un mois plus tard. Comparez deux versions mot à mot, reprenez une seule modification, nommez et épinglez des versions ; les modifications faites hors de Textus sont gardées. Les versions de 0.3 sont reprises d’elles-mêmes. Nécessite Textus 1.4.3.
+- **0.4.0** - Les versions s’espacent avec l’âge au lieu de ne garder que les 50 dernières ; chaque texte est stocké une fois ; les versions d’un document supprimé partent un mois plus tard. Comparez deux versions mot à mot, reprenez une seule modification, nommez et épinglez des versions ; les modifications faites hors de Textus sont gardées. Les versions de 0.3 sont reprises d’elles-mêmes. Nécessite Textus 1.4.3. Dans un dossier Git sur le bureau, les commits du document s’affichent sous ses versions.
 - **0.3.8** - Le texte d'avant le premier enregistrement n'est plus perdu quand cet enregistrement arrive dès l'ouverture du document.
 - **0.3.7** - Le texte d'un document avant son premier enregistrement est lui aussi gardé comme version, et les versions suivent le document quand il est renommé ou déplacé.
 - **0.3.6** - L'enregistrement automatique pendant la saisie n'écrit que la version la plus récente, et non toutes les versions du document : les longs documents s'enregistrent avec bien moins de travail.

@@ -1,0 +1,321 @@
+{
+  "id": "catvinci.git",
+  "name": "%name%",
+  "version": "0.1.0",
+  "publisher": "catvinci",
+  "author": "CatVinci Studio",
+  "description": "%description%",
+  "icon": "icon.svg",
+  "license": "MIT",
+  "repository": "https://github.com/CatVinci-Studio/textus-plugins",
+  "engines": {
+    "textus": ">=1.4.3"
+  },
+  "platforms": ["desktop"],
+  "main": ["lib/folder-paths.js", "lib/text-diff.js", "host.js"],
+  "permissions": ["files.read", "git.commit", "editor.read", "ai.tools"],
+  "activationEvents": ["onStartupFinished"],
+  "contributes": {
+    "commands": [
+      {
+        "command": "catvinci.git.commit",
+        "title": "%commit%"
+      }
+    ],
+    "menus": {
+      "app/plugins": [
+        {
+          "command": "catvinci.git.commit"
+        }
+      ]
+    },
+    "aiTools": [
+      {
+        "name": "git_changes",
+        "description": "%tool.git_changes%",
+        "parameters": {
+          "type": "object",
+          "properties": {}
+        }
+      },
+      {
+        "name": "git_history",
+        "description": "%tool.git_history%",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "path": {
+              "type": "string",
+              "description": "The file's path in the open folder."
+            },
+            "limit": {
+              "type": "number",
+              "description": "How many commits, 20 when left out (at most 100)."
+            }
+          },
+          "required": ["path"]
+        }
+      },
+      {
+        "name": "git_file_at",
+        "description": "%tool.git_file_at%",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "path": {
+              "type": "string",
+              "description": "The file's path in the open folder."
+            },
+            "hash": {
+              "type": "string",
+              "description": "The commit's hash, or its start, from git_history."
+            }
+          },
+          "required": ["path", "hash"]
+        }
+      }
+    ]
+  },
+  "l10n": {
+    "en": {
+      "name": "Git",
+      "description": "Changed files marked in the sidebar, the branch in the status bar, commits of the files you pick with your own Git, and a file's commits in Version History. Desktop.",
+      "commit": "Commit Changes…",
+      "detached": "detached",
+      "branchTip": "Git branch: click to commit changes",
+      "noRepo": "This folder isn't in a Git repository, or Git isn't installed.",
+      "nothing": "Nothing to commit.",
+      "pickFiles": "Files to commit",
+      "messagePrompt": "Commit message",
+      "messageHint": "What changed and why",
+      "firstCommit": "Commit in {0} with your Git? Its hooks and signing run as usual; nothing is pushed.",
+      "committed": "Committed {0} on {1}",
+      "failed": "Git couldn't commit: {0}",
+      "state.modified": "Changed",
+      "state.added": "Added",
+      "state.untracked": "New, not in Git yet",
+      "state.renamed": "Renamed",
+      "state.conflicted": "In conflict",
+      "state.deleted": "Deleted",
+      "tool.git_changes": "The open folder's branch and changed files, each changed text file's lines against its last commit. Read it before writing a commit message.",
+      "tool.git_history": "A file's Git commits, newest first, through renames: hash, date, author, subject.",
+      "tool.git_file_at": "A file's text as one of its commits had it (hash from git_history)."
+    },
+    "zh": {
+      "name": "Git",
+      "description": "在侧栏标出改过的文件，状态栏显示分支，用你自己的 Git 提交选中的文件，版本历史里能看到文件的提交。仅桌面版。",
+      "commit": "提交改动…",
+      "detached": "分离状态",
+      "branchTip": "Git 分支：点击提交改动",
+      "noRepo": "这个文件夹不在 Git 仓库里，或者没有安装 Git。",
+      "nothing": "没有要提交的改动。",
+      "pickFiles": "要提交的文件",
+      "messagePrompt": "提交说明",
+      "messageHint": "改了什么、为什么改",
+      "firstCommit": "用你的 Git 在 {0} 里提交吗？钩子和签名照常运行，不会推送。",
+      "committed": "已提交 {0}（分支 {1}）",
+      "failed": "Git 没能提交：{0}",
+      "state.modified": "已修改",
+      "state.added": "已添加",
+      "state.untracked": "新文件，尚未加入 Git",
+      "state.renamed": "已改名",
+      "state.conflicted": "有冲突",
+      "state.deleted": "已删除",
+      "tool.git_changes": "The open folder's branch and changed files, each changed text file's lines against its last commit. Read it before writing a commit message.",
+      "tool.git_history": "A file's Git commits, newest first, through renames: hash, date, author, subject.",
+      "tool.git_file_at": "A file's text as one of its commits had it (hash from git_history)."
+    },
+    "zh-Hant": {
+      "name": "Git",
+      "description": "在側欄標出改過的檔案，狀態列顯示分支，用你自己的 Git 提交選取的檔案，版本歷史中可以看到檔案的提交。僅限桌面版。",
+      "commit": "提交變更…",
+      "detached": "分離狀態",
+      "branchTip": "Git 分支：按一下提交變更",
+      "noRepo": "這個資料夾不在 Git 儲存庫中，或者沒有安裝 Git。",
+      "nothing": "沒有要提交的變更。",
+      "pickFiles": "要提交的檔案",
+      "messagePrompt": "提交说明",
+      "messageHint": "改了什麼、為什麼改",
+      "firstCommit": "用你的 Git 在 {0} 中提交嗎？鉤子和簽署照常執行，不會推送。",
+      "committed": "已提交 {0}（分支 {1}）",
+      "failed": "Git 無法提交：{0}",
+      "state.modified": "已修改",
+      "state.added": "已新增",
+      "state.untracked": "新檔案，尚未加入 Git",
+      "state.renamed": "已重新命名",
+      "state.conflicted": "有衝突",
+      "state.deleted": "已刪除",
+      "tool.git_changes": "The open folder's branch and changed files, each changed text file's lines against its last commit. Read it before writing a commit message.",
+      "tool.git_history": "A file's Git commits, newest first, through renames: hash, date, author, subject.",
+      "tool.git_file_at": "A file's text as one of its commits had it (hash from git_history)."
+    },
+    "ja": {
+      "name": "Git",
+      "description": "変更したファイルをサイドバーに印し、ブランチをステータスバーに表示し、選んだファイルを自分の Git でコミットします。版の履歴でファイルのコミットも見られます。デスクトップ版のみ。",
+      "commit": "変更をコミット…",
+      "detached": "detached",
+      "branchTip": "Git ブランチ：クリックして変更をコミット",
+      "noRepo": "このフォルダは Git リポジトリにないか、Git がインストールされていません。",
+      "nothing": "コミットする変更はありません。",
+      "pickFiles": "コミットするファイル",
+      "messagePrompt": "コミットメッセージ",
+      "messageHint": "何をなぜ変えたか",
+      "firstCommit": "{0} で自分の Git を使ってコミットしますか？フックと署名はいつも通り動き、プッシュはしません。",
+      "committed": "{1} に {0} をコミットしました",
+      "failed": "Git がコミットできませんでした：{0}",
+      "state.modified": "変更",
+      "state.added": "追加",
+      "state.untracked": "新規（Git 未登録）",
+      "state.renamed": "名前変更",
+      "state.conflicted": "競合",
+      "state.deleted": "削除",
+      "tool.git_changes": "The open folder's branch and changed files, each changed text file's lines against its last commit. Read it before writing a commit message.",
+      "tool.git_history": "A file's Git commits, newest first, through renames: hash, date, author, subject.",
+      "tool.git_file_at": "A file's text as one of its commits had it (hash from git_history)."
+    },
+    "ko": {
+      "name": "Git",
+      "description": "바뀐 파일을 사이드바에 표시하고, 브랜치를 상태 표시줄에 보여 주며, 고른 파일을 내 Git으로 커밋합니다. 버전 기록에서 파일의 커밋도 볼 수 있습니다. 데스크톱 전용.",
+      "commit": "변경 사항 커밋…",
+      "detached": "detached",
+      "branchTip": "Git 브랜치: 클릭해서 변경 사항 커밋",
+      "noRepo": "이 폴더는 Git 저장소에 없거나 Git이 설치되어 있지 않습니다.",
+      "nothing": "커밋할 변경 사항이 없습니다.",
+      "pickFiles": "커밋할 파일",
+      "messagePrompt": "커밋 메시지",
+      "messageHint": "무엇을 왜 바꿨는지",
+      "firstCommit": "{0}에서 내 Git으로 커밋할까요? 훅과 서명은 평소처럼 실행되고 푸시하지 않습니다.",
+      "committed": "{1}에 {0} 커밋함",
+      "failed": "Git이 커밋하지 못했습니다: {0}",
+      "state.modified": "변경됨",
+      "state.added": "추가됨",
+      "state.untracked": "새 파일, Git에 없음",
+      "state.renamed": "이름 바뀜",
+      "state.conflicted": "충돌",
+      "state.deleted": "삭제됨",
+      "tool.git_changes": "The open folder's branch and changed files, each changed text file's lines against its last commit. Read it before writing a commit message.",
+      "tool.git_history": "A file's Git commits, newest first, through renames: hash, date, author, subject.",
+      "tool.git_file_at": "A file's text as one of its commits had it (hash from git_history)."
+    },
+    "de": {
+      "name": "Git",
+      "description": "Geänderte Dateien in der Seitenleiste markiert, der Branch in der Statusleiste, Commits der gewählten Dateien mit Ihrem eigenen Git und die Commits einer Datei im Versionsverlauf. Nur Desktop.",
+      "commit": "Änderungen committen…",
+      "detached": "detached",
+      "branchTip": "Git-Branch: klicken, um Änderungen zu committen",
+      "noRepo": "Dieser Ordner liegt in keinem Git-Repository, oder Git ist nicht installiert.",
+      "nothing": "Nichts zu committen.",
+      "pickFiles": "Zu committende Dateien",
+      "messagePrompt": "Commit-Nachricht",
+      "messageHint": "Was sich geändert hat und warum",
+      "firstCommit": "In {0} mit Ihrem Git committen? Hooks und Signierung laufen wie gewohnt; nichts wird gepusht.",
+      "committed": "{0} auf {1} committet",
+      "failed": "Git konnte nicht committen: {0}",
+      "state.modified": "Geändert",
+      "state.added": "Hinzugefügt",
+      "state.untracked": "Neu, noch nicht in Git",
+      "state.renamed": "Umbenannt",
+      "state.conflicted": "Im Konflikt",
+      "state.deleted": "Gelöscht",
+      "tool.git_changes": "The open folder's branch and changed files, each changed text file's lines against its last commit. Read it before writing a commit message.",
+      "tool.git_history": "A file's Git commits, newest first, through renames: hash, date, author, subject.",
+      "tool.git_file_at": "A file's text as one of its commits had it (hash from git_history)."
+    },
+    "fr": {
+      "name": "Git",
+      "description": "Les fichiers modifiés marqués dans la barre latérale, la branche dans la barre d’état, des commits des fichiers choisis avec votre propre Git, et les commits d’un fichier dans l’historique des versions. Bureau uniquement.",
+      "commit": "Committer les modifications…",
+      "detached": "detached",
+      "branchTip": "Branche Git : cliquez pour committer les modifications",
+      "noRepo": "Ce dossier n’est pas dans un dépôt Git, ou Git n’est pas installé.",
+      "nothing": "Rien à committer.",
+      "pickFiles": "Fichiers à committer",
+      "messagePrompt": "Message de commit",
+      "messageHint": "Ce qui a changé et pourquoi",
+      "firstCommit": "Committer dans {0} avec votre Git ? Les hooks et la signature s’exécutent comme d’habitude ; rien n’est poussé.",
+      "committed": "{0} committé sur {1}",
+      "failed": "Git n’a pas pu committer : {0}",
+      "state.modified": "Modifié",
+      "state.added": "Ajouté",
+      "state.untracked": "Nouveau, pas encore dans Git",
+      "state.renamed": "Renommé",
+      "state.conflicted": "En conflit",
+      "state.deleted": "Supprimé",
+      "tool.git_changes": "The open folder's branch and changed files, each changed text file's lines against its last commit. Read it before writing a commit message.",
+      "tool.git_history": "A file's Git commits, newest first, through renames: hash, date, author, subject.",
+      "tool.git_file_at": "A file's text as one of its commits had it (hash from git_history)."
+    },
+    "es": {
+      "name": "Git",
+      "description": "Los archivos cambiados marcados en la barra lateral, la rama en la barra de estado, commits de los archivos que elijas con tu propio Git y los commits de un archivo en el historial de versiones. Solo escritorio.",
+      "commit": "Hacer commit de los cambios…",
+      "detached": "detached",
+      "branchTip": "Rama de Git: haz clic para hacer commit",
+      "noRepo": "Esta carpeta no está en un repositorio Git, o Git no está instalado.",
+      "nothing": "No hay nada para hacer commit.",
+      "pickFiles": "Archivos para el commit",
+      "messagePrompt": "Mensaje del commit",
+      "messageHint": "Qué cambió y por qué",
+      "firstCommit": "¿Hacer commit en {0} con tu Git? Los hooks y la firma se ejecutan como siempre; no se hace push.",
+      "committed": "Commit {0} en {1}",
+      "failed": "Git no pudo hacer el commit: {0}",
+      "state.modified": "Modificado",
+      "state.added": "Añadido",
+      "state.untracked": "Nuevo, aún no en Git",
+      "state.renamed": "Renombrado",
+      "state.conflicted": "En conflicto",
+      "state.deleted": "Eliminado",
+      "tool.git_changes": "The open folder's branch and changed files, each changed text file's lines against its last commit. Read it before writing a commit message.",
+      "tool.git_history": "A file's Git commits, newest first, through renames: hash, date, author, subject.",
+      "tool.git_file_at": "A file's text as one of its commits had it (hash from git_history)."
+    },
+    "pt": {
+      "name": "Git",
+      "description": "Os arquivos alterados marcados na barra lateral, o branch na barra de status, commits dos arquivos que você escolher com o seu próprio Git e os commits de um arquivo no histórico de versões. Só desktop.",
+      "commit": "Fazer commit das alterações…",
+      "detached": "detached",
+      "branchTip": "Branch do Git: clique para fazer commit",
+      "noRepo": "Esta pasta não está em um repositório Git, ou o Git não está instalado.",
+      "nothing": "Nada para fazer commit.",
+      "pickFiles": "Arquivos para o commit",
+      "messagePrompt": "Mensagem do commit",
+      "messageHint": "O que mudou e por quê",
+      "firstCommit": "Fazer commit em {0} com o seu Git? Hooks e assinatura funcionam como sempre; nada é enviado (push).",
+      "committed": "Commit {0} em {1}",
+      "failed": "O Git não conseguiu fazer o commit: {0}",
+      "state.modified": "Alterado",
+      "state.added": "Adicionado",
+      "state.untracked": "Novo, ainda fora do Git",
+      "state.renamed": "Renomeado",
+      "state.conflicted": "Em conflito",
+      "state.deleted": "Excluído",
+      "tool.git_changes": "The open folder's branch and changed files, each changed text file's lines against its last commit. Read it before writing a commit message.",
+      "tool.git_history": "A file's Git commits, newest first, through renames: hash, date, author, subject.",
+      "tool.git_file_at": "A file's text as one of its commits had it (hash from git_history)."
+    },
+    "ru": {
+      "name": "Git",
+      "description": "Изменённые файлы отмечены на боковой панели, ветка — в строке состояния, коммиты выбранных файлов вашим собственным Git и коммиты файла в истории версий. Только для компьютера.",
+      "commit": "Закоммитить изменения…",
+      "detached": "detached",
+      "branchTip": "Ветка Git: нажмите, чтобы закоммитить изменения",
+      "noRepo": "Эта папка не в репозитории Git, или Git не установлен.",
+      "nothing": "Нечего коммитить.",
+      "pickFiles": "Файлы для коммита",
+      "messagePrompt": "Сообщение коммита",
+      "messageHint": "Что изменилось и почему",
+      "firstCommit": "Коммитить в {0} вашим Git? Хуки и подпись работают как обычно; ничего не отправляется (push).",
+      "committed": "Коммит {0} в {1}",
+      "failed": "Git не смог сделать коммит: {0}",
+      "state.modified": "Изменён",
+      "state.added": "Добавлен",
+      "state.untracked": "Новый, ещё не в Git",
+      "state.renamed": "Переименован",
+      "state.conflicted": "Конфликт",
+      "state.deleted": "Удалён",
+      "tool.git_changes": "The open folder's branch and changed files, each changed text file's lines against its last commit. Read it before writing a commit message.",
+      "tool.git_history": "A file's Git commits, newest first, through renames: hash, date, author, subject.",
+      "tool.git_file_at": "A file's text as one of its commits had it (hash from git_history)."
+    }
+  }
+}
