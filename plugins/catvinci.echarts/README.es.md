@@ -25,6 +25,7 @@ El plugin pide un solo permiso, para dar a Textus AI la herramienta `check_echar
 
 ## Cambios
 
+- **0.3.3** - Un gráfico dibujado con su bloque plegado (en el móvil) se ajusta al ancho al abrirlo.
 - **0.3.2** - Los gráficos se redibujan al cambiar el ancho del panel, y su texto y altura por defecto siguen el zoom y la fuente de la app.
 - **0.3.1** - Su descripción ya no menciona mapas, que un bloque no puede cargar.
 - **0.3.0** - Textus AI puede revisar un bloque `echarts` antes de escribirlo.

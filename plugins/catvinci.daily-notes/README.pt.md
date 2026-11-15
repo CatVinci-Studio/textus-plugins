@@ -23,6 +23,7 @@ O plugin lê e escreve ficheiros na pasta aberta para encontrar e criar as notas
 
 ## Alterações
 
+- **0.7.5** - O título do mês do calendário começa à esquerda e termina em reticências numa barra lateral estreita.
 - **0.7.4** - Num painel estreito, como no celular, o calendário mostra o nome curto do mês em vez de cortar o longo.
 - **0.7.3** - Datas impossíveis como 30 de fevereiro são recusadas, o calendário mantém uma largura confortável em painéis largos e é redesenhado quando as configurações de pastas mudam, e as configurações semanais e mensais só aparecem quando essas notas estão ativadas.
 - **0.7.2** - Textos de ajuda e de estado vazio mais curtos.

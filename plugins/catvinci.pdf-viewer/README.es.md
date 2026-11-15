@@ -15,6 +15,7 @@ No pide permisos: Textus le pasa el PDF que abres.
 
 ## Cambios
 
+- **0.2.6** - Los botones y teclas de zoom avanzan de 1,25× en 1,25×, como en los demás visores.
 - **0.2.5** - Un PDF largo recorrido hasta el final ocupa mucha menos memoria: las páginas fuera de la vista también sueltan sus imágenes.
 - **0.2.4** - La barra pasa a otra línea en un panel estrecho, y buscar ya no mezcla resultados de una palabra anterior.
 - **0.2.3** - Su barra sigue el orden de Textus: lo que muestra, luego buscar y zoom.

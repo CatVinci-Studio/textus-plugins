@@ -147,8 +147,11 @@
     const th = (key) => {
       const node = el("th", { tabindex: "0", "data-key": key, onclick: (e) => columnMenu(e.currentTarget, key) },
         icon(TYPE_ICONS[typeOf(key)]), label(key), sorted(key), resizer(key));
-      // A column but the title is dragged along the head to a new place.
-      if (key !== "name") node.addEventListener("pointerdown", (e) => moveColumn(e, node, key));
+      // A column but the title is dragged along the head, or by its grip, to a new place.
+      if (key !== "name") {
+        node.append(el("span", { class: "tx-table-grip tx-table-grip-col", "aria-hidden": "true" }));
+        node.addEventListener("pointerdown", (e) => moveColumn(e, node, key));
+      }
       return node;
     };
     const head = el("tr", null, th("name"), data.columns.map(th),
@@ -214,7 +217,7 @@
     const place = (k, dx, lifted) => {
       for (const c of cells(k)) {
         c.style.transform = dx ? "translateX(" + dx + "px)" : "";
-        c.classList.toggle("col-lifted", lifted);
+        c.classList.toggle("tx-cell-lifted", lifted);
       }
     };
     drag.track(e, {
@@ -225,7 +228,7 @@
           return { key: k, left: r.left, middle: r.left + r.width / 2, width: r.width };
         });
         zoom = node.getBoundingClientRect().width / node.offsetWidth || 1;
-        frame.classList.add("col-moving");
+        frame.classList.add("tx-making-room");
       },
       move: (x) => {
         const from = order.indexOf(key);
@@ -246,7 +249,7 @@
         });
       },
       end: (_x, _y, dropped) => {
-        frame.classList.remove("col-moving");
+        frame.classList.remove("tx-making-room");
         for (const k of order) place(k, 0, false);
         const from = order.indexOf(key);
         if (!dropped || at === from) return render();

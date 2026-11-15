@@ -88,10 +88,11 @@ function timeline(source, width, dark, look) {
   var widest = Math.max.apply(
     null,
     events.map(function (e) {
-      return look.measure(e[0], small.px);
+      return look.measure(e[0], small.px, 400);
     }),
   );
-  var axis = narrow ? 10 : Math.round(Math.min(Math.max(widest, 24) + GAP + 4, width * 0.35));
+  // Up, never down: a date measured a hair wider than its column broke by letter.
+  var axis = narrow ? 10 : Math.ceil(Math.min(Math.max(widest, 24) + GAP + 4, width * 0.35));
   var x = axis + GAP;
   var room = Math.max(width - x - 4, 40);
   var parts = [];

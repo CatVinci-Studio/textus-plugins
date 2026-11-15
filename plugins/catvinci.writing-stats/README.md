@@ -15,6 +15,7 @@ It works on desktop and iPhone and needs Textus 1.3.0 or later. It asks to read 
 
 ## Changes
 
+- **0.2.5** - Words and characters are counted as the status bar counts them (from Textus 1.4.3), and a Windows file's front matter is left out of the count.
 - **0.2.4** - The store description now opens with what the plugin does.
 - **0.2.3** - Today now counts only the words you type yourself, not changes from sync or AI, and stays quick in large folders. A negative daily goal is no longer shown as met.
 - **0.2.2** - Its page now says in one sentence what it does, what it can do, and what changed in each version.

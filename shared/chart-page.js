@@ -68,6 +68,8 @@
     var problem = document.getElementById("chart-problem");
     var last = null;
     var drawing = Promise.resolve();
+    // The width it was last drawn at: 0 while its block was folded.
+    var drawnAt = 0;
 
     function draw() {
       if (!last) return drawing;
@@ -75,6 +77,7 @@
       drawing = drawing.then(async function () {
         problem.hidden = true;
         el.style.height = now.meta.height ? now.meta.height + "px" : "";
+        drawnAt = Math.round(el.clientWidth);
         try {
           if (now.error) throw new Error(now.error);
           await chart.draw(el, now.source, now.meta, dark(), now.extra);
@@ -109,15 +112,12 @@
         characterData: true,
         subtree: true,
       });
-    // Another width: drawn again to fit it, once it has settled.
-    var width = 0;
+    // Another width than it was drawn at (a folded block opened, a pane
+    // resized): drawn again to fit it, once it has settled.
     var resizing = 0;
     new ResizeObserver(function () {
       var now = Math.round(el.clientWidth);
-      if (!now || now === width) return;
-      var first = width === 0;
-      width = now;
-      if (first) return;
+      if (!now || now === drawnAt) return;
       clearTimeout(resizing);
       resizing = setTimeout(draw, 120);
     }).observe(el);

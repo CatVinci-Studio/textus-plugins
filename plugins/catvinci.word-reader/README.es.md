@@ -13,6 +13,7 @@ El plugin no pide permisos: solo lee el archivo que abres con él. Funciona en e
 
 ## Cambios
 
+- **0.2.6** - Los botones y teclas de zoom avanzan de 1,25× en 1,25×, como en los demás visores.
 - **0.2.5** - El botón de cerrar de la barra de búsqueda tiene nombre para lectores de pantalla y muestra una descripción.
 - **0.2.4** - Se abre ajustado al ancho de la pestaña; pellizcar o Ctrl+rueda (⌘ en Mac) amplía las páginas; una página más ancha que la pestaña se desplaza hasta ambos bordes; las barras se ajustan en una pestaña estrecha y el zoom se conserva al cambiar de idioma.
 - **0.2.3** - Su barra sigue el orden de Textus: lo que muestra, luego buscar y zoom.

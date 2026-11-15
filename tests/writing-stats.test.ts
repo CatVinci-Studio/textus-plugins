@@ -26,6 +26,11 @@ describe("counting", () => {
     expect(c.cjk).toBe(4);
   });
 
+  it("leaves out a Windows file's front matter too", () => {
+    const c = wc.count("---\r\ntitle: x\r\n---\r\n# Hello world\r\n");
+    expect(c.words).toBe(2);
+  });
+
   it("gives at least a minute to read", () => {
     expect(wc.readingMinutes(wc.count("A few words."))).toBe(1);
     expect(wc.readingMinutes({ words: 2300, cjk: 0 })).toBe(10);

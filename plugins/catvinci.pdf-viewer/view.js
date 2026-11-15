@@ -319,8 +319,8 @@
     fitWidth = false;
     zoomTo(next, x, y);
   }
-  $("zoom-in").onclick = () => setScale(scale * 1.2);
-  $("zoom-out").onclick = () => setScale(scale / 1.2);
+  $("zoom-in").onclick = () => setScale(scale * 1.25);
+  $("zoom-out").onclick = () => setScale(scale / 1.25);
   $("zoom").onclick = () => {
     if (fitWidth) return setScale(1);
     fitWidth = true;

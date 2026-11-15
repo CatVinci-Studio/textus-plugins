@@ -152,6 +152,7 @@ function disk(
       create: async (path: string, text: string) => {
         if (rel(path) in files) throw new Error("Exists: " + path);
         files[rel(path)] = text;
+        return path;
       },
       write: async (path: string, bytes: Uint8Array) =>
         void (files[rel(path)] = bytes),

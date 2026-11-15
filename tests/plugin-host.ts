@@ -322,9 +322,15 @@ export function folder(files: Record<string, string>) {
     },
     writeText: async (path: string, text: string) =>
       void (files[rel(path)] = text),
-    create: async (path: string, text = "") => {
-      if (rel(path) in files) throw new Error("Exists: " + path);
-      files[rel(path)] = text;
+    // As 1.7's: `unique` takes "Note 2.md"… beside a taken name; the path
+    // written comes back.
+    create: async (path: string, text = "", options?: { unique?: boolean }) => {
+      let at = path;
+      for (let n = 2; options?.unique && rel(at) in files; n++)
+        at = path.replace(/(\.[^./\\]+)?$/, (ext) => ` ${n}${ext}`);
+      if (rel(at) in files) throw new Error("Exists: " + at);
+      files[rel(at)] = text;
+      return at;
     },
     process: async (path: string, change: (text: string) => string) => {
       if (!(rel(path) in files)) throw new Error("No file " + path);

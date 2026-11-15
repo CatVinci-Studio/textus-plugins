@@ -1,7 +1,7 @@
 {
   "id": "catvinci.opencode",
   "name": "%name%",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "publisher": "catvinci",
   "author": "CatVinci Studio",
   "description": "%description%",
@@ -9,7 +9,7 @@
   "license": "MIT",
   "repository": "https://github.com/CatVinci-Studio/textus-plugins",
   "engines": {
-    "textus": ">=1.4.2"
+    "textus": ">=1.4.3-rc.1"
   },
   "platforms": [
     "desktop"
@@ -29,7 +29,8 @@
           "acp"
         ],
         "env": {
-          "OPENCODE_PERMISSION": "{\"edit\":\"ask\",\"bash\":\"ask\"}"
+          "OPENCODE_PERMISSION": "{\"edit\":\"ask\",\"bash\":\"ask\",\"webfetch\":\"ask\",\"websearch\":\"ask\",\"task\":\"deny\"}",
+          "OPENCODE_CONFIG_CONTENT": "{\"agent\":{\"plan\":{\"permission\":{\"edit\":\"deny\"}}}}"
         },
         "setup": "%setup%"
       }
@@ -39,52 +40,52 @@
     "en": {
       "name": "OpenCode",
       "description": "OpenCode in Textus AI: any model it is set up with reads your folder, writes and edits your notes, and asks before it changes anything.",
-      "setup": "Needs Node.js, and OpenCode signed in to a provider once: run opencode auth login in a terminal."
+      "setup": "Needs Node.js. Works at once with OpenCode’s free models; for your own provider, once in a terminal: npx -y opencode-ai@1.19.5 auth login"
     },
     "zh": {
       "name": "OpenCode",
       "description": "在 Textus AI 里用 OpenCode：用它配置好的任意模型读你的文件夹、写和改笔记，改动前先征得你同意。",
-      "setup": "需要 Node.js，并先在 OpenCode 里登录一次模型服务：在终端运行 opencode auth login。"
+      "setup": "需要 Node.js。直接就能用 OpenCode 的免费模型；要用自己的服务商，在终端运行一次：npx -y opencode-ai@1.19.5 auth login"
     },
     "zh-Hant": {
       "name": "OpenCode",
       "description": "在 Textus AI 裡用 OpenCode：用它設定好的任意模型讀你的資料夾、寫和改筆記，改動前先徵得你同意。",
-      "setup": "需要 Node.js，並先在 OpenCode 裡登入一次模型服務：在終端機執行 opencode auth login。"
+      "setup": "需要 Node.js。直接就能用 OpenCode 的免費模型；要用自己的服務商，在終端機執行一次：npx -y opencode-ai@1.19.5 auth login"
     },
     "ja": {
       "name": "OpenCode",
       "description": "Textus AI で OpenCode を使う：設定したどのモデルでも、フォルダを読み、ノートを書いて直し、変更の前に確認します。",
-      "setup": "Node.js と、一度プロバイダにサインインした OpenCode が必要です。ターミナルで opencode auth login を実行してください。"
+      "setup": "Node.js が必要です。OpenCode の無料モデルならすぐ使えます。自分のプロバイダーを使うには、ターミナルで一度：npx -y opencode-ai@1.19.5 auth login"
     },
     "ko": {
       "name": "OpenCode",
       "description": "Textus AI에서 OpenCode 사용: 설정한 어떤 모델로든 폴더를 읽고 노트를 쓰고 고치며, 바꾸기 전에 먼저 묻습니다.",
-      "setup": "Node.js와 한 번 제공자에 로그인한 OpenCode가 필요합니다. 터미널에서 opencode auth login을 실행하세요."
+      "setup": "Node.js가 필요합니다. OpenCode의 무료 모델은 바로 쓸 수 있습니다. 자신의 공급자를 쓰려면 터미널에서 한 번: npx -y opencode-ai@1.19.5 auth login"
     },
     "de": {
       "name": "OpenCode",
       "description": "OpenCode in Textus AI: Mit jedem eingerichteten Modell liest es deinen Ordner, schreibt und überarbeitet Notizen und fragt vor jeder Änderung.",
-      "setup": "Braucht Node.js und ein einmal bei einem Anbieter angemeldetes OpenCode: opencode auth login im Terminal ausführen."
+      "setup": "Braucht Node.js. Läuft sofort mit den kostenlosen Modellen von OpenCode; für einen eigenen Anbieter einmal im Terminal: npx -y opencode-ai@1.19.5 auth login"
     },
     "fr": {
       "name": "OpenCode",
       "description": "OpenCode dans Textus AI : avec le modèle qu’il utilise, il lit votre dossier, écrit et révise vos notes, et demande avant tout changement.",
-      "setup": "Nécessite Node.js et OpenCode connecté une fois à un fournisseur : lancez opencode auth login dans un terminal."
+      "setup": "Nécessite Node.js. Fonctionne tout de suite avec les modèles gratuits d’OpenCode ; pour votre propre fournisseur, une fois dans un terminal : npx -y opencode-ai@1.19.5 auth login"
     },
     "es": {
       "name": "OpenCode",
       "description": "OpenCode en Textus AI: con el modelo que tenga configurado, lee tu carpeta, escribe y edita tus notas y pregunta antes de cambiar nada.",
-      "setup": "Necesita Node.js y OpenCode con la sesión iniciada una vez en un proveedor: ejecuta opencode auth login en una terminal."
+      "setup": "Necesita Node.js. Funciona al momento con los modelos gratuitos de OpenCode; para tu propio proveedor, una vez en una terminal: npx -y opencode-ai@1.19.5 auth login"
     },
     "pt": {
       "name": "OpenCode",
       "description": "OpenCode no Textus AI: com o modelo configurado, lê sua pasta, escreve e edita suas notas e pergunta antes de mudar algo.",
-      "setup": "Precisa do Node.js e do OpenCode conectado uma vez a um provedor: rode opencode auth login num terminal."
+      "setup": "Precisa do Node.js. Funciona logo com os modelos gratuitos do OpenCode; para o seu próprio fornecedor, uma vez num terminal: npx -y opencode-ai@1.19.5 auth login"
     },
     "ru": {
       "name": "OpenCode",
       "description": "OpenCode в Textus AI: с любой настроенной моделью читает папку, пишет и правит заметки и спрашивает перед каждым изменением.",
-      "setup": "Нужны Node.js и OpenCode, один раз вошедший в провайдер: выполните opencode auth login в терминале."
+      "setup": "Нужен Node.js. Сразу работает с бесплатными моделями OpenCode; для своего провайдера один раз в терминале: npx -y opencode-ai@1.19.5 auth login"
     }
   }
 }

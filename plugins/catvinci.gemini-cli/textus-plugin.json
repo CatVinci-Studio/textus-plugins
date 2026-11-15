@@ -1,0 +1,92 @@
+{
+  "id": "catvinci.gemini-cli",
+  "name": "%name%",
+  "version": "0.1.0",
+  "publisher": "catvinci",
+  "author": "CatVinci Studio",
+  "description": "%description%",
+  "icon": "icon.svg",
+  "license": "MIT",
+  "repository": "https://github.com/CatVinci-Studio/textus-plugins",
+  "engines": {
+    "textus": ">=1.4.3-rc.1"
+  },
+  "platforms": [
+    "desktop"
+  ],
+  "permissions": [
+    "agents"
+  ],
+  "contributes": {
+    "agents": [
+      {
+        "id": "catvinci.gemini-cli.gemini",
+        "name": "Gemini CLI",
+        "command": "npx",
+        "args": [
+          "-y",
+          "@google/gemini-cli@0.68.0",
+          "--acp",
+          "--approval-mode",
+          "default"
+        ],
+        "setup": "%setup%",
+        "provider": "google",
+        "askMode": "default",
+        "signIn": "oauth-personal"
+      }
+    ]
+  },
+  "l10n": {
+    "en": {
+      "name": "Gemini CLI",
+      "description": "Gemini CLI in Textus AI: Google's Gemini models read your folder, write and edit your notes, and ask before they change anything.",
+      "setup": "Needs Node.js 20 or later. The first time, a browser opens to sign in with your Google account. For a Gemini API key or Vertex AI instead, run npx @google/gemini-cli once in a terminal and choose it with /auth."
+    },
+    "zh": {
+      "name": "Gemini CLI",
+      "description": "在 Textus AI 里用 Gemini CLI：用 Google 的 Gemini 模型读你的文件夹、写和改笔记，改动前先征得你同意。",
+      "setup": "需要 Node.js 20 或更新版本。第一次会打开浏览器用 Google 账号登录。要改用 Gemini API key 或 Vertex AI，请在终端运行一次 npx @google/gemini-cli，用 /auth 选择。"
+    },
+    "zh-Hant": {
+      "name": "Gemini CLI",
+      "description": "在 Textus AI 裡用 Gemini CLI：用 Google 的 Gemini 模型讀你的資料夾、寫和改筆記，改動前先徵得你同意。",
+      "setup": "需要 Node.js 20 或更新版本。第一次會開啟瀏覽器以 Google 帳號登入。要改用 Gemini API key 或 Vertex AI，請在終端機執行一次 npx @google/gemini-cli，用 /auth 選擇。"
+    },
+    "ja": {
+      "name": "Gemini CLI",
+      "description": "Textus AI で Gemini CLI を使う：Google の Gemini モデルがフォルダを読み、ノートを書いて直し、変更の前に確認します。",
+      "setup": "Node.js 20 以降が必要です。初回はブラウザが開き Google アカウントでサインインします。Gemini API キーや Vertex AI を使う場合は、ターミナルで一度 npx @google/gemini-cli を実行し /auth で選んでください。"
+    },
+    "ko": {
+      "name": "Gemini CLI",
+      "description": "Textus AI에서 Gemini CLI 사용: Google의 Gemini 모델이 폴더를 읽고 노트를 쓰고 고치며, 바꾸기 전에 먼저 묻습니다.",
+      "setup": "Node.js 20 이상이 필요합니다. 처음에는 브라우저가 열려 Google 계정으로 로그인합니다. Gemini API 키나 Vertex AI를 쓰려면 터미널에서 npx @google/gemini-cli를 한 번 실행하고 /auth로 선택하세요."
+    },
+    "de": {
+      "name": "Gemini CLI",
+      "description": "Gemini CLI in Textus AI: Googles Gemini-Modelle lesen deinen Ordner, schreiben und bearbeiten deine Notizen und fragen vor jeder Änderung.",
+      "setup": "Braucht Node.js 20 oder neuer. Beim ersten Mal öffnet sich ein Browser zur Anmeldung mit deinem Google-Konto. Für einen Gemini-API-Schlüssel oder Vertex AI einmal im Terminal npx @google/gemini-cli ausführen und mit /auth wählen."
+    },
+    "fr": {
+      "name": "Gemini CLI",
+      "description": "Gemini CLI dans Textus AI : les modèles Gemini de Google lisent votre dossier, écrivent et modifient vos notes, et demandent avant tout changement.",
+      "setup": "Nécessite Node.js 20 ou plus récent. La première fois, un navigateur s’ouvre pour se connecter avec votre compte Google. Pour une clé d’API Gemini ou Vertex AI, lancez une fois npx @google/gemini-cli dans un terminal et choisissez-la avec /auth."
+    },
+    "es": {
+      "name": "Gemini CLI",
+      "description": "Gemini CLI en Textus AI: los modelos Gemini de Google leen tu carpeta, escriben y editan tus notas, y preguntan antes de cambiar nada.",
+      "setup": "Necesita Node.js 20 o posterior. La primera vez se abre el navegador para entrar con tu cuenta de Google. Para una clave de la API de Gemini o Vertex AI, ejecuta una vez npx @google/gemini-cli en una terminal y elígela con /auth."
+    },
+    "pt": {
+      "name": "Gemini CLI",
+      "description": "Gemini CLI no Textus AI: os modelos Gemini do Google leem a sua pasta, escrevem e editam as suas notas, e perguntam antes de mudar algo.",
+      "setup": "Precisa do Node.js 20 ou posterior. Na primeira vez abre-se o navegador para entrar com a sua conta Google. Para uma chave da API Gemini ou Vertex AI, execute uma vez npx @google/gemini-cli num terminal e escolha-a com /auth."
+    },
+    "ru": {
+      "name": "Gemini CLI",
+      "description": "Gemini CLI в Textus AI: модели Gemini от Google читают вашу папку, пишут и правят заметки и спрашивают перед каждым изменением.",
+      "setup": "Нужен Node.js 20 или новее. В первый раз откроется браузер для входа в аккаунт Google. Для ключа Gemini API или Vertex AI один раз выполните в терминале npx @google/gemini-cli и выберите его через /auth."
+    }
+  }
+}

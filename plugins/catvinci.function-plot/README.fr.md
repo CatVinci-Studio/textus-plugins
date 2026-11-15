@@ -26,6 +26,7 @@ Il ne demande que **Outils pour Textus AI**, pour que Textus AI puisse vérifier
 
 ## Changements
 
+- **0.3.3** - Un graphique dessiné quand son bloc était replié (sur téléphone) s'adapte à la largeur quand on l'ouvre.
 - **0.3.2** - Les courbes raides comme tan(x) gardent leur forme et s'interrompent aux asymptotes ; une fonction sans rien à tracer le dit ; π et 2xsin(x) sont lus ; la vérification de Textus AI suit la plage de x de la clôture.
 - **0.3.1** - Sa page dit maintenant en une phrase ce qu'il fait, ce qu'il permet et ce qui a changé à chaque version.
 - **0.3.0** - un outil pour Textus AI, `check_function_plot`

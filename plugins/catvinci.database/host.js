@@ -144,7 +144,7 @@ async function changeBase(target, change) {
  */
 function draw(target, webview, context) {
   return context.plugin.readText("view.html").then((html) => {
-    webview.html = html;
+    webview.html = target.tab ? html.replace("<body>", '<body class="in-tab">') : html;
     // The view in front: the page keeps it (each reader's own), and says.
     let index = 0;
     let sent = 0;
@@ -340,6 +340,8 @@ function fileTarget(file) {
   return {
     path: file.path,
     key: () => file.path,
+    // A tab of its own: the page keeps a gutter, as the other file tabs do.
+    tab: true,
     ready: reload(),
     source: () => text,
     setSource: async (next) => {

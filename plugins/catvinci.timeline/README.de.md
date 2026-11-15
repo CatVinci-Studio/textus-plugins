@@ -25,6 +25,7 @@ Es braucht nur **Werkzeuge für Textus AI**, damit Textus AI einen Block prüfen
 
 ## Änderungen
 
+- **0.3.3** - Ein Datum bricht nicht mehr mitten im Wort um; bei zugeklapptem Block Gezeichnetes passt sich beim Aufklappen an.
 - **0.3.2** - lange Notizen und Daten brechen in einem schmalen Bereich um, die Schrift des Dokuments wird verwendet, und ein leerer Block sagt, was hineingehört
 - **0.3.1** - Seine Seite sagt jetzt in einem Satz, was es tut, was es kann und was sich in jeder Version geändert hat.
 - **0.3.0** - ein Werkzeug für Textus AI, `check_timeline`

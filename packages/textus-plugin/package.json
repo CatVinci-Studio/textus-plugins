@@ -1,0 +1,17 @@
+{
+  "name": "textus-plugin",
+  "version": "0.1.0",
+  "private": true,
+  "description": "For writing a Textus plugin: the API's types, a stand-in Textus to test it against, and `textus-plugin check`.",
+  "license": "MIT",
+  "type": "module",
+  "types": "textus.d.ts",
+  "bin": { "textus-plugin": "cli.mjs" },
+  "exports": {
+    ".": { "types": "./textus.d.ts" },
+    "./test": "./test.mjs",
+    "./check": "./check.mjs",
+    "./schema": "./textus-plugin.schema.json"
+  },
+  "files": ["*.mjs", "textus.d.ts", "textus-plugin.schema.json", "plugin-permissions.json", "README.md"]
+}

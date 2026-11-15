@@ -25,6 +25,7 @@ The plugin asks for one permission, to give Textus AI the `check_echarts` tool l
 
 ## Changes
 
+- **0.3.3** - A chart drawn while its block was folded (a phone) fits once the block opens, instead of keeping its old size.
 - **0.3.2** - Charts redraw when the panel width changes, and their text and default height follow the app's zoom and font.
 - **0.3.1** - Its description no longer lists maps, which a block can't load.
 - **0.3.0** - Textus AI can check an `echarts` block before it writes one.

@@ -19,6 +19,7 @@ Funciona no computador e no iPhone e precisa do Textus 1.3.10 ou mais recente. P
 
 ## Alterações
 
+- **0.5.4** - Um nome já usado recebe o próximo livre no momento da escrita, sem conflitos (Textus 1.4.3).
 - **0.5.3** - A descrição da loja agora começa pelo que o plugin faz.
 - **0.5.2** - Agora aparecem os modelos de uma pasta de modelos oculta ou em minúsculas, e de suas subpastas. Depois de inserir, o cursor fica logo após o modelo.
 - **0.5.1** - **Novo a partir de modelo…** no menu de contexto de um arquivo ou pasta cria o documento nessa pasta.

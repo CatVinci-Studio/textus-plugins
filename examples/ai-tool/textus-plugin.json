@@ -1,0 +1,57 @@
+{
+  "id": "your-name.glossary",
+  "name": "%name%",
+  "version": "0.1.0",
+  "publisher": "your-name",
+  "description": "%description%",
+  "license": "MIT",
+  "engines": {
+    "textus": ">=1.4.2"
+  },
+  "platforms": ["desktop", "ios"],
+  "main": "host.js",
+  "permissions": ["ai.tools"],
+  "contributes": {
+    "aiTools": [
+      {
+        "name": "look_up_term",
+        "description": "%tool.look_up_term%",
+        "parameters": {
+          "type": "object",
+          "required": ["term"],
+          "properties": {
+            "term": {
+              "type": "string",
+              "description": "The word or phrase to look up."
+            }
+          }
+        }
+      }
+    ],
+    "settings": [
+      {
+        "key": "terms",
+        "type": "string",
+        "default": "",
+        "title": "%terms%",
+        "description": "%termsHint%"
+      }
+    ]
+  },
+  "l10n": {
+    "en": {
+      "name": "Glossary",
+      "description": "Your own terms and what they mean, for Textus AI to look up while it writes.",
+      "tool.look_up_term": "Looks up a term in the user's own glossary: what they mean by it. Use it before explaining or rewriting a term the user may have defined.",
+      "terms": "Terms",
+      "termsHint": "One per line: term = meaning."
+    },
+    "zh": {
+      "name": "术语表",
+      "description": "你自己的术语和含义，写作时让 Textus AI 查。",
+      "tool.look_up_term": "在用户自己的术语表里查一个词：用户用它指什么。解释或改写用户可能定义过的词之前先查。",
+      "terms": "术语",
+      "termsHint": "每行一条：术语 = 含义。"
+    }
+  }
+}

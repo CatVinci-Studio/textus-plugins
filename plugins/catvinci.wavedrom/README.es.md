@@ -27,6 +27,7 @@ Solo pide **Herramientas para Textus AI**, para que Textus AI pueda revisar un b
 
 ## Cambios
 
+- **0.3.3** - Legible en modo oscuro: líneas y texto con los colores del tema; lo dibujado con el bloque plegado se ajusta al abrirlo. Un diagrama largo se reduce al ancho de la columna en vez de cortarse.
 - **0.3.2** - Los diagramas usan la fuente y el color de línea del tema, crecen con el zoom del documento, y `height=` ahora cambia el tamaño del propio diagrama.
 - **0.3.1** - Su página dice ahora en una frase qué hace, qué puede hacer y qué cambió en cada versión.
 - **0.3.0** - una herramienta para Textus AI, `check_wavedrom`

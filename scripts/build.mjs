@@ -34,6 +34,7 @@ import {
 import { join, relative } from "node:path";
 import JSZip from "jszip";
 import { communityEntry, releaseZipUrl } from "./community.mjs";
+import { publishedCatalog, versionsOf } from "./history.mjs";
 
 const ROOT = new URL("..", import.meta.url).pathname;
 const PLUGINS = join(ROOT, "plugins");
@@ -246,16 +247,23 @@ function skillOf(file) {
   const meta = (key) =>
     (new RegExp(`^  textus-${key}:\\s*"([^"\\n]*)"`, "m").exec(front[1]) ??
       [])[1];
-  const modes = (meta("modes") ?? "write")
-    .split(/[\s,]+/)
-    .filter(Boolean);
+  const modes = (meta("modes") ?? "write").split(/[\s,]+/).filter(Boolean);
   for (const mode of modes)
     if (!MODES.includes(mode))
       throw new Error(`${file}: textus-modes "${mode}" is not one of ${MODES}`);
   const labels = {};
-  for (const m of front[1].matchAll(/^  textus-label-([\w-]+):\s*"([^"\n]*)"/gm))
+  for (const m of front[1].matchAll(
+    /^  textus-label-([\w-]+):\s*"([^"\n]*)"/gm,
+  ))
     labels[m[1]] = { label: m[2], hint: meta(`hint-${m[1]}`) ?? "" };
-  return { name, description, version, modes, labels, bytes: Buffer.from(text) };
+  return {
+    name,
+    description,
+    version,
+    modes,
+    labels,
+    bytes: Buffer.from(text),
+  };
 }
 
 /** The panel modes a skill can be in (`textus-modes`). */
@@ -299,7 +307,9 @@ for (const file of communityFiles) {
     `community/${file}`,
   );
   if (ids.includes(entry.id))
-    throw new Error(`community/${file}: ${entry.id} is an official plugin's id`);
+    throw new Error(
+      `community/${file}: ${entry.id} is an official plugin's id`,
+    );
   if (check || removed.has(entry.id)) continue;
   const url = releaseZipUrl(entry);
   const response = await fetch(url, { redirect: "follow" });
@@ -338,8 +348,14 @@ if (check)
   console.log(
     `${ids.length} manifests, ${communityFiles.length} community listings and ${skillFiles.length} skills read`,
   );
-else
+else {
+  const published = await publishedCatalog();
+  for (const entry of catalog) {
+    const versions = versionsOf(published, entry);
+    if (versions.length) entry.versions = versions;
+  }
   writeFileSync(
     join(DIST, "index.json"),
     `${JSON.stringify({ schema: 1, plugins: catalog, skills }, null, 2)}\n`,
   );
+}

@@ -28,6 +28,7 @@ Bob --> Alice : Hi!
 
 ## Changements
 
+- **0.2.5** - Un graphique dessiné quand son bloc était replié (sur téléphone) s'adapte à la largeur quand on l'ouvre.
 - **0.2.4** - `!theme` fonctionne ; plus d'espace vide dans une colonne étroite ; en mode serveur, l'erreur de PlantUML s'affiche et les thèmes sombres ont un dessin sombre.
 - **0.2.3** - Textes d'aide et d'état vide plus courts.
 - **0.2.2** - Sa page dit maintenant en une phrase ce qu'il fait, ce qu'il permet et ce qui a changé à chaque version.

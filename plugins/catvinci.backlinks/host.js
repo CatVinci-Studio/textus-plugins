@@ -82,8 +82,8 @@ async function gather(focus, doc) {
   for (const name of names) {
     const found = await textus.metadata.search(name, { limit: SEARCH_LIMIT });
     for (const hit of found.hits) {
-      // Search counts lines from 1, the index from 0.
-      const line = hit.line - 1;
+      // Search's `line` counts from 1, the index from 0; 1.7's `location` too.
+      const line = hit.location ? hit.location.line : hit.line - 1;
       const key = hit.path + ":" + line;
       if (hit.path === focus || linkedLines.has(key) || seen.has(key)) continue;
       const lines = await linesOf(hit.path, files);
@@ -247,7 +247,9 @@ async function chooseStyle() {
     { placeholder: t("styleAsk") },
   );
   if (!picked || picked === now) return;
-  await linkStyle.choose(root, picked);
+  // From Textus 1.4.3 Textus writes it; before, the settings file by hand.
+  if (textus.text) await textus.files.setConvention("linkStyle", picked);
+  else await linkStyle.choose(root, picked);
   await textus.ui.notice(t(picked === "wiki" ? "styleIsWiki" : "styleIsMarkdown"));
 }
 

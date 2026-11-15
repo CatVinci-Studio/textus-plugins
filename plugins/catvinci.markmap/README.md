@@ -25,6 +25,7 @@ The plugin uses [markmap](https://markmap.js.org). It asks for one permission, t
 
 ## Changes
 
+- **0.3.5** - A chart drawn while its block was folded (a phone) fits once the block opens, instead of keeping its old size.
 - **0.3.4** - Editing a mind map for a long time no longer makes Textus use more and more memory.
 - **0.3.3** - Scrolling over a mind map now scrolls the note; pinch or Ctrl-scroll to zoom. The map uses your theme's font and colors, in dark mode too, and opens fully fitted.
 - **0.3.2** - Its page now says in one sentence what it does, what it can do, and what changed in each version.

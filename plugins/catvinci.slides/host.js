@@ -119,14 +119,20 @@ const waiting = new Set();
 
 /** Renders only while a slides tab is open: no deck work on other edits,
  *  and none when the text is as it was. `to` is a page that just opened. */
+/** The document last read, for when none is in front. */
+let last = null;
+
 async function update(to) {
   if (!views.size) return;
   if (to) waiting.add(to);
   const mine = ++turn;
-  const text = await textus.editor.getText();
+  let text = await textus.editor.getText();
+  let doc = text === null ? null : await textus.editor.getPath();
+  // No document in front (a phone shows the deck's tab alone): the last one.
+  if (text === null && last) ({ text, doc } = last);
+  else if (text !== null) last = { text, doc };
   let changed = false;
   if (text !== null) {
-    const doc = await textus.editor.getPath();
     const from = doc + "\0" + text;
     if (from !== madeFrom || !deck) {
       const shown = render(await withPictures(text, doc));
@@ -207,7 +213,7 @@ exports.activate = function (ctx) {
           waiting.delete(webview);
           if (views.size) return;
           pictures.clear();
-          deck = madeFrom = null;
+          deck = madeFrom = last = null;
         });
         webview.onDidReceiveMessage((message) => {
           if (message === "ready") void update(webview);
@@ -216,9 +222,11 @@ exports.activate = function (ctx) {
       },
     }),
     // The tab's "ready" draws the deck: the document stays in front beside it.
-    textus.commands.register("catvinci.slides.present", () =>
-      textus.layout.openView("catvinci.slides.view", { where: "beside" }),
-    ),
+    textus.commands.register("catvinci.slides.present", async () => {
+      const text = await textus.editor.getText();
+      if (text !== null) last = { text, doc: await textus.editor.getPath() };
+      return textus.layout.openView("catvinci.slides.view", { where: "beside" });
+    }),
     textus.commands.register("catvinci.slides.export", exportHtml),
     textus.ai.registerTool("export_slides", exportSlides),
     textus.editor.onDidChange(() => update()),

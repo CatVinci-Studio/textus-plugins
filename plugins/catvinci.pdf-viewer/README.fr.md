@@ -15,6 +15,7 @@ Il ne demande aucune autorisation : Textus lui transmet le PDF que vous ouvrez.
 
 ## Changements
 
+- **0.2.6** - Les boutons et touches de zoom avancent par 1,25×, comme dans les autres visionneuses.
 - **0.2.5** - Un long PDF parcouru jusqu’au bout occupe bien moins de mémoire : les pages hors de vue libèrent aussi leurs images.
 - **0.2.4** - La barre passe à la ligne dans un panneau étroit, et la recherche ne mélange plus les résultats d'un mot précédent.
 - **0.2.3** - Sa barre suit l'ordre de Textus : ce qu'elle montre, puis recherche et zoom.

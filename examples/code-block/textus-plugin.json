@@ -1,0 +1,29 @@
+{
+  "id": "your-name.bars",
+  "name": "%name%",
+  "version": "0.1.0",
+  "publisher": "your-name",
+  "description": "%description%",
+  "license": "MIT",
+  "engines": {
+    "textus": ">=1.4.2"
+  },
+  "platforms": ["desktop", "ios"],
+  "main": "host.js",
+  "permissions": [],
+  "contributes": {
+    "codeBlocks": [{ "language": "bars", "title": "%title%" }]
+  },
+  "l10n": {
+    "en": {
+      "name": "Bars",
+      "description": "Draws a ```bars block of label: number lines as a bar chart in the theme's colours.",
+      "title": "Bar chart"
+    },
+    "zh": {
+      "name": "条形图",
+      "description": "把 ```bars 代码块里的「名称: 数字」画成条形图，用主题的颜色。",
+      "title": "条形图"
+    }
+  }
+}

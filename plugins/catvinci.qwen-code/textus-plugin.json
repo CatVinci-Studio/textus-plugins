@@ -1,0 +1,94 @@
+{
+  "id": "catvinci.qwen-code",
+  "name": "%name%",
+  "version": "0.1.0",
+  "publisher": "catvinci",
+  "author": "CatVinci Studio",
+  "description": "%description%",
+  "icon": "icon.svg",
+  "license": "MIT",
+  "repository": "https://github.com/CatVinci-Studio/textus-plugins",
+  "engines": {
+    "textus": ">=1.4.3-rc.1"
+  },
+  "platforms": [
+    "desktop"
+  ],
+  "permissions": [
+    "agents"
+  ],
+  "contributes": {
+    "agents": [
+      {
+        "id": "catvinci.qwen-code.qwen",
+        "name": "Qwen Code",
+        "command": "npx",
+        "args": [
+          "-y",
+          "@qwen-code/qwen-code@0.27.3",
+          "--acp",
+          "--approval-mode",
+          "default",
+          "--exclude-tools",
+          "ask_user_question"
+        ],
+        "setup": "%setup%",
+        "provider": "qwen",
+        "askMode": "default",
+        "signIn": ""
+      }
+    ]
+  },
+  "l10n": {
+    "en": {
+      "name": "Qwen Code",
+      "description": "Qwen Code in Textus AI: Alibaba's Qwen models read your folder, write and edit your notes, and ask before they change anything.",
+      "setup": "Needs Node.js 22 or later and an API key. Put three lines in ~/.qwen/.env: OPENAI_API_KEY, OPENAI_BASE_URL and OPENAI_MODEL (OpenRouter, Alibaba Cloud Model Studio or any OpenAI-compatible service), or run npx @qwen-code/qwen-code once in a terminal and use /auth."
+    },
+    "zh": {
+      "name": "Qwen Code",
+      "description": "在 Textus AI 里用 Qwen Code：用阿里的通义千问模型读你的文件夹、写和改笔记，改动前先征得你同意。",
+      "setup": "需要 Node.js 22 或更新版本，以及一个 API key。在 ~/.qwen/.env 里写三行：OPENAI_API_KEY、OPENAI_BASE_URL 和 OPENAI_MODEL（OpenRouter、阿里云百炼或任何兼容 OpenAI 的服务）；或在终端运行一次 npx @qwen-code/qwen-code，用 /auth 设置。"
+    },
+    "zh-Hant": {
+      "name": "Qwen Code",
+      "description": "在 Textus AI 裡用 Qwen Code：用阿里的通義千問模型讀你的資料夾、寫和改筆記，改動前先徵得你同意。",
+      "setup": "需要 Node.js 22 或更新版本，以及一組 API key。在 ~/.qwen/.env 裡寫三行：OPENAI_API_KEY、OPENAI_BASE_URL 和 OPENAI_MODEL（OpenRouter、阿里雲百煉或任何相容 OpenAI 的服務）；或在終端機執行一次 npx @qwen-code/qwen-code，用 /auth 設定。"
+    },
+    "ja": {
+      "name": "Qwen Code",
+      "description": "Textus AI で Qwen Code を使う：Alibaba の Qwen モデルがフォルダを読み、ノートを書いて直し、変更の前に確認します。",
+      "setup": "Node.js 22 以降と API キーが必要です。~/.qwen/.env に OPENAI_API_KEY、OPENAI_BASE_URL、OPENAI_MODEL の 3 行を書きます（OpenRouter、Alibaba Cloud Model Studio、OpenAI 互換サービス）。またはターミナルで一度 npx @qwen-code/qwen-code を実行し /auth で設定します。"
+    },
+    "ko": {
+      "name": "Qwen Code",
+      "description": "Textus AI에서 Qwen Code 사용: Alibaba의 Qwen 모델이 폴더를 읽고 노트를 쓰고 고치며, 바꾸기 전에 먼저 묻습니다.",
+      "setup": "Node.js 22 이상과 API 키가 필요합니다. ~/.qwen/.env에 OPENAI_API_KEY, OPENAI_BASE_URL, OPENAI_MODEL 세 줄을 넣거나(OpenRouter, Alibaba Cloud Model Studio, OpenAI 호환 서비스), 터미널에서 npx @qwen-code/qwen-code를 한 번 실행하고 /auth를 쓰세요."
+    },
+    "de": {
+      "name": "Qwen Code",
+      "description": "Qwen Code in Textus AI: Alibabas Qwen-Modelle lesen deinen Ordner, schreiben und bearbeiten deine Notizen und fragen vor jeder Änderung.",
+      "setup": "Braucht Node.js 22 oder neuer und einen API-Schlüssel. Drei Zeilen in ~/.qwen/.env: OPENAI_API_KEY, OPENAI_BASE_URL und OPENAI_MODEL (OpenRouter, Alibaba Cloud Model Studio oder ein OpenAI-kompatibler Dienst), oder einmal im Terminal npx @qwen-code/qwen-code ausführen und /auth nutzen."
+    },
+    "fr": {
+      "name": "Qwen Code",
+      "description": "Qwen Code dans Textus AI : les modèles Qwen d’Alibaba lisent votre dossier, écrivent et modifient vos notes, et demandent avant tout changement.",
+      "setup": "Nécessite Node.js 22 ou plus récent et une clé d’API. Mettez trois lignes dans ~/.qwen/.env : OPENAI_API_KEY, OPENAI_BASE_URL et OPENAI_MODEL (OpenRouter, Alibaba Cloud Model Studio ou tout service compatible OpenAI), ou lancez une fois npx @qwen-code/qwen-code dans un terminal et utilisez /auth."
+    },
+    "es": {
+      "name": "Qwen Code",
+      "description": "Qwen Code en Textus AI: los modelos Qwen de Alibaba leen tu carpeta, escriben y editan tus notas, y preguntan antes de cambiar nada.",
+      "setup": "Necesita Node.js 22 o posterior y una clave de API. Pon tres líneas en ~/.qwen/.env: OPENAI_API_KEY, OPENAI_BASE_URL y OPENAI_MODEL (OpenRouter, Alibaba Cloud Model Studio o cualquier servicio compatible con OpenAI), o ejecuta una vez npx @qwen-code/qwen-code en una terminal y usa /auth."
+    },
+    "pt": {
+      "name": "Qwen Code",
+      "description": "Qwen Code no Textus AI: os modelos Qwen da Alibaba leem a sua pasta, escrevem e editam as suas notas e perguntam antes de mudar algo.",
+      "setup": "Precisa do Node.js 22 ou posterior e de uma chave de API. Ponha três linhas em ~/.qwen/.env: OPENAI_API_KEY, OPENAI_BASE_URL e OPENAI_MODEL (OpenRouter, Alibaba Cloud Model Studio ou qualquer serviço compatível com OpenAI), ou execute uma vez npx @qwen-code/qwen-code num terminal e use /auth."
+    },
+    "ru": {
+      "name": "Qwen Code",
+      "description": "Qwen Code в Textus AI: модели Qwen от Alibaba читают вашу папку, пишут и правят заметки и спрашивают перед любым изменением.",
+      "setup": "Нужны Node.js 22 или новее и ключ API. Добавьте три строки в ~/.qwen/.env: OPENAI_API_KEY, OPENAI_BASE_URL и OPENAI_MODEL (OpenRouter, Alibaba Cloud Model Studio или любой совместимый с OpenAI сервис), или один раз выполните в терминале npx @qwen-code/qwen-code и используйте /auth."
+    }
+  }
+}

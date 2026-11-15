@@ -26,6 +26,7 @@ Pede apenas **Ferramentas para o Textus AI**, para que o Textus AI possa verific
 
 ## Alterações
 
+- **0.3.3** - Um gráfico desenhado com o bloco recolhido (no telemóvel) ajusta-se à largura ao abrir.
 - **0.3.2** - Curvas íngremes como tan(x) mantêm a forma e se interrompem nas assíntotas; uma função sem nada para desenhar avisa; π e 2xsin(x) são lidos; a verificação do Textus AI usa o intervalo de x da cerca.
 - **0.3.1** - Sua página agora diz numa frase o que ele faz, o que pode fazer e o que mudou em cada versão.
 - **0.3.0** - uma ferramenta para o Textus AI, `check_function_plot`

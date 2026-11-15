@@ -45,8 +45,8 @@
   function fitWidth() {
     if (fit && natural) setZoom(Math.min(1, pages.clientWidth / natural));
   }
-  $("zoom-in").onclick = () => zoomBy(zoom + 0.1);
-  $("zoom-out").onclick = () => zoomBy(zoom - 0.1);
+  $("zoom-in").onclick = () => zoomBy(zoom * 1.25);
+  $("zoom-out").onclick = () => zoomBy(zoom / 1.25);
   $("zoom").onclick = () => zoomBy(1);
   pages.addEventListener(
     "wheel",
@@ -163,10 +163,10 @@
       openFind();
     } else if (mod && (event.key === "=" || event.key === "+")) {
       event.preventDefault();
-      zoomBy(zoom + 0.1);
+      zoomBy(zoom * 1.25);
     } else if (mod && event.key === "-") {
       event.preventDefault();
-      zoomBy(zoom - 0.1);
+      zoomBy(zoom / 1.25);
     } else if (mod && event.key === "0") {
       event.preventDefault();
       zoomBy(1);

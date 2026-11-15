@@ -26,6 +26,7 @@ Es braucht nur **Werkzeuge für Textus AI**, damit Textus AI einen Block prüfen
 
 ## Änderungen
 
+- **0.3.3** - Ein Diagramm, das bei zugeklapptem Block (auf dem Handy) gezeichnet wurde, passt sich beim Aufklappen an die Breite an.
 - **0.3.2** - Steile Kurven wie tan(x) behalten ihre Form und brechen an Asymptoten ab; eine Funktion ohne zeichenbaren Teil sagt das; π und 2xsin(x) werden gelesen; die Prüfung von Textus AI nutzt den x-Bereich des Zauns.
 - **0.3.1** - Seine Seite sagt jetzt in einem Satz, was es tut, was es kann und was sich in jeder Version geändert hat.
 - **0.3.0** - ein Werkzeug für Textus AI, `check_function_plot`
