@@ -7,6 +7,17 @@
   var MAX_HISTORY_SIZE = 8 * 1024 * 1024;
   var KEEP_DAYS = [30, 90, 365, 0];
 
+  // development/cloud-sync/src/config.ts
+  var providers = {
+    s3: { transport: "s3", endpoint: "", saveGap: 0 },
+    webdav: { transport: "dav", endpoint: "", saveGap: 0 },
+    nutstore: {
+      transport: "dav",
+      endpoint: "https://dav.jianguoyun.com/dav",
+      saveGap: 3
+    }
+  };
+
   // development/cloud-sync/src/panel.ts
   var api = acquireTextusApi();
   var element = (id) => document.getElementById(id);
@@ -49,6 +60,9 @@
     if (typeof chosen !== "string" || chosen === now) return;
     input("provider").value = chosen;
     input("endpoint").value = "";
+    input("saveGap").value = String(
+      providers[chosen]?.saveGap ?? 0
+    );
     for (const id of secretFields) input(id).value = "";
     dirty = true;
     toggles();
@@ -88,7 +102,13 @@
       input("endpoint").value = "https://dav.jianguoyun.com/dav";
     input("bucket").required = provider === "s3";
     element("interval-field").hidden = !input("automatic").checked;
-    for (const id of ["password-field", "confirm-field", "interval-field"])
+    element("save-gap-field").hidden = !input("automatic").checked;
+    for (const id of [
+      "password-field",
+      "confirm-field",
+      "interval-field",
+      "save-gap-field"
+    ])
       for (const field of element(id).querySelectorAll("input"))
         field.disabled = element(id).hidden;
     for (const id of buttons)
@@ -104,6 +124,7 @@
       "bucket",
       "prefix",
       "interval",
+      "saveGap",
       "keepDays"
     ])
       input(id).value = String(config[id]);
@@ -138,7 +159,8 @@
       prefix: input("prefix").value,
       pathStyle: input("pathStyle").checked,
       automatic: input("automatic").checked,
-      interval: input("automatic").checked ? Number(input("interval").value) : Math.min(Math.max(Number(input("interval").value) || 5, 5), 1440),
+      interval: input("automatic").checked ? Number(input("interval").value) : Math.min(Math.max(Number(input("interval").value) || 5, 1), 1440),
+      saveGap: input("automatic").checked ? Number(input("saveGap").value) : Math.min(Math.max(Number(input("saveGap").value) || 0, 0), 60),
       exclude: element("exclude").value,
       gitignore: input("gitignore").checked,
       obsidian: input("obsidian").checked,

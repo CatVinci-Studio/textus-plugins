@@ -9,26 +9,22 @@ export const defaults: Config = {
   pathStyle: true,
   automatic: false,
   interval: 5,
+  saveGap: 0,
   exclude: "",
   gitignore: false,
   obsidian: false,
   encrypt: false,
   keepDays: 90,
 };
-// saveGap keeps syncs after saves within a provider's request quota.
+// saveGap: a new connection's wait, in minutes, between a save and its
+// sync; Nutstore caps requests per account, so it starts at 3.
 export const providers = {
-  s3: { transport: "s3", endpoint: "", requestLimit: Infinity, saveGap: 0 },
-  webdav: {
-    transport: "dav",
-    endpoint: "",
-    requestLimit: Infinity,
-    saveGap: 30_000,
-  },
+  s3: { transport: "s3", endpoint: "", saveGap: 0 },
+  webdav: { transport: "dav", endpoint: "", saveGap: 0 },
   nutstore: {
     transport: "dav",
     endpoint: "https://dav.jianguoyun.com/dav",
-    requestLimit: 550,
-    saveGap: 180_000,
+    saveGap: 3,
   },
 } as const;
 
@@ -110,8 +106,11 @@ export function normalizeConfig(input: Partial<Config>): Config {
   if (!KEEP_DAYS.includes(c.keepDays)) c.keepDays = defaults.keepDays;
   c.keepPending = c.keepPending === true;
   c.interval = Number(c.interval);
-  if (!Number.isInteger(c.interval) || c.interval < 5 || c.interval > 1440)
+  if (!Number.isInteger(c.interval) || c.interval < 1 || c.interval > 1440)
     throw new SyncError("invalidInterval");
+  c.saveGap = Number(input.saveGap ?? spec.saveGap);
+  if (!Number.isInteger(c.saveGap) || c.saveGap < 0 || c.saveGap > 60)
+    throw new SyncError("invalidSaveGap");
   return c;
 }
 

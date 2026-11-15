@@ -1,4 +1,4 @@
-import { defaults, providers } from "./config";
+import { defaults } from "./config";
 import { parseBase } from "./content";
 import { synchronize } from "./engine";
 import { scopeOf } from "./scope";
@@ -144,7 +144,7 @@ class Controller {
       !this.disposed && config.automatic && configured && root
         ? {
             settle: 5_000,
-            gap: providers[config.provider].saveGap,
+            gap: config.saveGap * 60_000,
             every: config.interval * 60_000,
           }
         : null,
