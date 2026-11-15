@@ -17,7 +17,7 @@ const CALLS = TABLE.map(({ permission, calls }) => [
   permission,
 ]);
 const KNOWN = new Set(SCHEMA.properties.permissions.items.anyOf?.flatMap((p) => p.enum ?? []) ?? SCHEMA.properties.permissions.items.enum ?? []);
-const known = (p) => KNOWN.has(p) || /^(network|commands):.+/.test(p);
+const known = (p) => KNOWN.has(p) || /^(network|commands|hidden):.+/.test(p);
 
 /**
  * The problems of the plugin whose files are `files` (path → text), each
