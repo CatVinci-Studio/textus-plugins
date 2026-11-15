@@ -25,6 +25,7 @@ O plugin pede uma única permissão, para dar ao Textus AI a ferramenta `check_e
 
 ## Alterações
 
+- **0.3.3** - Um gráfico desenhado com o bloco recolhido (no telemóvel) ajusta-se à largura ao abrir.
 - **0.3.2** - Os gráficos são redesenhados quando a largura do painel muda, e o texto e a altura padrão seguem o zoom e a fonte do app.
 - **0.3.1** - A descrição já não cita mapas, que um bloco não consegue carregar.
 - **0.3.0** - O Textus AI pode verificar um bloco `echarts` antes de escrevê-lo.

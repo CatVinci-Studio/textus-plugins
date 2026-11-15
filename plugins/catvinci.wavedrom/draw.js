@@ -1,4 +1,5 @@
-// WaveJSON drawn by WaveDrom, in its dark skin on a dark page.
+// WaveJSON drawn by WaveDrom: on screen in the theme's colours, in a
+// picture in its own skin for the export's.
 var SVG = "http://www.w3.org/2000/svg";
 
 // WaveDrom draws into the element whose id ends in `index`.
@@ -15,14 +16,27 @@ function wave(el, source, dark, index) {
   return target.querySelector("svg");
 }
 
+// The skin's colours in the theme's: ink for black and the blue labels,
+// the page for white, pastel slots tinted into the page.
+function themed(css) {
+  return css
+    .replace(/font-family:Helvetica/g, "font-family:var(--font-sans)")
+    .replace(/(stroke|fill):#(?:000|0041c4)(?=[;}'"]|$)/g, "$1:var(--doc-text)")
+    .replace(/stroke:#(?:fff|ffffff)(?=[;}'"]|$)/g, "stroke:var(--doc-text)")
+    .replace(/fill:(?:#(?:fff|ffffff)|[w]hite)(cc)?(?=[;}'"]|$)/g, "fill:var(--doc-bg, var(--ui-bg))")
+    .replace(/fill:(#(?:ffffb4|ffe0b9|b9e0ff|ccfdfe|cdfdc5|f0c1fb|f5c2c0))(?=[;}'"]|$)/g, "fill:color-mix(in srgb, $1 40%, var(--doc-bg, var(--ui-bg)))")
+    .replace(/text\{fill:[^;}]*\}/g, "");
+}
+
 // On screen: the theme's text and lines, sized by `height=` or the document's zoom.
 function onScreen(svg, meta) {
   var style = svg.querySelector("style");
-  if (style)
-    style.textContent = style.textContent
-      .replace(/font-family:Helvetica/g, "font-family:var(--font-sans)")
-      .replace(/stroke:#(?:000|fff|ffffff)(?=[;}])/g, "stroke:var(--doc-text)")
-      .replace(/text\{fill:[^;}]*\}/g, "") + "text{fill:var(--doc-text)}";
+  if (style) style.textContent = themed(style.textContent) + "text{fill:var(--doc-text)}";
+  svg.querySelectorAll("[style]").forEach(function (node) {
+    // The whole-picture white backdrop goes; the block's own background shows.
+    if (/^stroke:none;fill:[w]hite$/.test(node.getAttribute("style"))) node.remove();
+    else node.setAttribute("style", themed(node.getAttribute("style")));
+  });
   var width = parseFloat(svg.getAttribute("width"));
   if (!svg.getAttribute("viewBox") || !(width > 0)) return;
   svg.removeAttribute("width");
@@ -33,8 +47,10 @@ function onScreen(svg, meta) {
 }
 
 drawChartBlock({
-  draw: function (el, source, meta, dark) {
-    var svg = wave(el, source, dark, 0);
+  // The default skin, recoloured: the dark one keeps white fills under
+  // white lines.
+  draw: function (el, source, meta) {
+    var svg = wave(el, source, false, 0);
     if (svg) onScreen(svg, meta);
   },
   // Drawn again in the export's colours, not the window's.

@@ -23,6 +23,7 @@ C D E F | G A B c |
 
 ## Cambios
 
+- **0.3.3** - Un gráfico dibujado con su bloque plegado (en el móvil) se ajusta al ancho al abrirlo.
 - **0.3.2** - Los compases se reparten en líneas según la columna en vez de encoger toda la partitura; hacer clic en una nota ya no la pone roja; `check_abc` acepta nombres de modo completos, cualquier duración de nota, líneas `+:`, `` ` `` y `$`; se quita `height=`.
 - **0.3.1** - Su página dice ahora en una frase qué hace, qué puede hacer y qué cambió en cada versión.
 - **0.3.0** - Textus AI puede revisar un bloque `abc` antes de escribirlo (`check_abc`).

@@ -26,6 +26,7 @@ Solo pide **Herramientas para Textus AI**, para que Textus AI pueda revisar un b
 
 ## Cambios
 
+- **0.3.3** - Un gráfico dibujado con su bloque plegado (en el móvil) se ajusta al ancho al abrirlo.
 - **0.3.2** - Las curvas empinadas como tan(x) conservan su forma y se cortan en las asíntotas; una función sin nada que dibujar lo dice; se leen π y 2xsin(x); la revisión de Textus AI usa el rango de x de la valla.
 - **0.3.1** - Su página dice ahora en una frase qué hace, qué puede hacer y qué cambió en cada versión.
 - **0.3.0** - una herramienta para Textus AI, `check_function_plot`

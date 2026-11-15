@@ -13,6 +13,9 @@ body {
   padding: var(--space-2) var(--space-3) 0;
 }
 #month {
+  /* A block, not the kit button's centred flex: its text starts at the
+     left and ends in an ellipsis when the bar is narrow. */
+  display: block;
   flex: 1;
   min-width: 0;
   overflow: hidden;

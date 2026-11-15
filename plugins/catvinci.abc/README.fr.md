@@ -23,6 +23,7 @@ C D E F | G A B c |
 
 ## Changements
 
+- **0.3.3** - Un graphique dessiné quand son bloc était replié (sur téléphone) s'adapte à la largeur quand on l'ouvre.
 - **0.3.2** - Les mesures passent à la ligne selon la colonne au lieu de réduire toute la partition ; cliquer sur une note ne la rend plus rouge ; `check_abc` accepte les noms de mode complets, toute durée de note, les lignes `+:`, `` ` `` et `$` ; `height=` est retiré.
 - **0.3.1** - Sa page dit maintenant en une phrase ce qu'il fait, ce qu'il permet et ce qui a changé à chaque version.
 - **0.3.0** - Textus AI peut vérifier un bloc `abc` avant de l'écrire (`check_abc`).

@@ -25,6 +25,7 @@ It asks only for **Tools for Textus AI**, so Textus AI can check a block before 
 
 ## Changes
 
+- **0.3.3** - A date no longer breaks in the middle ("2024-0" over "3"); a chart drawn while its block was folded fits once it opens.
 - **0.3.2** - long notes and dates wrap to fit a narrow island, the timeline uses the document's font, and an empty block says what to write
 - **0.3.1** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
 - **0.3.0** - a tool for Textus AI, `check_timeline`

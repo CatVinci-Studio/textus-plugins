@@ -14,6 +14,14 @@ body {
   font-size: var(--text-body);
   color: var(--ui-text);
 }
+/* A .base file in a tab of its own: the gutter other file tabs keep. */
+body.in-tab {
+  padding: 0 var(--space-4);
+}
+/* No source button over a tab. */
+body.in-tab #bar {
+  padding-right: 0;
+}
 #bar {
   /* Clear of the block's own source button at its top right. */
   padding-right: var(--block-source-room);

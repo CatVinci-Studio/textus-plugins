@@ -4,6 +4,11 @@ html,
 body {
   margin: 0;
   background: transparent;
+}
+/* Inside the block's frame, clear of its edge as other blocks are. */
+body {
+  padding: var(--space-2) var(--space-3);
+  box-sizing: border-box;
   font-family: var(--font-sans);
   font-size: var(--text-body);
   color: var(--ui-text);
