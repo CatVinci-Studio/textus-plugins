@@ -8,7 +8,9 @@
 
 Textus 用 `npx` 运行 [GitHub Copilot CLI](https://github.com/github/copilot-cli) 的 `copilot --acp`（它的 Agent Client Protocol 服务）。Copilot CLI 是 GitHub 自己的软件，用它自己的许可；账号和用量都归 GitHub，Textus 不保存它的令牌。
 
-只在电脑上可用，需要 Textus 1.4.2 或更新版本；模式和模型菜单需要 Textus 1.4.3。它只要一个权限：在这台电脑上启动这个助手。
+Autopilot 会自己一直做下去，用掉更多高级请求次数。Textus 固定它启动的版本：Copilot 在这里不会自己更新。
+
+只在电脑上可用，需要 Textus 1.4.3 或更新版本。它只要一个权限：在这台电脑上启动这个助手。
 
 ## 更新
 

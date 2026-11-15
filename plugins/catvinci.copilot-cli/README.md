@@ -8,7 +8,9 @@ Talk to GitHub Copilot CLI in Textus AI, with the models of your Copilot plan. I
 
 Textus starts [GitHub Copilot CLI](https://github.com/github/copilot-cli) with `copilot --acp`, its Agent Client Protocol server, run with `npx`. Copilot CLI is GitHub's own software under its own licence; your account and its usage are GitHub's, and Textus keeps no token for it.
 
-It works on the desktop and needs Textus 1.4.2 or later; its mode and model menus need Textus 1.4.3. It asks for one permission: to start this agent on this computer.
+Autopilot keeps going on its own and uses more premium requests. Textus keeps the version it starts: Copilot doesn't update itself here.
+
+It works on the desktop and needs Textus 1.4.3 or later. It asks for one permission: to start this agent on this computer.
 
 ## Changes
 

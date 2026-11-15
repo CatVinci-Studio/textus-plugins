@@ -1,7 +1,7 @@
 {
   "id": "catvinci.codex",
   "name": "%name%",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "publisher": "catvinci",
   "author": "CatVinci Studio",
   "description": "%description%",
@@ -9,7 +9,7 @@
   "license": "MIT",
   "repository": "https://github.com/CatVinci-Studio/textus-plugins",
   "engines": {
-    "textus": ">=1.4.2"
+    "textus": ">=1.4.3-rc.1"
   },
   "platforms": [
     "desktop"
@@ -28,7 +28,13 @@
           "@agentclientprotocol/codex-acp@2.6.0"
         ],
         "setup": "%setup%",
-        "provider": "openai"
+        "provider": "openai",
+        "env": {
+          "DEFAULT_AUTH_REQUEST": "{\"methodId\":\"chat-gpt\"}",
+          "INITIAL_AGENT_MODE": "read-only"
+        },
+        "askMode": "read-only",
+        "signIn": "chat-gpt"
       }
     ]
   },
@@ -36,52 +42,52 @@
     "en": {
       "name": "Codex",
       "description": "Codex in Textus AI: it reads your folder, writes and edits your notes, and asks before it changes anything.",
-      "setup": "Needs Node.js, and Codex signed in once: run npx @openai/codex login in a terminal."
+      "setup": "Needs Node.js. The first time, a browser opens to sign in with ChatGPT; or once in a terminal: npx -y @agentclientprotocol/codex-acp@2.6.0 cli login"
     },
     "zh": {
       "name": "Codex",
       "description": "在 Textus AI 里用 Codex：读你的文件夹、写和改笔记，改动前先征得你同意。",
-      "setup": "需要 Node.js，并先登录一次 Codex：在终端运行 npx @openai/codex login。"
+      "setup": "需要 Node.js。第一次会打开浏览器用 ChatGPT 登录；也可以在终端运行一次：npx -y @agentclientprotocol/codex-acp@2.6.0 cli login"
     },
     "zh-Hant": {
       "name": "Codex",
       "description": "在 Textus AI 裡用 Codex：讀你的資料夾、寫和改筆記，改動前先徵得你同意。",
-      "setup": "需要 Node.js，並先登入一次 Codex：在終端機執行 npx @openai/codex login。"
+      "setup": "需要 Node.js。第一次會開啟瀏覽器以 ChatGPT 登入；也可以在終端機執行一次：npx -y @agentclientprotocol/codex-acp@2.6.0 cli login"
     },
     "ja": {
       "name": "Codex",
       "description": "Textus AI で Codex を使う：フォルダを読み、ノートを書いて直し、変更の前に確認します。",
-      "setup": "Node.js と、一度サインインした Codex が必要です。ターミナルで npx @openai/codex login を実行してください。"
+      "setup": "Node.js が必要です。初回はブラウザが開き ChatGPT でサインインします。ターミナルで一度：npx -y @agentclientprotocol/codex-acp@2.6.0 cli login でも可。"
     },
     "ko": {
       "name": "Codex",
       "description": "Textus AI에서 Codex 사용: 폴더를 읽고 노트를 쓰고 고치며, 바꾸기 전에 먼저 묻습니다.",
-      "setup": "Node.js와 한 번 로그인한 Codex가 필요합니다. 터미널에서 npx @openai/codex login을 실행하세요."
+      "setup": "Node.js가 필요합니다. 처음에는 브라우저가 열려 ChatGPT로 로그인합니다. 또는 터미널에서 한 번: npx -y @agentclientprotocol/codex-acp@2.6.0 cli login"
     },
     "de": {
       "name": "Codex",
       "description": "Codex in Textus AI: liest deinen Ordner, schreibt und überarbeitet Notizen und fragt vor jeder Änderung.",
-      "setup": "Braucht Node.js und ein einmal angemeldetes Codex: npx @openai/codex login im Terminal ausführen."
+      "setup": "Braucht Node.js. Beim ersten Mal öffnet sich ein Browser zur Anmeldung mit ChatGPT; oder einmal im Terminal: npx -y @agentclientprotocol/codex-acp@2.6.0 cli login"
     },
     "fr": {
       "name": "Codex",
       "description": "Codex dans Textus AI : il lit votre dossier, écrit et révise vos notes, et demande avant tout changement.",
-      "setup": "Nécessite Node.js et Codex connecté une fois : lancez npx @openai/codex login dans un terminal."
+      "setup": "Nécessite Node.js. La première fois, un navigateur s’ouvre pour se connecter avec ChatGPT ; ou une fois dans un terminal : npx -y @agentclientprotocol/codex-acp@2.6.0 cli login"
     },
     "es": {
       "name": "Codex",
       "description": "Codex en Textus AI: lee tu carpeta, escribe y edita tus notas y pregunta antes de cambiar nada.",
-      "setup": "Necesita Node.js y Codex con la sesión iniciada una vez: ejecuta npx @openai/codex login en una terminal."
+      "setup": "Necesita Node.js. La primera vez se abre el navegador para entrar con ChatGPT; o una vez en una terminal: npx -y @agentclientprotocol/codex-acp@2.6.0 cli login"
     },
     "pt": {
       "name": "Codex",
       "description": "Codex no Textus AI: lê sua pasta, escreve e edita suas notas e pergunta antes de mudar algo.",
-      "setup": "Precisa do Node.js e do Codex conectado uma vez: rode npx @openai/codex login num terminal."
+      "setup": "Precisa do Node.js. Na primeira vez abre-se o navegador para entrar com o ChatGPT; ou uma vez num terminal: npx -y @agentclientprotocol/codex-acp@2.6.0 cli login"
     },
     "ru": {
       "name": "Codex",
       "description": "Codex в Textus AI: читает папку, пишет и правит заметки и спрашивает перед любым изменением.",
-      "setup": "Нужны Node.js и Codex, в который вы вошли хотя бы раз: выполните npx @openai/codex login в терминале."
+      "setup": "Нужен Node.js. В первый раз откроется браузер для входа через ChatGPT; или один раз в терминале: npx -y @agentclientprotocol/codex-acp@2.6.0 cli login"
     }
   }
 }

@@ -9,7 +9,7 @@
   "license": "MIT",
   "repository": "https://github.com/CatVinci-Studio/textus-plugins",
   "engines": {
-    "textus": ">=1.4.2"
+    "textus": ">=1.4.3-rc.1"
   },
   "platforms": [
     "desktop"
@@ -26,7 +26,8 @@
         "args": [
           "-y",
           "@github/copilot@1.0.112",
-          "--acp"
+          "--acp",
+          "--no-auto-update"
         ],
         "setup": "%setup%",
         "provider": "github"
