@@ -31,13 +31,7 @@
       month: "long",
     });
     const month = $("month");
-    month.textContent = name;
-    // A narrow bar (a phone) takes the short name before it cuts the long.
-    if (month.scrollWidth > month.clientWidth)
-      month.textContent = shown.toLocaleDateString(api.language, {
-        year: "numeric",
-        month: "short",
-      });
+    fitMonth();
     month.disabled = !monthNotes;
     // The full name even when the bar cuts it short.
     $("month").title = monthNotes ? name + " · " + api.t("openMonth") : name;
@@ -78,6 +72,19 @@
       grid.append(button);
     });
   }
+
+  /** The month's name, short when the bar is too narrow for the long one
+   *  (a sidebar, a phone): again whenever the bar's width changes. */
+  function fitMonth() {
+    const month = $("month");
+    const as = (style) => shown.toLocaleDateString(api.language, { year: "numeric", month: style });
+    month.textContent = as("long");
+    // The text's own width: a button reports no overflow of its own.
+    const text = document.createRange();
+    text.selectNodeContents(month);
+    if (text.getBoundingClientRect().width > month.clientWidth) month.textContent = as("short");
+  }
+  new ResizeObserver(() => fitMonth()).observe($("month").parentElement);
 
   /** The week number in front of a row: its weekly note. The row's middle
    *  day names it, whichever day the calendar starts its weeks on. */
@@ -120,7 +127,5 @@
     render();
   });
   render();
-  // The panel widened or narrowed: the month's long or short name again.
-  addEventListener("resize", render);
   api.postMessage({ type: "ready" });
 })();
