@@ -20,8 +20,8 @@ Cloud Sync needs Textus 1.4.1 or later on the desktop.
 On another device, open the matching folder and enter the same service and
 the same remote folder (and, for an encrypted one, the same sync password). Turn on **Sync automatically
 while Textus is open**: it then syncs a few seconds after you save or rename a
-file, and also every 5 minutes in case nothing triggered it (you can set 5 to
-1,440 minutes). A file you delete goes out with the next sync. **Plugins › Sync
+file, and also every 5 minutes in case nothing triggered it (you can set 1 to
+1,440 minutes; 5 to 1,440 on Nutstore). A file you delete goes out with the next sync. **Plugins › Sync
 now** runs a sync at any time.
 
 Once a connection is saved, the status bar shows how sync stands: **Synced ·
@@ -149,8 +149,8 @@ more on S3):
 
 Each further changed block adds 3 requests on S3, up to 5 on WebDAV. WebDAV
 costs more because it creates folders and takes the lock with an upload and a
-`MOVE`. Syncs after saves wait until saving settles (5 s), and no sooner than
-30 s (WebDAV) or 3 min (Nutstore) after the previous one.
+`MOVE`. Syncs after saves wait until saving settles (5 s); on Nutstore, which
+caps requests per account, also no sooner than 3 min after the previous one.
 
 ## End-to-end encryption
 
@@ -282,6 +282,7 @@ and `THIRD_PARTY_NOTICES.md`. The storage design was informed by Petrichor/Sylva
 
 ## Changes
 
+- **0.5.3** - S3 and WebDAV no longer carry limits meant for Nutstore: a WebDAV sync follows a save without waiting 30 s, and the automatic interval can be as short as 1 minute.
 - **0.5.2** - The plugin no longer caps its own requests: a first Nutstore sync of a folder with many files no longer stops at "The service request limit was reached".
 - **0.5.1** - A sync interrupted after it wrote the history but before the new state no longer leaves versions in the history that were never synced. Trash and old versions age by the storage server's clock, so a device whose clock is wrong no longer drops what the others keep.
 - **0.5.0** - Older versions stay in the cloud: right-click a file › **Cloud History…** to read and restore one, and **Plugins › Cloud History…** brings back deleted files. **Keep cloud history** sets 30, 90 or 365 days, or always, and old versions are cleaned up by themselves. End-to-end encryption is now a switch, off for new connections; connections set up before keep it. Also brings 0.4.7's changes. Needs Textus 1.4.1.

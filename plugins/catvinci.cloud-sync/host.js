@@ -73,16 +73,13 @@ var defaults = {
   keepDays: 90
 };
 var providers = {
-  s3: { transport: "s3", endpoint: "", saveGap: 0 },
-  webdav: {
-    transport: "dav",
-    endpoint: "",
-    saveGap: 3e4
-  },
+  s3: { transport: "s3", endpoint: "", saveGap: 0, minInterval: 1 },
+  webdav: { transport: "dav", endpoint: "", saveGap: 0, minInterval: 1 },
   nutstore: {
     transport: "dav",
     endpoint: "https://dav.jianguoyun.com/dav",
-    saveGap: 18e4
+    saveGap: 18e4,
+    minInterval: 5
   }
 };
 function relativePath(value) {
@@ -137,8 +134,8 @@ function normalizeConfig(input) {
   if (!KEEP_DAYS.includes(c.keepDays)) c.keepDays = defaults.keepDays;
   c.keepPending = c.keepPending === true;
   c.interval = Number(c.interval);
-  if (!Number.isInteger(c.interval) || c.interval < 5 || c.interval > 1440)
-    throw new SyncError("invalidInterval");
+  if (!Number.isInteger(c.interval) || c.interval < spec.minInterval || c.interval > 1440)
+    throw new SyncError("invalidInterval", [spec.minInterval]);
   return c;
 }
 function identity(c) {

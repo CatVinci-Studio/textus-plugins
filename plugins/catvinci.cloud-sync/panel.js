@@ -7,6 +7,18 @@
   var MAX_HISTORY_SIZE = 8 * 1024 * 1024;
   var KEEP_DAYS = [30, 90, 365, 0];
 
+  // development/cloud-sync/src/config.ts
+  var providers = {
+    s3: { transport: "s3", endpoint: "", saveGap: 0, minInterval: 1 },
+    webdav: { transport: "dav", endpoint: "", saveGap: 0, minInterval: 1 },
+    nutstore: {
+      transport: "dav",
+      endpoint: "https://dav.jianguoyun.com/dav",
+      saveGap: 18e4,
+      minInterval: 5
+    }
+  };
+
   // development/cloud-sync/src/panel.ts
   var api = acquireTextusApi();
   var element = (id) => document.getElementById(id);
@@ -69,6 +81,7 @@
     dirty = true;
     toggles();
   };
+  var minInterval = (provider) => providers[provider]?.minInterval ?? 5;
   function toggles() {
     const provider = input("provider").value;
     element("keep-name").textContent = keepLabel(input("keepDays").value);
@@ -87,6 +100,7 @@
     if (provider === "nutstore")
       input("endpoint").value = "https://dav.jianguoyun.com/dav";
     input("bucket").required = provider === "s3";
+    input("interval").min = String(minInterval(provider));
     element("interval-field").hidden = !input("automatic").checked;
     for (const id of ["password-field", "confirm-field", "interval-field"])
       for (const field of element(id).querySelectorAll("input"))
@@ -138,7 +152,13 @@
       prefix: input("prefix").value,
       pathStyle: input("pathStyle").checked,
       automatic: input("automatic").checked,
-      interval: input("automatic").checked ? Number(input("interval").value) : Math.min(Math.max(Number(input("interval").value) || 5, 5), 1440),
+      interval: input("automatic").checked ? Number(input("interval").value) : Math.min(
+        Math.max(
+          Number(input("interval").value) || 5,
+          minInterval(input("provider").value)
+        ),
+        1440
+      ),
       exclude: element("exclude").value,
       gitignore: input("gitignore").checked,
       obsidian: input("obsidian").checked,

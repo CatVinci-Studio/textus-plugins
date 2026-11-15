@@ -1,4 +1,5 @@
 import { KEEP_DAYS, type Config, type Result } from "./model";
+import { providers } from "./config";
 
 const api = acquireTextusApi();
 const element = <T extends HTMLElement>(id: string) =>
@@ -76,6 +77,10 @@ keepPick.onclick = async () => {
   toggles();
 };
 
+/** The shortest automatic interval the provider allows, in minutes. */
+const minInterval = (provider: string) =>
+  providers[provider as keyof typeof providers]?.minInterval ?? 5;
+
 function toggles() {
   const provider = input("provider").value;
   element("keep-name").textContent = keepLabel(input("keepDays").value);
@@ -94,6 +99,7 @@ function toggles() {
   if (provider === "nutstore")
     input("endpoint").value = "https://dav.jianguoyun.com/dav";
   input("bucket").required = provider === "s3";
+  input("interval").min = String(minInterval(provider));
   element("interval-field").hidden = !input("automatic").checked;
   // A field out of sight is neither checked nor sent.
   for (const id of ["password-field", "confirm-field", "interval-field"])
@@ -150,7 +156,13 @@ function save() {
     automatic: input("automatic").checked,
     interval: input("automatic").checked
       ? Number(input("interval").value)
-      : Math.min(Math.max(Number(input("interval").value) || 5, 5), 1440),
+      : Math.min(
+          Math.max(
+            Number(input("interval").value) || 5,
+            minInterval(input("provider").value),
+          ),
+          1440,
+        ),
     exclude: element<HTMLTextAreaElement>("exclude").value,
     gitignore: input("gitignore").checked,
     obsidian: input("obsidian").checked,
