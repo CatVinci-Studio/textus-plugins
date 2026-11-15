@@ -5,7 +5,6 @@ import { normalizeConfig } from "./config";
 import { RemoteStore, testConnection, type Fetch } from "./transport";
 import { MemoryLocal, bytes, text } from "./test-fixtures";
 import { openEncryptedStore } from "./encrypted-store";
-import { LOCK } from "./model";
 
 const account = "TEST_ACCESS_KEY",
   secret = "test-only-secret";
@@ -291,25 +290,14 @@ describe("storage protocols over HTTP", () => {
     }
   });
 
-  it("can release its lock after Nutstore's transfer budget is exhausted", async () => {
+  it("sends Nutstore every request it needs, with no budget of its own", async () => {
     const store = new RemoteStore(
       normalizeConfig({ provider: "nutstore" }),
       { account: `rate-test-${crypto.randomUUID()}`, secret },
       localFetch,
     );
-    expect(await store.create(LOCK, bytes("owner"))).toBe(true);
-    for (let i = 0; i < 550; i++) {
-      try {
-        await store.has("missing-block");
-      } catch (error) {
-        expect(error).toMatchObject({ message: "rateLimited" });
-        break;
-      }
-    }
-    await expect(store.has("missing-block")).rejects.toThrow("rateLimited");
-    expect(text(await store.get(LOCK))).toBe("owner");
-    await store.remove(LOCK);
-    expect(await store.get(LOCK)).toBeNull();
+    for (let i = 0; i < 600; i++)
+      expect(await store.has("missing-block")).toBe(false);
   });
 
   // README's request table: each sync as the plugin runs it, with a new store.

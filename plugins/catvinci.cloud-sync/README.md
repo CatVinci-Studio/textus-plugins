@@ -150,8 +150,7 @@ more on S3):
 Each further changed block adds 3 requests on S3, up to 5 on WebDAV. WebDAV
 costs more because it creates folders and takes the lock with an upload and a
 `MOVE`. Syncs after saves wait until saving settles (5 s), and no sooner than
-30 s (WebDAV) or 3 min (Nutstore) after the previous one, which keeps Nutstore
-under its 550 requests per 30 minutes.
+30 s (WebDAV) or 3 min (Nutstore) after the previous one.
 
 ## End-to-end encryption
 
@@ -283,6 +282,7 @@ and `THIRD_PARTY_NOTICES.md`. The storage design was informed by Petrichor/Sylva
 
 ## Changes
 
+- **0.5.2** - The plugin no longer caps its own requests: a first Nutstore sync of a folder with many files no longer stops at "The service request limit was reached".
 - **0.5.1** - A sync interrupted after it wrote the history but before the new state no longer leaves versions in the history that were never synced. Trash and old versions age by the storage server's clock, so a device whose clock is wrong no longer drops what the others keep.
 - **0.5.0** - Older versions stay in the cloud: right-click a file › **Cloud History…** to read and restore one, and **Plugins › Cloud History…** brings back deleted files. **Keep cloud history** sets 30, 90 or 365 days, or always, and old versions are cleaned up by themselves. End-to-end encryption is now a switch, off for new connections; connections set up before keep it. Also brings 0.4.7's changes. Needs Textus 1.4.1.
 - **0.4.7** - A sync reads again only the files whose size or time changed since the last one, so syncing a big folder while you write takes far less work. Your own rules can leave out more files (written as in a `.gitignore`), the folder's `.gitignore` can count too, and Obsidian's shared settings can sync. A picture or other attachment changed on another device now replaces the one here instead of being kept twice. Needs Textus 1.4.1.

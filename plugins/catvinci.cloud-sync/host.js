@@ -73,17 +73,15 @@ var defaults = {
   keepDays: 90
 };
 var providers = {
-  s3: { transport: "s3", endpoint: "", requestLimit: Infinity, saveGap: 0 },
+  s3: { transport: "s3", endpoint: "", saveGap: 0 },
   webdav: {
     transport: "dav",
     endpoint: "",
-    requestLimit: Infinity,
     saveGap: 3e4
   },
   nutstore: {
     transport: "dav",
     endpoint: "https://dav.jianguoyun.com/dav",
-    requestLimit: 550,
     saveGap: 18e4
   }
 };
@@ -1232,7 +1230,6 @@ function guessServiceRegion(url, headers) {
 }
 
 // development/cloud-sync/src/transport.ts
-var requests = /* @__PURE__ */ new Map();
 var encodePath = (path) => path.split("/").map(encodeURIComponent).join("/");
 var pause = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 var RemoteStore = class {
@@ -1261,20 +1258,8 @@ var RemoteStore = class {
     url.pathname = url.pathname.replace(/\/$/, "") + "/" + encodePath(s3 && c.pathStyle ? `${c.bucket}/${prefix}` : prefix);
     return url.toString();
   }
-  reserve(cleanup) {
-    const cap = providers[this.config.provider].requestLimit;
-    if (!Number.isFinite(cap)) return;
-    const key = `${this.config.endpoint}:${this.credentials.account}`;
-    const recent = (requests.get(key) ?? []).filter(
-      (at) => at > Date.now() - 30 * 6e4
-    );
-    if (recent.length >= cap + (cleanup ? 20 : 0))
-      throw new SyncError("rateLimited");
-    requests.set(key, [...recent, Date.now()]);
-  }
-  async request(method, url, body, extra = {}, cleanup = false) {
+  async request(method, url, body, extra = {}) {
     for (let attempt = 0; ; attempt++) {
-      this.reserve(cleanup);
       let headers = { ...extra };
       if (providers[this.config.provider].transport === "s3") {
         const signed = await new AwsV4Signer({
@@ -1350,8 +1335,7 @@ var RemoteStore = class {
       "GET",
       this.target(key),
       void 0,
-      {},
-      key === LOCK
+      {}
     );
     if (res.status === 404) return null;
     this.require(res);
@@ -1399,8 +1383,7 @@ var RemoteStore = class {
       "DELETE",
       this.target(key),
       void 0,
-      {},
-      true
+      {}
     );
     if (res.status !== 404) this.require(res);
   }
