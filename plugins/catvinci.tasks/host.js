@@ -435,8 +435,8 @@ exports.activate = function (ctx) {
     onCheck: function (item, checked) {
       return tick(item.data, checked).finally(() => list.refresh());
     },
-    filterPlaceholder: t("filter"),
-    emptyText: t("none"),
+    filterPlaceholder: "%filter%",
+    emptyText: "%none%",
   });
   const refresh = () => {
     list.refresh();

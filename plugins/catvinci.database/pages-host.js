@@ -272,8 +272,8 @@ return function activatePages(ctx) {
   list = textus.views.registerList("catvinci.database.pages", {
     items: (parent) => (parent ? parent.data.children : roots).map(item),
     onMove: (moved, target) => movePage(moved, target),
-    emptyText: t("empty"),
-    filterPlaceholder: t("filter"),
+    emptyText: "%empty%",
+    filterPlaceholder: "%filter%",
   });
   ctx.subscriptions.push(
     list,

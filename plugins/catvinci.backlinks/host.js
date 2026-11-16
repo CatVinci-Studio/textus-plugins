@@ -306,8 +306,8 @@ let list = null;
 exports.activate = function (ctx) {
   list = textus.views.registerList("catvinci.backlinks.panel", {
     items: items,
-    filterPlaceholder: t("filter"),
-    emptyText: t("none"),
+    filterPlaceholder: "%filter%",
+    emptyText: "%none%",
   });
   const refresh = () => list.refresh();
   ctx.subscriptions.push(
