@@ -20,6 +20,7 @@ Ist der geöffnete Ordner ein Obsidian-Vault (er enthält einen Ordner `.obsidia
 
 ## Änderungen
 
+- **0.4.5** - Suchfeld und Leerhinweis folgen der Sprache von Textus, wenn Sie sie wechseln. Benötigt Textus 1.4.3.
 - **0.4.4** - Obsidians Lesezeichen werden weiter gelistet, aber nicht mehr zurückgeschrieben: Seit Textus 1.4 ändern Plugins `.obsidian` nicht. Braucht Textus 1.4.0.
 - **0.4.3** - Die Liste ist nach dem Pfad des Dokuments im Ordner gruppiert, eine Gruppe pro Dokument; lange Stellen enden an einem Wort mit „…“; scheitert die Block-ID in einem Vault, bleibt das Lesezeichen trotzdem erhalten.
 - **0.4.2** - Kürzere Hilfe- und Leertexte.

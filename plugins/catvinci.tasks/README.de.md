@@ -46,6 +46,7 @@ Das Plugin liest die Dokumente des Ordners, um ihre Aufgaben zu finden, und schr
 
 ## Änderungen
 
+- **0.4.7** - Suchfeld und Leerhinweis folgen der Sprache von Textus, wenn Sie sie wechseln. Benötigt Textus 1.4.3.
 - **0.4.6** - Der Aufgabenblock hält wie andere Blöcke Abstand zu seinem Rahmen.
 - **0.4.5** - Eine Aufgabe, die die KI unter einer Überschrift anlegt, landet nie mehr in einem Codeblock, und „Erledigte Aufgaben ans Ende der Liste“ wirkt auch in Notizen mit Windows-Zeilenenden (CRLF).
 - **0.4.4** - Eine Aufgabenabfrage im Dokument erscheint in der Schriftgröße der Oberfläche: Eine breitere Spalte zeigt mehr davon statt größerer Schrift (Textus 1.4.1).

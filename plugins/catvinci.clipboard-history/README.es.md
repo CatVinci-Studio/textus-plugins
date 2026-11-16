@@ -17,6 +17,7 @@ Solo se guarda lo que copias en tus documentos, nunca lo que copias en Ajustes o
 
 ## Cambios
 
+- **0.1.4** - El campo de filtro y el mensaje vacío siguen el idioma de Textus al cambiarlo. Requiere Textus 1.4.3.
 - **0.1.3** - Cada elemento muestra cuándo se copió, con una línea entre elementos.
 - **0.1.2** - Vuelve el botón Borrar: un clic vacía el historial. Textos de ayuda y de estado vacío más breves.
 - **0.1.1** - Su página dice ahora en una frase qué hace, qué puede hacer y qué cambió en cada versión.

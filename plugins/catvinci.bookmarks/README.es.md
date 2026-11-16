@@ -20,6 +20,7 @@ Cuando la carpeta abierta es una bóveda de Obsidian (tiene una carpeta `.obsidi
 
 ## Cambios
 
+- **0.4.5** - El campo de filtro y el mensaje vacío siguen el idioma de Textus al cambiarlo. Requiere Textus 1.4.3.
 - **0.4.4** - Los marcadores de Obsidian se siguen listando, pero ya no se escriben: desde Textus 1.4 los plugins no cambian `.obsidian`. Necesita Textus 1.4.0.
 - **0.4.3** - La lista se agrupa por la ruta del documento en la carpeta, un grupo por documento; los pasajes largos terminan en una palabra con "…"; si falla el id de bloque en una bóveda, el marcador se guarda igual.
 - **0.4.2** - Textos de ayuda y de estado vacío más breves.

@@ -39,6 +39,7 @@ Der Tab **Bidirektionale Links** in der Seitenleiste zeigt, was auf das geöffne
 
 ## Änderungen
 
+- **0.4.6** - Suchfeld und Leerhinweis folgen der Sprache von Textus, wenn Sie sie wechseln. Benötigt Textus 1.4.3.
 - **0.4.5** - Unverlinkte Erwähnungen öffnen an der richtigen Zeile; den Linkstil speichert Textus selbst (Textus 1.4.3).
 - **0.4.4** - Links umwandeln lässt Links in einem Codeblock unverändert und wandelt die danach um; Unverlinkte Erwähnungen zeigt und verlinkt keine Namen mehr in Front Matter oder Code.
 - **0.4.3** - Standardlinks auf noch nicht vorhandene Notizen erscheinen jetzt unter Ausgehende Links, Links auf Überschriften derselben Notiz führen die Notiz nicht mehr selbst auf, und das Ziehen einer Trennlinie zeichnet das Panel nicht mehr neu.

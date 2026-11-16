@@ -160,7 +160,7 @@ describe("Two-way Links' manifest", () => {
     expect(m.id).toBe("catvinci.backlinks");
     expect(m.l10n.en.name).toBe("Two-way Links");
     expect(m.l10n.zh.name).toBe("双向链接");
-    expect(m.engines.textus).toBe(">=1.3.9");
+    expect(m.engines.textus).toBe(">=1.4.3");
     expect(m.contributes.suggestFor).toEqual(["wikilinks"]);
     expect(m.contributes.embeds).toEqual([
       { id: "catvinci.backlinks.embed", targets: ["note", "heading", "block"] },

@@ -46,6 +46,7 @@ O plugin lê os documentos da pasta para achar as tarefas, e só escreve num doc
 
 ## Alterações
 
+- **0.4.7** - O campo de filtro e a mensagem vazia seguem o idioma do Textus quando você o muda. Requer o Textus 1.4.3.
 - **0.4.6** - O bloco de tarefas mantém uma margem dentro da moldura, como os outros blocos.
 - **0.4.5** - Uma tarefa que a IA adiciona sob um título não cai mais dentro de um bloco de código, e “Mover tarefas concluídas para o fim da lista” funciona em notas com quebras de linha do Windows (CRLF).
 - **0.4.4** - Uma consulta de tarefas num documento aparece no tamanho de texto da interface: uma coluna mais larga mostra mais em vez de letra maior (Textus 1.4.1).
