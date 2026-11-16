@@ -1,5 +1,8 @@
 import { describe, expect, it } from "vitest";
+import { readFileSync } from "node:fs";
 import { loadPlugin } from "./plugin-host";
+
+const manifest = JSON.parse(readFileSync("plugins/catvinci.git/textus-plugin.json", "utf8"));
 
 /** Git (plugins/catvinci.git): badges, the branch, committing and the
  *  tools, over a fake textus.git. */
@@ -42,7 +45,7 @@ function withGit(changes: { path: string; state: string }[] | null) {
       },
       pick: async (items: { value: string; picked: boolean }[]) => items.filter((i) => i.picked).map((i) => i.value),
       input: async () => " Fix the intro ",
-      confirm: async (text: string) => (asked.push(text), true),
+      confirm: async (text: string, o?: { okLabel?: string }) => (asked.push(`${o?.okLabel}: ${text}`), true),
       notice: async () => true,
       message: async () => {},
     },
@@ -82,7 +85,10 @@ describe("the Git plugin", () => {
       ["Fix the intro", ["/root/a.md"]],
       ["Fix the intro", ["/root/a.md"]],
     ]);
+    // Its button commits at once: "Commit", not the command's "Commit Changes…".
     expect(g.asked).toHaveLength(1);
+    expect(g.asked[0]).toMatch(/^commitNow: /);
+    expect(manifest.l10n.en.commitNow).toBe("Commit");
   });
 
   it("gives Textus AI the changes against the last commit", async () => {

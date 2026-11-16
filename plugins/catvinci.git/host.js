@@ -70,7 +70,7 @@ async function commit() {
   if (!message || !message.trim()) return;
   const allowed = (await ctx.storage.global.get("allowed")) || [];
   if (!allowed.includes(root)) {
-    const ok = await textus.ui.confirm(t("firstCommit", root), { okLabel: t("commit") });
+    const ok = await textus.ui.confirm(t("firstCommit", root), { okLabel: t("commitNow") });
     if (!ok) return;
     await ctx.storage.global.set("allowed", allowed.concat(root));
   }
