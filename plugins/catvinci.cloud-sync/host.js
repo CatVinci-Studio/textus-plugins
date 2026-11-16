@@ -32,6 +32,7 @@ var ID = "catvinci.cloud-sync";
 var FORMAT = "textus-cloud-sync/1";
 var CHUNK_SIZE = 2 * 1024 * 1024;
 var MAX_FILE_SIZE = 128 * 1024 * 1024;
+var TRANSFER_BYTES = 32 * 1024 * 1024;
 var MAX_MANIFEST_SIZE = 8 * 1024 * 1024;
 var MAX_FILES = 2e4;
 var HEAD = "v1/head.json";
@@ -300,26 +301,55 @@ function conflictPath(path, hash3) {
 
 // development/cloud-sync/src/pool.ts
 var Pool = class {
-  constructor(limit) {
+  constructor(limit, budget) {
     this.limit = limit;
+    this.budget = budget;
     __publicField(this, "running", /* @__PURE__ */ new Set());
     __publicField(this, "failure", null);
+    __publicField(this, "count", 0);
+    __publicField(this, "bytes", 0);
+    __publicField(this, "waiting", []);
   }
   check() {
     if (this.failure) throw this.failure.error;
   }
-  /** `task` started once a slot is free. */
-  async add(task) {
-    while (this.running.size >= this.limit) await Promise.race(this.running);
+  /** A slot for `size` bytes, if one is free now. */
+  tryTake(size) {
+    const fits = this.count === 0 || this.count < this.limit && this.bytes + size <= this.budget;
+    if (fits) {
+      this.count++;
+      this.bytes += size;
+    }
+    return fits;
+  }
+  /** A slot for `size` bytes, once one is free. */
+  async take(size) {
     this.check();
+    while (!this.tryTake(size)) {
+      await new Promise((wake) => this.waiting.push(wake));
+      this.check();
+    }
+  }
+  give(size) {
+    this.count--;
+    this.bytes -= size;
+    const waiting = this.waiting;
+    this.waiting = [];
+    for (const wake of waiting) wake();
+  }
+  /** `task` run in a slot taken for `size` bytes, given back when it ends. */
+  run(size, task) {
     const run = task().catch((error) => {
       this.failure ?? (this.failure = { error });
-    }).finally(() => this.running.delete(run));
+    }).finally(() => {
+      this.running.delete(run);
+      this.give(size);
+    });
     this.running.add(run);
   }
   /** Every task done, or the first failure. */
   async drain() {
-    while (this.running.size) await Promise.race(this.running);
+    await this.settle();
     this.check();
   }
   /** Every started task settled, failed or not: before the lock goes. */
@@ -498,6 +528,7 @@ async function clean(p, stale, dropped, history) {
 }
 
 // development/cloud-sync/src/engine.ts
+var TRANSFERS = /* @__PURE__ */ new Set(["download", "conflict", "upload"]);
 async function download(store, entry, signal) {
   const bytes = new Uint8Array(entry.size);
   let offset = 0;
@@ -554,8 +585,7 @@ async function synchronize(options) {
       throw new SyncError("lockLost");
   };
   let completed = false;
-  const parallel = options.parallel ?? 4;
-  const uploads = new Pool(parallel);
+  const pool = new Pool(options.parallel ?? 4, TRANSFER_BYTES);
   const fetching = /* @__PURE__ */ new Map();
   try {
     await ownLock();
@@ -653,19 +683,34 @@ async function synchronize(options) {
       result.moved++;
     }
     let ahead = 0;
-    const fetchAhead = () => {
-      while (ahead < actions.length && fetching.size < parallel) {
-        const { path, kind } = actions[ahead++];
-        if (kind !== "download" && kind !== "conflict" || done.has(path))
-          continue;
+    const fetchAhead = (from) => {
+      for (ahead = Math.max(ahead, from); ahead < actions.length; ahead++) {
+        const { path, kind } = actions[ahead];
+        if (done.has(path) || !TRANSFERS.has(kind)) continue;
+        if (kind !== "download" || files[path]) return;
+        if (!pool.tryTake(remote.files[path].size)) return;
         const bytes = download(store, remote.files[path], signal);
         bytes.catch(() => {
         });
         fetching.set(path, bytes);
       }
     };
+    const fetched = async (path, entry) => {
+      let bytes = fetching.get(path);
+      if (!bytes) {
+        await pool.take(entry.size);
+        bytes = download(store, entry, signal);
+        fetching.set(path, bytes);
+      }
+      try {
+        return await bytes;
+      } finally {
+        fetching.delete(path);
+        pool.give(entry.size);
+      }
+    };
     for (let i = 0; i < actions.length; i++) {
-      fetchAhead();
+      fetchAhead(i);
       checkAbort(signal);
       await local.check();
       const { path, kind } = actions[i];
@@ -696,8 +741,7 @@ async function synchronize(options) {
         continue;
       }
       if (kind === "download" || kind === "conflict") {
-        const bytes = await fetching.get(path);
-        fetching.delete(path);
+        const bytes = await fetched(path, r);
         checkAbort(signal);
         const applied = kind === "download" && await local.apply(path, bytes, l?.hash ?? null);
         if (applied === "deferred") {
@@ -732,19 +776,25 @@ async function synchronize(options) {
           continue;
         }
       }
-      const current = await local.read(path);
-      if (!l || !current || await hash(current) !== l.hash) {
+      if (!l) {
         result.deferred.push(path);
         continue;
       }
-      await uploads.add(async () => {
+      await pool.take(l.size);
+      const current = await local.read(path);
+      if (!current || await hash(current) !== l.hash) {
+        pool.give(l.size);
+        result.deferred.push(path);
+        continue;
+      }
+      pool.run(l.size, async () => {
         await upload(store, l, current, known, signal);
         next.files[path] = l;
         base.files[path] = l.hash;
         result.uploaded++;
       });
     }
-    await uploads.drain();
+    await pool.drain();
     checkAbort(signal);
     await local.check();
     await ownLock();
@@ -768,7 +818,7 @@ async function synchronize(options) {
     completed = true;
     return result;
   } finally {
-    await Promise.allSettled([uploads.settle(), ...fetching.values()]);
+    await Promise.allSettled([pool.settle(), ...fetching.values()]);
     try {
       await ownLock();
       await store.remove(LOCK);

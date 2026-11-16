@@ -3,6 +3,7 @@
   // development/cloud-sync/src/model.ts
   var CHUNK_SIZE = 2 * 1024 * 1024;
   var MAX_FILE_SIZE = 128 * 1024 * 1024;
+  var TRANSFER_BYTES = 32 * 1024 * 1024;
   var MAX_MANIFEST_SIZE = 8 * 1024 * 1024;
   var MAX_HISTORY_SIZE = 8 * 1024 * 1024;
   var KEEP_DAYS = [30, 90, 365, 0];

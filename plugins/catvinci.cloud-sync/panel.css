@@ -117,6 +117,20 @@ input[readonly] {
 .form-end > .danger-text {
   color: var(--ui-danger);
 }
+/* Too narrow for one line (a sidebar, a phone): one column, every button
+   on both edges, the danger last. */
+@media (max-width: 26em) {
+  .form-end {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .form-end > .spacer {
+    display: none;
+  }
+  .form-end > .danger-text {
+    order: 1;
+  }
+}
 /* A saved connection's card: each name and its value, the value quiet and
    whole where it fits (an address wraps rather than runs out). */
 #connected .tx-row > span {

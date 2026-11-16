@@ -2,6 +2,8 @@ export const ID = "catvinci.cloud-sync";
 export const FORMAT = "textus-cloud-sync/1";
 export const CHUNK_SIZE = 2 * 1024 * 1024;
 export const MAX_FILE_SIZE = 128 * 1024 * 1024;
+/** Bytes of files a sync holds in memory for transfers at once. */
+export const TRANSFER_BYTES = 32 * 1024 * 1024;
 export const MAX_MANIFEST_SIZE = 8 * 1024 * 1024;
 export const MAX_FILES = 20000;
 export const HEAD = "v1/head.json";
