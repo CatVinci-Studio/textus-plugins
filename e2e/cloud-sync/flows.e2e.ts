@@ -209,7 +209,7 @@ async function pickProvider(
  *  show once it is on. */
 async function encryptOn(panel: FrameLocator) {
   const on = panel.locator("#encrypt");
-  if (await on.isVisible() && !(await on.isChecked())) await on.check();
+  if ((await on.isVisible()) && !(await on.isChecked())) await on.check();
 }
 async function configure(
   page: Page,
@@ -390,7 +390,7 @@ test("configuration errors preserve input and Chinese UI fits narrow and dark vi
   await evidence(page, "chinese-dark-narrow", "#sync-password");
   remote.failure = 403;
   await panel.locator("#test-saved").click();
-  await expect(panel.locator("#status")).toContainText("服务拒绝写入");
+  await expect(panel.locator("#status")).toContainText("认证或权限不足");
   await expect(panel.locator("#sync")).toBeEnabled();
   // Disconnecting forgets this folder's connection; the form comes back empty.
   remote.failure = null;
@@ -565,8 +565,6 @@ test("password confirmation errors retain input and an old plaintext directory i
   );
   remote.files.set("/dav/textus/notes/v1/head.json", old);
   await panel.locator("#sync").click();
-  await expect(panel.locator("#status")).toContainText(
-    "isn't encrypted",
-  );
+  await expect(panel.locator("#status")).toContainText("isn't encrypted");
   expect([...remote.files]).toEqual([["/dav/textus/notes/v1/head.json", old]]);
 });

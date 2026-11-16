@@ -147,6 +147,13 @@ function normalizeConfig(input) {
     c.parallel = spec.parallel;
   return c;
 }
+function withConnection(saved, connection) {
+  if (!saved) return connection;
+  if (saved.provider === connection.provider)
+    return { ...saved, ...connection };
+  const { saveGap: _gap, parallel: _parallel, ...options } = saved;
+  return { ...options, ...connection };
+}
 function identity(c) {
   return JSON.stringify([
     providers[c.provider].transport,
@@ -2188,6 +2195,8 @@ var Controller = class {
       progress: null
     });
     __publicField(this, "t", (key, ...args) => this.api.l10n.t(key, ...args));
+    /** The folder's saved settings, or null before it has a connection. */
+    __publicField(this, "saved", () => this.state.configured ? this.state.config : null);
     __publicField(this, "page", (name) => this.ctx.plugin.readText(name));
     this.settings = new Settings(ctx);
   }
@@ -2324,10 +2333,9 @@ var Controller = class {
       if (draft) {
         const root2 = this.state.root;
         if (!root2) throw new SyncError("noFolder");
-        const config2 = normalizeConfig({
-          ...this.state.config,
-          ...draft.config
-        });
+        const config2 = normalizeConfig(
+          withConnection(this.saved(), draft.config)
+        );
         const keys = await this.settings.resolve(
           root2,
           config2,
@@ -2481,7 +2489,7 @@ var Controller = class {
         try {
           await this.settings.save(
             root,
-            { ...this.state.config, ...m.config },
+            withConnection(this.saved(), m.config),
             m.credentials
           );
           await this.refresh();

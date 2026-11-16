@@ -126,6 +126,19 @@ export function normalizeConfig(input: Partial<Config>): Config {
   return c;
 }
 
+/** A connection typed in, with the folder's options when it has some: a
+ *  different service starts from its own wait and transfers. */
+export function withConnection(
+  saved: Config | null,
+  connection: Partial<Config>,
+): Partial<Config> {
+  if (!saved) return connection;
+  if (saved.provider === connection.provider)
+    return { ...saved, ...connection };
+  const { saveGap: _gap, parallel: _parallel, ...options } = saved;
+  return { ...options, ...connection };
+}
+
 export function identity(c: Config): string {
   return JSON.stringify([
     providers[c.provider].transport,

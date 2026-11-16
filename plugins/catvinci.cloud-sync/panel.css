@@ -33,6 +33,7 @@ fieldset {
 .tx-group + .form-end,
 form + .tx-group-title,
 section + form,
+form + section,
 form + form {
   margin-top: var(--space-6);
 }
@@ -74,6 +75,8 @@ form + form {
   align-items: stretch;
 }
 .tx-row.stack > textarea {
+  box-sizing: border-box;
+  width: 100%;
   resize: vertical;
   font-family: var(--font-mono);
 }

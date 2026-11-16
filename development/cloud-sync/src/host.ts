@@ -1,4 +1,4 @@
-import { defaults, normalizeConfig } from "./config";
+import { defaults, normalizeConfig, withConnection } from "./config";
 import { parseBase } from "./content";
 import { synchronize } from "./engine";
 import { scopeOf } from "./scope";
@@ -148,6 +148,8 @@ class Controller {
         : null,
     );
   }
+  /** The folder's saved settings, or null before it has a connection. */
+  private saved = () => (this.state.configured ? this.state.config : null);
   private async store() {
     const root = await this.api.files.root();
     if (!root) throw new SyncError("noFolder");
@@ -215,10 +217,9 @@ class Controller {
       if (draft) {
         const root = this.state.root;
         if (!root) throw new SyncError("noFolder");
-        const config = normalizeConfig({
-          ...this.state.config,
-          ...draft.config,
-        });
+        const config = normalizeConfig(
+          withConnection(this.saved(), draft.config),
+        );
         const keys = await this.settings.resolve(
           root,
           config,
@@ -403,7 +404,7 @@ class Controller {
           // The connection from the form, the options as they are.
           await this.settings.save(
             root,
-            { ...this.state.config, ...m.config },
+            withConnection(this.saved(), m.config),
             m.credentials,
           );
           await this.refresh();

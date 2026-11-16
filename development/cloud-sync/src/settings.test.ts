@@ -195,10 +195,16 @@ it("saves sync options at once without touching the connection or its keys", asy
     parallel: 2,
     endpoint: "https://elsewhere.example",
   } as never);
-  expect(next).toMatchObject({ interval: 30, parallel: 2, endpoint: "https://dav.example" });
+  expect(next).toMatchObject({
+    interval: 30,
+    parallel: 2,
+    endpoint: "https://dav.example",
+  });
   expect(next.keepPending).toBe(false);
   expect(JSON.stringify([...f.secrets])).toBe(secrets);
-  expect((await f.settings.saveOptions("/notes", { keepDays: 90 })).keepPending).toBe(true);
+  expect(
+    (await f.settings.saveOptions("/notes", { keepDays: 90 })).keepPending,
+  ).toBe(true);
 });
 it("tests typed credentials without saving them, keeping a saved key left empty", async () => {
   const f = fixture();
@@ -208,7 +214,10 @@ it("tests typed credentials without saving them, keeping a saved key left empty"
     secret: "test-secret",
   });
   const before = JSON.stringify([...f.secrets]);
-  const resolved = await f.settings.resolve("/notes", config, { account: "alice", secret: "" });
+  const resolved = await f.settings.resolve("/notes", config, {
+    account: "alice",
+    secret: "",
+  });
   expect(resolved).toMatchObject({ account: "alice", secret: "test-secret" });
   expect(JSON.stringify([...f.secrets])).toBe(before);
   await expect(
@@ -217,12 +226,24 @@ it("tests typed credentials without saving them, keeping a saved key left empty"
 });
 it("disconnects by removing this folder's keys and settings only", async () => {
   const f = fixture();
-  await f.settings.save("/notes", config, { ...encryption, account: "alice", secret: "a-secret" });
-  await f.settings.save("/other", config, { ...encryption, account: "bob", secret: "b-secret" });
+  await f.settings.save("/notes", config, {
+    ...encryption,
+    account: "alice",
+    secret: "a-secret",
+  });
+  await f.settings.save("/other", config, {
+    ...encryption,
+    account: "bob",
+    secret: "b-secret",
+  });
   await f.settings.forget("/notes");
   expect(f.secrets.size).toBe(1);
-  await expect(f.settings.credentials("/other", config)).resolves.toMatchObject({ account: "bob" });
-  expect((await f.settings.load("/notes")).endpoint).not.toBe("https://dav.example");
+  await expect(f.settings.credentials("/other", config)).resolves.toMatchObject(
+    { account: "bob" },
+  );
+  expect((await f.settings.load("/notes")).endpoint).not.toBe(
+    "https://dav.example",
+  );
 });
 it("shows an account's start only", () => {
   expect(masked("alice@example.com")).toBe("alic••••");

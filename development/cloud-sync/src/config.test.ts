@@ -1,5 +1,10 @@
 import { describe, expect, it } from "vitest";
-import { inScope, normalizeConfig, relativePath } from "./config";
+import {
+  inScope,
+  normalizeConfig,
+  relativePath,
+  withConnection,
+} from "./config";
 import { parseManifest } from "./content";
 import { scopeOf } from "./scope";
 import { FORMAT, encode } from "./model";
@@ -237,4 +242,28 @@ describe("connection and data boundaries", () => {
       ),
     ).toThrow("invalidManifest");
   });
+});
+
+it("starts a new or changed service from its own wait and transfers, keeping the folder's options", () => {
+  const nutstore = { provider: "nutstore" as const, prefix: "notes" };
+  expect(normalizeConfig(withConnection(null, nutstore))).toMatchObject({
+    saveGap: 3,
+    parallel: 2,
+  });
+  const s3 = normalizeConfig({
+    provider: "s3",
+    bucket: "my-bucket",
+    automatic: true,
+    parallel: 16,
+  });
+  expect(normalizeConfig(withConnection(s3, nutstore))).toMatchObject({
+    automatic: true,
+    saveGap: 3,
+    parallel: 2,
+  });
+  expect(
+    normalizeConfig(
+      withConnection(s3, { provider: "s3", bucket: "other-bucket" }),
+    ),
+  ).toMatchObject({ parallel: 16, bucket: "other-bucket" });
 });

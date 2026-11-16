@@ -349,17 +349,20 @@ it.each([
   ["create", "permissionWrite"],
   ["get", "permissionRead"],
   ["remove", "permissionDelete"],
-] as const)("names the permission a key lacks when %s is refused", async (step, code) => {
-  const store = new MemoryStore();
-  store[step] = async () => {
-    throw new SyncError("permissionError", [403]);
-  };
-  await expect(testConnection(store)).rejects.toMatchObject({ code });
-  // A wrong sign-in is not a missing permission.
-  store[step] = async () => {
-    throw new SyncError("permissionError", [401]);
-  };
-  await expect(testConnection(store)).rejects.toMatchObject({
-    code: "permissionError",
-  });
-});
+] as const)(
+  "names the permission a key lacks when %s is refused",
+  async (step, code) => {
+    const store = new MemoryStore();
+    store[step] = async () => {
+      throw new SyncError("permissionError", [403]);
+    };
+    await expect(testConnection(store)).rejects.toMatchObject({ code });
+    // A wrong sign-in is not a missing permission.
+    store[step] = async () => {
+      throw new SyncError("permissionError", [401]);
+    };
+    await expect(testConnection(store)).rejects.toMatchObject({
+      code: "permissionError",
+    });
+  },
+);
