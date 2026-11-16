@@ -32,6 +32,7 @@ var ID = "catvinci.cloud-sync";
 var FORMAT = "textus-cloud-sync/1";
 var CHUNK_SIZE = 2 * 1024 * 1024;
 var MAX_FILE_SIZE = 128 * 1024 * 1024;
+var TRANSFER_BYTES = 32 * 1024 * 1024;
 var MAX_MANIFEST_SIZE = 8 * 1024 * 1024;
 var MAX_FILES = 2e4;
 var HEAD = "v1/head.json";
@@ -55,6 +56,7 @@ var blockKey = (hash3) => `v1/blocks/${hash3.slice(0, 2)}/${hash3}`;
 function checkAbort(signal) {
   if (signal?.aborted) throw new SyncError("cancelled");
 }
+var PARALLEL = [1, 2, 4, 8, 16, 32];
 
 // development/cloud-sync/src/config.ts
 var defaults = {
@@ -71,15 +73,17 @@ var defaults = {
   gitignore: false,
   obsidian: false,
   encrypt: false,
-  keepDays: 90
+  keepDays: 90,
+  parallel: 8
 };
 var providers = {
-  s3: { transport: "s3", endpoint: "", saveGap: 0 },
-  webdav: { transport: "dav", endpoint: "", saveGap: 0 },
+  s3: { transport: "s3", endpoint: "", saveGap: 0, parallel: 8 },
+  webdav: { transport: "dav", endpoint: "", saveGap: 0, parallel: 4 },
   nutstore: {
     transport: "dav",
     endpoint: "https://dav.jianguoyun.com/dav",
-    saveGap: 3
+    saveGap: 3,
+    parallel: 2
   }
 };
 function relativePath(value) {
@@ -139,7 +143,17 @@ function normalizeConfig(input) {
   c.saveGap = Number(input.saveGap ?? spec.saveGap);
   if (!Number.isInteger(c.saveGap) || c.saveGap < 0 || c.saveGap > 60)
     throw new SyncError("invalidSaveGap");
+  c.parallel = Number(input.parallel ?? spec.parallel);
+  if (!PARALLEL.includes(c.parallel))
+    c.parallel = spec.parallel;
   return c;
+}
+function withConnection(saved, connection) {
+  if (!saved) return connection;
+  if (saved.provider === connection.provider)
+    return { ...saved, ...connection };
+  const { saveGap: _gap, parallel: _parallel, ...options } = saved;
+  return { ...options, ...connection };
 }
 function identity(c) {
   return JSON.stringify([
@@ -285,6 +299,65 @@ function conflictPath(path, hash3) {
   return `Sync conflicts/${safe.slice(0, end)} (${hash3.slice(0, 8)})${safe.slice(end)}`;
 }
 
+// development/cloud-sync/src/pool.ts
+var Pool = class {
+  constructor(limit, budget) {
+    this.limit = limit;
+    this.budget = budget;
+    __publicField(this, "running", /* @__PURE__ */ new Set());
+    __publicField(this, "failure", null);
+    __publicField(this, "count", 0);
+    __publicField(this, "bytes", 0);
+    __publicField(this, "waiting", []);
+  }
+  check() {
+    if (this.failure) throw this.failure.error;
+  }
+  /** A slot for `size` bytes, if one is free now. */
+  tryTake(size) {
+    const fits = this.count === 0 || this.count < this.limit && this.bytes + size <= this.budget;
+    if (fits) {
+      this.count++;
+      this.bytes += size;
+    }
+    return fits;
+  }
+  /** A slot for `size` bytes, once one is free. */
+  async take(size) {
+    this.check();
+    while (!this.tryTake(size)) {
+      await new Promise((wake) => this.waiting.push(wake));
+      this.check();
+    }
+  }
+  give(size) {
+    this.count--;
+    this.bytes -= size;
+    const waiting = this.waiting;
+    this.waiting = [];
+    for (const wake of waiting) wake();
+  }
+  /** `task` run in a slot taken for `size` bytes, given back when it ends. */
+  run(size, task) {
+    const run = task().catch((error) => {
+      this.failure ?? (this.failure = { error });
+    }).finally(() => {
+      this.running.delete(run);
+      this.give(size);
+    });
+    this.running.add(run);
+  }
+  /** Every task done, or the first failure. */
+  async drain() {
+    await this.settle();
+    this.check();
+  }
+  /** Every started task settled, failed or not: before the lock goes. */
+  async settle() {
+    while (this.running.size) await Promise.race(this.running);
+  }
+};
+
 // development/cloud-sync/src/history.ts
 var HOUR = 36e5;
 var DAY = 24 * HOUR;
@@ -389,7 +462,10 @@ function unusedBlocks(candidates, next, previous, history) {
   const used = blocksOf(Object.values(next.files), /* @__PURE__ */ new Set());
   blocksOf(Object.values(previous.files), used);
   for (const list of Object.values(history.versions)) blocksOf(list, used);
-  blocksOf((next.trash ?? []).map((t) => t.entry), used);
+  blocksOf(
+    (next.trash ?? []).map((t) => t.entry),
+    used
+  );
   return [...blocksOf(candidates, /* @__PURE__ */ new Set())].filter((h) => !used.has(h));
 }
 
@@ -452,6 +528,7 @@ async function clean(p, stale, dropped, history) {
 }
 
 // development/cloud-sync/src/engine.ts
+var TRANSFERS = /* @__PURE__ */ new Set(["download", "conflict", "upload"]);
 async function download(store, entry, signal) {
   const bytes = new Uint8Array(entry.size);
   let offset = 0;
@@ -470,17 +547,25 @@ async function upload(store, entry, bytes, known, signal) {
   let offset = 0;
   for (const block of entry.blocks) {
     checkAbort(signal);
-    if (!known.has(block.hash)) {
-      const key = blockKey(block.hash);
-      if (!await store.has(key))
-        await store.put(key, bytes.subarray(offset, offset + block.size));
-      const actual = await store.get(key);
-      if (!actual || await hash(actual) !== block.hash)
-        throw new SyncError("integrityError");
-      known.add(block.hash);
+    let stored = known.get(block.hash);
+    if (!stored) {
+      stored = putBlock(
+        store,
+        block.hash,
+        bytes.subarray(offset, offset + block.size)
+      );
+      known.set(block.hash, stored);
     }
+    await stored;
     offset += block.size;
   }
+}
+async function putBlock(store, hashed, bytes) {
+  const key = blockKey(hashed);
+  if (!await store.has(key)) await store.put(key, bytes);
+  const actual = await store.get(key);
+  if (!actual || await hash(actual) !== hashed)
+    throw new SyncError("integrityError");
 }
 async function synchronize(options) {
   const { local, store, signal } = options;
@@ -500,6 +585,8 @@ async function synchronize(options) {
       throw new SyncError("lockLost");
   };
   let completed = false;
+  const pool = new Pool(options.parallel ?? 4, TRANSFER_BYTES);
+  const fetching = /* @__PURE__ */ new Map();
   try {
     await ownLock();
     const raw = await store.get(HEAD);
@@ -539,7 +626,10 @@ async function synchronize(options) {
       Object.entries(lastSynced).filter(([path]) => !local.wants(path))
     );
     if (Object.keys(parked).length) base.parked = parked;
-    const known = /* @__PURE__ */ new Set();
+    const known = /* @__PURE__ */ new Map();
+    for (const entry of Object.values(remote.files))
+      for (const block of entry.blocks)
+        known.set(block.hash, Promise.resolve());
     const result = {
       uploaded: 0,
       downloaded: 0,
@@ -592,7 +682,35 @@ async function synchronize(options) {
       done.add(from).add(to);
       result.moved++;
     }
+    let ahead = 0;
+    const fetchAhead = (from) => {
+      for (ahead = Math.max(ahead, from); ahead < actions.length; ahead++) {
+        const { path, kind } = actions[ahead];
+        if (done.has(path) || !TRANSFERS.has(kind)) continue;
+        if (kind !== "download" || files[path]) return;
+        if (!pool.tryTake(remote.files[path].size)) return;
+        const bytes = download(store, remote.files[path], signal);
+        bytes.catch(() => {
+        });
+        fetching.set(path, bytes);
+      }
+    };
+    const fetched = async (path, entry) => {
+      let bytes = fetching.get(path);
+      if (!bytes) {
+        await pool.take(entry.size);
+        bytes = download(store, entry, signal);
+        fetching.set(path, bytes);
+      }
+      try {
+        return await bytes;
+      } finally {
+        fetching.delete(path);
+        pool.give(entry.size);
+      }
+    };
     for (let i = 0; i < actions.length; i++) {
+      fetchAhead(i);
       checkAbort(signal);
       await local.check();
       const { path, kind } = actions[i];
@@ -623,7 +741,7 @@ async function synchronize(options) {
         continue;
       }
       if (kind === "download" || kind === "conflict") {
-        const bytes = await download(store, r, signal);
+        const bytes = await fetched(path, r);
         checkAbort(signal);
         const applied = kind === "download" && await local.apply(path, bytes, l?.hash ?? null);
         if (applied === "deferred") {
@@ -658,16 +776,25 @@ async function synchronize(options) {
           continue;
         }
       }
-      const current = await local.read(path);
-      if (!l || !current || await hash(current) !== l.hash) {
+      if (!l) {
         result.deferred.push(path);
         continue;
       }
-      await upload(store, l, current, known, signal);
-      next.files[path] = l;
-      base.files[path] = l.hash;
-      result.uploaded++;
+      await pool.take(l.size);
+      const current = await local.read(path);
+      if (!current || await hash(current) !== l.hash) {
+        pool.give(l.size);
+        result.deferred.push(path);
+        continue;
+      }
+      pool.run(l.size, async () => {
+        await upload(store, l, current, known, signal);
+        next.files[path] = l;
+        base.files[path] = l.hash;
+        result.uploaded++;
+      });
     }
+    await pool.drain();
     checkAbort(signal);
     await local.check();
     await ownLock();
@@ -691,6 +818,7 @@ async function synchronize(options) {
     completed = true;
     return result;
   } finally {
+    await Promise.allSettled([pool.settle(), ...fetching.values()]);
     try {
       await ownLock();
       await store.remove(LOCK);
@@ -1238,7 +1366,7 @@ var RemoteStore = class {
     this.credentials = credentials;
     this.fetch = fetch2;
     this.sleep = sleep;
-    __publicField(this, "dirs", /* @__PURE__ */ new Set());
+    __publicField(this, "dirs", /* @__PURE__ */ new Map());
     /** The server's clock minus ours, from its last answer's Date. */
     __publicField(this, "skew", 0);
     __publicField(this, "cache", /* @__PURE__ */ new Map());
@@ -1302,7 +1430,7 @@ var RemoteStore = class {
   require(response) {
     if (response.status >= 200 && response.status < 300) return;
     if ([401, 403].includes(response.status))
-      throw new SyncError("permissionError");
+      throw new SyncError("permissionError", [response.status]);
     if (response.status === 429) throw new SyncError("rateLimited");
     if (response.status === 507) throw new SyncError("quotaError");
     throw new SyncError("httpError", [response.status]);
@@ -1313,17 +1441,24 @@ var RemoteStore = class {
     let path = "";
     for (const part of parts) {
       path += `${encodeURIComponent(part)}/`;
-      if (this.dirs.has(path)) continue;
-      const url = `${this.config.endpoint}/${path}`;
-      const res = await this.request("MKCOL", url);
-      const made = res.status >= 200 && res.status < 300;
-      if (!made && !await this.isFolder(url)) {
-        if ([401, 403, 429, 507].includes(res.status)) this.require(res);
-        throw new SyncError("folderNotCreated", [
-          decodeURIComponent(path.slice(0, -1))
-        ]);
+      let made = this.dirs.get(path);
+      if (!made) {
+        made = this.folder(path);
+        this.dirs.set(path, made);
+        made.catch(() => this.dirs.delete(path));
       }
-      this.dirs.add(path);
+      await made;
+    }
+  }
+  async folder(path) {
+    const url = `${this.config.endpoint}/${path}`;
+    const res = await this.request("MKCOL", url);
+    const made = res.status >= 200 && res.status < 300;
+    if (!made && !await this.isFolder(url)) {
+      if ([401, 403, 429, 507].includes(res.status)) this.require(res);
+      throw new SyncError("folderNotCreated", [
+        decodeURIComponent(path.slice(0, -1))
+      ]);
     }
   }
   async isFolder(url) {
@@ -1331,12 +1466,7 @@ var RemoteStore = class {
     return res.status === 207 || res.status === 200;
   }
   async get(key) {
-    const res = await this.request(
-      "GET",
-      this.target(key),
-      void 0,
-      {}
-    );
+    const res = await this.request("GET", this.target(key), void 0, {});
     if (res.status === 404) return null;
     this.require(res);
     return res.bytes();
@@ -1379,12 +1509,7 @@ var RemoteStore = class {
     }
   }
   async remove(key) {
-    const res = await this.request(
-      "DELETE",
-      this.target(key),
-      void 0,
-      {}
-    );
+    const res = await this.request("DELETE", this.target(key), void 0, {});
     if (res.status !== 404) this.require(res);
   }
 };
@@ -1393,15 +1518,27 @@ async function testConnection(store) {
   const original = crypto.getRandomValues(new Uint8Array(32));
   let created = false;
   try {
-    created = await store.create(key, original);
+    created = await refused(
+      "permissionWrite",
+      () => store.create(key, original)
+    );
     if (!created) throw new SyncError("unsafeServer");
     if (await store.create(key, new Uint8Array([9])))
       throw new SyncError("unsafeServer");
-    const read2 = await store.get(key);
+    const read2 = await refused("permissionRead", () => store.get(key));
     if (!read2 || await hash(read2) !== await hash(original))
       throw new SyncError("unsafeServer");
   } finally {
-    if (created) await store.remove(key);
+    if (created) await refused("permissionDelete", () => store.remove(key));
+  }
+}
+async function refused(code, run) {
+  try {
+    return await run();
+  } catch (error) {
+    if (error instanceof SyncError && error.code === "permissionError" && error.args[0] === 403)
+      throw new SyncError(code);
+    throw error;
   }
 }
 
@@ -1843,6 +1980,17 @@ var Pacer = class {
 };
 
 // development/cloud-sync/src/settings.ts
+var OPTIONS = [
+  "automatic",
+  "interval",
+  "saveGap",
+  "keepDays",
+  "exclude",
+  "gitignore",
+  "obsidian",
+  "parallel"
+];
+var masked = (account) => account.length > 8 ? `${account.slice(0, 4)}\u2022\u2022\u2022\u2022` : "\u2022\u2022\u2022\u2022";
 var Settings = class {
   constructor(ctx) {
     this.ctx = ctx;
@@ -1888,7 +2036,19 @@ var Settings = class {
       config.keepDays = before.keepDays;
       config.keepPending = before.keepPending;
     }
-    const key = await this.secretKey(root, config);
+    await this.ctx.secrets.set(
+      await this.secretKey(root, config),
+      JSON.stringify(await this.resolve(root, config, incoming))
+    );
+    await this.ctx.storage.global.set(
+      `config:${await this.scope(root)}`,
+      config
+    );
+    return config;
+  }
+  /** The credentials `incoming` makes for `config`: a field left empty keeps
+   *  the one saved for this connection. Checked, not saved. */
+  async resolve(root, config, incoming) {
     let previous = { account: "", secret: "" };
     try {
       previous = await this.credentials(root, config);
@@ -1908,31 +2068,39 @@ var Settings = class {
       if ([account, secret, sessionToken].includes(syncPassword))
         throw new SyncError("syncPasswordSeparate");
     }
-    await this.ctx.secrets.set(
-      key,
-      JSON.stringify({
-        account,
-        secret,
-        syncPassword,
-        sessionToken
-      })
-    );
-    await this.ctx.storage.global.set(
-      `config:${await this.scope(root)}`,
-      config
-    );
-    return config;
+    return { account, secret, syncPassword, sessionToken };
   }
-  /** The folder's keep setting, as a sync left it, taken as this one's. */
-  async adoptKeep(root, keep) {
+  /** The sync options alone, not the connection: saved as they change. */
+  async saveOptions(root, options) {
+    const picked = Object.fromEntries(
+      OPTIONS.filter((k) => k in options).map((k) => [k, options[k]])
+    );
+    const next = normalizeConfig({ ...await this.load(root), ...picked });
+    if ("keepDays" in options) next.keepPending = true;
+    await this.ctx.storage.global.set(`config:${await this.scope(root)}`, next);
+    return next;
+  }
+  /** The folder's connection removed from this device: its keys and its
+   *  settings. Nothing in the folder or the cloud changes. */
+  async forget(root) {
+    const config = await this.load(root);
+    await this.ctx.secrets.delete(await this.secretKey(root, config));
+    await this.ctx.storage.global.set(`config:${await this.scope(root)}`, null);
+  }
+  /** The folder's keep setting, as a sync that carried `carried` left it,
+   *  taken as this one's; false when one was picked meanwhile (it goes out
+   *  with the next sync). */
+  async adoptKeep(root, keep, carried) {
     const key = `config:${await this.scope(root)}`;
     const saved = await this.ctx.storage.global.get(key);
-    if (!saved) return;
+    if (!saved || saved.keepPending && saved.keepDays !== carried)
+      return false;
     await this.ctx.storage.global.set(key, {
       ...saved,
       keepDays: keep.days,
       keepPending: false
     });
+    return true;
   }
   async baseKey(root, config) {
     const { account } = await this.credentials(root, config);
@@ -1960,6 +2128,38 @@ function statusText(s, now, t, language) {
     unit[0]
   );
   return t("statusSynced", when);
+}
+
+// development/cloud-sync/src/connection.ts
+async function testDraft(config, credentials, fetch2, signal) {
+  const store = new RemoteStore(config, credentials, fetch2);
+  await testConnection(
+    config.encrypt ? await openEncryptedStore(store, credentials.syncPassword ?? "", {
+      signal
+    }) : await openPlainStore(store)
+  );
+}
+async function recoverLock(store, {
+  language,
+  confirm,
+  signal
+}) {
+  const raw = await store.get(LOCK);
+  if (!raw) return "noLock";
+  let at = "\u2014";
+  try {
+    const parsed = JSON.parse(new TextDecoder().decode(raw));
+    if (typeof parsed.startedAt === "string" && Number.isFinite(Date.parse(parsed.startedAt)))
+      at = new Date(parsed.startedAt).toLocaleString(language);
+  } catch {
+  }
+  if (!await confirm(at)) return null;
+  checkAbort(signal);
+  const current = await store.get(LOCK);
+  if (!current || new TextDecoder().decode(raw) !== new TextDecoder().decode(current))
+    throw new SyncError("lockLost");
+  await store.remove(LOCK);
+  return "unlocked";
 }
 
 // development/cloud-sync/src/history-host.ts
@@ -2050,7 +2250,11 @@ function registerHistory(api, source) {
         if (m.type === "ready" || m.type === "open")
           reply({ type: "list", ...await list(m.path ?? path) });
         else if (m.type === "preview" && m.path && m.hash)
-          reply({ type: "preview", hash: m.hash, ...await preview(m.path, m.hash) });
+          reply({
+            type: "preview",
+            hash: m.hash,
+            ...await preview(m.path, m.hash)
+          });
         else if (m.type === "restore" && m.path && m.hash) {
           const { v } = await version(m.path, m.hash);
           const failed = await source.operation("sync", {
@@ -2114,6 +2318,8 @@ var Controller = class {
       progress: null
     });
     __publicField(this, "t", (key, ...args) => this.api.l10n.t(key, ...args));
+    /** The folder's saved settings, or null before it has a connection. */
+    __publicField(this, "saved", () => this.state.configured ? this.state.config : null);
     __publicField(this, "page", (name) => this.ctx.plugin.readText(name));
     this.settings = new Settings(ctx);
   }
@@ -2155,9 +2361,12 @@ var Controller = class {
     const root = await this.api.files.root();
     const config = root ? await this.settings.load(root) : { ...defaults };
     let configured = false;
+    let account;
     if (root)
       try {
-        await this.settings.credentials(root, config);
+        account = masked(
+          (await this.settings.credentials(root, config)).account
+        );
         await this.settings.password(root, config);
         configured = true;
       } catch {
@@ -2171,7 +2380,8 @@ var Controller = class {
         !root ? "noFolder" : configured ? "ready" : "notConfigured"
       ),
       error: false,
-      progress: null
+      progress: null,
+      account: configured ? account : void 0
     };
     if (root && configured) {
       const key = await this.settings.baseKey(root, config);
@@ -2202,31 +2412,6 @@ var Controller = class {
       store: new RemoteStore(config, credentials, this.api.net.fetch)
     };
   }
-  async recover(store) {
-    const raw = await store.get(LOCK);
-    if (!raw) {
-      this.message("noLock");
-      return;
-    }
-    let at = "\u2014";
-    try {
-      const parsed = JSON.parse(new TextDecoder().decode(raw));
-      if (typeof parsed.startedAt === "string" && Number.isFinite(Date.parse(parsed.startedAt)))
-        at = new Date(parsed.startedAt).toLocaleString(this.api.env.language);
-    } catch {
-    }
-    if (!await this.api.ui.confirm(this.t("confirmUnlock", at), {
-      danger: true,
-      okLabel: this.t("unlock")
-    }))
-      return;
-    checkAbort(this.abort?.signal);
-    const current = await store.get(LOCK);
-    if (!current || new TextDecoder().decode(raw) !== new TextDecoder().decode(current))
-      throw new SyncError("lockLost");
-    await store.remove(LOCK);
-    this.message("unlocked");
-  }
   /** The remote folder, opened plain or encrypted as the folder is set up. */
   async open(root, config, store, { test = false, quiet = false } = {}) {
     const key = await this.settings.baseKey(root, config);
@@ -2244,10 +2429,7 @@ var Controller = class {
           signal: this.abort?.signal
         }
       );
-      await this.ctx.storage.global.set(
-        `vault:${key}`,
-        encrypted.fingerprint
-      );
+      await this.ctx.storage.global.set(`vault:${key}`, encrypted.fingerprint);
       opened = encrypted;
     } else opened = await openPlainStore(store);
     if (test || !this.tested.has(key)) await testConnection(opened);
@@ -2258,19 +2440,45 @@ var Controller = class {
   /** The remote folder as the history page reads it. */
   async remote() {
     const { root, config, store } = await this.store();
-    return { root, store: (await this.open(root, config, store, { quiet: true })).opened };
+    return {
+      root,
+      store: (await this.open(root, config, store, { quiet: true })).opened
+    };
   }
   /** Runs one operation; resolves to its error's code, null when it went well. */
-  async operation(kind, restore) {
+  async operation(kind, restore, draft) {
     if (this.state.busy || this.disposed) return "busy";
     this.state.busy = true;
     this.state.progress = null;
     this.abort = new AbortController();
     this.message(kind === "sync" ? "scanning" : "testing");
     try {
+      if (draft) {
+        const root2 = this.state.root;
+        if (!root2) throw new SyncError("noFolder");
+        const config2 = normalizeConfig(
+          withConnection(this.saved(), draft.config)
+        );
+        const keys = await this.settings.resolve(
+          root2,
+          config2,
+          draft.credentials
+        );
+        await testDraft(config2, keys, this.api.net.fetch, this.abort?.signal);
+        this.message("tested");
+        return null;
+      }
       const { root, config, store } = await this.store();
       if (kind === "unlock") {
-        await this.recover(store);
+        const said = await recoverLock(store, {
+          language: this.api.env.language,
+          confirm: (at2) => this.api.ui.confirm(this.t("confirmUnlock", at2), {
+            danger: true,
+            okLabel: this.t("unlock")
+          }),
+          signal: this.abort?.signal
+        });
+        if (said) this.message(said);
         return null;
       }
       const { key, opened } = await this.open(root, config, store, {
@@ -2304,8 +2512,12 @@ var Controller = class {
         // The folder's setting, once published, is this device's too.
         onKeep: async (keep) => {
           if (keep.days === config.keepDays && !config.keepPending) return;
-          await this.settings.adoptKeep(root, keep);
-          if (this.state.root === root)
+          const adopted = await this.settings.adoptKeep(
+            root,
+            keep,
+            config.keepDays
+          );
+          if (adopted && this.state.root === root)
             this.state.config = {
               ...this.state.config,
               keepDays: keep.days,
@@ -2314,6 +2526,7 @@ var Controller = class {
         },
         device: await deviceName(this.ctx, this.api),
         cleanupDue,
+        parallel: config.parallel,
         base,
         signal: this.abort.signal,
         saveBase: (next) => this.ctx.storage.global.set(key, next),
@@ -2370,7 +2583,31 @@ var Controller = class {
         this.message("cancelling");
         return;
       }
+      if (m.type === "options" && m.options && this.state.root) {
+        await this.settings.saveOptions(this.state.root, m.options);
+        await this.refresh();
+        this.message("optionsSaved");
+        return;
+      }
       if (this.state.busy) throw new SyncError("busy");
+      if (m.type === "disconnect" && this.state.root) {
+        if (!await this.api.ui.confirm(this.t("confirmDisconnect"), {
+          danger: true,
+          okLabel: this.t("disconnect")
+        }))
+          return;
+        await this.settings.forget(this.state.root);
+        await this.refresh();
+        this.message("disconnected");
+        return;
+      }
+      if (m.type === "test" && m.config && m.credentials) {
+        await this.operation("test", void 0, {
+          config: m.config,
+          credentials: m.credentials
+        });
+        return;
+      }
       if (m.type === "save" && m.config && m.credentials) {
         const root = await this.api.files.root();
         if (!root || root !== this.state.root)
@@ -2378,7 +2615,11 @@ var Controller = class {
         this.state.busy = true;
         this.broadcast();
         try {
-          await this.settings.save(root, m.config, m.credentials);
+          await this.settings.save(
+            root,
+            withConnection(this.saved(), m.config),
+            m.credentials
+          );
           await this.refresh();
           for (const view of this.views) this.send(view, { type: "saved" });
           this.message("saved");

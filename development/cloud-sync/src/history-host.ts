@@ -56,7 +56,10 @@ export async function restoreInto(
   const now = current ? await hash(current) : null;
   const head = await store.get(HEAD);
   const synced = head ? parseManifest(head).files[path]?.hash : undefined;
-  if (now === (synced ?? null) && (await local.apply(path, bytes, now)) === true)
+  if (
+    now === (synced ?? null) &&
+    (await local.apply(path, bytes, now)) === true
+  )
     return;
   for (const tag of [version.hash, crypto.randomUUID()]) {
     if ((await local.apply(beside(path, tag), bytes, null)) === true) return;
@@ -83,7 +86,9 @@ const row = (v: Version) => ({
 /** The history page: one file's versions, or the deleted files. */
 export function registerHistory(api: Textus.Api, source: Source) {
   const relative = (root: string, path: string) =>
-    path.startsWith(root) ? path.slice(root.length).replace(/^[/\\]/, "") : path;
+    path.startsWith(root)
+      ? path.slice(root.length).replace(/^[/\\]/, "")
+      : path;
   async function list(path: string | null) {
     const { files, history } = await read((await source.remote()).store);
     if (path)
@@ -129,7 +134,11 @@ export function registerHistory(api: Textus.Api, source: Source) {
         if (m.type === "ready" || m.type === "open")
           reply({ type: "list", ...(await list(m.path ?? path)) });
         else if (m.type === "preview" && m.path && m.hash)
-          reply({ type: "preview", hash: m.hash, ...(await preview(m.path, m.hash)) });
+          reply({
+            type: "preview",
+            hash: m.hash,
+            ...(await preview(m.path, m.hash)),
+          });
         else if (m.type === "restore" && m.path && m.hash) {
           const { v } = await version(m.path, m.hash);
           const failed = await source.operation("sync", {

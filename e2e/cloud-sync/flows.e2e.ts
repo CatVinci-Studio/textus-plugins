@@ -209,12 +209,13 @@ async function pickProvider(
  *  show once it is on. */
 async function encryptOn(panel: FrameLocator) {
   const on = panel.locator("#encrypt");
-  if (await on.isVisible() && !(await on.isChecked())) await on.check();
+  if ((await on.isVisible()) && !(await on.isChecked())) await on.check();
 }
 async function configure(
   page: Page,
   provider: "s3" | "webdav" | "nutstore",
   password = syncPassword,
+  enter = false,
 ) {
   const panel = page.frameLocator(".plugin-webview-frame");
   await pickProvider(page, provider);
@@ -226,7 +227,11 @@ async function configure(
   await encryptOn(panel);
   await panel.locator("#sync-password").fill(password);
   await panel.locator("#confirm-password").fill(password);
-  await panel.locator("#save").click();
+  if (enter) await panel.locator("#confirm-password").press("Enter");
+  else await panel.locator("#save").click();
+  // Saved, the connection is a card: the account shown only by its start.
+  await expect(panel.locator("#connected")).toBeVisible();
+  await expect(panel.locator("#c-account")).toHaveText("fixt••••");
   await expect(panel.locator("#secret")).toHaveValue("");
   await expect(panel.locator("#sync-password")).toHaveValue("");
   await expect(panel.locator("#confirm-password")).toHaveValue("");
@@ -265,7 +270,7 @@ for (const provider of ["s3", "webdav", "nutstore"] as const) {
     const remote = new Remote();
     await open(page, remote, { "/work/notes/note.md": "# Hello from Textus" });
     const panel = await configure(page, provider);
-    await panel.locator("#test").click();
+    await panel.locator("#test-saved").click();
     await expect(panel.locator("#status")).toContainText("Connection passed");
     await sync(page);
     await evidence(page, `${provider}-sync-success`);
@@ -358,6 +363,12 @@ test("configuration errors preserve input and Chinese UI fits narrow and dark vi
   await encryptOn(panel);
   await panel.locator("#sync-password").fill(syncPassword);
   await panel.locator("#confirm-password").fill(syncPassword);
+  await panel.locator("#prefix").fill("textus/笔记");
+  // A connection tests as typed, before it is saved, and stays unsaved.
+  await panel.locator("#test").click();
+  await expect(panel.locator("#status")).toContainText("连接测试通过");
+  await expect(panel.locator("#connected")).toBeHidden();
+  await expect(panel.locator("#secret")).toHaveValue("fixture-secret");
   await panel.locator("#prefix").fill("../unsafe");
   await panel.locator("#save").click();
   await expect(panel.locator("#status")).toContainText("请输入相对目录");
@@ -376,11 +387,18 @@ test("configuration errors preserve input and Chinese UI fits narrow and dark vi
     path: `test-results/cloud-sync-${test.info().project.name}-narrow.png`,
     fullPage: true,
   });
-  await evidence(page, "chinese-dark-narrow", "#sync-password");
+  await evidence(page, "chinese-dark-narrow", "#connected");
   remote.failure = 403;
-  await panel.locator("#test").click();
+  await panel.locator("#test-saved").click();
   await expect(panel.locator("#status")).toContainText("认证或权限不足");
   await expect(panel.locator("#sync")).toBeEnabled();
+  // Disconnecting forgets this folder's connection; the form comes back empty.
+  remote.failure = null;
+  await panel.locator("#disconnect").click();
+  await page.getByRole("dialog").getByRole("button", { name: "断开" }).click();
+  await expect(panel.locator("#connection")).toBeVisible();
+  await expect(panel.locator("#options")).toBeHidden();
+  await expect(panel.locator("#account")).toHaveValue("");
 });
 
 test("automatic sync runs on its configured interval and Enter saves through the sandbox bridge", async ({
@@ -388,12 +406,12 @@ test("automatic sync runs on its configured interval and Enter saves through the
 }) => {
   const remote = new Remote();
   await open(page, remote, { "/work/notes/note.md": "# Automatic" });
-  const panel = await configure(page, "webdav");
+  const panel = await configure(page, "webdav", syncPassword, true);
   await page.clock.install();
+  // Options apply as they change, with no save; the interval starts at 5.
   await panel.locator("#automatic").check();
-  await panel.locator("#interval").fill("5");
-  await panel.locator("#interval").press("Enter");
-  await expect(panel.locator("#sync")).toBeEnabled();
+  await page.clock.runFor(10);
+  await expect(panel.locator("#status")).toHaveText("Settings saved.");
   await page.clock.fastForward(5 * 60_000 + 10);
   await expect(panel.locator("#status")).toContainText("uploaded 1");
   expect(
@@ -411,8 +429,7 @@ test("a save syncs a few seconds later and the status bar says how sync stands",
   const status = page.locator('[data-status-plugin="catvinci.cloud-sync"]');
   await expect(status).toHaveText("Not synced yet");
   await panel.locator("#automatic").check();
-  await panel.locator("#interval").press("Enter");
-  await expect(panel.locator("#sync")).toBeEnabled();
+  await expect(panel.locator("#status")).toHaveText("Settings saved.");
   await sync(page);
   await expect(status).toHaveText("Synced · just now");
   const head = () =>
@@ -466,6 +483,8 @@ test("a wrong sync password leaves both devices unchanged, then the correct pass
         () => (window as unknown as Record<string, unknown>).__devFs,
       ),
     ).toEqual({});
+    // Editing keeps the saved keys; only the password is typed again.
+    await panel.locator("#edit").click();
     await encryptOn(panel);
     await panel.locator("#sync-password").fill(syncPassword);
     await panel.locator("#confirm-password").fill(syncPassword);
@@ -546,8 +565,28 @@ test("password confirmation errors retain input and an old plaintext directory i
   );
   remote.files.set("/dav/textus/notes/v1/head.json", old);
   await panel.locator("#sync").click();
-  await expect(panel.locator("#status")).toContainText(
-    "isn't encrypted",
-  );
+  await expect(panel.locator("#status")).toContainText("isn't encrypted");
   expect([...remote.files]).toEqual([["/dav/textus/notes/v1/head.json", old]]);
+});
+
+test("the connection card fits a narrow panel in German, the longest words", async ({
+  page,
+}) => {
+  const panel = await open(
+    page,
+    new Remote(),
+    { "/work/notes/a.md": "x" },
+    "de",
+  );
+  await pickProvider(page, "webdav", "de");
+  await panel.locator("#endpoint").fill("https://fixture.invalid/dav");
+  await panel.locator("#account").fill("fixture-account");
+  await panel.locator("#secret").fill("fixture-secret");
+  await panel.locator("#save").click();
+  await expect(panel.locator("#connected")).toBeVisible();
+  await page.setViewportSize({ width: 560, height: 780 });
+  const [content, view] = await panel
+    .locator("body")
+    .evaluate((body) => [body.scrollWidth, body.clientWidth]);
+  expect(content).toBeLessThanOrEqual(view);
 });

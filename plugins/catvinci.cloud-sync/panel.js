@@ -3,18 +3,21 @@
   // development/cloud-sync/src/model.ts
   var CHUNK_SIZE = 2 * 1024 * 1024;
   var MAX_FILE_SIZE = 128 * 1024 * 1024;
+  var TRANSFER_BYTES = 32 * 1024 * 1024;
   var MAX_MANIFEST_SIZE = 8 * 1024 * 1024;
   var MAX_HISTORY_SIZE = 8 * 1024 * 1024;
   var KEEP_DAYS = [30, 90, 365, 0];
+  var PARALLEL = [1, 2, 4, 8, 16, 32];
 
   // development/cloud-sync/src/config.ts
   var providers = {
-    s3: { transport: "s3", endpoint: "", saveGap: 0 },
-    webdav: { transport: "dav", endpoint: "", saveGap: 0 },
+    s3: { transport: "s3", endpoint: "", saveGap: 0, parallel: 8 },
+    webdav: { transport: "dav", endpoint: "", saveGap: 0, parallel: 4 },
     nutstore: {
       transport: "dav",
       endpoint: "https://dav.jianguoyun.com/dav",
-      saveGap: 3
+      saveGap: 3,
+      parallel: 2
     }
   };
 
@@ -22,7 +25,6 @@
   var api = acquireTextusApi();
   var element = (id) => document.getElementById(id);
   var input = (id) => element(id);
-  var buttons = ["sync", "test", "unlock"];
   var secretFields = [
     "account",
     "secret",
@@ -31,15 +33,13 @@
     "confirm-password"
   ];
   var DEFAULT_PREFIX = "textus/my-workspace";
-  function folderPrefix(root2) {
-    const name = (root2.split(/[\\/]/).filter(Boolean).pop() ?? "").replace(/[\x00-\x1f\x7f\\:*?"<>|]/g, "-").replace(/[. ]+$/, "");
+  function folderPrefix(root) {
+    const name = (root.split(/[\\/]/).filter(Boolean).pop() ?? "").replace(/[\x00-\x1f\x7f\\:*?"<>|]/g, "-").replace(/[. ]+$/, "");
     return name ? `textus/${name}` : DEFAULT_PREFIX;
   }
-  var initialized = false;
-  var dirty = false;
-  var root = null;
-  var busy = false;
-  var configured = false;
+  var state = null;
+  var editing = false;
+  var typed = false;
   document.documentElement.lang = api.language;
   for (const item of document.querySelectorAll("[data-t]"))
     item.textContent = api.t(item.dataset.t);
@@ -49,43 +49,53 @@
     webdav: ["accountDav", "secretDav"],
     nutstore: ["accountNutstore", "secretNutstore"]
   };
-  var PROVIDERS = ["s3", "webdav", "nutstore"];
-  var providerPick = element("provider-pick");
-  providerPick.onclick = async () => {
-    const now = input("provider").value;
-    const chosen = await api.menu(
-      PROVIDERS.map((p) => ({ label: api.t(p), value: p, checked: p === now })),
-      providerPick
-    );
-    if (typeof chosen !== "string" || chosen === now) return;
-    input("provider").value = chosen;
-    input("endpoint").value = "";
-    input("saveGap").value = String(
-      providers[chosen]?.saveGap ?? 0
-    );
-    for (const id of secretFields) input(id).value = "";
-    dirty = true;
-    toggles();
-  };
-  var KEEP = KEEP_DAYS.map(String);
+  function picker(id, values, label, picked, choices = () => values) {
+    const button = element(`${id}-pick`);
+    button.onclick = async () => {
+      const now = input(id).value;
+      const chosen = await api.menu(
+        choices().map((v) => ({ label: label(v), value: v, checked: v === now })),
+        button
+      );
+      if (typeof chosen !== "string" || chosen === now) return;
+      input(id).value = chosen;
+      picked(chosen);
+    };
+  }
+  picker(
+    "provider",
+    ["s3", "webdav", "nutstore"],
+    (p) => api.t(p),
+    () => {
+      input("endpoint").value = "";
+      for (const id of secretFields) input(id).value = "";
+      typed = true;
+      formToggles();
+    }
+  );
   var keepLabel = (days) => days === "0" ? api.t("keepForever") : api.t("keepDays", days);
-  var keepPick = element("keep-pick");
-  var keepPicked = false;
-  keepPick.onclick = async () => {
-    const now = input("keepDays").value;
-    const chosen = await api.menu(
-      KEEP.map((d) => ({ label: keepLabel(d), value: d, checked: d === now })),
-      keepPick
+  var minutes = (m) => api.t("minutes", m);
+  var delayLabel = (m) => m === "0" ? api.t("delayNone") : minutes(m);
+  var OPTION_PICKS = [
+    ["interval", [5, 10, 15, 30, 60], minutes],
+    ["saveGap", [0, 1, 3, 5, 10], delayLabel],
+    ["keepDays", KEEP_DAYS, keepLabel],
+    ["parallel", PARALLEL, String]
+  ];
+  var optionLabel = (id, value) => OPTION_PICKS.find(([k]) => k === id)[2](value);
+  for (const [id, values, label] of OPTION_PICKS)
+    picker(
+      id,
+      values.map(String),
+      label,
+      (v) => {
+        element(`${id}-name`).textContent = label(v);
+        sendOptions();
+      },
+      () => [.../* @__PURE__ */ new Set([...values.map(Number), Number(input(id).value)])].sort((a, b) => a - b).map(String)
     );
-    if (typeof chosen !== "string" || chosen === now) return;
-    input("keepDays").value = chosen;
-    keepPicked = true;
-    dirty = true;
-    toggles();
-  };
-  function toggles() {
+  function formToggles() {
     const provider = input("provider").value;
-    element("keep-name").textContent = keepLabel(input("keepDays").value);
     const encrypt = input("encrypt").checked;
     element("password-field").hidden = !encrypt;
     element("confirm-field").hidden = !encrypt;
@@ -99,78 +109,111 @@
     element("secret-label").textContent = api.t(secret);
     input("endpoint").required = provider !== "s3";
     if (provider === "nutstore")
-      input("endpoint").value = "https://dav.jianguoyun.com/dav";
+      input("endpoint").value = providers.nutstore.endpoint;
     input("bucket").required = provider === "s3";
-    element("interval-field").hidden = !input("automatic").checked;
-    element("save-gap-field").hidden = !input("automatic").checked;
-    for (const id of [
-      "password-field",
-      "confirm-field",
-      "interval-field",
-      "save-gap-field"
-    ])
+    for (const id of ["account", "secret", "sync-password"]) {
+      input(id).placeholder = editing ? api.t("keptIfEmpty") : "";
+      input(id).required = !editing && id !== "sync-password";
+    }
+    input("sync-password").required = !editing && encrypt;
+    for (const id of ["password-field", "confirm-field"])
       for (const field of element(id).querySelectorAll("input"))
         field.disabled = element(id).hidden;
-    for (const id of buttons)
-      element(id).disabled = busy || !root || !configured || dirty;
+  }
+  function show() {
+    if (!state) return;
+    const { config, configured, busy, root } = state;
+    const form = !configured || editing;
+    element("connected").hidden = form || !root;
+    element("connection").hidden = !form || !root;
+    for (const id of ["options", "rules"]) element(id).hidden = !configured;
+    element("cancel-edit").hidden = !editing;
+    element("c-service").textContent = api.t(config.provider);
+    element("c-endpoint").textContent = config.endpoint;
+    element("c-endpoint-row").hidden = config.provider === "nutstore";
+    element("c-bucket").textContent = config.bucket;
+    element("c-bucket-row").hidden = config.provider !== "s3";
+    element("c-account-label").textContent = api.t(
+      (signIn[config.provider] ?? signIn.s3)[0]
+    );
+    element("c-account").textContent = state.account ?? "";
+    element("c-prefix").textContent = config.prefix;
+    element("c-encrypt").textContent = api.t(
+      config.encrypt ? "encryptionOn" : "encryptionOff"
+    );
+    element("fields").disabled = busy || !root;
+    for (const id of ["test", "save", "test-saved", "edit", "disconnect"])
+      element(id).disabled = busy || !root;
+    for (const id of ["sync", "unlock"])
+      element(id).disabled = busy || !root || !configured;
     document.body.dataset.ready = String(!!root && configured);
   }
-  function fill(config) {
-    keepPicked = false;
-    for (const id of [
-      "provider",
-      "endpoint",
-      "region",
-      "bucket",
-      "prefix",
-      "interval",
-      "saveGap",
-      "keepDays"
-    ])
+  function fillForm(config, root) {
+    const prefix = !state?.configured && root && config.prefix === DEFAULT_PREFIX ? folderPrefix(root) : config.prefix;
+    for (const id of ["provider", "endpoint", "region", "bucket"])
       input(id).value = String(config[id]);
-    element("exclude").value = config.exclude;
-    for (const id of [
-      "pathStyle",
-      "automatic",
-      "gitignore",
-      "obsidian",
-      "encrypt"
-    ])
-      input(id).checked = config[id];
-    toggles();
+    input("prefix").value = prefix;
+    input("pathStyle").checked = config.pathStyle;
+    input("encrypt").checked = config.encrypt;
+    for (const id of secretFields) input(id).value = "";
+    typed = false;
+    formToggles();
   }
-  element("connection").addEventListener("input", () => {
-    dirty = true;
-    toggles();
-  });
-  element("connection").addEventListener("change", () => {
-    dirty = true;
-    toggles();
-  });
-  function save() {
-    if (busy) return;
-    if (!element("connection").reportValidity()) return;
+  function fillOptions(config) {
+    input("automatic").checked = config.automatic;
+    for (const [id] of OPTION_PICKS) {
+      const value = String(config[id]);
+      input(id).value = value;
+      element(`${id}-name`).textContent = optionLabel(id, value);
+    }
+    element("exclude").value = config.exclude;
+    input("gitignore").checked = config.gitignore;
+    input("obsidian").checked = config.obsidian;
+    optionToggles();
+  }
+  function optionToggles() {
+    const automatic = input("automatic").checked;
+    element("interval-field").hidden = !automatic;
+    element("saveGap-field").hidden = !automatic;
+  }
+  var pending;
+  function sendOptions(wait = 0) {
+    clearTimeout(pending);
+    pending = setTimeout(() => {
+      api.postMessage({
+        type: "options",
+        options: {
+          automatic: input("automatic").checked,
+          interval: Number(input("interval").value),
+          saveGap: Number(input("saveGap").value),
+          keepDays: Number(input("keepDays").value),
+          parallel: Number(input("parallel").value),
+          exclude: element("exclude").value,
+          gitignore: input("gitignore").checked,
+          obsidian: input("obsidian").checked
+        }
+      });
+    }, wait);
+  }
+  for (const id of ["options", "rules"]) {
+    element(id).addEventListener("change", () => {
+      optionToggles();
+      sendOptions();
+    });
+    element(id).addEventListener("submit", (e) => e.preventDefault());
+  }
+  function draft() {
     const encrypt = input("encrypt").checked;
-    const config = {
-      provider: input("provider").value,
-      endpoint: input("endpoint").value,
-      region: input("region").value,
-      bucket: input("bucket").value,
-      prefix: input("prefix").value,
-      pathStyle: input("pathStyle").checked,
-      automatic: input("automatic").checked,
-      interval: input("automatic").checked ? Number(input("interval").value) : Math.min(Math.max(Number(input("interval").value) || 5, 1), 1440),
-      saveGap: input("automatic").checked ? Number(input("saveGap").value) : Math.min(Math.max(Number(input("saveGap").value) || 0, 0), 60),
-      exclude: element("exclude").value,
-      gitignore: input("gitignore").checked,
-      obsidian: input("obsidian").checked,
-      encrypt,
-      keepDays: Number(input("keepDays").value),
-      keepPending: keepPicked
-    };
-    api.postMessage({
-      type: "save",
-      config,
+    return {
+      config: {
+        provider: input("provider").value,
+        endpoint: input("endpoint").value,
+        region: input("region").value,
+        bucket: input("bucket").value,
+        prefix: input("prefix").value,
+        pathStyle: input("pathStyle").checked,
+        encrypt
+      },
       credentials: {
         account: input("account").value,
         secret: input("secret").value,
@@ -178,20 +221,40 @@
         syncPassword: encrypt ? input("sync-password").value : "",
         confirmPassword: encrypt ? input("confirm-password").value : ""
       }
-    });
+    };
   }
-  element("save").onclick = save;
-  element("connection").addEventListener(
-    "submit",
-    (event) => event.preventDefault()
-  );
+  function submit(type) {
+    if (state?.busy) return;
+    if (!element("connection").reportValidity()) return;
+    api.postMessage({ type, ...draft() });
+  }
+  element("save").onclick = () => submit("save");
+  element("test").onclick = () => submit("test");
+  element("connection").addEventListener("submit", (e) => e.preventDefault());
+  element("connection").addEventListener("input", () => typed = true);
+  element("connection").addEventListener("change", () => {
+    typed = true;
+    formToggles();
+  });
   element("connection").addEventListener("keydown", (event) => {
     if (event.key === "Enter" && event.target instanceof HTMLInputElement) {
       event.preventDefault();
-      save();
+      submit("save");
     }
   });
-  for (const id of [...buttons, "cancel", "openSettings"])
+  element("edit").onclick = () => {
+    editing = true;
+    if (state) fillForm(state.config, state.root);
+    show();
+    input("account").focus();
+  };
+  element("cancel-edit").onclick = () => {
+    editing = false;
+    if (state) fillForm(state.config, state.root);
+    show();
+  };
+  element("test-saved").onclick = () => api.postMessage({ type: "test" });
+  for (const id of ["sync", "unlock", "cancel", "openSettings", "disconnect"])
     element(id).onclick = () => api.postMessage({ type: id });
   function showResult(result) {
     const container = element("results");
@@ -213,37 +276,28 @@
   api.onMessage((value) => {
     const m = value;
     if (m.type === "saved") {
-      dirty = false;
-      initialized = false;
-      for (const id of secretFields) input(id).value = "";
+      editing = false;
+      typed = false;
       api.postMessage({ type: "ready" });
       return;
     }
     if (m.type !== "state") return;
-    busy = m.busy;
-    configured = m.configured;
-    if (!initialized || root !== m.root) {
-      if (root !== m.root) for (const id of secretFields) input(id).value = "";
-      fill(
-        !m.configured && m.root && m.config.prefix === DEFAULT_PREFIX ? { ...m.config, prefix: folderPrefix(m.root) } : m.config
-      );
-      initialized = true;
-      dirty = false;
-    } else if (!keepPicked) input("keepDays").value = String(m.config.keepDays);
-    root = m.root;
+    const first = !state || state.root !== m.root;
+    const was = state;
+    state = m;
+    if (first || !typed && !editing) fillForm(m.config, m.root);
+    if (first || was?.configured !== m.configured) editing = false;
+    if (document.activeElement?.closest(".options") == null || first)
+      fillOptions(m.config);
     element("status").textContent = m.message || api.t("loading");
     element("status").dataset.error = String(m.error);
-    element("fields").disabled = busy || !root;
-    element("cancel").hidden = !busy;
+    element("cancel").hidden = !m.busy;
     const progress = element("progress");
-    progress.hidden = !busy;
+    progress.hidden = !m.busy;
     progress.classList.toggle("is-indeterminate", m.progress == null);
     progress.style.setProperty("--value", String(m.progress ?? 0));
-    element("credentials-state").textContent = api.t(
-      configured ? "credentialsSaved" : "credentialsMissing"
-    );
     const summary = element("summary");
-    summary.hidden = !configured;
+    summary.hidden = !m.configured;
     summary.textContent = [
       api.t(m.config.provider),
       m.config.prefix,
@@ -253,7 +307,7 @@
     last.hidden = !m.lastRun;
     last.textContent = m.lastRun ? `${api.t("lastRun")} \xB7 ${new Date(m.lastRun).toLocaleString(api.language)}` : "";
     showResult(m.result);
-    toggles();
+    show();
   });
   api.postMessage({ type: "ready" });
 })();

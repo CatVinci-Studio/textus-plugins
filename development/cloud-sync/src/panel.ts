@@ -1,11 +1,10 @@
-import { KEEP_DAYS, type Config, type Result } from "./model";
+import { KEEP_DAYS, PARALLEL, type Config, type Result } from "./model";
 import { providers } from "./config";
 
 const api = acquireTextusApi();
 const element = <T extends HTMLElement>(id: string) =>
   document.getElementById(id) as T;
 const input = (id: string) => element<HTMLInputElement>(id);
-const buttons = ["sync", "test", "unlock"];
 const secretFields = [
   "account",
   "secret",
@@ -21,11 +20,25 @@ function folderPrefix(root: string) {
     .replace(/[. ]+$/, "");
   return name ? `textus/${name}` : DEFAULT_PREFIX;
 }
-let initialized = false;
-let dirty = false;
-let root: string | null = null;
-let busy = false;
-let configured = false;
+
+interface State {
+  type: string;
+  root: string | null;
+  config: Config;
+  busy: boolean;
+  configured: boolean;
+  message: string;
+  error: boolean;
+  progress: number | null;
+  result?: Result;
+  lastRun?: string;
+  account?: string;
+}
+let state: State | null = null;
+/** The connection's form is open over a saved one (Edit). */
+let editing = false;
+/** The form holds what was typed: a state from the host doesn't refill it. */
+let typed = false;
 
 document.documentElement.lang = api.language;
 for (const item of document.querySelectorAll<HTMLElement>("[data-t]"))
@@ -40,49 +53,70 @@ const signIn: Record<string, [string, string]> = {
   webdav: ["accountDav", "secretDav"],
   nutstore: ["accountNutstore", "secretNutstore"],
 };
-// The service: Textus's own dropdown, the three in its menu.
-const PROVIDERS = ["s3", "webdav", "nutstore"];
-const providerPick = element("provider-pick") as HTMLButtonElement;
-providerPick.onclick = async () => {
-  const now = input("provider").value;
-  const chosen = await api.menu(
-    PROVIDERS.map((p) => ({ label: api.t(p), value: p, checked: p === now })),
-    providerPick,
-  );
-  if (typeof chosen !== "string" || chosen === now) return;
-  input("provider").value = chosen;
-  input("endpoint").value = "";
-  input("saveGap").value = String(
-    providers[chosen as keyof typeof providers]?.saveGap ?? 0,
-  );
-  for (const id of secretFields) input(id).value = "";
-  dirty = true;
-  toggles();
-};
 
-// How long older versions stay in the cloud.
-const KEEP = KEEP_DAYS.map(String);
+/** A pick from Textus's own menu into a hidden field, its name on a button. */
+function picker(
+  id: string,
+  values: readonly string[],
+  label: (value: string) => string,
+  picked: (value: string) => void,
+  choices: () => readonly string[] = () => values,
+) {
+  const button = element<HTMLButtonElement>(`${id}-pick`);
+  button.onclick = async () => {
+    const now = input(id).value;
+    const chosen = await api.menu(
+      choices().map((v) => ({ label: label(v), value: v, checked: v === now })),
+      button,
+    );
+    if (typeof chosen !== "string" || chosen === now) return;
+    input(id).value = chosen;
+    picked(chosen);
+  };
+}
+picker(
+  "provider",
+  ["s3", "webdav", "nutstore"],
+  (p) => api.t(p),
+  () => {
+    input("endpoint").value = "";
+    for (const id of secretFields) input(id).value = "";
+    typed = true;
+    formToggles();
+  },
+);
 const keepLabel = (days: string) =>
   days === "0" ? api.t("keepForever") : api.t("keepDays", days);
-const keepPick = element("keep-pick") as HTMLButtonElement;
-// Picked here since the page showed the settings: a choice to share.
-let keepPicked = false;
-keepPick.onclick = async () => {
-  const now = input("keepDays").value;
-  const chosen = await api.menu(
-    KEEP.map((d) => ({ label: keepLabel(d), value: d, checked: d === now })),
-    keepPick,
+const minutes = (m: string) => api.t("minutes", m);
+const delayLabel = (m: string) => (m === "0" ? api.t("delayNone") : minutes(m));
+/** Each option's choices, and how it reads. A value saved before these
+ *  choices (an interval of 7) stays among them. */
+const OPTION_PICKS: [string, readonly number[], (v: string) => string][] = [
+  ["interval", [5, 10, 15, 30, 60], minutes],
+  ["saveGap", [0, 1, 3, 5, 10], delayLabel],
+  ["keepDays", KEEP_DAYS, keepLabel],
+  ["parallel", PARALLEL, String],
+];
+const optionLabel = (id: string, value: string) =>
+  OPTION_PICKS.find(([k]) => k === id)![2](value);
+for (const [id, values, label] of OPTION_PICKS)
+  picker(
+    id,
+    values.map(String),
+    label,
+    (v) => {
+      element(`${id}-name`).textContent = label(v);
+      sendOptions();
+    },
+    () =>
+      [...new Set([...values.map(Number), Number(input(id).value)])]
+        .sort((a, b) => a - b)
+        .map(String),
   );
-  if (typeof chosen !== "string" || chosen === now) return;
-  input("keepDays").value = chosen;
-  keepPicked = true;
-  dirty = true;
-  toggles();
-};
 
-function toggles() {
+/** The connection's fields, as the service asks for them. */
+function formToggles() {
   const provider = input("provider").value;
-  element("keep-name").textContent = keepLabel(input("keepDays").value);
   const encrypt = input("encrypt").checked;
   element("password-field").hidden = !encrypt;
   element("confirm-field").hidden = !encrypt;
@@ -96,85 +130,126 @@ function toggles() {
   element("secret-label").textContent = api.t(secret);
   input("endpoint").required = provider !== "s3";
   if (provider === "nutstore")
-    input("endpoint").value = "https://dav.jianguoyun.com/dav";
+    input("endpoint").value = providers.nutstore.endpoint;
   input("bucket").required = provider === "s3";
-  element("interval-field").hidden = !input("automatic").checked;
-  element("save-gap-field").hidden = !input("automatic").checked;
-  // A field out of sight is neither checked nor sent.
-  for (const id of [
-    "password-field",
-    "confirm-field",
-    "interval-field",
-    "save-gap-field",
-  ])
+  // A saved connection's keys stay unless new ones are typed.
+  for (const id of ["account", "secret", "sync-password"]) {
+    input(id).placeholder = editing ? api.t("keptIfEmpty") : "";
+    input(id).required = !editing && id !== "sync-password";
+  }
+  input("sync-password").required = !editing && encrypt;
+  for (const id of ["password-field", "confirm-field"])
     for (const field of element(id).querySelectorAll("input"))
       field.disabled = element(id).hidden;
-  for (const id of buttons)
-    element<HTMLButtonElement>(id).disabled =
-      busy || !root || !configured || dirty;
+}
+
+/** The saved connection's card, or the form, and the options below. */
+function show() {
+  if (!state) return;
+  const { config, configured, busy, root } = state;
+  const form = !configured || editing;
+  element("connected").hidden = form || !root;
+  element("connection").hidden = !form || !root;
+  for (const id of ["options", "rules"]) element(id).hidden = !configured;
+  element("cancel-edit").hidden = !editing;
+  element("c-service").textContent = api.t(config.provider);
+  element("c-endpoint").textContent = config.endpoint;
+  element("c-endpoint-row").hidden = config.provider === "nutstore";
+  element("c-bucket").textContent = config.bucket;
+  element("c-bucket-row").hidden = config.provider !== "s3";
+  element("c-account-label").textContent = api.t(
+    (signIn[config.provider] ?? signIn.s3)[0],
+  );
+  element("c-account").textContent = state.account ?? "";
+  element("c-prefix").textContent = config.prefix;
+  element("c-encrypt").textContent = api.t(
+    config.encrypt ? "encryptionOn" : "encryptionOff",
+  );
+  element<HTMLFieldSetElement>("fields").disabled = busy || !root;
+  for (const id of ["test", "save", "test-saved", "edit", "disconnect"])
+    element<HTMLButtonElement>(id).disabled = busy || !root;
+  for (const id of ["sync", "unlock"])
+    element<HTMLButtonElement>(id).disabled = busy || !root || !configured;
   // The sidebar offers Sync now only once there is something to sync.
   document.body.dataset.ready = String(!!root && configured);
 }
-function fill(config: Config) {
-  keepPicked = false;
-  for (const id of [
-    "provider",
-    "endpoint",
-    "region",
-    "bucket",
-    "prefix",
-    "interval",
-    "saveGap",
-    "keepDays",
-  ] as const)
+
+/** The form filled from the saved connection (or a new one's defaults). */
+function fillForm(config: Config, root: string | null) {
+  const prefix =
+    !state?.configured && root && config.prefix === DEFAULT_PREFIX
+      ? folderPrefix(root)
+      : config.prefix;
+  for (const id of ["provider", "endpoint", "region", "bucket"] as const)
     input(id).value = String(config[id]);
-  element<HTMLTextAreaElement>("exclude").value = config.exclude;
-  for (const id of [
-    "pathStyle",
-    "automatic",
-    "gitignore",
-    "obsidian",
-    "encrypt",
-  ] as const)
-    input(id).checked = config[id];
-  toggles();
+  input("prefix").value = prefix;
+  input("pathStyle").checked = config.pathStyle;
+  input("encrypt").checked = config.encrypt;
+  for (const id of secretFields) input(id).value = "";
+  typed = false;
+  formToggles();
 }
-element("connection").addEventListener("input", () => {
-  dirty = true;
-  toggles();
-});
-element("connection").addEventListener("change", () => {
-  dirty = true;
-  toggles();
-});
-function save() {
-  if (busy) return;
-  if (!element<HTMLFormElement>("connection").reportValidity()) return;
+
+/** The options filled from what is saved. */
+function fillOptions(config: Config) {
+  input("automatic").checked = config.automatic;
+  for (const [id] of OPTION_PICKS) {
+    const value = String(config[id as keyof Config]);
+    input(id).value = value;
+    element(`${id}-name`).textContent = optionLabel(id, value);
+  }
+  element<HTMLTextAreaElement>("exclude").value = config.exclude;
+  input("gitignore").checked = config.gitignore;
+  input("obsidian").checked = config.obsidian;
+  optionToggles();
+}
+function optionToggles() {
+  const automatic = input("automatic").checked;
+  element("interval-field").hidden = !automatic;
+  element("saveGap-field").hidden = !automatic;
+}
+
+/** The options, sent as they change (a number once it is a valid one). */
+let pending: ReturnType<typeof setTimeout> | undefined;
+function sendOptions(wait = 0) {
+  clearTimeout(pending);
+  pending = setTimeout(() => {
+    api.postMessage({
+      type: "options",
+      options: {
+        automatic: input("automatic").checked,
+        interval: Number(input("interval").value),
+        saveGap: Number(input("saveGap").value),
+        keepDays: Number(input("keepDays").value),
+        parallel: Number(input("parallel").value),
+        exclude: element<HTMLTextAreaElement>("exclude").value,
+        gitignore: input("gitignore").checked,
+        obsidian: input("obsidian").checked,
+      },
+    });
+  }, wait);
+}
+for (const id of ["options", "rules"]) {
+  element(id).addEventListener("change", () => {
+    optionToggles();
+    sendOptions();
+  });
+  element(id).addEventListener("submit", (e) => e.preventDefault());
+}
+
+/** The form's connection and keys, for a test or a save. */
+function draft() {
   const encrypt = input("encrypt").checked;
-  const config = {
-    provider: input("provider").value,
-    endpoint: input("endpoint").value,
-    region: input("region").value,
-    bucket: input("bucket").value,
-    prefix: input("prefix").value,
-    pathStyle: input("pathStyle").checked,
-    automatic: input("automatic").checked,
-    interval: input("automatic").checked
-      ? Number(input("interval").value)
-      : Math.min(Math.max(Number(input("interval").value) || 5, 1), 1440),
-    saveGap: input("automatic").checked
-      ? Number(input("saveGap").value)
-      : Math.min(Math.max(Number(input("saveGap").value) || 0, 0), 60),
-    exclude: element<HTMLTextAreaElement>("exclude").value,
-    gitignore: input("gitignore").checked,
-    obsidian: input("obsidian").checked,
-    encrypt,
-    keepDays: Number(input("keepDays").value),
-    keepPending: keepPicked,
-  };
-  api.postMessage({
-    type: "save",
-    config,
+  return {
+    config: {
+      provider: input("provider").value as Config["provider"],
+      endpoint: input("endpoint").value,
+      region: input("region").value,
+      bucket: input("bucket").value,
+      prefix: input("prefix").value,
+      pathStyle: input("pathStyle").checked,
+      encrypt,
+    },
     credentials: {
       account: input("account").value,
       secret: input("secret").value,
@@ -182,21 +257,42 @@ function save() {
       syncPassword: encrypt ? input("sync-password").value : "",
       confirmPassword: encrypt ? input("confirm-password").value : "",
     },
-  });
+  };
+}
+function submit(type: "save" | "test") {
+  if (state?.busy) return;
+  if (!element<HTMLFormElement>("connection").reportValidity()) return;
+  api.postMessage({ type, ...draft() });
 }
 // Textus intentionally omits allow-forms from webview sandboxes. Submit
 // through the message bridge, including Enter, without native form submission.
-element("save").onclick = save;
-element("connection").addEventListener("submit", (event) =>
-  event.preventDefault(),
-);
+element("save").onclick = () => submit("save");
+element("test").onclick = () => submit("test");
+element("connection").addEventListener("submit", (e) => e.preventDefault());
+element("connection").addEventListener("input", () => (typed = true));
+element("connection").addEventListener("change", () => {
+  typed = true;
+  formToggles();
+});
 element("connection").addEventListener("keydown", (event) => {
   if (event.key === "Enter" && event.target instanceof HTMLInputElement) {
     event.preventDefault();
-    save();
+    submit("save");
   }
 });
-for (const id of [...buttons, "cancel", "openSettings"])
+element("edit").onclick = () => {
+  editing = true;
+  if (state) fillForm(state.config, state.root);
+  show();
+  input("account").focus();
+};
+element("cancel-edit").onclick = () => {
+  editing = false;
+  if (state) fillForm(state.config, state.root);
+  show();
+};
+element("test-saved").onclick = () => api.postMessage({ type: "test" });
+for (const id of ["sync", "unlock", "cancel", "openSettings", "disconnect"])
   element(id).onclick = () => api.postMessage({ type: id });
 
 function showResult(result?: Result) {
@@ -216,55 +312,36 @@ function showResult(result?: Result) {
     container.append(title, list);
   }
 }
+
 api.onMessage((value) => {
-  const m = value as {
-    type: string;
-    root: string | null;
-    config: Config;
-    busy: boolean;
-    configured: boolean;
-    message: string;
-    error: boolean;
-    progress: number | null;
-    result?: Result;
-    lastRun?: string;
-  };
+  const m = value as State;
+  // Saved: the form closes onto the connection's card.
   if (m.type === "saved") {
-    dirty = false;
-    initialized = false;
-    for (const id of secretFields) input(id).value = "";
+    editing = false;
+    typed = false;
     api.postMessage({ type: "ready" });
     return;
   }
   if (m.type !== "state") return;
-  busy = m.busy;
-  configured = m.configured;
-  if (!initialized || root !== m.root) {
-    if (root !== m.root) for (const id of secretFields) input(id).value = "";
-    fill(
-      !m.configured && m.root && m.config.prefix === DEFAULT_PREFIX
-        ? { ...m.config, prefix: folderPrefix(m.root) }
-        : m.config,
-    );
-    initialized = true;
-    dirty = false;
-  } else if (!keepPicked) input("keepDays").value = String(m.config.keepDays);
-  root = m.root;
+  const first = !state || state.root !== m.root;
+  const was = state;
+  state = m;
+  if (first || (!typed && !editing)) fillForm(m.config, m.root);
+  if (first || was?.configured !== m.configured) editing = false;
+  // Not under the rules being typed.
+  if (document.activeElement?.closest(".options") == null || first)
+    fillOptions(m.config);
   element("status").textContent = m.message || api.t("loading");
   element("status").dataset.error = String(m.error);
-  element<HTMLFieldSetElement>("fields").disabled = busy || !root;
-  element("cancel").hidden = !busy;
+  element("cancel").hidden = !m.busy;
   // Textus's progress bar (tx-progress): how far, or a sweep when unknown.
   const progress = element("progress");
-  progress.hidden = !busy;
+  progress.hidden = !m.busy;
   progress.classList.toggle("is-indeterminate", m.progress == null);
   progress.style.setProperty("--value", String(m.progress ?? 0));
-  element("credentials-state").textContent = api.t(
-    configured ? "credentialsSaved" : "credentialsMissing",
-  );
-  // What is synced where, as saved: edits in the form count once saved.
+  // What is synced where, as saved.
   const summary = element("summary");
-  summary.hidden = !configured;
+  summary.hidden = !m.configured;
   summary.textContent = [
     api.t(m.config.provider),
     m.config.prefix,
@@ -278,6 +355,6 @@ api.onMessage((value) => {
     ? `${api.t("lastRun")} · ${new Date(m.lastRun).toLocaleString(api.language)}`
     : "";
   showResult(m.result);
-  toggles();
+  show();
 });
 api.postMessage({ type: "ready" });

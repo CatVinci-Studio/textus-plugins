@@ -1,7 +1,15 @@
 import { describe as suite, expect, it } from "vitest";
 import { hash, parseManifest } from "./content";
 import { synchronize } from "./engine";
-import { CHUNK_SIZE, HEAD, LOCK, blockKey, encode, emptyBase } from "./model";
+import {
+  CHUNK_SIZE,
+  HEAD,
+  LOCK,
+  TRANSFER_BYTES,
+  blockKey,
+  encode,
+  emptyBase,
+} from "./model";
 import { MemoryLocal, MemoryStore, bytes, keep, text } from "./test-fixtures";
 
 suite("workspace synchronization", () => {
@@ -155,6 +163,142 @@ suite("workspace synchronization", () => {
     expect(await remote.has(LOCK)).toBe(false);
     remote.put = put;
     expect((await a.sync(remote)).uploaded).toBe(1);
+  });
+  it("sends and fetches up to its transfers at once, both ways together, never more", async () => {
+    const remote = new MemoryStore();
+    const docs = Object.fromEntries(
+      Array.from({ length: 12 }, (_, i) => [`n${i}.md`, `note ${i}`]),
+    );
+    let now = 0,
+      most = 0,
+      fetching = 0,
+      fetchingMost = 0;
+    const gets: string[] = [];
+    let theirs = new Set<string>();
+    const slow =
+      <A extends [string, ...unknown[]], R>(
+        run: (...a: A) => Promise<R>,
+        seen?: string[],
+      ) =>
+      async (...args: A) => {
+        if (args[0].includes("/blocks/")) seen?.push(args[0]);
+        const theirBlock = !!seen && theirs.has(args[0]);
+        most = Math.max(most, ++now);
+        if (theirBlock) fetchingMost = Math.max(fetchingMost, ++fetching);
+        await new Promise((r) => setTimeout(r, 2));
+        now--;
+        if (theirBlock) fetching--;
+        return run(...args);
+      };
+    remote.put = slow(remote.put.bind(remote));
+    remote.get = slow(remote.get.bind(remote), gets);
+    expect(
+      (await new MemoryLocal(docs).sync(remote, undefined, { parallel: 4 }))
+        .uploaded,
+    ).toBe(12);
+    expect(most).toBe(4);
+    most = 0;
+    theirs = new Set(gets);
+    gets.length = 0;
+    const mine = Object.fromEntries(
+      Array.from({ length: 12 }, (_, i) => [`m${i}.md`, `mine ${i}`]),
+    );
+    const b = new MemoryLocal(mine);
+    const result = await b.sync(remote, undefined, { parallel: 3 });
+    expect(result).toMatchObject({ downloaded: 12, uploaded: 12 });
+    expect(most).toBeGreaterThan(1);
+    expect(most).toBeLessThanOrEqual(3);
+    // Fetched ahead after its own uploads, not one by one.
+    expect(fetchingMost).toBeGreaterThan(1);
+    expect(
+      Object.fromEntries([...b.files].map(([k, v]) => [k, text(v)])),
+    ).toEqual({ ...docs, ...mine });
+    // Each fetched once, however far ahead (and each sent read back once).
+    expect(gets).toEqual([...new Set(gets)]);
+  });
+  it("holds large files in memory one at a time, both ways", async () => {
+    const remote = new MemoryStore();
+    let now = 0,
+      most = 0;
+    const gets: string[] = [];
+    const put = remote.put.bind(remote),
+      get = remote.get.bind(remote);
+    remote.put = async (key, value) => {
+      most = Math.max(most, ++now);
+      await new Promise((r) => setTimeout(r, 20));
+      now--;
+      return put(key, value);
+    };
+    remote.get = async (key) => {
+      if (key.includes("/blocks/")) gets.push(key);
+      return get(key);
+    };
+    // Over half the memory budget, every block its own.
+    const large = (seed: number) => {
+      const data = new Uint8Array(TRANSFER_BYTES / 2 + 1);
+      for (let i = 0; i < data.length; i++)
+        data[i] = (i * 31 + (i >> 16) + seed * 7) & 255;
+      return data;
+    };
+    const a = new MemoryLocal();
+    for (const [i, name] of ["b", "c", "d"].entries())
+      a.files.set(`${name}.pdf`, large(i));
+    expect((await a.sync(remote, undefined, { parallel: 8 })).uploaded).toBe(3);
+    expect(most).toBe(1);
+    // A download waiting behind an upload is fetched once, then the next.
+    gets.length = 0;
+    const b = new MemoryLocal();
+    b.files.set("a.pdf", large(9));
+    const result = await b.sync(remote, undefined, { parallel: 8 });
+    expect(result).toMatchObject({ uploaded: 1, downloaded: 3 });
+    expect(gets).toEqual([...new Set(gets)]);
+  });
+  it("sends no block the folder's files already hold", async () => {
+    const remote = new MemoryStore();
+    const a = new MemoryLocal({ "a.md": "same words" });
+    await a.sync(remote);
+    const blocks: string[] = [];
+    for (const name of ["get", "has", "put"] as const) {
+      const run = remote[name].bind(remote) as (
+        key: string,
+        value: Uint8Array,
+      ) => Promise<never>;
+      remote[name] = (async (key: string, value: Uint8Array) => {
+        if (key.includes("/blocks/")) blocks.push(`${name} ${key}`);
+        return run(key, value);
+      }) as never;
+    }
+    a.files.set("copy.md", bytes("same words"));
+    expect((await a.sync(remote)).uploaded).toBe(1);
+    expect(blocks).toEqual([]);
+  });
+  it("lets every running upload finish before a failed sync gives up its lock", async () => {
+    const remote = new MemoryStore();
+    const put = remote.put.bind(remote);
+    let failed = false;
+    const late: string[] = [];
+    remote.put = async (key, value) => {
+      if (!key.includes("/blocks/")) return put(key, value);
+      // The first fails once the others are on their way.
+      if (!failed) {
+        failed = true;
+        await new Promise((r) => setTimeout(r, 2));
+        throw Error("offline");
+      }
+      await new Promise((r) => setTimeout(r, 5));
+      if (!(await remote.has(LOCK))) late.push(key);
+      await put(key, value);
+    };
+    const docs = Object.fromEntries(
+      Array.from({ length: 8 }, (_, i) => [`n${i}.md`, `note ${i}`]),
+    );
+    await expect(
+      new MemoryLocal(docs).sync(remote, undefined, { parallel: 4 }),
+    ).rejects.toThrow("offline");
+    await new Promise((r) => setTimeout(r, 30));
+    expect(late).toEqual([]);
+    expect(await remote.has(LOCK)).toBe(false);
+    expect(await remote.has(HEAD)).toBe(false);
   });
   it("rejects a corrupt remote block before changing local content", async () => {
     const remote = new MemoryStore();

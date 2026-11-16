@@ -45,6 +45,133 @@
         <div id="progress" class="tx-progress" role="progressbar" hidden></div>
         <div id="results"></div>
       </section>
+      <form id="options" class="options" autocomplete="off" hidden>
+        <h2 class="tx-group-title" data-t="syncTitle"></h2>
+        <div class="tx-group">
+          <div class="tx-row">
+            <label
+              id="automatic-label"
+              for="automatic"
+              data-t="automatic"
+            ></label>
+            <input
+              id="automatic"
+              type="checkbox"
+              role="switch"
+              class="tx-switch"
+              aria-labelledby="automatic-label"
+            />
+          </div>
+          <div class="tx-row" id="interval-field">
+            <div class="row-text">
+              <label for="interval-pick" data-t="interval"></label>
+            </div>
+            <button type="button" class="tx-select" id="interval-pick">
+              <span id="interval-name"></span
+              ><span class="tx-icon" data-icon="chevron"></span>
+            </button>
+          </div>
+          <input id="interval" type="hidden" />
+          <div class="tx-row" id="saveGap-field">
+            <div class="row-text">
+              <label for="saveGap-pick" data-t="saveGap"></label>
+              <p class="hint" id="saveGap-help" data-t="saveGapHelp"></p>
+            </div>
+            <button
+              type="button"
+              class="tx-select"
+              id="saveGap-pick"
+              aria-describedby="saveGap-help"
+            >
+              <span id="saveGap-name"></span
+              ><span class="tx-icon" data-icon="chevron"></span>
+            </button>
+          </div>
+          <input id="saveGap" type="hidden" />
+          <div class="tx-row" id="keepDays-field">
+            <div class="row-text">
+              <label for="keepDays-pick" data-t="keepHistory"></label>
+              <p class="hint" id="keepDays-help" data-t="keepHistoryHelp"></p>
+            </div>
+            <button
+              type="button"
+              class="tx-select"
+              id="keepDays-pick"
+              aria-describedby="keepDays-help"
+            >
+              <span id="keepDays-name"></span
+              ><span class="tx-icon" data-icon="chevron"></span>
+            </button>
+          </div>
+          <input id="keepDays" type="hidden" />
+          <div class="tx-row" id="parallel-field">
+            <div class="row-text">
+              <label for="parallel-pick" data-t="parallel"></label>
+              <p class="hint" id="parallel-help" data-t="parallelHelp"></p>
+            </div>
+            <button
+              type="button"
+              class="tx-select"
+              id="parallel-pick"
+              aria-describedby="parallel-help"
+            >
+              <span id="parallel-name"></span
+              ><span class="tx-icon" data-icon="chevron"></span>
+            </button>
+          </div>
+          <input id="parallel" type="hidden" />
+        </div>
+      </form>
+      <section id="connected" hidden>
+        <h2 class="tx-group-title" data-t="connectionTitle"></h2>
+        <div class="tx-group">
+          <div class="tx-row">
+            <span data-t="service"></span
+            ><span class="value" id="c-service"></span>
+          </div>
+          <div class="tx-row" id="c-endpoint-row">
+            <span data-t="endpoint"></span
+            ><span class="value" id="c-endpoint"></span>
+          </div>
+          <div class="tx-row" id="c-bucket-row">
+            <span data-t="bucket"></span
+            ><span class="value" id="c-bucket"></span>
+          </div>
+          <div class="tx-row">
+            <span id="c-account-label"></span
+            ><span class="value" id="c-account"></span>
+          </div>
+          <div class="tx-row">
+            <span data-t="prefix"></span
+            ><span class="value" id="c-prefix"></span>
+          </div>
+          <div class="tx-row">
+            <span data-t="encrypt"></span
+            ><span class="value" id="c-encrypt"></span>
+          </div>
+        </div>
+        <div class="form-end">
+          <button
+            type="button"
+            class="tx-button danger-text"
+            id="disconnect"
+            data-t="disconnect"
+          ></button>
+          <span class="spacer"></span>
+          <button
+            type="button"
+            class="tx-button"
+            id="test-saved"
+            data-t="test"
+          ></button>
+          <button
+            type="button"
+            class="tx-button"
+            id="edit"
+            data-t="edit"
+          ></button>
+        </div>
+      </section>
       <form id="connection" autocomplete="off">
         <fieldset id="fields" disabled>
           <h2 class="tx-group-title" data-t="connectionTitle"></h2>
@@ -52,7 +179,12 @@
             <div class="tx-row">
               <div class="row-text">
                 <label for="provider-pick" data-t="service"></label>
-                <p id="nutstore-help" class="hint" data-t="nutstoreHelp" hidden></p>
+                <p
+                  id="nutstore-help"
+                  class="hint"
+                  data-t="nutstoreHelp"
+                  hidden
+                ></p>
               </div>
               <button type="button" class="tx-select" id="provider-pick">
                 <span id="provider-name"></span
@@ -93,19 +225,29 @@
               </div>
               <div class="tx-row">
                 <label for="token" data-t="token"></label
-                ><input id="token" type="password" autocomplete="new-password" />
+                ><input
+                  id="token"
+                  type="password"
+                  autocomplete="new-password"
+                />
               </div>
               <div class="tx-row">
                 <label for="pathStyle" data-t="pathStyle"></label
-                ><input id="pathStyle" type="checkbox" role="switch" class="tx-switch" />
+                ><input
+                  id="pathStyle"
+                  type="checkbox"
+                  role="switch"
+                  class="tx-switch"
+                />
               </div>
             </details>
-          </div>
-          <h2 class="tx-group-title" data-t="encryptionTitle"></h2>
-          <div class="tx-group">
             <div class="tx-row">
               <div class="row-text">
-                <label id="encrypt-label" for="encrypt" data-t="encrypt"></label>
+                <label
+                  id="encrypt-label"
+                  for="encrypt"
+                  data-t="encrypt"
+                ></label>
                 <p class="hint" id="encrypt-help" data-t="encryptHelp"></p>
               </div>
               <input
@@ -120,7 +262,11 @@
             <div class="tx-row" id="password-field">
               <div class="row-text">
                 <label for="sync-password" data-t="syncPassword"></label>
-                <p class="hint" id="encryption-help" data-t="encryptionHelp"></p>
+                <p
+                  class="hint"
+                  id="encryption-help"
+                  data-t="encryptionHelp"
+                ></p>
               </div>
               <input
                 id="sync-password"
@@ -141,96 +287,20 @@
               />
             </div>
           </div>
-          <div class="tx-group">
-            <div class="tx-row">
-              <label id="automatic-label" for="automatic" data-t="automatic"></label>
-              <input
-                id="automatic"
-                type="checkbox"
-                role="switch"
-                class="tx-switch"
-                aria-labelledby="automatic-label"
-              />
-            </div>
-            <div class="tx-row">
-              <div class="row-text">
-                <label for="keep-pick" data-t="keepHistory"></label>
-                <p class="hint" id="keep-help" data-t="keepHistoryHelp"></p>
-              </div>
-              <button type="button" class="tx-select" id="keep-pick" aria-describedby="keep-help">
-                <span id="keep-name"></span
-                ><span class="tx-icon" data-icon="chevron"></span>
-              </button>
-            </div>
-            <input id="keepDays" type="hidden" value="90" />
-            <div class="tx-row" id="interval-field">
-              <label for="interval" data-t="interval"></label
-              ><input
-                id="interval"
-                class="number"
-                type="number"
-                min="1"
-                max="1440"
-                step="1"
-                required
-              />
-            </div>
-            <div class="tx-row" id="save-gap-field">
-              <label for="saveGap" data-t="saveGap"></label
-              ><input
-                id="saveGap"
-                class="number"
-                type="number"
-                min="0"
-                max="60"
-                step="1"
-                required
-              />
-            </div>
-          </div>
-          <div class="tx-group">
-            <div class="tx-row stack">
-              <div class="row-text">
-                <label for="exclude" data-t="exclude"></label>
-                <p id="exclude-hint" class="hint" data-t="excludeHint"></p>
-              </div>
-              <textarea
-                id="exclude"
-                rows="3"
-                maxlength="20000"
-                spellcheck="false"
-                aria-describedby="exclude-hint"
-              ></textarea>
-            </div>
-            <div class="tx-row">
-              <label id="gitignore-label" for="gitignore" data-t="gitignore"></label>
-              <input
-                id="gitignore"
-                type="checkbox"
-                role="switch"
-                class="tx-switch"
-                aria-labelledby="gitignore-label"
-              />
-            </div>
-            <div class="tx-row">
-              <label id="obsidian-label" for="obsidian" data-t="obsidian"></label>
-              <input
-                id="obsidian"
-                type="checkbox"
-                role="switch"
-                class="tx-switch"
-                aria-labelledby="obsidian-label"
-              />
-            </div>
-          </div>
           <div class="form-end">
-            <p id="credentials-state" class="hint"></p>
+            <button
+              type="button"
+              class="tx-button"
+              id="cancel-edit"
+              data-t="cancel"
+              hidden
+            ></button>
+            <span class="spacer"></span>
             <button
               type="button"
               class="tx-button"
               id="test"
               data-t="test"
-              disabled
             ></button
             ><button
               type="button"
@@ -240,6 +310,48 @@
             ></button>
           </div>
         </fieldset>
+      </form>
+      <form id="rules" class="options" autocomplete="off" hidden>
+        <h2 class="tx-group-title" data-t="rulesTitle"></h2>
+        <div class="tx-group">
+          <div class="tx-row stack">
+            <div class="row-text">
+              <label for="exclude" data-t="exclude"></label>
+              <p id="exclude-hint" class="hint" data-t="excludeHint"></p>
+            </div>
+            <textarea
+              id="exclude"
+              rows="3"
+              maxlength="20000"
+              spellcheck="false"
+              aria-describedby="exclude-hint"
+            ></textarea>
+          </div>
+          <div class="tx-row">
+            <label
+              id="gitignore-label"
+              for="gitignore"
+              data-t="gitignore"
+            ></label>
+            <input
+              id="gitignore"
+              type="checkbox"
+              role="switch"
+              class="tx-switch"
+              aria-labelledby="gitignore-label"
+            />
+          </div>
+          <div class="tx-row">
+            <label id="obsidian-label" for="obsidian" data-t="obsidian"></label>
+            <input
+              id="obsidian"
+              type="checkbox"
+              role="switch"
+              class="tx-switch"
+              aria-labelledby="obsidian-label"
+            />
+          </div>
+        </div>
       </form>
       <h2 class="tx-group-title recovery" data-t="advanced"></h2>
       <div class="tx-group">

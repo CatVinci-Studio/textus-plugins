@@ -15,7 +15,7 @@ const encodePath = (path: string) =>
 const pause = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 export class RemoteStore implements ObjectStore {
-  private dirs = new Set<string>();
+  private dirs = new Map<string, Promise<void>>();
   /** The server's clock minus ours, from its last answer's Date. */
   private skew = 0;
   private cache = new Map<string, ArrayBuffer>();
@@ -103,7 +103,7 @@ export class RemoteStore implements ObjectStore {
   private require(response: Response) {
     if (response.status >= 200 && response.status < 300) return;
     if ([401, 403].includes(response.status))
-      throw new SyncError("permissionError");
+      throw new SyncError("permissionError", [response.status]);
     if (response.status === 429) throw new SyncError("rateLimited");
     if (response.status === 507) throw new SyncError("quotaError");
     throw new SyncError("httpError", [response.status]);
@@ -114,19 +114,27 @@ export class RemoteStore implements ObjectStore {
     let path = "";
     for (const part of parts) {
       path += `${encodeURIComponent(part)}/`;
-      if (this.dirs.has(path)) continue;
-      const url = `${this.config.endpoint}/${path}`;
-      const res = await this.request("MKCOL", url);
-      // Servers answer "already there" differently (Nutstore with 409, others
-      // 405), so a refused MKCOL is checked before it counts as a failure.
-      const made = res.status >= 200 && res.status < 300;
-      if (!made && !(await this.isFolder(url))) {
-        if ([401, 403, 429, 507].includes(res.status)) this.require(res);
-        throw new SyncError("folderNotCreated", [
-          decodeURIComponent(path.slice(0, -1)),
-        ]);
+      // Shared, so uploads at once make each folder once.
+      let made = this.dirs.get(path);
+      if (!made) {
+        made = this.folder(path);
+        this.dirs.set(path, made);
+        made.catch(() => this.dirs.delete(path));
       }
-      this.dirs.add(path);
+      await made;
+    }
+  }
+  private async folder(path: string) {
+    const url = `${this.config.endpoint}/${path}`;
+    const res = await this.request("MKCOL", url);
+    // Servers answer "already there" differently (Nutstore with 409, others
+    // 405), so a refused MKCOL is checked before it counts as a failure.
+    const made = res.status >= 200 && res.status < 300;
+    if (!made && !(await this.isFolder(url))) {
+      if ([401, 403, 429, 507].includes(res.status)) this.require(res);
+      throw new SyncError("folderNotCreated", [
+        decodeURIComponent(path.slice(0, -1)),
+      ]);
     }
   }
   private async isFolder(url: string): Promise<boolean> {
@@ -134,12 +142,7 @@ export class RemoteStore implements ObjectStore {
     return res.status === 207 || res.status === 200;
   }
   async get(key: string): Promise<Uint8Array | null> {
-    const res = await this.request(
-      "GET",
-      this.target(key),
-      undefined,
-      {},
-    );
+    const res = await this.request("GET", this.target(key), undefined, {});
     if (res.status === 404) return null;
     this.require(res);
     return res.bytes();
@@ -183,12 +186,7 @@ export class RemoteStore implements ObjectStore {
     }
   }
   async remove(key: string): Promise<void> {
-    const res = await this.request(
-      "DELETE",
-      this.target(key),
-      undefined,
-      {},
-    );
+    const res = await this.request("DELETE", this.target(key), undefined, {});
     if (res.status !== 404) this.require(res);
   }
 }
@@ -199,14 +197,32 @@ export async function testConnection(store: ObjectStore) {
   const original = crypto.getRandomValues(new Uint8Array(32));
   let created = false;
   try {
-    created = await store.create(key, original);
+    created = await refused("permissionWrite", () =>
+      store.create(key, original),
+    );
     if (!created) throw new SyncError("unsafeServer");
     if (await store.create(key, new Uint8Array([9])))
       throw new SyncError("unsafeServer");
-    const read = await store.get(key);
+    const read = await refused("permissionRead", () => store.get(key));
     if (!read || (await hash(read)) !== (await hash(original)))
       throw new SyncError("unsafeServer");
   } finally {
-    if (created) await store.remove(key);
+    if (created) await refused("permissionDelete", () => store.remove(key));
+  }
+}
+
+/** `run`, a refusal of it (403; a 401 is the sign-in) named for what it
+ *  was: writing, reading or deleting - a key often has some of the three. */
+async function refused<T>(code: string, run: () => Promise<T>): Promise<T> {
+  try {
+    return await run();
+  } catch (error) {
+    if (
+      error instanceof SyncError &&
+      error.code === "permissionError" &&
+      error.args[0] === 403
+    )
+      throw new SyncError(code);
+    throw error;
   }
 }

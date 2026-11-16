@@ -2,6 +2,8 @@ export const ID = "catvinci.cloud-sync";
 export const FORMAT = "textus-cloud-sync/1";
 export const CHUNK_SIZE = 2 * 1024 * 1024;
 export const MAX_FILE_SIZE = 128 * 1024 * 1024;
+/** Bytes of files a sync holds in memory for transfers at once. */
+export const TRANSFER_BYTES = 32 * 1024 * 1024;
 export const MAX_MANIFEST_SIZE = 8 * 1024 * 1024;
 export const MAX_FILES = 20000;
 export const HEAD = "v1/head.json";
@@ -34,6 +36,8 @@ export interface Config {
   encrypt: boolean;
   /** Days older versions are kept in the remote folder; 0 keeps them for good. */
   keepDays: KeepDays;
+  /** Transfers run at once (PARALLEL). */
+  parallel: number;
   /** keepDays was chosen here and isn't the folder's yet: the next sync
    *  makes it so; until then the folder's setting is taken. */
   keepPending?: boolean;
@@ -172,4 +176,22 @@ export const blockKey = (hash: string) =>
   `v1/blocks/${hash.slice(0, 2)}/${hash}`;
 export function checkAbort(signal?: AbortSignal) {
   if (signal?.aborted) throw new SyncError("cancelled");
+}
+
+/** The choices of transfers at once: more is faster with many small files. */
+export const PARALLEL = [1, 2, 4, 8, 16, 32] as const;
+
+/** What the plugin's pages show, sent to each. */
+export interface ViewState {
+  root: string | null;
+  config: Config;
+  configured: boolean;
+  busy: boolean;
+  message: string;
+  error: boolean;
+  progress: number | null;
+  result?: Result;
+  lastRun?: string;
+  /** The saved account, its start only (masked). */
+  account?: string;
 }
