@@ -4,7 +4,7 @@ Guarda una nota para cada día en una carpeta de la carpeta abierta, con un cale
 
 - Pulsa **Ctrl+Alt+J** (**⌘⌥J** en Mac) o elige **Complementos › Abrir la nota de hoy**. Se abre la nota de hoy; la primera vez se crea.
 - **Complementos › Abrir el día anterior** y **Complementos › Abrir el día siguiente** pasan de la nota del día que tienes delante a la de al lado.
-- La pestaña **Calendario** de la barra lateral muestra un mes y marca los días con nota. Haz clic en un día para abrir su nota, o en **Hoy** para abrir la de hoy. La semana empieza como en tu región.
+- La pestaña **Calendario** de la barra lateral muestra un mes y marca los días con nota. Haz clic en un día para abrir su nota, o en **Hoy** para abrir la de hoy. La semana empieza como en el idioma de Textus, igual que cuentan los números de semana.
 - Una nota que ya existe nunca se sobrescribe.
 
 ## Ajustes
@@ -23,6 +23,7 @@ El complemento lee y escribe archivos de la carpeta abierta para encontrar y cre
 
 ## Cambios
 
+- **0.7.7** - La semana empieza según el idioma de Textus, no la región del dispositivo, igual que los números de semana.
 - **0.7.6** - La página sigue el idioma de Textus por sí sola. Requiere Textus 1.4.3.
 - **0.7.5** - El título del mes del calendario empieza a la izquierda y termina en puntos suspensivos en una barra lateral estrecha.
 - **0.7.4** - En un panel estrecho, como en el móvil, el calendario muestra el nombre corto del mes en lugar de cortar el largo.

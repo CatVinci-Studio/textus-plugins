@@ -4,7 +4,7 @@ Keeps a note for each day in a folder of the open folder, with a calendar in the
 
 - Press **Ctrl+Alt+J** (**⌘⌥J** on a Mac) or choose **Plugins › Open Today's Note**. Today's note opens; the first time, it is made.
 - **Plugins › Open the Day Before** and **Plugins › Open the Day After** go from the day's note in front to the one beside it.
-- The **Calendar** tab in the sidebar shows a month and marks the days that have a note. Click a day to open its note, or **Today** to open today's. Weeks start as your region has them.
+- The **Calendar** tab in the sidebar shows a month and marks the days that have a note. Click a day to open its note, or **Today** to open today's. Weeks start as your Textus language has them, as the week numbers count.
 - A note that is already there is never written over.
 
 ## Settings
@@ -23,6 +23,7 @@ The plugin reads and writes files in the open folder to find and make the notes,
 
 ## Changes
 
+- **0.7.7** - Weeks start as Textus's language has them, not the device's region, so they agree with the week numbers.
 - **0.7.6** - The page follows Textus's language by itself. Needs Textus 1.4.3.
 - **0.7.5** - The Calendar's month title starts at the left and ends in an ellipsis in a narrow sidebar, instead of being cut at both ends.
 - **0.7.4** - In a narrow panel, such as on a phone, the calendar shows the month's short name instead of cutting the long one off.

@@ -94,18 +94,6 @@ async function noteDates(where) {
   return files.map((f) => dateAt(where, f.path)).filter(Boolean);
 }
 
-/** Where the system's region starts its weeks: Sunday in the US, Monday
- *  in most of the world. */
-function weekStart() {
-  try {
-    const locale = new Intl.Locale(Intl.DateTimeFormat().resolvedOptions().locale);
-    const info = locale.getWeekInfo ? locale.getWeekInfo() : locale.weekInfo;
-    return info && info.firstDay === 7 ? "sunday" : "monday";
-  } catch {
-    return "monday";
-  }
-}
-
 /** The week number a weekly note's name format counts: ISO's (W) or the
  *  language's (w). */
 function weekToken(format) {
@@ -121,7 +109,6 @@ async function refresh() {
   panel.postMessage({
     type: "dates",
     dates: await noteDates(where),
-    weekStart: weekStart(),
     week: weekly && weekly.enabled ? weekToken(weekly.format) : null,
     month: !!(monthly && monthly.enabled),
   });

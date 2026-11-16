@@ -4,7 +4,7 @@ Guarda uma nota para cada dia numa pasta da pasta aberta, com um calendário na 
 
 - Prima **Ctrl+Alt+J** (**⌘⌥J** no Mac) ou escolha **Plugins › Abrir a nota de hoje**. A nota de hoje abre-se; da primeira vez, é criada.
 - **Plugins › Abrir o dia anterior** e **Plugins › Abrir o dia seguinte** passam da nota do dia aberta para a vizinha.
-- A aba **Calendário** da barra lateral mostra um mês e marca os dias com nota. Clique num dia para abrir a nota dele, ou em **Hoje** para abrir a de hoje. A semana começa como na sua região.
+- A aba **Calendário** da barra lateral mostra um mês e marca os dias com nota. Clique num dia para abrir a nota dele, ou em **Hoje** para abrir a de hoje. A semana começa como no idioma do Textus, como contam os números da semana.
 - Uma nota que já existe nunca é substituída.
 
 ## Ajustes
@@ -23,6 +23,7 @@ O plugin lê e escreve ficheiros na pasta aberta para encontrar e criar as notas
 
 ## Alterações
 
+- **0.7.7** - A semana começa conforme o idioma do Textus, não a região do aparelho, como os números da semana.
 - **0.7.6** - A página segue o idioma do Textus sozinha. Requer o Textus 1.4.3.
 - **0.7.5** - O título do mês do calendário começa à esquerda e termina em reticências numa barra lateral estreita.
 - **0.7.4** - Num painel estreito, como no celular, o calendário mostra o nome curto do mês em vez de cortar o longo.

@@ -18,7 +18,6 @@
   let shown = saved.month ? new Date(saved.month + "-01T00:00:00") : new Date();
   shown = new Date(shown.getFullYear(), shown.getMonth(), 1);
   let noted = new Set();
-  let weekStart = "monday";
   let hasFolder = true;
   // The week number weekly notes count, "w" or "W"; null with them off.
   let week = null;
@@ -40,10 +39,10 @@
     grid.textContent = "";
     grid.classList.toggle("weeks", !!week);
     if (week) grid.append(document.createElement("div"));
-    // Textus's month: whole weeks from the vault's first weekday; a sixth
-    // row only when the month reaches it.
+    // Textus's month: whole weeks from the UI language's first weekday, as
+    // the week numbers beside them count; a sixth row only when needed.
     const days = window.textus
-      .monthDays(shown.getFullYear(), shown.getMonth(), { weekStart: weekStart === "sunday" ? 0 : 1 })
+      .monthDays(shown.getFullYear(), shown.getMonth())
       .filter((g, i, all) => i < 35 || all.slice(35).some((x) => x.inMonth));
     for (const g of days.slice(0, 7)) {
       const cell = document.createElement("div");
@@ -121,7 +120,6 @@
     if (message.type !== "dates") return;
     hasFolder = message.dates !== null;
     noted = new Set(message.dates || []);
-    weekStart = message.weekStart || "monday";
     week = message.week || null;
     monthNotes = !!message.month;
     render();
