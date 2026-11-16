@@ -6,7 +6,7 @@ Guarda cada salvamento de um documento como uma versão, para ver o que mudou e 
 - A aba **Histórico** da barra lateral lista as versões do documento aberto, a mais recente no topo, agrupadas por dia: Hoje, Ontem e depois a data.
 - Escolha uma para ver, linha por linha, o que mudou desde então.
 - Compare-a com o documento agora ou com qualquer outra versão, com as palavras alteradas marcadas. **Repor** junto a uma alteração recupera só essa alteração; **Mais** dá nome ou fixa uma versão, que fica então guardada para sempre, ou abre-a como novo documento. As alterações feitas fora do Textus (outra app, uma sincronização, git) também ficam: o texto de antes e o de depois.
-- **Restaurar esta versão** oferece o texto antigo como uma edição do documento, que você aceita ou recusa como qualquer outra. **Abrir como novo documento** a abre ao lado.
+- **Restaurar** oferece o texto antigo como uma edição do documento, que você aceita ou recusa como qualquer outra. **Abrir como novo documento** a abre ao lado.
 - As versões ficam dentro do Textus, não na sua pasta. Documentos com mais de 2 MB não são guardados, e quando o armazenamento enche, as versões mais antigas saem primeiro.
 
 ## Permissões
@@ -17,6 +17,7 @@ Guarda cada salvamento de um documento como uma versão, para ver o que mudou e 
 
 ## Alterações
 
+- **0.4.1** - Restaurar é uma só palavra, assim o botão cabe numa barra lateral estreita em todos os idiomas.
 - **0.4.0** - As versões ficam mais espaçadas com o tempo em vez de só as últimas 50; cada texto é guardado uma vez; as versões de um documento apagado vão-se um mês depois. Compare duas versões quaisquer palavra a palavra, reponha uma só alteração, dê nome e fixe versões; as alterações feitas fora do Textus ficam guardadas. As versões da 0.3 passam sozinhas. Requer o Textus 1.4.3. Numa pasta Git no desktop, os commits do documento aparecem sob as suas versões.
 - **0.3.8** - O texto de antes do primeiro salvamento não se perde mais quando esse salvamento acontece logo ao abrir o documento.
 - **0.3.7** - O texto de um documento antes do primeiro salvamento também fica como versão, e as versões acompanham o documento quando ele é renomeado ou movido.
