@@ -36,6 +36,7 @@ kanban-plugin: board
 
 ## Alterações
 
+- **0.4.10** - A caixa de um cartão fica centrada na primeira linha em qualquer tamanho de texto.
 - **0.4.9** - Clicar com o botão direito num cartão ou nome de lista durante a edição (para colar) já não termina a edição, e o Enter de um método de entrada no iPhone e iPad escolhe as palavras em vez de guardar. A página segue o idioma do Textus sozinha. Requer o Textus 1.4.3.
 - **0.4.8** - Um quadro com quebras de linha do Windows (CRLF) as mantém, e um quadro alterado em outro lugar enquanto você edita mostra essa mudança em vez de sobrescrevê-la, e avisa. A descrição da loja agora começa pelo que o plugin faz.
 - **0.4.7** - Uma linha em branco dentro de um cartão não o divide mais, e Esc não deixa mais um cartão vazio. A IA não mexe em notas comuns, e o quadro cabe em painéis estreitos.

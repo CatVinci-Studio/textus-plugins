@@ -90,8 +90,14 @@ body {
   word-break: break-word;
   cursor: text;
 }
+/* On the title's first line, however tall the text (a phone's is). */
 .card .ui-check {
   margin-top: 2px;
+}
+@supports (height: 1lh) {
+  .card .ui-check {
+    margin-top: calc((1lh - var(--check-size, 16px)) / 2);
+  }
 }
 .inline-field {
   flex: 1;
