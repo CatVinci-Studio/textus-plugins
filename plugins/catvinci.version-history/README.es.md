@@ -6,7 +6,7 @@ Guarda cada guardado de un documento como una versión, para ver qué cambió y 
 - La pestaña **Historial** de la barra lateral lista las versiones del documento abierto, la más reciente arriba, agrupadas por día: Hoy, Ayer y luego la fecha.
 - Elige una para ver, línea a línea, qué cambió desde entonces.
 - Compárala con el documento actual o con cualquier otra versión, con las palabras cambiadas marcadas. **Restaurar** junto a un cambio recupera solo ese cambio; **Más** pone nombre o fija una versión, que entonces se guarda siempre, o la abre como documento nuevo. También se guardan los cambios hechos fuera de Textus (otra app, una sincronización, git): el texto de antes y el de después.
-- **Restaurar esta versión** ofrece el texto antiguo como una edición del documento, que aceptas o rechazas como cualquier otra. **Abrir como documento nuevo** la abre al lado.
+- **Restaurar** ofrece el texto antiguo como una edición del documento, que aceptas o rechazas como cualquier otra. **Abrir como documento nuevo** la abre al lado.
 - Las versiones se guardan dentro de Textus, no en tu carpeta. Los documentos de más de 2 MB no se guardan, y cuando el almacenamiento se llena se van primero las versiones más antiguas.
 
 ## Permisos
@@ -17,6 +17,7 @@ Guarda cada guardado de un documento como una versión, para ver qué cambió y 
 
 ## Cambios
 
+- **0.4.1** - Restaurar es una sola palabra, así su botón cabe en una barra lateral estrecha en todos los idiomas.
 - **0.4.0** - Las versiones se espacian con la edad en lugar de quedarse solo las últimas 50; cada texto se guarda una vez; las versiones de un documento borrado se van al mes. Compara dos versiones cualesquiera palabra por palabra, recupera un solo cambio, pon nombre y fija versiones, y se guardan los cambios hechos fuera de Textus. Las versiones de 0.3 pasan solas. Requiere Textus 1.4.3. En una carpeta Git en el escritorio, los commits del documento aparecen bajo sus versiones.
 - **0.3.8** - El texto de antes del primer guardado ya no se pierde cuando ese guardado llega justo al abrir el documento.
 - **0.3.7** - El texto que tenía un documento antes de guardarlo por primera vez también se conserva como versión, y las versiones siguen al documento al cambiarle el nombre o moverlo.

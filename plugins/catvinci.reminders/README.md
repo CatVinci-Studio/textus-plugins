@@ -16,6 +16,7 @@ It works on desktop and needs Textus 1.3.10 or later. It asks to read the open f
 
 ## Changes
 
+- **0.3.5** - The filter field and empty message follow Textus's language when you switch it. Needs Textus 1.4.3.
 - **0.3.4** - Opening a folder reads only the documents Textus finds a reminder mark in, not every document.
 - **0.3.3** - The store description now opens with what the plugin does.
 - **0.3.2** - Two open windows no longer clear each other's reminders, and the list empties when you close the folder. A mistyped time is refused instead of inserting a broken mark.

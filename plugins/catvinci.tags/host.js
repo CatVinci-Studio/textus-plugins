@@ -101,8 +101,8 @@ async function notesWithTag(input) {
 exports.activate = function (ctx) {
   list = textus.views.registerList("catvinci.tags.panel", {
     items,
-    filterPlaceholder: t("filter"),
-    emptyText: t("none"),
+    filterPlaceholder: "%filter%",
+    emptyText: "%none%",
   });
   const refresh = () => list.refresh();
   ctx.subscriptions.push(

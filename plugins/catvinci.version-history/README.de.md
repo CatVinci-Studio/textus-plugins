@@ -6,7 +6,7 @@ Behält jedes Speichern eines Dokuments als Version, damit Sie sehen, was sich g
 - Der Reiter **Verlauf** in der Seitenleiste listet die Versionen des geöffneten Dokuments, die neueste oben, nach Tagen gruppiert: Heute, Gestern, dann das Datum.
 - Wählen Sie eine, um Zeile für Zeile zu sehen, was sich seitdem geändert hat.
 - Vergleiche sie mit dem Dokument jetzt oder mit jeder anderen Version, die geänderten Wörter markiert. **Wiederherstellen** neben einer Änderung holt nur diese zurück; **Mehr** benennt oder heftet eine Version an, die dann immer bleibt, oder öffnet sie als neues Dokument. Auch Änderungen außerhalb von Textus (eine andere App, eine Synchronisierung, git) bleiben: der Text davor und danach.
-- **Diese Version wiederherstellen** bietet den alten Text als Änderung am Dokument an, die Sie wie jede andere annehmen oder ablehnen. **Als neues Dokument öffnen** öffnet sie stattdessen daneben.
+- **Wiederherstellen** bietet den alten Text als Änderung am Dokument an, die Sie wie jede andere annehmen oder ablehnen. **Als neues Dokument öffnen** öffnet sie stattdessen daneben.
 - Die Versionen liegen in Textus, nicht in Ihrem Ordner. Dokumente über 2 MB werden nicht behalten, und ist der Speicher voll, gehen die ältesten Versionen zuerst.
 
 ## Berechtigungen
@@ -17,6 +17,7 @@ Behält jedes Speichern eines Dokuments als Version, damit Sie sehen, was sich g
 
 ## Änderungen
 
+- **0.4.1** - Wiederherstellen ist ein Wort, damit die Schaltfläche in jeder Sprache in eine schmale Seitenleiste passt.
 - **0.4.0** - Versionen werden mit dem Alter lichter, statt nur die letzten 50 zu behalten; jeder Text wird einmal gespeichert; die Versionen eines gelöschten Dokuments gehen nach einem Monat. Zwei beliebige Versionen Wort für Wort vergleichen, eine einzelne Änderung zurückholen, Versionen benennen und anheften; Änderungen außerhalb von Textus bleiben. Versionen aus 0.3 ziehen von selbst um. Braucht Textus 1.4.3. In einem Git-Ordner auf dem Desktop stehen die Commits des Dokuments unter seinen Versionen.
 - **0.3.8** - Der Text vor dem ersten Speichern geht nicht mehr verloren, wenn dieses Speichern direkt beim Öffnen kommt.
 - **0.3.7** - Der Text eines Dokuments vor dem ersten Speichern bleibt ebenfalls als Version erhalten, und die Versionen folgen einem Dokument, wenn es umbenannt oder verschoben wird.

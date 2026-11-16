@@ -50,6 +50,8 @@ export class EncryptedStore implements ObjectStore {
     if (snapshot) return `v2/snapshots/${snapshot[1]}.bin`;
     const probe = /^v1\/probes\/([0-9a-f-]{36})$/.exec(key);
     if (probe) return `v2/probes/${probe[1]}.bin`;
+    const pending = /^v1\/pending\/([0-9a-f-]{36})\.json$/.exec(key);
+    if (pending) return `v2/pending/${pending[1]}.bin`;
     throw new SyncError("invalidPath");
   }
   async get(key: string) {

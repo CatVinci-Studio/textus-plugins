@@ -1,3 +1,4 @@
+import { pendingIn } from "./pending";
 import { defaults, normalizeConfig, withConnection } from "./config";
 import { parseBase } from "./content";
 import { synchronize } from "./engine";
@@ -307,6 +308,7 @@ class Controller {
         base,
         signal: this.abort.signal,
         saveBase: (next) => this.ctx.storage.global.set(key, next),
+        pending: pendingIn(this.ctx.storage.global, key),
         progress: (phase, current, total) => {
           this.state.progress = total ? current / total : null;
           this.message(phase, false, current, total);

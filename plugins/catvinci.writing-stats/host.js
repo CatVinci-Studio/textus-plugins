@@ -199,7 +199,7 @@ exports.activate = function (ctx) {
   store = ctx.storage.global;
   list = textus.views.registerList("catvinci.writing-stats.panel", {
     items: items,
-    emptyText: t("none"),
+    emptyText: "%none%",
   });
   ctx.subscriptions.push(
     list,

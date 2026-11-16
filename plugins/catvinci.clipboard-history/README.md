@@ -17,6 +17,7 @@ Only what you copy in your documents is kept, never what you copy in Settings or
 
 ## Changes
 
+- **0.1.4** - The filter field and empty message follow Textus's language when you switch it. Needs Textus 1.4.3.
 - **0.1.3** - Each clip shows when it was copied, with a line between clips.
 - **0.1.2** - The panel's Clear button is back: one click empties the history. Shorter help and empty-state text.
 - **0.1.1** - Its page now says in one sentence what it does, what it can do, and what changed in each version.

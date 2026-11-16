@@ -39,6 +39,7 @@ La pestaña **Enlaces bidireccionales** de la barra lateral muestra qué enlaza 
 
 ## Cambios
 
+- **0.4.6** - El campo de filtro y el mensaje vacío siguen el idioma de Textus al cambiarlo. Requiere Textus 1.4.3.
 - **0.4.5** - Las menciones sin enlazar se abren en la línea correcta y el estilo de enlace lo guarda el propio Textus (Textus 1.4.3).
 - **0.4.4** - Convertir enlaces deja intactos los enlaces de un bloque de código y convierte los que vienen después; Menciones sin enlace ya no muestra ni enlaza nombres en el front matter o en el código.
 - **0.4.3** - Los enlaces estándar a notas que aún no existen ahora aparecen en Enlaces salientes, los enlaces a encabezados de la misma nota ya no listan la propia nota y arrastrar un divisor ya no redibuja el panel.

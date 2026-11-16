@@ -17,6 +17,7 @@ Seul ce que vous copiez dans vos documents est gardé, jamais ce que vous copiez
 
 ## Changements
 
+- **0.1.4** - Le champ de filtre et le message vide suivent la langue de Textus quand vous la changez. Nécessite Textus 1.4.3.
 - **0.1.3** - Chaque élément indique quand il a été copié, avec un trait entre les éléments.
 - **0.1.2** - Le bouton Effacer revient : un clic vide l’historique. Textes d'aide et d'état vide plus courts.
 - **0.1.1** - Sa page dit maintenant en une phrase ce qu'il fait, ce qu'il permet et ce qui a changé à chaque version.

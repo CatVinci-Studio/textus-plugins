@@ -20,6 +20,7 @@ Quand le dossier ouvert est un coffre Obsidian (il contient un dossier `.obsidia
 
 ## Changements
 
+- **0.4.5** - Le champ de filtre et le message vide suivent la langue de Textus quand vous la changez. Nécessite Textus 1.4.3.
 - **0.4.4** - Les signets d’Obsidian sont toujours listés, mais plus écrits : depuis Textus 1.4, les plugins ne modifient pas `.obsidian`. Nécessite Textus 1.4.0.
 - **0.4.3** - La liste est groupée par chemin du document dans le dossier, un groupe par document ; les longs passages s'arrêtent sur un mot avec « … » ; si l'id de bloc échoue dans un coffre, le signet est quand même gardé.
 - **0.4.2** - Textes d'aide et d'état vide plus courts.

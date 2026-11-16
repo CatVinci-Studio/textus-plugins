@@ -4,7 +4,7 @@ Garde une note pour chaque jour dans un dossier du dossier ouvert, avec un calen
 
 - Appuyez sur **Ctrl+Alt+J** (**⌘⌥J** sur Mac) ou choisissez **Extensions › Ouvrir la note du jour**. La note d'aujourd'hui s'ouvre ; la première fois, elle est créée.
 - **Extensions › Ouvrir la veille** et **Extensions › Ouvrir le lendemain** passent de la note du jour affichée à sa voisine.
-- L'onglet **Calendrier** de la barre latérale affiche un mois et marque les jours qui ont une note. Cliquez sur un jour pour ouvrir sa note, ou sur **Aujourd’hui** pour ouvrir celle du jour. La semaine commence comme dans votre région.
+- L'onglet **Calendrier** de la barre latérale affiche un mois et marque les jours qui ont une note. Cliquez sur un jour pour ouvrir sa note, ou sur **Aujourd’hui** pour ouvrir celle du jour. La semaine commence comme dans la langue de Textus, comme le comptent les numéros de semaine.
 - Une note qui existe déjà n'est jamais écrasée.
 
 ## Réglages
@@ -23,6 +23,7 @@ L'extension lit et écrit des fichiers du dossier ouvert pour trouver et créer 
 
 ## Changements
 
+- **0.7.7** - La semaine commence selon la langue de Textus et non la région de l’appareil, comme les numéros de semaine.
 - **0.7.6** - La page suit la langue de Textus d’elle-même. Nécessite Textus 1.4.3.
 - **0.7.5** - Le titre du mois du calendrier commence à gauche et se termine par des points de suspension dans une barre latérale étroite.
 - **0.7.4** - Dans un panneau étroit, comme sur un téléphone, le calendrier affiche le nom court du mois au lieu de couper le nom long.

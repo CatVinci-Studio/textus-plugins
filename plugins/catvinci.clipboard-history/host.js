@@ -35,7 +35,7 @@ const preview = (text) => {
 exports.activate = function (context) {
   ctx = context;
   list = textus.views.registerList("catvinci.clipboard-history.panel", {
-    emptyText: t("empty"),
+    emptyText: "%empty%",
     items: async function () {
       return (await all()).map((entry) => ({
         id: String(entry.at),

@@ -170,7 +170,7 @@ exports.activate = function (ctx) {
         icon: "clock",
         location: { path: r.path, line: r.line },
       })),
-    emptyText: t("none"),
+    emptyText: "%none%",
   });
   ctx.subscriptions.push(
     list,

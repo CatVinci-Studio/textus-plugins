@@ -17,6 +17,7 @@ Behalten wird nur, was Sie in Ihren Dokumenten kopieren, nie, was Sie in den Ein
 
 ## Änderungen
 
+- **0.1.4** - Suchfeld und Leerhinweis folgen der Sprache von Textus, wenn Sie sie wechseln. Benötigt Textus 1.4.3.
 - **0.1.3** - Jeder Eintrag zeigt, wann er kopiert wurde, mit einer Linie zwischen den Einträgen.
 - **0.1.2** - Die Schaltfläche zum Leeren ist zurück: ein Klick leert den Verlauf. Kürzere Hilfe- und Leertexte.
 - **0.1.1** - Seine Seite sagt jetzt in einem Satz, was es tut, was es kann und was sich in jeder Version geändert hat.

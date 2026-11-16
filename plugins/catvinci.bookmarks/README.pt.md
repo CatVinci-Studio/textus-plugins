@@ -20,6 +20,7 @@ Quando a pasta aberta é um cofre do Obsidian (tem uma pasta `.obsidian`):
 
 ## Alterações
 
+- **0.4.5** - O campo de filtro e a mensagem vazia seguem o idioma do Textus quando você o muda. Requer o Textus 1.4.3.
 - **0.4.4** - Os favoritos do Obsidian continuam listados, mas não são mais gravados: desde o Textus 1.4 os plugins não alteram `.obsidian`. Precisa do Textus 1.4.0.
 - **0.4.3** - A lista é agrupada pelo caminho do documento na pasta, um grupo por documento; trechos longos terminam em uma palavra com "…"; se o id de bloco falhar em um cofre, o favorito é salvo mesmo assim.
 - **0.4.2** - Textos de ajuda e de estado vazio mais curtos.

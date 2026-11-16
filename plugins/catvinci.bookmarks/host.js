@@ -67,7 +67,7 @@ exports.activate = function (context) {
   ctx = context;
   textus.ai.registerTool("list_bookmarks", listBookmarks);
   list = textus.views.registerList("catvinci.bookmarks.panel", {
-    emptyText: t("empty"),
+    emptyText: "%empty%",
     items: async function () {
       const vault = await obsidianMarks();
       const root = await textus.files.root();

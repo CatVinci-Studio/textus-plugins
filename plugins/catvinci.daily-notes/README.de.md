@@ -4,7 +4,7 @@ Legt für jeden Tag eine Notiz in einem Ordner des geöffneten Ordners an, mit e
 
 - Drücken Sie **Ctrl+Alt+J** (**⌘⌥J** auf dem Mac) oder wählen Sie **Plugins › Heutige Notiz öffnen**. Die heutige Notiz öffnet sich; beim ersten Mal wird sie angelegt.
 - **Plugins › Vorherigen Tag öffnen** und **Plugins › Nächsten Tag öffnen** wechseln von der gerade geöffneten Tagesnotiz zur benachbarten.
-- Der Tab **Kalender** in der Seitenleiste zeigt einen Monat und markiert die Tage mit einer Notiz. Ein Klick auf einen Tag öffnet seine Notiz, **Heute** die von heute. Die Woche beginnt so, wie es in Ihrer Region üblich ist.
+- Der Tab **Kalender** in der Seitenleiste zeigt einen Monat und markiert die Tage mit einer Notiz. Ein Klick auf einen Tag öffnet seine Notiz, **Heute** die von heute. Die Woche beginnt so, wie es in der Sprache von Textus üblich ist, passend zu den Wochennummern.
 - Eine Notiz, die schon da ist, wird nie überschrieben.
 
 ## Einstellungen
@@ -23,6 +23,7 @@ Das Plugin liest und schreibt Dateien im geöffneten Ordner, um die Notizen zu f
 
 ## Änderungen
 
+- **0.7.7** - Die Woche beginnt nach der Sprache von Textus statt nach der Region des Geräts, passend zu den Wochennummern.
 - **0.7.6** - Die Seite folgt der Sprache von Textus von selbst. Benötigt Textus 1.4.3.
 - **0.7.5** - Der Monatstitel im Kalender beginnt links und endet in einer schmalen Seitenleiste mit Auslassungspunkten, statt an beiden Enden abgeschnitten zu werden.
 - **0.7.4** - In einer schmalen Leiste, etwa auf dem Handy, zeigt der Kalender den kurzen Monatsnamen, statt den langen abzuschneiden.

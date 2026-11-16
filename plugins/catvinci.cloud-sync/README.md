@@ -234,7 +234,9 @@ listing is required.
 
 Encrypted blocks and an immutable snapshot are written before `v2/head.bin` is
 published. The local baseline advances only after publication succeeds.
-Retries reuse completed blocks. Cancellation stops after the current network
+Retries reuse completed blocks, also after a restart: blocks a stopped sync
+stored are remembered locally and not checked again, as long as no other
+device published meanwhile. Cancellation stops after the current network
 request and releases the lock when possible. Textus's network API bounds a
 request to 60 seconds; it does not offer request-level cancellation.
 
@@ -284,6 +286,7 @@ and `THIRD_PARTY_NOTICES.md`. The storage design was informed by Petrichor/Sylva
 
 ## Changes
 
+- **0.6.1** - A big first sync that stops halfway (cancelled, offline, or slowed by the service) goes on where it stopped next time, instead of checking every file it already sent; on Nutstore that saves most of the requests.
 - **0.6.0** - Sync settings rearranged: sync options sit at the top and apply as you pick them, with no Save button. **Sync interval**, **Sync delay**, and **Keep cloud history** are pickers. Files now go up and down several at a time: **Transfers at once** sets how many (S3 8, WebDAV 4, Nutstore 2 to start), and blocks the cloud already holds are no longer checked again. A connected service shows as a card with the account masked and **Test connection**, **Edit** and **Disconnect**; the encryption switch and password are part of the connection. **Test connection** works before saving, and names the missing permission (write, read or delete) when a check fails.
 - **0.5.3** - One set of rules for every service: the automatic interval can be 1 to 1,440 minutes, and **After a save, wait** sets how long a sync waits after saving (Nutstore starts at 3 minutes, S3 and WebDAV at 0; WebDAV no longer waits 30 s).
 - **0.5.2** - The plugin no longer caps its own requests: a first Nutstore sync of a folder with many files no longer stops at "The service request limit was reached".

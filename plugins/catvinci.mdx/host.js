@@ -78,16 +78,18 @@ async function convert(from, to, change) {
 /** The preview pages open, each sent the drawing when it changes. */
 const views = new Set();
 let shown = null;
-async function update(to) {
-  if (!views.size) return;
+/** The MDX in front drawn; another kind of document leaves the last one. */
+async function read() {
   const path = await textus.editor.getPath();
   const text = await textus.editor.getText();
-  // Another kind of document in front: the last MDX stays drawn.
-  if (isMdx(path) && text !== null) {
-    const html = textusMdx.toHtml(text);
-    const problems = await problemsOf(text);
-    shown = { html, problem: problems[0] ? t("problem", problems[0].line, problems[0].message) : null };
-  }
+  if (!isMdx(path) || text === null) return;
+  const html = textusMdx.toHtml(text);
+  const problems = await problemsOf(text);
+  shown = { html, problem: problems[0] ? t("problem", problems[0].line, problems[0].message) : null };
+}
+async function update(to) {
+  if (!views.size) return;
+  await read();
   const message = shown ?? { html: null, empty: t("empty") };
   for (const view of to ? [to] : views) void view.postMessage(message);
 }
@@ -109,7 +111,12 @@ exports.activate = function (ctx) {
         });
       },
     }),
-    textus.commands.register("catvinci.mdx.preview", () => textus.layout.openView(VIEW, { where: "beside" })),
+    // Read first: on a phone the preview's tab is shown alone, with no MDX
+    // in front to read once it opens.
+    textus.commands.register("catvinci.mdx.preview", async () => {
+      await read();
+      await textus.layout.openView(VIEW, { where: "beside" });
+    }),
     textus.commands.register("catvinci.mdx.toMarkdown", () => convert(/\.mdx$/i, ".md", textusMdx.mdxToMarkdown)),
     textus.commands.register("catvinci.mdx.toMdx", () => convert(/\.(md|markdown)$/i, ".mdx", textusMdx.markdownToMdx)),
     textus.editor.onDidChange(() => update()),

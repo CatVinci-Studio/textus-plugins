@@ -6,7 +6,7 @@ Garde chaque enregistrement d’un document comme une version, pour voir ce qui 
 - L’onglet **Historique** de la barre latérale liste les versions du document ouvert, la plus récente en haut, groupées par jour : Aujourd’hui, Hier, puis la date.
 - Choisissez-en une pour voir, ligne par ligne, ce qui a changé depuis.
 - Comparez-la au document actuel ou à n’importe quelle autre version, les mots modifiés étant marqués. **Rétablir** à côté d’une modification ne reprend que celle-ci ; **Plus** nomme ou épingle une version, alors gardée pour de bon, ou l’ouvre comme nouveau document. Les modifications faites hors de Textus (une autre app, une synchronisation, git) sont gardées aussi : le texte d’avant et celui d’après.
-- **Restaurer cette version** propose l’ancien texte comme une modification du document, que vous acceptez ou refusez comme les autres. **Ouvrir comme nouveau document** l’ouvre à côté.
+- **Restaurer** propose l’ancien texte comme une modification du document, que vous acceptez ou refusez comme les autres. **Ouvrir comme nouveau document** l’ouvre à côté.
 - Les versions sont gardées dans Textus, pas dans votre dossier. Les documents de plus de 2 Mo ne sont pas gardés, et quand le stockage est plein, les plus anciennes versions partent d’abord.
 
 ## Autorisations
@@ -17,6 +17,7 @@ Garde chaque enregistrement d’un document comme une version, pour voir ce qui 
 
 ## Changements
 
+- **0.4.1** - Restaurer tient en un mot, pour que son bouton tienne dans une barre latérale étroite dans toutes les langues.
 - **0.4.0** - Les versions s’espacent avec l’âge au lieu de ne garder que les 50 dernières ; chaque texte est stocké une fois ; les versions d’un document supprimé partent un mois plus tard. Comparez deux versions mot à mot, reprenez une seule modification, nommez et épinglez des versions ; les modifications faites hors de Textus sont gardées. Les versions de 0.3 sont reprises d’elles-mêmes. Nécessite Textus 1.4.3. Dans un dossier Git sur le bureau, les commits du document s’affichent sous ses versions.
 - **0.3.8** - Le texte d'avant le premier enregistrement n'est plus perdu quand cet enregistrement arrive dès l'ouverture du document.
 - **0.3.7** - Le texte d'un document avant son premier enregistrement est lui aussi gardé comme version, et les versions suivent le document quand il est renommé ou déplacé.
