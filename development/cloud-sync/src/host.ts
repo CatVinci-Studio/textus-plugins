@@ -1,4 +1,4 @@
-import { defaults } from "./config";
+import { defaults, normalizeConfig } from "./config";
 import { parseBase } from "./content";
 import { synchronize } from "./engine";
 import { scopeOf } from "./scope";
@@ -6,13 +6,19 @@ import { openEncryptedStore } from "./encrypted-store";
 import { openPlainStore } from "./plain-store";
 import { Workspace } from "./local";
 import { Pacer } from "./pacer";
-import { Settings } from "./settings";
+import { masked, Settings } from "./settings";
 import { statusText } from "./status";
 import { RemoteStore, testConnection } from "./transport";
-import { deviceName, registerHistory, restoreInto, type Restore } from "./history-host";
+import { recoverLock, testDraft, type Draft } from "./connection";
+import {
+  deviceName,
+  registerHistory,
+  restoreInto,
+  type Restore,
+} from "./history-host";
 import {
   ID,
-  LOCK,
+  type ViewState,
   SyncError,
   checkAbort,
   type Config,
@@ -20,18 +26,6 @@ import {
   type ObjectStore,
   type Result,
 } from "./model";
-
-interface ViewState {
-  root: string | null;
-  config: Config;
-  configured: boolean;
-  busy: boolean;
-  message: string;
-  error: boolean;
-  progress: number | null;
-  result?: Result;
-  lastRun?: string;
-}
 
 class Controller {
   private settings: Settings;
@@ -109,9 +103,12 @@ class Controller {
     const root = await this.api.files.root();
     const config = root ? await this.settings.load(root) : { ...defaults };
     let configured = false;
+    let account: string | undefined;
     if (root)
       try {
-        await this.settings.credentials(root, config);
+        account = masked(
+          (await this.settings.credentials(root, config)).account,
+        );
         await this.settings.password(root, config);
         configured = true;
       } catch {
@@ -127,6 +124,7 @@ class Controller {
       ),
       error: false,
       progress: null,
+      account: configured ? account : undefined,
     };
     if (root && configured) {
       const key = await this.settings.baseKey(root, config);
@@ -162,40 +160,6 @@ class Controller {
       store: new RemoteStore(config, credentials, this.api.net.fetch),
     };
   }
-  private async recover(store: RemoteStore) {
-    const raw = await store.get(LOCK);
-    if (!raw) {
-      this.message("noLock");
-      return;
-    }
-    let at = "—";
-    try {
-      const parsed = JSON.parse(new TextDecoder().decode(raw));
-      if (
-        typeof parsed.startedAt === "string" &&
-        Number.isFinite(Date.parse(parsed.startedAt))
-      )
-        at = new Date(parsed.startedAt).toLocaleString(this.api.env.language);
-    } catch {
-      /* An unknown lock is still removable with confirmation. */
-    }
-    if (
-      !(await this.api.ui.confirm(this.t("confirmUnlock", at), {
-        danger: true,
-        okLabel: this.t("unlock"),
-      }))
-    )
-      return;
-    checkAbort(this.abort?.signal);
-    const current = await store.get(LOCK);
-    if (
-      !current ||
-      new TextDecoder().decode(raw) !== new TextDecoder().decode(current)
-    )
-      throw new SyncError("lockLost");
-    await store.remove(LOCK);
-    this.message("unlocked");
-  }
   /** The remote folder, opened plain or encrypted as the folder is set up. */
   private async open(
     root: string,
@@ -205,10 +169,7 @@ class Controller {
   ) {
     const key = await this.settings.baseKey(root, config);
     const pin = await this.ctx.storage.global.get(`vault:${key}`);
-    if (
-      pin != null &&
-      (typeof pin !== "string" || !/^[a-f0-9]{64}$/.test(pin))
-    )
+    if (pin != null && (typeof pin !== "string" || !/^[a-f0-9]{64}$/.test(pin)))
       throw new SyncError("invalidBase");
     let opened: ObjectStore;
     if (config.encrypt) {
@@ -221,10 +182,7 @@ class Controller {
           signal: this.abort?.signal,
         },
       );
-      await this.ctx.storage.global.set(
-        `vault:${key}`,
-        encrypted.fingerprint,
-      );
+      await this.ctx.storage.global.set(`vault:${key}`, encrypted.fingerprint);
       opened = encrypted;
     } else opened = await openPlainStore(store);
     if (test || !this.tested.has(key)) await testConnection(opened);
@@ -236,12 +194,16 @@ class Controller {
   /** The remote folder as the history page reads it. */
   async remote() {
     const { root, config, store } = await this.store();
-    return { root, store: (await this.open(root, config, store, { quiet: true })).opened };
+    return {
+      root,
+      store: (await this.open(root, config, store, { quiet: true })).opened,
+    };
   }
   /** Runs one operation; resolves to its error's code, null when it went well. */
   async operation(
     kind: "sync" | "test" | "unlock",
     restore?: Restore,
+    draft?: Draft,
   ): Promise<string | null> {
     if (this.state.busy || this.disposed) return "busy";
     this.state.busy = true;
@@ -249,9 +211,35 @@ class Controller {
     this.abort = new AbortController();
     this.message(kind === "sync" ? "scanning" : "testing");
     try {
+      // A connection being typed in, tested before it is saved.
+      if (draft) {
+        const root = this.state.root;
+        if (!root) throw new SyncError("noFolder");
+        const config = normalizeConfig({
+          ...this.state.config,
+          ...draft.config,
+        });
+        const keys = await this.settings.resolve(
+          root,
+          config,
+          draft.credentials,
+        );
+        await testDraft(config, keys, this.api.net.fetch, this.abort?.signal);
+        this.message("tested");
+        return null;
+      }
       const { root, config, store } = await this.store();
       if (kind === "unlock") {
-        await this.recover(store);
+        const said = await recoverLock(store, {
+          language: this.api.env.language,
+          confirm: (at) =>
+            this.api.ui.confirm(this.t("confirmUnlock", at), {
+              danger: true,
+              okLabel: this.t("unlock"),
+            }),
+          signal: this.abort?.signal,
+        });
+        if (said) this.message(said);
         return null;
       }
       const { key, opened } = await this.open(root, config, store, {
@@ -360,6 +348,7 @@ class Controller {
       type?: string;
       config?: Partial<Config>;
       credentials?: ConnectionInput;
+      options?: Partial<Config>;
     };
     try {
       if (m.type === "ready") {
@@ -376,7 +365,34 @@ class Controller {
         this.message("cancelling");
         return;
       }
+      // The sync options apply as they change, a sync running or not.
+      if (m.type === "options" && m.options && this.state.root) {
+        await this.settings.saveOptions(this.state.root, m.options);
+        await this.refresh();
+        this.message("optionsSaved");
+        return;
+      }
       if (this.state.busy) throw new SyncError("busy");
+      if (m.type === "disconnect" && this.state.root) {
+        if (
+          !(await this.api.ui.confirm(this.t("confirmDisconnect"), {
+            danger: true,
+            okLabel: this.t("disconnect"),
+          }))
+        )
+          return;
+        await this.settings.forget(this.state.root);
+        await this.refresh();
+        this.message("disconnected");
+        return;
+      }
+      if (m.type === "test" && m.config && m.credentials) {
+        await this.operation("test", undefined, {
+          config: m.config,
+          credentials: m.credentials,
+        });
+        return;
+      }
       if (m.type === "save" && m.config && m.credentials) {
         const root = await this.api.files.root();
         if (!root || root !== this.state.root)
@@ -384,7 +400,12 @@ class Controller {
         this.state.busy = true;
         this.broadcast();
         try {
-          await this.settings.save(root, m.config, m.credentials);
+          // The connection from the form, the options as they are.
+          await this.settings.save(
+            root,
+            { ...this.state.config, ...m.config },
+            m.credentials,
+          );
           await this.refresh();
           for (const view of this.views) this.send(view, { type: "saved" });
           this.message("saved");

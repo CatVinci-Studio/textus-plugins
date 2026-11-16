@@ -11,6 +11,22 @@ import {
 
 type SavedCredentials = Credentials & { syncPassword?: string };
 
+/** What the page's sync options change; the rest is the connection. */
+const OPTIONS = [
+  "automatic",
+  "interval",
+  "saveGap",
+  "keepDays",
+  "exclude",
+  "gitignore",
+  "obsidian",
+  "parallel",
+] as const;
+
+/** An account shown, not given away: its start and dots. */
+export const masked = (account: string) =>
+  account.length > 8 ? `${account.slice(0, 4)}••••` : "••••";
+
 export class Settings {
   constructor(private ctx: Textus.PluginContext) {}
   private async scope(root: string) {
@@ -61,7 +77,23 @@ export class Settings {
       config.keepDays = before.keepDays;
       config.keepPending = before.keepPending;
     }
-    const key = await this.secretKey(root, config);
+    await this.ctx.secrets.set(
+      await this.secretKey(root, config),
+      JSON.stringify(await this.resolve(root, config, incoming)),
+    );
+    await this.ctx.storage.global.set(
+      `config:${await this.scope(root)}`,
+      config,
+    );
+    return config;
+  }
+  /** The credentials `incoming` makes for `config`: a field left empty keeps
+   *  the one saved for this connection. Checked, not saved. */
+  async resolve(
+    root: string,
+    config: Config,
+    incoming: ConnectionInput,
+  ): Promise<SavedCredentials> {
     let previous: SavedCredentials = { account: "", secret: "" };
     try {
       previous = await this.credentials(root, config);
@@ -90,20 +122,25 @@ export class Settings {
       if ([account, secret, sessionToken].includes(syncPassword))
         throw new SyncError("syncPasswordSeparate");
     }
-    await this.ctx.secrets.set(
-      key,
-      JSON.stringify({
-        account,
-        secret,
-        syncPassword,
-        sessionToken,
-      }),
+    return { account, secret, syncPassword, sessionToken };
+  }
+  /** The sync options alone, not the connection: saved as they change. */
+  async saveOptions(root: string, options: Partial<Config>): Promise<Config> {
+    const picked = Object.fromEntries(
+      OPTIONS.filter((k) => k in options).map((k) => [k, options[k]]),
     );
-    await this.ctx.storage.global.set(
-      `config:${await this.scope(root)}`,
-      config,
-    );
-    return config;
+    const next = normalizeConfig({ ...(await this.load(root)), ...picked });
+    // A keep picked here is this device's to publish (keepPending).
+    if ("keepDays" in options) next.keepPending = true;
+    await this.ctx.storage.global.set(`config:${await this.scope(root)}`, next);
+    return next;
+  }
+  /** The folder's connection removed from this device: its keys and its
+   *  settings. Nothing in the folder or the cloud changes. */
+  async forget(root: string) {
+    const config = await this.load(root);
+    await this.ctx.secrets.delete(await this.secretKey(root, config));
+    await this.ctx.storage.global.set(`config:${await this.scope(root)}`, null);
   }
   /** The folder's keep setting, as a sync left it, taken as this one's. */
   async adoptKeep(root: string, keep: Keep) {

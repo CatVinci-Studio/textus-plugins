@@ -79,10 +79,12 @@ list.addEventListener("keydown", (e) => {
   const all = [...list.querySelectorAll<HTMLElement>(".tx-list-row")];
   const at = all.indexOf(document.activeElement as HTMLElement);
   const to = (
-    { ArrowUp: at - 1, ArrowDown: at + 1, Home: 0, End: all.length - 1 } as Record<
-      string,
-      number
-    >
+    {
+      ArrowUp: at - 1,
+      ArrowDown: at + 1,
+      Home: 0,
+      End: all.length - 1,
+    } as Record<string, number>
   )[e.key];
   if (at < 0 || to === undefined || !all[to]) return;
   e.preventDefault();

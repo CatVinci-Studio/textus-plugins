@@ -3,7 +3,8 @@ import { createServer, type Server } from "node:http";
 import { createHash, createHmac } from "node:crypto";
 import { normalizeConfig } from "./config";
 import { RemoteStore, testConnection, type Fetch } from "./transport";
-import { MemoryLocal, bytes, text } from "./test-fixtures";
+import { MemoryLocal, MemoryStore, bytes, text } from "./test-fixtures";
+import { SyncError } from "./model";
 import { openEncryptedStore } from "./encrypted-store";
 
 const account = "TEST_ACCESS_KEY",
@@ -155,7 +156,10 @@ describe("storage protocols over HTTP", () => {
   it("tells the time by the server's clock, not this device's", async () => {
     const ahead = Date.now() + 86_400_000;
     const store = new RemoteStore(
-      normalizeConfig({ provider: "webdav", endpoint: "https://store.example/dav" }),
+      normalizeConfig({
+        provider: "webdav",
+        endpoint: "https://store.example/dav",
+      }),
       { account, secret },
       async () => ({
         status: 404,
@@ -338,5 +342,24 @@ describe("storage protocols over HTTP", () => {
     const edited = await measure();
     local.files.delete("b.md");
     expect([idle, edited, await measure()]).toEqual(expected);
+  });
+});
+
+it.each([
+  ["create", "permissionWrite"],
+  ["get", "permissionRead"],
+  ["remove", "permissionDelete"],
+] as const)("names the permission a key lacks when %s is refused", async (step, code) => {
+  const store = new MemoryStore();
+  store[step] = async () => {
+    throw new SyncError("permissionError", [403]);
+  };
+  await expect(testConnection(store)).rejects.toMatchObject({ code });
+  // A wrong sign-in is not a missing permission.
+  store[step] = async () => {
+    throw new SyncError("permissionError", [401]);
+  };
+  await expect(testConnection(store)).rejects.toMatchObject({
+    code: "permissionError",
   });
 });

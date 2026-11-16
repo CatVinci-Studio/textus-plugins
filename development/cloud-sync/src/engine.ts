@@ -340,4 +340,3 @@ export async function synchronize(options: Options): Promise<Result> {
     }
   }
 }
-

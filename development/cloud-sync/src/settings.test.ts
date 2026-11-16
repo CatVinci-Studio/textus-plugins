@@ -1,6 +1,6 @@
 import { expect, it } from "vitest";
 import { normalizeConfig } from "./config";
-import { Settings } from "./settings";
+import { Settings, masked } from "./settings";
 
 function fixture() {
   const global = new Map<string, unknown>(),
@@ -18,6 +18,9 @@ function fixture() {
       get: async (k: string) => secrets.get(k),
       set: async (k: string, v: string) => {
         secrets.set(k, v);
+      },
+      delete: async (k: string) => {
+        secrets.delete(k);
       },
     },
   };
@@ -178,4 +181,50 @@ it("needs no sync password without encryption, and reads settings from before 0.
     encrypt: true,
     keepDays: 90,
   });
+});
+it("saves sync options at once without touching the connection or its keys", async () => {
+  const f = fixture();
+  await f.settings.save("/notes", config, {
+    ...encryption,
+    account: "alice",
+    secret: "test-secret",
+  });
+  const secrets = JSON.stringify([...f.secrets]);
+  const next = await f.settings.saveOptions("/notes", {
+    interval: 30,
+    parallel: 2,
+    endpoint: "https://elsewhere.example",
+  } as never);
+  expect(next).toMatchObject({ interval: 30, parallel: 2, endpoint: "https://dav.example" });
+  expect(next.keepPending).toBe(false);
+  expect(JSON.stringify([...f.secrets])).toBe(secrets);
+  expect((await f.settings.saveOptions("/notes", { keepDays: 90 })).keepPending).toBe(true);
+});
+it("tests typed credentials without saving them, keeping a saved key left empty", async () => {
+  const f = fixture();
+  await f.settings.save("/notes", config, {
+    ...encryption,
+    account: "alice",
+    secret: "test-secret",
+  });
+  const before = JSON.stringify([...f.secrets]);
+  const resolved = await f.settings.resolve("/notes", config, { account: "alice", secret: "" });
+  expect(resolved).toMatchObject({ account: "alice", secret: "test-secret" });
+  expect(JSON.stringify([...f.secrets])).toBe(before);
+  await expect(
+    f.settings.resolve("/notes", config, { account: "bob", secret: "" }),
+  ).rejects.toMatchObject({ code: "credentialsRequired" });
+});
+it("disconnects by removing this folder's keys and settings only", async () => {
+  const f = fixture();
+  await f.settings.save("/notes", config, { ...encryption, account: "alice", secret: "a-secret" });
+  await f.settings.save("/other", config, { ...encryption, account: "bob", secret: "b-secret" });
+  await f.settings.forget("/notes");
+  expect(f.secrets.size).toBe(1);
+  await expect(f.settings.credentials("/other", config)).resolves.toMatchObject({ account: "bob" });
+  expect((await f.settings.load("/notes")).endpoint).not.toBe("https://dav.example");
+});
+it("shows an account's start only", () => {
+  expect(masked("alice@example.com")).toBe("alic••••");
+  expect(masked("short")).toBe("••••");
 });

@@ -34,6 +34,8 @@ export interface Config {
   encrypt: boolean;
   /** Days older versions are kept in the remote folder; 0 keeps them for good. */
   keepDays: KeepDays;
+  /** Transfers run at once (PARALLEL). */
+  parallel: number;
   /** keepDays was chosen here and isn't the folder's yet: the next sync
    *  makes it so; until then the folder's setting is taken. */
   keepPending?: boolean;
@@ -172,4 +174,22 @@ export const blockKey = (hash: string) =>
   `v1/blocks/${hash.slice(0, 2)}/${hash}`;
 export function checkAbort(signal?: AbortSignal) {
   if (signal?.aborted) throw new SyncError("cancelled");
+}
+
+/** The choices of transfers at once: more is faster with many small files. */
+export const PARALLEL = [1, 2, 4, 8, 16, 32] as const;
+
+/** What the plugin's pages show, sent to each. */
+export interface ViewState {
+  root: string | null;
+  config: Config;
+  configured: boolean;
+  busy: boolean;
+  message: string;
+  error: boolean;
+  progress: number | null;
+  result?: Result;
+  lastRun?: string;
+  /** The saved account, its start only (masked). */
+  account?: string;
 }

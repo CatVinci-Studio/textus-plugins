@@ -52,7 +52,12 @@
   list.addEventListener("keydown", (e) => {
     const all = [...list.querySelectorAll(".tx-list-row")];
     const at = all.indexOf(document.activeElement);
-    const to = { ArrowUp: at - 1, ArrowDown: at + 1, Home: 0, End: all.length - 1 }[e.key];
+    const to = {
+      ArrowUp: at - 1,
+      ArrowDown: at + 1,
+      Home: 0,
+      End: all.length - 1
+    }[e.key];
     if (at < 0 || to === void 0 || !all[to]) return;
     e.preventDefault();
     all[at].tabIndex = -1;

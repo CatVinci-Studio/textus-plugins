@@ -20,7 +20,8 @@ const DAY = 24 * HOUR;
 const MAX_VERSIONS = 200;
 const time = (iso: string | undefined) => (iso ? Date.parse(iso) : NaN);
 /** When a version stopped being current (written by 0.5.0: when written). */
-export const retiredAt = (v: { at: string; until?: string }) => time(v.until ?? v.at);
+export const retiredAt = (v: { at: string; until?: string }) =>
+  time(v.until ?? v.at);
 
 export const emptyHistory = (): History => ({
   format: FORMAT,
@@ -173,6 +174,9 @@ export function unusedBlocks(
   const used = blocksOf(Object.values(next.files), new Set());
   blocksOf(Object.values(previous.files), used);
   for (const list of Object.values(history.versions)) blocksOf(list, used);
-  blocksOf((next.trash ?? []).map((t) => t.entry), used);
+  blocksOf(
+    (next.trash ?? []).map((t) => t.entry),
+    used,
+  );
   return [...blocksOf(candidates, new Set())].filter((h) => !used.has(h));
 }

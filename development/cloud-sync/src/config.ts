@@ -1,4 +1,10 @@
-import { KEEP_DAYS, SyncError, type Config, type KeepDays } from "./model";
+import {
+  KEEP_DAYS,
+  PARALLEL,
+  SyncError,
+  type Config,
+  type KeepDays,
+} from "./model";
 
 export const defaults: Config = {
   provider: "s3",
@@ -15,16 +21,19 @@ export const defaults: Config = {
   obsidian: false,
   encrypt: false,
   keepDays: 90,
+  parallel: 8,
 };
 // saveGap: a new connection's wait, in minutes, between a save and its
-// sync; Nutstore caps requests per account, so it starts at 3.
+// sync; Nutstore caps requests per account, so it starts at 3, and with
+// few transfers at once (parallel).
 export const providers = {
-  s3: { transport: "s3", endpoint: "", saveGap: 0 },
-  webdav: { transport: "dav", endpoint: "", saveGap: 0 },
+  s3: { transport: "s3", endpoint: "", saveGap: 0, parallel: 8 },
+  webdav: { transport: "dav", endpoint: "", saveGap: 0, parallel: 4 },
   nutstore: {
     transport: "dav",
     endpoint: "https://dav.jianguoyun.com/dav",
     saveGap: 3,
+    parallel: 2,
   },
 } as const;
 
@@ -111,6 +120,9 @@ export function normalizeConfig(input: Partial<Config>): Config {
   c.saveGap = Number(input.saveGap ?? spec.saveGap);
   if (!Number.isInteger(c.saveGap) || c.saveGap < 0 || c.saveGap > 60)
     throw new SyncError("invalidSaveGap");
+  c.parallel = Number(input.parallel ?? spec.parallel);
+  if (!(PARALLEL as readonly number[]).includes(c.parallel))
+    c.parallel = spec.parallel;
   return c;
 }
 
