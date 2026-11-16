@@ -96,7 +96,7 @@ body {
 }
 @supports (height: 1lh) {
   .card .ui-check {
-    margin-top: calc((1lh - var(--check-size, 16px)) / 2);
+    margin-top: calc((1lh - var(--check-size)) / 2);
   }
 }
 .inline-field {
