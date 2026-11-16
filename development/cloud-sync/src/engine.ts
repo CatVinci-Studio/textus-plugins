@@ -1,6 +1,7 @@
 import { isObsidianSetting } from "./config";
 import { hash, parseManifest } from "./content";
 import { conflictPath, moves, plan } from "./planner";
+import { PendingBlocks, resume, type PendingStore } from "./pending";
 import { Pool } from "./pool";
 import { publish } from "./publish";
 import {
@@ -43,6 +44,8 @@ export interface Options {
   progress?: Progress;
   /** Transfers at once (Config.parallel). */
   parallel?: number;
+  /** Where blocks stored by a run that stopped before publishing are kept. */
+  pending?: PendingStore;
 }
 
 export async function download(
@@ -77,17 +80,19 @@ async function upload(
   bytes: Uint8Array,
   known: Known,
   signal?: AbortSignal,
+  onStored: (hash: string) => void = () => {},
 ) {
   let offset = 0;
   for (const block of entry.blocks) {
     checkAbort(signal);
     let stored = known.get(block.hash);
     if (!stored) {
+      const hashed = block.hash;
       stored = putBlock(
         store,
-        block.hash,
+        hashed,
         bytes.subarray(offset, offset + block.size),
-      );
+      ).then(() => onStored(hashed));
       known.set(block.hash, stored);
     }
     await stored;
@@ -123,6 +128,7 @@ export async function synchronize(options: Options): Promise<Result> {
       throw new SyncError("lockLost");
   };
   let completed = false;
+  let blocks: PendingBlocks | undefined;
   const pool = new Pool(options.parallel ?? 4, TRANSFER_BYTES);
   // Downloads fetched a few files ahead of the loop that applies them.
   const fetching = new Map<string, Promise<Uint8Array>>();
@@ -183,6 +189,14 @@ export async function synchronize(options: Options): Promise<Result> {
     for (const entry of Object.values(remote.files))
       for (const block of entry.blocks)
         known.set(block.hash, Promise.resolve());
+    // And the ones a stopped run of this device stored.
+    blocks = new PendingBlocks(
+      store,
+      await resume(store, remote.revision, options.pending),
+      options.pending,
+    );
+    for (const hashed of blocks.hashes) known.set(hashed, Promise.resolve());
+    let begun: Promise<void> | undefined;
     const result: Result = {
       uploaded: 0,
       downloaded: 0,
@@ -366,7 +380,10 @@ export async function synchronize(options: Options): Promise<Result> {
         continue;
       }
       pool.run(l.size, async () => {
-        await upload(store, l, current, known, signal);
+        await (begun ??= blocks!.begin());
+        await upload(store, l, current, known, signal, (hashed) =>
+          blocks!.stored(hashed),
+        );
         next.files[path] = l;
         base.files[path] = l.hash;
         result.uploaded++;
@@ -392,12 +409,14 @@ export async function synchronize(options: Options): Promise<Result> {
       cleanupDue: options.cleanupDue ?? false,
       ownLock,
     });
+    await blocks.done();
     await options.saveBase(base);
     completed = true;
     return result;
   } finally {
     // Nothing of this run still sending when the lock goes.
     await Promise.allSettled([pool.settle(), ...fetching.values()]);
+    if (!completed) await blocks?.save();
     // Cancellation cannot prevent releasing our lock. A lock belonging to a
     // replacement run is never removed, even after manual recovery elsewhere.
     try {

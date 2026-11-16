@@ -164,6 +164,57 @@ suite("workspace synchronization", () => {
     remote.put = put;
     expect((await a.sync(remote)).uploaded).toBe(1);
   });
+  it("goes on where a stopped first upload was, checking no block it stored again - unless the remote changed", async () => {
+    const files = { "a.md": "one", "b.md": "two", "c.md": "three" };
+    const blockOf = async (t: string) => blockKey(await hash(bytes(t)));
+    // A first upload that stops at its third block, then runs again.
+    const stopped = async (between?: (remote: MemoryStore) => Promise<void>) => {
+      const remote = new MemoryStore(),
+        a = new MemoryLocal(files);
+      let kept: unknown = null;
+      const pending = {
+        load: async () => kept,
+        save: async (p: unknown) => void (kept = p),
+      };
+      const put = remote.put.bind(remote);
+      let blocks = 0;
+      remote.put = async (key, value) => {
+        if (key.includes("/blocks/") && ++blocks === 3) throw Error("offline");
+        await put(key, value);
+      };
+      await expect(
+        a.sync(remote, undefined, { pending, parallel: 1 }),
+      ).rejects.toThrow("offline");
+      remote.put = put;
+      await between?.(remote);
+      const checked: string[] = [];
+      const has = remote.has.bind(remote);
+      remote.has = async (key) => (checked.push(key), has(key));
+      const get = remote.get.bind(remote);
+      remote.get = async (key) => (checked.push(key), get(key));
+      expect((await a.sync(remote, undefined, { pending })).uploaded).toBe(3);
+      const stored = [await blockOf("one"), await blockOf("two")];
+      return {
+        recheck: stored.filter((k) => checked.includes(k)).length,
+        kept,
+        leftover: [...remote.values.keys()].filter((k) => k.includes("pending")),
+      };
+    };
+    expect(await stopped()).toEqual({ recheck: 0, kept: null, leftover: [] });
+    // Emptied to start over: the stored blocks may be gone.
+    expect(
+      (await stopped(async (remote) => remote.values.clear())).recheck,
+    ).toBe(2);
+    // Published from elsewhere meanwhile: its clean-up may have taken them.
+    expect(
+      (
+        await stopped((remote) =>
+          new MemoryLocal({ "d.md": "four" }).sync(remote).then(() => {}),
+        )
+      ).recheck,
+    ).toBe(2);
+  });
+
   it("sends and fetches up to its transfers at once, both ways together, never more", async () => {
     const remote = new MemoryStore();
     const docs = Object.fromEntries(

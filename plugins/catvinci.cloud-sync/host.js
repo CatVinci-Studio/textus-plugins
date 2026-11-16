@@ -58,6 +58,73 @@ function checkAbort(signal) {
 }
 var PARALLEL = [1, 2, 4, 8, 16, 32];
 
+// development/cloud-sync/src/pending.ts
+var KEPT = 2e4;
+var SAVE_EVERY = 100;
+var markerKey = (id) => `v1/pending/${id}.json`;
+function parsePending(value) {
+  const p = value;
+  if (!p || typeof p.revision !== "string" || !Array.isArray(p.hashes))
+    return null;
+  return {
+    revision: p.revision,
+    marker: typeof p.marker === "string" ? p.marker : void 0,
+    hashes: p.hashes.filter((h) => typeof h === "string")
+  };
+}
+async function resume(store, revision, saved) {
+  const last = parsePending(await saved?.load());
+  if (last && last.revision === revision && (revision || last.marker && await store.has(markerKey(last.marker))))
+    return last;
+  return { revision, hashes: [] };
+}
+var PendingBlocks = class {
+  constructor(store, pending, saved) {
+    this.store = store;
+    this.pending = pending;
+    this.saved = saved;
+    __publicField(this, "since", 0);
+    __publicField(this, "saving", Promise.resolve());
+  }
+  get hashes() {
+    return this.pending.hashes;
+  }
+  /** Before a first upload stores anything: its marker on the remote. */
+  async begin() {
+    if (this.pending.revision || this.pending.marker) return;
+    const marker = crypto.randomUUID();
+    await this.store.put(markerKey(marker), encode({}));
+    this.pending.marker = marker;
+  }
+  stored(hash3) {
+    this.pending.hashes.push(hash3);
+    if (++this.since >= SAVE_EVERY) void this.save();
+  }
+  /** Kept for the next run: this one stopped before publishing. */
+  save() {
+    if (!this.saved) return Promise.resolve();
+    this.since = 0;
+    const { revision, marker, hashes } = this.pending;
+    const kept = { revision, marker, hashes: hashes.slice(-KEPT) };
+    this.saving = this.saving.then(() => this.saved.save(kept)).catch(() => {
+    });
+    return this.saving;
+  }
+  /** Published: every block is named by the manifest now. */
+  async done() {
+    await this.saving;
+    await this.saved?.save(null).catch(() => {
+    });
+    const { marker } = this.pending;
+    if (marker) await this.store.remove(markerKey(marker)).catch(() => {
+    });
+  }
+};
+var pendingIn = (storage, key) => ({
+  load: () => storage.get(`pending:${key}`),
+  save: (pending) => storage.set(`pending:${key}`, pending)
+});
+
 // development/cloud-sync/src/config.ts
 var defaults = {
   provider: "s3",
@@ -543,17 +610,19 @@ async function download(store, entry, signal) {
   if (await hash(bytes) !== entry.hash) throw new SyncError("integrityError");
   return bytes;
 }
-async function upload(store, entry, bytes, known, signal) {
+async function upload(store, entry, bytes, known, signal, onStored = () => {
+}) {
   let offset = 0;
   for (const block of entry.blocks) {
     checkAbort(signal);
     let stored = known.get(block.hash);
     if (!stored) {
+      const hashed = block.hash;
       stored = putBlock(
         store,
-        block.hash,
+        hashed,
         bytes.subarray(offset, offset + block.size)
-      );
+      ).then(() => onStored(hashed));
       known.set(block.hash, stored);
     }
     await stored;
@@ -585,6 +654,7 @@ async function synchronize(options) {
       throw new SyncError("lockLost");
   };
   let completed = false;
+  let blocks;
   const pool = new Pool(options.parallel ?? 4, TRANSFER_BYTES);
   const fetching = /* @__PURE__ */ new Map();
   try {
@@ -630,6 +700,13 @@ async function synchronize(options) {
     for (const entry of Object.values(remote.files))
       for (const block of entry.blocks)
         known.set(block.hash, Promise.resolve());
+    blocks = new PendingBlocks(
+      store,
+      await resume(store, remote.revision, options.pending),
+      options.pending
+    );
+    for (const hashed of blocks.hashes) known.set(hashed, Promise.resolve());
+    let begun;
     const result = {
       uploaded: 0,
       downloaded: 0,
@@ -788,7 +865,15 @@ async function synchronize(options) {
         continue;
       }
       pool.run(l.size, async () => {
-        await upload(store, l, current, known, signal);
+        await (begun ?? (begun = blocks.begin()));
+        await upload(
+          store,
+          l,
+          current,
+          known,
+          signal,
+          (hashed) => blocks.stored(hashed)
+        );
         next.files[path] = l;
         base.files[path] = l.hash;
         result.uploaded++;
@@ -814,11 +899,13 @@ async function synchronize(options) {
       cleanupDue: options.cleanupDue ?? false,
       ownLock
     });
+    await blocks.done();
     await options.saveBase(base);
     completed = true;
     return result;
   } finally {
     await Promise.allSettled([pool.settle(), ...fetching.values()]);
+    if (!completed) await blocks?.save();
     try {
       await ownLock();
       await store.remove(LOCK);
@@ -1571,6 +1658,8 @@ var EncryptedStore = class {
     if (snapshot) return `v2/snapshots/${snapshot[1]}.bin`;
     const probe = /^v1\/probes\/([0-9a-f-]{36})$/.exec(key);
     if (probe) return `v2/probes/${probe[1]}.bin`;
+    const pending = /^v1\/pending\/([0-9a-f-]{36})\.json$/.exec(key);
+    if (pending) return `v2/pending/${pending[1]}.bin`;
     throw new SyncError("invalidPath");
   }
   async get(key) {
@@ -2530,6 +2619,7 @@ var Controller = class {
         base,
         signal: this.abort.signal,
         saveBase: (next) => this.ctx.storage.global.set(key, next),
+        pending: pendingIn(this.ctx.storage.global, key),
         progress: (phase, current, total) => {
           this.state.progress = total ? current / total : null;
           this.message(phase, false, current, total);
