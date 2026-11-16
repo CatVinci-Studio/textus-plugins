@@ -12,6 +12,7 @@ Nothing pushes, pulls or switches branches. Needs Git installed (on a Mac, the C
 
 ## Changes
 
+- **0.1.1** - The first-commit confirmation's button reads "Commit".
 - **0.1.0** - First version.
 
 <!-- ai-tools -->
