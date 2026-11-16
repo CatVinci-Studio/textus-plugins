@@ -33,8 +33,10 @@ beforeAll(async () => {
     const path = req.url!,
       method = req.method!;
     recorded.push({ method, path, headers: req.headers, body });
-    if (mode === "forbidden") {
-      res.writeHead(403).end("secret should not appear");
+    if (mode === "forbidden" || mode === "unauthorized") {
+      res
+        .writeHead(mode === "forbidden" ? 403 : 401)
+        .end("secret should not appear");
       return;
     }
     if (mode === "retry" && failures++ < 2) {
@@ -256,6 +258,32 @@ describe("storage protocols over HTTP", () => {
       mode = "normal";
     }
     expect(recorded.length - start).toBe(1);
+  });
+  it("names a refused write, but not a wrong sign-in, when testing a connection", async () => {
+    try {
+      mode = "forbidden";
+      await expect(testConnection(make("s3"))).rejects.toMatchObject({
+        code: "permissionWrite",
+      });
+      mode = "unauthorized";
+      await expect(testConnection(make("s3"))).rejects.toMatchObject({
+        code: "permissionError",
+      });
+    } finally {
+      mode = "normal";
+    }
+  });
+  it("creates each WebDAV folder once for uploads sent at once", async () => {
+    const store = make("webdav");
+    const start = recorded.length;
+    await Promise.all(
+      ["a", "b", "c", "d"].map((n) => store.put(`v1/blocks/ab/${n}`, bytes(n))),
+    );
+    const made = recorded
+      .slice(start)
+      .filter((r) => r.method === "MKCOL")
+      .map((r) => r.path);
+    expect(made.length).toBe(new Set(made).size);
   });
   it("retries transient idempotent requests with a bounded budget", async () => {
     mode = "retry";

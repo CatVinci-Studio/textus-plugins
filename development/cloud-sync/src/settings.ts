@@ -142,16 +142,20 @@ export class Settings {
     await this.ctx.secrets.delete(await this.secretKey(root, config));
     await this.ctx.storage.global.set(`config:${await this.scope(root)}`, null);
   }
-  /** The folder's keep setting, as a sync left it, taken as this one's. */
-  async adoptKeep(root: string, keep: Keep) {
+  /** The folder's keep setting, as a sync that carried `carried` left it,
+   *  taken as this one's; false when one was picked meanwhile (it goes out
+   *  with the next sync). */
+  async adoptKeep(root: string, keep: Keep, carried: number) {
     const key = `config:${await this.scope(root)}`;
-    const saved = await this.ctx.storage.global.get(key);
-    if (!saved) return;
+    const saved = (await this.ctx.storage.global.get(key)) as Config | null;
+    if (!saved || (saved.keepPending && saved.keepDays !== carried))
+      return false;
     await this.ctx.storage.global.set(key, {
       ...(saved as Config),
       keepDays: keep.days,
       keepPending: false,
     });
+    return true;
   }
   async baseKey(root: string, config: Config) {
     const { account } = await this.credentials(root, config);

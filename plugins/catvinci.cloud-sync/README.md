@@ -18,8 +18,8 @@ Cloud Sync needs Textus 1.4.1 or later on the desktop.
 4. Choose **Save connection**, then **Sync now**.
 
 On another device, open the matching folder and enter the same service and
-the same remote folder (and, for an encrypted one, the same sync password). Turn on **Sync automatically
-while Textus is open**: it then syncs a few seconds after you save or rename a
+the same remote folder (and, for an encrypted one, the same sync password). Turn on **Sync automatically**
+(while Textus is open): it then syncs a few seconds after you save or rename a
 file, and also every 5 minutes in case nothing triggered it (**Sync interval**: 5 to
 60 minutes). A file you delete goes out with the next sync. **Plugins › Sync
 now** runs a sync at any time.
@@ -284,7 +284,7 @@ and `THIRD_PARTY_NOTICES.md`. The storage design was informed by Petrichor/Sylva
 
 ## Changes
 
-- **0.6.0** - Sync settings rearranged: sync options sit at the top and apply as you pick them, with no Save button. **Sync interval**, **Sync delay**, **Keep cloud history** and the new **Transfers at once** are pickers. A connected service shows as a card with the account masked and **Test connection**, **Edit** and **Disconnect**; the encryption switch and password are part of the connection. **Test connection** works before saving, and names the missing permission (write, read or delete) when a check fails.
+- **0.6.0** - Sync settings rearranged: sync options sit at the top and apply as you pick them, with no Save button. **Sync interval**, **Sync delay**, and **Keep cloud history** are pickers. Files now go up and down several at a time: **Transfers at once** sets how many (S3 8, WebDAV 4, Nutstore 2 to start), and blocks the cloud already holds are no longer checked again. A connected service shows as a card with the account masked and **Test connection**, **Edit** and **Disconnect**; the encryption switch and password are part of the connection. **Test connection** works before saving, and names the missing permission (write, read or delete) when a check fails.
 - **0.5.3** - One set of rules for every service: the automatic interval can be 1 to 1,440 minutes, and **After a save, wait** sets how long a sync waits after saving (Nutstore starts at 3 minutes, S3 and WebDAV at 0; WebDAV no longer waits 30 s).
 - **0.5.2** - The plugin no longer caps its own requests: a first Nutstore sync of a folder with many files no longer stops at "The service request limit was reached".
 - **0.5.1** - A sync interrupted after it wrote the history but before the new state no longer leaves versions in the history that were never synced. Trash and old versions age by the storage server's clock, so a device whose clock is wrong no longer drops what the others keep.

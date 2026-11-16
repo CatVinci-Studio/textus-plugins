@@ -156,6 +156,67 @@ suite("workspace synchronization", () => {
     remote.put = put;
     expect((await a.sync(remote)).uploaded).toBe(1);
   });
+  it("sends and fetches up to its transfers at once, never more", async () => {
+    const remote = new MemoryStore();
+    const docs = Object.fromEntries(
+      Array.from({ length: 12 }, (_, i) => [`n${i}.md`, `note ${i}`]),
+    );
+    let now = 0,
+      most = 0;
+    const slow =
+      <A extends unknown[], R>(run: (...a: A) => Promise<R>) =>
+      async (...args: A) => {
+        most = Math.max(most, ++now);
+        await new Promise((r) => setTimeout(r, 2));
+        now--;
+        return run(...args);
+      };
+    remote.put = slow(remote.put.bind(remote));
+    remote.get = slow(remote.get.bind(remote));
+    expect(
+      (await new MemoryLocal(docs).sync(remote, undefined, { parallel: 4 }))
+        .uploaded,
+    ).toBe(12);
+    expect(most).toBe(4);
+    most = 0;
+    const b = new MemoryLocal();
+    expect((await b.sync(remote, undefined, { parallel: 3 })).downloaded).toBe(
+      12,
+    );
+    expect(most).toBeGreaterThan(1);
+    expect(most).toBeLessThanOrEqual(3);
+    expect(
+      Object.fromEntries([...b.files].map(([k, v]) => [k, text(v)])),
+    ).toEqual(docs);
+  });
+  it("lets every running upload finish before a failed sync gives up its lock", async () => {
+    const remote = new MemoryStore();
+    const put = remote.put.bind(remote);
+    let failed = false;
+    const late: string[] = [];
+    remote.put = async (key, value) => {
+      if (!key.includes("/blocks/")) return put(key, value);
+      // The first fails once the others are on their way.
+      if (!failed) {
+        failed = true;
+        await new Promise((r) => setTimeout(r, 2));
+        throw Error("offline");
+      }
+      await new Promise((r) => setTimeout(r, 5));
+      if (!(await remote.has(LOCK))) late.push(key);
+      await put(key, value);
+    };
+    const docs = Object.fromEntries(
+      Array.from({ length: 8 }, (_, i) => [`n${i}.md`, `note ${i}`]),
+    );
+    await expect(
+      new MemoryLocal(docs).sync(remote, undefined, { parallel: 4 }),
+    ).rejects.toThrow("offline");
+    await new Promise((r) => setTimeout(r, 30));
+    expect(late).toEqual([]);
+    expect(await remote.has(LOCK)).toBe(false);
+    expect(await remote.has(HEAD)).toBe(false);
+  });
   it("rejects a corrupt remote block before changing local content", async () => {
     const remote = new MemoryStore();
     await new MemoryLocal({ "a.md": "valid" }).sync(remote);

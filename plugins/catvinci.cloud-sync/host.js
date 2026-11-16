@@ -298,6 +298,36 @@ function conflictPath(path, hash3) {
   return `Sync conflicts/${safe.slice(0, end)} (${hash3.slice(0, 8)})${safe.slice(end)}`;
 }
 
+// development/cloud-sync/src/pool.ts
+var Pool = class {
+  constructor(limit) {
+    this.limit = limit;
+    __publicField(this, "running", /* @__PURE__ */ new Set());
+    __publicField(this, "failure", null);
+  }
+  check() {
+    if (this.failure) throw this.failure.error;
+  }
+  /** `task` started once a slot is free. */
+  async add(task) {
+    while (this.running.size >= this.limit) await Promise.race(this.running);
+    this.check();
+    const run = task().catch((error) => {
+      this.failure ?? (this.failure = { error });
+    }).finally(() => this.running.delete(run));
+    this.running.add(run);
+  }
+  /** Every task done, or the first failure. */
+  async drain() {
+    while (this.running.size) await Promise.race(this.running);
+    this.check();
+  }
+  /** Every started task settled, failed or not: before the lock goes. */
+  async settle() {
+    while (this.running.size) await Promise.race(this.running);
+  }
+};
+
 // development/cloud-sync/src/history.ts
 var HOUR = 36e5;
 var DAY = 24 * HOUR;
@@ -486,17 +516,25 @@ async function upload(store, entry, bytes, known, signal) {
   let offset = 0;
   for (const block of entry.blocks) {
     checkAbort(signal);
-    if (!known.has(block.hash)) {
-      const key = blockKey(block.hash);
-      if (!await store.has(key))
-        await store.put(key, bytes.subarray(offset, offset + block.size));
-      const actual = await store.get(key);
-      if (!actual || await hash(actual) !== block.hash)
-        throw new SyncError("integrityError");
-      known.add(block.hash);
+    let stored = known.get(block.hash);
+    if (!stored) {
+      stored = putBlock(
+        store,
+        block.hash,
+        bytes.subarray(offset, offset + block.size)
+      );
+      known.set(block.hash, stored);
     }
+    await stored;
     offset += block.size;
   }
+}
+async function putBlock(store, hashed, bytes) {
+  const key = blockKey(hashed);
+  if (!await store.has(key)) await store.put(key, bytes);
+  const actual = await store.get(key);
+  if (!actual || await hash(actual) !== hashed)
+    throw new SyncError("integrityError");
 }
 async function synchronize(options) {
   const { local, store, signal } = options;
@@ -516,6 +554,9 @@ async function synchronize(options) {
       throw new SyncError("lockLost");
   };
   let completed = false;
+  const parallel = options.parallel ?? 4;
+  const uploads = new Pool(parallel);
+  const fetching = /* @__PURE__ */ new Map();
   try {
     await ownLock();
     const raw = await store.get(HEAD);
@@ -555,7 +596,10 @@ async function synchronize(options) {
       Object.entries(lastSynced).filter(([path]) => !local.wants(path))
     );
     if (Object.keys(parked).length) base.parked = parked;
-    const known = /* @__PURE__ */ new Set();
+    const known = /* @__PURE__ */ new Map();
+    for (const entry of Object.values(remote.files))
+      for (const block of entry.blocks)
+        known.set(block.hash, Promise.resolve());
     const result = {
       uploaded: 0,
       downloaded: 0,
@@ -608,7 +652,20 @@ async function synchronize(options) {
       done.add(from).add(to);
       result.moved++;
     }
+    let ahead = 0;
+    const fetchAhead = () => {
+      while (ahead < actions.length && fetching.size < parallel) {
+        const { path, kind } = actions[ahead++];
+        if (kind !== "download" && kind !== "conflict" || done.has(path))
+          continue;
+        const bytes = download(store, remote.files[path], signal);
+        bytes.catch(() => {
+        });
+        fetching.set(path, bytes);
+      }
+    };
     for (let i = 0; i < actions.length; i++) {
+      fetchAhead();
       checkAbort(signal);
       await local.check();
       const { path, kind } = actions[i];
@@ -639,7 +696,8 @@ async function synchronize(options) {
         continue;
       }
       if (kind === "download" || kind === "conflict") {
-        const bytes = await download(store, r, signal);
+        const bytes = await fetching.get(path);
+        fetching.delete(path);
         checkAbort(signal);
         const applied = kind === "download" && await local.apply(path, bytes, l?.hash ?? null);
         if (applied === "deferred") {
@@ -679,11 +737,14 @@ async function synchronize(options) {
         result.deferred.push(path);
         continue;
       }
-      await upload(store, l, current, known, signal);
-      next.files[path] = l;
-      base.files[path] = l.hash;
-      result.uploaded++;
+      await uploads.add(async () => {
+        await upload(store, l, current, known, signal);
+        next.files[path] = l;
+        base.files[path] = l.hash;
+        result.uploaded++;
+      });
     }
+    await uploads.drain();
     checkAbort(signal);
     await local.check();
     await ownLock();
@@ -707,6 +768,7 @@ async function synchronize(options) {
     completed = true;
     return result;
   } finally {
+    await Promise.allSettled([uploads.settle(), ...fetching.values()]);
     try {
       await ownLock();
       await store.remove(LOCK);
@@ -1254,7 +1316,7 @@ var RemoteStore = class {
     this.credentials = credentials;
     this.fetch = fetch2;
     this.sleep = sleep;
-    __publicField(this, "dirs", /* @__PURE__ */ new Set());
+    __publicField(this, "dirs", /* @__PURE__ */ new Map());
     /** The server's clock minus ours, from its last answer's Date. */
     __publicField(this, "skew", 0);
     __publicField(this, "cache", /* @__PURE__ */ new Map());
@@ -1329,17 +1391,24 @@ var RemoteStore = class {
     let path = "";
     for (const part of parts) {
       path += `${encodeURIComponent(part)}/`;
-      if (this.dirs.has(path)) continue;
-      const url = `${this.config.endpoint}/${path}`;
-      const res = await this.request("MKCOL", url);
-      const made = res.status >= 200 && res.status < 300;
-      if (!made && !await this.isFolder(url)) {
-        if ([401, 403, 429, 507].includes(res.status)) this.require(res);
-        throw new SyncError("folderNotCreated", [
-          decodeURIComponent(path.slice(0, -1))
-        ]);
+      let made = this.dirs.get(path);
+      if (!made) {
+        made = this.folder(path);
+        this.dirs.set(path, made);
+        made.catch(() => this.dirs.delete(path));
       }
-      this.dirs.add(path);
+      await made;
+    }
+  }
+  async folder(path) {
+    const url = `${this.config.endpoint}/${path}`;
+    const res = await this.request("MKCOL", url);
+    const made = res.status >= 200 && res.status < 300;
+    if (!made && !await this.isFolder(url)) {
+      if ([401, 403, 429, 507].includes(res.status)) this.require(res);
+      throw new SyncError("folderNotCreated", [
+        decodeURIComponent(path.slice(0, -1))
+      ]);
     }
   }
   async isFolder(url) {
@@ -1968,16 +2037,20 @@ var Settings = class {
     await this.ctx.secrets.delete(await this.secretKey(root, config));
     await this.ctx.storage.global.set(`config:${await this.scope(root)}`, null);
   }
-  /** The folder's keep setting, as a sync left it, taken as this one's. */
-  async adoptKeep(root, keep) {
+  /** The folder's keep setting, as a sync that carried `carried` left it,
+   *  taken as this one's; false when one was picked meanwhile (it goes out
+   *  with the next sync). */
+  async adoptKeep(root, keep, carried) {
     const key = `config:${await this.scope(root)}`;
     const saved = await this.ctx.storage.global.get(key);
-    if (!saved) return;
+    if (!saved || saved.keepPending && saved.keepDays !== carried)
+      return false;
     await this.ctx.storage.global.set(key, {
       ...saved,
       keepDays: keep.days,
       keepPending: false
     });
+    return true;
   }
   async baseKey(root, config) {
     const { account } = await this.credentials(root, config);
@@ -2389,8 +2462,12 @@ var Controller = class {
         // The folder's setting, once published, is this device's too.
         onKeep: async (keep) => {
           if (keep.days === config.keepDays && !config.keepPending) return;
-          await this.settings.adoptKeep(root, keep);
-          if (this.state.root === root)
+          const adopted = await this.settings.adoptKeep(
+            root,
+            keep,
+            config.keepDays
+          );
+          if (adopted && this.state.root === root)
             this.state.config = {
               ...this.state.config,
               keepDays: keep.days,
@@ -2399,6 +2476,7 @@ var Controller = class {
         },
         device: await deviceName(this.ctx, this.api),
         cleanupDue,
+        parallel: config.parallel,
         base,
         signal: this.abort.signal,
         saveBase: (next) => this.ctx.storage.global.set(key, next),

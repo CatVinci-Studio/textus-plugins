@@ -249,3 +249,28 @@ it("shows an account's start only", () => {
   expect(masked("alice@example.com")).toBe("alic••••");
   expect(masked("short")).toBe("••••");
 });
+it("keeps a history choice picked while a sync ran over what that sync found", async () => {
+  const f = fixture();
+  await f.settings.save("/notes", config, {
+    ...encryption,
+    account: "alice",
+    secret: "test-secret",
+  });
+  const carried = (await f.settings.load("/notes")).keepDays;
+  await f.settings.saveOptions("/notes", { keepDays: 30 });
+  expect(
+    await f.settings.adoptKeep(
+      "/notes",
+      { days: 365, at: "" } as never,
+      carried,
+    ),
+  ).toBe(false);
+  expect(await f.settings.load("/notes")).toMatchObject({
+    keepDays: 30,
+    keepPending: true,
+  });
+  expect(await f.settings.adoptKeep("/notes", { days: 30, at: "" }, 30)).toBe(
+    true,
+  );
+  expect((await f.settings.load("/notes")).keepPending).toBe(false);
+});

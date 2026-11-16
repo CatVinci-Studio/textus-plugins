@@ -1,6 +1,7 @@
 import { isObsidianSetting } from "./config";
 import { hash, parseManifest } from "./content";
 import { conflictPath, moves, plan } from "./planner";
+import { Pool } from "./pool";
 import { publish } from "./publish";
 import {
   FORMAT,
@@ -36,6 +37,8 @@ export interface Options {
   cleanupDue?: boolean;
   signal?: AbortSignal;
   progress?: Progress;
+  /** Transfers at once (Config.parallel). */
+  parallel?: number;
 }
 
 export async function download(
@@ -61,28 +64,39 @@ export async function download(
   return bytes;
 }
 
+/** Each block sent once: by hash, the ones stored or being stored. */
+type Known = Map<string, Promise<void>>;
+
 async function upload(
   store: ObjectStore,
   entry: Entry,
   bytes: Uint8Array,
-  known: Set<string>,
+  known: Known,
   signal?: AbortSignal,
 ) {
   let offset = 0;
   for (const block of entry.blocks) {
     checkAbort(signal);
-    if (!known.has(block.hash)) {
-      const key = blockKey(block.hash);
-      if (!(await store.has(key)))
-        await store.put(key, bytes.subarray(offset, offset + block.size));
-      // A stored block's name alone is not proof of its contents.
-      const actual = await store.get(key);
-      if (!actual || (await hash(actual)) !== block.hash)
-        throw new SyncError("integrityError");
-      known.add(block.hash);
+    let stored = known.get(block.hash);
+    if (!stored) {
+      stored = putBlock(
+        store,
+        block.hash,
+        bytes.subarray(offset, offset + block.size),
+      );
+      known.set(block.hash, stored);
     }
+    await stored;
     offset += block.size;
   }
+}
+async function putBlock(store: ObjectStore, hashed: string, bytes: Uint8Array) {
+  const key = blockKey(hashed);
+  if (!(await store.has(key))) await store.put(key, bytes);
+  // A stored block's name alone is not proof of its contents.
+  const actual = await store.get(key);
+  if (!actual || (await hash(actual)) !== hashed)
+    throw new SyncError("integrityError");
 }
 
 export async function synchronize(options: Options): Promise<Result> {
@@ -105,6 +119,10 @@ export async function synchronize(options: Options): Promise<Result> {
       throw new SyncError("lockLost");
   };
   let completed = false;
+  const parallel = options.parallel ?? 4;
+  const uploads = new Pool(parallel);
+  // Downloads fetched a few files ahead of the loop that applies them.
+  const fetching = new Map<string, Promise<Uint8Array>>();
   try {
     await ownLock();
     const raw = await store.get(HEAD);
@@ -157,7 +175,11 @@ export async function synchronize(options: Options): Promise<Result> {
       Object.entries(lastSynced).filter(([path]) => !local.wants(path)),
     );
     if (Object.keys(parked).length) base.parked = parked;
-    const known = new Set<string>();
+    // Blocks the folder's files use are stored already.
+    const known: Known = new Map();
+    for (const entry of Object.values(remote.files))
+      for (const block of entry.blocks)
+        known.set(block.hash, Promise.resolve());
     const result: Result = {
       uploaded: 0,
       downloaded: 0,
@@ -221,7 +243,19 @@ export async function synchronize(options: Options): Promise<Result> {
       done.add(from).add(to);
       result.moved++;
     }
+    let ahead = 0;
+    const fetchAhead = () => {
+      while (ahead < actions.length && fetching.size < parallel) {
+        const { path, kind } = actions[ahead++];
+        if ((kind !== "download" && kind !== "conflict") || done.has(path))
+          continue;
+        const bytes = download(store, remote.files[path], signal);
+        bytes.catch(() => {});
+        fetching.set(path, bytes);
+      }
+    };
     for (let i = 0; i < actions.length; i++) {
+      fetchAhead();
       checkAbort(signal);
       await local.check();
       const { path, kind } = actions[i];
@@ -254,7 +288,8 @@ export async function synchronize(options: Options): Promise<Result> {
         continue;
       }
       if (kind === "download" || kind === "conflict") {
-        const bytes = await download(store, r, signal);
+        const bytes = await fetching.get(path)!;
+        fetching.delete(path);
         checkAbort(signal);
         const applied =
           kind === "download" &&
@@ -302,11 +337,14 @@ export async function synchronize(options: Options): Promise<Result> {
         result.deferred.push(path);
         continue;
       }
-      await upload(store, l, current, known, signal);
-      next.files[path] = l;
-      base.files[path] = l.hash;
-      result.uploaded++;
+      await uploads.add(async () => {
+        await upload(store, l, current, known, signal);
+        next.files[path] = l;
+        base.files[path] = l.hash;
+        result.uploaded++;
+      });
     }
+    await uploads.drain();
     checkAbort(signal);
     await local.check();
     await ownLock();
@@ -330,6 +368,8 @@ export async function synchronize(options: Options): Promise<Result> {
     completed = true;
     return result;
   } finally {
+    // Nothing of this run still sending when the lock goes.
+    await Promise.allSettled([uploads.settle(), ...fetching.values()]);
     // Cancellation cannot prevent releasing our lock. A lock belonging to a
     // replacement run is never removed, even after manual recovery elsewhere.
     try {

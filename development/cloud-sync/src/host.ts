@@ -289,8 +289,12 @@ class Controller {
         // The folder's setting, once published, is this device's too.
         onKeep: async (keep) => {
           if (keep.days === config.keepDays && !config.keepPending) return;
-          await this.settings.adoptKeep(root, keep);
-          if (this.state.root === root)
+          const adopted = await this.settings.adoptKeep(
+            root,
+            keep,
+            config.keepDays,
+          );
+          if (adopted && this.state.root === root)
             this.state.config = {
               ...this.state.config,
               keepDays: keep.days,
@@ -299,6 +303,7 @@ class Controller {
         },
         device: await deviceName(this.ctx, this.api),
         cleanupDue,
+        parallel: config.parallel,
         base,
         signal: this.abort.signal,
         saveBase: (next) => this.ctx.storage.global.set(key, next),

@@ -15,7 +15,7 @@ const encodePath = (path: string) =>
 const pause = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 export class RemoteStore implements ObjectStore {
-  private dirs = new Set<string>();
+  private dirs = new Map<string, Promise<void>>();
   /** The server's clock minus ours, from its last answer's Date. */
   private skew = 0;
   private cache = new Map<string, ArrayBuffer>();
@@ -114,19 +114,27 @@ export class RemoteStore implements ObjectStore {
     let path = "";
     for (const part of parts) {
       path += `${encodeURIComponent(part)}/`;
-      if (this.dirs.has(path)) continue;
-      const url = `${this.config.endpoint}/${path}`;
-      const res = await this.request("MKCOL", url);
-      // Servers answer "already there" differently (Nutstore with 409, others
-      // 405), so a refused MKCOL is checked before it counts as a failure.
-      const made = res.status >= 200 && res.status < 300;
-      if (!made && !(await this.isFolder(url))) {
-        if ([401, 403, 429, 507].includes(res.status)) this.require(res);
-        throw new SyncError("folderNotCreated", [
-          decodeURIComponent(path.slice(0, -1)),
-        ]);
+      // Shared, so uploads at once make each folder once.
+      let made = this.dirs.get(path);
+      if (!made) {
+        made = this.folder(path);
+        this.dirs.set(path, made);
+        made.catch(() => this.dirs.delete(path));
       }
-      this.dirs.add(path);
+      await made;
+    }
+  }
+  private async folder(path: string) {
+    const url = `${this.config.endpoint}/${path}`;
+    const res = await this.request("MKCOL", url);
+    // Servers answer "already there" differently (Nutstore with 409, others
+    // 405), so a refused MKCOL is checked before it counts as a failure.
+    const made = res.status >= 200 && res.status < 300;
+    if (!made && !(await this.isFolder(url))) {
+      if ([401, 403, 429, 507].includes(res.status)) this.require(res);
+      throw new SyncError("folderNotCreated", [
+        decodeURIComponent(path.slice(0, -1)),
+      ]);
     }
   }
   private async isFolder(url: string): Promise<boolean> {

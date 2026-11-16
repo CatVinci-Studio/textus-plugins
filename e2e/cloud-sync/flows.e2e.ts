@@ -387,7 +387,7 @@ test("configuration errors preserve input and Chinese UI fits narrow and dark vi
     path: `test-results/cloud-sync-${test.info().project.name}-narrow.png`,
     fullPage: true,
   });
-  await evidence(page, "chinese-dark-narrow", "#sync-password");
+  await evidence(page, "chinese-dark-narrow", "#connected");
   remote.failure = 403;
   await panel.locator("#test-saved").click();
   await expect(panel.locator("#status")).toContainText("认证或权限不足");
@@ -567,4 +567,26 @@ test("password confirmation errors retain input and an old plaintext directory i
   await panel.locator("#sync").click();
   await expect(panel.locator("#status")).toContainText("isn't encrypted");
   expect([...remote.files]).toEqual([["/dav/textus/notes/v1/head.json", old]]);
+});
+
+test("the connection card fits a narrow panel in German, the longest words", async ({
+  page,
+}) => {
+  const panel = await open(
+    page,
+    new Remote(),
+    { "/work/notes/a.md": "x" },
+    "de",
+  );
+  await pickProvider(page, "webdav", "de");
+  await panel.locator("#endpoint").fill("https://fixture.invalid/dav");
+  await panel.locator("#account").fill("fixture-account");
+  await panel.locator("#secret").fill("fixture-secret");
+  await panel.locator("#save").click();
+  await expect(panel.locator("#connected")).toBeVisible();
+  await page.setViewportSize({ width: 560, height: 780 });
+  const [content, view] = await panel
+    .locator("body")
+    .evaluate((body) => [body.scrollWidth, body.clientWidth]);
+  expect(content).toBeLessThanOrEqual(view);
 });
