@@ -1,0 +1,24 @@
+{
+  "id": "your-name.spoilers",
+  "name": "%name%",
+  "version": "0.1.0",
+  "publisher": "your-name",
+  "description": "%description%",
+  "license": "MIT",
+  "engines": {
+    "textus": ">=1.4.4-rc.1"
+  },
+  "main": "host.js",
+  "permissions": [],
+  "activationEvents": ["onStartupFinished"],
+  "l10n": {
+    "en": {
+      "name": "Spoilers and Readings",
+      "description": "Shows ||a spoiler|| covered until you point at it, and {漢字|かんじ} with its reading above the words. The text stays as you wrote it."
+    },
+    "zh": {
+      "name": "剧透与注音",
+      "description": "把 ||剧透|| 遮住，指上去才显示；把 {漢字|かんじ} 的读音标在字上方。原文保持不变。"
+    }
+  }
+}
