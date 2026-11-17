@@ -134,21 +134,6 @@
     section.className = "tx-lane list";
     const head = document.createElement("div");
     head.className = "tx-lane-head list-head";
-    // A list moves by its head, the others making way.
-    head.addEventListener("pointerdown", (e) => {
-      if (e.target.closest("input, button, textarea, [contenteditable]")) return;
-      drag.sortable(e, {
-        item: section,
-        axis: "x",
-        lists: () => [$("board")],
-        itemsOf: (b) => [...b.children].filter((n) => n.classList.contains("list")),
-        onDrop: (_board, index) => {
-          board.lists.splice(board.lists.indexOf(list), 1);
-          board.lists.splice(index, 0, list);
-          changed();
-        },
-      });
-    });
     const title = document.createElement("span");
     title.className = "list-title";
     title.textContent = list.title;
@@ -203,6 +188,18 @@
     section.append(head, cards, add);
     return section;
   }
+
+  // A list moves by its head, the others making way; not while its title
+  // is being written.
+  window.textus.drag.reorder($("board"), {
+    items: ".list",
+    handle: ".list-head:not(:has(input, textarea, [contenteditable]))",
+    axis: "x",
+    onDrop: (from, to) => {
+      board.lists.splice(to, 0, board.lists.splice(from, 1)[0]);
+      changed();
+    },
+  });
 
   function render() {
     const root = $("board");

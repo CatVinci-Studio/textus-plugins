@@ -21,24 +21,22 @@ window.databaseViews = function (page) {
         capped(g.rels).map((rel) => card(byRel.get(rel), key, g.value)),
         moreMark(g.rels.length),
         newButton(groupProps(key, g.value)));
-      // A list moved by its head, the others making way: the board's order,
-      // kept in the base (groupOrder).
-      head.addEventListener("pointerdown", (e) =>
-        drag.sortable(e, {
-          item: lane,
-          axis: "x",
-          lists: () => [lane.parentElement],
-          itemsOf: (b) => [...b.children],
-          onDrop: (_board, index) => {
-            const order = page.data.groups.map((x) => x.value).filter((v) => v !== g.value);
-            order.splice(index, 0, g.value);
-            if (order.join("\n") !== page.data.groups.map((x) => x.value).join("\n")) setSpec({ groupOrder: order });
-            else render();
-          },
-        }));
       return lane;
     });
-    return el("div", { class: "tx-board board" }, lanes);
+    const lanesBox = el("div", { class: "tx-board board" }, lanes);
+    // A list moved by its head, the others making way: the board's order,
+    // kept in the base (groupOrder).
+    window.textus.drag.reorder(lanesBox, {
+      items: ".lane",
+      handle: ".lane-head",
+      axis: "x",
+      onDrop: (from, to) => {
+        const order = page.data.groups.map((x) => x.value);
+        order.splice(to, 0, order.splice(from, 1)[0]);
+        setSpec({ groupOrder: order });
+      },
+    });
+    return lanesBox;
   }
 
   function groupProps(key, value) {

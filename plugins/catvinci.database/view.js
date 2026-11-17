@@ -180,21 +180,19 @@
   /** The handle at a column head's right edge: dragged, the column's width,
    *  kept in the base (columnSize); a double click goes back to fitting. */
   function resizer(key) {
-    const handle = el("span", { class: "col-resize", "aria-hidden": "true" });
+    const handle = el("span", { class: "col-resize", "aria-label": s("columnWidth") });
     handle.addEventListener("click", (e) => e.stopPropagation());
     handle.addEventListener("dblclick", (e) => {
       e.stopPropagation();
       setSpec({ width: { key: key, px: 0 } });
     });
-    handle.addEventListener("pointerdown", (e) => {
-      e.stopPropagation();
-      const frame = handle.closest(".tx-table-frame");
-      const from = handle.parentElement.getBoundingClientRect().width;
-      let px = from;
-      drag.track(e, {
-        move: (x) => sizeColumn(frame, key, (px = Math.max(MIN_COLUMN, Math.round(from + x - e.clientX)))),
-        end: (_x, _y, dropped) => (dropped ? setSpec({ width: { key: key, px: px } }) : sizeColumn(frame, key, widthsOf(key))),
-      });
+    // Not the column's own drag by its head.
+    handle.addEventListener("pointerdown", (e) => e.stopPropagation());
+    window.textus.resizeHandle(handle, {
+      min: MIN_COLUMN,
+      get: () => handle.parentElement.getBoundingClientRect().width,
+      set: (px) => sizeColumn(handle.closest(".tx-table-frame"), key, Math.round(px)),
+      done: (px) => setSpec({ width: { key: key, px: Math.round(px) } }),
     });
     return handle;
   }
