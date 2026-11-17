@@ -14,11 +14,54 @@
   "l10n": {
     "en": {
       "name": "Spoilers and Readings",
-      "description": "Shows ||a spoiler|| covered until you point at it, and {漢字|かんじ} with its reading above the words. The text stays as you wrote it."
+      "description": "Shows ||a spoiler|| covered until you point at it, and {漢字|かんじ} with its reading above the words. The text stays as you wrote it.",
+      "snippet.spoiler": "Spoiler",
+      "snippet.ruby": "Reading over words",
+      "walk.title": "Getting Started",
+      "walk.spoiler": "Hide a spoiler",
+      "walk.spoilerHow": "Type /spoiler, or put the words between || and ||. Point at them to read them.",
+      "walk.ruby": "Set a reading over words",
+      "walk.rubyHow": "Write {漢字|かんじ}: the words, a bar, then their reading."
     },
     "zh": {
       "name": "剧透与注音",
-      "description": "把 ||剧透|| 遮住，指上去才显示；把 {漢字|かんじ} 的读音标在字上方。原文保持不变。"
+      "description": "把 ||剧透|| 遮住，指上去才显示；把 {漢字|かんじ} 的读音标在字上方。原文保持不变。",
+      "snippet.spoiler": "剧透",
+      "snippet.ruby": "注音",
+      "walk.title": "上手",
+      "walk.spoiler": "遮住剧透",
+      "walk.spoilerHow": "输入 /剧透，或者把文字放在 || 和 || 之间。指上去就能看到。",
+      "walk.ruby": "给文字注音",
+      "walk.rubyHow": "写成 {漢字|かんじ}：文字、竖线，再写读音。"
     }
+  },
+  "contributes": {
+    "snippets": [
+      {
+        "label": "%snippet.spoiler%",
+        "body": "||$0||",
+        "keywords": "spoiler"
+      },
+      {
+        "label": "%snippet.ruby%",
+        "body": "{$0|}",
+        "keywords": "ruby reading furigana"
+      }
+    ],
+    "walkthroughs": [
+      {
+        "title": "%walk.title%",
+        "steps": [
+          {
+            "title": "%walk.spoiler%",
+            "description": "%walk.spoilerHow%"
+          },
+          {
+            "title": "%walk.ruby%",
+            "description": "%walk.rubyHow%"
+          }
+        ]
+      }
+    ]
   }
 }

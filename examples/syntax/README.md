@@ -6,4 +6,6 @@
 
 The Markdown stays as you wrote it, and exports keep it. Shows
 `textus.editor.registerSyntax` (API 1.8, preview), which needs no
-permission.
+permission, and two manifest keys that need no code:
+`contributes.snippets` (/spoiler in the `/` menu) and
+`contributes.walkthroughs` (first steps on the plugin's page in Settings).
