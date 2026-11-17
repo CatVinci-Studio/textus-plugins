@@ -1,0 +1,39 @@
+{
+  "id": "your-name.plain-text",
+  "name": "%name%",
+  "version": "0.1.0",
+  "publisher": "your-name",
+  "description": "%description%",
+  "license": "MIT",
+  "engines": {
+    "textus": ">=1.4.4-rc.1"
+  },
+  "platforms": ["desktop"],
+  "main": "host.js",
+  "permissions": ["editor.read"],
+  "activationEvents": ["onStartupFinished"],
+  "contributes": {
+    "commands": [
+      {
+        "command": "your-name.plain-text.count",
+        "title": "%count%"
+      }
+    ]
+  },
+  "l10n": {
+    "en": {
+      "name": "Plain Text",
+      "description": "Adds Plain Text (.txt) to File › Export, and counts the words of a selection from the editor's right-click menu.",
+      "format": "Plain Text",
+      "count": "Count Selected Words",
+      "words": "{0} words selected"
+    },
+    "zh": {
+      "name": "纯文本",
+      "description": "在「文件 › 导出」里加上纯文本（.txt），并在编辑器右键菜单里统计选中文字的字数。",
+      "format": "纯文本",
+      "count": "统计选中字数",
+      "words": "选中了 {0} 个字"
+    }
+  }
+}

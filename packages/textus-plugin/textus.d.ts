@@ -1,7 +1,7 @@
 /**
- * The Textus plugin API, 1.7: the `textus` object a plugin's code is given
- * (src/plugins/host/runtime/host.js), the context its `activate` receives, and
- * `acquireTextusApi()` in its webviews (runtime/webview.js). The one source
+ * The Textus plugin API, 1.8: the `textus` object a plugin's code is given
+ * (src/plugins/host/host-runtime.ts), the context its `activate` receives, and
+ * `acquireTextusApi()` in its webviews (webview-runtime.ts). The one source
  * of truth: docs/dev/plugins/guide.md explains it, the reference pages are
  * made from it, Textus AI writes plugins from it, and
  * src/plugins/host/textus-types.test.ts keeps it in step with the runtime.
@@ -52,6 +52,8 @@ declare global {
     interface Location {
       path: string;
       line?: number;
+      /** The column in `line`, from 0. From 1.8. */
+      ch?: number;
       heading?: string;
       block?: string;
       text?: string;
@@ -142,6 +144,9 @@ declare global {
       editor: Editor;
       files: Files;
       metadata: Metadata;
+      /** From 1.4.3: the folder's Git history (files.read; committing,
+       *  git.commit). Desktop only. */
+      git: Git;
       /** From 1.3.10: no permission, nothing leaves the plugin's frame. */
       dates: Dates;
       templates: Templates;
@@ -161,13 +166,18 @@ declare global {
       appearance: Appearance;
       /** 1.7: text as the app reads it. */
       text: Text;
+      /** From 1.8: paths worked out in the plugin's frame; no permission. */
+      path: Path;
+      /** From 1.8: past versions kept elsewhere (Git, sync), offered by one
+       *  plugin and read by another (files.read). */
+      history: History;
     }
 
     interface Env {
       /** Textus's UI language ("en", "zh", "zh-Hant", ...). */
       readonly language: string;
       readonly appVersion: string;
-      /** This API's version: "1.7" from Textus 1.4.3 ("1.6": 1.4.2, "1.5": 1.3.13-rc.1,
+      /** This API's version: "1.8" from Textus 1.4.4 ("1.7": 1.4.3, "1.6": 1.4.2, "1.5": 1.3.13-rc.1,
        *  "1.4": 1.3.10, "1.3": 1.3.10-rc.1, "1.2": 1.3.9, "1.1": 1.3.0-beta.8). Prefer engines.textus; compare
        *  it as numbers, not as text ("1.10" > "1.9"). */
       readonly apiVersion: string;
@@ -231,6 +241,21 @@ declare global {
     // ---------------------------------------------------------------
 
     interface Ui {
+      /** Items for a right-click menu - the editor's or the file tree's -
+       *  worked out as it opens, from what it was opened on (the file; in
+       *  the editor also the selected text). Each item runs a command with
+       *  its args. Answers after 0.5 s are left out. No permission; the
+       *  command needs its own. From 1.8. */
+      registerContextMenu(
+        where: "editor" | "fileTree",
+        provide: (target: {
+          path: string | null;
+          folder?: boolean;
+          selectedText?: string;
+        }) =>
+          | { label: string; command: string; args?: unknown[] }[]
+          | Promise<{ label: string; command: string; args?: unknown[] }[]>,
+      ): Disposable;
       /** A short note at the bottom of the window that goes by itself.
        *  With `action` ("Undo"), a button on it: resolves true when it was
        *  clicked before the note went, false otherwise (Textus 1.3.12). */
@@ -534,9 +559,11 @@ declare global {
        *  From 1.3.10. */
       onMove?(item: ListItem, target: ListItem): void | Promise<void>;
       /** What the field over the list says; without it, there is no
-       *  field. The list filters itself by label, description and detail. */
+       *  field. The list filters itself by label, description and detail.
+       *  A `%key%` of the manifest's `l10n` follows the UI language (from
+       *  1.4.3); plain text stays as given. */
       filterPlaceholder?: string;
-      /** Shown when there are no items. */
+      /** Shown when there are no items; a `%key%` as above. */
       emptyText?: string;
     }
 
@@ -572,7 +599,7 @@ declare global {
     interface ListView extends Disposable {
       /** Asks the provider again. */
       refresh(): void;
-      /** A line over the list ("12 tasks"); "" for none. */
+      /** A line over the list ("12 tasks"), or a `%key%`; "" for none. */
       setMessage(text: string): void;
     }
 
@@ -628,6 +655,10 @@ declare global {
       /** Its Markdown (editor.read). */
       getText(): Promise<string | null>;
       getSelection(): Promise<{ text: string; markdown: string | null } | null>;
+      /** Where the caret is in the document's Markdown: its path, line and
+       *  column (from 0); null with no document in front (editor.read).
+       *  From 1.8. */
+      getCursor(): Promise<Location | null>;
       /** Its blocks as Textus AI is shown them (editor.read). */
       getBlocks(): Promise<Block[] | null>;
       getOutline(): Promise<
@@ -665,6 +696,21 @@ declare global {
       registerPasteHandler(
         pattern: RegExp | string,
         provide: (text: string) => string | null | Promise<string | null>,
+      ): Disposable;
+      /** The blocks the `/` menu can offer now: Textus's own (`source`
+       *  "textus": its id as `textus.insertBlock` takes it) and plugins'.
+       *  From 1.8. */
+      blockTypes(): Promise<{ id: string; label: string; source: string }[]>;
+      /** A block of the plugin's own in the `/` menu: `insert` puts it in at
+       *  the caret (with the plugin's own calls, which need their
+       *  permissions). `keywords` find it too ("kanban board"). From 1.8. */
+      registerBlockType(
+        id: string,
+        type: {
+          label: string;
+          keywords?: string;
+          insert(): void | Promise<void>;
+        },
       ): Disposable;
       /** From 1.6 (editor.read): rows added to the outline of the document
        *  in front, under its headings - a screenplay's scenes, a novel's
@@ -711,6 +757,10 @@ declare global {
         text: string;
         empty: boolean;
         block: string | null;
+        /** From 1.8: where the selection starts and the caret is, in the
+         *  document's Markdown (lines and columns from 0). */
+        anchor?: { line: number; ch: number };
+        head?: { line: number; ch: number };
       }>;
       /** From 1.6: the first and last block in sight changed, once
        *  scrolling or an edit rests (editor.read). */
@@ -1180,15 +1230,62 @@ declare global {
     }
 
     interface Frontmatter {
-      /** The YAML at the top of a document, as an object; {} for none. */
+      /** The YAML at the top of a document, as an object; {} for none.
+       *  From 1.8 read by a full YAML parser (block text, lists of maps). */
       get(path: string): Promise<Record<string, unknown>>;
-      /** Changes it through files.process; the rest of the file untouched. */
+      /** Changes it through files.process; the rest of the file untouched.
+       *  From 1.8 the keys that didn't change, and every comment, stay as
+       *  written. */
       update(
         path: string,
         change: (
           frontmatter: Record<string, unknown>,
         ) => Record<string, unknown> | void,
       ): Promise<void>;
+    }
+
+    // ---------------------------------------------------------------
+    // git: the open folder's Git history, read with the user's own git
+    // (desktop; elsewhere status() is null and the rest refuse). Files.read;
+    // commit needs git.commit. No push, pull or switching branches.
+    // ---------------------------------------------------------------
+
+    interface GitChange {
+      path: string;
+      state:
+        | "modified"
+        | "added"
+        | "deleted"
+        | "renamed"
+        | "untracked"
+        | "conflicted";
+      /** In the index already (`git add`ed). */
+      staged: boolean;
+    }
+
+    interface GitCommit {
+      hash: string;
+      /** When it was committed, in ms since 1970. */
+      at: number;
+      author: string;
+      subject: string;
+      /** The file's path in this commit; it may have been renamed since. */
+      path: string;
+    }
+
+    interface Git {
+      /** The branch (null when detached) and the changed files of the
+       *  open folder; null when it is in no repository or git isn't there.
+       *  Hidden files are left out. */
+      status(): Promise<{ branch: string | null; changes: GitChange[] } | null>;
+      /** `path`'s commits, newest first, through renames (100, at most 500). */
+      log(path: string, options?: { limit?: number }): Promise<GitCommit[]>;
+      /** The file as commit `hash` had it at `path` (a GitCommit's path);
+       *  null when it had none there, or it isn't text. */
+      show(hash: string, path: string): Promise<string | null>;
+      /** Commits the changes of `paths` only, with `message`, as the user's
+       *  git does (hooks, signing): the new commit's hash. git.commit. */
+      commit(message: string, paths: string[]): Promise<string>;
     }
 
     // ---------------------------------------------------------------
@@ -1234,6 +1331,10 @@ declare global {
         },
       ): Promise<string>;
       tags(): Promise<{ tag: string; count: number }[]>;
+      /** Sets the box of the task at `location` (a Task's) to `status`:
+       *  "x" done, " " open, or any one character. Needs files.write.
+       *  From 1.8. */
+      setTask(location: Location, status: string): Promise<void>;
       tasks(filter?: {
         done?: boolean;
         path?: string;
@@ -1304,7 +1405,10 @@ declare global {
 
     interface Task {
       text: string;
+      /** Anything but a space in its box. */
       done: boolean;
+      /** The character in its box: " ", "x", "-", "/"... From 1.8. */
+      status: string;
       /** From 📅 2026-11-01 or due:2026-11-01. */
       due: string | null;
       tags: string[];
@@ -1318,13 +1422,17 @@ declare global {
     // ---------------------------------------------------------------
 
     interface Net {
-      /** HTTPS to the hosts granted (`network:<host>`); no cookies. */
+      /** HTTPS to the hosts granted (`network:<host>`); no cookies. Each
+       *  plugin's requests share kept connections (HTTP/2 where the server
+       *  has it). `signal` aborted stops the request at once; it then
+       *  rejects with an `AbortError` (from 1.7). */
       fetch(
         url: string,
         init?: {
           method?: string;
           headers?: Record<string, string>;
           body?: Uint8Array | ArrayBuffer | string;
+          signal?: AbortSignal;
         },
       ): Promise<{
         status: number;
@@ -1358,6 +1466,40 @@ declare global {
        *  what is said. From 1.3.6. */
       state(): Promise<AiState>;
       onDidChangeState: Event<AiState>;
+      /** Grey text after the caret when typing pauses: `provide` answers
+       *  the words to offer, or null; it is waited for at most 5 seconds.
+       *  The user picks one source at a time in Settings › Textus AI ›
+       *  Writing assist ("Suggestions from"), Textus AI or one of these.
+       *  editor.read. From 1.4.4 (API 1.8, preview). */
+      registerInlineCompletion(
+        id: string,
+        source: {
+          label?: string;
+          provide(request: {
+            before: string;
+            after: string;
+            path: string | null;
+          }): string | null | Promise<string | null>;
+        },
+      ): Disposable;
+      /** Whether the user's writing model can be asked now: Textus AI is on
+       *  (never in the iOS App Store download in mainland China). ai.model.
+       *  From 1.4.4 (API 1.8, preview). */
+      available(): Promise<boolean>;
+      /** The user's writing model's answer, as text (ai.model). The first
+       *  call asks the user; each plugin has 100,000 tokens a month (counted
+       *  roughly: a CJK character is one, other text one per four
+       *  characters), and the user is asked before more. Refused when the
+       *  user says no or Textus AI is off. From 1.4.4 (API 1.8, preview). */
+      complete(request: AiRequest): Promise<string>;
+    }
+
+    /** `prompt` for one question, or `messages` for a conversation whose
+     *  next turn is asked for; at most 200,000 characters with `system`. */
+    interface AiRequest {
+      system?: string;
+      prompt?: string;
+      messages?: { role: "user" | "assistant"; content: string }[];
     }
 
     interface PanelsState {
@@ -1385,6 +1527,23 @@ declare global {
     }
 
     interface Export {
+      /** A format in File › Export: `export` turns the document into the
+       *  file's contents, text or bytes, and Textus asks where to save it
+       *  and writes it. `html` is the standalone page File › Export › HTML
+       *  writes, pictures inside it. From 1.4.4 (API 1.8). */
+      registerFormat(
+        id: string,
+        format: {
+          label?: string;
+          /** Its files' extension, like "docx". */
+          extension: string;
+          export(document: {
+            markdown: string;
+            html: string;
+            path: string | null;
+          }): string | Uint8Array | Promise<string | Uint8Array>;
+        },
+      ): Disposable;
       /** KaTeX's stylesheet with its fonts inline, as Textus draws formulas:
        *  for a plugin page or a saved file that shows KaTeX's markup without
        *  loading anything from the web. About 400 KB. From 1.4.2 (API 1.6). */
@@ -1574,6 +1733,66 @@ declare global {
       /** Names in the file tree's order: "Week2" before "Week10", case
        *  and accents aside, in the UI language. For `Array.sort`. */
       compareNames(a: string, b: string): number;
+      /** YAML read in full (YAML 1.2): block text, lists of maps, quoting.
+       *  {} for YAML that isn't a map; rejects YAML that can't be read.
+       *  From 1.8. */
+      parseYaml(yaml: string): Promise<Record<string, unknown>>;
+      /** A value written as YAML, without a trailing line break. From 1.8. */
+      stringifyYaml(value: unknown): Promise<string>;
+    }
+
+    /** One past version of a document, as a source keeps it. */
+    interface HistoryVersion {
+      id: string;
+      /** When, as an ISO date. */
+      at: string;
+      label?: string;
+      author?: string;
+    }
+
+    /** Where a document's past versions are kept besides Textus's own: a
+     *  plugin offers its source (Git, a sync service), another - Version
+     *  History - lists them all and reads a version. Needs files.read.
+     *  From 1.8. */
+    interface History {
+      /** Offers a source named `id` among the plugin's own. */
+      registerSource(
+        id: string,
+        source: {
+          label: string;
+          /** The document's versions here, any order. */
+          versions(path: string): HistoryVersion[] | Promise<HistoryVersion[]>;
+          /** A version's text; null when it has none. */
+          read(
+            path: string,
+            version: string,
+          ): string | null | Promise<string | null>;
+        },
+      ): Disposable;
+      /** Every source offered now; `id` is "<plugin id>/<source id>". */
+      sources(): Promise<{ id: string; label: string; plugin: string }[]>;
+      /** A source's versions of `path`, newest first. */
+      versions(source: string, path: string): Promise<HistoryVersion[]>;
+      /** One version's text. */
+      read(source: string, path: string, version: string): Promise<string>;
+    }
+
+    /** Paths as Textus writes them: "/" between parts on every system; a
+     *  "\\" in what is given is read as one. From 1.8. */
+    interface Path {
+      /** The parts joined, "." and ".." worked out: join("a", "../b") is "b". */
+      join(...parts: string[]): string;
+      /** "." and ".." worked out, "/" between parts, no "/" at the end. */
+      normalize(path: string): string;
+      /** The folder it is in: "." for a bare name, "/" at the top. */
+      dirname(path: string): string;
+      /** The last part; without `ext` when it ends so. */
+      basename(path: string, ext?: string): string;
+      /** From the last "." of the last part (".md"), "" for none or a
+       *  name that starts with its only dot (".textus"). */
+      extname(path: string): string;
+      /** How to get from the folder `from` to `to`: "../ideas/a.md". */
+      relative(from: string, to: string): string;
     }
 
     // ---------------------------------------------------------------
@@ -1599,6 +1818,12 @@ declare global {
       /** From 1.7: onMessage by the name host.js's webview has; onMessage
        *  stays. */
       onDidReceiveMessage(fn: (message: unknown) => void): Disposable;
+      /** From 1.7: whether the page is in sight. */
+      readonly visible: boolean;
+      /** From 1.7: told as the page goes out of sight and comes back. Out
+       *  of sight it may be let go to save memory and is rebuilt when
+       *  shown, from `getState()`: set what it should keep here. */
+      onDidChangeVisibility(fn: (visible: boolean) => void): Disposable;
       getState(): unknown;
       setState<T>(state: T): T;
       /** Textus's own menu over the page, for a right-click or a dropdown,
