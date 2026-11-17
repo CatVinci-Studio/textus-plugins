@@ -23,6 +23,7 @@ O plugin lê e escreve ficheiros na pasta aberta para encontrar e criar as notas
 
 ## Alterações
 
+- **0.7.8** - Quando a barra é estreita demais até para o nome curto do mês (a barra lateral do telemóvel), o mês fica numa linha própria acima dos botões em vez de perder o ano.
 - **0.7.7** - A semana começa conforme o idioma do Textus, não a região do aparelho, como os números da semana.
 - **0.7.6** - A página segue o idioma do Textus sozinha. Requer o Textus 1.4.3.
 - **0.7.5** - O título do mês do calendário começa à esquerda e termina em reticências numa barra lateral estreita.

@@ -73,15 +73,22 @@
   }
 
   /** The month's name, short when the bar is too narrow for the long one
-   *  (a sidebar, a phone): again whenever the bar's width changes. */
+   *  (a sidebar, a phone), and on a row of its own above the buttons when
+   *  even that won't fit: again whenever the bar's width changes. */
   function fitMonth() {
     const month = $("month");
     const as = (style) => shown.toLocaleDateString(api.language, { year: "numeric", month: style });
-    month.textContent = as("long");
     // The text's own width: a button reports no overflow of its own.
     const text = document.createRange();
-    text.selectNodeContents(month);
-    if (text.getBoundingClientRect().width > month.clientWidth) month.textContent = as("short");
+    const fits = (style) => {
+      month.textContent = as(style);
+      text.selectNodeContents(month);
+      return text.getBoundingClientRect().width <= month.clientWidth;
+    };
+    $("bar").classList.remove("stacked");
+    if (fits("long") || fits("short")) return;
+    $("bar").classList.add("stacked");
+    if (!fits("long")) fits("short");
   }
   new ResizeObserver(() => fitMonth()).observe($("month").parentElement);
 

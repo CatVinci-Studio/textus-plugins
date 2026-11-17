@@ -23,6 +23,7 @@ El complemento lee y escribe archivos de la carpeta abierta para encontrar y cre
 
 ## Cambios
 
+- **0.7.8** - Si la barra es demasiado estrecha incluso para el nombre corto del mes (la barra lateral del móvil), el mes pasa a su propia fila sobre los botones en vez de perder el año.
 - **0.7.7** - La semana empieza según el idioma de Textus, no la región del dispositivo, igual que los números de semana.
 - **0.7.6** - La página sigue el idioma de Textus por sí sola. Requiere Textus 1.4.3.
 - **0.7.5** - El título del mes del calendario empieza a la izquierda y termina en puntos suspensivos en una barra lateral estrecha.
