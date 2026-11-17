@@ -6,7 +6,7 @@ It works like Obsidian's Linter, and every change is one undo step.
 
 ## Markdown
 
-- Words that break a common Markdown rule are underlined; rest the pointer on one to see which rule and why.
+- Words that break a common Markdown rule are underlined; rest the pointer on one (or put the caret in it) to see which rule and why, and apply its fix to that block with one click or Alt+Enter (Textus 1.4.4).
 - **Fix Markdown** (right-click, or the Plugins menu) fixes what can be fixed.
 - Each block is checked on its own, so rules about the document as a whole (heading levels, the first line, blank lines between blocks) are left out.
 
@@ -39,6 +39,7 @@ CJK Spacing, the plugin that puts spaces between Chinese and Latin text, leaves 
 
 ## Changes
 
+- **0.5.0** - Each finding opens a card that names the rule and fixes that block (Alt+Enter), or sets it aside with Ignore (Textus 1.4.4).
 - **0.4.1** - Remove Blank Lines and list switching leave a code block inside a longer fence (```` holding ```) alone.
 - **0.4.0** - Switch selected lines to a bullet, numbered or task list (numbered counts from 1 at each level; a task keeps its tick).
 - **0.3.2** - Shorter help and empty-state text.

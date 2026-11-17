@@ -159,25 +159,43 @@ async function tidyText(rule, editor) {
 
 exports.activate = function () {
   textus.ai.registerTool("lint_markdown", lintMarkdown);
-  textus.editor.registerDecorations({
-    decorate: async function (blocks) {
-      if ((await textus.settings.get("underline")) === false) return [];
-      const rules = await config();
-      const marks = [];
-      for (const block of blocks) {
-        if (SKIP.has(block.kind)) continue;
-        for (const error of lint(block.markdown, rules))
-          marks.push({
+  // From Textus 1.4.4 each finding is a diagnostic: the slip card names
+  // the rule and applies its fix to the block; before, an underline.
+  const found = async function (blocks) {
+    if ((await textus.settings.get("underline")) === false) return [];
+    const rules = await config();
+    const out = [];
+    for (const block of blocks) {
+      if (SKIP.has(block.kind)) continue;
+      for (const error of lint(block.markdown, rules)) out.push({ block, error });
+    }
+    return out;
+  };
+  if (textus.editor.registerDiagnostics)
+    textus.editor.registerDiagnostics("rules", {
+      check: async (blocks) =>
+        (await found(blocks)).map(({ block, error }) => {
+          const fixed = error.fixInfo && markdownlint.applyFixes(block.markdown, [error]).replace(/\n+$/, "");
+          return {
             block: block.id,
             anchor: error.errorContext || undefined,
-            style: "underline",
-            tone: "warning",
-            tooltip: tooltip(error),
-          });
-      }
-      return marks;
-    },
-  });
+            severity: "warning",
+            message: tooltip(error),
+            fix: fixed && fixed !== block.markdown ? { markdown: fixed } : undefined,
+          };
+        }),
+    });
+  else
+    textus.editor.registerDecorations({
+      decorate: async (blocks) =>
+        (await found(blocks)).map(({ block, error }) => ({
+          block: block.id,
+          anchor: error.errorContext || undefined,
+          style: "underline",
+          tone: "warning",
+          tooltip: tooltip(error),
+        })),
+    });
   textus.commands.registerEditorCommand("catvinci.markdown-lint.fix", fixMarkdown);
   for (const rule of RULES)
     textus.commands.registerEditorCommand("catvinci.markdown-lint." + rule, (editor) => tidyText(rule, editor));
