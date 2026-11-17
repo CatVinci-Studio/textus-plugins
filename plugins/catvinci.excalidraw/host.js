@@ -8,6 +8,8 @@ let ctx;
 const MAX_PICTURE = 20 * 1024 * 1024;
 const MIME = { png: "image/png", jpg: "image/jpeg", jpeg: "image/jpeg", gif: "image/gif", webp: "image/webp", svg: "image/svg+xml" };
 
+const dirname = (path) => path.replace(/[\\/][^\\/]*$/, "");
+
 /** The pictures a note links by id, read for the page; one not found is
  *  left out (Excalidraw shows its frame). */
 async function pictures(document, embedded) {
@@ -18,7 +20,7 @@ async function pictures(document, embedded) {
     if (!mime) continue;
     try {
       const found = await textus.metadata.resolveNote("[[" + name + "]]", document.path).catch(() => null);
-      const path = found && found.exists ? found.path : folderPaths.abs(folderPaths.dir(document.path), name);
+      const path = found && found.exists ? found.path : folderPaths.abs(dirname(document.path), name);
       const stat = await textus.files.stat(path);
       if (!stat || stat.size > MAX_PICTURE) continue;
       out.push({ id: e.id, mime: mime, bytes: await textus.files.read(path) });
