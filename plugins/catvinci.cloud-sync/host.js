@@ -2487,7 +2487,34 @@ function registerHistory(api, source) {
       view.html = html;
     });
   };
+  const offer = api.history;
+  const relOf = async (path) => {
+    const root = await api.files.root();
+    return root ? relative(root.replace(/\\/g, "/"), path.replace(/\\/g, "/")) : null;
+  };
+  const offered = offer ? [
+    offer.registerSource("versions", {
+      label: api.l10n.t("name"),
+      versions: async (path) => {
+        const rel = await relOf(path);
+        if (!rel) return [];
+        const { history } = await read((await source.remote()).store);
+        return (history.versions[rel] ?? []).map((v) => ({
+          id: v.hash,
+          at: v.until ?? v.at,
+          author: v.device || void 0
+        }));
+      },
+      read: async (path, hash3) => {
+        const rel = await relOf(path);
+        if (!rel) return null;
+        const shown = await preview(rel, hash3);
+        return "text" in shown ? shown.text ?? null : null;
+      }
+    })
+  ] : [];
   return [
+    ...offered,
     api.views.registerWebview(`${ID}.history`, {
       resolve: (view, context) => resolve(view, context?.state)
     }),

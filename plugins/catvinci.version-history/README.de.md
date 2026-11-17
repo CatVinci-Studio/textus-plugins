@@ -17,6 +17,7 @@ Behält jedes Speichern eines Dokuments als Version, damit Sie sehen, was sich g
 
 ## Änderungen
 
+- **0.5.0** - Ab Textus 1.4.4 erscheinen auch die Versionen, die andere Plugins von einem Dokument behalten (die von Cloud Sync), jeweils unter dem Namen ihrer Quelle, zum Vergleichen und Wiederherstellen wie die übrigen.
 - **0.4.1** - Wiederherstellen ist ein Wort, damit die Schaltfläche in jeder Sprache in eine schmale Seitenleiste passt.
 - **0.4.0** - Versionen werden mit dem Alter lichter, statt nur die letzten 50 zu behalten; jeder Text wird einmal gespeichert; die Versionen eines gelöschten Dokuments gehen nach einem Monat. Zwei beliebige Versionen Wort für Wort vergleichen, eine einzelne Änderung zurückholen, Versionen benennen und anheften; Änderungen außerhalb von Textus bleiben. Versionen aus 0.3 ziehen von selbst um. Braucht Textus 1.4.3. In einem Git-Ordner auf dem Desktop stehen die Commits des Dokuments unter seinen Versionen.
 - **0.3.8** - Der Text vor dem ersten Speichern geht nicht mehr verloren, wenn dieses Speichern direkt beim Öffnen kommt.

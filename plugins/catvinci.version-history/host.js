@@ -69,16 +69,42 @@ async function commitsOf(path) {
   return { branch: status.branch, commits: commits };
 }
 
+/** Versions other plugins keep of the document (Cloud Sync's, from
+ *  Textus 1.4.4), by source; the last asked kept for their texts. */
+let lastOthers = { path: null, sources: [] };
+async function othersOf(path) {
+  const sources = [];
+  if (path && textus.history) {
+    for (const source of await textus.history.sources().catch(() => [])) {
+      const list = await textus.history.versions(source.id, path).catch(() => []);
+      if (!list.length) continue;
+      sources.push({
+        label: source.label,
+        versions: list.slice(0, 50).map((v) => ({
+          id: "src:" + source.id + "\n" + v.id,
+          at: v.at,
+          subject: v.label || null,
+          author: v.author || null,
+        })),
+      });
+    }
+  }
+  lastOthers = { path: path, sources: sources };
+  return sources;
+}
+
 async function show() {
   if (!panel) return;
   const path = await textus.editor.getPath();
   const git = await commitsOf(path);
+  const others = await othersOf(path);
   panel.postMessage({
     type: "versions",
     path: path,
     versions: (await store.list(path)).map((v) => Object.assign({ id: store.idOf(v) }, v)),
     commits: git.commits,
     branch: git.branch,
+    others: others,
     full: store.full,
   });
 }
@@ -87,8 +113,13 @@ async function versionOf(path, id) {
   return (await store.list(path)).find((v) => store.idOf(v) === id) || null;
 }
 
-/** A version's text, or a commit's (`git:<hash>`); null when it is gone. */
+/** A version's text, a commit's (`git:<hash>`) or another source's
+ *  (`src:<source>\n<version>`); null when it is gone. */
 async function textOf(path, id) {
+  if (typeof id === "string" && id.startsWith("src:")) {
+    const [source, version] = id.slice(4).split("\n");
+    return textus.history.read(source, path, version).catch(() => null);
+  }
   if (typeof id === "string" && id.startsWith("git:")) {
     const known = lastCommits.path === path ? lastCommits.commits : (await commitsOf(path)).commits;
     const commit = known.find((c) => c.id === id);

@@ -17,6 +17,7 @@ Guarda cada guardado de un documento como una versión, para ver qué cambió y 
 
 ## Cambios
 
+- **0.5.0** - Desde Textus 1.4.4 también se listan las versiones que otros plugins guardan de un documento (las de Cloud Sync), cada una bajo el nombre de su origen, para compararlas y restaurarlas como las demás.
 - **0.4.1** - Restaurar es una sola palabra, así su botón cabe en una barra lateral estrecha en todos los idiomas.
 - **0.4.0** - Las versiones se espacian con la edad en lugar de quedarse solo las últimas 50; cada texto se guarda una vez; las versiones de un documento borrado se van al mes. Compara dos versiones cualesquiera palabra por palabra, recupera un solo cambio, pon nombre y fija versiones, y se guardan los cambios hechos fuera de Textus. Las versiones de 0.3 pasan solas. Requiere Textus 1.4.3. En una carpeta Git en el escritorio, los commits del documento aparecen bajo sus versiones.
 - **0.3.8** - El texto de antes del primer guardado ya no se pierde cuando ese guardado llega justo al abrir el documento.

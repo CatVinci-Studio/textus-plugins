@@ -17,6 +17,7 @@ Keeps each save of a document as a version, so you can see what changed and brin
 
 ## Changes
 
+- **0.5.0** - From Textus 1.4.4 the versions other plugins keep of a document - Cloud Sync's - are listed too, each under its source's name, to compare and restore like the rest.
 - **0.4.1** - Restore is one word, so its button fits a narrow sidebar in every language.
 - **0.4.0** - Versions thin out with age instead of the last 50 going; each text is stored once; a deleted document's versions go a month later. Compare any two versions, word by word; take back one change; name and pin versions; changes made outside Textus are kept. Versions from 0.3 move over by themselves. Needs Textus 1.4.3. In a Git folder on the desktop, the document's commits show under its versions.
 - **0.3.8** - The text from before the first save is no longer lost when that save comes right as the document opens.

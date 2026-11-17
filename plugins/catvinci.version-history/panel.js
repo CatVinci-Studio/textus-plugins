@@ -11,8 +11,11 @@
   let against = "current";
   let data = { path: null, versions: [], commits: [] };
   /** Versions and commits: what a card compares with, or picks. */
-  const everything = () => data.versions.concat(data.commits || []);
-  const isCommit = (item) => String(item.id).startsWith("git:");
+  const everything = () =>
+    data.versions.concat(data.commits || [], ...(data.others || []).map((o) => o.versions));
+  /** Kept elsewhere - a Git commit, another plugin's version: opened,
+   *  not named or pinned. */
+  const isCommit = (item) => /^(git|src):/.test(String(item.id));
   /** Texts the host sent, by version and what it is compared with. */
   const texts = new Map();
   const textKey = (id, other) => id + "|" + other;
@@ -136,7 +139,7 @@
     const toggle = el("button", isOpen ? "row-head" : "tx-list-row");
     toggle.dataset.id = version.id;
     toggle.setAttribute("aria-expanded", String(isOpen));
-    const stamp = el("span", "when tx-list-label", isCommit(version) ? version.subject : timeOf(version.at));
+    const stamp = el("span", "when tx-list-label", isCommit(version) ? version.subject || timeOf(version.at) : timeOf(version.at));
     if (version.name) stamp.prepend(el("strong", "name", version.name + " "));
     if (version.pinned) stamp.append(" ", el("span", "tx-tag", t("pinned")));
     const meta = el("span", "delta tx-list-meta");
@@ -209,6 +212,11 @@
       const heading = t("commits") + (data.branch ? " · " + data.branch : "");
       list.append(el("li", "tx-list-heading", heading));
       data.commits.forEach((commit) => list.append(versionNode(commit)));
+    }
+    // Other plugins' versions (Cloud Sync's), each under its name.
+    for (const other of data.others || []) {
+      list.append(el("li", "tx-list-heading", other.label));
+      other.versions.forEach((version) => list.append(versionNode(version)));
     }
     const all = toggles();
     const stop = all.find((b) => b.dataset.id === String(opened)) || all[0];
