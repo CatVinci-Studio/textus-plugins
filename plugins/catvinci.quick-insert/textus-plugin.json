@@ -26,7 +26,6 @@
   "permissions": [
     "files.read",
     "editor.read",
-    "editor.write",
     "ai.tools"
   ],
   "activationEvents": [

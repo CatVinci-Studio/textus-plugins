@@ -17,6 +17,7 @@
   ],
   "main": [
     "lib/lz-string.js",
+    "lib/folder-paths.js",
     "excalidraw-file.js",
     "host.js"
   ],

@@ -15,7 +15,7 @@
     data.versions.concat(data.commits || [], ...(data.others || []).map((o) => o.versions));
   /** Kept elsewhere - a Git commit, another plugin's version: opened,
    *  not named or pinned. */
-  const isCommit = (item) => /^(git|src):/.test(String(item.id));
+  const keptElsewhere = (item) => /^(git|src):/.test(String(item.id));
   /** Texts the host sent, by version and what it is compared with. */
   const texts = new Map();
   const textKey = (id, other) => id + "|" + other;
@@ -116,7 +116,7 @@
   }
 
   async function more(version, button) {
-    const items = isCommit(version)
+    const items = keptElsewhere(version)
       ? [{ label: t("open"), value: "open" }]
       : [
           { label: t("nameVersion"), value: "name" },
@@ -139,11 +139,11 @@
     const toggle = el("button", isOpen ? "row-head" : "tx-list-row");
     toggle.dataset.id = version.id;
     toggle.setAttribute("aria-expanded", String(isOpen));
-    const stamp = el("span", "when tx-list-label", isCommit(version) ? version.subject || timeOf(version.at) : timeOf(version.at));
+    const stamp = el("span", "when tx-list-label", keptElsewhere(version) ? version.subject || timeOf(version.at) : timeOf(version.at));
     if (version.name) stamp.prepend(el("strong", "name", version.name + " "));
     if (version.pinned) stamp.append(" ", el("span", "tx-tag", t("pinned")));
     const meta = el("span", "delta tx-list-meta");
-    if (isCommit(version)) meta.append(el("span", "outside", when(version.at)));
+    if (keptElsewhere(version)) meta.append(el("span", "outside", when(version.at)));
     else {
       if (version.source === "disk") meta.append(el("span", "outside", t("outside") + " "));
       const change = (version.chars || 0) - (older ? older.chars || 0 : 0);

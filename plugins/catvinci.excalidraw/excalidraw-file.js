@@ -112,5 +112,5 @@
   const empty = () =>
     JSON.stringify({ type: "excalidraw", version: 2, source: "https://textus.md", elements: [], appState: {}, files: {} }, null, 2);
 
-  root.excalidrawFile = { parse: parse, write: write, textElements: textElements, empty: empty };
+  root.excalidrawFile = { parse: parse, write: write, empty: empty };
 })(typeof window !== "undefined" ? window : globalThis);

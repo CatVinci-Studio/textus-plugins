@@ -40,5 +40,8 @@ var folderPaths = (function () {
     return p;
   }
 
-  return { abs: abs, rel: rel, clean: clean, slash: slash, native: native };
+  /** The folder `path` is in. */
+  var dir = (path) => path.replace(/[\\/][^\\/]*$/, "");
+
+  return { abs: abs, rel: rel, clean: clean, slash: slash, native: native, dir: dir };
 })();

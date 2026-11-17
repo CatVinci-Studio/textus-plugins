@@ -197,7 +197,6 @@
     return handle;
   }
   const MIN_COLUMN = 64;
-  const widthsOf = (key) => (data.spec.widths || {})[key] || 0;
 
   /** A column dragged by its head among the others, as the sidebar's tabs
    *  are: the column itself lifts and follows the pointer, the ones it

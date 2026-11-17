@@ -17,7 +17,6 @@
   ],
   "main": [
     "lib/folder-paths.js",
-    "lib/free-name.js",
     "lib/conventions.js",
     "host.js"
   ],

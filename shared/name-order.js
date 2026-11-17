@@ -1,6 +1,6 @@
 // Names in the order people expect: "Week2" before "Week10", case and
-// accents aside. Each plugin using it lists this as lib/name-order.js in
-// libs.json, before the files that sort names.
+// accents aside. The app gives plugins this as textus.text.compareNames;
+// the tests' host loads this copy in its place.
 (function (root) {
   "use strict";
   var collators = new Map();

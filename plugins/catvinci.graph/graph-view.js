@@ -3,8 +3,7 @@
 // wheel (or a pinch) to zoom, a node to place it; hover lights its links,
 // a click opens it (with Ctrl or Cmd, beside the one in front). It adapts by itself:
 // labels as it is zoomed in, arrows when there are few enough links to
-// read them, a node's size by its links. Repulsion is computed on a grid of nearby nodes, so a
-// folder of thousands of documents still moves smoothly.
+// read them, a node's size by its links. The forces are in graph-forces.js.
 (function (root) {
   "use strict";
 

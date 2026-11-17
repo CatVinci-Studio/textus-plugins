@@ -2,14 +2,11 @@
 // .excalidraw.md notes, drawn and edited in a tab with Excalidraw itself.
 // The page sends the scene back as it changes; it is written here, in the
 // form the file had.
-/* global excalidrawFile */
+/* global excalidrawFile, folderPaths */
 let ctx;
 
 const MAX_PICTURE = 20 * 1024 * 1024;
 const MIME = { png: "image/png", jpg: "image/jpeg", jpeg: "image/jpeg", gif: "image/gif", webp: "image/webp", svg: "image/svg+xml" };
-
-const dirname = (path) => path.replace(/[\\/][^\\/]*$/, "");
-const join = (dir, name) => dir.replace(/[\\/]+$/, "") + "/" + name;
 
 /** The pictures a note links by id, read for the page; one not found is
  *  left out (Excalidraw shows its frame). */
@@ -21,7 +18,7 @@ async function pictures(document, embedded) {
     if (!mime) continue;
     try {
       const found = await textus.metadata.resolveNote("[[" + name + "]]", document.path).catch(() => null);
-      const path = found && found.exists ? found.path : join(dirname(document.path), name);
+      const path = found && found.exists ? found.path : folderPaths.abs(folderPaths.dir(document.path), name);
       const stat = await textus.files.stat(path);
       if (!stat || stat.size > MAX_PICTURE) continue;
       out.push({ id: e.id, mime: mime, bytes: await textus.files.read(path) });
@@ -95,7 +92,7 @@ exports.activate = function (context) {
       const name = await textus.ui.input({ prompt: textus.l10n.t("drawingName"), value: textus.l10n.t("drawing") });
       if (!name || !name.trim()) return;
       const file = name.trim().replace(/[\\/:*?"<>|]/g, "-").replace(/\.excalidraw$/i, "");
-      const path = await textus.files.create(join(root, file + ".excalidraw"), excalidrawFile.empty(), { unique: true });
+      const path = await textus.files.create(folderPaths.abs(root, file + ".excalidraw"), excalidrawFile.empty(), { unique: true });
       await textus.layout.open(path);
     }),
   );

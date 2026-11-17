@@ -8,12 +8,10 @@ let ctx;
 const MAX_FILES = 300;
 const MAX_IMAGE = 20 * 1024 * 1024;
 
-const dirname = (path) => path.replace(/[\\/][^\\/]*$/, "");
-
 /** The folder a canvas's paths start from: the open folder, else the
  *  canvas's own. */
 async function baseOf(document) {
-  return (await textus.files.root()) || dirname(document.path);
+  return (await textus.files.root()) || folderPaths.dir(document.path);
 }
 
 /** What a file node shows: a note's title and opening, a picture's bytes,
