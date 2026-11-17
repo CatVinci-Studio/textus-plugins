@@ -27,20 +27,45 @@
       return { scene: scene, compressed: false, embedded: [] };
     }
     const m = DRAWING.exec(text);
-    if (!m) return { scene: {}, compressed: true, embedded: [] };
+    if (!m) return { scene: {}, compressed: true, embedded: [], words: {} };
     const compressed = m[2] === "compressed-json";
     const scene = JSON.parse(compressed ? decompress(m[3]) : m[3]);
     const embedded = [];
     for (const e of text.slice(0, m.index).matchAll(EMBEDDED_FILE)) embedded.push({ id: e[1], link: e[2] });
-    return { scene: scene, compressed: compressed, embedded: embedded };
+    return { scene: scene, compressed: compressed, embedded: embedded, words: wordsOf(text, scene) };
+  }
+
+  const shownText = (e) => (e.originalText != null ? e.originalText : e.text || "");
+
+  /** Each text element's words as the note lists them - with its
+   *  [[links]], which the drawing itself shows without - while the drawing
+   *  still shows what it did when read. */
+  function wordsOf(text, scene) {
+    const at = TEXT_ELEMENTS.exec(text);
+    if (!at) return {};
+    const rest = text.slice(at.index + at[0].length);
+    const next = /\n(#{1,6} |%%)/.exec(rest);
+    const section = (next ? rest.slice(0, next.index) : rest).replace(/\r\n/g, "\n").trim();
+    const shown = {};
+    for (const e of scene.elements || []) if (e && e.type === "text") shown[e.id] = shownText(e);
+    const words = {};
+    for (const entry of section.split(/\n\n(?=[^\n])/)) {
+      const m = / \^([\w-]+)$/.exec(entry);
+      if (m && m[1] in shown) words[m[1]] = { listed: entry.slice(0, m.index), shown: shown[m[1]] };
+    }
+    return words;
   }
 
   /** The words of a note's drawing, as Obsidian Excalidraw lists them:
    *  each text element's own text and its id. */
-  function textElements(scene) {
+  function textElements(scene, words) {
     return (scene.elements || [])
       .filter((e) => e && e.type === "text" && !e.isDeleted)
-      .map((e) => (e.originalText != null ? e.originalText : e.text || "") + " ^" + e.id)
+      .map((e) => {
+        const kept = words && words[e.id];
+        const now = shownText(e);
+        return (kept && kept.shown === now ? kept.listed : now) + " ^" + e.id;
+      })
       .join("\n\n");
   }
 
@@ -64,7 +89,7 @@
     }
     const compressed = parsed ? parsed.compressed : true;
     const drawing = drawingSection(JSON.stringify(scene, null, compressed ? 0 : "\t"), compressed, eol);
-    const words = "## Text Elements" + eol + textElements(scene).replace(/\n/g, eol) + eol;
+    const words = "## Text Elements" + eol + textElements(scene, parsed && parsed.words).replace(/\n/g, eol) + eol;
 
     let out = text;
     const m = DRAWING.exec(out);

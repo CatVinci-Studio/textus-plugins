@@ -85,6 +85,24 @@ describe("an Obsidian Excalidraw note", () => {
     expect(file.write("/v/A.excalidraw.md", out, JSON.stringify(scene), again)).toBe(out);
   });
 
+  it("keeps a text's [[links]] as the note lists them while its words are unchanged", () => {
+    const linked = {
+      ...scene,
+      elements: [
+        { id: "t1", type: "text", text: "Note A here", originalText: "Note A here" },
+        { id: "t2", type: "text", text: "Old", originalText: "Old" },
+      ],
+    };
+    const text = note("```json\n" + JSON.stringify(linked) + "\n```").replace(
+      "Old words ^t0",
+      "[[Note A]] here ^t1\n\nOld ^t2",
+    );
+    const parsed = file.parse("/v/A.excalidraw.md", text);
+    const edited = { ...linked, elements: [linked.elements[0], { ...linked.elements[1], text: "New", originalText: "New" }] };
+    const out = file.write("/v/A.excalidraw.md", text, JSON.stringify(edited), parsed);
+    expect(out).toContain("## Text Elements\n[[Note A]] here ^t1\n\nNew ^t2\n");
+  });
+
   it("keeps a plain drawing plain", () => {
     const plain = note("```json\n" + JSON.stringify(scene) + "\n```");
     const parsed = file.parse("/v/A.excalidraw.md", plain);
