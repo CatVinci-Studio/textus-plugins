@@ -21,6 +21,9 @@ const BADGES = {
 /** Badges and the branch as Git sees the folder now. */
 async function refresh() {
   const status = await textus.git.status().catch(() => null);
+  states = new Map(((status && status.changes) || []).map((c) => [c.path, c.state]));
+  committed.clear();
+  remark();
   const next = new Set();
   for (const change of (status && status.changes) || []) {
     const badge = BADGES[change.state];
@@ -39,6 +42,53 @@ async function refresh() {
   if (branchItem) branchItem.update(item);
   else branchItem = textus.ui.statusItem("catvinci.git.branch", item);
   return status;
+}
+
+// The blocks changed since the last commit, marked in the margin.
+
+/** The last commit's text of each file asked about, by path; null for
+ *  one Git doesn't follow or that isn't changed. */
+const committed = new Map();
+/** The changed files' states, from the last refresh. */
+let states = new Map();
+
+const blockKey = (markdown) => markdown.replace(/\s+$/gm, "").trim();
+
+async function committedText(path) {
+  if (committed.has(path)) return committed.get(path);
+  let text = null;
+  if (states.get(path) === "modified") {
+    const last = (await textus.git.log(path, { limit: 1 }).catch(() => []))[0];
+    text = last ? await textus.git.show(last.hash, last.path).catch(() => null) : null;
+  }
+  committed.set(path, text);
+  return text;
+}
+
+/** A mark beside each block in sight that the last commit hasn't. */
+async function changedBlocks(inSight, doc) {
+  const path = doc && doc.path;
+  if (!path || !states.has(path)) return [];
+  const before = await committedText(path);
+  if (before === null) return [];
+  const kept = new Set(before.split(/\n{2,}/).map(blockKey));
+  return inSight
+    .filter((block) => !kept.has(blockKey(block.markdown)))
+    .map((block) => ({
+      block: block.id,
+      style: "gutter",
+      tone: "warning",
+      tooltip: t("blockChanged"),
+      command: { id: "catvinci.git.commit" },
+    }));
+}
+
+let marks = null;
+/** Asked again with what Git says now. Hosts before 1.8 send no path:
+ *  no marks there. */
+function remark() {
+  if (marks) marks.dispose();
+  marks = textus.editor.registerDecorations({ decorate: changedBlocks });
 }
 
 let timer = null;

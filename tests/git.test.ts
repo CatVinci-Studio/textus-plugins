@@ -12,6 +12,8 @@ function withGit(changes: { path: string; state: string }[] | null) {
   const commits: [string, string[]][] = [];
   const asked: string[] = [];
   let item: { text: string } | null = null;
+  type Decorate = (inSight: { id: string; markdown: string }[], doc: { path?: string }) => Promise<unknown[]>;
+  let decorate: Decorate | null = null;
   const status = async () =>
     changes && { branch: "main", changes: changes.map((c) => ({ staged: false, ...c })) };
   const plugin = loadPlugin("catvinci.git", {
@@ -35,7 +37,13 @@ function withGit(changes: { path: string; state: string }[] | null) {
       onDidChangeRoot: () => ({ dispose() {} }),
       onDidChangeOnDisk: () => ({ dispose() {} }),
     },
-    editor: { getPath: async () => "/root/a.md" },
+    editor: {
+      getPath: async () => "/root/a.md",
+      registerDecorations: (p: { decorate: Decorate }) => {
+        decorate = p.decorate;
+        return { dispose: () => (decorate = null) };
+      },
+    },
     app: { onDidChangeState: () => ({ dispose() {} }) },
     commands: { register: (id: string, run: () => Promise<unknown>) => void commands.set(id, run) },
     ui: {
@@ -51,7 +59,7 @@ function withGit(changes: { path: string; state: string }[] | null) {
     },
   });
   const settle = () => new Promise((r) => setTimeout(r, 5));
-  return { plugin, badges, commands, commits, asked, item: () => item, settle };
+  return { plugin, badges, commands, commits, asked, item: () => item, settle, decorate: () => decorate };
 }
 
 describe("the Git plugin", () => {
@@ -64,6 +72,24 @@ describe("the Git plugin", () => {
     expect([...g.badges.keys()]).toEqual(["/root/a.md", "/root/b.md"]);
     expect(g.badges.get("/root/a.md")).toMatchObject({ text: "M", tone: "warning" });
     expect(g.item()?.text).toBe("⎇ main");
+  });
+
+  it("marks the blocks changed since the last commit, in a changed file only", async () => {
+    const g = withGit([
+      { path: "/root/a.md", state: "modified" },
+      { path: "/root/b.md", state: "untracked" },
+    ]);
+    await g.settle();
+    const blocks = [
+      { id: "x", markdown: "one\ntwo" },
+      { id: "y", markdown: "three" },
+    ];
+    expect(await g.decorate()!(blocks, { path: "/root/a.md" })).toEqual([
+      expect.objectContaining({ block: "y", style: "gutter", command: { id: "catvinci.git.commit" } }),
+    ]);
+    expect(await g.decorate()!(blocks, { path: "/root/b.md" })).toEqual([]);
+    // A host before 1.8 sends no path.
+    expect(await g.decorate()!(blocks, {})).toEqual([]);
   });
 
   it("shows nothing outside a repository", async () => {
