@@ -41,7 +41,7 @@ The plugins for [Textus](https://textus.md), the Markdown editor. None of them c
 | PDF Viewer | Open PDFs in a tab beside your notes: pages, zoom, and text to select and copy. |
 | PlantUML | UML and other diagrams from PlantUML text, drawn on your computer - or by the PlantUML server, if you choose. Drawing on your computer takes about 100 MB more memory; the PlantUML server takes none. |
 | Pomodoro | A focus timer floating over the window or the desktop: 25 minutes of work, 5 of rest, a notification at each end. |
-| Quick Insert | Type / for headings, lists, tables, formulas and more, : for emoji, @ for a date (@tomorrow, @next friday), and turn a paragraph into another kind of block. |
+| Quick Insert | Type / for Textus's headings, lists, tables, formulas and other blocks, : for emoji, and @ for a date (@tomorrow, @next friday). |
 | Quick Notes | Jot something down without leaving the document: notes in the sidebar, kept in Inbox.md or today's daily note, to insert later or open as a document. |
 | Quick Preview | Preview a linked document without opening it: rest the pointer on a Markdown link or a [[wikilink]] to read its opening, or the section or block it names, in a card beside it. Pin keeps the card open while you write. |
 | Qwen Code | Qwen Code in Textus AI: Alibaba's Qwen models read your folder, write and edit your notes, and ask before they change anything. |
