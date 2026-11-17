@@ -22,7 +22,7 @@ const BADGES = {
 async function refresh() {
   const status = await textus.git.status().catch(() => null);
   states = new Map(((status && status.changes) || []).map((c) => [c.path, c.state]));
-  committed.clear();
+  changed.clear();
   remark();
   const next = new Set();
   for (const change of (status && status.changes) || []) {
@@ -44,36 +44,55 @@ async function refresh() {
   return status;
 }
 
-// The blocks changed since the last commit, marked in the margin.
+// The blocks changed since the last commit, marked in the margin: the
+// lines the saved file has that its last commit hadn't, found in the
+// blocks. Lines are compared without their list, quote or heading marks
+// and outer spaces, so a file Textus writes a little differently from how
+// it was committed is not all marked.
 
-/** The last commit's text of each file asked about, by path; null for
- *  one Git doesn't follow or that isn't changed. */
-const committed = new Map();
+/** The changed lines of each file asked about, by path; null for one Git
+ *  doesn't follow, isn't changed, or is too large to compare. */
+const changed = new Map();
 /** The changed files' states, from the last refresh. */
 let states = new Map();
 
-const blockKey = (markdown) => markdown.replace(/\s+$/gm, "").trim();
+const plainLine = (line) =>
+  line
+    .trim()
+    .replace(/^(?:>\s*)+/, "")
+    .replace(/^(?:[-*+]|\d+[.)])\s+(?:\[[ xX/-]\]\s+)?/, "")
+    .replace(/^#{1,6}\s+/, "")
+    .trim();
 
-async function committedText(path) {
-  if (committed.has(path)) return committed.get(path);
-  let text = null;
+async function changedLines(path) {
+  if (changed.has(path)) return changed.get(path);
+  let lines = null;
   if (states.get(path) === "modified") {
     const last = (await textus.git.log(path, { limit: 1 }).catch(() => []))[0];
-    text = last ? await textus.git.show(last.hash, last.path).catch(() => null) : null;
+    const before = last ? await textus.git.show(last.hash, last.path).catch(() => null) : null;
+    const now = before === null ? null : await textus.files.readText(path).catch(() => null);
+    const parts = now === null ? null : lineDiff(before, now);
+    if (parts)
+      lines = new Set(
+        parts
+          .filter((p) => p.kind === "added")
+          .map((p) => plainLine(p.line))
+          // An empty line or a lone mark is in every document.
+          .filter((line) => line.length > 1 && !/^[-*_=`~|:]+$/.test(line)),
+      );
   }
-  committed.set(path, text);
-  return text;
+  changed.set(path, lines);
+  return lines;
 }
 
-/** A mark beside each block in sight that the last commit hasn't. */
+/** A mark beside each block in sight holding a line the last commit hadn't. */
 async function changedBlocks(inSight, doc) {
   const path = doc && doc.path;
   if (!path || !states.has(path)) return [];
-  const before = await committedText(path);
-  if (before === null) return [];
-  const kept = new Set(before.split(/\n{2,}/).map(blockKey));
+  const lines = await changedLines(path);
+  if (!lines || !lines.size) return [];
   return inSight
-    .filter((block) => !kept.has(blockKey(block.markdown)))
+    .filter((block) => block.markdown.split("\n").some((line) => lines.has(plainLine(line))))
     .map((block) => ({
       block: block.id,
       style: "gutter",

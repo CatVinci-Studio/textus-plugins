@@ -3,7 +3,7 @@
 For a folder kept in Git, on the desktop:
 
 - Files changed since the last commit are marked in the sidebar: **M** changed, **A** added, **U** new and not in Git yet, **R** renamed, **!** in conflict.
-- In a changed document, each paragraph, heading or list changed since the last commit has a mark in the right margin; clicking it commits (Textus 1.4.4).
+- In a changed document, each paragraph, heading or list with lines the last commit hadn't (as saved) has a mark in the right margin; clicking it commits (Textus 1.4.4).
 - The status bar shows the branch; clicking it commits.
 - **Commit Changes…** (Plugins menu, or the branch) lists the changed files, the one in front picked; you write the message, and your own Git commits those files only - its hooks and signing run as usual. The first commit in a folder asks first.
 - With Version History 0.4, a document's commits show under its versions, compared and restored the same way.

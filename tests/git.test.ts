@@ -28,7 +28,7 @@ function withGit(changes: { path: string; state: string }[] | null) {
     },
     files: {
       root: async () => "/root",
-      readText: async () => "one\n2\n",
+      readText: async () => "one\n- [x] two more\n",
       setBadge: async (path: string, badge: unknown) => void (badge ? badges.set(path, badge) : badges.delete(path)),
       onDidSave: () => ({ dispose() {} }),
       onDidCreate: () => ({ dispose() {} }),
@@ -81,8 +81,10 @@ describe("the Git plugin", () => {
     ]);
     await g.settle();
     const blocks = [
-      { id: "x", markdown: "one\ntwo" },
-      { id: "y", markdown: "three" },
+      { id: "x", markdown: "one" },
+      // Written another way by the editor: still found.
+      { id: "y", markdown: "* [x] two more" },
+      { id: "z", markdown: "---" },
     ];
     expect(await g.decorate()!(blocks, { path: "/root/a.md" })).toEqual([
       expect.objectContaining({ block: "y", style: "gutter", command: { id: "catvinci.git.commit" } }),
@@ -122,7 +124,7 @@ describe("the Git plugin", () => {
     const result = await g.plugin.tools.get("git_changes")!({});
     expect(result).toEqual({
       branch: "main",
-      changes: [{ path: "a.md", state: "modified", diff: "  one\n- two\n+ 2\n  " }],
+      changes: [{ path: "a.md", state: "modified", diff: "  one\n- two\n+ - [x] two more\n  " }],
     });
     expect(await g.plugin.tools.get("git_file_at")!({ path: "a.md", hash: "abc1" })).toMatchObject({
       file: "a.md",
