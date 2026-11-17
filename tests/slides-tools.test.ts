@@ -21,9 +21,26 @@ it("exports the document in front as a deck beside it", async () => {
   expect(written["/root/Talk.slides.html"]).toContain("<title>Talk.md</title>");
 });
 
-it("asks for a saved document when there is none", async () => {
-  const { tools } = loadPlugin("catvinci.slides");
+it("asks for a saved document when there is none; File › Export takes any", async () => {
+  type Format = {
+    export(d: { markdown: string; path: string | null }): Promise<string>;
+  };
+  let format: Format | undefined;
+  const { tools } = loadPlugin("catvinci.slides", {
+    export: {
+      registerFormat: (_id: string, f: Format) => (
+        (format = f),
+        { dispose() {} }
+      ),
+    },
+  });
   expect(await tools.get("export_slides")!({})).toHaveProperty("error");
+  const page = await format!.export({
+    markdown: "# One\n\n---\n\n# Two",
+    path: null,
+  });
+  expect(page).toContain("<title>name</title>");
+  expect(page.match(/<svg[^>]*data-marpit-svg/g)).toHaveLength(2);
 });
 
 it("renders nothing on edits while no slides tab is open", async () => {
@@ -78,7 +95,10 @@ it("sends the deck again only when it changed, and to a page that opens", async 
       view: {
         html: "",
         postMessage: (m: unknown) => void sent.push(m),
-        onDidReceiveMessage: (fn: typeof told) => ((told = fn), { dispose() {} }),
+        onDidReceiveMessage: (fn: typeof told) => (
+          (told = fn),
+          { dispose() {} }
+        ),
         onDidDispose: () => ({ dispose() {} }),
       },
     };

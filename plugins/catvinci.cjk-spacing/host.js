@@ -1,5 +1,6 @@
-// CJK Spacing: a command for the document in front, and - when the
-// setting is on - the same on every save (files.onWillSave).
+// CJK Spacing: a command for the document in front, the same on every save
+// when that setting is on (files.onWillSave), and - from Textus 1.4.4 - a
+// slip underlined where a space is missing, fixed from its card.
 const SKIP = new Set(markdownKeep.SKIP_KINDS);
 
 /** Textus AI's tool: the text spaced, nothing written. */
@@ -9,8 +10,36 @@ function fixSpacing(input) {
   return { text: spaced, changed: spaced !== text };
 }
 
+/** The first place `spaced` differs from `text`: the two characters a
+ *  space goes between, to underline them. */
+function missingAt(text, spaced) {
+  let i = 0;
+  while (i < text.length && text[i] === spaced[i]) i++;
+  return i > 0 && i < text.length ? text.slice(i - 1, i + 1) : undefined;
+}
+
 exports.activate = function () {
   textus.ai.registerTool("fix_cjk_spacing", fixSpacing);
+  if (textus.editor.registerDiagnostics)
+    textus.editor.registerDiagnostics("spacing", {
+      check: async (blocks) => {
+        if ((await textus.settings.get("underline")) === false) return [];
+        const out = [];
+        for (const block of blocks) {
+          if (SKIP.has(block.kind)) continue;
+          const spaced = cjkSpacing.spaceDocument(block.markdown);
+          if (spaced === block.markdown) continue;
+          out.push({
+            block: block.id,
+            anchor: missingAt(block.markdown, spaced),
+            severity: "info",
+            message: textus.l10n.t("missing"),
+            fix: { markdown: spaced, label: textus.l10n.t("addSpaces") },
+          });
+        }
+        return out;
+      },
+    });
   textus.commands.registerEditorCommand(
     "catvinci.cjk-spacing.space",
     async function (editor) {

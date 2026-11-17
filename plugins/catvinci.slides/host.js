@@ -221,6 +221,20 @@ exports.activate = function (ctx) {
       return textus.layout.openView("catvinci.slides.view", { where: "beside" });
     }),
     textus.commands.register("catvinci.slides.export", exportHtml),
+    // From Textus 1.4.4 the deck is also a format in File › Export.
+    ...(textus.export.registerFormat
+      ? [
+          textus.export.registerFormat("slides", {
+            label: t("format"),
+            extension: "html",
+            export: async ({ markdown, path }) => {
+              const { html, css } = render(await withPictures(markdown, path));
+              const name = path ? path.split(/[\\/]/).pop() : t("name");
+              return standalone(name, html, await withMath(html, css));
+            },
+          }),
+        ]
+      : []),
     textus.ai.registerTool("export_slides", exportSlides),
     textus.editor.onDidChange(() => update()),
     // Another document, or back to this one: made again, its pictures read

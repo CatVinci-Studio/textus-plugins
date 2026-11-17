@@ -36,3 +36,25 @@ describe("link cards' tool", () => {
     ).toHaveProperty("error");
   });
 });
+
+it("offers itself on a right-click only over a selected web address", async () => {
+  type Provide = (t: { selectedText?: string }) => unknown[];
+  let provide: Provide | undefined;
+  loadPlugin("catvinci.link-cards", {
+    ui: {
+      registerContextMenu: (_w: string, p: Provide) => (
+        (provide = p),
+        { dispose() {} }
+      ),
+    },
+  });
+  expect(provide!({ selectedText: "just words" })).toEqual([]);
+  expect(provide!({})).toEqual([]);
+  expect(provide!({ selectedText: "https://example.com/a" })).toEqual([
+    {
+      label: "turnInto",
+      command: "catvinci.link-cards.insert",
+      args: ["https://example.com/a"],
+    },
+  ]);
+});

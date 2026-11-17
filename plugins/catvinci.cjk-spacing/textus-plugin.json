@@ -1,7 +1,7 @@
 {
   "id": "catvinci.cjk-spacing",
   "name": "%name%",
-  "version": "0.2.4",
+  "version": "0.3.0",
   "publisher": "catvinci",
   "author": "CatVinci Studio",
   "description": "%description%",
@@ -40,6 +40,12 @@
         "type": "boolean",
         "default": false,
         "title": "%onSave%"
+      },
+      {
+        "key": "underline",
+        "type": "boolean",
+        "default": true,
+        "title": "%underline%"
       }
     ],
     "aiTools": [
@@ -67,6 +73,9 @@
       "description": "Puts a space between Chinese or Japanese text and Latin letters or numbers.",
       "space": "Add Spaces Between CJK and Latin",
       "onSave": "Also when saving",
+      "underline": "Underline missing spaces",
+      "missing": "Spaces are missing between CJK and Latin text here.",
+      "addSpaces": "Add spaces",
       "done": "Spaced {0} blocks.",
       "none": "The spacing is already right.",
       "tool.fix_cjk_spacing": "Puts a space between Chinese or Japanese characters and Latin letters or digits in some Markdown, leaving code and links alone, as the plugin's command does. Returns the spaced text; writes nothing."
@@ -76,6 +85,9 @@
       "description": "在中文、日文与英文字母或数字之间加上空格。",
       "space": "在中英文之间加空格",
       "onSave": "保存时也自动加",
+      "underline": "给缺少的空格加下划线",
+      "missing": "这里中文和英文、数字之间少了空格。",
+      "addSpaces": "加上空格",
       "done": "已调整 {0} 处。",
       "none": "间距已经没问题。",
       "tool.fix_cjk_spacing": "在一段 Markdown 中给中日文字与英文字母、数字之间加上空格，代码和链接保持不变，和插件命令的做法一样。返回处理后的文本，不写入任何文件。"
@@ -85,6 +97,9 @@
       "description": "在中文、日文與英文字母或數字之間加上空格。",
       "space": "在中英文之間加空格",
       "onSave": "儲存時也自動加",
+      "underline": "為缺少的空格加底線",
+      "missing": "這裡中文和英文、數字之間少了空格。",
+      "addSpaces": "加上空格",
       "done": "已調整 {0} 處。",
       "none": "間距已經沒問題。",
       "tool.fix_cjk_spacing": "在一段 Markdown 中為中日文字與英文字母、數字之間加上空格，程式碼和連結保持不變，和外掛命令的做法一樣。回傳處理後的文字，不寫入任何檔案。"
@@ -94,6 +109,9 @@
       "description": "中国語・日本語の文字と英字や数字の間にスペースを入れます。",
       "space": "和文と欧文の間にスペースを入れる",
       "onSave": "保存時にも入れる",
+      "underline": "足りないスペースに下線を引く",
+      "missing": "ここでは和文と欧文・数字の間にスペースが足りません。",
+      "addSpaces": "スペースを入れる",
       "done": "{0} か所を調整しました。",
       "none": "スペースはすでに整っています。",
       "tool.fix_cjk_spacing": "Markdown の中で、中国語・日本語の文字と英字・数字の間に空白を入れます。コードとリンクはそのままで、プラグインのコマンドと同じです。空白を入れた文章を返し、何も書き込みません。"
@@ -103,6 +121,9 @@
       "description": "중국어·일본어 글자와 영문자나 숫자 사이에 공백을 넣습니다.",
       "space": "CJK와 영문 사이에 공백 넣기",
       "onSave": "저장할 때도 넣기",
+      "underline": "빠진 공백에 밑줄 긋기",
+      "missing": "여기서 한중일 문자와 라틴 문자·숫자 사이에 공백이 빠졌습니다.",
+      "addSpaces": "공백 넣기",
       "done": "{0}곳을 고쳤습니다.",
       "none": "간격이 이미 맞습니다.",
       "tool.fix_cjk_spacing": "Markdown에서 중국어·일본어 문자와 라틴 문자·숫자 사이에 공백을 넣습니다. 코드와 링크는 그대로 두며 플러그인 명령과 같습니다. 공백을 넣은 글을 돌려주고 아무것도 쓰지 않습니다."
@@ -112,6 +133,9 @@
       "description": "Pone un espacio entre texto chino o japonés y letras latinas o números.",
       "space": "Añadir espacios entre CJK y latín",
       "onSave": "También al guardar",
+      "underline": "Subrayar los espacios que faltan",
+      "missing": "Aquí faltan espacios entre el texto CJK y el latino.",
+      "addSpaces": "Añadir espacios",
       "done": "{0} bloques ajustados.",
       "none": "El espaciado ya está bien.",
       "tool.fix_cjk_spacing": "Pone un espacio entre caracteres chinos o japoneses y letras latinas o cifras en un Markdown, sin tocar el código ni los enlaces, como el comando del complemento. Devuelve el texto espaciado; no escribe nada."
@@ -121,6 +145,9 @@
       "description": "Met une espace entre le texte chinois ou japonais et les lettres latines ou les chiffres.",
       "space": "Ajouter des espaces entre CJK et latin",
       "onSave": "Aussi à l’enregistrement",
+      "underline": "Souligner les espaces manquantes",
+      "missing": "Il manque ici des espaces entre le texte CJK et le texte latin.",
+      "addSpaces": "Ajouter les espaces",
       "done": "{0} blocs ajustés.",
       "none": "L’espacement est déjà correct.",
       "tool.fix_cjk_spacing": "Met une espace entre les caractères chinois ou japonais et les lettres latines ou les chiffres d'un Markdown, sans toucher au code ni aux liens, comme la commande de l'extension. Renvoie le texte espacé ; n'écrit rien."
@@ -130,6 +157,9 @@
       "description": "Setzt ein Leerzeichen zwischen chinesischen oder japanischen Text und lateinische Buchstaben oder Ziffern.",
       "space": "Leerzeichen zwischen CJK und Latein einfügen",
       "onSave": "Auch beim Speichern",
+      "underline": "Fehlende Leerzeichen unterstreichen",
+      "missing": "Hier fehlen Leerzeichen zwischen CJK- und lateinischem Text.",
+      "addSpaces": "Leerzeichen einfügen",
       "done": "{0} Blöcke angepasst.",
       "none": "Die Abstände stimmen schon.",
       "tool.fix_cjk_spacing": "Setzt in Markdown ein Leerzeichen zwischen chinesische oder japanische Zeichen und lateinische Buchstaben oder Ziffern, Code und Links ausgenommen, wie der Befehl des Plugins. Gibt den Text zurück; schreibt nichts."
@@ -139,6 +169,9 @@
       "description": "Ставит пробел между китайским или японским текстом и латиницей или цифрами.",
       "space": "Добавить пробелы между CJK и латиницей",
       "onSave": "Также при сохранении",
+      "underline": "Подчёркивать недостающие пробелы",
+      "missing": "Здесь не хватает пробелов между текстом CJK и латиницей.",
+      "addSpaces": "Добавить пробелы",
       "done": "Изменено блоков: {0}.",
       "none": "Пробелы уже в порядке.",
       "tool.fix_cjk_spacing": "Ставит пробел между китайскими или японскими знаками и латинскими буквами или цифрами в Markdown, не трогая код и ссылки, как команда плагина. Возвращает текст с пробелами; ничего не записывает."
@@ -148,6 +181,9 @@
       "description": "Coloca um espaço entre texto chinês ou japonês e letras latinas ou números.",
       "space": "Adicionar espaços entre CJK e latim",
       "onSave": "Também ao salvar",
+      "underline": "Sublinhar os espaços que faltam",
+      "missing": "Aqui faltam espaços entre o texto CJK e o latino.",
+      "addSpaces": "Adicionar espaços",
       "done": "{0} blocos ajustados.",
       "none": "O espaçamento já está certo.",
       "tool.fix_cjk_spacing": "Põe um espaço entre caracteres chineses ou japoneses e letras latinas ou algarismos num Markdown, sem mexer no código nem nos links, como o comando do plugin. Devolve o texto espaçado; não escreve nada."

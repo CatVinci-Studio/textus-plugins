@@ -21,6 +21,7 @@ Setzt ein Leerzeichen zwischen chinesischen oder japanischen Text und lateinisch
 
 ## Änderungen
 
+- **0.3.0** - Ab Textus 1.4.4 wird ein Absatz unterstrichen, in dem ein Leerzeichen zwischen CJK- und lateinischem Text fehlt; seine Karte fügt die Leerzeichen ein. In den Einstellungen des Plugins abschaltbar.
 - **0.2.4** - Ein Codeblock in einem längeren Zaun (```` mit ``` darin) bleibt unverändert.
 - **0.2.3** - Das Werkzeug für Textus AI sagt, was es tut: Chinesisch und Japanisch, nicht Koreanisch.
 - **0.2.2** - lässt Obsidians Block-IDs, Dataview-Felder, Hervorhebungen und Tasks-Felder, wie sie sind
