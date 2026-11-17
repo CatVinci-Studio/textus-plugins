@@ -733,11 +733,12 @@ declare global {
       /** Marks over the text (editor.read), asked for the blocks in sight
        *  and again when they change. 1.4.1: `document` is the whole
        *  document those blocks are of, which can be one beside the
-       *  document in front; read it rather than `getBlocks`. */
+       *  document in front; read it rather than `getBlocks`. From 1.8
+       *  also its `path` (null while it is unsaved). */
       registerDecorations(provider: {
         decorate(
           blocks: Block[],
-          document?: { blocks: Block[] },
+          document?: { blocks: Block[]; path?: string | null },
         ): Decoration[] | Promise<Decoration[]>;
       }): Disposable;
       /** Another document came to the front (or none). */
@@ -889,7 +890,10 @@ declare global {
     interface Decoration {
       block: string;
       anchor?: string;
-      style: "highlight" | "underline" | "muted" | "badge";
+      /** From 1.8 also "gutter": a mark in the margin right of the block,
+       *  beside its first line, or at the top of a list, quote, table or
+       *  code (a change, a reading place, a warning). */
+      style: "highlight" | "underline" | "muted" | "badge" | "gutter";
       tone?: "accent" | "warning" | "danger" | "success";
       /** For "badge": its text, after the words. */
       text?: string;
@@ -900,6 +904,12 @@ declare global {
        *  with Cmd/Ctrl+click as a link is - a DOI, an RFC, an issue number
        *  made a link without changing the text. */
       url?: string;
+      /** For "gutter", from 1.8: the plugin's SVG (drawn in the tone) or
+       *  one or two characters; a dot without. */
+      icon?: string;
+      /** For "gutter", from 1.8: a command of the plugin's a click runs;
+       *  without one the mark is only shown. */
+      command?: { id: string; args?: unknown[] };
     }
 
     /** A document about to be saved. */
@@ -1672,13 +1682,24 @@ declare global {
       | "--tone-pink"
       | "--tone-gray";
 
+    /** Bundled grain for the frame; no plugin images or network requests.
+     *  From 1.8. */
+    interface FrameTexture {
+      /** Grain opacity, from 0 to 1. Zero leaves the paint unchanged. */
+      opacity: number;
+      /** Defaults to black in light mode, white in dark mode. */
+      color?: "black" | "white";
+    }
+
     /**
      * From 1.6 (permission `appearance`): a palette over whichever theme is
      * on. Only the colours the others are drawn from are open; borders,
      * hovers and the like follow. Values are colours; `--ui-frame-paint`
      * (the frame round the pages: bar, rail, sidebar) may also be a
      * `linear-`, `radial-` or `conic-gradient(...)` of colours, laid across
-     * the whole window. No images, `url()` or `var()`. Text kept readable:
+     * the whole window. No plugin images, `url()` or `var()`. When UI colours
+     * are supplied, text is kept readable; a frame-only layer leaves other
+     * surfaces alone:
      * below 4.5:1 on its background (or any of the paint's colours) it is
      * moved toward ink or white. The user's Custom CSS still wins.
      *
@@ -1689,16 +1710,24 @@ declare global {
      *     ctx.subscriptions.push(layer);
      */
     interface Appearance {
+      /** From 1.8: `setColors` takes `frameTexture`. */
+      readonly supportsFrameTexture?: boolean;
       /** Lays `colors` over the theme, for light, dark or both (the
        *  default); disposing it, or the plugin stopping, takes it away.
        *  Several plugins: per colour the one last by id wins. Rejects
        *  naming the first colour or value not taken. */
       setColors(
         colors: Partial<Record<OpenColor, string>>,
-        options?: { scheme?: "light" | "dark" | "both" },
+        options?: {
+          scheme?: "light" | "dark" | "both";
+          /** From 1.8. Requires --ui-frame-paint in this layer; the winning
+           *  paint owns its texture. Disposing that layer removes both. */
+          frameTexture?: FrameTexture;
+        },
       ): Promise<Disposable>;
       /** The open colours as the window shows them now (theme and every
-       *  plugin's), as `rgb(...)`; the paint as set, or "". No permission. */
+       *  plugin's), as `rgb(...)`; the paint as rendered (including bundled
+       *  texture), or "". No permission. */
       colors(): Promise<Record<OpenColor, string>>;
       /** The theme (its id, for keeping a palette per theme), the scheme or
        *  a plugin's colours changed. */
