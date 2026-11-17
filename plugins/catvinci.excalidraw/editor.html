@@ -17,9 +17,11 @@
     </style>
     <script>
       // Where Excalidraw finds its fonts: the folder this one is in. Where
-      // the plugin's files have no address (a file given as data), none.
+      // the plugin's files have no address (a file given as data), the
+      // page's own server, never Excalidraw's CDN: a font it lacks is
+      // given up on at once, and nothing is asked of a third party.
       var font = "textus-resource:fonts/Virgil/Virgil-Regular.woff2";
-      if (/^(?!data:).*\/fonts\/Virgil\//.test(font)) window.EXCALIDRAW_ASSET_PATH = font.replace(/fonts\/Virgil\/.*$/, "");
+      window.EXCALIDRAW_ASSET_PATH = /^(?!data:).*\/fonts\/Virgil\//.test(font) ? font.replace(/fonts\/Virgil\/.*$/, "") : "/";
     </script>
   </head>
   <body>
