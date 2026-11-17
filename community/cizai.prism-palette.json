@@ -1,0 +1,8 @@
+{
+  "id": "cizai.prism-palette",
+  "repo": "Ciao1019/textus-prism-palette",
+  "version": "0.1.0",
+  "libs": {
+    "palette.js": "React 19.3.1, React DOM 19.3.1 and Scheduler 0.28.0 (npm, MIT); bundled with the readable Prism UI sources in src/ and its embedded grain tile"
+  }
+}
