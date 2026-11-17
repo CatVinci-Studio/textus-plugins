@@ -41,6 +41,7 @@ The citation key is the item's Citation Key field (or a `Citation Key:` line in 
 
 ## Changes
 
+- **0.4.4** - Sorts names with Textus's own order instead of a copy of it, so the package is smaller. Needs Textus 1.4.3.
 - **0.4.3** - A citation now replaces the selected words; the References list no longer says Zotero is unreachable when it answers, and hover previews show up more reliably.
 - **0.4.2** - Shorter help and empty-state text.
 - **0.4.1** - Its code is split into smaller files by what each part does; nothing changes in use.

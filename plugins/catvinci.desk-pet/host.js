@@ -90,8 +90,8 @@ let pose = "daydream";
 /** The half of the window or screen she sits in: she faces the middle. */
 let side = "right";
 let guest = null;
-/** Whether Textus AI's panel is open: closed, its guest goes home. Textus
- *  before 1.3.10 doesn't say, so it counts as open. */
+/** Whether Textus AI's panel is open: closed, its guest goes home. Open
+ *  until Textus says. */
 let aiOpen = true;
 let aiBusy = false;
 let away = false;
@@ -202,7 +202,7 @@ async function refresh() {
 
 /** Her half and whether she's folded, as Textus has her now. */
 async function placed() {
-  const open = await textus.layout.floatingViews?.().catch(() => []);
+  const open = await textus.layout.floatingViews().catch(() => []);
   const here = open?.find((v) => v.view === VIEW);
   if (!here) return;
   if (here.side) side = here.side;
@@ -455,12 +455,10 @@ exports.activate = function (ctx) {
   void textus.ai.state().then((state) => {
     if (state && state.state !== "idle") void aiChanged(state);
   });
-  if (textus.layout.panels) {
-    const panels = (state) => {
-      aiOpen = !!(state && state.ai && state.ai.open);
-      void refresh();
-    };
-    ctx.subscriptions.push(textus.layout.onDidChangePanels(panels));
-    void textus.layout.panels().then(panels);
-  }
+  const panels = (state) => {
+    aiOpen = !!(state && state.ai && state.ai.open);
+    void refresh();
+  };
+  ctx.subscriptions.push(textus.layout.onDidChangePanels(panels));
+  void textus.layout.panels().then(panels);
 };

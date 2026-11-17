@@ -97,6 +97,7 @@ export function parseBase(raw: unknown): Base {
     b.format !== FORMAT ||
     !b.files ||
     Array.isArray(b.files) ||
+    (b.revision !== undefined && typeof b.revision !== "string") ||
     [b.files, b.parked ?? {}].some(
       (map) =>
         Array.isArray(map) ||

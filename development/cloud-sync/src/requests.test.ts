@@ -37,9 +37,9 @@ it("counts the S3 requests of an idle sync, a saved edit and a deletion", async 
     await a.sync(await openEncryptedStore(raw, password));
     return raw.calls.length;
   };
-  expect(await measure()).toBe(8);
+  expect(await measure()).toBe(3);
   a.files.set("a.md", bytes("edited"));
-  expect(await measure()).toBe(20);
+  expect(await measure()).toBe(18);
   a.files.delete("b.md");
   expect(await measure()).toBe(20);
 });

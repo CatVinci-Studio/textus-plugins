@@ -21,6 +21,9 @@ const BADGES = {
 /** Badges and the branch as Git sees the folder now. */
 async function refresh() {
   const status = await textus.git.status().catch(() => null);
+  states = new Map(((status && status.changes) || []).map((c) => [c.path, c.state]));
+  changed.clear();
+  remark();
   const next = new Set();
   for (const change of (status && status.changes) || []) {
     const badge = BADGES[change.state];
@@ -39,6 +42,72 @@ async function refresh() {
   if (branchItem) branchItem.update(item);
   else branchItem = textus.ui.statusItem("catvinci.git.branch", item);
   return status;
+}
+
+// The blocks changed since the last commit, marked in the margin: the
+// lines the saved file has that its last commit hadn't, found in the
+// blocks. Lines are compared without their list, quote or heading marks
+// and outer spaces, so a file Textus writes a little differently from how
+// it was committed is not all marked.
+
+/** The changed lines of each file asked about, by path; null for one Git
+ *  doesn't follow, isn't changed, or is too large to compare. */
+const changed = new Map();
+/** The changed files' states, from the last refresh. */
+let states = new Map();
+
+const plainLine = (line) =>
+  line
+    .trim()
+    .replace(/^(?:>\s*)+/, "")
+    .replace(/^(?:[-*+]|\d+[.)])\s+(?:\[[ xX/-]\]\s+)?/, "")
+    .replace(/^#{1,6}\s+/, "")
+    .trim();
+
+async function changedLines(path) {
+  if (changed.has(path)) return changed.get(path);
+  let lines = null;
+  if (states.get(path) === "modified") {
+    const last = (await textus.git.log(path, { limit: 1 }).catch(() => []))[0];
+    const before = last ? await textus.git.show(last.hash, last.path).catch(() => null) : null;
+    const now = before === null ? null : await textus.files.readText(path).catch(() => null);
+    const parts = now === null ? null : lineDiff(before, now);
+    if (parts)
+      lines = new Set(
+        parts
+          .filter((p) => p.kind === "added")
+          .map((p) => plainLine(p.line))
+          // An empty line or a lone mark is in every document.
+          .filter((line) => line.length > 1 && !/^[-*_=`~|:]+$/.test(line)),
+      );
+  }
+  changed.set(path, lines);
+  return lines;
+}
+
+/** A mark beside each block in sight holding a line the last commit hadn't. */
+async function changedBlocks(inSight, doc) {
+  const path = doc && doc.path;
+  if (!path || !states.has(path)) return [];
+  const lines = await changedLines(path);
+  if (!lines || !lines.size) return [];
+  return inSight
+    .filter((block) => block.markdown.split("\n").some((line) => lines.has(plainLine(line))))
+    .map((block) => ({
+      block: block.id,
+      style: "gutter",
+      tone: "warning",
+      tooltip: t("blockChanged"),
+      command: { id: "catvinci.git.commit" },
+    }));
+}
+
+let marks = null;
+/** Asked again with what Git says now. Hosts before 1.8 send no path:
+ *  no marks there. */
+function remark() {
+  if (marks) marks.dispose();
+  marks = textus.editor.registerDecorations({ decorate: changedBlocks });
 }
 
 let timer = null;

@@ -17,6 +17,7 @@ Guarda cada salvamento de um documento como uma versão, para ver o que mudou e 
 
 ## Alterações
 
+- **0.5.0** - A partir do Textus 1.4.4, as versões que outros plugins guardam de um documento (as do Cloud Sync) também aparecem, cada uma sob o nome da sua origem, para comparar e restaurar como as demais.
 - **0.4.1** - Restaurar é uma só palavra, assim o botão cabe numa barra lateral estreita em todos os idiomas.
 - **0.4.0** - As versões ficam mais espaçadas com o tempo em vez de só as últimas 50; cada texto é guardado uma vez; as versões de um documento apagado vão-se um mês depois. Compare duas versões quaisquer palavra a palavra, reponha uma só alteração, dê nome e fixe versões; as alterações feitas fora do Textus ficam guardadas. As versões da 0.3 passam sozinhas. Requer o Textus 1.4.3. Numa pasta Git no desktop, os commits do documento aparecem sob as suas versões.
 - **0.3.8** - O texto de antes do primeiro salvamento não se perde mais quando esse salvamento acontece logo ao abrir o documento.

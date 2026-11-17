@@ -99,13 +99,54 @@ async function upload(
     offset += block.size;
   }
 }
+/** One request: blocks are named by their contents, so sending one that is
+ *  there already changes nothing, and asking first would cost as much. The
+ *  answer is the check: S3 refuses a body that isn't the one signed, WebDAV
+ *  one cut short; every download checks each block's hash again. */
 async function putBlock(store: ObjectStore, hashed: string, bytes: Uint8Array) {
-  const key = blockKey(hashed);
-  if (!(await store.has(key))) await store.put(key, bytes);
-  // A stored block's name alone is not proof of its contents.
-  const actual = await store.get(key);
-  if (!actual || (await hash(actual)) !== hashed)
-    throw new SyncError("integrityError");
+  await store.put(blockKey(hashed), bytes);
+}
+
+/** Nothing changed here since the last sync, and the remote is still the
+ *  revision it was then: done, with one request and no lock. Null when
+ *  anything may have to move, and the sync runs in full. */
+async function unchanged(
+  options: Options,
+  files: Record<string, Entry>,
+): Promise<Result | null> {
+  const { local, store, base } = options;
+  if (!base.revision || options.cleanupDue || options.keep.chosen) return null;
+  const ours = Object.entries(files).filter(([path]) => local.wants(path));
+  if (
+    ours.length !== Object.keys(base.files).length ||
+    ours.some(([path, entry]) => base.files[path] !== entry.hash)
+  )
+    return null;
+  try {
+    const raw = await store.get(HEAD);
+    const remote = raw && parseManifest(raw);
+    if (!remote || remote.revision !== base.revision) return null;
+    // The same revision, but what this device takes of it changed (a folder
+    // no longer left out): its files there are fetched in full.
+    const theirs = Object.entries(remote.files).filter(([p]) => local.wants(p));
+    if (
+      theirs.length !== ours.length ||
+      theirs.some(([path, entry]) => base.files[path] !== entry.hash)
+    )
+      return null;
+  } catch {
+    // Half written (a WebDAV PUT isn't atomic): read again under the lock.
+    return null;
+  }
+  return {
+    uploaded: 0,
+    downloaded: 0,
+    removed: 0,
+    moved: 0,
+    conflicts: [],
+    deferred: [],
+    unchanged: ours.length,
+  };
 }
 
 export async function synchronize(options: Options): Promise<Result> {
@@ -117,6 +158,12 @@ export async function synchronize(options: Options): Promise<Result> {
   };
   checkAbort(signal);
   await local.check();
+  progress("scanning", 0, 0);
+  const files = await local.scan();
+  checkAbort(signal);
+  const idle = await unchanged(options, files);
+  if (idle) return idle;
+  checkAbort(signal);
   progress("locking", 0, 0);
   if (!(await store.create(LOCK, encode(owner)))) throw new SyncError("locked");
   const ownLock = async () => {
@@ -150,9 +197,6 @@ export async function synchronize(options: Options): Promise<Result> {
         Object.keys(options.base.parked ?? {}).length)
     )
       throw new SyncError("remoteMissing");
-    progress("scanning", 0, 0);
-    const files = await local.scan();
-    checkAbort(signal);
     const now = new Date(store.now?.() ?? Date.now());
     const cutoff = now.getTime() - TRASH_DAYS * 86_400_000;
     const next: Manifest = {
@@ -290,12 +334,18 @@ export async function synchronize(options: Options): Promise<Result> {
         pool.give(entry.size);
       }
     };
+    // Done is what has finished: uploads still sending don't count yet.
+    let reached = 0,
+      sending = 0;
+    const report = () =>
+      progress("transferring", reached - sending, actions.length);
     for (let i = 0; i < actions.length; i++) {
       fetchAhead(i);
       checkAbort(signal);
       await local.check();
       const { path, kind } = actions[i];
-      progress("transferring", i, actions.length);
+      reached = i;
+      report();
       const l = files[path],
         r = remote.files[path];
       if (done.has(path)) continue;
@@ -379,16 +429,23 @@ export async function synchronize(options: Options): Promise<Result> {
         result.deferred.push(path);
         continue;
       }
+      sending++;
       pool.run(l.size, async () => {
-        await (begun ??= blocks!.begin());
-        await upload(store, l, current, known, signal, (hashed) =>
-          blocks!.stored(hashed),
-        );
-        next.files[path] = l;
-        base.files[path] = l.hash;
-        result.uploaded++;
+        try {
+          await (begun ??= blocks!.begin());
+          await upload(store, l, current, known, signal, (hashed) =>
+            blocks!.stored(hashed),
+          );
+          next.files[path] = l;
+          base.files[path] = l.hash;
+          result.uploaded++;
+        } finally {
+          sending--;
+          report();
+        }
       });
     }
+    reached = actions.length;
     await pool.drain();
     checkAbort(signal);
     await local.check();
@@ -410,6 +467,8 @@ export async function synchronize(options: Options): Promise<Result> {
       ownLock,
     });
     await blocks.done();
+    // Left to do (a file open, changed meanwhile): next time runs in full.
+    if (!result.deferred.length && next.revision) base.revision = next.revision;
     await options.saveBase(base);
     completed = true;
     return result;

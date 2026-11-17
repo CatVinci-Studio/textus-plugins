@@ -3,9 +3,7 @@
   const api = acquireTextusApi();
   const t = api.t;
   const $ = (id) => document.getElementById(id);
-  $("new").setAttribute("aria-label", t("new"));
-  $("empty-intro").textContent = t("emptyIntro");
-  $("empty-new").textContent = t("new");
+  // The buttons' and messages' words come from their data-t.
   $("empty-new").addEventListener("click", () => $("new").click());
   // A note's box as tall as its text, from one line.
   const fit = (area) => {
@@ -14,7 +12,6 @@
   };
   $("filter").placeholder = t("search");
   $("filter").setAttribute("aria-label", t("search"));
-  $("no-match").textContent = t("noMatch");
   let all = [];
   $("filter").addEventListener("input", () => render(all));
   const timers = new Map();

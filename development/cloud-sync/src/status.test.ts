@@ -1,5 +1,5 @@
 import { expect, it } from "vitest";
-import { statusText, type Status } from "./status";
+import { fewPerSecond, statusText, type Status } from "./status";
 
 const t = (key: string, ...args: unknown[]) => [key, ...args].join(" ");
 const now = Date.parse("2026-11-05T12:00:00Z");
@@ -43,4 +43,25 @@ it("puts syncing, errors and conflicts before the time", () => {
   expect(statusText({ ...synced, result: conflict }, now, t, "en")).toBe(
     "statusConflict",
   );
+});
+
+it("passes a sync's progress on a few times a second, never dropping a new phase or the end", () => {
+  let now = 0;
+  const heard: string[] = [];
+  const report = fewPerSecond(
+    (phase, current, total) => heard.push(`${phase} ${current}/${total}`),
+    () => now,
+  );
+  report("transferring", 0, 10);
+  report("transferring", 1, 10);
+  now = 250;
+  report("transferring", 2, 10);
+  report("transferring", 10, 10);
+  report("publishing", 10, 10);
+  expect(heard).toEqual([
+    "transferring 0/10",
+    "transferring 2/10",
+    "transferring 10/10",
+    "publishing 10/10",
+  ]);
 });

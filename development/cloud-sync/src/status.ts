@@ -34,3 +34,20 @@ export function statusText(
   );
   return t("statusSynced", when);
 }
+
+/** A sync's progress passed on a few times a second: many transfers end
+ *  at once, and each would redraw every panel. A new phase and the last
+ *  step always pass. */
+export function fewPerSecond(
+  report: (phase: string, current: number, total: number) => void,
+  now: () => number = Date.now,
+) {
+  let shown = "",
+    at = -Infinity;
+  return (phase: string, current: number, total: number) => {
+    if (phase === shown && current < total && now() - at < 200) return;
+    shown = phase;
+    at = now();
+    report(phase, current, total);
+  };
+}

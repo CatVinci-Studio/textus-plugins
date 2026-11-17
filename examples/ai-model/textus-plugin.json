@@ -1,0 +1,44 @@
+{
+  "id": "your-name.title-ideas",
+  "name": "%name%",
+  "version": "0.1.0",
+  "publisher": "your-name",
+  "description": "%description%",
+  "license": "MIT",
+  "engines": {
+    "textus": ">=1.4.4-rc.1"
+  },
+  "platforms": ["desktop", "ios"],
+  "main": "host.js",
+  "permissions": ["editor.read", "ai.model"],
+  "activationEvents": ["onStartupFinished"],
+  "contributes": {
+    "commands": [
+      {
+        "command": "your-name.title-ideas.suggest",
+        "title": "%suggest%"
+      }
+    ],
+    "menus": {
+      "app/plugins": [{ "command": "your-name.title-ideas.suggest" }]
+    }
+  },
+  "l10n": {
+    "en": {
+      "name": "Title Ideas",
+      "description": "Asks your writing model for three titles for the document in front, and finishes a word you are typing from the words already in it.",
+      "suggest": "Suggest Titles",
+      "words": "Words in this document",
+      "off": "Turn on Textus AI to get title ideas.",
+      "empty": "Write something first."
+    },
+    "zh": {
+      "name": "标题灵感",
+      "description": "让你的写作模型为当前文档想三个标题；打字时用文档里已有的词补全正在写的词。",
+      "suggest": "推荐标题",
+      "words": "本文档里的词",
+      "off": "打开 Textus AI 后才能推荐标题。",
+      "empty": "先写点内容。"
+    }
+  }
+}

@@ -35,6 +35,7 @@ It runs on the desktop and on iOS.
 
 ## Changes
 
+- **0.5.0** - Right-click a selected web address for Turn into a Link Card; the item no longer shows for other selections. Needs Textus 1.4.4.
 - **0.4.3** - Pictures and site icons show again; titles with an apostrophe are kept whole; **Fetch again** moved into the card's right-click menu; YouTube links show as cards with the video's still.
 - **0.4.2** - Its bars, lists and controls are Textus's own, grow with the interface and follow every theme; needs Textus 1.3.12.
 - **0.4.1** - Its page now says in one sentence what it does, what it can do, and what changed in each version.

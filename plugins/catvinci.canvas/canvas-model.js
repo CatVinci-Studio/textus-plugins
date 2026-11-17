@@ -1,6 +1,5 @@
 // Canvas: what a JSON Canvas file (jsoncanvas.org) holds, where its parts
-// sit, and what an Excalidraw note shows instead of its drawing. Pure, for
-// the host, the page and the tests.
+// sit. Pure, for the host, the page and the tests.
 
 (function (root) {
   "use strict";
@@ -304,47 +303,6 @@
     return s.startsWith("^") ? { block: s.slice(1) } : { heading: s };
   }
 
-  /** The pictures an Excalidraw note embeds in its text (`![[x.svg]]`,
-   *  `![](x.png)`), outside its code blocks and %% comments - where the
-   *  drawing's data is kept. */
-  function excalidrawEmbeds(text) {
-    const lines = [];
-    let fence = null;
-    for (const line of String(text).split(/\r?\n/)) {
-      const mark = /^\s*(```|~~~)/.exec(line);
-      if (fence) {
-        if (mark && mark[1] === fence) fence = null;
-      } else if (mark) fence = mark[1];
-      else lines.push(line);
-    }
-    const visible = lines.join("\n").replace(/%%[\s\S]*?(?:%%|$)/g, "");
-    const found = [];
-    const add = (target) => {
-      const t = target.trim();
-      if (IMAGES[extension(t)] && !found.includes(t)) found.push(t);
-    };
-    for (const m of visible.matchAll(/!\[\[([^\]|#]+)(?:[#|][^\]]*)?\]\]/g)) add(m[1]);
-    for (const m of visible.matchAll(/!\[[^\]]*\]\(<?([^)>]+?)>?(?:\s+"[^"]*")?\)/g)) {
-      let target = m[1];
-      try {
-        target = decodeURIComponent(target);
-      } catch {
-        // Not encoded: as written.
-      }
-      if (!/^[a-z]+:/i.test(target)) add(target);
-    }
-    return found;
-  }
-
-  /** The pictures Excalidraw's auto-export writes beside a drawing at
-   *  `path`: Drawing.excalidraw.svg, or Drawing.svg with the "keep
-   *  .excalidraw" setting off; SVG first. */
-  function excalidrawExports(path) {
-    const base = String(path).replace(/\.excalidraw(\.md)?$/i, "");
-    if (base === String(path)) return [];
-    return [".excalidraw.svg", ".excalidraw.png", ".svg", ".png"].map((ext) => base + ext);
-  }
-
   root.jsonCanvas = {
     parse: parse,
     color: color,
@@ -362,7 +320,5 @@
     mimeOf: mimeOf,
     titleOf: titleOf,
     subpathPlace: subpathPlace,
-    excalidrawEmbeds: excalidrawEmbeds,
-    excalidrawExports: excalidrawExports,
   };
 })(typeof window !== "undefined" ? window : globalThis);

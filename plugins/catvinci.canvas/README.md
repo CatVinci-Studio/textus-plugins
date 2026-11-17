@@ -9,12 +9,13 @@ Open a `.canvas` file from the sidebar and it fills a tab, fitted to the window.
 - Arrows, their labels and groups are drawn as in Obsidian. Colors come from your theme: Obsidian's six preset colors take the theme's red, orange, yellow, green, teal and purple.
 - Keys: **+** and **-** zoom, **0** or **F** fits, the arrow keys move.
 
-Excalidraw drawings (`.excalidraw.md`, `.excalidraw`) open too. Textus doesn't draw them; it shows the picture Excalidraw exported: one the note embeds, or the `.svg`/`.png` that Excalidraw's auto-export writes beside it. Without one, **Open as Text** shows the file itself.
+Excalidraw drawings open with the **Excalidraw** plugin, where you can also edit them.
 
 The plugin asks only to read files (to show the notes and pictures on a canvas). It never changes them. It works on the desktop and on iPhone and iPad.
 
 ## Changes
 
+- **0.1.6** - Excalidraw drawings now open with the new Excalidraw plugin, which edits them; Canvas no longer shows their exported picture.
 - **0.1.5** - The page follows Textus's language by itself. Needs Textus 1.4.3.
 - **0.1.4** - An empty or unreadable canvas now shows one clear message across the page. Card labels stay readable in every theme, and dragging no longer stops when the pointer leaves the canvas.
 - **0.1.3** - Shorter help and empty-state text. Its bar keeps Textus's one order: what it shows, then find and zoom.

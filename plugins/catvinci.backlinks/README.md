@@ -39,6 +39,7 @@ The **Two-way Links** tab of the sidebar shows what links to the document in fro
 
 ## Changes
 
+- **0.4.7** - Code kept for Textus versions it no longer runs on is gone.
 - **0.4.6** - The filter field and empty message follow Textus's language when you switch it. Needs Textus 1.4.3.
 - **0.4.5** - Unlinked mentions open on the right line, and Link Style is set by Textus itself (Textus 1.4.3).
 - **0.4.4** - The Convert Links commands leave links inside a code block alone and convert the ones after it, and Unlinked mentions no longer lists or links names in front matter or code.

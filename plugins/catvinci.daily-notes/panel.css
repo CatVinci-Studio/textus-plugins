@@ -30,6 +30,11 @@ body {
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+/* Too narrow for even the short name beside the buttons: the bar's
+   buttons go on to the row under it. */
+#bar.stacked #month {
+  flex-basis: 100%;
+}
 #month:enabled {
   cursor: pointer;
 }

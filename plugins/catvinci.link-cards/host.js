@@ -32,8 +32,8 @@ async function fetchLinkCard(input) {
 
 const block = (card) => "```card\n" + linkCards.write(card) + "\n```\n";
 
-async function insertCard() {
-  const selected = await textus.editor.getSelection();
+async function insertCard(given) {
+  const selected = typeof given === "string" ? { text: given } : await textus.editor.getSelection();
   const chosen = selected && linkCards.isUrl(selected.text) ? selected.text.trim() : null;
   const url = chosen || (await textus.ui.input({ prompt: t("urlPrompt"), placeholder: "https://" }));
   if (!url || !linkCards.isUrl(url)) return url && textus.ui.message(t("notUrl"));
@@ -86,5 +86,11 @@ exports.activate = function (ctx) {
     textus.views.registerCodeBlock("card", cardBlock(ctx, true)),
     textus.views.registerCodeBlock("cardlink", cardBlock(ctx, false)),
     textus.views.registerCodeBlock("embed", cardBlock(ctx, false)),
+    // Offered on a right-click only when the selection is a web address.
+    textus.ui.registerContextMenu("editor", ({ selectedText }) =>
+      selectedText && linkCards.isUrl(selectedText)
+        ? [{ label: t("turnInto"), command: "catvinci.link-cards.insert", args: [selectedText] }]
+        : [],
+    ),
   );
 };

@@ -80,6 +80,39 @@ suite("workspace synchronization", () => {
     expect(result.conflicts[0]).not.toBe(name);
     expect(text(local.files.get(result.conflicts[0]))).toBe("remote");
   });
+  it("with nothing changed on either side, asks for the remote's revision alone, no lock", async () => {
+    const remote = new MemoryStore();
+    const a = new MemoryLocal({ "note.md": "one" }),
+      b = new MemoryLocal();
+    await a.sync(remote);
+    await b.sync(remote);
+    const asked: string[] = [];
+    for (const call of ["get", "put", "create", "has", "remove"] as const) {
+      const run = remote[call].bind(remote) as (...a: unknown[]) => unknown;
+      (remote as unknown as Record<string, unknown>)[call] = (
+        ...args: unknown[]
+      ) => (asked.push(`${call} ${String(args[0])}`), run(...args));
+    }
+    expect((await b.sync(remote)).unchanged).toBe(1);
+    expect(asked).toEqual([`get ${HEAD}`]);
+    // Changed elsewhere: the revision differs, and the sync runs in full.
+    a.files.set("note.md", bytes("two"));
+    await a.sync(remote);
+    expect((await b.sync(remote)).downloaded).toBe(1);
+    expect(text(b.files.get("note.md"))).toBe("two");
+  });
+  it("syncs in full once a folder left out is taken again, the remote unchanged", async () => {
+    const remote = new MemoryStore();
+    await new MemoryLocal({ "a.md": "one", "X/b.md": "two" }).sync(remote);
+    const b = new MemoryLocal();
+    b.leaves = (path) => path.startsWith("X/");
+    await b.sync(remote);
+    await b.sync(remote);
+    expect(b.files.has("X/b.md")).toBe(false);
+    b.leaves = () => false;
+    expect((await b.sync(remote)).downloaded).toBe(1);
+    expect(text(b.files.get("X/b.md"))).toBe("two");
+  });
   it("defers open destinations without advancing their baseline or changing the remote file", async () => {
     const remote = new MemoryStore();
     const a = new MemoryLocal({ "note.md": "base" }),
@@ -168,7 +201,9 @@ suite("workspace synchronization", () => {
     const files = { "a.md": "one", "b.md": "two", "c.md": "three" };
     const blockOf = async (t: string) => blockKey(await hash(bytes(t)));
     // A first upload that stops at its third block, then runs again.
-    const stopped = async (between?: (remote: MemoryStore) => Promise<void>) => {
+    const stopped = async (
+      between?: (remote: MemoryStore) => Promise<void>,
+    ) => {
       const remote = new MemoryStore(),
         a = new MemoryLocal(files);
       let kept: unknown = null;
@@ -187,17 +222,16 @@ suite("workspace synchronization", () => {
       ).rejects.toThrow("offline");
       remote.put = put;
       await between?.(remote);
-      const checked: string[] = [];
-      const has = remote.has.bind(remote);
-      remote.has = async (key) => (checked.push(key), has(key));
-      const get = remote.get.bind(remote);
-      remote.get = async (key) => (checked.push(key), get(key));
+      const sent: string[] = [];
+      remote.put = async (key, value) => (sent.push(key), put(key, value));
       expect((await a.sync(remote, undefined, { pending })).uploaded).toBe(3);
       const stored = [await blockOf("one"), await blockOf("two")];
       return {
-        recheck: stored.filter((k) => checked.includes(k)).length,
+        recheck: stored.filter((k) => sent.includes(k)).length,
         kept,
-        leftover: [...remote.values.keys()].filter((k) => k.includes("pending")),
+        leftover: [...remote.values.keys()].filter((k) =>
+          k.includes("pending"),
+        ),
       };
     };
     expect(await stopped()).toEqual({ recheck: 0, kept: null, leftover: [] });
@@ -225,6 +259,7 @@ suite("workspace synchronization", () => {
       fetching = 0,
       fetchingMost = 0;
     const gets: string[] = [];
+    const puts: string[] = [];
     let theirs = new Set<string>();
     const slow =
       <A extends [string, ...unknown[]], R>(
@@ -241,7 +276,7 @@ suite("workspace synchronization", () => {
         if (theirBlock) fetching--;
         return run(...args);
       };
-    remote.put = slow(remote.put.bind(remote));
+    remote.put = slow(remote.put.bind(remote), puts);
     remote.get = slow(remote.get.bind(remote), gets);
     expect(
       (await new MemoryLocal(docs).sync(remote, undefined, { parallel: 4 }))
@@ -249,7 +284,7 @@ suite("workspace synchronization", () => {
     ).toBe(12);
     expect(most).toBe(4);
     most = 0;
-    theirs = new Set(gets);
+    theirs = new Set(puts);
     gets.length = 0;
     const mine = Object.fromEntries(
       Array.from({ length: 12 }, (_, i) => [`m${i}.md`, `mine ${i}`]),
@@ -264,7 +299,7 @@ suite("workspace synchronization", () => {
     expect(
       Object.fromEntries([...b.files].map(([k, v]) => [k, text(v)])),
     ).toEqual({ ...docs, ...mine });
-    // Each fetched once, however far ahead (and each sent read back once).
+    // Each fetched once, however far ahead.
     expect(gets).toEqual([...new Set(gets)]);
   });
   it("holds large files in memory one at a time, both ways", async () => {

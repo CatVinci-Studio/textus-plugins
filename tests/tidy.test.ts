@@ -181,9 +181,11 @@ describe("blank lines before a ^block-id", () => {
 });
 
 /** Tidy as the sandbox runs it, with its settings and commands. */
-function host(settings: Record<string, unknown> = {}) {
+function host(settings: Record<string, unknown> = {}, diagnostics = true) {
   const commands = new Map<string, (editor: unknown) => Promise<void>>();
   let provider: { decorate: (blocks: unknown[]) => Promise<unknown[]> } | null =
+    null;
+  let checker: { check: (blocks: unknown[]) => Promise<unknown[]> } | null =
     null;
   const { tools } = loadPlugin("catvinci.markdown-lint", {
     settings: { get: async (key: string) => settings[key] },
@@ -198,6 +200,10 @@ function host(settings: Record<string, unknown> = {}) {
         (provider = p),
         { dispose() {} }
       ),
+      // Textus 1.4.4 on; before, only decorations.
+      registerDiagnostics: diagnostics
+        ? (_id: string, c: typeof checker) => ((checker = c), { dispose() {} })
+        : undefined,
     },
     ui: { confirm: async () => true, notice: async () => {} },
   });
@@ -205,6 +211,7 @@ function host(settings: Record<string, unknown> = {}) {
     commands,
     tools,
     decorate: (blocks: unknown[]) => provider!.decorate(blocks),
+    check: (blocks: unknown[]) => checker!.check(blocks),
   };
 }
 
@@ -237,13 +244,29 @@ describe("Tidy: Markdown Lint and Text Tidy in one", () => {
     expect(await rules({})).toEqual(["MD030", "MD009"]);
     expect(await rules({ off: ["no-trailing-spaces", " md030 "] })).toEqual([]);
     const block = { id: "a", kind: "paragraph", markdown: "Trailing   " };
-    expect(await host({ off: ["MD009"] }).decorate([block])).toEqual([]);
+    expect(await host({ off: ["MD009"] }).check([block])).toEqual([]);
   });
 
   it("underlines nothing with underlining off", async () => {
     const block = { id: "a", kind: "list", markdown: "*  one" };
-    expect(await host().decorate([block])).toHaveLength(1);
-    expect(await host({ underline: false }).decorate([block])).toEqual([]);
+    expect(await host().check([block])).toHaveLength(1);
+    expect(await host({ underline: false }).check([block])).toEqual([]);
+  });
+
+  it("explains each finding on the slip card, with its fix for the block", async () => {
+    const block = { id: "a", kind: "list", markdown: "*  one" };
+    expect(await host().check([block])).toEqual([
+      expect.objectContaining({
+        block: "a",
+        severity: "warning",
+        message: expect.stringMatching(/^MD030: /),
+        fix: { markdown: "* one" },
+      }),
+    ]);
+    // An older Textus: an underline, as before.
+    expect(await host({}, false).decorate([block])).toEqual([
+      expect.objectContaining({ block: "a", style: "underline" }),
+    ]);
   });
 });
 

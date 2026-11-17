@@ -72,6 +72,17 @@ function mindMap(el, source, meta, dark) {
       return c.tones[seen.get(key) % c.tones.length];
     },
   });
+  // d3-zoom's own extent reads the svg's width attribute, which "100%"
+  // can't give while the svg has no layout yet: the real box instead.
+  if (map.zoom && map.zoom.extent)
+    map.zoom.extent(function () {
+      var w = svg.clientWidth || el.clientWidth || 1;
+      var h = svg.clientHeight || Number(meta.height) || 360;
+      return [
+        [0, 0],
+        [w, h],
+      ];
+    });
   maps.set(el, map);
   return map.setData(root).then(function () {
     return map.fit();

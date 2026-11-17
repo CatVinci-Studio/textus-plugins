@@ -1,32 +1,9 @@
-// Quick Insert: the / menu's blocks are Textus's own Format commands, run
-// straight from the manifest (`runs`), so they land before the next key;
-// here are the rest: a callout, Turn into…, emoji after :, and dates after
-// @ (@tomorrow, @下周五), written as a date or a link to the day's note.
+// Quick Insert: the / menu lists Textus's own blocks (contributes.blockMenu);
+// here are emoji after : and dates after @ (@tomorrow, @下周五), written as
+// a date or a link to the day's note.
 
 /* global quickEmoji, naturalDates, folderConventions, linkStyle */
-const t = (key, ...args) => textus.l10n.t(key, ...args);
 const DAY = /^(\d{4})-(\d{2})-(\d{2})$/;
-
-/** Turn into…'s blocks, as textus.insertBlock names them. */
-const BLOCKS = {
-  text: "paragraph",
-  h1: "h1",
-  h2: "h2",
-  h3: "h3",
-  bullet: "bullet-list",
-  numbered: "ordered-list",
-  task: "task-list",
-  quote: "blockquote",
-  code: "code-block",
-};
-
-async function turnInto() {
-  const name = await textus.ui.pick(
-    Object.keys(BLOCKS).map((value) => ({ label: t(value), value: value })),
-    { placeholder: t("turnPlaceholder") },
-  );
-  if (name) await textus.commands.execute("textus.insertBlock", BLOCKS[name]);
-}
 
 const dateOf = (day) => {
   const m = DAY.exec(day);
@@ -60,7 +37,8 @@ function daily() {
 async function dayLink(day, path) {
   const notes = await daily();
   const name = textus.dates.format(dateOf(day), notes.format);
-  if (!notes.root) return "[" + name + "](" + name.replace(/ /g, "%20") + ".md)";
+  if (!notes.root)
+    return "[" + name + "](" + name.replace(/ /g, "%20") + ".md)";
   const note =
     notes.root + "/" + (notes.folder ? notes.folder + "/" : "") + name + ".md";
   const from =
@@ -112,12 +90,8 @@ async function dateCompletions(context) {
 }
 
 exports.activate = function (ctx) {
-  const command = (name, run) =>
-    textus.commands.register("catvinci.quick-insert." + name, run);
   const forget = () => void (dailyNotes = null);
   ctx.subscriptions.push(
-    command("callout", () => textus.editor.insertText("> [!NOTE]\n> ")),
-    command("turnInto", turnInto),
     textus.ai.registerTool("parse_date", parseDate),
     textus.editor.registerCompletion("catvinci.quick-insert.emoji", {
       provideCompletions(context) {

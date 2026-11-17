@@ -6,13 +6,13 @@
   <body>
     <div id="bar">
       <input id="filter" class="tx-input" type="search" />
-      <button id="new" class="tx-icon-button"><span class="tx-icon" data-icon="plus"></span></button>
+      <button id="new" class="tx-icon-button" data-t-label="new"><span class="tx-icon" data-icon="plus"></span></button>
     </div>
     <ul id="notes"></ul>
-    <p id="no-match" class="tx-empty" hidden></p>
+    <p id="no-match" class="tx-empty" data-t="noMatch" hidden></p>
     <div id="empty" class="tx-empty" hidden>
-      <p id="empty-intro"></p>
-      <button id="empty-new" type="button" class="tx-button"></button>
+      <p id="empty-intro" data-t="emptyIntro"></p>
+      <button id="empty-new" type="button" class="tx-button" data-t="new"></button>
     </div>
     <script src="textus-resource:panel.js"></script>
   </body>

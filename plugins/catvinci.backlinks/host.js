@@ -247,9 +247,7 @@ async function chooseStyle() {
     { placeholder: t("styleAsk") },
   );
   if (!picked || picked === now) return;
-  // From Textus 1.4.3 Textus writes it; before, the settings file by hand.
-  if (textus.text) await textus.files.setConvention("linkStyle", picked);
-  else await linkStyle.choose(root, picked);
+  await textus.files.setConvention("linkStyle", picked);
   await textus.ui.notice(t(picked === "wiki" ? "styleIsWiki" : "styleIsMarkdown"));
 }
 

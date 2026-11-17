@@ -48,7 +48,7 @@ type Shown = {
 };
 
 /** The plugin with its History panel open on `path`. */
-function withPanel(storage: ReturnType<typeof place>, path: string, git?: unknown) {
+function withPanel(storage: ReturnType<typeof place>, path: string, git?: unknown, history?: unknown) {
   const on: Record<string, (e: never) => unknown> = {};
   const listen = (name: string) => (fn: (e: never) => unknown) => void (on[name] = fn);
   let resolve: (w: unknown) => Promise<void> = async () => {};
@@ -78,6 +78,7 @@ function withPanel(storage: ReturnType<typeof place>, path: string, git?: unknow
       },
       ui: { input: async () => "Sent to the editor" },
       ...(git ? { git } : {}),
+      ...(history ? { history } : {}),
       layout: { openUntitled: async (text: string) => void opened.push(text) },
       views: {
         registerWebview: (_id: string, provider: { resolve: typeof resolve }) => void (resolve = provider.resolve),
@@ -294,6 +295,23 @@ describe("a document's Git commits", () => {
     expect(p.posted.findLast((m) => m.type === "texts")).toMatchObject({ from: "first text", to: "second text" });
     await p.post({ type: "restore", id: "git:a1" });
     expect(p.proposed).toEqual(["first text\n"]);
+  });
+
+  it("are listed with other plugins' versions, each under its source's name", async () => {
+    const history = {
+      sources: async () => [{ id: "catvinci.cloud-sync/versions", label: "Cloud Sync", plugin: "catvinci.cloud-sync" }],
+      versions: async (_source: string, path: string) =>
+        path === "/root/A.md" ? [{ id: "h1", at: "2026-11-01T10:00:00Z", author: "Laptop" }] : [],
+      read: async (_source: string, _path: string, version: string) => (version === "h1" ? "synced text\n" : null),
+    };
+    const p = withPanel(place(), "/root/A.md", undefined, history);
+    await p.ready;
+    const shown = p.latest() as Shown & { others: { label: string; versions: { id: string }[] }[] };
+    expect(shown.others).toEqual([
+      { label: "Cloud Sync", versions: [{ id: "src:catvinci.cloud-sync/versions\nh1", at: "2026-11-01T10:00:00Z", subject: null, author: "Laptop" }] },
+    ]);
+    await p.post({ type: "restore", id: "src:catvinci.cloud-sync/versions\nh1" });
+    expect(p.proposed).toEqual(["synced text\n"]);
   });
 
   it("are none outside a repository", async () => {

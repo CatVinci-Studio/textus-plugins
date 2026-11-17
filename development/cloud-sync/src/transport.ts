@@ -2,6 +2,7 @@ import { AwsV4Signer } from "aws4fetch";
 import { hash } from "./content";
 import { providers, relativePath } from "./config";
 import {
+  LOCK,
   SyncError,
   type Config,
   type Credentials,
@@ -14,11 +15,30 @@ const encodePath = (path: string) =>
   path.split("/").map(encodeURIComponent).join("/");
 const pause = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
+/** What may be sent again after no answer, or a gateway's (502, 504):
+ *  asking twice changes nothing. A MOVE may have happened. A busy answer
+ *  (429, 503) did nothing, so anything is sent again after it. */
+const REPEATABLE = new Set([
+  "GET",
+  "HEAD",
+  "PUT",
+  "DELETE",
+  "PROPFIND",
+  "MKCOL",
+]);
+const ATTEMPTS = 4;
+/** The longest a server may ask to be left before a sync stops for now. */
+const LONGEST_WAIT_S = 60;
+
 export class RemoteStore implements ObjectStore {
   private dirs = new Map<string, Promise<void>>();
   /** The server's clock minus ours, from its last answer's Date. */
   private skew = 0;
   private cache = new Map<string, ArrayBuffer>();
+  /** Until when every request waits: the server asked to be left. */
+  private quietUntil = 0;
+  /** Told when the server asks to wait, in seconds: the status says so. */
+  onWait?: (seconds: number) => void;
   constructor(
     private config: Config,
     private credentials: Credentials,
@@ -49,13 +69,23 @@ export class RemoteStore implements ObjectStore {
       encodePath(s3 && c.pathStyle ? `${c.bucket}/${prefix}` : prefix);
     return url.toString();
   }
+  /** One request, sent again while the server is busy, and after no clear
+   *  answer if `repeat` (not a MOVE, nor the lock's DELETE: done the first
+   *  time, a second could take another device's lock). `unsure` hears of a
+   *  send that may have landed unanswered. */
   private async request(
     method: string,
     url: string,
     body?: Uint8Array,
     extra: Record<string, string> = {},
+    {
+      repeat = REPEATABLE.has(method),
+      unsure,
+    }: { repeat?: boolean; unsure?: () => void } = {},
   ): Promise<Response> {
     for (let attempt = 0; ; attempt++) {
+      const quiet = this.quietUntil - Date.now();
+      if (quiet > 0) await this.sleep(quiet);
       let headers: Record<string, string> = { ...extra };
       if (providers[this.config.provider].transport === "s3") {
         const signed = await new AwsV4Signer({
@@ -84,20 +114,28 @@ export class RemoteStore implements ObjectStore {
       try {
         response = await this.fetch(url, { method, body, headers });
       } catch {
-        throw new SyncError("networkError");
+        if (!repeat || attempt + 1 >= ATTEMPTS)
+          throw new SyncError("networkError");
+        unsure?.();
+        await this.sleep(backoff(attempt));
+        continue;
       }
       const date = Date.parse(response.headers["date"] ?? "");
       if (Number.isFinite(date)) this.skew = date - Date.now();
-      // Only reads and idempotent PUTs retry; a MOVE may already have succeeded.
-      if (
-        ![429, 502, 503, 504].includes(response.status) ||
-        attempt >= 2 ||
-        !["GET", "HEAD", "PUT"].includes(method)
-      )
+      const busy = [429, 503].includes(response.status);
+      const gateway = [502, 504].includes(response.status);
+      if (!(busy || (gateway && repeat)) || attempt + 1 >= ATTEMPTS)
         return response;
-      const retry = Number(response.headers["retry-after"] ?? "0");
-      if (retry > 5) throw new SyncError("rateLimited");
-      await this.sleep(Math.max(500 * 2 ** attempt, retry * 1000));
+      if (gateway) unsure?.();
+      const asked = retryAfter(response.headers["retry-after"]);
+      if (asked > LONGEST_WAIT_S) throw new SyncError("rateLimited");
+      const wait = Math.max(backoff(attempt), asked * 1000);
+      // Busy is for every request: the others hold back too.
+      if (busy) {
+        this.quietUntil = Math.max(this.quietUntil, Date.now() + wait);
+        if (asked) this.onWait?.(asked);
+      }
+      await this.sleep(wait);
     }
   }
   private require(response: Response) {
@@ -108,34 +146,49 @@ export class RemoteStore implements ObjectStore {
     if (response.status === 507) throw new SyncError("quotaError");
     throw new SyncError("httpError", [response.status]);
   }
+  /** The folders `key` goes in, made from the deepest up: those there
+   *  already cost one refused MKCOL at most. */
   private async parents(key: string) {
     if (providers[this.config.provider].transport !== "dav") return;
     const parts = `${this.config.prefix}/${key}`.split("/").slice(0, -1);
-    let path = "";
-    for (const part of parts) {
-      path += `${encodeURIComponent(part)}/`;
-      // Shared, so uploads at once make each folder once.
-      let made = this.dirs.get(path);
-      if (!made) {
-        made = this.folder(path);
-        this.dirs.set(path, made);
-        made.catch(() => this.dirs.delete(path));
-      }
-      await made;
-    }
+    const paths = parts.map(
+      (_, i) =>
+        parts
+          .slice(0, i + 1)
+          .map(encodeURIComponent)
+          .join("/") + "/",
+    );
+    await this.ensure(paths, paths.length - 1);
   }
-  private async folder(path: string) {
+  private ensure(paths: string[], i: number): Promise<void> {
+    const path = paths[i];
+    // Shared, so uploads at once make each folder once.
+    let made = this.dirs.get(path);
+    if (!made) {
+      const refused = () =>
+        new SyncError("folderNotCreated", [
+          decodeURIComponent(path.slice(0, -1)),
+        ]);
+      made = (async () => {
+        if (await this.folder(path)) return;
+        if (i === 0) throw refused();
+        await this.ensure(paths, i - 1);
+        if (!(await this.folder(path))) throw refused();
+      })();
+      this.dirs.set(path, made);
+      made.catch(() => this.dirs.delete(path));
+    }
+    return made;
+  }
+  /** MKCOL: whether the folder is there now. "Already there" is 405;
+   *  Nutstore says 409, as for a missing parent, so a 409 is looked at. */
+  private async folder(path: string): Promise<boolean> {
     const url = `${this.config.endpoint}/${path}`;
     const res = await this.request("MKCOL", url);
-    // Servers answer "already there" differently (Nutstore with 409, others
-    // 405), so a refused MKCOL is checked before it counts as a failure.
-    const made = res.status >= 200 && res.status < 300;
-    if (!made && !(await this.isFolder(url))) {
-      if ([401, 403, 429, 507].includes(res.status)) this.require(res);
-      throw new SyncError("folderNotCreated", [
-        decodeURIComponent(path.slice(0, -1)),
-      ]);
-    }
+    if ((res.status >= 200 && res.status < 300) || res.status === 405)
+      return true;
+    if ([401, 403, 429, 507].includes(res.status)) this.require(res);
+    return this.isFolder(url);
   }
   private async isFolder(url: string): Promise<boolean> {
     const res = await this.request("PROPFIND", url, undefined, { Depth: "0" });
@@ -154,15 +207,32 @@ export class RemoteStore implements ObjectStore {
     return true;
   }
   async put(key: string, bytes: Uint8Array): Promise<void> {
-    await this.parents(key);
-    this.require(await this.request("PUT", this.target(key), bytes));
+    const url = this.target(key);
+    const dav = providers[this.config.provider].transport === "dav";
+    // Its folders are mostly there: made only when the PUT says one isn't.
+    let res = await this.request("PUT", url, bytes);
+    if (dav && [404, 409].includes(res.status)) {
+      await this.parents(key);
+      res = await this.request("PUT", url, bytes);
+    }
+    this.require(res);
   }
   async create(key: string, bytes: Uint8Array): Promise<boolean> {
     if (providers[this.config.provider].transport === "s3") {
-      const res = await this.request("PUT", this.target(key), bytes, {
-        "If-None-Match": "*",
-      });
-      if (res.status === 412) return false;
+      // Sent again after no answer, a refusal may be to our own first try.
+      let resent = false;
+      const res = await this.request(
+        "PUT",
+        this.target(key),
+        bytes,
+        { "If-None-Match": "*" },
+        { unsure: () => (resent = true) },
+      );
+      if (res.status === 412) {
+        if (!resent) return false;
+        const there = await this.get(key);
+        return !!there && (await hash(there)) === (await hash(bytes));
+      }
       this.require(res);
       return true;
     }
@@ -186,9 +256,32 @@ export class RemoteStore implements ObjectStore {
     }
   }
   async remove(key: string): Promise<void> {
-    const res = await this.request("DELETE", this.target(key), undefined, {});
+    const res = await this.request(
+      "DELETE",
+      this.target(key),
+      undefined,
+      {},
+      {
+        repeat: key !== LOCK,
+      },
+    );
     if (res.status !== 404) this.require(res);
   }
+}
+
+/** A pause before sending again: doubling from half a second, give or
+ *  take a fifth, so requests that met the same busy server spread out. */
+function backoff(attempt: number): number {
+  return 500 * 2 ** attempt * (0.8 + Math.random() * 0.4);
+}
+
+/** Retry-After in seconds: a number, or a date (HTTP's two forms). */
+function retryAfter(value: string | undefined): number {
+  if (!value) return 0;
+  const seconds = Number(value);
+  if (Number.isFinite(seconds)) return Math.max(0, seconds);
+  const at = Date.parse(value);
+  return Number.isFinite(at) ? Math.max(0, (at - Date.now()) / 1000) : 0;
 }
 
 /** Tests permissions and the exclusion primitive using disposable objects only. */

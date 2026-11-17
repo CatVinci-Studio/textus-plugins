@@ -3,8 +3,7 @@
 // wheel (or a pinch) to zoom, a node to place it; hover lights its links,
 // a click opens it (with Ctrl or Cmd, beside the one in front). It adapts by itself:
 // labels as it is zoomed in, arrows when there are few enough links to
-// read them, a node's size by its links. Repulsion is computed on a grid of nearby nodes, so a
-// folder of thousands of documents still moves smoothly.
+// read them, a node's size by its links. The forces are in graph-forces.js.
 (function (root) {
   "use strict";
 
@@ -55,13 +54,38 @@
       };
     }
 
+    /** Fitted and not moved by hand since: a new size fits it again (the
+     *  sidebar's frame gets its width after the first fit). */
+    let fitted = false;
+
+    function fit() {
+      if (!nodes.length) return;
+      const xs = nodes.map((n) => n.x);
+      const ys = nodes.map((n) => n.y);
+      // The notes spread over the pane, a label's room kept at its edges -
+      // a share of a narrow pane: labels keep their size, so a small graph
+      // zoomed in reads apart.
+      const w = Math.max(...xs) - Math.min(...xs) || 1;
+      const h = Math.max(...ys) - Math.min(...ys) || 1;
+      const roomX = Math.min(180, size.w * 0.3);
+      const roomY = Math.min(80, size.h * 0.2);
+      const k = Math.min((size.w - roomX) / w, (size.h - roomY) / h);
+      view.k = Math.min(4, Math.max(0.15, k));
+      view.x = -(Math.max(...xs) + Math.min(...xs)) / 2;
+      view.y = -(Math.max(...ys) + Math.min(...ys)) / 2;
+      fitted = true;
+      draw();
+    }
+
     function resize() {
       const rect = canvas.getBoundingClientRect();
       const ratio = window.devicePixelRatio || 1;
+      const grew = rect.width !== size.w || rect.height !== size.h;
       size = { w: rect.width, h: rect.height, ratio: ratio };
       canvas.width = Math.max(1, Math.round(rect.width * ratio));
       canvas.height = Math.max(1, Math.round(rect.height * ratio));
-      draw();
+      if (fitted && grew && size.w > 0) fit();
+      else draw();
     }
 
     function radius(node) {
@@ -138,68 +162,7 @@
     }
 
     function step() {
-      const cell = 120;
-      const grid = new Map();
-      for (const n of nodes) {
-        const key = Math.floor(n.x / cell) + "," + Math.floor(n.y / cell);
-        if (!grid.has(key)) grid.set(key, []);
-        grid.get(key).push(n);
-      }
-      const strength = 900;
-      const room = 56;
-      for (const n of nodes) {
-        const gx = Math.floor(n.x / cell);
-        const gy = Math.floor(n.y / cell);
-        for (let dx = -1; dx <= 1; dx++)
-          for (let dy = -1; dy <= 1; dy++) {
-            const bucket = grid.get(gx + dx + "," + (gy + dy));
-            if (!bucket) continue;
-            for (const m of bucket) {
-              if (m === n) continue;
-              let x = n.x - m.x;
-              let y = n.y - m.y;
-              let d2 = x * x + y * y;
-              if (d2 < 0.01) {
-                x = Math.random() - 0.5;
-                y = Math.random() - 0.5;
-                d2 = 0.5;
-              }
-              if (d2 > cell * cell) continue;
-              const f = (strength / d2) * alpha;
-              n.vx += x * f * 0.01;
-              n.vy += y * f * 0.01;
-              // No closer than a label's room: the push above fades with
-              // distance, and left to it a few notes drew over each other.
-              if (d2 < room * room) {
-                const d = Math.sqrt(d2);
-                const push = ((room - d) / d) * 0.25 * alpha;
-                n.vx += x * push;
-                n.vy += y * push;
-              }
-            }
-          }
-        // A gentle pull to the middle keeps islands in view.
-        n.vx -= n.x * 0.002 * alpha;
-        n.vy -= n.y * 0.002 * alpha;
-      }
-      for (const e of edges) {
-        const x = e.b.x - e.a.x;
-        const y = e.b.y - e.a.y;
-        const d = Math.sqrt(x * x + y * y) || 1;
-        const f = ((d - 70) / d) * 0.06 * alpha;
-        e.a.vx += x * f;
-        e.a.vy += y * f;
-        e.b.vx -= x * f;
-        e.b.vy -= y * f;
-      }
-      for (const n of nodes) {
-        if (n === dragging) continue;
-        n.vx *= 0.6;
-        n.vy *= 0.6;
-        n.x += n.vx;
-        n.y += n.vy;
-      }
-      alpha *= 0.985;
+      alpha = root.graphForces(nodes, edges, alpha, dragging);
     }
 
     function tick() {
@@ -399,6 +362,7 @@
         dragging.vx = dragging.vy = 0;
         heat(0.3);
       } else if (panning) {
+        fitted = false;
         view.x = panning.vx + (p.x - panning.x) / view.k;
         view.y = panning.vy + (p.y - panning.y) / view.k;
         draw();
@@ -426,6 +390,7 @@
         e.preventDefault();
         const p = point(e);
         const before = toWorld(p.x, p.y);
+        fitted = false;
         view.k = Math.min(
           4,
           // A pinch sends many small steps, a mouse wheel few large ones.
@@ -469,20 +434,7 @@
       setData: setData,
       setFocus: setFocus,
       setGroups: setGroups,
-      zoomToFit: function () {
-        if (!nodes.length) return;
-        const xs = nodes.map((n) => n.x);
-        const ys = nodes.map((n) => n.y);
-        // The notes spread over the pane, a label's room kept at its edges:
-        // labels keep their size, so a small graph zoomed in reads apart.
-        const w = Math.max(...xs) - Math.min(...xs) || 1;
-        const h = Math.max(...ys) - Math.min(...ys) || 1;
-        const k = Math.min((size.w - 180) / w, (size.h - 80) / h);
-        view.k = Math.min(4, Math.max(0.15, k));
-        view.x = -(Math.max(...xs) + Math.min(...xs)) / 2;
-        view.y = -(Math.max(...ys) + Math.min(...ys)) / 2;
-        draw();
-      },
+      zoomToFit: fit,
       nodeCount: () => nodes.length,
       moving: () => alpha > 0.02,
       edgeCount: () => edges.length,

@@ -8,7 +8,7 @@
 /** What activate was given: the plugin's storage and own files. */
 let ctx;
 
-/* global graphLinks, folderPaths, nameOrder */
+/* global graphLinks, folderPaths */
 let graph = null;
 let building = null;
 let stale = true;
@@ -197,7 +197,7 @@ async function listNeighbours(input) {
     notes: near.nodes
       .filter((n) => n.id !== focus)
       .map((n) => ({ name: n.name, path: n.rel, kind: n.kind, distance: away.get(n.id) }))
-      .sort((a, b) => a.distance - b.distance || nameOrder.compareNames(a.name, b.name)),
+      .sort((a, b) => a.distance - b.distance || textus.text.compareNames(a.name, b.name)),
     links: near.edges.map((e) => ({ from: label.get(e.source), to: label.get(e.target), both: e.both })),
   };
 }

@@ -23,18 +23,30 @@ function themed(css) {
     .replace(/font-family:Helvetica/g, "font-family:var(--font-sans)")
     .replace(/(stroke|fill):#(?:000|0041c4)(?=[;}'"]|$)/g, "$1:var(--doc-text)")
     .replace(/stroke:#(?:fff|ffffff)(?=[;}'"]|$)/g, "stroke:var(--doc-text)")
-    .replace(/fill:(?:#(?:fff|ffffff)|[w]hite)(cc)?(?=[;}'"]|$)/g, "fill:var(--doc-bg, var(--ui-bg))")
-    .replace(/fill:(#(?:ffffb4|ffe0b9|b9e0ff|ccfdfe|cdfdc5|f0c1fb|f5c2c0))(?=[;}'"]|$)/g, "fill:color-mix(in srgb, $1 40%, var(--doc-bg, var(--ui-bg)))")
+    .replace(
+      /fill:(?:#(?:fff|ffffff)|[w]hite)(cc)?(?=[;}'"]|$)/g,
+      "fill:var(--doc-bg, var(--ui-bg))",
+    )
+    .replace(
+      /fill:(#(?:ffffb4|ffe0b9|b9e0ff|ccfdfe|cdfdc5|f0c1fb|f5c2c0))(?=[;}'"]|$)/g,
+      "fill:color-mix(in srgb, $1 40%, var(--doc-bg, var(--ui-bg)))",
+    )
     .replace(/text\{fill:[^;}]*\}/g, "");
 }
+
+/** How far a long diagram shrinks before it scrolls instead. */
+var READABLE = 0.6;
 
 // On screen: the theme's text and lines, sized by `height=` or the document's zoom.
 function onScreen(svg, meta) {
   var style = svg.querySelector("style");
-  if (style) style.textContent = themed(style.textContent) + "text{fill:var(--doc-text)}";
+  if (style)
+    style.textContent =
+      themed(style.textContent) + "text{fill:var(--doc-text)}";
   svg.querySelectorAll("[style]").forEach(function (node) {
     // The whole-picture white backdrop goes; the block's own background shows.
-    if (/^stroke:none;fill:[w]hite$/.test(node.getAttribute("style"))) node.remove();
+    if (/^stroke:none;fill:[w]hite$/.test(node.getAttribute("style")))
+      node.remove();
     else node.setAttribute("style", themed(node.getAttribute("style")));
   });
   var width = parseFloat(svg.getAttribute("width"));
@@ -43,9 +55,14 @@ function onScreen(svg, meta) {
   svg.removeAttribute("height");
   var height = parseFloat(meta.height);
   svg.style.height = height > 0 ? height + "px" : "auto";
-  svg.style.width = height > 0 ? "auto" : "calc(" + width + "px * var(--ui-text-scale, 1))";
-  // A long one shrinks to the column rather than being cut.
-  svg.style.maxWidth = "100%";
+  var natural = "calc(" + width + "px * var(--ui-text-scale, 1))";
+  // A long one shrinks to the column, but only so far that its labels stay
+  // readable; past that the block scrolls sideways (a phone).
+  svg.style.width =
+    height > 0
+      ? "auto"
+      : "max(" + natural + " * " + READABLE + ", min(100%, " + natural + "))";
+  svg.style.maxWidth = height > 0 ? "100%" : "none";
 }
 
 drawChartBlock({

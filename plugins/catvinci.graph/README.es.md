@@ -25,6 +25,7 @@ En una bóveda de Obsidian, los grupos de color guardados en el `graph.json` de 
 
 ## Cambios
 
+- **0.5.8** - El grafo de la barra lateral se extiende para llenar su panel, en vez de empezar como un pequeño grupo con etiquetas encimadas. Ordena los nombres con el orden propio de Textus en lugar de una copia, así el paquete es más pequeño.
 - **0.5.7** - La página sigue el idioma de Textus por sí sola. Requiere Textus 1.4.3.
 - **0.5.6** - Los recuentos y botones de la parte superior de la pestaña del grafo siguen a la vista: desplazarte o pellizcar sobre el grafo ya no los empuja hacia arriba bajo la pestaña. Las etiquetas ya no se amontonan: las notas con más enlaces conservan la suya y el resto aparece al acercar. Una carpeta grande se abre ya ordenada en lugar de desplegarse, y las imágenes y otros archivos adjuntos que enlaza una nota quedan fuera del grafo salvo que actives Archivos adjuntos en sus ajustes. Cambiar de documento o guardar ya no sacude todo el grafo para que se recoloque.
 - **0.5.5** - Los enlaces Markdown estándar a notas aún no escritas se colocan donde Textus las crea y se unen con los [[enlaces]] a la misma nota. Ctrl/Cmd-clic abre una nota junto a la de delante. Las etiquetas siguen el tamaño del texto de la interfaz y los colores de carpeta, el tema. El grafo de la barra lateral ya no tiene ajustes propios.

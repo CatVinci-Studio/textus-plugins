@@ -6,6 +6,7 @@ Bases are written in **Obsidian's Bases format** (` ```base ` blocks and `.base`
 
 ## Pages
 
+- **0.7.16** - Sorts names with Textus's own order instead of a copy of it, so the package is smaller. A board's lists move as Textus's own tabs do, and a column's width can also be set with the arrow keys.
 - **0.7.15** - The filter field and empty message follow Textus's language when you switch it. Needs Textus 1.4.3.
 - **0.7.14** - A column's grip is placed by Textus's shared rule, the same one as the document's tables. The calendar view and cell editing use Textus's shared page tools. Needs Textus 1.4.3.
 - **0.7.13** - A column is pulled by the same grip as the document's tables, and lifts and slides the same way. Needs Textus 1.4.3.

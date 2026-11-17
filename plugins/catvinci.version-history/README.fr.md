@@ -17,6 +17,7 @@ Garde chaque enregistrement d’un document comme une version, pour voir ce qui 
 
 ## Changements
 
+- **0.5.0** - À partir de Textus 1.4.4, les versions qu’autres plugins gardent d’un document (celles de Cloud Sync) sont listées aussi, chacune sous le nom de sa source, à comparer et restaurer comme les autres.
 - **0.4.1** - Restaurer tient en un mot, pour que son bouton tienne dans une barre latérale étroite dans toutes les langues.
 - **0.4.0** - Les versions s’espacent avec l’âge au lieu de ne garder que les 50 dernières ; chaque texte est stocké une fois ; les versions d’un document supprimé partent un mois plus tard. Comparez deux versions mot à mot, reprenez une seule modification, nommez et épinglez des versions ; les modifications faites hors de Textus sont gardées. Les versions de 0.3 sont reprises d’elles-mêmes. Nécessite Textus 1.4.3. Dans un dossier Git sur le bureau, les commits du document s’affichent sous ses versions.
 - **0.3.8** - Le texte d'avant le premier enregistrement n'est plus perdu quand cet enregistrement arrive dès l'ouverture du document.

@@ -1,6 +1,5 @@
 // A canvas's page: its nodes and edges on a stage to drag and zoom, fitted
-// on open; the notes and pictures on it as host.js reads them. An
-// Excalidraw drawing shows its exported picture on the same stage.
+// on open; the notes and pictures on it as host.js reads them.
 (function () {
   "use strict";
   const api = acquireTextusApi();
@@ -302,26 +301,10 @@
     status.hidden = false;
   }
 
-  /** An Excalidraw drawing: its exported picture to look around, or why
-   *  there is none. */
-  function drawExcalidraw(m) {
-    if (!m.picture) return noContent(t("excalidraw"), true);
-    const img = picture(m.picture.bytes, m.picture.mime, m.picture.name);
-    img.className = "drawing";
-    img.onload = () => {
-      box = { x: 0, y: 0, width: img.naturalWidth || 800, height: img.naturalHeight || 600 };
-      place(img, box);
-      fitView();
-    };
-    img.onerror = () => noContent(t("excalidraw"), true);
-    world.replaceChildren(img);
-  }
-
   api.onMessage((m) => {
     if (!m) return;
     if (m.type === "canvas") drawCanvas(m.canvas);
     else if (m.type === "file") fillFile(m);
-    else if (m.type === "excalidraw") drawExcalidraw(m);
     else if (m.type === "failed") noContent(t("failed", m.message), true);
   });
   apply();

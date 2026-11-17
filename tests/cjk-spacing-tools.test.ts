@@ -16,3 +16,36 @@ it("spaces CJK and Latin text, leaving code as it is", async () => {
     changed: false,
   });
 });
+
+it("marks a paragraph missing a space, with its spaced Markdown as the fix", async () => {
+  type Check = { check(blocks: unknown[]): Promise<unknown[]> };
+  let checker: Check | undefined;
+  let underline: boolean | undefined;
+  loadPlugin("catvinci.cjk-spacing", {
+    settings: {
+      get: async (key: string) => (key === "underline" ? underline : undefined),
+    },
+    editor: {
+      registerDiagnostics: (_id: string, c: Check) => (
+        (checker = c),
+        { dispose() {} }
+      ),
+    },
+  });
+  const blocks = [
+    { id: "a", kind: "paragraph", markdown: "用Textus写作" },
+    { id: "b", kind: "paragraph", markdown: "已经 OK 了" },
+    { id: "c", kind: "code", markdown: "```\n用Textus\n```" },
+  ];
+  expect(await checker!.check(blocks)).toEqual([
+    {
+      block: "a",
+      anchor: "用T",
+      severity: "info",
+      message: "missing",
+      fix: { markdown: "用 Textus 写作", label: "addSpaces" },
+    },
+  ]);
+  underline = false;
+  expect(await checker!.check(blocks)).toEqual([]);
+});

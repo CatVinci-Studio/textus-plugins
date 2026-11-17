@@ -21,6 +21,7 @@ Coloca um espaço entre texto chinês ou japonês e letras latinas ou números.
 
 ## Alterações
 
+- **0.3.0** - A partir do Textus 1.4.4, um parágrafo sem espaço entre texto CJK e latino fica sublinhado; o cartão adiciona os espaços. Desative nas configurações do plugin.
 - **0.2.4** - Um bloco de código dentro de uma cerca mais longa (```` com ``` dentro) fica intacto.
 - **0.2.3** - A ferramenta para o Textus AI diz o que faz: chinês e japonês, não coreano.
 - **0.2.2** - deixa como estão os ids de bloco, campos do Dataview, destaques e campos do Tasks do Obsidian

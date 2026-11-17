@@ -143,16 +143,21 @@ more on S3):
 
 | Sync                                  | S3  | WebDAV / Nutstore |
 | ------------------------------------- | --- | ----------------- |
-| Nothing changed                       | 8   | 16                |
-| One edited document (one 2 MiB block) | 20  | 35                |
-| One deleted file                      | 20  | 32                |
+| Nothing changed                       | 3   | 3                 |
+| One edited document (one 2 MiB block) | 18  | 20                |
+| One deleted file                      | 20  | 22                |
 
-Each further changed block adds 3 requests on S3, up to 5 on WebDAV. WebDAV
-costs more because it creates folders and takes the lock with an upload and a
-`MOVE`. Syncs after saves wait until saving settles (5 s), then for **Sync
+With nothing changed on either side, a sync only reads the folder's current
+revision and takes no lock. Each further changed block adds 1 request: a block
+is sent once, without asking first whether it is there or reading it back
+(blocks are named by their contents; every download checks each one). On
+WebDAV a block going into a folder that isn't there yet costs 2 more, the
+refused upload and the folder; taking the lock costs an upload and a `MOVE`. Syncs after saves wait until saving settles (5 s), then for **Sync
 delay** (none to 10 minutes): 3 for a new Nutstore connection, since Nutstore
-caps requests per account, and 0 for S3 and WebDAV. If a server asks for more
-than 5 s before the next request, that sync stops and says to try again later.
+caps requests per account, and 0 for S3 and WebDAV. A busy server's answer
+(429, 503) pauses every request; when it asks for a wait, the status shows
+"Waiting for the server" with the seconds, up to 60 s. Asked for longer, that
+sync stops and says to try again later; what it sent is kept for the next one.
 
 ## End-to-end encryption
 
@@ -286,6 +291,7 @@ and `THIRD_PARTY_NOTICES.md`. The storage design was informed by Petrichor/Sylva
 
 ## Changes
 
+- **0.7.0** - Faster syncs with fewer requests: with nothing changed, a sync asks the service once instead of 8 to 16 times; a changed file's blocks are sent in one request each, without checking first or reading them back; on WebDAV folders are made only when one is missing. A busy service is waited for (up to a minute, shown in the status) instead of stopping the sync, and requests that got no answer are sent again. The progress counts files that are done. From Textus 1.4.4 the versions it keeps of a document show in Version History too.
 - **0.6.1** - A big first sync that stops halfway (cancelled, offline, or slowed by the service) goes on where it stopped next time, instead of checking every file it already sent; on Nutstore that saves most of the requests.
 - **0.6.0** - Sync settings rearranged: sync options sit at the top and apply as you pick them, with no Save button. **Sync interval**, **Sync delay**, and **Keep cloud history** are pickers. Files now go up and down several at a time: **Transfers at once** sets how many (S3 8, WebDAV 4, Nutstore 2 to start), and blocks the cloud already holds are no longer checked again. A connected service shows as a card with the account masked and **Test connection**, **Edit** and **Disconnect**; the encryption switch and password are part of the connection. **Test connection** works before saving, and names the missing permission (write, read or delete) when a check fails.
 - **0.5.3** - One set of rules for every service: the automatic interval can be 1 to 1,440 minutes, and **After a save, wait** sets how long a sync waits after saving (Nutstore starts at 3 minutes, S3 and WebDAV at 0; WebDAV no longer waits 30 s).

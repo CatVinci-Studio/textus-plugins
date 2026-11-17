@@ -111,10 +111,13 @@ describe("every example", () => {
     const { checkPlugin } = await import("../packages/textus-plugin/check.mjs");
     const { loadPlugin } = await import("../packages/textus-plugin/test.mjs");
     expect(kinds.sort()).toEqual([
+      "ai-model",
       "ai-tool",
       "code-block",
+      "export-format",
       "hello",
       "page",
+      "syntax",
     ]);
     for (const kind of kinds) {
       const dir = EXAMPLES + kind;
@@ -130,7 +133,7 @@ describe("every example", () => {
         appearance: { colors: async () => ({ "--doc-accent": "red" }) },
       });
       await plugin.activate();
-      const c = plugin.manifest.contributes;
+      const c = plugin.manifest.contributes ?? {};
       const ids = (key: string) => [...(plugin.registered[key]?.keys() ?? [])];
       if (c.commands)
         expect(ids("register")).toEqual(
@@ -156,6 +159,43 @@ describe("every example", () => {
     expect(await plugin.callTool("look_up_term", { term: "toc" })).toBe(
       "toc: table of contents",
     );
+  });
+
+  it("answers as it says: the word completion and the plain-text export", async () => {
+    const { loadPlugin } = await import("../packages/textus-plugin/test.mjs");
+    const ai = loadPlugin(EXAMPLES + "ai-model", {});
+    await ai.activate();
+    const words = ai.registered.registerInlineCompletion.get("words") as {
+      provide(r: { before: string; after: string; path: null }): unknown;
+    };
+    const ask = (before: string, after = "") =>
+      words.provide({ before, after, path: null });
+    expect(ask("Notes about gardening. Later: gard")).toBe("ening");
+    expect(ask("Notes about gardening. Later: zz")).toBe(null);
+    expect(ask("gardening gard", "en")).toBe(null);
+
+    const txt = loadPlugin(EXAMPLES + "export-format", {});
+    await txt.activate();
+    const format = txt.registered.registerFormat.get("txt") as {
+      export(d: { markdown: string }): string;
+    };
+    expect(
+      format.export({ markdown: "# Title\n\nSome **bold** [link](x.md).\n" }),
+    ).toBe("Title\n\nSome bold link.\n");
+
+    const syntax = loadPlugin(EXAMPLES + "syntax", {});
+    await syntax.activate();
+    const shown = syntax.registered.registerSyntax as Map<
+      string,
+      { pattern: RegExp }
+    >;
+    expect(
+      shown.get("spoiler")!.pattern.exec("a ||secret|| b")?.groups?.text,
+    ).toBe("secret");
+    expect(shown.get("ruby")!.pattern.exec("{漢字|かんじ}")?.groups).toEqual({
+      text: "漢字",
+      note: "かんじ",
+    });
   });
 
   it("is what create-textus-plugin makes, with the id changed", async () => {

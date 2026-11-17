@@ -28,6 +28,7 @@ Funciona en escritorio.
 
 ## Cambios
 
+- **0.5.5** - Los nombres y las descripciones emergentes de sus botones vienen de Textus, como en sus otras páginas.
 - **0.5.4** - La página sigue el idioma de Textus por sí sola. Requiere Textus 1.4.3.
 - **0.5.3** - Crear una nota durante una búsqueda la borra, así la nota nueva se ve; el clic derecho en el texto de una nota también ofrece deshacer, cortar, copiar y pegar; una búsqueda sin resultados lo indica.
 - **0.5.2** - En la barra lateral el panel ya no muestra un título propio, como las demás pestañas. Textos de ayuda y de estado vacío más breves. Su panel lateral y su página siguen el diseño de Textus 1.3.13. Sin notas, explica para qué sirve y ofrece Nueva; el cuadro de cada nota crece con su texto.

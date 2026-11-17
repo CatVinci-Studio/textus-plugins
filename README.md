@@ -9,7 +9,7 @@ The plugins for [Textus](https://textus.md), the Markdown editor. None of them c
 | --- | --- |
 | Bookmarks | Bookmark a passage and come back to it from the sidebar - across documents. |
 | Calendar & Daily Notes | A calendar in the sidebar and a note for each day, kept in a folder of the open folder. |
-| Canvas | Open Obsidian's canvases (.canvas) in a tab: notes, pictures, links and groups on a board to drag and zoom. Excalidraw drawings show the picture exported from them. |
+| Canvas | Open Obsidian's canvases (.canvas) in a tab: notes, pictures, links and groups on a board to drag and zoom. |
 | Chart.js | Simple charts from a Chart.js configuration. |
 | CJK Spacing | Puts a space between Chinese or Japanese text and Latin letters or numbers. |
 | Claude Code | Claude Code in Textus AI: it reads your folder, writes and edits your notes, and asks before it changes anything. |
@@ -20,6 +20,7 @@ The plugins for [Textus](https://textus.md), the Markdown editor. None of them c
 | Desk Pet | A chibi companion that floats on your desktop or in the window while you write: Moyu, or the LLM-chan of the model Textus AI is using. She writes when you type, dozes when you stop, cheers when you save and leans in when Textus AI is at work. |
 | ECharts | Charts from an ECharts option - bars, lines, pies and more. |
 | Emacs | Emacs keys in the editor: C-f C-b C-n C-p, C-a C-e, M-f M-b, M-< M->, the mark (C-SPC) and the region, C-k and C-w into a kill ring, C-y and M-y, C-/ undo and C-x prefixes. |
+| Excalidraw | Draw sketchy diagrams with Excalidraw in a tab: .excalidraw files, and Obsidian Excalidraw's drawings, edited and saved in the form they had. |
 | Function Plot | Graphs of functions, one per line: sin(x), x^2 - 1. |
 | Gemini CLI | Gemini CLI in Textus AI: Google's Gemini models read your folder, write and edit your notes, and ask before they change anything. |
 | Git | Changed files marked in the sidebar, the branch in the status bar, commits of the files you pick with your own Git, and a file's commits in Version History. Desktop. |
@@ -41,7 +42,7 @@ The plugins for [Textus](https://textus.md), the Markdown editor. None of them c
 | PDF Viewer | Open PDFs in a tab beside your notes: pages, zoom, and text to select and copy. |
 | PlantUML | UML and other diagrams from PlantUML text, drawn on your computer - or by the PlantUML server, if you choose. Drawing on your computer takes about 100 MB more memory; the PlantUML server takes none. |
 | Pomodoro | A focus timer floating over the window or the desktop: 25 minutes of work, 5 of rest, a notification at each end. |
-| Quick Insert | Type / for headings, lists, tables, formulas and more, : for emoji, @ for a date (@tomorrow, @next friday), and turn a paragraph into another kind of block. |
+| Quick Insert | Type / for Textus's headings, lists, tables, formulas and other blocks, : for emoji, and @ for a date (@tomorrow, @next friday). |
 | Quick Notes | Jot something down without leaving the document: notes in the sidebar, kept in Inbox.md or today's daily note, to insert later or open as a document. |
 | Quick Preview | Preview a linked document without opening it: rest the pointer on a Markdown link or a [[wikilink]] to read its opening, or the section or block it names, in a card beside it. Pin keeps the card open while you write. |
 | Qwen Code | Qwen Code in Textus AI: Alibaba's Qwen models read your folder, write and edit your notes, and ask before they change anything. |

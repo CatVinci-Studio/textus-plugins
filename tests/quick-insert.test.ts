@@ -38,13 +38,8 @@ describe("quick insert", () => {
     expect(pattern.exec("https://x")).toBeNull();
   });
 
-  it("names every command in every language it speaks", () => {
-    const keys = manifest.contributes.commands.map((c) => c.title.slice(1, -1));
-    for (const [lang, strings] of Object.entries(manifest.l10n))
-      for (const key of keys)
-        expect(
-          strings[key as keyof typeof strings],
-          `${lang}.${key}`,
-        ).toBeTruthy();
+  it("puts Textus's own blocks in the / menu instead of keeping its own", () => {
+    expect(manifest.contributes.blockMenu).toBe(true);
+    expect("commands" in manifest.contributes).toBe(false);
   });
 });

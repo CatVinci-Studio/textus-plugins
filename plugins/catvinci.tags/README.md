@@ -15,6 +15,7 @@ Lists every `#tag` in the open folder in the sidebar, with how many notes use it
 
 ## Changes
 
+- **0.3.6** - Sorts names with Textus's own order instead of a copy of it, so the package is smaller.
 - **0.3.5** - The filter field and empty message follow Textus's language when you switch it. Needs Textus 1.4.3.
 - **0.3.4** - Renaming leaves `[[#Heading]]` links alone, and a ``` line inside a `~~~` block no longer ends the code.
 - **0.3.3** - Tags match in any letter case, as their counts do; renaming a tag moves its nested tags too and no longer touches link addresses or front-matter tags like `project-x`; tags like `a/` or `a//b` are refused.

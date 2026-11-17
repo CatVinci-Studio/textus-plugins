@@ -3,7 +3,7 @@
 // later on this computer (http://localhost:23119/api/), which Zotero serves
 // once "Allow other applications on this computer to communicate with
 // Zotero" is on - nothing leaves the computer.
-/* global nameOrder, noteSettings, notePath, openNote */
+/* global noteSettings, notePath, openNote */
 /** What activate was given: the plugin's storage and own files. */
 let ctx;
 
@@ -352,7 +352,7 @@ exports.activate = function (context) {
       const entries = items
         .filter((item) => !seen.has(item.key) && seen.add(item.key))
         .sort((a, b) =>
-          nameOrder.compareNames(authors(a) + year(a), authors(b) + year(b)),
+          textus.text.compareNames(authors(a) + year(a), authors(b) + year(b)),
         )
         .map(reference);
       const list = "## " + t("references") + "\n\n" + entries.join("\n");

@@ -41,6 +41,7 @@ A chave de citação vem do campo Citation Key do item (ou de uma linha `Citatio
 
 ## Alterações
 
+- **0.4.4** - Ordena os nomes com a ordem do próprio Textus em vez de uma cópia, então o pacote ficou menor. Requer o Textus 1.4.3.
 - **0.4.3** - Agora a citação substitui as palavras selecionadas; a lista de referências não diz mais que o Zotero está fora do ar quando ele responde, e a prévia ao passar o mouse aparece com mais confiabilidade.
 - **0.4.2** - Textos de ajuda e de estado vazio mais curtos.
 - **0.4.1** - Seu código foi dividido em arquivos menores conforme o que cada parte faz; nada muda no uso.

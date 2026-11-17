@@ -1,7 +1,7 @@
 // Dates written and read in Moment-style formats (YYYY-MM-DD, "dddd, MMMM
 // Do"), as Obsidian's settings and templates name them, and the {{date}}
-// and {{time}} of a template filled in. Each plugin using it lists this as
-// lib/dates.js in libs.json.
+// and {{time}} of a template filled in. The app gives plugins this as
+// textus.dates; the tests' host loads this copy in its place.
 (function (root) {
   "use strict";
 

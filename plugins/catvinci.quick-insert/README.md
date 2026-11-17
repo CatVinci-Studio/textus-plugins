@@ -4,14 +4,14 @@ Type `/` for headings, lists, tables and other blocks, `:` for an emoji and `@` 
 
 ## The / menu
 
-Type `/` at the start of a line or after a space, and pick what to put there:
+Type `/` at the start of a line or after a space, and pick what to put there - Textus's own blocks, the same as the Format menu's:
 
-- **Heading 1–3, Text**, and **bulleted, numbered and to-do lists**
-- **Quote, Code block, Formula, Table, Divider** and a **Callout** (`> [!NOTE]`)
+- **Text, Heading 1–3**, and **bulleted, numbered and to-do lists**
+- **Quote, Callout, Code block, Formula, Table, Divider**
+
+Picking one turns the line you're on into it. Other plugins add their own blocks to the menu (a database, a link card, a reminder, a template).
 
 Keep typing to narrow the list: `/table`, `/tab` - in any language, and Chinese names by pinyin too (`/biaoge`).
-
-**Turn into…** (in the `/` menu and the command palette) changes the paragraph you're in into a heading, a list, a quote or code, and back into text.
 
 ## Emoji
 
@@ -43,6 +43,7 @@ It runs on the desktop and on iOS.
 
 ## Changes
 
+- **0.5.0** - The `/` menu lists Textus's own blocks, the Format menu's, so it always matches the app; Turn into… is gone from it, since picking a block turns the line you're on (the block handle's ⋮⋮ also has Turn Into). Needs Textus 1.4.4
 - **0.4.3** - Dates in Traditional Chinese like 後天, 3天後 and 下週五 now work. A bare @ lists your app language's dates first, and day links are right relative to the note.
 - **0.4.2** - Shares Two-way Links' fix for working out how a note links.
 - **0.4.1** - a day's link is a standard link, [2026-11-08](Journal/2026-11-08.md), unless the folder or the note already uses [[wiki links]]

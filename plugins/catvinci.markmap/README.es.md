@@ -25,6 +25,7 @@ El plugin usa [markmap](https://markmap.js.org). Pide un solo permiso, para dar 
 
 ## Cambios
 
+- **0.3.6** - Un mapa mental dibujado antes de que su nota se maquetara ya no muestra un error.
 - **0.3.5** - Un gráfico dibujado con su bloque plegado (en el móvil) se ajusta al ancho al abrirlo.
 - **0.3.4** - Editar un mapa mental durante mucho tiempo ya no hace que Textus use cada vez más memoria.
 - **0.3.3** - Al desplazarte sobre un mapa mental ahora se desplaza la nota; pellizca o usa Ctrl y la rueda para hacer zoom. El mapa usa la fuente y los colores de tu tema, también en modo oscuro, y se abre ajustado entero.

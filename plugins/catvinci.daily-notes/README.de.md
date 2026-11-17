@@ -23,6 +23,7 @@ Das Plugin liest und schreibt Dateien im geöffneten Ordner, um die Notizen zu f
 
 ## Änderungen
 
+- **0.7.8** - Ist die Leiste selbst für den kurzen Monatsnamen zu schmal (Seitenleiste am Handy), steht der Monat in einer eigenen Zeile über den Knöpfen, statt das Jahr zu verlieren. Der Kalender schreibt Daten mit Textus’ eigenen Formaten; das Paket ist kleiner.
 - **0.7.7** - Die Woche beginnt nach der Sprache von Textus statt nach der Region des Geräts, passend zu den Wochennummern.
 - **0.7.6** - Die Seite folgt der Sprache von Textus von selbst. Benötigt Textus 1.4.3.
 - **0.7.5** - Der Monatstitel im Kalender beginnt links und endet in einer schmalen Seitenleiste mit Auslassungspunkten, statt an beiden Enden abgeschnitten zu werden.

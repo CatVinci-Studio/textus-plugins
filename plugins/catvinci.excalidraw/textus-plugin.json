@@ -1,0 +1,148 @@
+{
+  "id": "catvinci.excalidraw",
+  "name": "%name%",
+  "version": "0.1.0",
+  "publisher": "catvinci",
+  "author": "CatVinci Studio",
+  "description": "%description%",
+  "icon": "icon.svg",
+  "license": "MIT",
+  "repository": "https://github.com/CatVinci-Studio/textus-plugins",
+  "engines": {
+    "textus": ">=1.4.3"
+  },
+  "platforms": [
+    "desktop",
+    "ios"
+  ],
+  "main": [
+    "lib/lz-string.js",
+    "lib/folder-paths.js",
+    "excalidraw-file.js",
+    "host.js"
+  ],
+  "permissions": [
+    "files.read",
+    "files.write"
+  ],
+  "contributes": {
+    "commands": [
+      {
+        "command": "catvinci.excalidraw.new",
+        "title": "%new%"
+      }
+    ],
+    "menus": {
+      "app/plugins": [
+        {
+          "command": "catvinci.excalidraw.new"
+        }
+      ]
+    },
+    "customEditors": [
+      {
+        "viewType": "catvinci.excalidraw.drawing",
+        "displayName": "%name%",
+        "filenamePatterns": [
+          "*.excalidraw",
+          "*.excalidraw.md"
+        ],
+        "frontMatter": [
+          "excalidraw-plugin"
+        ]
+      }
+    ]
+  },
+  "l10n": {
+    "en": {
+      "name": "Excalidraw",
+      "description": "Draw sketchy diagrams with Excalidraw in a tab: .excalidraw files, and Obsidian Excalidraw's drawings, edited and saved in the form they had.",
+      "new": "New Drawing",
+      "drawingName": "Name of the drawing",
+      "drawing": "Drawing",
+      "needsFolder": "Open a folder first.",
+      "failed": "This drawing can't be read: {0}"
+    },
+    "zh": {
+      "name": "Excalidraw",
+      "description": "在标签页里用 Excalidraw 画手绘风格的图：编辑 .excalidraw 文件和 Obsidian Excalidraw 的绘图，按原来的格式保存。",
+      "new": "新建绘图",
+      "drawingName": "绘图名称",
+      "drawing": "绘图",
+      "needsFolder": "请先打开一个文件夹。",
+      "failed": "无法读取这个绘图：{0}"
+    },
+    "zh-Hant": {
+      "name": "Excalidraw",
+      "description": "在分頁中用 Excalidraw 畫手繪風格的圖：編輯 .excalidraw 檔案和 Obsidian Excalidraw 的繪圖，依原本的格式儲存。",
+      "new": "新增繪圖",
+      "drawingName": "繪圖名稱",
+      "drawing": "繪圖",
+      "needsFolder": "請先開啟一個資料夾。",
+      "failed": "無法讀取這個繪圖：{0}"
+    },
+    "ja": {
+      "name": "Excalidraw",
+      "description": "Excalidraw で手描き風の図をタブの中で描きます。.excalidraw ファイルと Obsidian Excalidraw の図を編集し、元の形式のまま保存します。",
+      "new": "新しい図",
+      "drawingName": "図の名前",
+      "drawing": "図",
+      "needsFolder": "先にフォルダーを開いてください。",
+      "failed": "この図を読み込めません：{0}"
+    },
+    "ko": {
+      "name": "Excalidraw",
+      "description": "탭에서 Excalidraw로 손그림 느낌의 그림을 그립니다. .excalidraw 파일과 Obsidian Excalidraw 그림을 편집하고 원래 형식 그대로 저장합니다.",
+      "new": "새 그림",
+      "drawingName": "그림 이름",
+      "drawing": "그림",
+      "needsFolder": "먼저 폴더를 여세요.",
+      "failed": "이 그림을 읽을 수 없습니다: {0}"
+    },
+    "es": {
+      "name": "Excalidraw",
+      "description": "Dibuja diagramas a mano alzada con Excalidraw en una pestaña: archivos .excalidraw y dibujos de Obsidian Excalidraw, editados y guardados en su formato.",
+      "new": "Nuevo dibujo",
+      "drawingName": "Nombre del dibujo",
+      "drawing": "Dibujo",
+      "needsFolder": "Abre primero una carpeta.",
+      "failed": "No se puede leer este dibujo: {0}"
+    },
+    "fr": {
+      "name": "Excalidraw",
+      "description": "Dessinez des schémas à main levée avec Excalidraw dans un onglet : fichiers .excalidraw et dessins d’Obsidian Excalidraw, modifiés et enregistrés dans leur format.",
+      "new": "Nouveau dessin",
+      "drawingName": "Nom du dessin",
+      "drawing": "Dessin",
+      "needsFolder": "Ouvrez d’abord un dossier.",
+      "failed": "Impossible de lire ce dessin : {0}"
+    },
+    "de": {
+      "name": "Excalidraw",
+      "description": "Zeichne Skizzen mit Excalidraw in einem Tab: .excalidraw-Dateien und Zeichnungen aus Obsidian Excalidraw, bearbeitet und in ihrem Format gespeichert.",
+      "new": "Neue Zeichnung",
+      "drawingName": "Name der Zeichnung",
+      "drawing": "Zeichnung",
+      "needsFolder": "Öffne zuerst einen Ordner.",
+      "failed": "Diese Zeichnung lässt sich nicht lesen: {0}"
+    },
+    "ru": {
+      "name": "Excalidraw",
+      "description": "Рисуйте схемы от руки в Excalidraw прямо во вкладке: файлы .excalidraw и рисунки Obsidian Excalidraw редактируются и сохраняются в своём формате.",
+      "new": "Новый рисунок",
+      "drawingName": "Название рисунка",
+      "drawing": "Рисунок",
+      "needsFolder": "Сначала откройте папку.",
+      "failed": "Не удаётся прочитать этот рисунок: {0}"
+    },
+    "pt": {
+      "name": "Excalidraw",
+      "description": "Desenhe diagramas à mão livre com o Excalidraw numa aba: arquivos .excalidraw e desenhos do Obsidian Excalidraw, editados e salvos no formato que tinham.",
+      "new": "Novo desenho",
+      "drawingName": "Nome do desenho",
+      "drawing": "Desenho",
+      "needsFolder": "Abra uma pasta primeiro.",
+      "failed": "Não foi possível ler este desenho: {0}"
+    }
+  }
+}

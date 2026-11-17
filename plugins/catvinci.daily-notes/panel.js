@@ -1,4 +1,3 @@
-/* global dates */
 (function () {
   "use strict";
   const api = acquireTextusApi();
@@ -13,6 +12,8 @@
   $("today").textContent = api.t("todayButton");
   $("nofolder").textContent = api.t("nofolder");
 
+  // Textus's dates, as the host's textus.dates.
+  const dates = window.textus.dates;
   const dateOf = (d) => dates.format(d, "YYYY-MM-DD");
   const saved = api.getState() || {};
   let shown = saved.month ? new Date(saved.month + "-01T00:00:00") : new Date();
@@ -73,15 +74,22 @@
   }
 
   /** The month's name, short when the bar is too narrow for the long one
-   *  (a sidebar, a phone): again whenever the bar's width changes. */
+   *  (a sidebar, a phone), and on a row of its own above the buttons when
+   *  even that won't fit: again whenever the bar's width changes. */
   function fitMonth() {
     const month = $("month");
     const as = (style) => shown.toLocaleDateString(api.language, { year: "numeric", month: style });
-    month.textContent = as("long");
     // The text's own width: a button reports no overflow of its own.
     const text = document.createRange();
-    text.selectNodeContents(month);
-    if (text.getBoundingClientRect().width > month.clientWidth) month.textContent = as("short");
+    const fits = (style) => {
+      month.textContent = as(style);
+      text.selectNodeContents(month);
+      return text.getBoundingClientRect().width <= month.clientWidth;
+    };
+    $("bar").classList.remove("stacked");
+    if (fits("long") || fits("short")) return;
+    $("bar").classList.add("stacked");
+    if (!fits("long")) fits("short");
   }
   new ResizeObserver(() => fitMonth()).observe($("month").parentElement);
 
@@ -89,7 +97,7 @@
    *  day names it, whichever day the calendar starts its weeks on. */
   function weekButton(start) {
     const middle = new Date(start.getFullYear(), start.getMonth(), start.getDate() + 3);
-    const number = dates.format(middle, week, api.language);
+    const number = dates.format(middle, week);
     const button = document.createElement("button");
     button.className = "week";
     button.textContent = number;

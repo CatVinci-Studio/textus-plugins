@@ -2,6 +2,7 @@
 // <% tp.file.title %>, <% tp.file.cursor() %> - as the Templater plugin
 // writes them in an Obsidian vault. Only these few values are read; a
 // script (<%* %>) or any other tag is never run and stays as written.
+// The app fills these for plugins; the tests' host loads this copy.
 
 /* global dates */
 (function (root) {

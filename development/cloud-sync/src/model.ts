@@ -116,6 +116,9 @@ export interface Base {
   /** Last-synced hashes of files this device leaves out, kept for when
    *  they're included again. */
   parked?: Record<string, string>;
+  /** The remote's revision once this device had all of it: unchanged on
+   *  both sides, a sync asks for nothing more than that. */
+  revision?: string;
 }
 export interface ObjectStore {
   /** The server's time as its last answer gave it, where it says: what ages
