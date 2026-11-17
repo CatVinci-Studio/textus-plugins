@@ -8,7 +8,7 @@ import { openPlainStore } from "./plain-store";
 import { Workspace } from "./local";
 import { Pacer } from "./pacer";
 import { masked, Settings } from "./settings";
-import { statusText } from "./status";
+import { fewPerSecond, statusText } from "./status";
 import { RemoteStore, testConnection } from "./transport";
 import { recoverLock, testDraft, type Draft } from "./connection";
 import {
@@ -157,11 +157,11 @@ class Controller {
     if (root !== this.state.root) throw new SyncError("rootChanged");
     const config = await this.settings.load(root);
     const credentials = await this.settings.credentials(root, config);
-    return {
-      root,
-      config,
-      store: new RemoteStore(config, credentials, this.api.net.fetch),
-    };
+    const store = new RemoteStore(config, credentials, this.api.net.fetch);
+    // A busy server asked for a pause: said, so the sync isn't taken as stuck.
+    store.onWait = (seconds) =>
+      this.message("waiting", false, Math.ceil(seconds));
+    return { root, config, store };
   }
   /** The remote folder, opened plain or encrypted as the folder is set up. */
   private async open(
@@ -309,10 +309,10 @@ class Controller {
         signal: this.abort.signal,
         saveBase: (next) => this.ctx.storage.global.set(key, next),
         pending: pendingIn(this.ctx.storage.global, key),
-        progress: (phase, current, total) => {
+        progress: fewPerSecond((phase, current, total) => {
           this.state.progress = total ? current / total : null;
           this.message(phase, false, current, total);
-        },
+        }),
       });
       const at = new Date().toISOString();
       await this.ctx.storage.global.set(`last:${key}`, { at, result });

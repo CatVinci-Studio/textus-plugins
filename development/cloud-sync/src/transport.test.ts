@@ -74,6 +74,14 @@ beforeAll(async () => {
         res.writeHead(412).end();
         return;
       }
+      // WebDAV puts nothing in a folder that isn't there.
+      if (
+        !String(req.headers.authorization).startsWith("AWS4") &&
+        !folders.has(path.replace(/[^/]+$/, ""))
+      ) {
+        res.writeHead(409).end();
+        return;
+      }
       objects.set(path, body);
       res.writeHead(201).end();
     } else if (method === "MOVE") {
@@ -273,17 +281,22 @@ describe("storage protocols over HTTP", () => {
       mode = "normal";
     }
   });
-  it("creates each WebDAV folder once for uploads sent at once", async () => {
-    const store = make("webdav");
+  it("makes a new WebDAV folder once for uploads sent at once, from the deepest up", async () => {
+    const mkcols = async (names: string[]) => {
+      const store = make("webdav");
+      const start = recorded.length;
+      await Promise.all(
+        names.map((n) => store.put(`v1/blocks/ab/${n}`, bytes(n))),
+      );
+      return recorded.slice(start).filter((r) => r.method === "MKCOL").length;
+    };
+    expect(await mkcols(["a", "b", "c", "d"])).toBe(await mkcols(["a"]));
+    // Into a folder there already: no MKCOL at all.
+    const store = make("webdav", { prefix: "notes" });
+    await store.put("x", bytes("x"));
     const start = recorded.length;
-    await Promise.all(
-      ["a", "b", "c", "d"].map((n) => store.put(`v1/blocks/ab/${n}`, bytes(n))),
-    );
-    const made = recorded
-      .slice(start)
-      .filter((r) => r.method === "MKCOL")
-      .map((r) => r.path);
-    expect(made.length).toBe(new Set(made).size);
+    await store.put("y", bytes("y"));
+    expect(recorded.slice(start).map((r) => r.method)).toEqual(["PUT"]);
   });
   it("retries transient idempotent requests with a bounded budget", async () => {
     mode = "retry";
@@ -334,9 +347,9 @@ describe("storage protocols over HTTP", () => {
 
   // README's request table: each sync as the plugin runs it, with a new store.
   it.each([
-    ["s3", [8, 20, 20]],
-    ["webdav", [16, 35, 32]],
-    ["nutstore", [16, 35, 32]],
+    ["s3", [3, 18, 20]],
+    ["webdav", [3, 20, 22]],
+    ["nutstore", [3, 20, 22]],
   ] as const)("counts %s requests per sync", async (provider, expected) => {
     mode = "normal";
     const prefix = `notes/${crypto.randomUUID()}`;
@@ -353,17 +366,22 @@ describe("storage protocols over HTTP", () => {
       await local.sync(
         await openEncryptedStore(make(provider, { prefix }), password),
       );
-      // A block's shard folder is random; when it is there already, the
-      // refused MKCOL is checked with one more PROPFIND. Not counted.
-      return recorded
-        .slice(start)
-        .filter(
-          (r) =>
-            !(
-              r.method === "PROPFIND" &&
-              /\/blocks\/[0-9a-f]{2}\/?$/.test(r.path)
-            ),
-        ).length;
+      // A block's shard folder is random, there already or not: making
+      // one (the PUT it refused, the MKCOL) isn't counted.
+      const made = recorded.slice(start);
+      return made.filter(
+        (r, i) =>
+          !(
+            ["MKCOL", "PROPFIND"].includes(r.method) &&
+            /\/blocks\/[0-9a-f]{2}\/?$/.test(r.path)
+          ) &&
+          !(
+            r.method === "PUT" &&
+            made
+              .slice(i + 1)
+              .some((s) => s.method === "PUT" && s.path === r.path)
+          ),
+      ).length;
     };
     const idle = await measure();
     local.files.set("a.md", bytes("edited"));

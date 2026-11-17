@@ -317,7 +317,7 @@ function parseManifest(raw) {
 function parseBase(raw) {
   if (raw == null) return { format: FORMAT, files: /* @__PURE__ */ Object.create(null) };
   const b = raw;
-  if (b.format !== FORMAT || !b.files || Array.isArray(b.files) || [b.files, b.parked ?? {}].some(
+  if (b.format !== FORMAT || !b.files || Array.isArray(b.files) || b.revision !== void 0 && typeof b.revision !== "string" || [b.files, b.parked ?? {}].some(
     (map) => Array.isArray(map) || Object.entries(map).some(
       ([p, h]) => !inScope(p) || !/^[a-f0-9]{64}$/.test(h)
     )
@@ -630,11 +630,29 @@ async function upload(store, entry, bytes, known, signal, onStored = () => {
   }
 }
 async function putBlock(store, hashed, bytes) {
-  const key = blockKey(hashed);
-  if (!await store.has(key)) await store.put(key, bytes);
-  const actual = await store.get(key);
-  if (!actual || await hash(actual) !== hashed)
-    throw new SyncError("integrityError");
+  await store.put(blockKey(hashed), bytes);
+}
+async function unchanged(options, files) {
+  const { local, store, base } = options;
+  if (!base.revision || options.cleanupDue || options.keep.chosen) return null;
+  const ours = Object.entries(files).filter(([path]) => local.wants(path));
+  if (ours.length !== Object.keys(base.files).length || ours.some(([path, entry]) => base.files[path] !== entry.hash))
+    return null;
+  try {
+    const raw = await store.get(HEAD);
+    if (!raw || parseManifest(raw).revision !== base.revision) return null;
+  } catch {
+    return null;
+  }
+  return {
+    uploaded: 0,
+    downloaded: 0,
+    removed: 0,
+    moved: 0,
+    conflicts: [],
+    deferred: [],
+    unchanged: ours.length
+  };
 }
 async function synchronize(options) {
   const { local, store, signal } = options;
@@ -646,6 +664,12 @@ async function synchronize(options) {
   };
   checkAbort(signal);
   await local.check();
+  progress("scanning", 0, 0);
+  const files = await local.scan();
+  checkAbort(signal);
+  const idle = await unchanged(options, files);
+  if (idle) return idle;
+  checkAbort(signal);
   progress("locking", 0, 0);
   if (!await store.create(LOCK, encode(owner))) throw new SyncError("locked");
   const ownLock = async () => {
@@ -668,9 +692,6 @@ async function synchronize(options) {
     };
     if (!raw && (Object.keys(options.base.files).length || Object.keys(options.base.parked ?? {}).length))
       throw new SyncError("remoteMissing");
-    progress("scanning", 0, 0);
-    const files = await local.scan();
-    checkAbort(signal);
     const now = new Date(store.now?.() ?? Date.now());
     const cutoff = now.getTime() - TRASH_DAYS * 864e5;
     const next = {
@@ -786,12 +807,15 @@ async function synchronize(options) {
         pool.give(entry.size);
       }
     };
+    let reached = 0, sending = 0;
+    const report = () => progress("transferring", reached - sending, actions.length);
     for (let i = 0; i < actions.length; i++) {
       fetchAhead(i);
       checkAbort(signal);
       await local.check();
       const { path, kind } = actions[i];
-      progress("transferring", i, actions.length);
+      reached = i;
+      report();
       const l = files[path], r = remote.files[path];
       if (done.has(path)) continue;
       if (kind === "equal") {
@@ -864,21 +888,28 @@ async function synchronize(options) {
         result.deferred.push(path);
         continue;
       }
+      sending++;
       pool.run(l.size, async () => {
-        await (begun ?? (begun = blocks.begin()));
-        await upload(
-          store,
-          l,
-          current,
-          known,
-          signal,
-          (hashed) => blocks.stored(hashed)
-        );
-        next.files[path] = l;
-        base.files[path] = l.hash;
-        result.uploaded++;
+        try {
+          await (begun ?? (begun = blocks.begin()));
+          await upload(
+            store,
+            l,
+            current,
+            known,
+            signal,
+            (hashed) => blocks.stored(hashed)
+          );
+          next.files[path] = l;
+          base.files[path] = l.hash;
+          result.uploaded++;
+        } finally {
+          sending--;
+          report();
+        }
       });
     }
+    reached = actions.length;
     await pool.drain();
     checkAbort(signal);
     await local.check();
@@ -900,6 +931,7 @@ async function synchronize(options) {
       ownLock
     });
     await blocks.done();
+    if (!result.deferred.length && next.revision) base.revision = next.revision;
     await options.saveBase(base);
     completed = true;
     return result;
@@ -1447,6 +1479,16 @@ function guessServiceRegion(url, headers) {
 // development/cloud-sync/src/transport.ts
 var encodePath = (path) => path.split("/").map(encodeURIComponent).join("/");
 var pause = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+var REPEATABLE = /* @__PURE__ */ new Set([
+  "GET",
+  "HEAD",
+  "PUT",
+  "DELETE",
+  "PROPFIND",
+  "MKCOL"
+]);
+var ATTEMPTS = 4;
+var LONGEST_WAIT_S = 60;
 var RemoteStore = class {
   constructor(config, credentials, fetch2, sleep = pause) {
     this.config = config;
@@ -1457,6 +1499,10 @@ var RemoteStore = class {
     /** The server's clock minus ours, from its last answer's Date. */
     __publicField(this, "skew", 0);
     __publicField(this, "cache", /* @__PURE__ */ new Map());
+    /** Until when every request waits: the server asked to be left. */
+    __publicField(this, "quietUntil", 0);
+    /** Told when the server asks to wait, in seconds: the status says so. */
+    __publicField(this, "onWait");
     if (!credentials.account || !credentials.secret || providers[config.provider].transport === "dav" && credentials.account.includes(":"))
       throw new SyncError("credentialsRequired");
   }
@@ -1473,8 +1519,13 @@ var RemoteStore = class {
     url.pathname = url.pathname.replace(/\/$/, "") + "/" + encodePath(s3 && c.pathStyle ? `${c.bucket}/${prefix}` : prefix);
     return url.toString();
   }
-  async request(method, url, body, extra = {}) {
+  /** One request, sent again while the server is busy or doesn't answer,
+   *  if it may be (`repeat`: not a MOVE, nor a create whose lost answer a
+   *  retry would read as someone else's). */
+  async request(method, url, body, extra = {}, repeat = REPEATABLE.has(method)) {
     for (let attempt = 0; ; attempt++) {
+      const quiet = this.quietUntil - Date.now();
+      if (quiet > 0) await this.sleep(quiet);
       let headers = { ...extra };
       if (providers[this.config.provider].transport === "s3") {
         const signed = await new AwsV4Signer({
@@ -1503,15 +1554,24 @@ var RemoteStore = class {
       try {
         response = await this.fetch(url, { method, body, headers });
       } catch {
-        throw new SyncError("networkError");
+        if (!repeat || attempt + 1 >= ATTEMPTS)
+          throw new SyncError("networkError");
+        await this.sleep(backoff(attempt));
+        continue;
       }
       const date = Date.parse(response.headers["date"] ?? "");
       if (Number.isFinite(date)) this.skew = date - Date.now();
-      if (![429, 502, 503, 504].includes(response.status) || attempt >= 2 || !["GET", "HEAD", "PUT"].includes(method))
+      const busy = [429, 503].includes(response.status);
+      if (!(busy || [502, 504].includes(response.status)) || !repeat || attempt + 1 >= ATTEMPTS)
         return response;
-      const retry = Number(response.headers["retry-after"] ?? "0");
-      if (retry > 5) throw new SyncError("rateLimited");
-      await this.sleep(Math.max(500 * 2 ** attempt, retry * 1e3));
+      const asked = retryAfter(response.headers["retry-after"]);
+      if (asked > LONGEST_WAIT_S) throw new SyncError("rateLimited");
+      const wait = Math.max(backoff(attempt), asked * 1e3);
+      if (busy) {
+        this.quietUntil = Math.max(this.quietUntil, Date.now() + wait);
+        if (asked) this.onWait?.(asked);
+      }
+      await this.sleep(wait);
     }
   }
   require(response) {
@@ -1522,31 +1582,43 @@ var RemoteStore = class {
     if (response.status === 507) throw new SyncError("quotaError");
     throw new SyncError("httpError", [response.status]);
   }
+  /** The folders `key` goes in, made from the deepest up: those there
+   *  already cost one refused MKCOL at most. */
   async parents(key) {
     if (providers[this.config.provider].transport !== "dav") return;
     const parts = `${this.config.prefix}/${key}`.split("/").slice(0, -1);
-    let path = "";
-    for (const part of parts) {
-      path += `${encodeURIComponent(part)}/`;
-      let made = this.dirs.get(path);
-      if (!made) {
-        made = this.folder(path);
-        this.dirs.set(path, made);
-        made.catch(() => this.dirs.delete(path));
-      }
-      await made;
-    }
+    const paths = parts.map(
+      (_, i) => parts.slice(0, i + 1).map(encodeURIComponent).join("/") + "/"
+    );
+    await this.ensure(paths, paths.length - 1);
   }
+  ensure(paths, i) {
+    const path = paths[i];
+    let made = this.dirs.get(path);
+    if (!made) {
+      const refused2 = () => new SyncError("folderNotCreated", [
+        decodeURIComponent(path.slice(0, -1))
+      ]);
+      made = (async () => {
+        if (await this.folder(path)) return;
+        if (i === 0) throw refused2();
+        await this.ensure(paths, i - 1);
+        if (!await this.folder(path)) throw refused2();
+      })();
+      this.dirs.set(path, made);
+      made.catch(() => this.dirs.delete(path));
+    }
+    return made;
+  }
+  /** MKCOL: whether the folder is there now. "Already there" is 405;
+   *  Nutstore says 409, as for a missing parent, so a 409 is looked at. */
   async folder(path) {
     const url = `${this.config.endpoint}/${path}`;
     const res = await this.request("MKCOL", url);
-    const made = res.status >= 200 && res.status < 300;
-    if (!made && !await this.isFolder(url)) {
-      if ([401, 403, 429, 507].includes(res.status)) this.require(res);
-      throw new SyncError("folderNotCreated", [
-        decodeURIComponent(path.slice(0, -1))
-      ]);
-    }
+    if (res.status >= 200 && res.status < 300 || res.status === 405)
+      return true;
+    if ([401, 403, 429, 507].includes(res.status)) this.require(res);
+    return this.isFolder(url);
   }
   async isFolder(url) {
     const res = await this.request("PROPFIND", url, void 0, { Depth: "0" });
@@ -1565,15 +1637,39 @@ var RemoteStore = class {
     return true;
   }
   async put(key, bytes) {
-    await this.parents(key);
-    this.require(await this.request("PUT", this.target(key), bytes));
+    const url = this.target(key);
+    const dav = providers[this.config.provider].transport === "dav";
+    let res = await this.request("PUT", url, bytes);
+    if (dav && [404, 409].includes(res.status)) {
+      await this.parents(key);
+      res = await this.request("PUT", url, bytes);
+    }
+    this.require(res);
   }
   async create(key, bytes) {
     if (providers[this.config.provider].transport === "s3") {
-      const res = await this.request("PUT", this.target(key), bytes, {
-        "If-None-Match": "*"
-      });
-      if (res.status === 412) return false;
+      const put = (repeat) => this.request(
+        "PUT",
+        this.target(key),
+        bytes,
+        { "If-None-Match": "*" },
+        repeat
+      );
+      let res;
+      let resent = false;
+      try {
+        res = await put(false);
+      } catch (error) {
+        if (!(error instanceof SyncError) || error.code !== "networkError")
+          throw error;
+        resent = true;
+        res = await put(true);
+      }
+      if (res.status === 412) {
+        if (!resent) return false;
+        const there = await this.get(key);
+        return !!there && await hash(there) === await hash(bytes);
+      }
       this.require(res);
       return true;
     }
@@ -1600,6 +1696,16 @@ var RemoteStore = class {
     if (res.status !== 404) this.require(res);
   }
 };
+function backoff(attempt) {
+  return 500 * 2 ** attempt * (0.8 + Math.random() * 0.4);
+}
+function retryAfter(value) {
+  if (!value) return 0;
+  const seconds = Number(value);
+  if (Number.isFinite(seconds)) return Math.max(0, seconds);
+  const at = Date.parse(value);
+  return Number.isFinite(at) ? Math.max(0, (at - Date.now()) / 1e3) : 0;
+}
 async function testConnection(store) {
   const key = `v1/probes/${crypto.randomUUID()}`;
   const original = crypto.getRandomValues(new Uint8Array(32));
@@ -2218,6 +2324,15 @@ function statusText(s, now, t, language) {
   );
   return t("statusSynced", when);
 }
+function fewPerSecond(report, now = Date.now) {
+  let shown = "", at = -Infinity;
+  return (phase, current, total) => {
+    if (phase === shown && current < total && now() - at < 200) return;
+    shown = phase;
+    at = now();
+    report(phase, current, total);
+  };
+}
 
 // development/cloud-sync/src/connection.ts
 async function testDraft(config, credentials, fetch2, signal) {
@@ -2495,11 +2610,9 @@ var Controller = class {
     if (root !== this.state.root) throw new SyncError("rootChanged");
     const config = await this.settings.load(root);
     const credentials = await this.settings.credentials(root, config);
-    return {
-      root,
-      config,
-      store: new RemoteStore(config, credentials, this.api.net.fetch)
-    };
+    const store = new RemoteStore(config, credentials, this.api.net.fetch);
+    store.onWait = (seconds) => this.message("waiting", false, Math.ceil(seconds));
+    return { root, config, store };
   }
   /** The remote folder, opened plain or encrypted as the folder is set up. */
   async open(root, config, store, { test = false, quiet = false } = {}) {
@@ -2620,10 +2733,10 @@ var Controller = class {
         signal: this.abort.signal,
         saveBase: (next) => this.ctx.storage.global.set(key, next),
         pending: pendingIn(this.ctx.storage.global, key),
-        progress: (phase, current, total) => {
+        progress: fewPerSecond((phase, current, total) => {
           this.state.progress = total ? current / total : null;
           this.message(phase, false, current, total);
-        }
+        })
       });
       const at = (/* @__PURE__ */ new Date()).toISOString();
       await this.ctx.storage.global.set(`last:${key}`, { at, result });
