@@ -95,24 +95,12 @@ describe("canvas tabs", () => {
   });
 });
 
-describe("Excalidraw tabs", () => {
-  it("shows the picture the note embeds", async () => {
-    const note = "![[Drawing.svg]]\n%%\n## Drawing\n```compressed-json\nabc\n```\n%%";
-    const { editors } = canvasPlugin({ "Drawing.svg": "<svg/>" });
-    const { sent } = await open(editors.get("catvinci.canvas.excalidraw"), "Sketch.excalidraw.md", note);
-    expect(sent).toEqual([
-      { type: "excalidraw", name: "Sketch.excalidraw.md", picture: { name: "Drawing.svg", bytes: enc("<svg/>"), mime: "image/svg+xml" } },
-    ]);
-  });
-
-  it("else the auto-export beside it, else none - and opens the file as text", async () => {
-    const { editors, opened } = canvasPlugin({ "Sketch.excalidraw.png": "PNG" });
-    const editor = editors.get("catvinci.canvas.excalidraw");
-    const beside = await open(editor, "Sketch.excalidraw.md", "");
-    expect(beside.sent[0].picture).toMatchObject({ name: "Sketch.excalidraw.png", mime: "image/png" });
-    const none = await open(editor, "Other.excalidraw", "{}");
-    expect(none.sent).toEqual([{ type: "excalidraw", name: "Other.excalidraw", picture: null }]);
-    await none.send({ type: "text" });
-    expect(opened).toEqual([["/root/Other.excalidraw", { asDocument: true }]]);
+describe("a canvas that can't be read", () => {
+  it("opens the file as text", async () => {
+    const { editors, opened } = canvasPlugin({});
+    const broken = await open(editors.get("catvinci.canvas.canvas"), "Broken.canvas", "{");
+    expect(broken.sent[0].type).toBe("failed");
+    await broken.send({ type: "text" });
+    expect(opened).toEqual([["/root/Broken.canvas", { asDocument: true }]]);
   });
 });

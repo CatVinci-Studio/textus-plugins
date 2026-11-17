@@ -1,7 +1,7 @@
 {
   "id": "catvinci.canvas",
   "name": "%name%",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "publisher": "catvinci",
   "author": "CatVinci Studio",
   "description": "%description%",
@@ -11,7 +11,10 @@
   "engines": {
     "textus": ">=1.4.3"
   },
-  "platforms": ["desktop", "ios"],
+  "platforms": [
+    "desktop",
+    "ios"
+  ],
   "main": [
     "lib/folder-paths.js",
     "canvas-model.js",
@@ -28,149 +31,118 @@
         "filenamePatterns": [
           "*.canvas"
         ]
-      },
-      {
-        "viewType": "catvinci.canvas.excalidraw",
-        "displayName": "%excalidrawName%",
-        "filenamePatterns": [
-          "*.excalidraw.md",
-          "*.excalidraw"
-        ],
-        "frontMatter": [
-          "excalidraw-plugin"
-        ]
       }
     ]
   },
   "l10n": {
     "en": {
       "name": "Canvas",
-      "description": "Open Obsidian's canvases (.canvas) in a tab: notes, pictures, links and groups on a board to drag and zoom. Excalidraw drawings show the picture exported from them.",
-      "excalidrawName": "Excalidraw drawing",
+      "description": "Open Obsidian's canvases (.canvas) in a tab: notes, pictures, links and groups on a board to drag and zoom.",
       "zoomIn": "Zoom in",
       "zoomOut": "Zoom out",
       "fit": "Fit to view",
       "empty": "This canvas is empty.",
       "missing": "Not in this folder",
       "failed": "This canvas can't be read: {0}",
-      "excalidraw": "Drawn with Obsidian's Excalidraw: turn on its auto-export there to see it here.",
       "openAsText": "Open as Text"
     },
     "zh": {
       "name": "白板",
-      "description": "在标签页里打开 Obsidian 的白板（.canvas）：笔记、图片、链接和分组排在画布上，可以拖动和缩放。Excalidraw 绘图显示它导出的图片。",
-      "excalidrawName": "Excalidraw 绘图",
+      "description": "在标签页里打开 Obsidian 的白板（.canvas）：笔记、图片、链接和分组排在画布上，可以拖动和缩放。",
       "zoomIn": "放大",
       "zoomOut": "缩小",
       "fit": "适应窗口",
       "empty": "这个白板是空的。",
       "missing": "不在这个文件夹里",
       "failed": "无法读取这个白板：{0}",
-      "excalidraw": "这是 Obsidian Excalidraw 画的图：在那里开启自动导出后可在此查看。",
       "openAsText": "以文本打开"
     },
     "zh-Hant": {
       "name": "白板",
-      "description": "在分頁中開啟 Obsidian 的白板（.canvas）：筆記、圖片、連結和群組排在畫布上，可以拖曳和縮放。Excalidraw 繪圖顯示它匯出的圖片。",
-      "excalidrawName": "Excalidraw 繪圖",
+      "description": "在分頁中開啟 Obsidian 的白板（.canvas）：筆記、圖片、連結和群組排在畫布上，可以拖曳和縮放。",
       "zoomIn": "放大",
       "zoomOut": "縮小",
       "fit": "符合視窗",
       "empty": "這個白板是空的。",
       "missing": "不在這個資料夾裡",
       "failed": "無法讀取這個白板：{0}",
-      "excalidraw": "這是 Obsidian Excalidraw 畫的圖：在那裡開啟自動匯出後可在此檢視。",
       "openAsText": "以文字開啟"
     },
     "ja": {
       "name": "キャンバス",
-      "description": "Obsidian のキャンバス（.canvas）をタブで開きます。ノート・画像・リンク・グループを並べたボードをドラッグやズームで見られます。Excalidraw の図はエクスポートされた画像で表示します。",
-      "excalidrawName": "Excalidraw の図",
+      "description": "Obsidian のキャンバス（.canvas）をタブで開きます。ノート・画像・リンク・グループを並べたボードをドラッグやズームで見られます。",
       "zoomIn": "拡大",
       "zoomOut": "縮小",
       "fit": "全体を表示",
       "empty": "このキャンバスは空です。",
       "missing": "このフォルダーにありません",
       "failed": "このキャンバスを読み込めません：{0}",
-      "excalidraw": "Obsidian の Excalidraw で描かれた図です。そちらで自動エクスポートをオンにするとここに表示されます。",
       "openAsText": "テキストとして開く"
     },
     "ko": {
       "name": "캔버스",
-      "description": "Obsidian 캔버스(.canvas)를 탭에서 엽니다. 노트·그림·링크·그룹이 놓인 보드를 끌고 확대해 볼 수 있습니다. Excalidraw 그림은 내보낸 이미지로 보여 줍니다.",
-      "excalidrawName": "Excalidraw 그림",
+      "description": "Obsidian 캔버스(.canvas)를 탭에서 엽니다. 노트·그림·링크·그룹이 놓인 보드를 끌고 확대해 볼 수 있습니다.",
       "zoomIn": "확대",
       "zoomOut": "축소",
       "fit": "전체 보기",
       "empty": "이 캔버스는 비어 있습니다.",
       "missing": "이 폴더에 없음",
       "failed": "이 캔버스를 읽을 수 없습니다: {0}",
-      "excalidraw": "Obsidian Excalidraw로 그린 그림입니다. 그쪽에서 자동 내보내기를 켜면 여기에 표시됩니다.",
       "openAsText": "텍스트로 열기"
     },
     "es": {
       "name": "Lienzo",
-      "description": "Abre los lienzos de Obsidian (.canvas) en una pestaña: notas, imágenes, enlaces y grupos en un tablero que puedes arrastrar y ampliar. Los dibujos de Excalidraw muestran la imagen exportada.",
-      "excalidrawName": "Dibujo de Excalidraw",
+      "description": "Abre los lienzos de Obsidian (.canvas) en una pestaña: notas, imágenes, enlaces y grupos en un tablero que puedes arrastrar y ampliar.",
       "zoomIn": "Acercar",
       "zoomOut": "Alejar",
       "fit": "Ajustar a la vista",
       "empty": "Este lienzo está vacío.",
       "missing": "No está en esta carpeta",
       "failed": "No se puede leer este lienzo: {0}",
-      "excalidraw": "Dibujado con Excalidraw de Obsidian: activa allí su exportación automática para verlo aquí.",
       "openAsText": "Abrir como texto"
     },
     "fr": {
       "name": "Canevas",
-      "description": "Ouvrez les canevas d’Obsidian (.canvas) dans un onglet : notes, images, liens et groupes sur un tableau à faire glisser et zoomer. Les dessins Excalidraw affichent l’image qui en est exportée.",
-      "excalidrawName": "Dessin Excalidraw",
+      "description": "Ouvrez les canevas d’Obsidian (.canvas) dans un onglet : notes, images, liens et groupes sur un tableau à faire glisser et zoomer.",
       "zoomIn": "Zoom avant",
       "zoomOut": "Zoom arrière",
       "fit": "Tout afficher",
       "empty": "Ce canevas est vide.",
       "missing": "Absent de ce dossier",
       "failed": "Impossible de lire ce canevas : {0}",
-      "excalidraw": "Dessiné avec Excalidraw d'Obsidian : activez-y l'export automatique pour le voir ici.",
       "openAsText": "Ouvrir en texte"
     },
     "de": {
       "name": "Canvas",
-      "description": "Öffne Obsidians Canvas-Dateien (.canvas) in einem Tab: Notizen, Bilder, Links und Gruppen auf einer Fläche zum Verschieben und Zoomen. Excalidraw-Zeichnungen zeigen ihr exportiertes Bild.",
-      "excalidrawName": "Excalidraw-Zeichnung",
+      "description": "Öffne Obsidians Canvas-Dateien (.canvas) in einem Tab: Notizen, Bilder, Links und Gruppen auf einer Fläche zum Verschieben und Zoomen.",
       "zoomIn": "Vergrößern",
       "zoomOut": "Verkleinern",
       "fit": "Alles zeigen",
       "empty": "Dieses Canvas ist leer.",
       "missing": "Nicht in diesem Ordner",
       "failed": "Dieses Canvas lässt sich nicht lesen: {0}",
-      "excalidraw": "Mit Excalidraw in Obsidian gezeichnet: Aktiviere dort den automatischen Export, um es hier zu sehen.",
       "openAsText": "Als Text öffnen"
     },
     "ru": {
       "name": "Холст",
-      "description": "Открывайте холсты Obsidian (.canvas) во вкладке: заметки, картинки, ссылки и группы на доске, которую можно двигать и масштабировать. Рисунки Excalidraw показываются экспортированной картинкой.",
-      "excalidrawName": "Рисунок Excalidraw",
+      "description": "Открывайте холсты Obsidian (.canvas) во вкладке: заметки, картинки, ссылки и группы на доске, которую можно двигать и масштабировать.",
       "zoomIn": "Увеличить",
       "zoomOut": "Уменьшить",
       "fit": "Показать всё",
       "empty": "Этот холст пуст.",
       "missing": "Нет в этой папке",
       "failed": "Не удаётся прочитать этот холст: {0}",
-      "excalidraw": "Нарисовано в Excalidraw для Obsidian: включите там автоэкспорт, чтобы видеть рисунок здесь.",
       "openAsText": "Открыть как текст"
     },
     "pt": {
       "name": "Canvas",
-      "description": "Abra os canvas do Obsidian (.canvas) numa aba: notas, imagens, links e grupos num quadro para arrastar e ampliar. Desenhos do Excalidraw mostram a imagem exportada.",
-      "excalidrawName": "Desenho do Excalidraw",
+      "description": "Abra os canvas do Obsidian (.canvas) numa aba: notas, imagens, links e grupos num quadro para arrastar e ampliar.",
       "zoomIn": "Ampliar",
       "zoomOut": "Reduzir",
       "fit": "Ajustar à janela",
       "empty": "Este canvas está vazio.",
       "missing": "Não está nesta pasta",
       "failed": "Não foi possível ler este canvas: {0}",
-      "excalidraw": "Desenhado com o Excalidraw do Obsidian: ative lá a exportação automática para vê-lo aqui.",
       "openAsText": "Abrir como texto"
     }
   }

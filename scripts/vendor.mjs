@@ -62,3 +62,53 @@ await build({
   outfile: `${ROOT}vendor/mdx.js`,
 });
 console.log("vendor/mdx.js");
+
+// Excalidraw and React for catvinci.excalidraw's page. Left out, to keep
+// the plugin within the catalog's 5 MB: Mermaid-to-drawing, the font
+// subsetter (a WebAssembly build, for embedding fonts in an exported SVG)
+// and the languages Textus isn't in.
+const EXCALIDRAW_LANGUAGES = ["en", "zh-CN", "zh-TW", "ja-JP", "ko-KR", "es-ES", "fr-FR", "de-DE", "ru-RU", "pt-BR", "pt-PT", "percentages"];
+const leftOut = {
+  name: "left-out",
+  setup(b) {
+    b.onResolve({ filter: /^@excalidraw\/mermaid-to-excalidraw$|subset-(shared|worker)\.chunk\.js$/ }, (a) => ({ path: a.path, namespace: "left-out" }));
+    b.onResolve({ filter: /\/locales\/[^/]+\.js$/ }, (a) => {
+      const name = a.path.split("/").pop().replace(/-[A-Z0-9]+\.js$/, "");
+      return EXCALIDRAW_LANGUAGES.includes(name) ? undefined : { path: a.path, namespace: "left-out" };
+    });
+    b.onLoad({ filter: /.*/, namespace: "left-out" }, () => ({
+      contents: "export default {}; export const parseMermaidToExcalidraw = () => { throw new Error('Not in Textus.'); };",
+      loader: "js",
+    }));
+  },
+};
+await build({
+  entryPoints: [`${ROOT}vendor-src/excalidraw.mjs`],
+  bundle: true,
+  format: "iife",
+  platform: "browser",
+  define: { "process.env.NODE_ENV": '"production"' },
+  conditions: ["production"],
+  loader: { ".css": "text" },
+  plugins: [leftOut],
+  minify: true,
+  legalComments: "eof",
+  outfile: `${ROOT}vendor/excalidraw.js`,
+});
+console.log("vendor/excalidraw.js");
+
+// lz-string for the Excalidraw plugin's host, as a global only: its own
+// file sets module.exports, which is where a plugin's host keeps activate.
+await build({
+  stdin: {
+    contents: `import LZString from "lz-string"; globalThis.LZString = LZString;`,
+    resolveDir: ROOT,
+  },
+  bundle: true,
+  format: "iife",
+  platform: "browser",
+  minify: true,
+  legalComments: "eof",
+  outfile: `${ROOT}vendor/lz-string.js`,
+});
+console.log("vendor/lz-string.js");

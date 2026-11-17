@@ -142,9 +142,6 @@ body {
 .link-url {
   word-break: break-all;
 }
-img.drawing {
-  position: absolute;
-}
 
 /* A text node's or a note's Markdown, as the document draws it. */
 .markdown {

@@ -110,5 +110,15 @@
   "catvinci.mdx/lib/mdx.js": "./vendor/mdx.js",
   "catvinci.version-history/lib/text-diff.js": "./shared/text-diff.js",
   "catvinci.git/lib/text-diff.js": "./shared/text-diff.js",
-  "catvinci.git/lib/folder-paths.js": "./shared/folder-paths.js"
+  "catvinci.git/lib/folder-paths.js": "./shared/folder-paths.js",
+  "catvinci.excalidraw/lib/excalidraw.js": "./vendor/excalidraw.js",
+  "catvinci.excalidraw/lib/lz-string.js": "./vendor/lz-string.js",
+  "catvinci.excalidraw/fonts/Excalifont/": "@excalidraw/excalidraw/dist/prod/fonts/Excalifont/",
+  "catvinci.excalidraw/fonts/Virgil/": "@excalidraw/excalidraw/dist/prod/fonts/Virgil/",
+  "catvinci.excalidraw/fonts/Cascadia/": "@excalidraw/excalidraw/dist/prod/fonts/Cascadia/",
+  "catvinci.excalidraw/fonts/Nunito/": "@excalidraw/excalidraw/dist/prod/fonts/Nunito/",
+  "catvinci.excalidraw/fonts/Lilita/": "@excalidraw/excalidraw/dist/prod/fonts/Lilita/",
+  "catvinci.excalidraw/fonts/ComicShanns/": "@excalidraw/excalidraw/dist/prod/fonts/ComicShanns/",
+  "catvinci.excalidraw/fonts/Liberation/": "@excalidraw/excalidraw/dist/prod/fonts/Liberation/",
+  "catvinci.excalidraw/fonts/Assistant/": "@excalidraw/excalidraw/dist/prod/fonts/Assistant/"
 }

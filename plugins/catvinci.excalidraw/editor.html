@@ -1,0 +1,31 @@
+<!doctype html>
+<html>
+  <head>
+    <style>
+      html,
+      body,
+      #app {
+        height: 100%;
+        margin: 0;
+      }
+      body {
+        background: var(--doc-bg);
+      }
+      #status[hidden] {
+        display: none;
+      }
+    </style>
+    <script>
+      // Where Excalidraw finds its fonts: the folder this one is in. Where
+      // the plugin's files have no address (a file given as data), none.
+      var font = "textus-resource:fonts/Virgil/Virgil-Regular.woff2";
+      if (/^(?!data:).*\/fonts\/Virgil\//.test(font)) window.EXCALIDRAW_ASSET_PATH = font.replace(/fonts\/Virgil\/.*$/, "");
+    </script>
+  </head>
+  <body>
+    <div id="app"></div>
+    <div id="status" class="tx-empty" hidden></div>
+    <script src="textus-resource:lib/excalidraw.js"></script>
+    <script src="textus-resource:editor.js"></script>
+  </body>
+</html>

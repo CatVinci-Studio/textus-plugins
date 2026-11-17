@@ -187,14 +187,18 @@ export function loadPlugin(
   const document = main.includes("lib/markdownlint.js")
     ? { createElement: () => ({ innerHTML: "", textContent: "" }) }
     : undefined;
+  // As the app's host runs them: a library that sets module.exports takes
+  // the place where activate is looked for.
+  const module = { exports };
   new Function(
+    "module",
     "exports",
     "textus",
     "document",
     main.map((f) => sourceOf(id, f)).join("\n;\n"),
-  )(exports, textus, document);
+  )(module, exports, textus, document);
   const secrets = new Map<string, string>();
-  exports.activate({
+  module.exports.activate({
     subscriptions: [],
     storage: { global: storage },
     secrets: {
