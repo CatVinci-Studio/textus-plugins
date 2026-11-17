@@ -39,6 +39,7 @@ L’onglet **Liens bidirectionnels** de la barre latérale montre ce qui lie le 
 
 ## Changements
 
+- **0.4.7** - Le code gardé pour des versions de Textus où il ne tourne plus a été retiré.
 - **0.4.6** - Le champ de filtre et le message vide suivent la langue de Textus quand vous la changez. Nécessite Textus 1.4.3.
 - **0.4.5** - Les mentions non liées s’ouvrent à la bonne ligne, et le style de lien est enregistré par Textus lui-même (Textus 1.4.3).
 - **0.4.4** - Convertir les liens laisse les liens d'un bloc de code tels quels et convertit ceux qui suivent ; les mentions non liées ne listent ni ne lient plus les noms dans le front matter ou le code.

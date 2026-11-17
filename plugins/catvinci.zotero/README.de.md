@@ -41,6 +41,7 @@ Der Zitierschlüssel kommt aus dem Feld Citation Key des Eintrags (oder einer Ze
 
 ## Änderungen
 
+- **0.4.4** - Sortiert Namen mit Textus’ eigener Reihenfolge statt einer Kopie davon; das Paket ist kleiner. Benötigt Textus 1.4.3.
 - **0.4.3** - Ein Zitat ersetzt jetzt die markierten Wörter; das Literaturverzeichnis meldet nicht mehr, Zotero sei nicht erreichbar, wenn es antwortet, und die Vorschau beim Überfahren erscheint zuverlässiger.
 - **0.4.2** - Kürzere Hilfe- und Leertexte.
 - **0.4.1** - Sein Code ist nach Aufgaben in kleinere Dateien aufgeteilt; in der Nutzung ändert sich nichts.

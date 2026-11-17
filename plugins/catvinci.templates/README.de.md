@@ -19,6 +19,7 @@ Läuft auf dem Desktop und auf dem iPhone und braucht Textus 1.3.10 oder neuer. 
 
 ## Änderungen
 
+- **0.5.5** - Sortiert Namen mit Textus’ eigener Reihenfolge statt einer Kopie davon; das Paket ist kleiner. Benötigt Textus 1.4.3.
 - **0.5.4** - Ist ein Name vergeben, bekommt die Datei beim Schreiben den nächsten freien, nie einen doppelten (Textus 1.4.3).
 - **0.5.3** - Die Store-Beschreibung beginnt jetzt mit dem, was das Plugin tut.
 - **0.5.2** - Vorlagen in einem versteckten oder kleingeschriebenen Vorlagenordner und in seinen Unterordnern erscheinen jetzt. Nach dem Einfügen steht der Cursor direkt hinter der Vorlage.

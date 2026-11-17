@@ -33,6 +33,7 @@ It runs on the desktop and on iOS.
 
 ## Changes
 
+- **0.3.10** - Code kept for Textus versions it no longer runs on is gone.
 - **0.3.9** - The page follows Textus's language by itself. Needs Textus 1.4.3.
 - **0.3.8** - Present as Slides draws the deck on a phone, where its tab comes to the front alone.
 - **0.3.7** - Formulas use KaTeX's own fonts from Textus 1.4.2 on, in the tab and in a saved HTML file; earlier versions keep the system's fonts.

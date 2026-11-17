@@ -1,4 +1,3 @@
-/* global dates */
 (function () {
   "use strict";
   const api = acquireTextusApi();
@@ -13,6 +12,8 @@
   $("today").textContent = api.t("todayButton");
   $("nofolder").textContent = api.t("nofolder");
 
+  // Textus's dates, as the host's textus.dates.
+  const dates = window.textus.dates;
   const dateOf = (d) => dates.format(d, "YYYY-MM-DD");
   const saved = api.getState() || {};
   let shown = saved.month ? new Date(saved.month + "-01T00:00:00") : new Date();
@@ -96,7 +97,7 @@
    *  day names it, whichever day the calendar starts its weeks on. */
   function weekButton(start) {
     const middle = new Date(start.getFullYear(), start.getMonth(), start.getDate() + 3);
-    const number = dates.format(middle, week, api.language);
+    const number = dates.format(middle, week);
     const button = document.createElement("button");
     button.className = "week";
     button.textContent = number;

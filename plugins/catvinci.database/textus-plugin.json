@@ -1,7 +1,7 @@
 {
   "id": "catvinci.database",
   "name": "%name%",
-  "version": "0.7.15",
+  "version": "0.7.16",
   "publisher": "catvinci",
   "author": "CatVinci Studio",
   "description": "%description%",
@@ -19,7 +19,6 @@
     "lib/expr.js",
     "lib/base-filters.js",
     "lib/bases.js",
-    "lib/name-order.js",
     "pages.js",
     "pages-host.js",
     "dataview.js",

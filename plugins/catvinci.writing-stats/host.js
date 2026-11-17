@@ -39,11 +39,11 @@ async function goalWords() {
 
 /** Only the user's own typing adds to today; any other call (another
  *  document in front, AI, disk, undo) just moves the baseline. */
-/** Words and characters as the status bar counts them (textus.text, from
- *  Textus 1.4.3), else our own count. */
+/** Words and characters as the status bar counts them; our own count for
+ *  the rest, or when Textus can't answer. */
 async function counted(text) {
   const own = writingCount.count(text);
-  const app = textus.text ? await textus.text.count(text).catch(() => null) : null;
+  const app = await textus.text.count(text).catch(() => null);
   return typeof app?.words === "number"
     ? { ...own, words: app.words, characters: app.characters }
     : own;

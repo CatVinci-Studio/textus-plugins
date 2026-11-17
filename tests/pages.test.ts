@@ -20,6 +20,12 @@ let p: {
 
 beforeAll(async () => {
   await import(/* @vite-ignore */ "../shared/name-order.js");
+  // pages.js sorts with the host's textus.text.compareNames: the same code.
+  const host = globalThis as unknown as {
+    nameOrder: { compareNames: unknown };
+    textus?: unknown;
+  };
+  host.textus = { text: { compareNames: host.nameOrder.compareNames } };
   const script = "../plugins/catvinci.database/pages.js";
   await import(/* @vite-ignore */ script);
   p = (globalThis as unknown as { pages: typeof p }).pages;

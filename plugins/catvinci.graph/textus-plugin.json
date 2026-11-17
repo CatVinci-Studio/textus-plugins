@@ -17,7 +17,6 @@
   ],
   "main": [
     "lib/folder-paths.js",
-    "lib/name-order.js",
     "links.js",
     "host.js"
   ],

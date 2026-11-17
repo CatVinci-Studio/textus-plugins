@@ -65,9 +65,9 @@ export function memoryStorage(files: Record<string, string> = {}) {
   };
 }
 
-/** Textus's textus.dates and textus.templates (the app's runtime/text.js),
- *  stood in for by the same code kept here: shared/dates.js and the
- *  Templater subset. */
+/** Textus's textus.dates, textus.templates and text.compareNames (the
+ *  app's runtime/text.js), stood in for by the same code kept here:
+ *  shared/dates.js, the Templater subset and shared/name-order.js. */
 function textApi(conventions: () => Promise<Any>): Any {
   const box: Any = {};
   const run = (file: URL) =>
@@ -77,6 +77,7 @@ function textApi(conventions: () => Promise<Any>): Any {
     );
   run(new URL("../shared/dates.js", import.meta.url));
   run(new URL("../shared/templater.js", import.meta.url));
+  run(new URL("../shared/name-order.js", import.meta.url));
   const asDate = (v: unknown) =>
     v instanceof Date
       ? v
@@ -84,6 +85,7 @@ function textApi(conventions: () => Promise<Any>): Any {
         ? new Date(`${v}T00:00:00`)
         : new Date((v as number) ?? Date.now());
   return {
+    text: { compareNames: box.nameOrder.compareNames },
     dates: {
       format: (d: unknown, f?: string, o?: Any) =>
         box.dates.format(asDate(d), f || "YYYY-MM-DD", o?.language ?? "en"),

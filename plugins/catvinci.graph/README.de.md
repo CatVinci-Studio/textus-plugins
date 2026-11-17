@@ -25,7 +25,7 @@ In einem Obsidian-Vault färben auch die in Obsidians `graph.json` gespeicherten
 
 ## Änderungen
 
-- **0.5.8** - Der Graph in der Seitenleiste breitet sich auf sein Feld aus, statt als kleiner Klumpen mit übereinanderliegenden Beschriftungen zu beginnen.
+- **0.5.8** - Der Graph in der Seitenleiste breitet sich auf sein Feld aus, statt als kleiner Klumpen mit übereinanderliegenden Beschriftungen zu beginnen. Sortiert Namen mit Textus’ eigener Reihenfolge statt einer Kopie davon; das Paket ist kleiner.
 - **0.5.7** - Die Seite folgt der Sprache von Textus von selbst. Benötigt Textus 1.4.3.
 - **0.5.6** - Zahlen und Schaltflächen oben im Graph-Tab bleiben sichtbar: Scrollen oder Zoomen über dem Graphen schiebt sie nicht mehr nach oben unter den Tab. Beschriftungen stapeln sich nicht mehr: Die am stärksten verlinkten Notizen behalten ihre, die übrigen erscheinen beim Hineinzoomen. Ein großer Ordner öffnet sich bereits angeordnet, statt sich zu entfalten, und Bilder und andere Anhänge, auf die eine Notiz verlinkt, bleiben außerhalb des Graphen, bis du in den Einstellungen Anhänge einschaltest. Beim Wechsel des Dokuments oder beim Speichern gerät nicht mehr der ganze Graph in Bewegung.
 - **0.5.5** - Normale Markdown-Links auf noch nicht geschriebene Notizen landen dort, wo Textus sie anlegt, und fallen mit [[Links]] auf dieselbe Notiz zusammen. Strg/Cmd-Klick öffnet eine Notiz neben der vorderen. Beschriftungen folgen der Textgröße der Oberfläche, Ordnerfarben dem Theme. Der Graph in der Seitenleiste hat keine eigenen Einstellungen mehr.

@@ -23,7 +23,7 @@ L'extension lit et écrit des fichiers du dossier ouvert pour trouver et créer 
 
 ## Changements
 
-- **0.7.8** - Si la barre est trop étroite même pour le nom court du mois (la barre latérale d’un téléphone), le mois passe sur sa propre ligne au-dessus des boutons au lieu de perdre l’année.
+- **0.7.8** - Si la barre est trop étroite même pour le nom court du mois (la barre latérale d’un téléphone), le mois passe sur sa propre ligne au-dessus des boutons au lieu de perdre l’année. Le calendrier écrit les dates avec celles de Textus : le paquet est plus léger.
 - **0.7.7** - La semaine commence selon la langue de Textus et non la région de l’appareil, comme les numéros de semaine.
 - **0.7.6** - La page suit la langue de Textus d’elle-même. Nécessite Textus 1.4.3.
 - **0.7.5** - Le titre du mois du calendrier commence à gauche et se termine par des points de suspension dans une barre latérale étroite.

@@ -10,6 +10,12 @@ let bexpr: {
 
 beforeAll(async () => {
   await import(/* @vite-ignore */ "../shared/name-order.js");
+  // pages.js sorts with the host's textus.text.compareNames: the same code.
+  const host = globalThis as unknown as {
+    nameOrder: { compareNames: unknown };
+    textus?: unknown;
+  };
+  host.textus = { text: { compareNames: host.nameOrder.compareNames } };
   await import(/* @vite-ignore */ "../plugins/catvinci.database/pages.js");
   await import(/* @vite-ignore */ "../shared/expr.js");
   const g = globalThis as unknown as {

@@ -23,7 +23,7 @@ The plugin reads and writes files in the open folder to find and make the notes,
 
 ## Changes
 
-- **0.7.8** - Where the bar is too narrow for even the short month name (a phone's sidebar), the month goes on a row of its own above the buttons instead of losing its year.
+- **0.7.8** - Where the bar is too narrow for even the short month name (a phone's sidebar), the month goes on a row of its own above the buttons instead of losing its year. The calendar writes dates with Textus's own, so the package is smaller.
 - **0.7.7** - Weeks start as Textus's language has them, not the device's region, so they agree with the week numbers.
 - **0.7.6** - The page follows Textus's language by itself. Needs Textus 1.4.3.
 - **0.7.5** - The Calendar's month title starts at the left and ends in an ellipsis in a narrow sidebar, instead of being cut at both ends.

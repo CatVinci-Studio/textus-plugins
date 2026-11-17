@@ -28,10 +28,9 @@ function render(markdown) {
 }
 
 let mathCss = null;
-/** `css` with KaTeX's fonts inline when `html` has formulas: Textus 1.4.2
- *  hands them over; before it, formulas keep the system's fonts. */
+/** `css` with KaTeX's fonts inline when `html` has formulas. */
 async function withMath(html, css) {
-  if (!html.includes('class="katex"') || !textus.export.mathCss) return css;
+  if (!html.includes('class="katex"')) return css;
   mathCss = mathCss || textus.export.mathCss().catch(() => "");
   return css + (await mathCss);
 }

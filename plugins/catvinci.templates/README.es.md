@@ -19,6 +19,7 @@ Funciona en escritorio y en iPhone y necesita Textus 1.3.10 o posterior. Pide le
 
 ## Cambios
 
+- **0.5.5** - Ordena los nombres con el orden propio de Textus en lugar de una copia, así el paquete es más pequeño. Requiere Textus 1.4.3.
 - **0.5.4** - Si un nombre ya existe, el archivo recibe el siguiente libre al escribirse, sin choques (Textus 1.4.3).
 - **0.5.3** - La descripción de la tienda empieza ahora por lo que hace el plugin.
 - **0.5.2** - Ahora aparecen las plantillas de una carpeta de plantillas oculta o en minúsculas, y de sus subcarpetas. Tras insertar, el cursor queda justo después de la plantilla.
