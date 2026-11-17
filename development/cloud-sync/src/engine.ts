@@ -124,7 +124,16 @@ async function unchanged(
     return null;
   try {
     const raw = await store.get(HEAD);
-    if (!raw || parseManifest(raw).revision !== base.revision) return null;
+    const remote = raw && parseManifest(raw);
+    if (!remote || remote.revision !== base.revision) return null;
+    // The same revision, but what this device takes of it changed (a folder
+    // no longer left out): its files there are fetched in full.
+    const theirs = Object.entries(remote.files).filter(([p]) => local.wants(p));
+    if (
+      theirs.length !== ours.length ||
+      theirs.some(([path, entry]) => base.files[path] !== entry.hash)
+    )
+      return null;
   } catch {
     // Half written (a WebDAV PUT isn't atomic): read again under the lock.
     return null;

@@ -640,7 +640,11 @@ async function unchanged(options, files) {
     return null;
   try {
     const raw = await store.get(HEAD);
-    if (!raw || parseManifest(raw).revision !== base.revision) return null;
+    const remote = raw && parseManifest(raw);
+    if (!remote || remote.revision !== base.revision) return null;
+    const theirs = Object.entries(remote.files).filter(([p]) => local.wants(p));
+    if (theirs.length !== ours.length || theirs.some(([path, entry]) => base.files[path] !== entry.hash))
+      return null;
   } catch {
     return null;
   }
@@ -1519,10 +1523,14 @@ var RemoteStore = class {
     url.pathname = url.pathname.replace(/\/$/, "") + "/" + encodePath(s3 && c.pathStyle ? `${c.bucket}/${prefix}` : prefix);
     return url.toString();
   }
-  /** One request, sent again while the server is busy or doesn't answer,
-   *  if it may be (`repeat`: not a MOVE, nor a create whose lost answer a
-   *  retry would read as someone else's). */
-  async request(method, url, body, extra = {}, repeat = REPEATABLE.has(method)) {
+  /** One request, sent again while the server is busy, and after no clear
+   *  answer if `repeat` (not a MOVE, nor the lock's DELETE: done the first
+   *  time, a second could take another device's lock). `unsure` hears of a
+   *  send that may have landed unanswered. */
+  async request(method, url, body, extra = {}, {
+    repeat = REPEATABLE.has(method),
+    unsure
+  } = {}) {
     for (let attempt = 0; ; attempt++) {
       const quiet = this.quietUntil - Date.now();
       if (quiet > 0) await this.sleep(quiet);
@@ -1556,14 +1564,17 @@ var RemoteStore = class {
       } catch {
         if (!repeat || attempt + 1 >= ATTEMPTS)
           throw new SyncError("networkError");
+        unsure?.();
         await this.sleep(backoff(attempt));
         continue;
       }
       const date = Date.parse(response.headers["date"] ?? "");
       if (Number.isFinite(date)) this.skew = date - Date.now();
       const busy = [429, 503].includes(response.status);
-      if (!(busy || [502, 504].includes(response.status)) || !repeat || attempt + 1 >= ATTEMPTS)
+      const gateway = [502, 504].includes(response.status);
+      if (!(busy || gateway && repeat) || attempt + 1 >= ATTEMPTS)
         return response;
+      if (gateway) unsure?.();
       const asked = retryAfter(response.headers["retry-after"]);
       if (asked > LONGEST_WAIT_S) throw new SyncError("rateLimited");
       const wait = Math.max(backoff(attempt), asked * 1e3);
@@ -1648,23 +1659,14 @@ var RemoteStore = class {
   }
   async create(key, bytes) {
     if (providers[this.config.provider].transport === "s3") {
-      const put = (repeat) => this.request(
+      let resent = false;
+      const res = await this.request(
         "PUT",
         this.target(key),
         bytes,
         { "If-None-Match": "*" },
-        repeat
+        { unsure: () => resent = true }
       );
-      let res;
-      let resent = false;
-      try {
-        res = await put(false);
-      } catch (error) {
-        if (!(error instanceof SyncError) || error.code !== "networkError")
-          throw error;
-        resent = true;
-        res = await put(true);
-      }
       if (res.status === 412) {
         if (!resent) return false;
         const there = await this.get(key);
@@ -1692,7 +1694,15 @@ var RemoteStore = class {
     }
   }
   async remove(key) {
-    const res = await this.request("DELETE", this.target(key), void 0, {});
+    const res = await this.request(
+      "DELETE",
+      this.target(key),
+      void 0,
+      {},
+      {
+        repeat: key !== LOCK
+      }
+    );
     if (res.status !== 404) this.require(res);
   }
 };

@@ -101,6 +101,18 @@ suite("workspace synchronization", () => {
     expect((await b.sync(remote)).downloaded).toBe(1);
     expect(text(b.files.get("note.md"))).toBe("two");
   });
+  it("syncs in full once a folder left out is taken again, the remote unchanged", async () => {
+    const remote = new MemoryStore();
+    await new MemoryLocal({ "a.md": "one", "X/b.md": "two" }).sync(remote);
+    const b = new MemoryLocal();
+    b.leaves = (path) => path.startsWith("X/");
+    await b.sync(remote);
+    await b.sync(remote);
+    expect(b.files.has("X/b.md")).toBe(false);
+    b.leaves = () => false;
+    expect((await b.sync(remote)).downloaded).toBe(1);
+    expect(text(b.files.get("X/b.md"))).toBe("two");
+  });
   it("defers open destinations without advancing their baseline or changing the remote file", async () => {
     const remote = new MemoryStore();
     const a = new MemoryLocal({ "note.md": "base" }),

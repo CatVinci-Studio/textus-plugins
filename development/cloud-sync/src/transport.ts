@@ -2,6 +2,7 @@ import { AwsV4Signer } from "aws4fetch";
 import { hash } from "./content";
 import { providers, relativePath } from "./config";
 import {
+  LOCK,
   SyncError,
   type Config,
   type Credentials,
@@ -14,8 +15,9 @@ const encodePath = (path: string) =>
   path.split("/").map(encodeURIComponent).join("/");
 const pause = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
-/** What may be sent again after no answer or a busy one: asking twice
- *  changes nothing. A MOVE may have happened. */
+/** What may be sent again after no answer, or a gateway's (502, 504):
+ *  asking twice changes nothing. A MOVE may have happened. A busy answer
+ *  (429, 503) did nothing, so anything is sent again after it. */
 const REPEATABLE = new Set([
   "GET",
   "HEAD",
@@ -67,15 +69,19 @@ export class RemoteStore implements ObjectStore {
       encodePath(s3 && c.pathStyle ? `${c.bucket}/${prefix}` : prefix);
     return url.toString();
   }
-  /** One request, sent again while the server is busy or doesn't answer,
-   *  if it may be (`repeat`: not a MOVE, nor a create whose lost answer a
-   *  retry would read as someone else's). */
+  /** One request, sent again while the server is busy, and after no clear
+   *  answer if `repeat` (not a MOVE, nor the lock's DELETE: done the first
+   *  time, a second could take another device's lock). `unsure` hears of a
+   *  send that may have landed unanswered. */
   private async request(
     method: string,
     url: string,
     body?: Uint8Array,
     extra: Record<string, string> = {},
-    repeat = REPEATABLE.has(method),
+    {
+      repeat = REPEATABLE.has(method),
+      unsure,
+    }: { repeat?: boolean; unsure?: () => void } = {},
   ): Promise<Response> {
     for (let attempt = 0; ; attempt++) {
       const quiet = this.quietUntil - Date.now();
@@ -110,18 +116,17 @@ export class RemoteStore implements ObjectStore {
       } catch {
         if (!repeat || attempt + 1 >= ATTEMPTS)
           throw new SyncError("networkError");
+        unsure?.();
         await this.sleep(backoff(attempt));
         continue;
       }
       const date = Date.parse(response.headers["date"] ?? "");
       if (Number.isFinite(date)) this.skew = date - Date.now();
       const busy = [429, 503].includes(response.status);
-      if (
-        !(busy || [502, 504].includes(response.status)) ||
-        !repeat ||
-        attempt + 1 >= ATTEMPTS
-      )
+      const gateway = [502, 504].includes(response.status);
+      if (!(busy || (gateway && repeat)) || attempt + 1 >= ATTEMPTS)
         return response;
+      if (gateway) unsure?.();
       const asked = retryAfter(response.headers["retry-after"]);
       if (asked > LONGEST_WAIT_S) throw new SyncError("rateLimited");
       const wait = Math.max(backoff(attempt), asked * 1000);
@@ -214,25 +219,15 @@ export class RemoteStore implements ObjectStore {
   }
   async create(key: string, bytes: Uint8Array): Promise<boolean> {
     if (providers[this.config.provider].transport === "s3") {
-      const put = (repeat: boolean) =>
-        this.request(
-          "PUT",
-          this.target(key),
-          bytes,
-          { "If-None-Match": "*" },
-          repeat,
-        );
-      let res: Response;
+      // Sent again after no answer, a refusal may be to our own first try.
       let resent = false;
-      try {
-        res = await put(false);
-      } catch (error) {
-        if (!(error instanceof SyncError) || error.code !== "networkError")
-          throw error;
-        // No answer: it may have landed. Sent again, a refusal may be ours.
-        resent = true;
-        res = await put(true);
-      }
+      const res = await this.request(
+        "PUT",
+        this.target(key),
+        bytes,
+        { "If-None-Match": "*" },
+        { unsure: () => (resent = true) },
+      );
       if (res.status === 412) {
         if (!resent) return false;
         const there = await this.get(key);
@@ -261,7 +256,15 @@ export class RemoteStore implements ObjectStore {
     }
   }
   async remove(key: string): Promise<void> {
-    const res = await this.request("DELETE", this.target(key), undefined, {});
+    const res = await this.request(
+      "DELETE",
+      this.target(key),
+      undefined,
+      {},
+      {
+        repeat: key !== LOCK,
+      },
+    );
     if (res.status !== 404) this.require(res);
   }
 }

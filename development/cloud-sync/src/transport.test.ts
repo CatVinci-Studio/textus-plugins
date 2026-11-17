@@ -309,6 +309,39 @@ describe("storage protocols over HTTP", () => {
     }
     expect(recorded.length - start).toBe(3);
   });
+  it("waits out a busy server before taking the lock, and never sends the lock's DELETE twice", async () => {
+    mode = "retry";
+    failures = 0;
+    try {
+      expect(await make("s3").create("v1/lock.json", bytes("x"))).toBe(true);
+    } finally {
+      mode = "normal";
+    }
+    // The DELETE got no answer: it may have landed, and the lock since be
+    // another device's. Not sent again.
+    let deletes = 0;
+    const lost: Fetch = async (url, init = {}) => {
+      if (init.method === "DELETE" && ++deletes === 1) throw Error("timeout");
+      return localFetch(url, init);
+    };
+    const store = new RemoteStore(
+      normalizeConfig({
+        provider: "s3",
+        endpoint: "https://store.example/dav",
+        bucket: "my-bucket",
+        prefix: `notes/${crypto.randomUUID()}`,
+      }),
+      { account, secret },
+      lost,
+      async () => {},
+    );
+    await expect(store.remove("v1/lock.json")).rejects.toThrow("networkError");
+    expect(deletes).toBe(1);
+    // Any other object's DELETE is sent again.
+    deletes = 0;
+    await store.remove("v1/blocks/ab/c");
+    expect(deletes).toBe(2);
+  });
   it("syncs into Nutstore folders that already exist", async () => {
     mode = "nutstoreFolders";
     try {
@@ -377,6 +410,7 @@ describe("storage protocols over HTTP", () => {
           ) &&
           !(
             r.method === "PUT" &&
+            r.path.includes("/blocks/") &&
             made
               .slice(i + 1)
               .some((s) => s.method === "PUT" && s.path === r.path)
