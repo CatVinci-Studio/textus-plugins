@@ -69,6 +69,16 @@ describe("a base", () => {
     expect(
       db.viewSpec(base, 0).views.map((v: { name: string }) => v.name),
     ).toEqual(["Board", "Places"]);
+    // Another plugin's view is kept as its type, and drawn by it.
+    const added = db.addView(base, "catvinci.timeline#timeline", "Timeline");
+    expect(added.views[2]).toEqual({
+      type: "catvinci.timeline#timeline",
+      name: "Timeline",
+    });
+    expect(db.viewSpec(added, 2)).toMatchObject({
+      view: "catvinci.timeline#timeline",
+      unknownView: null,
+    });
   });
 
   it("keeps a column's width where Obsidian does (columnSize), and lets it go", () => {
@@ -77,15 +87,25 @@ describe("a base", () => {
     );
     expect(db.viewSpec(base, 0).widths).toEqual({ status: 140, name: 220 });
     const wider = db.setView(base, 0, { width: { key: "due", px: 96.4 } });
-    expect((load(db.writeBase(wider)) as { views: { columnSize: unknown }[] }).views[0].columnSize).toEqual({
+    expect(
+      (load(db.writeBase(wider)) as { views: { columnSize: unknown }[] })
+        .views[0].columnSize,
+    ).toEqual({
       "note.status": 140,
       "file.name": 220,
       due: 96,
     });
-    const fit = db.setView(db.setView(base, 0, { width: { key: "status", px: 0 } }), 0, {
-      width: { key: "name", px: 0 },
-    });
-    expect((load(db.writeBase(fit)) as { views: Record<string, unknown>[] }).views[0]).not.toHaveProperty("columnSize");
+    const fit = db.setView(
+      db.setView(base, 0, { width: { key: "status", px: 0 } }),
+      0,
+      {
+        width: { key: "name", px: 0 },
+      },
+    );
+    expect(
+      (load(db.writeBase(fit)) as { views: Record<string, unknown>[] })
+        .views[0],
+    ).not.toHaveProperty("columnSize");
   });
 
   it("writes a view's change back and keeps what it doesn't know", () => {
@@ -125,7 +145,15 @@ describe("a base", () => {
     expect(renamed.properties).toEqual({ stage: { displayName: "Status" } });
     // Written as note.<key>, a column still shows once and keeps its width.
     const noted = db.renameKey(
-      { views: [{ type: "table", order: ["file.name", "note.status", "note.state"], columnSize: { "note.state": 120 } }] },
+      {
+        views: [
+          {
+            type: "table",
+            order: ["file.name", "note.status", "note.state"],
+            columnSize: { "note.state": 120 },
+          },
+        ],
+      },
       "state",
       "status",
     );
@@ -243,7 +271,11 @@ describe("a base's formulas", () => {
   it("are worked out for each row, used by filters and sorts, one using another", () => {
     const base = {
       filters: 'file.inFolder("Books")',
-      formulas: { ppu: "(price / pages).toFixed(2)", cheap: "formula.ppu < 0.1", loop: "formula.loop + 1" },
+      formulas: {
+        ppu: "(price / pages).toFixed(2)",
+        cheap: "formula.ppu < 0.1",
+        loop: "formula.loop + 1",
+      },
       views: [{ type: "table" }],
     };
     const docs = [
@@ -251,13 +283,28 @@ describe("a base's formulas", () => {
       { rel: "Books/B.md", frontmatter: { price: 30, pages: 100 } },
     ];
     const { rows } = db.rowsOf(base, docs, "Books/Books.md");
-    expect(rows.map((r: Row) => [r.name, r.props["formula.ppu"], r.props["formula.cheap"], r.props["formula.loop"]])).toEqual([
+    expect(
+      rows.map((r: Row) => [
+        r.name,
+        r.props["formula.ppu"],
+        r.props["formula.cheap"],
+        r.props["formula.loop"],
+      ]),
+    ).toEqual([
       ["A", "0.10", false, null],
       ["B", "0.30", false, null],
     ]);
     const spec = { filters: [{ raw: "formula.ppu > 0.2" }], sort: [] };
-    expect(db.viewRows(rows, spec, "Books/Books.md", db.formulasOf(base)).map((r: Row) => r.name)).toEqual(["B"]);
-    const sorted = db.viewRows(rows, { filters: [], sort: [{ key: "formula.ppu", desc: true }] }, "Books/Books.md");
+    expect(
+      db
+        .viewRows(rows, spec, "Books/Books.md", db.formulasOf(base))
+        .map((r: Row) => r.name),
+    ).toEqual(["B"]);
+    const sorted = db.viewRows(
+      rows,
+      { filters: [], sort: [{ key: "formula.ppu", desc: true }] },
+      "Books/Books.md",
+    );
     expect(sorted.map((r: Row) => r.name)).toEqual(["B", "A"]);
   });
 });

@@ -1,7 +1,7 @@
 {
   "id": "catvinci.database",
   "name": "%name%",
-  "version": "0.7.16",
+  "version": "0.8.0",
   "publisher": "catvinci",
   "author": "CatVinci Studio",
   "description": "%description%",

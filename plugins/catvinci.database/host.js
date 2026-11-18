@@ -30,6 +30,26 @@ async function obsidianTypes() {
   return parsed && parsed.types && typeof parsed.types === "object" ? parsed.types : {};
 }
 
+/** The views other plugins draw a database with (a timeline...), on a
+ *  Textus that has them. */
+function pluginViews() {
+  const views = textus.views;
+  return views && views.databaseViews ? views.databaseViews().catch(() => []) : Promise.resolve([]);
+}
+
+/** View `id` of another plugin drawn for `shown`: its HTML, or null when
+ *  that plugin isn't on (or failed, said in `problem`). */
+async function pluginView(id, data) {
+  const views = await pluginViews();
+  const view = views.find((v) => v.id === id);
+  if (!view) return { id, html: null, missing: true };
+  try {
+    return { id, label: view.label, html: await textus.views.renderDatabaseView(id, data) };
+  } catch (err) {
+    return { id, label: view.label, html: null, problem: String((err && err.message) || err) };
+  }
+}
+
 /** What a base's page draws: view `index` of `target`'s base. */
 async function snapshot(target, index) {
   root = await textus.files.root();
@@ -53,19 +73,33 @@ async function snapshot(target, index) {
   const options = {};
   for (const k of keys) if (types[k] === "select" || types[k] === "tags") options[k] = database.options(rows, k);
   const group = database.groupKey(spec, rows, types);
+  const columns = database.columnsOf(spec, rows).filter((k) => k !== "name");
+  const date = database.dateKey(spec, types);
+  const plugin = spec.view.includes("#")
+    ? await pluginView(spec.view, {
+        rows: shown.map((r) => ({ path: r.rel, name: r.name, props: r.props })),
+        columns,
+        types,
+        group: group || undefined,
+        date: date || undefined,
+      })
+    : null;
   return {
     spec,
     index: i,
     views: spec.views,
     folder: database.folderOf(base, self),
     rows: shown.map((r) => ({ rel: r.rel, name: r.name, props: r.props })),
-    columns: database.columnsOf(spec, rows).filter((k) => k !== "name"),
+    columns,
     keys,
     types,
     options,
     group,
     groups: database.groups(shown, group, spec.groupOrder).map((g) => ({ value: g.value, rels: g.rows.map((r) => r.rel) })),
-    date: database.dateKey(spec, types),
+    date,
+    // Other plugins' views, for the view menus; the one in front drawn.
+    pluginViews: (await pluginViews()).map((v) => ({ id: v.id, label: v.label })),
+    plugin,
     end: spec.end || Object.keys(types).find((k) => types[k] === "date" && /end|until|due/i.test(k)) || null,
     skipped: skipped.concat(spec.filters.filter((f) => f.raw !== undefined).map((f) => f.raw)),
   };
@@ -208,9 +242,12 @@ function draw(target, webview, context) {
         // The view in front moves only once the base is written.
         case "addView": {
           let next = index;
+          // Another plugin's view is named as that plugin calls it.
+          const other = String(m.view).includes("#") ? (await pluginViews()).find((v) => v.id === m.view) : null;
+          const name = other ? other.label : database.viewName(m.view);
           const added = (base) => {
             next = base.views.length;
-            return database.addView(base, m.view, database.viewName(m.view));
+            return database.addView(base, m.view, name);
           };
           if (await changeBase(target, added)) select(next);
           return;
