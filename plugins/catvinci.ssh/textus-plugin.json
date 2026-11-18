@@ -1,0 +1,154 @@
+{
+  "id": "catvinci.ssh",
+  "name": "%name%",
+  "version": "0.1.0",
+  "publisher": "catvinci",
+  "author": "CatVinci Studio",
+  "description": "%description%",
+  "icon": "icon.svg",
+  "license": "MIT",
+  "repository": "https://github.com/CatVinci-Studio/textus-plugins",
+  "engines": {
+    "textus": ">=1.4.6-rc.1"
+  },
+  "platforms": [
+    "desktop"
+  ],
+  "main": [
+    "remote-path.js",
+    "host.js"
+  ],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "permissions": [
+    "ssh"
+  ],
+  "contributes": {
+    "commands": [
+      {
+        "command": "catvinci.ssh.open",
+        "title": "%open%"
+      }
+    ],
+    "menus": {
+      "app/plugins": [
+        {
+          "command": "catvinci.ssh.open"
+        }
+      ]
+    }
+  },
+  "l10n": {
+    "en": {
+      "name": "SSH Folders",
+      "description": "Open a folder on a server through your own ssh and write there like in a folder on this computer: its documents in tabs, its files in the sidebar. Desktop.",
+      "open": "Open Remote Folder…",
+      "pickHost": "Pick a server from your ssh config",
+      "otherHost": "Another server…",
+      "hostPrompt": "Server, as you'd give it to ssh",
+      "folderPrompt": "Folder on {0}",
+      "notAbsolute": "Give the folder's whole path, starting with /.",
+      "notRemote": "{0} isn't a folder on a server."
+    },
+    "zh": {
+      "name": "SSH 文件夹",
+      "description": "通过你自己的 ssh 打开服务器上的文件夹，像本机文件夹一样写作：文档在标签页里，文件在侧栏里。仅桌面版。",
+      "open": "打开远程文件夹…",
+      "pickHost": "从你的 ssh 配置中选择服务器",
+      "otherHost": "其他服务器…",
+      "hostPrompt": "服务器（按你给 ssh 的写法）",
+      "folderPrompt": "{0} 上的文件夹",
+      "notAbsolute": "请填写文件夹的完整路径，以 / 开头。",
+      "notRemote": "{0} 不是服务器上的文件夹。"
+    },
+    "zh-Hant": {
+      "name": "SSH 資料夾",
+      "description": "透過你自己的 ssh 開啟伺服器上的資料夾，像本機資料夾一樣寫作：文件在分頁裡，檔案在側欄裡。僅桌面版。",
+      "open": "開啟遠端資料夾…",
+      "pickHost": "從你的 ssh 設定中選擇伺服器",
+      "otherHost": "其他伺服器…",
+      "hostPrompt": "伺服器（依你給 ssh 的寫法）",
+      "folderPrompt": "{0} 上的資料夾",
+      "notAbsolute": "請填寫資料夾的完整路徑，以 / 開頭。",
+      "notRemote": "{0} 不是伺服器上的資料夾。"
+    },
+    "ja": {
+      "name": "SSH フォルダー",
+      "description": "自分の ssh でサーバー上のフォルダーを開き、このコンピューターのフォルダーと同じように書けます：文書はタブに、ファイルはサイドバーに。デスクトップ版のみ。",
+      "open": "リモートフォルダーを開く…",
+      "pickHost": "ssh の設定からサーバーを選択",
+      "otherHost": "ほかのサーバー…",
+      "hostPrompt": "サーバー（ssh に渡す書き方で）",
+      "folderPrompt": "{0} のフォルダー",
+      "notAbsolute": "/ で始まるフォルダーのフルパスを入力してください。",
+      "notRemote": "{0} はサーバー上のフォルダーではありません。"
+    },
+    "ko": {
+      "name": "SSH 폴더",
+      "description": "내 ssh로 서버의 폴더를 열어 이 컴퓨터의 폴더처럼 씁니다: 문서는 탭에, 파일은 사이드바에. 데스크톱 전용.",
+      "open": "원격 폴더 열기…",
+      "pickHost": "ssh 설정에서 서버 선택",
+      "otherHost": "다른 서버…",
+      "hostPrompt": "서버 (ssh에 주는 형식으로)",
+      "folderPrompt": "{0}의 폴더",
+      "notAbsolute": "/로 시작하는 폴더의 전체 경로를 입력하세요.",
+      "notRemote": "{0}은(는) 서버의 폴더가 아닙니다."
+    },
+    "de": {
+      "name": "SSH-Ordner",
+      "description": "Öffnet einen Ordner auf einem Server über dein eigenes ssh, und du schreibst dort wie in einem Ordner auf diesem Computer: Dokumente in Tabs, Dateien in der Seitenleiste. Nur Desktop.",
+      "open": "Entfernten Ordner öffnen…",
+      "pickHost": "Server aus deiner ssh-Konfiguration wählen",
+      "otherHost": "Anderer Server…",
+      "hostPrompt": "Server, so wie du ihn ssh angibst",
+      "folderPrompt": "Ordner auf {0}",
+      "notAbsolute": "Gib den ganzen Pfad des Ordners an, beginnend mit /.",
+      "notRemote": "{0} ist kein Ordner auf einem Server."
+    },
+    "fr": {
+      "name": "Dossiers SSH",
+      "description": "Ouvre un dossier sur un serveur avec votre propre ssh et écrivez-y comme dans un dossier de cet ordinateur : documents en onglets, fichiers dans la barre latérale. Bureau uniquement.",
+      "open": "Ouvrir un dossier distant…",
+      "pickHost": "Choisir un serveur de votre configuration ssh",
+      "otherHost": "Un autre serveur…",
+      "hostPrompt": "Serveur, tel que vous le donnez à ssh",
+      "folderPrompt": "Dossier sur {0}",
+      "notAbsolute": "Indiquez le chemin complet du dossier, commençant par /.",
+      "notRemote": "{0} n'est pas un dossier sur un serveur."
+    },
+    "es": {
+      "name": "Carpetas SSH",
+      "description": "Abre una carpeta de un servidor con tu propio ssh y escribe allí como en una carpeta de este ordenador: documentos en pestañas, archivos en la barra lateral. Solo escritorio.",
+      "open": "Abrir carpeta remota…",
+      "pickHost": "Elige un servidor de tu configuración de ssh",
+      "otherHost": "Otro servidor…",
+      "hostPrompt": "Servidor, como se lo das a ssh",
+      "folderPrompt": "Carpeta en {0}",
+      "notAbsolute": "Escribe la ruta completa de la carpeta, empezando por /.",
+      "notRemote": "{0} no es una carpeta de un servidor."
+    },
+    "pt": {
+      "name": "Pastas SSH",
+      "description": "Abre uma pasta num servidor com o seu próprio ssh e escreva lá como numa pasta deste computador: documentos em abas, ficheiros na barra lateral. Só desktop.",
+      "open": "Abrir pasta remota…",
+      "pickHost": "Escolha um servidor da sua configuração ssh",
+      "otherHost": "Outro servidor…",
+      "hostPrompt": "Servidor, como o dá ao ssh",
+      "folderPrompt": "Pasta em {0}",
+      "notAbsolute": "Indique o caminho completo da pasta, começando por /.",
+      "notRemote": "{0} não é uma pasta num servidor."
+    },
+    "ru": {
+      "name": "Папки SSH",
+      "description": "Открывает папку на сервере через ваш собственный ssh, и вы пишете там как в папке на этом компьютере: документы во вкладках, файлы на боковой панели. Только для компьютера.",
+      "open": "Открыть удалённую папку…",
+      "pickHost": "Выберите сервер из конфигурации ssh",
+      "otherHost": "Другой сервер…",
+      "hostPrompt": "Сервер, как вы указываете его ssh",
+      "folderPrompt": "Папка на {0}",
+      "notAbsolute": "Укажите полный путь к папке, начиная с /.",
+      "notRemote": "{0} — не папка на сервере."
+    }
+  }
+}

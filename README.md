@@ -49,6 +49,7 @@ The plugins for [Textus](https://textus.md), the Markdown editor. None of them c
 | Qwen Code | Qwen Code in Textus AI: Alibaba's Qwen models read your folder, write and edit your notes, and ask before they change anything. |
 | Reminders | Reminders for the lines you date: write (@2026-11-02 09:00) in a line and a notification brings it back then - even with Textus's windows closed in background mode. A click opens the line. |
 | Sheet Music (ABC) | Sheet music from ABC notation. |
+| SSH Folders | Open a folder on a server through your own ssh and write there like in a folder on this computer: its documents in tabs, its files in the sidebar. Desktop. |
 | Tags | Every #tag in the open folder in the sidebar, with how many notes use it: open one for its notes, rename a tag everywhere, or merge two by renaming one to the other. |
 | Task Board | Kanban boards kept in Markdown: a list per heading, a card per task, in a .md with kanban-plugin in its front matter, as Obsidian's Kanban writes it. |
 | Tasks | Every task (- [ ]) in the open folder's documents, in one list: tick one off there, or go to it. |
