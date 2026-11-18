@@ -1,0 +1,73 @@
+{
+  "id": "catvinci.textbundle",
+  "name": "%name%",
+  "version": "0.1.0",
+  "publisher": "catvinci",
+  "author": "CatVinci Studio",
+  "description": "%description%",
+  "icon": "icon.svg",
+  "license": "MIT",
+  "repository": "https://github.com/CatVinci-Studio/textus-plugins",
+  "engines": {
+    "textus": ">=1.4.6-rc.1"
+  },
+  "platforms": [
+    "desktop",
+    "ios"
+  ],
+  "permissions": [],
+  "contributes": {
+    "folderDocuments": [
+      {
+        "extension": "textbundle",
+        "documents": [
+          "text.md",
+          "text.markdown",
+          "text.txt"
+        ]
+      }
+    ]
+  },
+  "l10n": {
+    "en": {
+      "name": "TextBundle",
+      "description": "Opens a .textbundle folder - as Bear, Ulysses and iA Writer save them - as one document, its pictures beside it."
+    },
+    "zh": {
+      "name": "TextBundle",
+      "description": "把 .textbundle 文件夹（Bear、Ulysses、iA Writer 存成的那种）当作一篇文档打开，图片就在旁边。"
+    },
+    "zh-Hant": {
+      "name": "TextBundle",
+      "description": "把 .textbundle 資料夾（Bear、Ulysses、iA Writer 存成的那種）當作一篇文件開啟，圖片就在旁邊。"
+    },
+    "ja": {
+      "name": "TextBundle",
+      "description": ".textbundle フォルダー（Bear、Ulysses、iA Writer が保存する形式）を、画像ごと 1 つの書類として開きます。"
+    },
+    "ko": {
+      "name": "TextBundle",
+      "description": ".textbundle 폴더(Bear, Ulysses, iA Writer가 저장하는 형식)를 그림과 함께 하나의 문서로 엽니다."
+    },
+    "de": {
+      "name": "TextBundle",
+      "description": "Öffnet einen .textbundle-Ordner - wie Bear, Ulysses und iA Writer ihn speichern - als ein Dokument, die Bilder daneben."
+    },
+    "fr": {
+      "name": "TextBundle",
+      "description": "Ouvre un dossier .textbundle - tel que Bear, Ulysses et iA Writer l'enregistrent - comme un seul document, ses images à côté."
+    },
+    "es": {
+      "name": "TextBundle",
+      "description": "Abre una carpeta .textbundle - como la guardan Bear, Ulysses e iA Writer - como un solo documento, con sus imágenes al lado."
+    },
+    "pt": {
+      "name": "TextBundle",
+      "description": "Abre uma pasta .textbundle - como o Bear, o Ulysses e o iA Writer a guardam - como um só documento, com as imagens ao lado."
+    },
+    "ru": {
+      "name": "TextBundle",
+      "description": "Открывает папку .textbundle - как её сохраняют Bear, Ulysses и iA Writer - как один документ, с картинками рядом."
+    }
+  }
+}

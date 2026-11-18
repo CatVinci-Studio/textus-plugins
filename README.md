@@ -53,6 +53,7 @@ The plugins for [Textus](https://textus.md), the Markdown editor. None of them c
 | Task Board | Kanban boards kept in Markdown: a list per heading, a card per task, in a .md with kanban-plugin in its front matter, as Obsidian's Kanban writes it. |
 | Tasks | Every task (- [ ]) in the open folder's documents, in one list: tick one off there, or go to it. |
 | Templates | Documents and snippets from your own templates: the date, time and title filled in, as Obsidian and Templater fill them. |
+| TextBundle | Opens a .textbundle folder - as Bear, Ulysses and iA Writer save them - as one document, its pictures beside it. |
 | Tidy | Tidy text and Markdown: underlines what breaks common Markdown rules and fixes it in one go, removes blank lines and trailing spaces, switches punctuation between Chinese and English, turns full-width letters into ASCII and joins lines - leaving code, math, front matter and Obsidian's own syntax as written. |
 | Timeline | Events in order, a line each: when \| what \| more. |
 | Two-way Links | Two-way links: type [[ to link a note, a heading or a block, and ![[ to embed one; in the sidebar, the notes that link to the document in front, the ones that name it without a link - linked in one click - and the notes it links to. |
