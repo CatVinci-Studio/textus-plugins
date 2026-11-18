@@ -415,6 +415,18 @@
     },
   });
 
+  /** Another plugin's view of the rows: its HTML, already cleaned of
+   *  scripts by Textus; a row in it (data-row) opens on a click. */
+  function pluginView(html) {
+    const box = el("div", { class: "plugin-view" });
+    box.innerHTML = html;
+    box.addEventListener("click", (e) => {
+      const row = e.target.closest("[data-row]");
+      if (row) post({ type: "open", rel: row.getAttribute("data-row") });
+    });
+    return box;
+  }
+
   // ---------------------------------------------------------------- frame
   function render() {
     stale = false;
@@ -433,10 +445,14 @@
     $("rules").replaceChildren(...rules());
     const notes = [];
     if (data.skipped && data.skipped.length) notes.push(el("div", { class: "tx-footnote skipped", title: data.skipped.join("\n") }, s("skipped").replace("{0}", String(data.skipped.length))));
-    if (data.spec.unknownView) notes.push(el("div", { class: "tx-footnote" }, s("unknownView").replace("{0}", data.spec.unknownView)));
+    // Another plugin's view that can't draw now (off, or failing): a table.
+    const plugin = data.plugin && data.plugin.html == null ? data.plugin : null;
+    if (data.spec.unknownView || plugin)
+      notes.push(el("div", { class: "tx-footnote", title: (plugin && plugin.problem) || "" }, s("unknownView").replace("{0}", data.spec.unknownView || "")));
     $("notes").replaceChildren(...notes);
     if (!data.rows.length && view !== "calendar" && view !== "table") return body.replaceChildren(el("div", { class: "tx-empty" }, s("empty")));
     nearEnd.disconnect();
+    if (data.plugin && data.plugin.html != null) return body.replaceChildren(pluginView(data.plugin.html));
     body.replaceChildren(({ board: views.board, calendar: views.calendar, gallery: views.gallery, list: views.list }[view] || table)());
   }
 

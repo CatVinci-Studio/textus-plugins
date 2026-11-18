@@ -63,8 +63,8 @@
     for (const [id, conf] of Object.entries(props))
       if (conf && typeof conf === "object" && TYPES.includes(conf.kind)) kinds[keyOf(id)] = conf.kind;
     return {
-      view: FROM_BASES[String(v.type)] || "table",
-      unknownView: FROM_BASES[String(v.type)] ? null : String(v.type || ""),
+      view: FROM_BASES[String(v.type)] || (isPluginView(v.type) ? String(v.type) : "table"),
+      unknownView: FROM_BASES[String(v.type)] || isPluginView(v.type) ? null : String(v.type || ""),
       name: v.name ? String(v.name) : null,
       columns: Array.isArray(v.order) ? v.order.map(keyOf).filter((k) => k !== "name") : null,
       // Obsidian's columnSize: a column's width in pixels, by property.
@@ -83,7 +83,11 @@
       date: v.date ? keyOf(v.date) : null,
       end: v.end ? keyOf(v.end) : null,
       kinds,
-      views: base.views.map((x, n) => ({ index: n, name: x.name ? String(x.name) : null, view: FROM_BASES[String(x.type)] || "table" })),
+      views: base.views.map((x, n) => ({
+        index: n,
+        name: x.name ? String(x.name) : null,
+        view: FROM_BASES[String(x.type)] || (isPluginView(x.type) ? String(x.type) : "table"),
+      })),
     };
   }
 
@@ -146,9 +150,14 @@
     return next;
   }
 
+  /** A view another plugin draws (`<plugin id>#<view id>`): written as
+   *  its type as it is. */
+  const isPluginView = (view) => /^[\w.-]+#[\w.-]+$/.test(String(view));
+
   /** `base` with a view of `view`'s kind added at the end. */
   function addView(base, view, name) {
-    return { ...base, views: base.views.concat([{ type: TO_BASES[view] || "table", name: name || view }]) };
+    const type = TO_BASES[view] || (isPluginView(view) ? view : "table");
+    return { ...base, views: base.views.concat([{ type, name: name || view }]) };
   }
 
   /** `base` with property `from` called `to` wherever a view names it. */

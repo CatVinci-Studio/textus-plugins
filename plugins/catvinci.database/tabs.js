@@ -13,6 +13,15 @@ window.databaseTabs = function (page) {
     onDrop: (from, to) => post({ type: "moveView", from: page.data.views[from].index, to }),
   });
 
+  /** A view's name in the menus: ours by its kind, another plugin's by
+   *  its label. */
+  const kindLabel = (k) => {
+    const other = (page.data.pluginViews || []).find((v) => v.id === k);
+    return other ? other.label : s(k);
+  };
+  /** Every kind of view: ours, then other plugins'. */
+  const kinds = () => VIEWS.concat((page.data.pluginViews || []).map((v) => v.id));
+
   /** The base's views, one tab each, and the +. */
   function viewTabs() {
     const data = page.data;
@@ -31,14 +40,14 @@ window.databaseTabs = function (page) {
         // No text selected from the press: in WebKit a selection starts a
         // drag of its own and the tab never moves.
         onpointerdown: (e) => e.pointerType === "mouse" && e.preventDefault(),
-      }, icon(VIEW_ICONS[v.view] || "table"), el("span", { class: "tx-segment-label" }, v.name || s(v.view))));
+      }, icon(VIEW_ICONS[v.view] || "list"), el("span", { class: "tx-segment-label" }, v.name || kindLabel(v.view))));
     const add = el("button", { type: "button", class: "tx-icon-button", "aria-label": s("addView"), onclick: (e) => addViewMenu(e.currentTarget) }, icon("plus"));
     return tabs.concat([add]);
   }
 
   async function viewMenu(at, v) {
     const items = [
-      { label: s("type"), items: VIEWS.map((k) => ({ label: s(k), value: "as:" + k, checked: v.view === k })) },
+      { label: s("type"), items: kinds().map((k) => ({ label: kindLabel(k), value: "as:" + k, checked: v.view === k })) },
       { label: s("renameView") + "…", value: "rename" },
     ];
     if (page.data.views.length > 1) items.push("separator", { label: s("deleteView"), value: "delete", danger: true });
@@ -50,7 +59,7 @@ window.databaseTabs = function (page) {
   }
 
   async function addViewMenu(at) {
-    const choice = await api.menu(VIEWS.map((k) => ({ label: s(k), value: k })), at);
+    const choice = await api.menu(kinds().map((k) => ({ label: kindLabel(k), value: k })), at);
     if (choice !== null) post({ type: "addView", view: choice });
   }
 
@@ -60,14 +69,14 @@ window.databaseTabs = function (page) {
     const data = page.data;
     const now = data.views.find((v) => v.index === data.index) || data.views[0];
     return now
-      ? [icon(VIEW_ICONS[now.view] || "table"), el("span", { class: "label" }, now.name || s(now.view)), icon("chevron")]
+      ? [icon(VIEW_ICONS[now.view] || "list"), el("span", { class: "label" }, now.name || kindLabel(now.view)), icon("chevron")]
       : [];
   }
 
   async function pickView(at) {
     const data = page.data;
-    const items = data.views.map((v) => ({ label: v.name || s(v.view), value: "view:" + v.index, checked: v.index === data.index }));
-    items.push("separator", { label: s("addView"), items: VIEWS.map((k) => ({ label: s(k), value: "add:" + k })) });
+    const items = data.views.map((v) => ({ label: v.name || kindLabel(v.view), value: "view:" + v.index, checked: v.index === data.index }));
+    items.push("separator", { label: s("addView"), items: kinds().map((k) => ({ label: kindLabel(k), value: "add:" + k })) });
     const choice = await api.menu(items, at);
     if (choice === null) return;
     const [kind, value] = String(choice).split(":");

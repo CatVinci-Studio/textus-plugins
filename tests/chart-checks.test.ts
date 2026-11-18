@@ -13,6 +13,37 @@ function checker(kind: string) {
   };
 }
 
+describe("the timeline's database view", () => {
+  it("puts a database's dated rows in order, each opening its row", async () => {
+    const views = new Map<string, { render(data: unknown): string }>();
+    loadPlugin("catvinci.timeline", {
+      views: {
+        registerDatabaseView(
+          id: string,
+          view: { render(data: unknown): string },
+        ) {
+          views.set(id, view);
+          return { dispose() {} };
+        },
+      },
+    });
+    const html = views.get("timeline")!.render({
+      rows: [
+        { path: "b.md", name: "Launch <b>", props: { due: "2026-11-20" } },
+        { path: "a.md", name: "Plan", props: { due: "2026-11-01" } },
+        { path: "c.md", name: "Someday", props: {} },
+      ],
+      columns: ["due"],
+      types: { due: "date" },
+    });
+    expect([...html.matchAll(/data-row="([^"]+)"/g)].map((m) => m[1])).toEqual([
+      "a.md",
+      "b.md",
+    ]);
+    expect(html).toContain("Launch &lt;b&gt;");
+  });
+});
+
 describe("chart checks", () => {
   it("take the source with or without its fence, and refuse an empty one", async () => {
     const check = checker("timeline");
@@ -81,7 +112,9 @@ describe("chart checks", () => {
       "signal[0].wave “p.k.”: k isn't a wave character (p n P N h l H L 0 1 = 2-9 x z u d . | < >).",
       "signal[1] has 2 data labels for 1 value bricks (= or 2-9) in its wave.",
     ]);
-    expect(await check("{ signal: [{ name: 'g', wave: 'p.<hl>.' }] }")).toEqual([]);
+    expect(await check("{ signal: [{ name: 'g', wave: 'p.<hl>.' }] }")).toEqual(
+      [],
+    );
     expect(await check("{ reg: [{ bits: 8, name: 'IPO' }] }")).toEqual([]);
     expect(await check("{ lanes: [] }")).toHaveLength(1);
   });
@@ -115,18 +148,22 @@ describe("chart checks", () => {
     const tool = loadPlugin("catvinci.function-plot").tools.get(
       "check_function_plot",
     )!;
-    expect(await tool({ source: "sqrt(x - 100)", meta: "xmin=100 xmax=200" }))
-      .toEqual({ ok: true });
     expect(
-      await tool({ source: "```function-plot xmin=100 xmax=200\nsqrt(x - 100)\n```" }),
+      await tool({ source: "sqrt(x - 100)", meta: "xmin=100 xmax=200" }),
     ).toEqual({ ok: true });
-    expect(await tool({ source: "sqrt(-x)", meta: { xmin: "1", xmax: "5" } }))
-      .toEqual({
-        ok: false,
-        problems: [
-          "“sqrt(-x)” has no value from x = 1 to 5: set xmin and xmax on the fence (```function-plot xmin=0 xmax=100).",
-        ],
-      });
+    expect(
+      await tool({
+        source: "```function-plot xmin=100 xmax=200\nsqrt(x - 100)\n```",
+      }),
+    ).toEqual({ ok: true });
+    expect(
+      await tool({ source: "sqrt(-x)", meta: { xmin: "1", xmax: "5" } }),
+    ).toEqual({
+      ok: false,
+      problems: [
+        "“sqrt(-x)” has no value from x = 1 to 5: set xmin and xmax on the fence (```function-plot xmin=0 xmax=100).",
+      ],
+    });
   });
 
   it("abc: a header ending in K:, and notes", async () => {
@@ -148,7 +185,9 @@ describe("chart checks", () => {
     // Full mode names, any note length, empty or clef-only keys, +: lines,
     // beam spacers, score line-breaks and CRLF are all valid ABC.
     for (const key of ["Ddorian", "Gmixolydian", "", "clef=bass"]) {
-      expect(await check("X:1\nL:3/8\nK:" + key + "\nA`B c$|\n+:d e|")).toEqual([]);
+      expect(await check("X:1\nL:3/8\nK:" + key + "\nA`B c$|\n+:d e|")).toEqual(
+        [],
+      );
     }
     expect(await check("X:1\r\nK:C\r\nCDE|\r\nw: la la")).toEqual([]);
     expect(await check("X:1\nK:Cmx\nC|")).toEqual([

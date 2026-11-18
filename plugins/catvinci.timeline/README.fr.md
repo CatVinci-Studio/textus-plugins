@@ -25,6 +25,7 @@ Il ne demande que **Outils pour Textus AI**, pour que Textus AI puisse vérifier
 
 ## Changements
 
+- **0.4.0** - Une base de données peut s’afficher en chronologie : choisissez Chronologie parmi ses vues, les lignes datées s’alignent dans l’ordre ; un clic ouvre une ligne. Requiert Textus 1.4.6.
 - **0.3.3** - Une date ne se coupe plus en son milieu ; un dessin fait bloc replié s'adapte à l'ouverture.
 - **0.3.2** - les notes et dates longues passent à la ligne dans un panneau étroit, la police du document est utilisée, et un bloc vide dit quoi écrire
 - **0.3.1** - Sa page dit maintenant en une phrase ce qu'il fait, ce qu'il permet et ce qui a changé à chaque version.

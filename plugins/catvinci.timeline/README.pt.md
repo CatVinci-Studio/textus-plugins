@@ -25,6 +25,7 @@ Pede apenas **Ferramentas para o Textus AI**, para que o Textus AI possa verific
 
 ## Alterações
 
+- **0.4.0** - Um banco de dados pode ser mostrado como linha do tempo: escolha Linha do tempo entre as visões e as linhas com data ficam em ordem; um clique abre uma linha. Requer Textus 1.4.6.
 - **0.3.3** - Uma data já não se parte a meio; o que foi desenhado com o bloco recolhido ajusta-se ao abrir.
 - **0.3.2** - notas e datas longas quebram a linha num painel estreito, usa a fonte do documento e um bloco vazio diz o que escrever
 - **0.3.1** - Sua página agora diz numa frase o que ele faz, o que pode fazer e o que mudou em cada versão.
