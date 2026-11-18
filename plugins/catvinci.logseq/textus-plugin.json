@@ -1,0 +1,71 @@
+{
+  "id": "catvinci.logseq",
+  "name": "%name%",
+  "version": "0.1.0",
+  "publisher": "catvinci",
+  "author": "CatVinci Studio",
+  "description": "%description%",
+  "icon": "icon.svg",
+  "license": "MIT",
+  "repository": "https://github.com/CatVinci-Studio/textus-plugins",
+  "engines": {
+    "textus": ">=1.4.6-rc.1"
+  },
+  "platforms": [
+    "desktop",
+    "ios"
+  ],
+  "main": [
+    "logseq-config.js",
+    "host.js"
+  ],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "permissions": [
+    "files.read"
+  ],
+  "contributes": {},
+  "l10n": {
+    "en": {
+      "name": "Logseq Folders",
+      "description": "Opens a Logseq graph the way Logseq writes it: links by page name, pictures in assets, journals in their folder and date format."
+    },
+    "zh": {
+      "name": "Logseq 文件夹",
+      "description": "按 Logseq 的写法打开 Logseq 图谱：按页面名链接，图片放在 assets，日记用它的文件夹和日期格式。"
+    },
+    "zh-Hant": {
+      "name": "Logseq 資料夾",
+      "description": "依 Logseq 的寫法開啟 Logseq 圖譜：依頁面名稱連結，圖片放在 assets，日記用它的資料夾和日期格式。"
+    },
+    "ja": {
+      "name": "Logseq フォルダー",
+      "description": "Logseq のグラフを Logseq の書き方で開きます：ページ名でのリンク、assets の画像、日誌のフォルダーと日付形式。"
+    },
+    "ko": {
+      "name": "Logseq 폴더",
+      "description": "Logseq 그래프를 Logseq 방식대로 엽니다: 페이지 이름 링크, assets의 그림, 저널 폴더와 날짜 형식."
+    },
+    "de": {
+      "name": "Logseq-Ordner",
+      "description": "Öffnet einen Logseq-Graphen so, wie Logseq ihn schreibt: Links per Seitenname, Bilder in assets, Journale in ihrem Ordner und Datumsformat."
+    },
+    "fr": {
+      "name": "Dossiers Logseq",
+      "description": "Ouvre un graphe Logseq comme Logseq l'écrit : liens par nom de page, images dans assets, journaux dans leur dossier et leur format de date."
+    },
+    "es": {
+      "name": "Carpetas de Logseq",
+      "description": "Abre un grafo de Logseq tal como lo escribe Logseq: enlaces por nombre de página, imágenes en assets, diarios en su carpeta y formato de fecha."
+    },
+    "pt": {
+      "name": "Pastas do Logseq",
+      "description": "Abre um grafo do Logseq como o Logseq o escreve: links pelo nome da página, imagens em assets, diários na sua pasta e formato de data."
+    },
+    "ru": {
+      "name": "Папки Logseq",
+      "description": "Открывает граф Logseq так, как его пишет Logseq: ссылки по имени страницы, картинки в assets, журналы в своей папке и формате даты."
+    }
+  }
+}
