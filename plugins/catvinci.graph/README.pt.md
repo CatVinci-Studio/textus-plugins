@@ -25,6 +25,7 @@ Num cofre do Obsidian, os grupos de cor salvos no `graph.json` do Obsidian tamb�
 
 ## Alterações
 
+- **0.5.9** - Esc ao arrastar uma nota ou a vista devolve-a ao lugar, e um toque cancelado pelo sistema já não deixa um arrasto preso.
 - **0.5.8** - O grafo da barra lateral se espalha para caber no painel, em vez de começar como um pequeno amontoado com rótulos sobrepostos. Ordena os nomes com a ordem do próprio Textus em vez de uma cópia, então o pacote ficou menor.
 - **0.5.7** - A página segue o idioma do Textus sozinha. Requer o Textus 1.4.3.
 - **0.5.6** - As contagens e os botões no topo da aba do grafo continuam à vista: rolar ou fazer pinça sobre o grafo já não os empurra para baixo da aba. Os rótulos já não se amontoam: as notas com mais ligações ficam com o seu e os restantes aparecem ao aproximar. Uma pasta grande abre já arrumada em vez de se desdobrar, e as imagens e outros anexos que uma nota liga ficam fora do grafo, a menos que ative Anexos nas definições. Trocar de documento ou salvar já não sacode o grafo inteiro para que se reorganize.

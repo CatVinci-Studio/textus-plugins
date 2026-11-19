@@ -9,7 +9,16 @@
   "use strict";
 
   var START_PX = 5;
-  var SLIDE_MS = 160;
+
+  /** The window's motion, as Textus gives its pages: a duration, an ease. */
+  function motion() {
+    var style = root.getComputedStyle(root.document.documentElement);
+    var ms = parseFloat(style.getPropertyValue("--dur-base"));
+    return {
+      duration: isFinite(ms) ? ms : 200,
+      easing: style.getPropertyValue("--ease-out").trim() || "ease-out",
+    };
+  }
 
   /** Follows a press from `down`: start once it moves START_PX, move, then
    *  end(x, y, dropped). The click a drag's release sends is swallowed. */
@@ -89,7 +98,7 @@
       if (!dx && !dy) return;
       n.animate(
         [{ transform: "translate(" + dx + "px," + dy + "px)" }, { transform: "none" }],
-        { duration: SLIDE_MS, easing: "ease-out" },
+        motion(),
       );
     });
   }

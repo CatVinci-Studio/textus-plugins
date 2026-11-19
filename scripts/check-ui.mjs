@@ -1,18 +1,25 @@
 #!/usr/bin/env node
-// A plugin page's sizes and colours come from Textus's tokens
+// A plugin page's sizes, colours and motion come from Textus's tokens
 // (docs/dev/plugins/ui.md in the app): no fixed pixels of 3 and up, no
-// literal colours, in a page's stylesheets, its <style>s and the styles its
-// scripts set. What must stay as it is says so in ALLOWED, with why.
+// literal colours, no fixed durations, in a page's stylesheets, its
+// <style>s and the styles its scripts set - the plugins', the shared files
+// copied into them, and the development plugins' sources. What must stay as
+// it is says so in ALLOWED, with why.
 import { readFileSync, readdirSync, statSync } from "node:fs";
 import { join, relative } from "node:path";
 
 /** "path:line text fragment": why it stays. */
-const ALLOWED = {};
+const ALLOWED = {
+  "plugins/catvinci.desk-pet/host.js:144 breathe 3.6s": "the pet's own breathing, not the interface's motion",
+  "plugins/catvinci.desk-pet/host.js:145 hop 0.5s": "the pet's own hop, not the interface's motion",
+};
 
 const PX = /(?<![\w.-])(\d*\.?\d+)px\b/g;
 /** Text at a size of its own, not the type scale's (--text-*). */
 const FIXED_TEXT = /font-size:\s*[\d.]+(?:rem|pt)\b/g;
 const COLOUR = /#[0-9a-f]{3,8}\b|\b(?:rgba?|hsla?)\(|(?<![\w-])(?:white|black)(?![\w-])/gi;
+/** A transition's or an animation's length: --dur-* instead. */
+const DURATION = /(?:transition|animation|duration)[^;]*?(?<![\w.-])(\d*\.?\d+m?s)\b/gi;
 
 function* pageFiles(dir) {
   for (const name of readdirSync(dir)) {
@@ -28,14 +35,23 @@ function* pageFiles(dir) {
 function styled(file, text) {
   if (file.endsWith(".css")) return text.split("\n");
   return text.split("\n").map((line) =>
-    /style|css|<style|stroke|fill|width|height|font/i.test(line) ? line : "",
+    /style|css|<style|stroke|fill|width|height|font|duration|transition|animation/i.test(line) ? line : "",
   );
 }
 
 const problems = [];
-for (const plugin of readdirSync("plugins")) {
-  const dir = join("plugins", plugin);
-  const files = [...pageFiles(dir)];
+const dirs = [
+  ...readdirSync("plugins").map((plugin) => join("plugins", plugin)),
+  "shared",
+  ...readdirSync("development").map((plugin) => join("development", plugin, "src")),
+];
+for (const dir of dirs) {
+  let files;
+  try {
+    files = [...pageFiles(dir)];
+  } catch {
+    continue;
+  }
   // A page drawn in host.js (a floating view's HTML) counts too.
   const host = join(dir, "host.js");
   try {
@@ -52,6 +68,8 @@ for (const plugin of readdirSync("plugins")) {
         if (Math.abs(Number(m[1])) >= 3) problems.push(`${at}: ${m[0]} - use a token or a proportion`);
       for (const m of line.matchAll(FIXED_TEXT)) problems.push(`${at}: ${m[0]} - use a --text-* size`);
       for (const m of line.matchAll(COLOUR)) problems.push(`${at}: ${m[0]} - use a colour token`);
+      for (const m of line.matchAll(DURATION))
+        if (Number.parseFloat(m[1]) > 0) problems.push(`${at}: ${m[1]} - use a --dur-* token`);
     });
   }
 }

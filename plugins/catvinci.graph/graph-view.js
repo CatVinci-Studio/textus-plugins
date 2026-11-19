@@ -342,47 +342,65 @@
       return { x: e.clientX - rect.left, y: e.clientY - rect.top };
     }
 
-    let downAt = null;
+    // A node dragged, or the view panned, once the press moves (the
+    // shared drag: Esc or a cancelled pointer puts it back); a press that
+    // doesn't move is a click, which opens a note.
     canvas.addEventListener("pointerdown", function (e) {
       const p = point(e);
-      downAt = p;
-      canvas.setPointerCapture(e.pointerId);
       const n = nodeAt(p.x, p.y);
-      if (n) {
-        dragging = n;
-        heat(0.3);
-      } else panning = { x: p.x, y: p.y, vx: view.x, vy: view.y };
+      const was = n ? { x: n.x, y: n.y } : { x: view.x, y: view.y };
+      root.drag.track(e, {
+        start: function () {
+          if (n) {
+            dragging = n;
+            heat(0.3);
+          } else panning = { x: p.x, y: p.y, vx: view.x, vy: view.y };
+        },
+        move: function (x, y) {
+          const at = point({ clientX: x, clientY: y });
+          if (dragging) {
+            const w = toWorld(at.x, at.y);
+            dragging.x = w.x;
+            dragging.y = w.y;
+            dragging.vx = dragging.vy = 0;
+            heat(0.3);
+          } else if (panning) {
+            fitted = false;
+            view.x = panning.vx + (at.x - panning.x) / view.k;
+            view.y = panning.vy + (at.y - panning.y) / view.k;
+            draw();
+          }
+        },
+        end: function (_x, _y, dropped) {
+          if (!dropped && dragging) {
+            dragging.x = was.x;
+            dragging.y = was.y;
+            heat(0.3);
+          } else if (!dropped && panning) {
+            view.x = was.x;
+            view.y = was.y;
+            draw();
+          }
+          dragging = null;
+          panning = null;
+        },
+      });
     });
     canvas.addEventListener("pointermove", function (e) {
+      if (dragging || panning) return;
       const p = point(e);
-      if (dragging) {
-        const w = toWorld(p.x, p.y);
-        dragging.x = w.x;
-        dragging.y = w.y;
-        dragging.vx = dragging.vy = 0;
-        heat(0.3);
-      } else if (panning) {
-        fitted = false;
-        view.x = panning.vx + (p.x - panning.x) / view.k;
-        view.y = panning.vy + (p.y - panning.y) / view.k;
+      const n = nodeAt(p.x, p.y);
+      if (n !== hover) {
+        hover = n;
+        canvas.style.cursor = n ? "pointer" : "grab";
+        canvas.title = n ? n.rel || n.name : "";
         draw();
-      } else {
-        const n = nodeAt(p.x, p.y);
-        if (n !== hover) {
-          hover = n;
-          canvas.style.cursor = n ? "pointer" : "grab";
-          canvas.title = n ? n.rel || n.name : "";
-          draw();
-        }
       }
     });
-    canvas.addEventListener("pointerup", function (e) {
+    canvas.addEventListener("click", function (e) {
       const p = point(e);
-      const moved = downAt && Math.hypot(p.x - downAt.x, p.y - downAt.y) > 4;
-      if (dragging && !moved && dragging.kind === "note")
-        options.onOpen(dragging.id, e.metaKey || e.ctrlKey);
-      dragging = null;
-      panning = null;
+      const n = nodeAt(p.x, p.y);
+      if (n && n.kind === "note") options.onOpen(n.id, e.metaKey || e.ctrlKey);
     });
     canvas.addEventListener(
       "wheel",

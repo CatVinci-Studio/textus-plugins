@@ -36,6 +36,7 @@ kanban-plugin: board
 
 ## Änderungen
 
+- **0.4.12** - Karten und Listen machen im selben Tempo Platz wie der Rest von Textus.
 - **0.4.11** - Eine Liste, an ihrem Kopf gezogen, hebt sich und gleitet über das Board wie Textus’ eigene Tabs; Esc legt sie zurück.
 - **0.4.10** - Das Kästchen einer Karte sitzt bei jeder Textgröße mittig auf ihrer ersten Zeile.
 - **0.4.9** - Ein Rechtsklick in eine Karte oder einen Listennamen beim Bearbeiten (etwa zum Einfügen) beendet die Bearbeitung nicht mehr, und die Eingabetaste einer Eingabemethode auf iPhone und iPad wählt Wörter, statt zu speichern. Die Seite folgt der Sprache von Textus von selbst. Benötigt Textus 1.4.3.
