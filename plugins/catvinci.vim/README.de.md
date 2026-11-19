@@ -22,6 +22,7 @@ Das Plugin fragt nach der Berechtigung, Tasten im Editor anzunehmen (um Vims Tas
 
 ## Änderungen
 
+- **0.2.9** - Braucht Textus 1.3.0-beta.8 oder neuer, die erste Version mit allem, was es nutzt.
 - **0.2.8** - Nur noch auf dem Desktop: Die Bildschirmtastatur eines Telefons tippt die Buchstaben in den Text, statt sie als Vim-Tasten auszuführen.
 - **0.2.7** - Der Modus in der Statusleiste öffnet ein Menü, das Vim ausschaltet; `.obsidian.vimrc` wird neu gelesen, wenn Sie zu Textus zurückkehren; **:** verlässt den visuellen Modus immer.
 - **0.2.6** - Kürzere Hilfe- und Leertexte.

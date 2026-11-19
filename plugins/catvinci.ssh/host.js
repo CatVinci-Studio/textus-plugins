@@ -34,7 +34,7 @@ async function onHost(url, work) {
 const provider = {
   list: (url) => onHost(url, (s, path) => textus.ssh.list(s, path)),
   readText: (url) => onHost(url, (s, path) => textus.ssh.readText(s, path)),
-  readBytes: (url) => onHost(url, (s, path) => textus.ssh.read(s, path)),
+  read: (url) => onHost(url, (s, path) => textus.ssh.read(s, path)),
   writeText: (url, text) =>
     onHost(url, (s, path) => textus.ssh.write(s, path, text)),
   create: (dir, name, folder) =>
@@ -55,7 +55,7 @@ const provider = {
         sshPaths.join(target.path, sshPaths.base(path)),
       );
     }),
-  delete: (url) => onHost(url, (s, path) => textus.ssh.remove(s, path)),
+  delete: (url) => onHost(url, (s, path) => textus.ssh.delete(s, path)),
 };
 
 /** The host to open: one from ~/.ssh/config, or one typed. */
