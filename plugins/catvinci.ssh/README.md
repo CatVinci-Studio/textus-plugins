@@ -21,4 +21,5 @@ It asks for **ssh**: Textus asks you once for each server before the plugin may 
 
 ## Changes
 
+- **0.1.1** - Uses the plugin API as Textus 1.4.6 ships it.
 - **0.1.0** - First version. Needs Textus 1.4.6.

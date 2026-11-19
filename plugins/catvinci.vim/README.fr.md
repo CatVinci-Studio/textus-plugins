@@ -22,6 +22,7 @@ Le plugin demande à recevoir les touches dans l’éditeur (pour exécuter cell
 
 ## Changements
 
+- **0.2.9** - Nécessite Textus 1.3.0-beta.8 ou plus récent, la première version avec tout ce qu’il utilise.
 - **0.2.8** - Sur ordinateur seulement : le clavier à l’écran d’un téléphone tape les lettres dans le texte au lieu de les exécuter comme des touches Vim.
 - **0.2.7** - Le mode dans la barre d’état ouvre un menu qui coupe Vim ; `.obsidian.vimrc` est relu quand vous revenez dans Textus ; quitter le mode visuel avec **:** marche toujours.
 - **0.2.6** - Textes d'aide et d'état vide plus courts.

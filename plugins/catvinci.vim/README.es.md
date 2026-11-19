@@ -22,6 +22,7 @@ El plugin pide tomar las teclas en el editor (para ejecutar las de Vim) y leer a
 
 ## Cambios
 
+- **0.2.9** - Necesita Textus 1.3.0-beta.8 o posterior, la primera versión con todo lo que usa.
 - **0.2.8** - Solo en el escritorio: el teclado en pantalla de un teléfono escribe las letras en el texto en vez de ejecutarlas como teclas de Vim.
 - **0.2.7** - El modo de la barra de estado abre un menú que apaga Vim; `.obsidian.vimrc` se vuelve a leer al volver a Textus; salir del modo visual con **:** siempre funciona.
 - **0.2.6** - Textos de ayuda y de estado vacío más breves.

@@ -83,18 +83,6 @@ const row = (v: Version) => ({
   device: v.device ?? "",
 });
 
-/** textus.history, from Textus 1.4.4 (API 1.8). */
-interface HistoryApi {
-  registerSource(
-    id: string,
-    source: {
-      label: string;
-      versions(path: string): Promise<{ id: string; at: string; author?: string }[]>;
-      read(path: string, version: string): Promise<string | null>;
-    },
-  ): Textus.Disposable;
-}
-
 /** The history page: one file's versions, or the deleted files. */
 export function registerHistory(api: Textus.Api, source: Source) {
   const relative = (root: string, path: string) =>
@@ -171,7 +159,7 @@ export function registerHistory(api: Textus.Api, source: Source) {
   };
   // From Textus 1.4.4 the versions kept here are offered to other plugins
   // (Version History lists them beside its own).
-  const offer = (api as unknown as { history?: HistoryApi }).history;
+  const offer = api.history as Textus.History | undefined;
   const relOf = async (path: string) => {
     const root = await api.files.root();
     return root ? relative(root.replace(/\\/g, "/"), path.replace(/\\/g, "/")) : null;
