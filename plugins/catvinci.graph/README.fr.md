@@ -25,6 +25,7 @@ Dans un coffre Obsidian, les groupes de couleur enregistrés dans le `graph.json
 
 ## Changements
 
+- **0.5.9** - Échap pendant qu'on fait glisser une note ou la vue la remet en place, et un toucher annulé par le système ne laisse plus un glissement bloqué.
 - **0.5.8** - Le graphe de la barre latérale s'étale pour remplir son panneau, au lieu de commencer en petit amas aux étiquettes superposées. Trie les noms dans l’ordre de Textus lui-même plutôt qu’avec une copie : le paquet est plus léger.
 - **0.5.7** - La page suit la langue de Textus d’elle-même. Nécessite Textus 1.4.3.
 - **0.5.6** - Les compteurs et boutons en haut de l'onglet du graphe restent visibles : faire défiler ou pincer sur le graphe ne les pousse plus sous l'onglet. Les libellés ne s'empilent plus : les notes les plus liées gardent le leur et les autres apparaissent en zoomant. Un grand dossier s'ouvre déjà disposé au lieu de se déplier, et les images et autres pièces jointes liées par une note restent hors du graphe sauf si vous activez Pièces jointes dans ses réglages. Changer de document ou enregistrer ne secoue plus tout le graphe pour qu’il se replace.

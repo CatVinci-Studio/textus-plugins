@@ -36,6 +36,7 @@ kanban-plugin: board
 
 ## Changements
 
+- **0.4.12** - Les cartes et les listes s'écartent au même rythme que le reste de Textus.
 - **0.4.11** - Une liste tirée par son en-tête se soulève et glisse le long du tableau comme les onglets de Textus ; Échap la remet en place.
 - **0.4.10** - La case d'une carte est centrée sur sa première ligne, quelle que soit la taille du texte.
 - **0.4.9** - Un clic droit sur une carte ou un nom de liste en cours d'édition (pour coller) ne termine plus l'édition, et la touche Entrée d'une méthode de saisie sur iPhone et iPad choisit les mots au lieu d'enregistrer. La page suit la langue de Textus d’elle-même. Nécessite Textus 1.4.3.

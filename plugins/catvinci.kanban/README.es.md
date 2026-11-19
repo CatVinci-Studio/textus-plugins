@@ -36,6 +36,7 @@ kanban-plugin: board
 
 ## Cambios
 
+- **0.4.12** - Las tarjetas y listas se apartan al mismo ritmo que el resto de Textus.
 - **0.4.11** - Una lista arrastrada por su cabecera se eleva y se desliza por el tablero como las pestañas de Textus; Esc la devuelve.
 - **0.4.10** - La casilla de una tarjeta queda centrada en su primera línea con cualquier tamaño de texto.
 - **0.4.9** - Hacer clic derecho en una tarjeta o en el nombre de una lista mientras la editas (para pegar) ya no termina la edición, y el Intro de un método de entrada en iPhone y iPad elige palabras en lugar de guardar. La página sigue el idioma de Textus por sí sola. Requiere Textus 1.4.3.

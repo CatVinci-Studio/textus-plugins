@@ -36,6 +36,7 @@ kanban-plugin: board
 
 ## Alterações
 
+- **0.4.12** - Os cartões e as listas abrem espaço ao mesmo ritmo que o resto do Textus.
 - **0.4.11** - Uma lista arrastada pelo cabeçalho se ergue e desliza pelo quadro como as abas do Textus; Esc a devolve.
 - **0.4.10** - A caixa de um cartão fica centrada na primeira linha em qualquer tamanho de texto.
 - **0.4.9** - Clicar com o botão direito num cartão ou nome de lista durante a edição (para colar) já não termina a edição, e o Enter de um método de entrada no iPhone e iPad escolhe as palavras em vez de guardar. A página segue o idioma do Textus sozinha. Requer o Textus 1.4.3.

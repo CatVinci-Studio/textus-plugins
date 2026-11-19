@@ -36,6 +36,7 @@ kanban-plugin: board
 
 ## Changes
 
+- **0.4.12** - Cards and lists make way at the pace of the rest of Textus.
 - **0.4.11** - A list dragged by its head lifts and slides along the board as Textus's own tabs do; Esc puts it back.
 - **0.4.10** - A card's checkbox sits on the middle of its first line at any text size.
 - **0.4.9** - Right-clicking a card or list name while you edit it (to paste) no longer ends the edit, and an input method's Enter on iPhone and iPad picks its words instead of saving. The page follows Textus's language by itself. Needs Textus 1.4.3.
