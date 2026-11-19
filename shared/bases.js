@@ -242,11 +242,25 @@
       const ctx = { file, this: self, formulas };
       if (!test(ctx)) continue;
       // Each formula's value beside the note's own properties, as formula.<name>.
-      const props = { ...file.properties };
+      const props = { ...file.properties, ...fileColumns(file) };
       for (const name of Object.keys(formulas)) props["formula." + name] = bexpr.formulaValue(name, ctx);
       rows.push({ rel: d.rel, name: file.basename, props, file });
     }
     return { rows, skipped };
+  }
+
+  /** The file's own as columns (file.folder, file.mtime…), shown as text. */
+  const pad = (n) => String(n).padStart(2, "0");
+  function fileColumns(file) {
+    const m = file.mtime;
+    return {
+      "file.path": file.path,
+      "file.folder": file.folder,
+      "file.ext": file.ext,
+      "file.mtime": m
+        ? m.getFullYear() + "-" + pad(m.getMonth() + 1) + "-" + pad(m.getDate()) + " " + pad(m.getHours()) + ":" + pad(m.getMinutes())
+        : "",
+    };
   }
 
   /** The base's formulas by name, as text. */

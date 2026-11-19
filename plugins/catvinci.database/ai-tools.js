@@ -52,7 +52,8 @@ async function queryRows(input) {
     rows: shown.slice(0, limit).map((r) => ({
       name: r.name,
       path: r.rel,
-      properties: Object.fromEntries(Object.entries(r.props).map(([k, v]) => [k, plain(v)])),
+      // The note's own; its path is said above.
+      properties: Object.fromEntries(Object.entries(r.props).filter(([k]) => !k.startsWith("file.")).map(([k, v]) => [k, plain(v)])),
     })),
   };
 }

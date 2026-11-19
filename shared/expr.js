@@ -458,6 +458,7 @@
       tags: fmTags.concat((doc.tags || []).map((t) => (typeof t === "string" ? t : t.tag || ""))).filter(Boolean),
       links: (doc.links || []).map((l) => (typeof l === "string" ? l : l.target || l.link || l.path || "")).filter(Boolean),
       properties: props,
+      mtime: typeof doc.modifiedMs === "number" ? new Date(doc.modifiedMs) : null,
     };
   }
 
