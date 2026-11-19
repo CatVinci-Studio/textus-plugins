@@ -283,6 +283,14 @@ describe("a base's formulas", () => {
       { rel: "Books/B.md", frontmatter: { price: 30, pages: 100 } },
     ];
     const { rows } = db.rowsOf(base, docs, "Books/Books.md");
+    // The file's own columns beside its properties.
+    const dated = db.rowsOf(
+      base,
+      [{ rel: "Books/A.md", frontmatter: {}, modifiedMs: new Date(2026, 10, 2, 9, 5).getTime() }],
+      "Books/Books.md",
+    ).rows[0];
+    expect(dated.props["file.folder"]).toBe("Books");
+    expect(dated.props["file.mtime"]).toBe("2026-11-02 09:05");
     expect(
       rows.map((r: Row) => [
         r.name,
