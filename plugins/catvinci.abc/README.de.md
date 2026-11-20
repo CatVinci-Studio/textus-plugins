@@ -23,6 +23,7 @@ C D E F | G A B c |
 
 ## Änderungen
 
+- **0.3.4** - Das Paket listet die mitgelieferten Bibliotheken samt ihren Lizenzen auf.
 - **0.3.3** - Ein Diagramm, das bei zugeklapptem Block (auf dem Handy) gezeichnet wurde, passt sich beim Aufklappen an die Breite an.
 - **0.3.2** - Takte brechen passend zur Spalte um, statt die ganze Partitur zu verkleinern; ein Klick auf eine Note färbt sie nicht mehr rot; `check_abc` akzeptiert volle Modusnamen, jede Notenlänge, `+:`-Zeilen, `` ` `` und `$`; `height=` entfällt.
 - **0.3.1** - Seine Seite sagt jetzt in einem Satz, was es tut, was es kann und was sich in jeder Version geändert hat.

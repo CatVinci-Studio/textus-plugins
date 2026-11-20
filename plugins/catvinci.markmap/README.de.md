@@ -25,6 +25,7 @@ Das Plugin nutzt [markmap](https://markmap.js.org). Es fragt nur nach einer Bere
 
 ## Änderungen
 
+- **0.3.7** - Das Paket listet die mitgelieferten Bibliotheken samt ihren Lizenzen auf.
 - **0.3.6** - Eine Mindmap, die gezeichnet wurde, bevor ihre Notiz angeordnet war, zeigt keinen Fehler mehr.
 - **0.3.5** - Ein Diagramm, das bei zugeklapptem Block (auf dem Handy) gezeichnet wurde, passt sich beim Aufklappen an die Breite an.
 - **0.3.4** - Wer lange an einer Mindmap arbeitet, lässt Textus nicht mehr immer mehr Speicher belegen.

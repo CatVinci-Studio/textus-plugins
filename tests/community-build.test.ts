@@ -20,7 +20,7 @@ it("checks and packages the first community listing using its release filename",
   try {
     for (const dir of ["scripts", "plugins", "skills", "community"])
       mkdirSync(join(fixture, dir));
-    for (const file of ["build.mjs", "community.mjs", "history.mjs"])
+    for (const file of ["build.mjs", "community.mjs", "history.mjs", "notices.mjs"])
       copyFileSync(join(root, "scripts", file), join(fixture, "scripts", file));
     writeFileSync(join(fixture, "libs.json"), "{}");
     writeFileSync(join(fixture, "removed.json"), '{"plugins":[]}');

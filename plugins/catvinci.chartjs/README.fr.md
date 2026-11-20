@@ -27,6 +27,7 @@ Il fonctionne sur ordinateur et sur iPhone et demande Textus 1.3.2 ou plus réce
 
 ## Changements
 
+- **0.3.4** - Le paquet liste les bibliothèques qu’il embarque, avec leurs licences.
 - **0.3.3** - Un graphique dessiné quand son bloc était replié (sur téléphone) s'adapte à la largeur quand on l'ouvre.
 - **0.3.2** - Les graphiques se redessinent quand le panneau se rétrécit ou s'élargit ; les libellés suivent la police et la taille du texte du thème, et la ligne d'erreur est de nouveau rouge.
 - **0.3.1** - Sa page dit maintenant en une phrase ce qu'il fait, ce qu'il permet et ce qui a changé à chaque version.

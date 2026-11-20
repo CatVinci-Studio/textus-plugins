@@ -33,6 +33,7 @@ It runs on the desktop and on iOS.
 
 ## Changes
 
+- **0.3.11** - Its package lists the libraries it carries, with their licenses.
 - **0.3.10** - Code kept for Textus versions it no longer runs on is gone. From Textus 1.4.4 the deck is also in File › Export, as Slides (HTML).
 - **0.3.9** - The page follows Textus's language by itself. Needs Textus 1.4.3.
 - **0.3.8** - Present as Slides draws the deck on a phone, where its tab comes to the front alone.

@@ -13,4 +13,5 @@
 
 ## Changes
 
+- **0.1.1** - 安装包里附上所带第三方库的清单和许可。
 - **0.1.0** - 第一个版本：在标签页里用 Excalidraw 编辑 `.excalidraw` 文件和 Obsidian Excalidraw 的绘图。

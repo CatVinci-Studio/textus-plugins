@@ -23,6 +23,7 @@ C D E F | G A B c |
 
 ## Alterações
 
+- **0.3.4** - O pacote lista as bibliotecas que inclui, com as suas licenças.
 - **0.3.3** - Um gráfico desenhado com o bloco recolhido (no telemóvel) ajusta-se à largura ao abrir.
 - **0.3.2** - Os compassos quebram de linha conforme a coluna em vez de encolher a partitura inteira; clicar numa nota não a deixa mais vermelha; `check_abc` aceita nomes de modo completos, qualquer duração de nota, linhas `+:`, `` ` `` e `$`; `height=` foi removido.
 - **0.3.1** - Sua página agora diz numa frase o que ele faz, o que pode fazer e o que mudou em cada versão.

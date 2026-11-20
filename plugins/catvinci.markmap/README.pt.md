@@ -25,6 +25,7 @@ O plugin usa o [markmap](https://markmap.js.org). Pede uma única permissão, pa
 
 ## Alterações
 
+- **0.3.7** - O pacote lista as bibliotecas que inclui, com as suas licenças.
 - **0.3.6** - Um mapa mental desenhado antes de a nota ser diagramada já não mostra um erro.
 - **0.3.5** - Um gráfico desenhado com o bloco recolhido (no telemóvel) ajusta-se à largura ao abrir.
 - **0.3.4** - Editar um mapa mental por muito tempo já não faz o Textus usar cada vez mais memória.

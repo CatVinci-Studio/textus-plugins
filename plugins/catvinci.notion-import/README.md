@@ -31,6 +31,7 @@ Everything happens on your device: the plugin reads and writes files in the open
 
 ## Changes
 
+- **0.7.11** - Its package lists the libraries it carries, with their licenses.
 - **0.7.10** - The database code it shares with Database brought up to date (its file columns filled).
 - **0.7.9** - Databases it makes keep a view another plugin draws (Textus 1.4.6).
 - **0.7.8** - The import report gets a free name as it is written (Textus 1.4.3).

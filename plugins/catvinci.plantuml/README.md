@@ -28,6 +28,7 @@ Bob --> Alice : Hi!
 
 ## Changes
 
+- **0.2.6** - Its package lists the libraries it carries, with their licenses.
 - **0.2.5** - A chart drawn while its block was folded (a phone) fits once the block opens, instead of keeping its old size.
 - **0.2.4** - `!theme` works; no empty gap in a narrow column; server mode shows PlantUML's own error and draws dark in dark themes.
 - **0.2.3** - Shorter help and empty-state text.

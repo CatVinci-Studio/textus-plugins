@@ -39,6 +39,7 @@ CJK Spacing, the plugin that puts spaces between Chinese and Latin text, leaves 
 
 ## Changes
 
+- **0.5.1** - Its package lists the libraries it carries, with their licenses.
 - **0.5.0** - Each finding opens a card that names the rule and fixes that block (Alt+Enter), or sets it aside with Ignore (Textus 1.4.4).
 - **0.4.1** - Remove Blank Lines and list switching leave a code block inside a longer fence (```` holding ```) alone.
 - **0.4.0** - Switch selected lines to a bullet, numbered or task list (numbered counts from 1 at each level; a task keeps its tick).

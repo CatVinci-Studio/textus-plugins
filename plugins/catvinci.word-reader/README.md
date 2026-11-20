@@ -13,6 +13,7 @@ The plugin asks for no permissions: it only reads the file you open in it. It wo
 
 ## Changes
 
+- **0.2.8** - Its package lists the libraries it carries, with their licenses.
 - **0.2.7** - The page follows Textus's language by itself. Needs Textus 1.4.3.
 - **0.2.6** - Zoom buttons and keys step by 1.25×, as the other viewers do.
 - **0.2.5** - The find bar's close button is named for screen readers and shows a tooltip.

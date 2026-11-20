@@ -28,6 +28,7 @@ Bob --> Alice : Hi!
 
 ## Änderungen
 
+- **0.2.6** - Das Paket listet die mitgelieferten Bibliotheken samt ihren Lizenzen auf.
 - **0.2.5** - Ein Diagramm, das bei zugeklapptem Block (auf dem Handy) gezeichnet wurde, passt sich beim Aufklappen an die Breite an.
 - **0.2.4** - `!theme` funktioniert; keine leere Lücke in einer schmalen Spalte; im Servermodus erscheint der Fehler von PlantUML selbst, dunkle Themes bekommen ein dunkles Bild.
 - **0.2.3** - Kürzere Hilfe- und Leertexte.

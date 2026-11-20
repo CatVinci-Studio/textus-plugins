@@ -39,6 +39,7 @@ Espacement CJK, l’extension qui met des espaces entre texte chinois et latin, 
 
 ## Changements
 
+- **0.5.1** - Le paquet liste les bibliothèques qu’il embarque, avec leurs licences.
 - **0.5.0** - Chaque problème ouvre une carte qui nomme la règle et corrige ce bloc (Alt+Entrée), ou le met de côté avec Ignorer (Textus 1.4.4).
 - **0.4.1** - Supprimer les lignes vides et changer de liste laissent intact un bloc de code dans une clôture plus longue (```` contenant ```).
 - **0.4.0** - Passer les lignes sélectionnées en liste à puces, numérotée ou de tâches (numérotée à partir de 1 à chaque niveau ; une tâche garde sa coche).
