@@ -27,6 +27,7 @@ Il ne demande que **Outils pour Textus AI**, pour que Textus AI puisse vérifier
 
 ## Changements
 
+- **0.3.5** - Le paquet liste les bibliothèques qu’il embarque, avec leurs licences.
 - **0.3.4** - Un très long diagramme ne se réduit que tant que ses libellés restent lisibles, puis défile horizontalement (téléphone).
 - **0.3.3** - Lisible en mode sombre : traits et texte aux couleurs du thème ; un dessin fait bloc replié s'adapte à l'ouverture. Un long diagramme se réduit à la largeur de la colonne au lieu d'être coupé.
 - **0.3.2** - Les diagrammes prennent la police et la couleur de trait du thème, suivent le zoom du document, et `height=` redimensionne désormais le diagramme lui-même.

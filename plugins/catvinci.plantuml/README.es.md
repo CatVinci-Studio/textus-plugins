@@ -28,6 +28,7 @@ Bob --> Alice : Hi!
 
 ## Cambios
 
+- **0.2.6** - El paquete incluye la lista de bibliotecas que lleva, con sus licencias.
 - **0.2.5** - Un gráfico dibujado con su bloque plegado (en el móvil) se ajusta al ancho al abrirlo.
 - **0.2.4** - `!theme` funciona; sin hueco vacío en una columna estrecha; en modo servidor se ve el error de PlantUML y los temas oscuros tienen un dibujo oscuro.
 - **0.2.3** - Textos de ayuda y de estado vacío más breves.

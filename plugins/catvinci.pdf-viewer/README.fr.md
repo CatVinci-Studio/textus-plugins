@@ -15,6 +15,7 @@ Il ne demande aucune autorisation : Textus lui transmet le PDF que vous ouvrez.
 
 ## Changements
 
+- **0.2.8** - Le paquet liste les bibliothèques qu’il embarque, avec leurs licences.
 - **0.2.7** - La page suit la langue de Textus d’elle-même. Nécessite Textus 1.4.3.
 - **0.2.6** - Les boutons et touches de zoom avancent par 1,25×, comme dans les autres visionneuses.
 - **0.2.5** - Un long PDF parcouru jusqu’au bout occupe bien moins de mémoire : les pages hors de vue libèrent aussi leurs images.

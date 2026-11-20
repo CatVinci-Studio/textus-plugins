@@ -13,6 +13,7 @@ Le plugin ne demande aucune permission : il lit seulement le fichier que vous ou
 
 ## Changements
 
+- **0.2.8** - Le paquet liste les bibliothèques qu’il embarque, avec leurs licences.
 - **0.2.7** - La page suit la langue de Textus d’elle-même. Nécessite Textus 1.4.3.
 - **0.2.6** - Les boutons et touches de zoom avancent par 1,25×, comme dans les autres visionneuses.
 - **0.2.5** - Le bouton de fermeture de la barre de recherche a un nom pour les lecteurs d'écran et affiche une infobulle.

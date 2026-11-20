@@ -28,6 +28,7 @@ Bob --> Alice : Hi!
 
 ## Alterações
 
+- **0.2.6** - O pacote lista as bibliotecas que inclui, com as suas licenças.
 - **0.2.5** - Um gráfico desenhado com o bloco recolhido (no telemóvel) ajusta-se à largura ao abrir.
 - **0.2.4** - `!theme` funciona; sem espaço vazio numa coluna estreita; no modo servidor aparece o erro do próprio PlantUML e os temas escuros têm desenho escuro.
 - **0.2.3** - Textos de ajuda e de estado vazio mais curtos.

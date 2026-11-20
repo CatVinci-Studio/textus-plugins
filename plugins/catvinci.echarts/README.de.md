@@ -25,6 +25,7 @@ Das Plugin fragt nur nach einer Berechtigung: um Textus AI das unten aufgeführt
 
 ## Änderungen
 
+- **0.3.4** - Das Paket listet die mitgelieferten Bibliotheken samt ihren Lizenzen auf.
 - **0.3.3** - Ein Diagramm, das bei zugeklapptem Block (auf dem Handy) gezeichnet wurde, passt sich beim Aufklappen an die Breite an.
 - **0.3.2** - Diagramme passen sich an, wenn sich die Breite des Bereichs ändert; Text und Standardhöhe folgen Zoom und Schrift der App.
 - **0.3.1** - Die Beschreibung nennt keine Karten mehr, die ein Block nicht laden kann.

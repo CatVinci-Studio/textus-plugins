@@ -39,6 +39,7 @@ Espaçamento CJK, o plugin que põe espaços entre texto chinês e latino, tamb�
 
 ## Alterações
 
+- **0.5.1** - O pacote lista as bibliotecas que inclui, com as suas licenças.
 - **0.5.0** - Cada problema abre um cartão que nomeia a regra e corrige esse bloco (Alt+Enter), ou o deixa de lado com Ignorar (Textus 1.4.4).
 - **0.4.1** - Remover linhas em branco e trocar de lista deixam intacto um bloco de código dentro de uma cerca mais longa (```` com ``` dentro).
 - **0.4.0** - Troca as linhas selecionadas para lista com marcadores, numerada ou de tarefas (numera a partir de 1 em cada nível; uma tarefa mantém a marca).

@@ -25,6 +25,7 @@ Le plugin demande une seule permission, pour donner à Textus AI l’outil `chec
 
 ## Changements
 
+- **0.3.4** - Le paquet liste les bibliothèques qu’il embarque, avec leurs licences.
 - **0.3.3** - Un graphique dessiné quand son bloc était replié (sur téléphone) s'adapte à la largeur quand on l'ouvre.
 - **0.3.2** - Les graphiques se redessinent quand la largeur du panneau change, et leur texte et leur hauteur par défaut suivent le zoom et la police de l’app.
 - **0.3.1** - Sa description ne cite plus les cartes, qu'un bloc ne peut pas charger.

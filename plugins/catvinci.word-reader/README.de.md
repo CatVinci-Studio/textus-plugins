@@ -13,6 +13,7 @@ Das Plugin fragt nach keinen Berechtigungen: Es liest nur die Datei, die Sie dam
 
 ## Änderungen
 
+- **0.2.8** - Das Paket listet die mitgelieferten Bibliotheken samt ihren Lizenzen auf.
 - **0.2.7** - Die Seite folgt der Sprache von Textus von selbst. Benötigt Textus 1.4.3.
 - **0.2.6** - Zoom-Knöpfe und -Tasten gehen in Schritten von 1,25×, wie in den anderen Ansichten.
 - **0.2.5** - Die Schließen-Schaltfläche der Suchleiste hat einen Namen für Screenreader und zeigt einen Tooltip.

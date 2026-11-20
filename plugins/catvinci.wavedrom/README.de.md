@@ -27,6 +27,7 @@ Es braucht nur **Werkzeuge für Textus AI**, damit Textus AI einen Block prüfen
 
 ## Änderungen
 
+- **0.3.5** - Das Paket listet die mitgelieferten Bibliotheken samt ihren Lizenzen auf.
 - **0.3.4** - Ein sehr langes Diagramm schrumpft nur so weit, dass die Beschriftung lesbar bleibt, und lässt sich dann seitlich scrollen (Telefon).
 - **0.3.3** - Im Dunkelmodus lesbar: Linien und Text in den Farben des Themas; bei zugeklapptem Block Gezeichnetes passt sich beim Aufklappen an. Ein langes Diagramm schrumpft auf die Spaltenbreite, statt abgeschnitten zu werden.
 - **0.3.2** - Diagramme nutzen Schrift und Linienfarbe des Themes, wachsen mit dem Zoom des Dokuments, und `height=` ändert jetzt die Größe des Diagramms selbst.

@@ -39,6 +39,7 @@ Espaciado CJK, el complemento que pone espacios entre texto chino y latino, tamb
 
 ## Cambios
 
+- **0.5.1** - El paquete incluye la lista de bibliotecas que lleva, con sus licencias.
 - **0.5.0** - Cada hallazgo abre una tarjeta que nombra la regla y corrige ese bloque (Alt+Enter), o lo deja de lado con Ignorar (Textus 1.4.4).
 - **0.4.1** - Quitar líneas en blanco y cambiar de lista dejan intacto un bloque de código dentro de una valla más larga (```` con ``` dentro).
 - **0.4.0** - Cambia las líneas seleccionadas a lista con viñetas, numerada o de tareas (numera desde 1 en cada nivel; una tarea conserva su marca).

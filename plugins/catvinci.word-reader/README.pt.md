@@ -13,6 +13,7 @@ O plugin não pede permissões: só lê o arquivo que você abre com ele. Funcio
 
 ## Alterações
 
+- **0.2.8** - O pacote lista as bibliotecas que inclui, com as suas licenças.
 - **0.2.7** - A página segue o idioma do Textus sozinha. Requer o Textus 1.4.3.
 - **0.2.6** - Os botões e teclas de zoom avançam 1,25× de cada vez, como nos outros visualizadores.
 - **0.2.5** - O botão de fechar da barra de busca tem nome para leitores de tela e mostra uma dica.

@@ -13,6 +13,7 @@ El plugin no pide permisos: solo lee el archivo que abres con él. Funciona en e
 
 ## Cambios
 
+- **0.2.8** - El paquete incluye la lista de bibliotecas que lleva, con sus licencias.
 - **0.2.7** - La página sigue el idioma de Textus por sí sola. Requiere Textus 1.4.3.
 - **0.2.6** - Los botones y teclas de zoom avanzan de 1,25× en 1,25×, como en los demás visores.
 - **0.2.5** - El botón de cerrar de la barra de búsqueda tiene nombre para lectores de pantalla y muestra una descripción.
