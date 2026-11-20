@@ -113,5 +113,5 @@ The Textus app's tests and its development server use a checkout of this reposit
 
 ## License
 
-MIT - see [LICENSE](LICENSE). The libraries copied into the packages keep their own licenses: PDF.js (Apache-2.0), JSZip (MIT) and docx-preview (Apache-2.0).
+MIT - see [LICENSE](LICENSE). The libraries copied into the packages keep their own licenses; each package lists them, with their license texts, in its `THIRD-PARTY-NOTICES.md` (`scripts/notices.mjs`).
 

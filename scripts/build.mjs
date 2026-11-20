@@ -35,6 +35,7 @@ import { join, relative } from "node:path";
 import JSZip from "jszip";
 import { communityEntry, releaseZipUrl } from "./community.mjs";
 import { publishedCatalog, versionsOf } from "./history.mjs";
+import { NOTICES, noticesFor, packagesFor } from "./notices.mjs";
 
 const ROOT = new URL("..", import.meta.url).pathname;
 const PLUGINS = join(ROOT, "plugins");
@@ -189,6 +190,8 @@ for (const id of ids) {
     for (const [name, path] of sources)
       zip.file(name.slice(id.length + 1), readFileSync(path), options);
   }
+  const notices = noticesFor(packagesFor(id, libs, ROOT));
+  if (notices) zip.file(NOTICES, notices, options);
   const bytes = await zip.generateAsync({
     type: "nodebuffer",
     compression: "DEFLATE",
