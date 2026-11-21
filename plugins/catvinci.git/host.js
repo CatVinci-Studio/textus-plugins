@@ -1,7 +1,8 @@
 // Git: the open folder's changed files marked in the sidebar, its branch
 // in the status bar, a command that commits what the user picks with their
-// own git, and tools for Textus AI to read the history and draft a commit
-// message. Nothing pushes, pulls or switches branches. Desktop only.
+// own git, Push and Pull through the user's git and its saved credentials,
+// and tools for Textus AI to read the history and draft a commit message.
+// Nothing switches branches. Desktop only.
 /* global folderPaths, lineDiff, hunkText */
 let ctx;
 let branchItem = null;
@@ -38,7 +39,10 @@ async function refresh() {
     branchItem = null;
     return null;
   }
-  const item = { text: "⎇ " + (status.branch || t("detached")), tooltip: t("branchTip"), command: "catvinci.git.commit" };
+  // What waits to go up or come down, as of the last fetch.
+  const sync = (status.ahead ? " ↑" + status.ahead : "") + (status.behind ? " ↓" + status.behind : "");
+  const tooltip = sync ? t("branchTip") + "\n" + t("syncTip", status.ahead, status.behind) : t("branchTip");
+  const item = { text: "⎇ " + (status.branch || t("detached")) + sync, tooltip: tooltip, command: "catvinci.git.commit" };
   if (branchItem) branchItem.update(item);
   else branchItem = textus.ui.statusItem("catvinci.git.branch", item);
   return status;
@@ -152,6 +156,37 @@ async function commit() {
   await refresh();
 }
 
+/** Sends the branch's commits to its remote branch. */
+async function push() {
+  const status = await refresh();
+  if (!status) return textus.ui.notice(t("noRepo"));
+  try {
+    await textus.git.push();
+    const after = await refresh();
+    await textus.ui.notice(t("pushed", status.branch || t("detached"), (after && after.upstream) || "origin"));
+  } catch (e) {
+    await textus.ui.message(t("pushFailed", errorText(e)), { tone: "error" });
+  }
+}
+
+/** Takes the remote branch's commits in; a conflict is undone by Textus
+ *  and said here. */
+async function pull() {
+  const status = await refresh();
+  if (!status) return textus.ui.notice(t("noRepo"));
+  if (!status.upstream) return textus.ui.notice(t("noUpstream"));
+  try {
+    await textus.git.fetch();
+    const fetched = await refresh();
+    if (!fetched || !fetched.behind) return textus.ui.notice(t("upToDate", status.upstream));
+    await textus.git.pull();
+    await refresh();
+    await textus.ui.notice(t("pulled", fetched.behind, status.upstream));
+  } catch (e) {
+    await textus.ui.message(t("pullFailed", errorText(e)), { tone: "error" });
+  }
+}
+
 // Textus AI's tools.
 
 /** A path the AI gave, in the open folder; else an error. */
@@ -213,6 +248,8 @@ async function gitFileAt(input) {
 exports.activate = function (context) {
   ctx = context;
   textus.commands.register("catvinci.git.commit", commit);
+  textus.commands.register("catvinci.git.push", push);
+  textus.commands.register("catvinci.git.pull", pull);
   textus.ai.registerTool("git_changes", gitChanges);
   textus.ai.registerTool("git_history", gitHistory);
   textus.ai.registerTool("git_file_at", gitFileAt);
