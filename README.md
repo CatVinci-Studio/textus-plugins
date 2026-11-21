@@ -23,7 +23,7 @@ The plugins for [Textus](https://textus.md), the Markdown editor. None of them c
 | Excalidraw | Draw sketchy diagrams with Excalidraw in a tab: .excalidraw files, and Obsidian Excalidraw's drawings, edited and saved in the form they had. |
 | Function Plot | Graphs of functions, one per line: sin(x), x^2 - 1. |
 | Gemini CLI | Gemini CLI in Textus AI: Google's Gemini models read your folder, write and edit your notes, and ask before they change anything. |
-| Git | Changed files marked in the sidebar, the branch in the status bar, commits of the files you pick with your own Git, and a file's commits in Version History. Desktop. |
+| Git | Changed files marked in the sidebar, the branch in the status bar, commits of the files you pick, pushing and pulling with your own Git, and a file's commits in Version History. Desktop. |
 | GitHub Copilot CLI | GitHub Copilot CLI in Textus AI: the models of your Copilot plan read your folder, write and edit your notes, and ask before they change anything. |
 | Graph View | Your notes and the links between them as a graph - for the whole folder, or around the document in front - with filters and colour groups. |
 | Heading Numbers | Numbers headings as you write - 1, 1.1, 1.2 - without changing the text; exports can carry the numbers too. |
