@@ -9,7 +9,7 @@
   "license": "MIT",
   "repository": "https://github.com/CatVinci-Studio/textus-plugins",
   "engines": {
-    "textus": ">=1.4.6"
+    "textus": ">=1.4.6-rc.4"
   },
   "platforms": ["desktop"],
   "main": ["lib/folder-paths.js", "lib/text-diff.js", "host.js"],
