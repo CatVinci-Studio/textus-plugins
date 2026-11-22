@@ -11,6 +11,7 @@ The plugins for [Textus](https://textus.md), the Markdown editor. None of them c
 | Calendar & Daily Notes | A calendar in the sidebar and a note for each day, kept in a folder of the open folder. |
 | Canvas | View Obsidian's canvases (.canvas) in a tab: notes, pictures, links and groups on a board you can move around and zoom. For viewing only; it doesn't edit them. |
 | Chart.js | Simple charts from a Chart.js configuration. |
+| Cisco IOS | Colours Cisco IOS configurations in code blocks: commands, interfaces, IP addresses and ! comments, in ```cisco or ```ios blocks. |
 | CJK Spacing | Puts a space between Chinese or Japanese text and Latin letters or numbers. |
 | Claude Code | Claude Code in Textus AI: it reads your folder, writes and edits your notes, and asks before it changes anything. |
 | Clipboard History | What you copied or cut in your documents, newest first, in the sidebar: click one to put it in again. |
