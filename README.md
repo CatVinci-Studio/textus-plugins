@@ -35,6 +35,7 @@ The plugins for [Textus](https://textus.md), the Markdown editor. None of them c
 | Link Cards | A link as a card with its page's title, description and picture - or a Bilibili video playing in place. Kept in the document as text. |
 | Logseq Folders | Opens a Logseq graph the way Logseq writes it: links by page name, pictures in assets, journals in their folder and date format. |
 | Marp | Present a document as slides, the Marp way: a new slide at each ---, themes and layout by Marp directives. The deck follows your writing in a tab beside it, and saves as one HTML file to present from any browser. |
+| Material Icon Theme | File and folder icons from VS Code's Material Icon Theme in the sidebar, search and quick open: a colour icon for each kind of file - Markdown, PDF, pictures, Word, Excel, code - and for folders such as images, docs and src. Pick it in Settings › Appearance › File icons. |
 | MDX | Write MDX documents (Docusaurus, Nextra…) with their problems underlined by MDX's own compiler, a preview beside them that runs none of their code, and conversion to Markdown and back. |
 | Mind Map | Draws a Markdown outline - headings and lists - as a mind map. |
 | Notion Import | Brings in a Notion export (the .zip or its folder) as plain Markdown notes: pages within pages as folders, databases in Obsidian's Bases format, pictures and files beside their pages. Pair it with Wiki to see the pages tree and the databases. |
