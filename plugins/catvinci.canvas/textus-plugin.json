@@ -9,7 +9,7 @@
   "license": "MIT",
   "repository": "https://github.com/CatVinci-Studio/textus-plugins",
   "engines": {
-    "textus": ">=1.4.3"
+    "textus": ">=1.4.7"
   },
   "platforms": [
     "desktop",
