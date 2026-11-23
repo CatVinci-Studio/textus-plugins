@@ -61,11 +61,11 @@
     if (box && !moved) fitView();
   }).observe(stage);
 
-  // Dragging moves the canvas; two fingers pinch it; a press that doesn't
-  // move is a click on what's under it.
+  // Dragging moves the canvas; a press that doesn't move is a click on
+  // what's under it. A second finger is a pinch, which Textus sends as a
+  // zooming wheel: it ends the move.
   const pointers = new Map();
   let pressed = null;
-  let pinch = null;
   const local = (e) => {
     const r = stage.getBoundingClientRect();
     return { x: e.clientX - r.left, y: e.clientY - r.top };
@@ -74,10 +74,6 @@
     if (e.button !== 0) return;
     pointers.set(e.pointerId, local(e));
     pressed = pointers.size === 1 ? { target: e.target, at: local(e), far: false } : null;
-    if (pointers.size === 2) {
-      const [a, b] = [...pointers.values()];
-      pinch = { distance: Math.hypot(a.x - b.x, a.y - b.y) };
-    }
     stage.setPointerCapture?.(e.pointerId);
     stage.classList.add("dragging");
   });
@@ -86,13 +82,6 @@
     if (!last) return;
     const now = local(e);
     pointers.set(e.pointerId, now);
-    if (pointers.size === 2 && pinch) {
-      const [a, b] = [...pointers.values()];
-      const distance = Math.hypot(a.x - b.x, a.y - b.y);
-      if (pinch.distance > 0) zoomBy(distance / pinch.distance, (a.x + b.x) / 2, (a.y + b.y) / 2);
-      pinch.distance = distance;
-      return;
-    }
     if (!pressed) return;
     if (!pressed.far && Math.hypot(now.x - pressed.at.x, now.y - pressed.at.y) <= 4) return;
     // Past the threshold: the canvas follows from where the press began.
@@ -102,7 +91,6 @@
   });
   const release = (e) => {
     if (!pointers.delete(e.pointerId)) return;
-    if (pointers.size < 2) pinch = null;
     if (pointers.size) return;
     stage.classList.remove("dragging");
     const press = pressed;
@@ -132,8 +120,7 @@
       const unit = e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? stage.clientHeight : 1;
       if (jc.wheelIntent(e) === "zoom") {
         const p = local(e);
-        const d = Math.max(-40, Math.min(40, e.deltaY * unit));
-        return zoomBy(Math.exp(-d * 0.01), p.x, p.y);
+        return zoomBy(jc.wheelZoom(e.deltaY * unit), p.x, p.y);
       }
       view = { x: view.x - e.deltaX * unit, y: view.y - e.deltaY * unit, scale: view.scale };
       moved = true;
