@@ -80,7 +80,7 @@ describe("an Obsidian vault's .obsidian.vimrc", () => {
       },
       editor: {
         keys: {
-          onKey: (fn: typeof key) => ((key = fn), { dispose() {} }),
+          onDidPressKey: (fn: typeof key) => ((key = fn), { dispose() {} }),
           capture: async () => {},
           exec: async (op: { op: string }) => (ops.push(op), { empty: false }),
         },

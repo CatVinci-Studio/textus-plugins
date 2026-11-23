@@ -247,7 +247,9 @@ exports.activate = async function () {
   textus.app.onDidChangeState(function (state) {
     if (state === "active") settingsChanged();
   });
-  textus.editor.keys.onKey(handle);
+  // Older Textus has only onKey.
+  const keys = textus.editor.keys;
+  keys["onDidPressKey" in keys ? "onDidPressKey" : "onKey"](handle);
   textus.commands.register("catvinci.vim.toggle", function () {
     on = !on;
     if (on) return setMode("normal");
