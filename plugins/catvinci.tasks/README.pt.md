@@ -42,7 +42,7 @@ Linhas sobre a aparência (`hide …`, `show …`) são ignoradas; qualquer outr
 
 ## Permissões
 
-O plugin lê os documentos da pasta para achar as tarefas, e só escreve num documento para marcar ou adicionar uma tarefa. Também dá ao Textus AI as ferramentas abaixo. Funciona no computador, no iPhone e no iPad.
+O plugin lê os documentos da pasta para achar as tarefas, e só escreve num documento para marcar ou adicionar uma tarefa. Também dá ao Textus AI as ferramentas abaixo.
 
 ## Alterações
 

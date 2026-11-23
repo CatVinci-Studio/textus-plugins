@@ -42,7 +42,7 @@ Las líneas sobre el aspecto (`hide …`, `show …`) se pasan por alto; cualqui
 
 ## Permisos
 
-El plugin lee los documentos de la carpeta para encontrar sus tareas, y escribe en un documento solo para marcar una tarea o añadir una. También da a Textus AI las herramientas de abajo. Funciona en el escritorio y en iPhone y iPad.
+El plugin lee los documentos de la carpeta para encontrar sus tareas, y escribe en un documento solo para marcar una tarea o añadir una. También da a Textus AI las herramientas de abajo.
 
 ## Cambios
 

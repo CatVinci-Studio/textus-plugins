@@ -42,7 +42,7 @@ Les lignes sur l’apparence (`hide …`, `show …`) sont ignorées ; toute aut
 
 ## Permissions
 
-Le plugin lit les documents du dossier pour trouver leurs tâches, et n’écrit dans un document que pour cocher ou ajouter une tâche. Il donne aussi à Textus AI les outils ci-dessous. Il fonctionne sur ordinateur, iPhone et iPad.
+Le plugin lit les documents du dossier pour trouver leurs tâches, et n’écrit dans un document que pour cocher ou ajouter une tâche. Il donne aussi à Textus AI les outils ci-dessous.
 
 ## Changements
 

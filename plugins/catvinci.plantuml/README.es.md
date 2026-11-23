@@ -15,7 +15,7 @@ Escribe un bloque de código con el lenguaje `plantuml` y pon dentro texto Plant
 - **Este equipo** (por defecto): nada sale de él. Dibujar en tu equipo usa más memoria.
 - **Servidor de PlantUML**: el texto de cada diagrama se envía a plantuml.com, que lo dibuja. No usa memoria extra.
 
-El plugin pide acceso a la red solo para `www.plantuml.com`, y solo lo usa si eliges el servidor de PlantUML. Funciona en el escritorio y en iPhone y iPad.
+El plugin pide acceso a la red solo para `www.plantuml.com`, y solo lo usa si eliges el servidor de PlantUML.
 
 ## Ejemplo
 

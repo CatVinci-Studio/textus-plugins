@@ -42,7 +42,7 @@ Zeilen zum Aussehen (`hide …`, `show …`) werden übergangen; jede andere Zei
 
 ## Berechtigungen
 
-Das Plugin liest die Dokumente des Ordners, um ihre Aufgaben zu finden, und schreibt nur in ein Dokument, um eine Aufgabe abzuhaken oder hinzuzufügen. Außerdem gibt es Textus AI die unten aufgeführten Werkzeuge. Es läuft auf dem Desktop sowie auf iPhone und iPad.
+Das Plugin liest die Dokumente des Ordners, um ihre Aufgaben zu finden, und schreibt nur in ein Dokument, um eine Aufgabe abzuhaken oder hinzuzufügen. Außerdem gibt es Textus AI die unten aufgeführten Werkzeuge.
 
 ## Änderungen
 

@@ -15,7 +15,7 @@ Dessine des diagrammes UML et d’autres à partir de texte PlantUML dans un blo
 - **Cet ordinateur** (par défaut) : rien n’en sort. Dessiner sur votre ordinateur prend plus de mémoire.
 - **Serveur PlantUML** : le texte de chaque diagramme est envoyé à plantuml.com, qui le dessine. Pas de mémoire en plus.
 
-Le plugin demande l’accès au réseau pour `www.plantuml.com` seulement, et ne s’en sert que si vous choisissez le serveur PlantUML. Il fonctionne sur ordinateur, iPhone et iPad.
+Le plugin demande l’accès au réseau pour `www.plantuml.com` seulement, et ne s’en sert que si vous choisissez le serveur PlantUML.
 
 ## Exemple
 

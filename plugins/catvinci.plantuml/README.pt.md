@@ -15,7 +15,7 @@ Escreva um bloco de código com a linguagem `plantuml` e coloque nele texto Plan
 - **Este computador** (padrão): nada sai dele. Desenhar no seu computador usa mais memória.
 - **Servidor do PlantUML**: o texto de cada diagrama vai para plantuml.com, que o desenha. Não usa memória a mais.
 
-O plugin pede acesso à rede só para `www.plantuml.com`, e só o usa quando você escolhe o servidor do PlantUML. Funciona no computador, no iPhone e no iPad.
+O plugin pede acesso à rede só para `www.plantuml.com`, e só o usa quando você escolhe o servidor do PlantUML.
 
 ## Exemplo
 

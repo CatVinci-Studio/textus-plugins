@@ -15,7 +15,7 @@
 - **本機**（預設）：內容不會離開電腦。在本機畫圖會多佔一些記憶體。
 - **PlantUML 伺服器**：每張圖的文字會傳給 plantuml.com，由它來畫，不額外佔記憶體。
 
-外掛只要求連線到 `www.plantuml.com` 的網路權限，而且只在你選擇 PlantUML 伺服器時才使用。電腦、iPhone 和 iPad 上都能使用。
+外掛只要求連線到 `www.plantuml.com` 的網路權限，而且只在你選擇 PlantUML 伺服器時才使用。
 
 ## 範例
 
