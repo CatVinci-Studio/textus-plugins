@@ -23,7 +23,7 @@ O plugin lê e escreve ficheiros na pasta aberta para encontrar e criar as notas
 
 ## Alterações
 
-- **0.7.9** - Its page no longer says which devices it runs on: the store shows that. It names the Textus it needs, 1.4.3. Its page receives Textus's messages by the API's current name.
+- **0.7.9** - Its page no longer says which devices it runs on: the store shows that. It names the Textus it needs, 1.4.3.
 - **0.7.8** - Where the bar is too narrow for even the short month name (a phone's sidebar), the month goes on a row of its own above the buttons instead of losing its year. The calendar writes dates with Textus's own, so the package is smaller.
 - **0.7.7** - Weeks start as Textus's language has them, not the device's region, so they agree with the week numbers.
 - **0.7.6** - The page follows Textus's language by itself. Needs Textus 1.4.3.

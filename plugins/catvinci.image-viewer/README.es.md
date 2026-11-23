@@ -19,7 +19,7 @@ No pide ninguno. Solo lee el archivo que abres.
 
 ## Cambios
 
-- **0.2.6** - Its page no longer says which devices it runs on: the store shows that. Its page receives Textus's messages by the API's current name. After switching to another tab and back, a picture keeps where it was scrolled as well as its zoom.
+- **0.2.6** - Its page no longer says which devices it runs on: the store shows that. After switching to another tab and back, a picture keeps where it was scrolled as well as its zoom.
 - **0.2.5** - The page follows Textus's language by itself. Needs Textus 1.4.3.
 - **0.2.4** - A turned and zoomed picture now scrolls to every edge, and a sideways picture fits the window. Zoom and turn are kept when the panel moves, a fourth turn no longer spins back, and the bar fits a narrow panel.
 - **0.2.3** - A trackpad pinch zooms smoothly, in step with the gesture; with Textus 1.3.13 a pinch on a Mac zooms the picture, not the document behind it. Its bar keeps Textus's one order: what it shows, then find and zoom.

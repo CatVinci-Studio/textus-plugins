@@ -14,7 +14,7 @@ Precisa do Textus 1.3.12 ou mais recente. Pede uma única permissão: notificaç
 
 ## Alterações
 
-- **0.1.4** - Its page is in every language Textus speaks. It no longer says 25 and 5 minutes: both lengths are yours to set. Its page receives Textus's messages by the API's current name.
+- **0.1.4** - Its page is in every language Textus speaks. It no longer says 25 and 5 minutes: both lengths are yours to set.
 - **0.1.3** - Quick clicks no longer lose one; a new focus or break length shows on a timer not yet started; the clock grows and shrinks with the timer.
 - **0.1.2** - A click on the timer starts and pauses it again (it did nothing in 0.1.0 and 0.1.1).
 - **0.1.1** - Follows every theme and grows with the interface; needs Textus 1.3.12.
