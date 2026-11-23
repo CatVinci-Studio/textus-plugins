@@ -1,5 +1,7 @@
+import { deviceOf, type Device } from "./device";
 import {
   KEEP_DAYS,
+  MAX_FILE_MIB,
   PARALLEL,
   SyncError,
   type Config,
@@ -22,6 +24,7 @@ export const defaults: Config = {
   encrypt: false,
   keepDays: 90,
   parallel: 8,
+  maxFileMiB: 128,
 };
 // saveGap: a new connection's wait, in minutes, between a save and its
 // sync; Nutstore caps requests per account, so it starts at 3, and with
@@ -55,7 +58,10 @@ export function relativePath(value: string): boolean {
   );
 }
 
-export function normalizeConfig(input: Partial<Config>): Config {
+export function normalizeConfig(
+  input: Partial<Config>,
+  device: Pick<Device, "parallel" | "maxFileMiB"> = deviceOf(),
+): Config {
   const c = { ...defaults, ...input };
   if (!Object.hasOwn(providers, c.provider))
     throw new SyncError("invalidConfig");
@@ -120,9 +126,13 @@ export function normalizeConfig(input: Partial<Config>): Config {
   c.saveGap = Number(input.saveGap ?? spec.saveGap);
   if (!Number.isInteger(c.saveGap) || c.saveGap < 0 || c.saveGap > 60)
     throw new SyncError("invalidSaveGap");
-  c.parallel = Number(input.parallel ?? spec.parallel);
+  const parallel = Math.min(spec.parallel, device.parallel);
+  c.parallel = Number(input.parallel ?? parallel);
   if (!(PARALLEL as readonly number[]).includes(c.parallel))
-    c.parallel = spec.parallel;
+    c.parallel = parallel;
+  c.maxFileMiB = Number(input.maxFileMiB ?? device.maxFileMiB);
+  if (!(MAX_FILE_MIB as readonly number[]).includes(c.maxFileMiB))
+    c.maxFileMiB = device.maxFileMiB;
   return c;
 }
 

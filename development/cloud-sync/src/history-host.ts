@@ -1,6 +1,7 @@
 import { hash, parseManifest } from "./content";
 import { download } from "./engine";
 import { emptyHistory, parseHistory, retiredAt } from "./history";
+import { beside } from "./planner";
 import {
   HEAD,
   HISTORY,
@@ -27,6 +28,8 @@ const LABELS: Record<string, string> = {
   macos: "Mac",
   windows: "Windows",
   linux: "Linux",
+  ios: "iOS",
+  android: "Android",
 };
 /** "Mac 3f2a": the platform, and enough of a random id to tell two apart. */
 export async function deviceName(ctx: Textus.PluginContext, api: Textus.Api) {
@@ -36,13 +39,6 @@ export async function deviceName(ctx: Textus.PluginContext, api: Textus.Api) {
   await ctx.storage.global.set("device", name);
   return name;
 }
-
-/** "Note (3f2a9c1b).md" beside "Note.md". */
-const beside = (path: string, tag: string) => {
-  const dot = path.lastIndexOf(".");
-  const cut = dot > path.lastIndexOf("/") + 1 ? dot : path.length;
-  return `${path.slice(0, cut)} (${tag.slice(0, 8)})${path.slice(cut)}`;
-};
 
 /** The version in the file's place when the file there is the synced one;
  *  else (edits not yet synced, an open tab) beside it, as a conflict copy is. */

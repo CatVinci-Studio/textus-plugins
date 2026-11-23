@@ -240,7 +240,9 @@
       "deletionsKept": "Nothing was deleted from the cloud. Sync now asks again.",
       "folderEmpty": "No files were found in this folder, though {0} were synced from it. Sync stopped so that nothing is deleted from the cloud: check that the folder can be read.",
       "doneNotTrashed": "not moved to the Trash {0}",
-      "notTrashed": "Deleted on another device, but this device couldn't move them to the Trash: left in place, tried again at the next sync"
+      "notTrashed": "Deleted on another device, but this device couldn't move them to the Trash: left in place, tried again at the next sync",
+      "pausedAway": "Paused while Textus is in the background; it goes on when you come back.",
+      "contentFolder": "This folder was opened without access to all files, so it can't be synced. Allow Textus to access all files, then open the folder again."
     },
     "zh": {
       "name": "云同步",
@@ -409,7 +411,9 @@
       "deletionsKept": "云端没有删除任何文件。点「立即同步」会再问一次。",
       "folderEmpty": "这个文件夹里一个文件都没找到，但之前从这里同步过 {0} 个。为了不删掉云端的文件，同步已停止：请确认这个文件夹能读取。",
       "doneNotTrashed": "{0} 个没能移到废纸篓",
-      "notTrashed": "别的设备上已删除，但这台设备没能把它们移到废纸篓：先留在原处，下次同步再试"
+      "notTrashed": "别的设备上已删除，但这台设备没能把它们移到废纸篓：先留在原处，下次同步再试",
+      "pausedAway": "Textus 在后台时暂停同步，回来后接着同步。",
+      "contentFolder": "这个文件夹是在没有“访问所有文件”权限时打开的，无法同步。请允许 Textus 访问所有文件，再重新打开这个文件夹。"
     },
     "zh-Hant": {
       "name": "雲端同步",
@@ -578,7 +582,9 @@
       "deletionsKept": "雲端沒有刪除任何檔案。按「立即同步」會再詢問一次。",
       "folderEmpty": "這個資料夾裡找不到任何檔案，但之前從這裡同步過 {0} 個。為了不刪掉雲端的檔案，同步已停止：請確認這個資料夾可以讀取。",
       "doneNotTrashed": "{0} 個無法移到垃圾桶",
-      "notTrashed": "已在其他裝置上刪除，但這台裝置無法將它們移到垃圾桶：先留在原處，下次同步時再試"
+      "notTrashed": "已在其他裝置上刪除，但這台裝置無法將它們移到垃圾桶：先留在原處，下次同步時再試",
+      "pausedAway": "Textus 在背景時暫停同步，回來後接著同步。",
+      "contentFolder": "這個資料夾是在沒有「存取所有檔案」權限時開啟的，無法同步。請允許 Textus 存取所有檔案，再重新開啟這個資料夾。"
     },
     "ja": {
       "name": "クラウド同期",
@@ -747,7 +753,9 @@
       "deletionsKept": "クラウドからは何も削除していません。「今すぐ同期」でもう一度確認します。",
       "folderEmpty": "このフォルダにファイルが見つかりませんが、以前ここから {0} 件を同期しています。クラウドのファイルを削除しないよう同期を止めました。フォルダを読み取れるか確認してください。",
       "doneNotTrashed": "ゴミ箱に移せず {0} 件",
-      "notTrashed": "別の端末で削除されましたが、この端末ではゴミ箱に移せませんでした。そのまま残し、次の同期でもう一度試します"
+      "notTrashed": "別の端末で削除されましたが、この端末ではゴミ箱に移せませんでした。そのまま残し、次の同期でもう一度試します",
+      "pausedAway": "Textus がバックグラウンドにある間は同期を止めています。戻ると続きから同期します。",
+      "contentFolder": "このフォルダは「すべてのファイルへのアクセス」なしで開かれたため、同期できません。Textus にすべてのファイルへのアクセスを許可してから、フォルダを開き直してください。"
     },
     "ko": {
       "name": "클라우드 동기화",
@@ -916,7 +924,9 @@
       "deletionsKept": "클라우드에서 아무것도 삭제하지 않았습니다. ‘지금 동기화’를 누르면 다시 묻습니다.",
       "folderEmpty": "이 폴더에서 파일을 찾지 못했지만, 전에는 이곳에서 {0}개를 동기화했습니다. 클라우드의 파일이 삭제되지 않도록 동기화를 멈췄습니다. 폴더를 읽을 수 있는지 확인하세요.",
       "doneNotTrashed": "휴지통으로 옮기지 못함 {0}개",
-      "notTrashed": "다른 기기에서 삭제되었지만 이 기기에서 휴지통으로 옮기지 못했습니다. 그대로 두고 다음 동기화 때 다시 시도합니다"
+      "notTrashed": "다른 기기에서 삭제되었지만 이 기기에서 휴지통으로 옮기지 못했습니다. 그대로 두고 다음 동기화 때 다시 시도합니다",
+      "pausedAway": "Textus가 백그라운드에 있는 동안 동기화를 멈췄습니다. 돌아오면 이어서 동기화합니다.",
+      "contentFolder": "이 폴더는 '모든 파일에 대한 접근' 권한 없이 열려 동기화할 수 없습니다. Textus에 모든 파일 접근을 허용한 뒤 폴더를 다시 여세요."
     },
     "es": {
       "name": "Sincronización en la nube",
@@ -1085,7 +1095,9 @@
       "deletionsKept": "No se eliminó nada de la nube. Sincronizar ahora vuelve a preguntar.",
       "folderEmpty": "No se encontró ningún archivo en esta carpeta, aunque se sincronizaron {0} desde ella. La sincronización se detuvo para no eliminar nada de la nube: comprueba que la carpeta se puede leer.",
       "doneNotTrashed": "sin mover a la Papelera {0}",
-      "notTrashed": "Eliminados en otro dispositivo, pero este no pudo moverlos a la Papelera: se quedan donde están y se vuelve a intentar en la próxima sincronización"
+      "notTrashed": "Eliminados en otro dispositivo, pero este no pudo moverlos a la Papelera: se quedan donde están y se vuelve a intentar en la próxima sincronización",
+      "pausedAway": "En pausa mientras Textus está en segundo plano; sigue cuando vuelvas.",
+      "contentFolder": "Esta carpeta se abrió sin acceso a todos los archivos, así que no se puede sincronizar. Permite que Textus acceda a todos los archivos y vuelve a abrir la carpeta."
     },
     "fr": {
       "name": "Synchro cloud",
@@ -1254,7 +1266,9 @@
       "deletionsKept": "Rien n’a été supprimé du cloud. Synchroniser maintenant reposera la question.",
       "folderEmpty": "Aucun fichier trouvé dans ce dossier, alors que {0} en ont été synchronisés. La synchronisation s’est arrêtée pour ne rien supprimer du cloud : vérifiez que le dossier est lisible.",
       "doneNotTrashed": "non placés dans la Corbeille {0}",
-      "notTrashed": "Supprimés sur un autre appareil, mais cet appareil n’a pas pu les placer dans la Corbeille : laissés en place, nouvel essai à la prochaine synchronisation"
+      "notTrashed": "Supprimés sur un autre appareil, mais cet appareil n’a pas pu les placer dans la Corbeille : laissés en place, nouvel essai à la prochaine synchronisation",
+      "pausedAway": "En pause tant que Textus est en arrière-plan ; la synchro reprend à votre retour.",
+      "contentFolder": "Ce dossier a été ouvert sans l’accès à tous les fichiers : il ne peut pas être synchronisé. Autorisez Textus à accéder à tous les fichiers, puis rouvrez le dossier."
     },
     "de": {
       "name": "Cloud-Sync",
@@ -1423,7 +1437,9 @@
       "deletionsKept": "In der Cloud wurde nichts gelöscht. Jetzt synchronisieren fragt erneut.",
       "folderEmpty": "In diesem Ordner wurden keine Dateien gefunden, obwohl {0} von hier synchronisiert wurden. Die Synchronisierung wurde angehalten, damit nichts aus der Cloud gelöscht wird: Prüfe, ob sich der Ordner lesen lässt.",
       "doneNotTrashed": "nicht in den Papierkorb gelegt {0}",
-      "notTrashed": "Auf einem anderen Gerät gelöscht, aber dieses Gerät konnte sie nicht in den Papierkorb legen: Sie bleiben, wo sie sind, und die nächste Synchronisierung versucht es erneut"
+      "notTrashed": "Auf einem anderen Gerät gelöscht, aber dieses Gerät konnte sie nicht in den Papierkorb legen: Sie bleiben, wo sie sind, und die nächste Synchronisierung versucht es erneut",
+      "pausedAway": "Pausiert, solange Textus im Hintergrund ist; geht weiter, sobald du zurückkommst.",
+      "contentFolder": "Dieser Ordner wurde ohne Zugriff auf alle Dateien geöffnet und kann daher nicht synchronisiert werden. Erlaube Textus den Zugriff auf alle Dateien und öffne den Ordner erneut."
     },
     "ru": {
       "name": "Облачная синхронизация",
@@ -1592,7 +1608,9 @@
       "deletionsKept": "Из облака ничего не удалено. «Синхронизировать» спросит снова.",
       "folderEmpty": "В этой папке не найдено ни одного файла, хотя раньше из неё синхронизировано файлов: {0}. Синхронизация остановлена, чтобы ничего не удалить из облака: проверьте, что папка доступна для чтения.",
       "doneNotTrashed": "не перемещено в корзину {0}",
-      "notTrashed": "Удалены на другом устройстве, но это устройство не смогло переместить их в корзину: оставлены на месте, следующая синхронизация попробует снова"
+      "notTrashed": "Удалены на другом устройстве, но это устройство не смогло переместить их в корзину: оставлены на месте, следующая синхронизация попробует снова",
+      "pausedAway": "Приостановлено, пока Textus в фоне; продолжится, когда вы вернётесь.",
+      "contentFolder": "Эта папка открыта без доступа ко всем файлам, поэтому её нельзя синхронизировать. Разрешите Textus доступ ко всем файлам и откройте папку снова."
     },
     "pt": {
       "name": "Sincronização na nuvem",
@@ -1761,7 +1779,9 @@
       "deletionsKept": "Nada foi excluído da nuvem. Sincronizar agora pergunta de novo.",
       "folderEmpty": "Nenhum arquivo foi encontrado nesta pasta, embora {0} tenham sido sincronizados a partir dela. A sincronização parou para não excluir nada da nuvem: verifique se a pasta pode ser lida.",
       "doneNotTrashed": "não movidos para a Lixeira {0}",
-      "notTrashed": "Excluídos em outro dispositivo, mas este dispositivo não conseguiu movê-los para a Lixeira: ficam onde estão e a próxima sincronização tenta de novo"
+      "notTrashed": "Excluídos em outro dispositivo, mas este dispositivo não conseguiu movê-los para a Lixeira: ficam onde estão e a próxima sincronização tenta de novo",
+      "pausedAway": "Em pausa enquanto o Textus está em segundo plano; continua quando você voltar.",
+      "contentFolder": "Esta pasta foi aberta sem acesso a todos os arquivos, por isso não pode ser sincronizada. Permita que o Textus acesse todos os arquivos e abra a pasta de novo."
     }
   },
   "repository": "https://github.com/CatVinci-Studio/textus-plugins"

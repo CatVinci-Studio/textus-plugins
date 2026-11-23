@@ -120,3 +120,77 @@ export const keep = (days: KeepDays, chosen = false): KeepChoice => ({
   days,
   chosen,
 });
+
+/** Textus's files over a folder in memory, `files` by whole path, each
+ *  listed with its size and a time that changes with its content; `trash`
+ *  as `platform` has it. */
+export function memoryFolder(
+  root: string,
+  files: Map<string, Uint8Array>,
+  platform = "macos",
+) {
+  const under = (dir: string) =>
+    [...files.keys()].filter((p) => p.startsWith(`${dir}/`));
+  const time = (p: string) =>
+    files.get(p)!.reduce((h, b) => (h * 31 + b) | 0, 7) >>> 0;
+  const api = {
+    env: { platform },
+    layout: { tabs: async () => [] },
+    files: {
+      root: async () => root,
+      list: async (dir: string) => {
+        const names = new Map<string, boolean>();
+        for (const p of under(dir)) {
+          const [name, ...rest] = p.slice(dir.length + 1).split("/");
+          names.set(name, rest.length > 0 || !!names.get(name));
+        }
+        return [...names].map(([name, isDir]) => ({
+          name,
+          isDir,
+          size: isDir ? 0 : files.get(`${dir}/${name}`)!.length,
+          modifiedMs: isDir ? 0 : time(`${dir}/${name}`),
+        }));
+      },
+      stat: async (p: string) =>
+        files.has(p)
+          ? { isDir: false, size: files.get(p)!.length, modifiedMs: time(p) }
+          : under(p).length
+            ? { isDir: true, size: 0, modifiedMs: 1 }
+            : null,
+      read: async (p: string) => files.get(p)!.slice(),
+      create: async (p: string, t: string) => {
+        if (files.has(p)) throw Error("exists");
+        files.set(p, bytes(t));
+      },
+      write: async (p: string, b: Uint8Array) => {
+        files.set(p, b.slice());
+      },
+      process: async (p: string, fn: (t: string) => string) => {
+        files.set(p, bytes(fn(text(files.get(p))!)));
+      },
+      trash: async (p: string) => {
+        if (platform === "android")
+          throw Error(`${p} can't be moved to the Trash here. [noTrash]`);
+        files.delete(p);
+      },
+      rename: async (from: string, to: string) => {
+        if (files.has(to)) throw Error("exists");
+        files.set(to, files.get(from)!);
+        files.delete(from);
+      },
+    },
+  };
+  return api as typeof api & Textus.Api;
+}
+
+/** Plugin storage in memory. */
+export function memoryStorage() {
+  const saved = new Map<string, unknown>();
+  return {
+    saved,
+    get: async (key: string) => structuredClone(saved.get(key)),
+    set: async (key: string, value: unknown) => {
+      saved.set(key, structuredClone(value));
+    },
+  };
+}

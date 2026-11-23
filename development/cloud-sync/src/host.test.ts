@@ -16,7 +16,10 @@ const manifest = JSON.parse(
 );
 const disposable = () => ({ dispose() {} });
 
-afterEach(() => deactivate());
+afterEach(() => {
+  deactivate();
+  vi.useRealTimers();
+});
 
 it("shows the whole page in the tab and Settings, its status in the sidebar", async () => {
   const pages = new Map<string, Resolve>();
@@ -90,8 +93,19 @@ it("shows the whole page in the tab and Settings, its status in the sidebar", as
   );
 });
 
-/** The plugin running over a folder of `names` connected to an S3 fake. */
-async function connected(names: string[]) {
+/** The plugin running over a folder of `names` connected to an S3 fake,
+ *  on `platform`; `hold` keeps requests waiting until released. */
+async function connected(
+  names: string[],
+  { platform = "macos", automatic = false } = {},
+) {
+  let held: Promise<void> | null = null;
+  const requests: string[] = [];
+  const listeners: Record<string, (value: never) => void> = {};
+  const on = (name: string) => (fn: (value: never) => void) => {
+    listeners[name] = fn;
+    return disposable();
+  };
   const objects = new Map<string, Uint8Array>();
   const reply = (status: number, value: Uint8Array = new Uint8Array()) => ({
     status,
@@ -107,6 +121,8 @@ async function connected(names: string[]) {
   ) => {
     const key = new URL(url).pathname,
       method = init.method ?? "GET";
+    requests.push(`${method} ${key}`);
+    await held;
     if (method === "PUT") {
       if (init.headers?.["if-none-match"] === "*" && objects.has(key))
         return reply(412);
@@ -124,11 +140,12 @@ async function connected(names: string[]) {
     names.map((n) => [`/notes/${n}`, new TextEncoder().encode(n)]),
   );
   const commands = new Map<string, () => Promise<unknown>>();
-  const shown = { tooltip: "" };
+  const shown = { tooltip: "", texts: [] as string[] };
   const confirm = vi.fn(async (_text: string) => false);
   (globalThis as unknown as { textus: unknown }).textus = {
     l10n: { t: (key: string, ...args: unknown[]) => [key, ...args].join(" ") },
-    env: { language: "en", platform: "macos" },
+    env: { language: "en", platform },
+    app: { state: "active", onDidChangeState: on("state") },
     net: { fetch },
     layout: { tabs: async () => [] },
     files: {
@@ -151,7 +168,7 @@ async function connected(names: string[]) {
       trash: async (p: string) => {
         files.delete(p);
       },
-      onDidSave: disposable,
+      onDidSave: on("save"),
       onDidDelete: disposable,
       onDidRename: disposable,
       onDidChangeRoot: disposable,
@@ -164,12 +181,14 @@ async function connected(names: string[]) {
     },
     ui: {
       confirm,
-      statusItem: (_id: string, item: { tooltip: string }) => {
+      statusItem: (_id: string, item: { text: string; tooltip: string }) => {
         shown.tooltip = item.tooltip;
+        shown.texts.push(item.text);
         return {
           ...disposable(),
-          update: (next: { tooltip: string }) => {
+          update: (next: { text: string; tooltip: string }) => {
             shown.tooltip = next.tooltip;
+            shown.texts.push(next.text);
           },
         };
       },
@@ -204,14 +223,25 @@ async function connected(names: string[]) {
     endpoint: "https://s3.example",
     bucket: "bucket",
     prefix: "notes",
+    automatic,
   });
-  const settings = new Settings(ctx);
+  const settings = new Settings(ctx, platform);
   await settings.save("/notes", config, {
     account: "TEST_ACCESS_KEY",
     secret: "test-only-secret",
   });
   await activate(ctx);
   return {
+    requests,
+    listeners,
+    hold: () => {
+      let release = () => {};
+      held = new Promise((done) => (release = done));
+      return () => {
+        held = null;
+        release();
+      };
+    },
     objects,
     files,
     global,
@@ -254,4 +284,56 @@ it("takes back the lock this device left when it was stopped mid-sync", async ()
   f.files.set("/notes/a.md", new TextEncoder().encode("edited"));
   expect(await f.sync()).toBeNull();
   expect(f.objects.has(LOCK_AT)).toBe(false);
+});
+
+it("on a phone, syncs as the folder opens and when Textus comes back, never in the background", async () => {
+  vi.useFakeTimers();
+  const f = await connected(["a.md"], { platform: "ios", automatic: true });
+  const settled = async (before?: Uint8Array) => {
+    await vi.waitFor(() => {
+      expect(f.objects.get(HEAD_AT)).not.toEqual(before);
+      expect(f.objects.has(LOCK_AT)).toBe(false);
+    });
+    await vi.advanceTimersByTimeAsync(100);
+  };
+  await settled();
+  const head = f.objects.get(HEAD_AT);
+  // A save as Textus leaves (autosave): nothing sent while away.
+  f.listeners.state("background" as never);
+  f.files.set("/notes/a.md", new TextEncoder().encode("edited"));
+  f.listeners.save({ path: "/notes/a.md" } as never);
+  const syncs = () => f.shown.texts.filter((t) => t === "statusSyncing").length;
+  const before = syncs();
+  await vi.advanceTimersByTimeAsync(10_000);
+  expect(syncs()).toBe(before);
+  // Back within two minutes: only the save's own sync, seconds later.
+  f.listeners.state("active" as never);
+  await vi.advanceTimersByTimeAsync(10);
+  expect(syncs()).toBe(before);
+  await vi.advanceTimersByTimeAsync(6_000);
+  await settled(head);
+  // Two minutes after it: with no save to sync.
+  const second = f.objects.get(HEAD_AT);
+  f.listeners.state("background" as never);
+  f.files.set("/notes/a.md", new TextEncoder().encode("edited again"));
+  await vi.advanceTimersByTimeAsync(2 * 60_000);
+  f.listeners.state("active" as never);
+  await vi.waitFor(() => expect(f.objects.get(HEAD_AT)).not.toEqual(second));
+});
+it("on a phone, stops a sync as Textus leaves and goes on with it, unasked, when it is back", async () => {
+  const f = await connected(["a.md"], { platform: "android", automatic: true });
+  const release = f.hold();
+  await vi.waitFor(() => expect(f.requests.length).toBeGreaterThan(0));
+  f.listeners.state("background" as never);
+  release();
+  await vi.waitFor(() => expect(f.shown.tooltip).toBe("pausedAway"));
+  expect(f.objects.has(HEAD_AT)).toBe(false);
+  f.listeners.state("active" as never);
+  await vi.waitFor(() => expect(f.objects.has(HEAD_AT)).toBe(true));
+});
+it("on a computer, leaves when it syncs to the pacer, as before", async () => {
+  const f = await connected(["a.md"], { automatic: true });
+  expect(f.listeners.state).toBeUndefined();
+  await new Promise((done) => setTimeout(done, 50));
+  expect(f.requests).toEqual([]);
 });

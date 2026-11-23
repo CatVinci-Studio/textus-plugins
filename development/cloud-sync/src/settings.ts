@@ -1,4 +1,5 @@
 import { defaults, identity, normalizeConfig } from "./config";
+import { deviceOf, folderKey } from "./device";
 import { hash } from "./content";
 import { validatePassword } from "./encryption";
 import { scanKey } from "./scan-cache";
@@ -22,6 +23,7 @@ const OPTIONS = [
   "gitignore",
   "obsidian",
   "parallel",
+  "maxFileMiB",
 ] as const;
 
 /** An account shown, not given away: its start and dots. */
@@ -29,9 +31,16 @@ export const masked = (account: string) =>
   account.length > 8 ? `${account.slice(0, 4)}••••` : "••••";
 
 export class Settings {
-  constructor(private ctx: Textus.PluginContext) {}
+  readonly device;
+  constructor(
+    private ctx: Textus.PluginContext,
+    private platform?: string,
+  ) {
+    this.device = deviceOf(platform);
+  }
+  private folder = (root: string) => folderKey(root, this.platform);
   private async scope(root: string) {
-    return hash(new TextEncoder().encode(root));
+    return hash(new TextEncoder().encode(this.folder(root)));
   }
   async load(root: string): Promise<Config> {
     const raw = await this.ctx.storage.global.get(
@@ -40,10 +49,13 @@ export class Settings {
     if (!raw) return { ...defaults };
     // Saved before encryption was a choice: it was always on.
     const saved = raw as Partial<Config>;
-    return normalizeConfig({ ...saved, encrypt: saved.encrypt ?? true });
+    return normalizeConfig(
+      { ...saved, encrypt: saved.encrypt ?? true },
+      this.device,
+    );
   }
   private async secretKey(root: string, config: Config) {
-    return `connection:${await hash(new TextEncoder().encode(root + identity(config)))}`;
+    return `connection:${await hash(new TextEncoder().encode(this.folder(root) + identity(config)))}`;
   }
   async credentials(root: string, config: Config): Promise<SavedCredentials> {
     const saved = await this.ctx.secrets.get(
@@ -70,7 +82,7 @@ export class Settings {
     input: Partial<Config>,
     incoming: ConnectionInput,
   ): Promise<Config> {
-    const config = normalizeConfig(input);
+    const config = normalizeConfig(input, this.device);
     // Only a keep picked on the page is a new choice; otherwise the one
     // known here stays (the page may show one from before a sync).
     const before = await this.load(root).catch(() => null);
@@ -130,7 +142,10 @@ export class Settings {
     const picked = Object.fromEntries(
       OPTIONS.filter((k) => k in options).map((k) => [k, options[k]]),
     );
-    const next = normalizeConfig({ ...(await this.load(root)), ...picked });
+    const next = normalizeConfig(
+      { ...(await this.load(root)), ...picked },
+      this.device,
+    );
     // A keep picked here is this device's to publish (keepPending).
     if ("keepDays" in options) next.keepPending = true;
     await this.ctx.storage.global.set(`config:${await this.scope(root)}`, next);
@@ -142,7 +157,7 @@ export class Settings {
     const config = await this.load(root);
     await this.ctx.secrets.delete(await this.secretKey(root, config));
     await this.ctx.storage.global.set(`config:${await this.scope(root)}`, null);
-    await this.ctx.storage.global.set(await scanKey(root), null);
+    await this.ctx.storage.global.set(await scanKey(this.folder(root)), null);
   }
   /** The folder's keep setting, as a sync that carried `carried` left it,
    *  taken as this one's; false when one was picked meanwhile (it goes out
@@ -161,6 +176,6 @@ export class Settings {
   }
   async baseKey(root: string, config: Config) {
     const { account } = await this.credentials(root, config);
-    return `encrypted-base:${await hash(new TextEncoder().encode(root + identity(config) + "\n" + account))}`;
+    return `encrypted-base:${await hash(new TextEncoder().encode(this.folder(root) + identity(config) + "\n" + account))}`;
   }
 }

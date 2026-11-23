@@ -85,3 +85,9 @@ export function conflictPath(path: string, hash: string): string {
   const end = dot > safe.lastIndexOf("/") + 1 ? dot : safe.length;
   return `Sync conflicts/${safe.slice(0, end)} (${hash.slice(0, 8)})${safe.slice(end)}`;
 }
+/** "Note (3f2a9c1b).md" beside "Note.md". */
+export function beside(path: string, tag: string) {
+  const dot = path.lastIndexOf(".");
+  const cut = dot > path.lastIndexOf("/") + 1 ? dot : path.length;
+  return `${path.slice(0, cut)} (${tag.slice(0, 8)})${path.slice(cut)}`;
+}

@@ -17,6 +17,7 @@ export class Pacer {
   private since: number | null = null;
   private last = -Infinity;
   private pace: Pace | null = null;
+  private paused = false;
   constructor(
     private run: () => void,
     private busy: () => boolean,
@@ -43,9 +44,15 @@ export class Pacer {
   stop() {
     this.configure(null);
   }
+  /** Held while Textus is in the background: saves made meanwhile wait
+   *  for it to come back. */
+  pause(paused: boolean) {
+    this.paused = paused;
+    this.arm();
+  }
   private arm() {
     clearTimeout(this.timer);
-    if (!this.pace) return;
+    if (!this.pace || this.paused) return;
     const { settle, gap, every } = this.pace;
     const now = this.now();
     const at =

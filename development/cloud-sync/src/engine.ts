@@ -130,6 +130,7 @@ async function unchanged(
     const raw = await store.get(HEAD);
     const remote = raw && parseManifest(raw);
     if (!remote || remote.revision !== base.revision) return null;
+    local.limitRemote?.(remote.files);
     // The same revision, but what this device takes of it changed (a folder
     // no longer left out): its files there are fetched in full.
     const theirs = Object.entries(remote.files).filter(([p]) => local.wants(p));
@@ -186,6 +187,7 @@ export async function synchronize(options: Options): Promise<Result> {
           updatedAt: "",
           files: Object.create(null),
         };
+    local.limitRemote?.(remote.files);
     // A previously joined folder must never silently recreate a missing repository.
     if (
       !raw &&

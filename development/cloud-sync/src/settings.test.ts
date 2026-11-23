@@ -3,7 +3,7 @@ import { normalizeConfig } from "./config";
 import { scanKey } from "./scan-cache";
 import { Settings, masked } from "./settings";
 
-function fixture() {
+function fixture(platform?: string) {
   const global = new Map<string, unknown>(),
     secrets = new Map<string, string>();
   const ctx = {
@@ -28,7 +28,7 @@ function fixture() {
   return {
     global,
     secrets,
-    settings: new Settings(ctx as unknown as Textus.PluginContext),
+    settings: new Settings(ctx as unknown as Textus.PluginContext, platform),
   };
 }
 const config = normalizeConfig({
@@ -278,4 +278,54 @@ it("keeps a history choice picked while a sync ran over what that sync found", a
     true,
   );
   expect((await f.settings.load("/notes")).keepPending).toBe(false);
+});
+
+const container = (id: string) =>
+  `/private/var/mobile/Containers/Data/Application/${id}/Documents/Notes`;
+it("finds an iPhone folder's connection, keys and sync state after an app update moves it", async () => {
+  const f = fixture("ios");
+  const before = container("87908D58-57AB-434B-9CF1-80D9BDD2224A");
+  const after = container("C4147BE8-97E4-4D69-862F-188ABE7EF348");
+  await f.settings.save(before, config, {
+    ...encryption,
+    account: "alice@example.com",
+    secret: "test-secret",
+  });
+  expect(await f.settings.load(after)).toEqual(await f.settings.load(before));
+  expect((await f.settings.credentials(after, config)).secret).toBe(
+    "test-secret",
+  );
+  expect(await f.settings.baseKey(after, config)).toBe(
+    await f.settings.baseKey(before, config),
+  );
+  // On a computer a path is its own key, whatever it looks like.
+  const mac = fixture("macos");
+  await mac.settings.save(before, config, {
+    ...encryption,
+    account: "alice@example.com",
+    secret: "test-secret",
+  });
+  await expect(mac.settings.credentials(after, config)).rejects.toThrow(
+    "credentialsRequired",
+  );
+});
+it("starts a phone's connection with fewer transfers at once and a smaller largest file", async () => {
+  const typed = {
+    provider: "s3" as const,
+    endpoint: "https://s3.example",
+    bucket: "notes",
+  };
+  const keys = { account: "alice@example.com", secret: "test-secret" };
+  const phone = fixture("android");
+  expect(await phone.settings.save("/n", typed, keys)).toMatchObject({
+    parallel: 2,
+    maxFileMiB: 32,
+  });
+  expect(
+    await phone.settings.saveOptions("/n", { maxFileMiB: 128, parallel: 8 }),
+  ).toMatchObject({ parallel: 8, maxFileMiB: 128 });
+  expect(await fixture().settings.save("/n", typed, keys)).toMatchObject({
+    parallel: 8,
+    maxFileMiB: 128,
+  });
 });

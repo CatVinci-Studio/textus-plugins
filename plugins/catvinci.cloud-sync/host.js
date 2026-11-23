@@ -57,6 +57,7 @@ function checkAbort(signal) {
   if (signal?.aborted) throw new SyncError("cancelled");
 }
 var PARALLEL = [1, 2, 4, 8, 16, 32];
+var MAX_FILE_MIB = [8, 16, 32, 64, 128];
 
 // development/cloud-sync/src/pending.ts
 var KEPT = 2e4;
@@ -125,6 +126,27 @@ var pendingIn = (storage, key) => ({
   save: (pending) => storage.set(`pending:${key}`, pending)
 });
 
+// development/cloud-sync/src/device.ts
+var DESKTOP = { phone: false, parallel: 32, maxFileMiB: 128 };
+var DEVICES = {
+  ios: {
+    phone: true,
+    parallel: 2,
+    maxFileMiB: 32,
+    // The app's Documents, on a device and in the simulator.
+    container: [
+      /^.*\/Containers\/Data\/Application\/[0-9a-f-]{36}\/Documents(?=\/|$)/i,
+      "documents:"
+    ]
+  },
+  android: { phone: true, parallel: 2, maxFileMiB: 32, ownTrash: "Sync trash" }
+};
+var deviceOf = (platform) => platform && Object.hasOwn(DEVICES, platform) && DEVICES[platform] || DESKTOP;
+function folderKey(root, platform) {
+  const container = deviceOf(platform).container;
+  return container ? root.replace(container[0], container[1]) : root;
+}
+
 // development/cloud-sync/src/config.ts
 var defaults = {
   provider: "s3",
@@ -141,7 +163,8 @@ var defaults = {
   obsidian: false,
   encrypt: false,
   keepDays: 90,
-  parallel: 8
+  parallel: 8,
+  maxFileMiB: 128
 };
 var providers = {
   s3: { transport: "s3", endpoint: "", saveGap: 0, parallel: 8 },
@@ -158,7 +181,7 @@ function relativePath(value) {
     (part) => part !== "" && part !== "." && part !== ".." && !/[. ]$/.test(part) && !/^(con|prn|aux|nul|com[1-9]|lpt[1-9])(?:\.|$)/i.test(part)
   );
 }
-function normalizeConfig(input) {
+function normalizeConfig(input, device = deviceOf()) {
   const c = { ...defaults, ...input };
   if (!Object.hasOwn(providers, c.provider))
     throw new SyncError("invalidConfig");
@@ -210,9 +233,13 @@ function normalizeConfig(input) {
   c.saveGap = Number(input.saveGap ?? spec.saveGap);
   if (!Number.isInteger(c.saveGap) || c.saveGap < 0 || c.saveGap > 60)
     throw new SyncError("invalidSaveGap");
-  c.parallel = Number(input.parallel ?? spec.parallel);
+  const parallel = Math.min(spec.parallel, device.parallel);
+  c.parallel = Number(input.parallel ?? parallel);
   if (!PARALLEL.includes(c.parallel))
-    c.parallel = spec.parallel;
+    c.parallel = parallel;
+  c.maxFileMiB = Number(input.maxFileMiB ?? device.maxFileMiB);
+  if (!MAX_FILE_MIB.includes(c.maxFileMiB))
+    c.maxFileMiB = device.maxFileMiB;
   return c;
 }
 function withConnection(saved, connection) {
@@ -510,6 +537,11 @@ function conflictPath(path, hash3) {
   const dot = safe.lastIndexOf(".");
   const end = dot > safe.lastIndexOf("/") + 1 ? dot : safe.length;
   return `Sync conflicts/${safe.slice(0, end)} (${hash3.slice(0, 8)})${safe.slice(end)}`;
+}
+function beside(path, tag) {
+  const dot = path.lastIndexOf(".");
+  const cut = dot > path.lastIndexOf("/") + 1 ? dot : path.length;
+  return `${path.slice(0, cut)} (${tag.slice(0, 8)})${path.slice(cut)}`;
 }
 
 // development/cloud-sync/src/lock.ts
@@ -898,6 +930,7 @@ async function unchanged(options, files) {
     const raw = await store.get(HEAD);
     const remote = raw && parseManifest(raw);
     if (!remote || remote.revision !== base.revision) return null;
+    local.limitRemote?.(remote.files);
     const theirs = Object.entries(remote.files).filter(([p]) => local.wants(p));
     if (theirs.length !== ours.length || theirs.some(([path, entry]) => base.files[path] !== entry.hash))
       return null;
@@ -945,6 +978,7 @@ async function synchronize(options) {
       updatedAt: "",
       files: /* @__PURE__ */ Object.create(null)
     };
+    local.limitRemote?.(remote.files);
     if (!raw && (Object.keys(options.base.files).length || Object.keys(options.base.parked ?? {}).length))
       throw new SyncError("remoteMissing");
     const now = new Date(store.now?.() ?? Date.now());
@@ -2227,25 +2261,42 @@ var ScanCache = class {
 // development/cloud-sync/src/local.ts
 var described = /* @__PURE__ */ new Map();
 var SETTLED_MS = 2e3;
+var NO_TRASH = /\[noTrash\]$/;
 var Workspace = class {
   constructor(api, root, storage, signal, scope = scopeOf({
     exclude: "",
     gitignore: false,
     obsidian: false
-  })) {
+  }), limit = MAX_FILE_SIZE) {
     this.api = api;
     this.root = root;
     this.signal = signal;
     this.scope = scope;
+    this.limit = limit;
     __publicField(this, "reservations");
     __publicField(this, "cache");
     /** Paths this run trashed or renamed, so their file events start no new sync. */
     __publicField(this, "touched", /* @__PURE__ */ new Set());
-    this.reservations = new Reservations(storage, root);
-    this.cache = new ScanCache(storage, root);
+    /** Files over `limit` here or in the cloud: left as they are on both. */
+    __publicField(this, "large", /* @__PURE__ */ new Set());
+    __publicField(this, "ownTrash");
+    const platform = api.env?.platform;
+    const folder = folderKey(root, platform);
+    this.reservations = new Reservations(storage, folder);
+    this.cache = new ScanCache(storage, folder);
+    this.ownTrash = deviceOf(platform).ownTrash;
+  }
+  inOwnTrash(path) {
+    const trash = this.ownTrash;
+    return !!trash && (path === trash || path.startsWith(`${trash}/`));
   }
   wants(path) {
-    return this.scope.wants(path);
+    return this.scope.wants(path) && !this.large.has(path) && !this.inOwnTrash(path);
+  }
+  limitRemote(remote) {
+    for (const [path, entry] of Object.entries(remote))
+      if (entry.size > this.limit && this.scope.wants(path))
+        this.large.add(path);
   }
   async check() {
     checkAbort(this.signal);
@@ -2320,6 +2371,10 @@ var Workspace = class {
     const seen = /* @__PURE__ */ new Map();
     let read2 = false;
     const add = async (rel, stat) => {
+      if (stat && stat.size > this.limit) {
+        this.large.add(rel);
+        return;
+      }
       const was = known.get(rel);
       const at = stat?.modifiedMs;
       if (was && stat && at != null && was.size === stat.size && was.modifiedMs === at && at < was.at - SETTLED_MS && !await this.reservations.get(rel)) {
@@ -2349,7 +2404,7 @@ var Workspace = class {
         if (entry.isDir) {
           if (this.scope.enters(rel) || /^\.textus\/(library|memory|skills)(\/|$)/.test(rel))
             await walk(rel);
-        } else if (this.scope.wants(rel)) {
+        } else if (this.wants(rel)) {
           if (++visits > MAX_FILES) throw new SyncError("tooManyFiles");
           await add(rel, entry);
         }
@@ -2389,11 +2444,28 @@ var Workspace = class {
     this.touched.add(path);
     try {
       await this.api.files.trash(path);
-    } catch {
-      this.touched.delete(path);
-      return "refused";
+    } catch (error) {
+      if (!(NO_TRASH.test(String(error)) && await this.keepAside(relative))) {
+        this.touched.delete(path);
+        return "refused";
+      }
     }
     return true;
+  }
+  /** Into the device's own trash folder, beside a file already there. */
+  async keepAside(relative) {
+    if (!this.ownTrash) return false;
+    const base = `${this.ownTrash}/${relative}`;
+    for (const target of [base, beside(base, crypto.randomUUID())]) {
+      const path = `${this.root.replace(/[/\\]$/, "")}/${target}`;
+      if (await this.api.files.stat(path)) continue;
+      try {
+        await this.api.files.rename(this.path(relative), path);
+        return true;
+      } catch {
+      }
+    }
+    return false;
   }
   async move(from, to, expected) {
     await this.check();
@@ -2465,6 +2537,7 @@ var Pacer = class {
     __publicField(this, "since", null);
     __publicField(this, "last", -Infinity);
     __publicField(this, "pace", null);
+    __publicField(this, "paused", false);
   }
   configure(pace) {
     this.pace = pace;
@@ -2487,9 +2560,15 @@ var Pacer = class {
   stop() {
     this.configure(null);
   }
+  /** Held while Textus is in the background: saves made meanwhile wait
+   *  for it to come back. */
+  pause(paused) {
+    this.paused = paused;
+    this.arm();
+  }
   arm() {
     clearTimeout(this.timer);
-    if (!this.pace) return;
+    if (!this.pace || this.paused) return;
     const { settle, gap, every } = this.pace;
     const now = this.now();
     const at = this.since === null ? now + every : Math.max(
@@ -2507,6 +2586,51 @@ var Pacer = class {
   }
 };
 
+// development/cloud-sync/src/lifecycle.ts
+var RETURN_GAP = 2 * 6e4;
+var Lifecycle = class {
+  constructor(s, state, now = () => Date.now()) {
+    this.s = s;
+    this.now = now;
+    __publicField(this, "last", -Infinity);
+    __publicField(this, "due", false);
+    __publicField(this, "away");
+    this.away = state === "background";
+    if (this.away) s.pause(true);
+  }
+  opened() {
+    this.run();
+  }
+  changed(state) {
+    if (state === "background") {
+      if (this.away) return;
+      this.away = true;
+      this.s.pause(true);
+      if (this.s.busy()) {
+        this.s.cancel();
+        this.last = -Infinity;
+      }
+    } else if (state === "active" && this.away) {
+      this.away = false;
+      this.s.pause(false);
+      if (this.now() - this.last >= RETURN_GAP) this.run();
+    }
+  }
+  /** A sync ended; `ok` when it went through. */
+  finished(ok) {
+    if (ok) this.last = this.now();
+    if (this.due) {
+      this.due = false;
+      this.run();
+    }
+  }
+  run() {
+    if (this.away || !this.s.automatic()) return;
+    if (this.s.busy()) this.due = true;
+    else this.s.sync();
+  }
+};
+
 // development/cloud-sync/src/settings.ts
 var OPTIONS = [
   "automatic",
@@ -2516,15 +2640,20 @@ var OPTIONS = [
   "exclude",
   "gitignore",
   "obsidian",
-  "parallel"
+  "parallel",
+  "maxFileMiB"
 ];
 var masked = (account) => account.length > 8 ? `${account.slice(0, 4)}\u2022\u2022\u2022\u2022` : "\u2022\u2022\u2022\u2022";
 var Settings = class {
-  constructor(ctx) {
+  constructor(ctx, platform) {
     this.ctx = ctx;
+    this.platform = platform;
+    __publicField(this, "device");
+    __publicField(this, "folder", (root) => folderKey(root, this.platform));
+    this.device = deviceOf(platform);
   }
   async scope(root) {
-    return hash(new TextEncoder().encode(root));
+    return hash(new TextEncoder().encode(this.folder(root)));
   }
   async load(root) {
     const raw = await this.ctx.storage.global.get(
@@ -2532,10 +2661,13 @@ var Settings = class {
     );
     if (!raw) return { ...defaults };
     const saved = raw;
-    return normalizeConfig({ ...saved, encrypt: saved.encrypt ?? true });
+    return normalizeConfig(
+      { ...saved, encrypt: saved.encrypt ?? true },
+      this.device
+    );
   }
   async secretKey(root, config) {
-    return `connection:${await hash(new TextEncoder().encode(root + identity(config)))}`;
+    return `connection:${await hash(new TextEncoder().encode(this.folder(root) + identity(config)))}`;
   }
   async credentials(root, config) {
     const saved = await this.ctx.secrets.get(
@@ -2558,7 +2690,7 @@ var Settings = class {
     return password;
   }
   async save(root, input, incoming) {
-    const config = normalizeConfig(input);
+    const config = normalizeConfig(input, this.device);
     const before = await this.load(root).catch(() => null);
     if (!config.keepPending && before) {
       config.keepDays = before.keepDays;
@@ -2603,7 +2735,10 @@ var Settings = class {
     const picked = Object.fromEntries(
       OPTIONS.filter((k) => k in options).map((k) => [k, options[k]])
     );
-    const next = normalizeConfig({ ...await this.load(root), ...picked });
+    const next = normalizeConfig(
+      { ...await this.load(root), ...picked },
+      this.device
+    );
     if ("keepDays" in options) next.keepPending = true;
     await this.ctx.storage.global.set(`config:${await this.scope(root)}`, next);
     return next;
@@ -2614,7 +2749,7 @@ var Settings = class {
     const config = await this.load(root);
     await this.ctx.secrets.delete(await this.secretKey(root, config));
     await this.ctx.storage.global.set(`config:${await this.scope(root)}`, null);
-    await this.ctx.storage.global.set(await scanKey(root), null);
+    await this.ctx.storage.global.set(await scanKey(this.folder(root)), null);
   }
   /** The folder's keep setting, as a sync that carried `carried` left it,
    *  taken as this one's; false when one was picked meanwhile (it goes out
@@ -2633,7 +2768,7 @@ var Settings = class {
   }
   async baseKey(root, config) {
     const { account } = await this.credentials(root, config);
-    return `encrypted-base:${await hash(new TextEncoder().encode(root + identity(config) + "\n" + account))}`;
+    return `encrypted-base:${await hash(new TextEncoder().encode(this.folder(root) + identity(config) + "\n" + account))}`;
   }
 };
 
@@ -2673,7 +2808,9 @@ async function recoverLock(store, {
 var LABELS = {
   macos: "Mac",
   windows: "Windows",
-  linux: "Linux"
+  linux: "Linux",
+  ios: "iOS",
+  android: "Android"
 };
 async function deviceName(ctx, api) {
   const saved = await ctx.storage.global.get("device");
@@ -2682,11 +2819,6 @@ async function deviceName(ctx, api) {
   await ctx.storage.global.set("device", name);
   return name;
 }
-var beside = (path, tag) => {
-  const dot = path.lastIndexOf(".");
-  const cut = dot > path.lastIndexOf("/") + 1 ? dot : path.length;
-  return `${path.slice(0, cut)} (${tag.slice(0, 8)})${path.slice(cut)}`;
-};
 async function restoreInto(local, store, { path, version }) {
   const bytes = await download(store, version);
   const current = await local.read(path);
@@ -2835,6 +2967,8 @@ var Controller = class {
     ));
     __publicField(this, "deletions", new DeletionQuestion());
     __publicField(this, "bar");
+    /** On a phone: when it syncs, as Textus comes and goes. */
+    __publicField(this, "lifecycle");
     /** Stores whose exclusive create was proven this session. */
     __publicField(this, "tested", /* @__PURE__ */ new Set());
     __publicField(this, "abort");
@@ -2854,7 +2988,7 @@ var Controller = class {
     __publicField(this, "stopped");
     __publicField(this, "saved", () => this.state.configured ? this.state.config : null);
     __publicField(this, "page", (name) => this.ctx.plugin.readText(name));
-    this.settings = new Settings(ctx);
+    this.settings = new Settings(ctx, api.env.platform);
   }
   send(view, message) {
     void view.postMessage(message).catch(() => this.views.delete(view));
@@ -2872,7 +3006,9 @@ var Controller = class {
   fail(error) {
     const e = error instanceof SyncError ? error : new SyncError("unknownError");
     this.stopped = e;
-    this.message(e.code, true, ...e.args);
+    if (e.code === "cancelled" && this.lifecycle?.away)
+      this.message("pausedAway");
+    else this.message(e.code, true, ...e.args);
     this.ctx.log.warn(e.code);
     return e.code;
   }
@@ -2946,6 +3082,7 @@ var Controller = class {
     const root = await this.api.files.root();
     if (!root) throw new SyncError("noFolder");
     if (root !== this.state.root) throw new SyncError("rootChanged");
+    if (root.startsWith("content://")) throw new SyncError("contentFolder");
     const config = await this.settings.load(root);
     const credentials = await this.settings.credentials(root, config);
     const store = new RemoteStore(config, credentials, this.api.net.fetch);
@@ -2990,6 +3127,7 @@ var Controller = class {
     if (this.state.busy || this.disposed) return "busy";
     this.state.busy = true;
     this.state.progress = null;
+    this.stopped = void 0;
     this.abort = new AbortController();
     this.message(kind === "sync" ? "scanning" : "testing");
     try {
@@ -2997,7 +3135,8 @@ var Controller = class {
         const root2 = this.state.root;
         if (!root2) throw new SyncError("noFolder");
         const config2 = normalizeConfig(
-          withConnection(this.saved(), draft.config)
+          withConnection(this.saved(), draft.config),
+          this.settings.device
         );
         const keys = await this.settings.resolve(
           root2,
@@ -3036,7 +3175,8 @@ var Controller = class {
         root,
         this.ctx.storage.global,
         this.abort.signal,
-        scopeOf(config, gitignore)
+        scopeOf(config, gitignore),
+        config.maxFileMiB * 1024 * 1024
       );
       if (restore) await restoreInto(this.workspace, opened, restore);
       const cleaned = `cleaned:${key}`;
@@ -3074,6 +3214,7 @@ var Controller = class {
           this.message(phase, false, current, total);
         })
       });
+      result.tooLarge = [...this.workspace.large].sort();
       const at = (/* @__PURE__ */ new Date()).toISOString();
       await this.ctx.storage.global.set(`last:${key}`, { at, result });
       if (cleanupDue) await this.ctx.storage.global.set(cleaned, Date.now());
@@ -3095,6 +3236,7 @@ var Controller = class {
       this.abort = void 0;
       this.broadcast();
       this.pacer.finished();
+      if (kind === "sync") this.lifecycle?.finished(!this.stopped);
     }
   }
   cancel() {
@@ -3141,16 +3283,32 @@ var Controller = class {
       api.files.onDidChangeRoot(({ path }) => {
         if (path === this.state.root) return;
         this.abort?.abort();
-        void this.refresh().catch((e) => this.fail(e));
+        void this.refresh().then(() => this.lifecycle?.opened()).catch((e) => this.fail(e));
       }),
       { dispose: () => this.stop() }
     );
+    if (this.settings.device.phone) {
+      this.lifecycle = new Lifecycle(
+        {
+          automatic: () => this.state.configured && this.state.config.automatic,
+          busy: () => this.state.busy,
+          sync: () => void this.sync(false),
+          cancel: () => this.cancel(),
+          pause: (paused) => this.pacer.pause(paused)
+        },
+        api.app.state
+      );
+      ctx.subscriptions.push(
+        api.app.onDidChangeState((state) => this.lifecycle?.changed(state))
+      );
+    }
     this.bar = new StatusBar(
       api,
       this.t,
       () => this.disposed ? null : this.state
     );
     await this.refresh();
+    this.lifecycle?.opened();
   }
   stop() {
     this.disposed = true;

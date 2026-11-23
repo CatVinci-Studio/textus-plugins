@@ -11,6 +11,7 @@ import { openEncryptedStore } from "./encrypted-store";
 import { openPlainStore } from "./plain-store";
 import { Workspace } from "./local";
 import { Pacer } from "./pacer";
+import { Lifecycle } from "./lifecycle";
 import { masked, Settings } from "./settings";
 import { doneText, fewPerSecond } from "./status";
 import { RemoteStore, testConnection } from "./transport";
@@ -40,6 +41,8 @@ class Controller implements Host {
   );
   private deletions = new DeletionQuestion();
   private bar?: StatusBar;
+  /** On a phone: when it syncs, as Textus comes and goes. */
+  private lifecycle?: Lifecycle;
   /** Stores whose exclusive create was proven this session. */
   private tested = new Set<string>();
   private abort?: AbortController;
@@ -59,7 +62,7 @@ class Controller implements Host {
     private ctx: Textus.PluginContext,
     readonly api: Textus.Api,
   ) {
-    this.settings = new Settings(ctx);
+    this.settings = new Settings(ctx, api.env.platform);
   }
   t = (key: string, ...args: unknown[]) => this.api.l10n.t(key, ...args);
   send(view: Textus.Webview, message: unknown) {
@@ -81,7 +84,10 @@ class Controller implements Host {
     const e =
       error instanceof SyncError ? error : new SyncError("unknownError");
     this.stopped = e;
-    this.message(e.code, true, ...e.args);
+    // Stopped as Textus left the screen: it goes on when Textus is back.
+    if (e.code === "cancelled" && this.lifecycle?.away)
+      this.message("pausedAway");
+    else this.message(e.code, true, ...e.args);
     // Provider response bodies and raw network errors can contain credentials.
     this.ctx.log.warn(e.code);
     return e.code;
@@ -161,6 +167,8 @@ class Controller implements Host {
     const root = await this.api.files.root();
     if (!root) throw new SyncError("noFolder");
     if (root !== this.state.root) throw new SyncError("rootChanged");
+    // An Android folder opened without access to all files.
+    if (root.startsWith("content://")) throw new SyncError("contentFolder");
     const config = await this.settings.load(root);
     const credentials = await this.settings.credentials(root, config);
     const store = new RemoteStore(config, credentials, this.api.net.fetch);
@@ -218,6 +226,7 @@ class Controller implements Host {
     if (this.state.busy || this.disposed) return "busy";
     this.state.busy = true;
     this.state.progress = null;
+    this.stopped = undefined;
     this.abort = new AbortController();
     this.message(kind === "sync" ? "scanning" : "testing");
     try {
@@ -227,6 +236,7 @@ class Controller implements Host {
         if (!root) throw new SyncError("noFolder");
         const config = normalizeConfig(
           withConnection(this.saved(), draft.config),
+          this.settings.device,
         );
         const keys = await this.settings.resolve(
           root,
@@ -270,6 +280,7 @@ class Controller implements Host {
         this.ctx.storage.global,
         this.abort.signal,
         scopeOf(config, gitignore),
+        config.maxFileMiB * 1024 * 1024,
       );
       if (restore) await restoreInto(this.workspace, opened, restore);
       const cleaned = `cleaned:${key}`;
@@ -309,6 +320,7 @@ class Controller implements Host {
           this.message(phase, false, current, total);
         }),
       });
+      result.tooLarge = [...this.workspace.large].sort();
       const at = new Date().toISOString();
       await this.ctx.storage.global.set(`last:${key}`, { at, result });
       if (cleanupDue) await this.ctx.storage.global.set(cleaned, Date.now());
@@ -330,6 +342,7 @@ class Controller implements Host {
       this.abort = undefined;
       this.broadcast();
       this.pacer.finished();
+      if (kind === "sync") this.lifecycle?.finished(!this.stopped);
     }
   }
   cancel() {
@@ -377,14 +390,32 @@ class Controller implements Host {
       api.files.onDidChangeRoot(({ path }) => {
         if (path === this.state.root) return;
         this.abort?.abort();
-        void this.refresh().catch((e) => this.fail(e));
+        void this.refresh()
+          .then(() => this.lifecycle?.opened())
+          .catch((e) => this.fail(e));
       }),
       { dispose: () => this.stop() },
     );
+    if (this.settings.device.phone) {
+      this.lifecycle = new Lifecycle(
+        {
+          automatic: () => this.state.configured && this.state.config.automatic,
+          busy: () => this.state.busy,
+          sync: () => void this.sync(false),
+          cancel: () => this.cancel(),
+          pause: (paused) => this.pacer.pause(paused),
+        },
+        api.app.state,
+      );
+      ctx.subscriptions.push(
+        api.app.onDidChangeState((state) => this.lifecycle?.changed(state)),
+      );
+    }
     this.bar = new StatusBar(api, this.t, () =>
       this.disposed ? null : this.state,
     );
     await this.refresh();
+    this.lifecycle?.opened();
   }
   stop() {
     this.disposed = true;
