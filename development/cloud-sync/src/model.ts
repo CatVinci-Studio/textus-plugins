@@ -143,8 +143,12 @@ export interface LocalFiles {
     bytes: Uint8Array,
     expected: string | null,
   ): Promise<boolean | "deferred">;
-  /** To the system Trash, only while it still has the `expected` hash. */
-  remove(path: string, expected: string): Promise<boolean | "deferred">;
+  /** To the system Trash, only while it still has the `expected` hash;
+   *  "refused" where the Trash took it not (none on the device). */
+  remove(
+    path: string,
+    expected: string,
+  ): Promise<boolean | "deferred" | "refused">;
   /** False when `from` changed or `to` exists. */
   move(from: string, to: string, expected: string): Promise<boolean>;
   check(): Promise<void>;
@@ -156,6 +160,9 @@ export interface Result {
   moved: number;
   conflicts: string[];
   deferred: string[];
+  /** Deleted elsewhere, but the Trash here refused them: tried again next
+   *  time. Absent from results saved before 0.8. */
+  notTrashed: string[];
   unchanged: number;
 }
 export class SyncError extends Error {

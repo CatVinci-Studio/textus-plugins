@@ -1,6 +1,7 @@
 import { expect, it, vi } from "vitest";
 import { Workspace } from "./local";
 import { hash } from "./content";
+import { scanKey } from "./scan-cache";
 import { bytes } from "./test-fixtures";
 
 function fixture() {
@@ -115,7 +116,8 @@ it("resumes a failed binary download after restart without publishing its reserv
   expect(await restarted.apply("a.png", data, null)).toBe(true);
   expect(f.api.files.create).toHaveBeenCalledOnce();
   expect(await restarted.read("a.png")).toEqual(data);
-  expect([...f.saved.values()]).toEqual([{}]);
+  const journals = [...f.saved].filter(([key]) => key.startsWith("pending:"));
+  expect(journals.map(([, value]) => value)).toEqual([{}]);
 });
 it("preserves an empty user file that replaces an interrupted download marker", async () => {
   const f = fixture();
@@ -220,4 +222,50 @@ it("reads again only a file whose size or time changed since the last sync", asy
   const changed = await scan();
   expect(read).toHaveBeenCalledTimes(2);
   expect(changed["a.md"].hash).not.toBe(first["a.md"].hash);
+});
+
+it("keeps what it read across a restart, reading again only what changed meanwhile", async () => {
+  const { api, files, storage } = fixture();
+  let modifiedMs = Date.now() - 60_000;
+  api.files.list = async () =>
+    [
+      {
+        name: "a.md",
+        isDir: false,
+        size: files.get("/notes/a.md")!.length,
+        modifiedMs,
+      },
+    ] as never;
+  const read = vi.spyOn(api.files, "read");
+  // A new launch: nothing in memory from the last one.
+  const launched = async () => {
+    vi.resetModules();
+    const { Workspace: Fresh } = await import("./local");
+    return new Fresh(api as unknown as Textus.Api, "/notes", storage).scan();
+  };
+  const first = await launched();
+  expect((await launched())["a.md"]).toEqual(first["a.md"]);
+  expect(read).toHaveBeenCalledTimes(1);
+  files.set("/notes/a.md", bytes("after!"));
+  modifiedMs += 1000;
+  expect((await launched())["a.md"].hash).toBe(await hash(bytes("after!")));
+  expect(read).toHaveBeenCalledTimes(2);
+  // Kept wrong: read again, never trusted.
+  await storage.set(await scanKey("/notes"), {
+    format: 1,
+    files: { "a.md": [6, modifiedMs, 0, "not a hash"] },
+  });
+  expect((await launched())["a.md"].hash).toBe(await hash(bytes("after!")));
+  expect(read).toHaveBeenCalledTimes(3);
+});
+it("leaves a file the Trash refuses in place, for the next sync", async () => {
+  const f = fixture();
+  f.api.files.trash.mockRejectedValueOnce(
+    Error("can't be moved to the Trash here."),
+  );
+  expect(await f.local.remove("a.md", await hash(bytes("before")))).toBe(
+    "refused",
+  );
+  expect(f.files.has("/notes/a.md")).toBe(true);
+  expect(f.local.touched.size).toBe(0);
 });

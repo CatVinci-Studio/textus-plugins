@@ -2,6 +2,7 @@ import { OBSIDIAN_SETTINGS, inScope, isText } from "./config";
 import { scopeOf, type Scope } from "./scope";
 import { describe, hash } from "./content";
 import { Reservations } from "./reservations";
+import { ScanCache, type Seen } from "./scan-cache";
 import {
   MAX_FILES,
   MAX_FILE_SIZE,
@@ -12,17 +13,16 @@ import {
 } from "./model";
 
 /** What a file was found to hold, by folder and path, with the size and
- *  time it had: a later sync reads again only what changed since. */
-const described = new Map<
-  string,
-  Map<string, { size: number; modifiedMs: number; at: number; entry: Entry }>
->();
+ *  time it had: a later sync reads again only what changed since. Kept on
+ *  disk too (ScanCache) for the first sync after a launch. */
+const described = new Map<string, Map<string, Seen>>();
 /** A file changed this close to when it was read may change again within
  *  the same tick of its clock: read again (as Git's racy check does). */
 const SETTLED_MS = 2000;
 
 export class Workspace implements LocalFiles {
   private reservations: Reservations;
+  private cache: ScanCache;
   /** Paths this run trashed or renamed, so their file events start no new sync. */
   readonly touched = new Set<string>();
   constructor(
@@ -37,6 +37,7 @@ export class Workspace implements LocalFiles {
     }),
   ) {
     this.reservations = new Reservations(storage, root);
+    this.cache = new ScanCache(storage, root);
   }
   wants(path: string) {
     return this.scope.wants(path);
@@ -112,8 +113,9 @@ export class Workspace implements LocalFiles {
   async scan(): Promise<Record<string, Entry>> {
     const files: Record<string, Entry> = Object.create(null);
     let visits = 0;
-    const known = described.get(this.root) ?? new Map();
-    const seen = new Map();
+    const known = described.get(this.root) ?? (await this.cache.load());
+    const seen = new Map<string, Seen>();
+    let read = false;
     const add = async (
       rel: string,
       stat: { size: number; modifiedMs: number | null } | null,
@@ -134,6 +136,7 @@ export class Workspace implements LocalFiles {
         return;
       }
       const bytes = await this.read(rel);
+      read = true;
       if (!bytes) return;
       files[rel] = await describe(bytes);
       if (stat && at != null)
@@ -183,6 +186,7 @@ export class Workspace implements LocalFiles {
         await walk(`.textus/${name}`);
     }
     described.set(this.root, seen);
+    if (read || seen.size !== known.size) await this.cache.save(seen);
     return files;
   }
   private async holds(relative: string, expected: string) {
@@ -196,7 +200,13 @@ export class Workspace implements LocalFiles {
     if (!(await this.holds(relative, expected))) return false;
     await this.check();
     this.touched.add(path);
-    await this.api.files.trash(path);
+    try {
+      await this.api.files.trash(path);
+    } catch {
+      // No Trash on this device (a phone): left in place, not deleted.
+      this.touched.delete(path);
+      return "refused" as const;
+    }
     return true;
   }
   async move(from: string, to: string, expected: string) {

@@ -2,7 +2,7 @@
   "id": "catvinci.cloud-sync",
   "name": "%name%",
   "description": "%description%",
-  "version": "0.7.0",
+  "version": "0.8.0",
   "publisher": "catvinci",
   "author": "CatVinci Studio",
   "license": "MIT",
@@ -232,7 +232,14 @@
       "permissionDelete": "The service refused to delete. Sync needs the key to delete too (old versions are cleaned up).",
       "minutes": "{0} min",
       "delayNone": "None",
-      "saveGapHelp": "After you stop editing, wait this long before uploading, so a file isn't sent while you write. On Nutstore, 3 minutes or more."
+      "saveGapHelp": "After you stop editing, wait this long before uploading, so a file isn't sent while you write. On Nutstore, 3 minutes or more.",
+      "confirmDeletions": "This sync would delete {0} files from the cloud: they are no longer in this folder. Delete them in the cloud too? Their last versions stay in Cloud History.",
+      "deleteInCloud": "Delete in the Cloud",
+      "manyDeletions": "This sync would delete {0} files from the cloud, so it stopped before deleting any. Choose Sync now to decide.",
+      "deletionsKept": "Nothing was deleted from the cloud. Sync now asks again.",
+      "folderEmpty": "No files were found in this folder, though {0} were synced from it. Sync stopped so that nothing is deleted from the cloud: check that the folder can be read.",
+      "doneNotTrashed": "not moved to the Trash {0}",
+      "notTrashed": "Deleted on another device, but this device couldn't move them to the Trash: left in place, tried again at the next sync"
     },
     "zh": {
       "name": "云同步",
@@ -394,7 +401,14 @@
       "permissionDelete": "服务拒绝删除。同步也需要删除权限（用来清理旧版本）。",
       "minutes": "{0} 分钟",
       "delayNone": "不延迟",
-      "saveGapHelp": "停止编辑后等这么久再上传，避免边写边传。坚果云建议 3 分钟以上。"
+      "saveGapHelp": "停止编辑后等这么久再上传，避免边写边传。坚果云建议 3 分钟以上。",
+      "confirmDeletions": "这次同步会从云端删除 {0} 个文件：它们已经不在这个文件夹里。也从云端删除吗？每个文件的最后版本仍留在云端历史里。",
+      "deleteInCloud": "从云端删除",
+      "manyDeletions": "这次同步会从云端删除 {0} 个文件，已在删除前停下。点「立即同步」来决定。",
+      "deletionsKept": "云端没有删除任何文件。点「立即同步」会再问一次。",
+      "folderEmpty": "这个文件夹里一个文件都没找到，但之前从这里同步过 {0} 个。为了不删掉云端的文件，同步已停止：请确认这个文件夹能读取。",
+      "doneNotTrashed": "{0} 个没能移到废纸篓",
+      "notTrashed": "别的设备上已删除，但这台设备没能把它们移到废纸篓：先留在原处，下次同步再试"
     },
     "zh-Hant": {
       "name": "雲端同步",
@@ -556,7 +570,14 @@
       "permissionDelete": "服務拒絕刪除。同步也需要刪除權限（用來清理舊版本）。",
       "minutes": "{0} 分鐘",
       "delayNone": "不延遲",
-      "saveGapHelp": "停止編輯後等這麼久再上傳，避免邊寫邊傳。堅果雲建議 3 分鐘以上。"
+      "saveGapHelp": "停止編輯後等這麼久再上傳，避免邊寫邊傳。堅果雲建議 3 分鐘以上。",
+      "confirmDeletions": "這次同步會從雲端刪除 {0} 個檔案：它們已經不在這個資料夾裡。也要從雲端刪除嗎？每個檔案的最後版本仍會留在雲端歷史裡。",
+      "deleteInCloud": "從雲端刪除",
+      "manyDeletions": "這次同步會從雲端刪除 {0} 個檔案，已在刪除前停下。請按「立即同步」再決定。",
+      "deletionsKept": "雲端沒有刪除任何檔案。按「立即同步」會再詢問一次。",
+      "folderEmpty": "這個資料夾裡找不到任何檔案，但之前從這裡同步過 {0} 個。為了不刪掉雲端的檔案，同步已停止：請確認這個資料夾可以讀取。",
+      "doneNotTrashed": "{0} 個無法移到垃圾桶",
+      "notTrashed": "已在其他裝置上刪除，但這台裝置無法將它們移到垃圾桶：先留在原處，下次同步時再試"
     },
     "ja": {
       "name": "クラウド同期",
@@ -718,7 +739,14 @@
       "permissionDelete": "サービスが削除を拒否しました。同期には削除権限も必要です（古い版の整理に使います）。",
       "minutes": "{0} 分",
       "delayNone": "なし",
-      "saveGapHelp": "編集をやめてからこの時間待ってアップロードします。書いている途中で送らないためです。Nutstore では 3 分以上をおすすめします。"
+      "saveGapHelp": "編集をやめてからこの時間待ってアップロードします。書いている途中で送らないためです。Nutstore では 3 分以上をおすすめします。",
+      "confirmDeletions": "この同期でクラウドから {0} 件のファイルが削除されます。どれもこのフォルダにはもうありません。クラウドからも削除しますか？それぞれの最後の版はクラウドの履歴に残ります。",
+      "deleteInCloud": "クラウドから削除",
+      "manyDeletions": "この同期でクラウドから {0} 件のファイルが削除されるため、削除する前に止めました。「今すぐ同期」で決めてください。",
+      "deletionsKept": "クラウドからは何も削除していません。「今すぐ同期」でもう一度確認します。",
+      "folderEmpty": "このフォルダにファイルが見つかりませんが、以前ここから {0} 件を同期しています。クラウドのファイルを削除しないよう同期を止めました。フォルダを読み取れるか確認してください。",
+      "doneNotTrashed": "ゴミ箱に移せず {0} 件",
+      "notTrashed": "別の端末で削除されましたが、この端末ではゴミ箱に移せませんでした。そのまま残し、次の同期でもう一度試します"
     },
     "ko": {
       "name": "클라우드 동기화",
@@ -880,7 +908,14 @@
       "permissionDelete": "서비스가 삭제를 거부했습니다. 동기화에는 삭제 권한도 필요합니다(이전 버전 정리용).",
       "minutes": "{0}분",
       "delayNone": "없음",
-      "saveGapHelp": "편집을 멈춘 뒤 이만큼 기다렸다가 업로드해 쓰는 도중에 보내지 않습니다. Nutstore는 3분 이상을 권장합니다."
+      "saveGapHelp": "편집을 멈춘 뒤 이만큼 기다렸다가 업로드해 쓰는 도중에 보내지 않습니다. Nutstore는 3분 이상을 권장합니다.",
+      "confirmDeletions": "이번 동기화로 클라우드에서 파일 {0}개가 삭제됩니다. 모두 이 폴더에 더 이상 없는 파일입니다. 클라우드에서도 삭제할까요? 각 파일의 마지막 버전은 클라우드 기록에 남습니다.",
+      "deleteInCloud": "클라우드에서 삭제",
+      "manyDeletions": "이번 동기화로 클라우드에서 파일 {0}개가 삭제되므로 삭제하기 전에 멈췄습니다. ‘지금 동기화’를 눌러 결정하세요.",
+      "deletionsKept": "클라우드에서 아무것도 삭제하지 않았습니다. ‘지금 동기화’를 누르면 다시 묻습니다.",
+      "folderEmpty": "이 폴더에서 파일을 찾지 못했지만, 전에는 이곳에서 {0}개를 동기화했습니다. 클라우드의 파일이 삭제되지 않도록 동기화를 멈췄습니다. 폴더를 읽을 수 있는지 확인하세요.",
+      "doneNotTrashed": "휴지통으로 옮기지 못함 {0}개",
+      "notTrashed": "다른 기기에서 삭제되었지만 이 기기에서 휴지통으로 옮기지 못했습니다. 그대로 두고 다음 동기화 때 다시 시도합니다"
     },
     "es": {
       "name": "Sincronización en la nube",
@@ -1042,7 +1077,14 @@
       "permissionDelete": "El servicio rechazó el borrado. La sincronización también necesita borrar (para limpiar versiones antiguas).",
       "minutes": "{0} min",
       "delayNone": "Ninguno",
-      "saveGapHelp": "Al dejar de editar, espera esto antes de subir, para no enviar un archivo mientras escribes. En Nutstore, 3 minutos o más."
+      "saveGapHelp": "Al dejar de editar, espera esto antes de subir, para no enviar un archivo mientras escribes. En Nutstore, 3 minutos o más.",
+      "confirmDeletions": "Esta sincronización eliminaría {0} archivos de la nube: ya no están en esta carpeta. ¿Eliminarlos también en la nube? Sus últimas versiones se quedan en el Historial en la nube.",
+      "deleteInCloud": "Eliminar en la nube",
+      "manyDeletions": "Esta sincronización eliminaría {0} archivos de la nube, así que se detuvo antes de eliminar ninguno. Elige Sincronizar ahora para decidir.",
+      "deletionsKept": "No se eliminó nada de la nube. Sincronizar ahora vuelve a preguntar.",
+      "folderEmpty": "No se encontró ningún archivo en esta carpeta, aunque se sincronizaron {0} desde ella. La sincronización se detuvo para no eliminar nada de la nube: comprueba que la carpeta se puede leer.",
+      "doneNotTrashed": "sin mover a la Papelera {0}",
+      "notTrashed": "Eliminados en otro dispositivo, pero este no pudo moverlos a la Papelera: se quedan donde están y se vuelve a intentar en la próxima sincronización"
     },
     "fr": {
       "name": "Synchro cloud",
@@ -1204,7 +1246,14 @@
       "permissionDelete": "Le service a refusé la suppression. La synchronisation doit aussi pouvoir supprimer (pour nettoyer les anciennes versions).",
       "minutes": "{0} min",
       "delayNone": "Aucun",
-      "saveGapHelp": "Après la fin de la saisie, attendre ce délai avant d'envoyer, pour ne pas envoyer un fichier en cours d'écriture. Sur Nutstore, 3 minutes ou plus."
+      "saveGapHelp": "Après la fin de la saisie, attendre ce délai avant d'envoyer, pour ne pas envoyer un fichier en cours d'écriture. Sur Nutstore, 3 minutes ou plus.",
+      "confirmDeletions": "Cette synchronisation supprimerait {0} fichiers du cloud : ils ne sont plus dans ce dossier. Les supprimer aussi dans le cloud ? Leurs dernières versions restent dans l’Historique dans le cloud.",
+      "deleteInCloud": "Supprimer dans le cloud",
+      "manyDeletions": "Cette synchronisation supprimerait {0} fichiers du cloud ; elle s’est arrêtée avant d’en supprimer aucun. Choisissez Synchroniser maintenant pour décider.",
+      "deletionsKept": "Rien n’a été supprimé du cloud. Synchroniser maintenant reposera la question.",
+      "folderEmpty": "Aucun fichier trouvé dans ce dossier, alors que {0} en ont été synchronisés. La synchronisation s’est arrêtée pour ne rien supprimer du cloud : vérifiez que le dossier est lisible.",
+      "doneNotTrashed": "non placés dans la Corbeille {0}",
+      "notTrashed": "Supprimés sur un autre appareil, mais cet appareil n’a pas pu les placer dans la Corbeille : laissés en place, nouvel essai à la prochaine synchronisation"
     },
     "de": {
       "name": "Cloud-Sync",
@@ -1366,7 +1415,14 @@
       "permissionDelete": "Der Dienst hat das Löschen abgelehnt. Die Synchronisierung braucht auch Löschrechte (zum Aufräumen alter Versionen).",
       "minutes": "{0} Min.",
       "delayNone": "Keine",
-      "saveGapHelp": "Nach dem Bearbeiten so lange warten, bevor hochgeladen wird, damit keine Datei mitten im Schreiben gesendet wird. Bei Nutstore 3 Minuten oder mehr."
+      "saveGapHelp": "Nach dem Bearbeiten so lange warten, bevor hochgeladen wird, damit keine Datei mitten im Schreiben gesendet wird. Bei Nutstore 3 Minuten oder mehr.",
+      "confirmDeletions": "Diese Synchronisierung würde {0} Dateien aus der Cloud löschen: Sie sind nicht mehr in diesem Ordner. Auch in der Cloud löschen? Ihre letzten Versionen bleiben im Cloud-Verlauf.",
+      "deleteInCloud": "In der Cloud löschen",
+      "manyDeletions": "Diese Synchronisierung würde {0} Dateien aus der Cloud löschen und hat deshalb vor dem Löschen angehalten. Wähle Jetzt synchronisieren, um zu entscheiden.",
+      "deletionsKept": "In der Cloud wurde nichts gelöscht. Jetzt synchronisieren fragt erneut.",
+      "folderEmpty": "In diesem Ordner wurden keine Dateien gefunden, obwohl {0} von hier synchronisiert wurden. Die Synchronisierung wurde angehalten, damit nichts aus der Cloud gelöscht wird: Prüfe, ob sich der Ordner lesen lässt.",
+      "doneNotTrashed": "nicht in den Papierkorb gelegt {0}",
+      "notTrashed": "Auf einem anderen Gerät gelöscht, aber dieses Gerät konnte sie nicht in den Papierkorb legen: Sie bleiben, wo sie sind, und die nächste Synchronisierung versucht es erneut"
     },
     "ru": {
       "name": "Облачная синхронизация",
@@ -1528,7 +1584,14 @@
       "permissionDelete": "Сервис отказал в удалении. Синхронизации нужно и право удаления (для очистки старых версий).",
       "minutes": "{0} мин",
       "delayNone": "Без задержки",
-      "saveGapHelp": "После правки подождать столько перед отправкой, чтобы файл не уходил на середине. Для Nutstore — от 3 минут."
+      "saveGapHelp": "После правки подождать столько перед отправкой, чтобы файл не уходил на середине. Для Nutstore — от 3 минут.",
+      "confirmDeletions": "Эта синхронизация удалит из облака файлов: {0}. В этой папке их больше нет. Удалить их и в облаке? Последние версии останутся в истории в облаке.",
+      "deleteInCloud": "Удалить в облаке",
+      "manyDeletions": "Эта синхронизация удалила бы из облака файлов: {0}, поэтому она остановилась, ничего не удалив. Нажмите «Синхронизировать», чтобы решить.",
+      "deletionsKept": "Из облака ничего не удалено. «Синхронизировать» спросит снова.",
+      "folderEmpty": "В этой папке не найдено ни одного файла, хотя раньше из неё синхронизировано файлов: {0}. Синхронизация остановлена, чтобы ничего не удалить из облака: проверьте, что папка доступна для чтения.",
+      "doneNotTrashed": "не перемещено в корзину {0}",
+      "notTrashed": "Удалены на другом устройстве, но это устройство не смогло переместить их в корзину: оставлены на месте, следующая синхронизация попробует снова"
     },
     "pt": {
       "name": "Sincronização na nuvem",
@@ -1690,7 +1753,14 @@
       "permissionDelete": "O serviço recusou a exclusão. A sincronização também precisa excluir (para limpar versões antigas).",
       "minutes": "{0} min",
       "delayNone": "Nenhum",
-      "saveGapHelp": "Depois de parar de editar, esperar isso antes de enviar, para não mandar um arquivo enquanto escreve. No Nutstore, 3 minutos ou mais."
+      "saveGapHelp": "Depois de parar de editar, esperar isso antes de enviar, para não mandar um arquivo enquanto escreve. No Nutstore, 3 minutos ou mais.",
+      "confirmDeletions": "Esta sincronização excluiria {0} arquivos da nuvem: eles não estão mais nesta pasta. Excluí-los também na nuvem? As últimas versões ficam no Histórico na nuvem.",
+      "deleteInCloud": "Excluir na nuvem",
+      "manyDeletions": "Esta sincronização excluiria {0} arquivos da nuvem, então parou antes de excluir qualquer um. Escolha Sincronizar agora para decidir.",
+      "deletionsKept": "Nada foi excluído da nuvem. Sincronizar agora pergunta de novo.",
+      "folderEmpty": "Nenhum arquivo foi encontrado nesta pasta, embora {0} tenham sido sincronizados a partir dela. A sincronização parou para não excluir nada da nuvem: verifique se a pasta pode ser lida.",
+      "doneNotTrashed": "não movidos para a Lixeira {0}",
+      "notTrashed": "Excluídos em outro dispositivo, mas este dispositivo não conseguiu movê-los para a Lixeira: ficam onde estão e a próxima sincronização tenta de novo"
     }
   },
   "repository": "https://github.com/CatVinci-Studio/textus-plugins"
