@@ -10,8 +10,9 @@ Textus 用 `npx` 运行 [GitHub Copilot CLI](https://github.com/github/copilot-c
 
 Autopilot 会自己一直做下去，用掉更多高级请求次数。Textus 固定它启动的版本：Copilot 在这里不会自己更新。
 
-只在电脑上可用，需要 Textus 1.4.3 或更新版本。它只要一个权限：在这台电脑上启动这个助手。
+需要 Textus 1.4.3 或更新版本。它只要一个权限：在这台电脑上启动这个助手。
 
 ## 更新日志
 
+- **0.1.1** - Its page is in every language Textus speaks. Needs Textus 1.4.3 itself, not a test version of it.
 - **0.1.0** - First version: GitHub Copilot CLI in Textus AI.

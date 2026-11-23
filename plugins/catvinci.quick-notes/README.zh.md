@@ -4,7 +4,7 @@
 
 - 按 **Ctrl+Alt+N**（Mac 上是 **⌘⌥N**），或用 **插件 › 新建快速笔记…**，输入一条笔记即可保存。
 - 在桌面版上，托盘或菜单栏图标里也有 **新建快速笔记…**。插件会请 Textus 在后台继续运行，所以关掉所有窗口后也能用。
-- 侧栏的 **快速笔记** 标签页列出所有笔记，最新的在最上面。点 **新建** 直接在这里写一条，也可以在列表里直接修改。
+- 侧边栏的 **快速笔记** 标签页列出所有笔记，最新的在最上面。点 **新建** 直接在这里写一条，也可以在列表里直接修改。
 - 每条笔记的操作菜单（点「更多」按钮或右键）里有 **插入**（插到文档的光标处）、**打开** 和 **删除**。存在文档里的笔记，会在那篇文档里打开并跳到它所在的行。
 - 删错了？底部的 **撤销** 能在几秒内把它找回来。新建后什么都没写的笔记会自动去掉。
 - 笔记有 6 条或更多时，顶部会出现搜索框。
@@ -16,9 +16,9 @@
 - **收件箱文件**（默认）：文件夹顶层的 `Inbox.md`，或在 **收件箱文件** 里设置的其他文档。每条笔记作为一个列表项加在末尾，带日期和时间，比如 `- 2026-11-08 14:05 给安娜打电话`。
 - **今天的日记**：放在 `## 快速笔记` 标题下（标题用界面语言），没有就自动加上。每条笔记带时间，比如 `- 14:05 给安娜打电话`。日记的文件夹、文件名和模板沿用文件夹的日记设置（比如 Obsidian 的）；没有设置时是 `Daily/YYYY-MM-DD.md`。
 
-直接修改这个文件，侧栏也会跟着变。旧版本保存的笔记会一次性移进来，按从旧到新的顺序。没有打开文件夹时，笔记保存在 Textus 里。
+直接修改这个文件，侧边栏也会跟着变。旧版本保存的笔记会一次性移进来，按从旧到新的顺序。没有打开文件夹时，笔记保存在 Textus 里。
 
-支持桌面版、iPhone、iPad 和安卓。在手机上，**新建快速笔记…** 在标题栏菜单的 **插件** 里，每条笔记的操作在它的「更多」按钮里。手机上没有托盘，所以不会请你让 Textus 在后台运行。
+在手机上，**新建快速笔记…** 在标题栏菜单的 **插件** 里，每条笔记的操作在它的「更多」按钮里。手机上没有托盘，所以不会请你让 Textus 在后台运行。
 
 ## 权限
 
@@ -28,7 +28,7 @@
 
 ## 更新日志
 
-- **0.6.0** - On iPhone, iPad and Android too: **New Quick Note…** under Plugins and the sidebar tab, with New and each note's more button easy to tap. Only the desktop asks to keep Textus running in the background. Needs Textus 1.4.7.
+- **0.6.0** - On iPhone, iPad and Android too: **New Quick Note…** under Plugins and the sidebar tab, with New and each note's more button easy to tap. Only the desktop asks to keep Textus running in the background. Needs Textus 1.4.7. Its page no longer says which devices it runs on: the store shows that.
 - **0.5.5** - Its buttons' names and tooltips come from Textus, as on its other pages.
 - **0.5.4** - The page follows Textus's language by itself. Needs Textus 1.4.3.
 - **0.5.3** - New while searching clears the search, so the new note shows; right-clicking a note's text also offers undo, cut, copy and paste; a search with no match says so.

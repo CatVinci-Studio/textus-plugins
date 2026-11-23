@@ -15,6 +15,7 @@
 
 ## 更新履歴
 
+- **0.2.9** - Its page shows its list of changes in English in every language.
 - **0.2.8** - Its package lists the libraries it carries, with their licenses.
 - **0.2.7** - The page follows Textus's language by itself. Needs Textus 1.4.3.
 - **0.2.6** - Zoom buttons and keys step by 1.25×, as the other viewers do.

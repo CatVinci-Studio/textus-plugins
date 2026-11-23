@@ -21,6 +21,7 @@ Setzt ein Leerzeichen zwischen chinesischen oder japanischen Text und lateinisch
 
 ## Änderungen
 
+- **0.3.1** - Its page shows its list of changes in English in every language.
 - **0.3.0** - From Textus 1.4.4, a paragraph missing a space between CJK and Latin text is underlined; its card adds the spaces. Turn it off in the plugin's settings.
 - **0.2.4** - A code block inside a longer fence (```` holding ```) is left alone.
 - **0.2.3** - Its Textus AI tool says what it does: Chinese and Japanese, not Korean.

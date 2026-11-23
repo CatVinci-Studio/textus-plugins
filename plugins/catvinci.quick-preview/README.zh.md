@@ -7,10 +7,11 @@
 - 卡片最多显示约 1500 个字符，在段落结尾处截断。**打开** 跳到那篇文档；**钉住** 让卡片在你写作时一直开着。
 - 只预览当前打开的文件夹里的文档。
 
-插件申请读取编辑器（知道你指着哪个链接）和读取文件（显示被链接的文档）的权限，从不修改文件。电脑、iPhone 和 iPad 上都能用。
+插件申请读取编辑器（知道你指着哪个链接）和读取文件（显示被链接的文档）的权限，从不修改文件。在平板上要接鼠标或触控板才能用。
 
 ## 更新日志
 
+- **0.2.4** - Its page says that on a tablet it needs a mouse or trackpad, instead of which devices it runs on.
 - **0.2.3** - The store description now opens with what the plugin does.
 - **0.2.2** - A link to a nested heading (`[[Note#A#B]]`) shows that heading's section, as a click opens it. Needs Textus 1.4.0.
 - **0.2.1** - Its page now says in one sentence what it does, what it can do, and what changed in each version.

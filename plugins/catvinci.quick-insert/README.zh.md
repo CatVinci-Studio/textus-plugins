@@ -39,10 +39,9 @@
 - **读取文件**：读取库的每日笔记设置，用来写日期链接。
 - **Textus AI 工具**：让 Textus AI 能把文字说的日子换算成日期。
 
-桌面版和 iOS 都能用。
-
 ## 更新日志
 
+- **0.5.1** - Its page is in every language Textus speaks. Needs Textus 1.4.4 itself, not a test version of it.
 - **0.5.0** - The `/` menu lists Textus's own blocks, the Format menu's, so it always matches the app; Turn into… is gone from it, since picking a block turns the line you're on (the block handle's ⋮⋮ also has Turn Into). Needs Textus 1.4.4
 - **0.4.3** - Dates in Traditional Chinese like 後天, 3天後 and 下週五 now work. A bare @ lists your app language's dates first, and day links are right relative to the note.
 - **0.4.2** - Shares Two-way Links' fix for working out how a note links.

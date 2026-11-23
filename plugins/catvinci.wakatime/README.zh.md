@@ -15,11 +15,11 @@
 - 离线时记录会先排队存着，联网后再分批发送。
 - 设置密钥之前不会发送任何内容，没保存过的文档也不会发送。想停止时，把密钥设为空即可。
 
-支持桌面版和 iPhone，需要 Textus 1.3.0 或更新版本。插件需要读取编辑器和打开的文件夹里的文件（文档、行数、`.wakatime-project` 和 `.git/HEAD`），并只连接 `api.wakatime.com`，不访问其他网络地址。
+需要 Textus 1.3.0 或更新版本。插件需要读取编辑器和打开的文件夹里的文件（文档、行数、`.wakatime-project` 和 `.git/HEAD`），并只连接 `api.wakatime.com`，不访问其他网络地址。
 
 ## 更新日志
 
-- **0.2.5** - Set the API key with a button on its page in Settings, and find its commands in the Plugins menu: on a phone, with no command palette, too.
+- **0.2.5** - Set the API key with a button on its page in Settings, and find its commands in the Plugins menu: on a phone, with no command palette, too. Its page is in every language Textus speaks.
 - **0.2.4** - Leaving the key empty now really turns it off; a garbled reply to Today's Writing Time shows the usual message.
 - **0.2.3** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
 - **0.2.2** - Finds `.wakatime-project` and the Git branch the same way on every system.

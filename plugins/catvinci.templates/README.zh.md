@@ -15,10 +15,11 @@
 - Templater 的常用标签也会填好：`<% tp.date.now("YYYY-MM-DD") %>`（可带天数偏移，比如 `-1`，或 `"P1W"`）、`tp.date.today`、`tomorrow` 和 `yesterday`、`<% tp.file.title %>`、`tp.file.creation_date()` 和 `tp.file.folder()`；`<% tp.file.cursor() %>` 会把光标放在那里。
 - 脚本和其他标签一律不执行：原样保留，并用一条通知列出它们。
 
-支持桌面版和 iPhone，需要 Textus 1.3.10 或更新版本。插件需要读写打开的文件夹里的文件，用来存放模板和新文档；读取和编辑当前文档，用来插入模板或存为模板；并为 Textus AI 提供下面两个工具。
+需要 Textus 1.4.3 或更新版本。插件需要读写打开的文件夹里的文件，用来存放模板和新文档；读取和编辑当前文档，用来插入模板或存为模板；并为 Textus AI 提供下面两个工具。
 
 ## 更新日志
 
+- **0.5.6** - Its page no longer says which devices it runs on: the store shows that. It names the Textus it needs, 1.4.3.
 - **0.5.5** - Sorts names with Textus's own order instead of a copy of it, so the package is smaller. Needs Textus 1.4.3.
 - **0.5.4** - A taken name gets the next free one as the file is written, never a clash (Textus 1.4.3).
 - **0.5.3** - The store description now opens with what the plugin does.

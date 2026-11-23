@@ -19,6 +19,7 @@ Läuft auf dem Desktop und auf dem iPhone und braucht Textus 1.3.10 oder neuer. 
 
 ## Änderungen
 
+- **0.5.6** - Its page no longer says which devices it runs on: the store shows that. It names the Textus it needs, 1.4.3.
 - **0.5.5** - Sorts names with Textus's own order instead of a copy of it, so the package is smaller. Needs Textus 1.4.3.
 - **0.5.4** - A taken name gets the next free one as the file is written, never a clash (Textus 1.4.3).
 - **0.5.3** - The store description now opens with what the plugin does.

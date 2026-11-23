@@ -9,9 +9,10 @@ Open a `.excalidraw` file from the sidebar, or choose **New Drawing** in the Plu
 - If the file is changed somewhere else while it is open, the tab shows the new drawing; a save never writes over it.
 - Excalidraw's handwriting fonts come with the plugin, except its Chinese one, so Chinese and Japanese text uses your system's font.
 
-The plugin asks to read and write files: it reads the drawing and the pictures it links, and writes only the drawing you edit. It works on the desktop and on iPhone and iPad.
+The plugin asks to read and write files: it reads the drawing and the pictures it links, and writes only the drawing you edit.
 
 ## Changes
 
+- **0.1.2** - Its page is in every language Textus speaks.
 - **0.1.1** - Its package lists the libraries it carries, with their licenses.
 - **0.1.0** - first version: `.excalidraw` and Obsidian Excalidraw drawings edited in a tab with Excalidraw.

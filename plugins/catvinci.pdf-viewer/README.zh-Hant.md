@@ -2,7 +2,7 @@
 
 在筆記旁的分頁裡開啟 PDF，可以閱讀、搜尋和拷貝文字。
 
-- 從側欄開啟 PDF，或把它拖進視窗。指向 PDF 某一頁的連結，會直接開到那一頁。
+- 從側邊欄開啟 PDF，或把它拖進視窗。指向 PDF 某一頁的連結，會直接開到那一頁。
 - 捲動翻頁，或用箭頭按鈕到上一頁、下一頁。
 - 用按鈕、**Ctrl+滾輪**（Mac 上是 **⌘+滾輪**）或雙指縮放。頁面會以指標為中心立刻放大縮小，停下後再變清晰。
 - PDF 開啟時符合視窗寬度，調整視窗大小時也會跟著變。點百分比可以在符合寬度和原始大小之間切換。
@@ -15,6 +15,7 @@
 
 ## 更新紀錄
 
+- **0.2.9** - Its page shows its list of changes in English in every language.
 - **0.2.8** - Its package lists the libraries it carries, with their licenses.
 - **0.2.7** - The page follows Textus's language by itself. Needs Textus 1.4.3.
 - **0.2.6** - Zoom buttons and keys step by 1.25×, as the other viewers do.

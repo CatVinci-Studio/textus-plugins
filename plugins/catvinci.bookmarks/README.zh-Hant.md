@@ -1,10 +1,10 @@
 # 書籤
 
-為一段文字加書籤，之後從側欄點一下就能跳回去，不限文件。
+為一段文字加書籤，之後從側邊欄點一下就能跳回去，不限文件。
 
 選取一些文字，選擇 **為選取文字加書籤**：在選取的文字上按右鍵，或使用 **外掛 › 為選取文字加書籤**。文件要先儲存，因為書籤要記住它所在的檔案。
 
-側欄的 **書籤** 分頁依文件列出所有書籤，點一下就會開啟文件並跳到那段文字。在書籤上按右鍵，選 **刪除書籤** 即可刪除。文件改名或搬移後，書籤會跟著走。
+側邊欄的 **書籤** 分頁依文件列出所有書籤，點一下就會開啟文件並跳到那段文字。在書籤上按右鍵，選 **刪除書籤** 即可刪除。文件改名或搬移後，書籤會跟著走。
 
 ## Obsidian 儲存庫
 
@@ -20,6 +20,7 @@
 
 ## 更新紀錄
 
+- **0.4.6** - Its page shows its list of changes in English in every language.
 - **0.4.5** - The filter field and empty message follow Textus's language when you switch it. Needs Textus 1.4.3.
 - **0.4.4** - Obsidian's bookmarks are listed as before but no longer written: Textus 1.4 keeps plugins out of `.obsidian`. Needs Textus 1.4.0.
 - **0.4.3** - Rows are grouped by the document's path in the folder, one group per document; long passages end at a word with "…"; a failed block-id edit in a vault keeps the bookmark.

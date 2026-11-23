@@ -18,10 +18,11 @@
 
 Obsidian：在 Obsidian 库里，还会读取库里的 `.obsidian.vimrc`（Vimrc Support 插件用的文件），排在你自己的设置之后；文件改了会重新读取。请直接打开整个库，而不是库里的文件夹。
 
-插件申请在编辑器里接管按键的权限（用来执行 Vim 按键）和读取文件的权限（只用来读 `.obsidian.vimrc`）。只在电脑上能用。
+插件申请在编辑器里接管按键的权限（用来执行 Vim 按键）和读取文件的权限（只用来读 `.obsidian.vimrc`）。
 
 ## 更新日志
 
+- **0.2.10** - Its page no longer says which devices it runs on: the store shows that.
 - **0.2.9** - Needs Textus 1.3.0-beta.8 or later, the first with everything it uses.
 - **0.2.8** - Desktop only: a phone's on-screen keyboard types its letters into the text instead of running them as Vim keys.
 - **0.2.7** - The status bar's mode opens a menu that turns Vim off; `.obsidian.vimrc` is read again when you come back to Textus; leaving visual mode with **:** always works.

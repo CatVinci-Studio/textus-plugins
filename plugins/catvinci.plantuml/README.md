@@ -12,10 +12,10 @@ Write a code block with the language `plantuml` and put PlantUML text in it, fro
 
 **Settings › Extensions › Plugins › PlantUML › Drawn by** chooses where diagrams are drawn:
 
-- **This computer** (the default): nothing leaves it. Drawing on your computer takes about 100 MB more memory.
+- **This computer** (the default): nothing leaves it. Drawing on your computer takes more memory.
 - **PlantUML server**: each diagram's text is sent to plantuml.com, which draws it. This takes no extra memory.
 
-The plugin asks for network access to `www.plantuml.com` only, and uses it only when you choose the PlantUML server. It works on the desktop and on iPhone and iPad.
+The plugin asks for network access to `www.plantuml.com` only, and uses it only when you choose the PlantUML server.
 
 ## Example
 
@@ -28,6 +28,7 @@ Bob --> Alice : Hi!
 
 ## Changes
 
+- **0.2.7** - Its page no longer says which devices it runs on: the store shows that. It no longer gives a figure for the memory drawing on your computer takes.
 - **0.2.6** - Its package lists the libraries it carries, with their licenses.
 - **0.2.5** - A chart drawn while its block was folded (a phone) fits once the block opens, instead of keeping its old size.
 - **0.2.4** - `!theme` works; no empty gap in a narrow column; server mode shows PlantUML's own error and draws dark in dark themes.

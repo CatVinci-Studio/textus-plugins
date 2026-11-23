@@ -10,8 +10,9 @@ Textus starts [GitHub Copilot CLI](https://github.com/github/copilot-cli) with `
 
 Autopilot keeps going on its own and uses more premium requests. Textus keeps the version it starts: Copilot doesn't update itself here.
 
-It works on the desktop and needs Textus 1.4.3 or later. It asks for one permission: to start this agent on this computer.
+It needs Textus 1.4.3 or later. It asks for one permission: to start this agent on this computer.
 
 ## Changes
 
+- **0.1.1** - Its page is in every language Textus speaks. Needs Textus 1.4.3 itself, not a test version of it.
 - **0.1.0** - First version: GitHub Copilot CLI in Textus AI.

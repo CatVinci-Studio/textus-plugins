@@ -11,7 +11,7 @@ Write a code block with the language `echarts` and put an ECharts option in it. 
 - If the option can't be drawn, the block says what went wrong.
 - An export to HTML, PDF or Word carries the chart as a picture.
 
-The plugin asks for one permission, to give Textus AI the `check_echarts` tool listed below: it checks a block before Textus AI writes it into a document. It works on the desktop and on iPhone and iPad.
+The plugin asks for one permission, to give Textus AI the `check_echarts` tool listed below: it checks a block before Textus AI writes it into a document.
 
 ## Example
 
@@ -25,6 +25,7 @@ The plugin asks for one permission, to give Textus AI the `check_echarts` tool l
 
 ## Changes
 
+- **0.3.5** - Its page no longer says which devices it runs on: the store shows that.
 - **0.3.4** - Its package lists the libraries it carries, with their licenses.
 - **0.3.3** - A chart drawn while its block was folded (a phone) fits once the block opens, instead of keeping its old size.
 - **0.3.2** - Charts redraw when the panel width changes, and their text and default height follow the app's zoom and font.

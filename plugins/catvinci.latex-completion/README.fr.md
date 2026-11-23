@@ -11,6 +11,7 @@ Elle fonctionne sur ordinateur et sur iPhone et demande Textus 1.3.0 ou plus ré
 
 ## Changements
 
+- **0.1.6** - Its page no longer says which devices it runs on: the store shows that.
 - **0.1.5** - The store description now opens with what the plugin does.
 - **0.1.4** - A command typed out whole comes first, so Enter keeps it (\in stays \in); a command without braces is written with a space after it; with Textus 1.3.13 the list closes once a command is written.
 - **0.1.3** - Its page now says in one sentence what it does, what it can do, and what changed in each version.

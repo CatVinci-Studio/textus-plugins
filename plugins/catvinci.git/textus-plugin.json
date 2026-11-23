@@ -1,7 +1,7 @@
 {
   "id": "catvinci.git",
   "name": "%name%",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "publisher": "catvinci",
   "author": "CatVinci Studio",
   "description": "%description%",
@@ -9,7 +9,7 @@
   "license": "MIT",
   "repository": "https://github.com/CatVinci-Studio/textus-plugins",
   "engines": {
-    "textus": ">=1.4.6-rc.4"
+    "textus": ">=1.4.6"
   },
   "platforms": ["desktop"],
   "category": "sync",
@@ -94,7 +94,7 @@
   "l10n": {
     "en": {
       "name": "Git",
-      "description": "Changed files marked in the sidebar, the branch in the status bar, commits of the files you pick, pushing and pulling with your own Git, and a file's commits in Version History. Desktop.",
+      "description": "Changed files marked in the sidebar, the branch in the status bar, commits of the files you pick, pushing and pulling with your own Git, and a file's commits in Version History.",
       "commit": "Commit Changes…",
       "push": "Push",
       "pull": "Pull",
@@ -129,7 +129,7 @@
     },
     "zh": {
       "name": "Git",
-      "description": "在侧栏标出改过的文件，状态栏显示分支，用你自己的 Git 提交选中的文件、推送和拉取，版本历史里能看到文件的提交。仅桌面版。",
+      "description": "在侧边栏标出改过的文件，状态栏显示分支，用你自己的 Git 提交选中的文件、推送和拉取，版本历史里能看到文件的提交。",
       "commit": "提交改动…",
       "push": "推送",
       "pull": "拉取",
@@ -158,13 +158,13 @@
       "state.renamed": "已改名",
       "state.conflicted": "有冲突",
       "state.deleted": "已删除",
-      "tool.git_changes": "The open folder's branch and changed files, each changed text file's lines against its last commit. Read it before writing a commit message.",
-      "tool.git_history": "A file's Git commits, newest first, through renames: hash, date, author, subject.",
-      "tool.git_file_at": "A file's text as one of its commits had it (hash from git_history)."
+      "tool.git_changes": "打开的文件夹的分支和改动的文件，以及每个改动的文本文件相对上次提交改了哪些行。写提交说明前先读它。",
+      "tool.git_history": "一个文件的 Git 提交，从新到旧，跟随重命名：哈希、日期、作者、标题。",
+      "tool.git_file_at": "一个文件在某次提交时的内容（哈希来自 git_history）。"
     },
     "zh-Hant": {
       "name": "Git",
-      "description": "在側欄標出改過的檔案，狀態列顯示分支，用你自己的 Git 提交選取的檔案、推送和拉取，版本歷史中可以看到檔案的提交。僅限桌面版。",
+      "description": "在側邊欄標出改過的檔案，狀態列顯示分支，用你自己的 Git 提交選取的檔案、推送和拉取，版本歷史中可以看到檔案的提交。",
       "commit": "提交變更…",
       "push": "推送",
       "pull": "拉取",
@@ -193,13 +193,13 @@
       "state.renamed": "已重新命名",
       "state.conflicted": "有衝突",
       "state.deleted": "已刪除",
-      "tool.git_changes": "The open folder's branch and changed files, each changed text file's lines against its last commit. Read it before writing a commit message.",
-      "tool.git_history": "A file's Git commits, newest first, through renames: hash, date, author, subject.",
-      "tool.git_file_at": "A file's text as one of its commits had it (hash from git_history)."
+      "tool.git_changes": "開啟的資料夾的分支和變更的檔案，以及每個變更的文字檔相對上次提交改了哪些行。寫提交訊息前先讀它。",
+      "tool.git_history": "一個檔案的 Git 提交，由新到舊，跟隨重新命名：雜湊、日期、作者、標題。",
+      "tool.git_file_at": "一個檔案在某次提交時的內容（雜湊來自 git_history）。"
     },
     "ja": {
       "name": "Git",
-      "description": "変更したファイルをサイドバーに印し、ブランチをステータスバーに表示し、選んだファイルのコミット、プッシュ、プルを自分の Git で行います。版の履歴でファイルのコミットも見られます。デスクトップ版のみ。",
+      "description": "変更したファイルをサイドバーに印し、ブランチをステータスバーに表示し、選んだファイルのコミット、プッシュ、プルを自分の Git で行います。版の履歴でファイルのコミットも見られます。",
       "commit": "変更をコミット…",
       "push": "プッシュ",
       "pull": "プル",
@@ -228,13 +228,13 @@
       "state.renamed": "名前変更",
       "state.conflicted": "競合",
       "state.deleted": "削除",
-      "tool.git_changes": "The open folder's branch and changed files, each changed text file's lines against its last commit. Read it before writing a commit message.",
-      "tool.git_history": "A file's Git commits, newest first, through renames: hash, date, author, subject.",
-      "tool.git_file_at": "A file's text as one of its commits had it (hash from git_history)."
+      "tool.git_changes": "開いているフォルダーのブランチと変更されたファイル、変更された各テキストファイルの最後のコミットからの変更行。コミットメッセージを書く前に読みます。",
+      "tool.git_history": "ファイルの Git コミットを新しい順に、名前の変更もたどって：ハッシュ、日付、作者、件名。",
+      "tool.git_file_at": "あるコミット時点でのファイルの内容（ハッシュは git_history から）。"
     },
     "ko": {
       "name": "Git",
-      "description": "바뀐 파일을 사이드바에 표시하고, 브랜치를 상태 표시줄에 보여 주며, 고른 파일의 커밋과 푸시, 풀을 내 Git으로 합니다. 버전 기록에서 파일의 커밋도 볼 수 있습니다. 데스크톱 전용.",
+      "description": "바뀐 파일을 사이드바에 표시하고, 브랜치를 상태 표시줄에 보여 주며, 고른 파일의 커밋과 푸시, 풀을 내 Git으로 합니다. 버전 기록에서 파일의 커밋도 볼 수 있습니다.",
       "commit": "변경 사항 커밋…",
       "push": "푸시",
       "pull": "풀",
@@ -263,13 +263,13 @@
       "state.renamed": "이름 바뀜",
       "state.conflicted": "충돌",
       "state.deleted": "삭제됨",
-      "tool.git_changes": "The open folder's branch and changed files, each changed text file's lines against its last commit. Read it before writing a commit message.",
-      "tool.git_history": "A file's Git commits, newest first, through renames: hash, date, author, subject.",
-      "tool.git_file_at": "A file's text as one of its commits had it (hash from git_history)."
+      "tool.git_changes": "열린 폴더의 브랜치와 바뀐 파일, 바뀐 각 텍스트 파일이 마지막 커밋 이후 바뀐 줄. 커밋 메시지를 쓰기 전에 읽습니다.",
+      "tool.git_history": "파일의 Git 커밋을 최신순으로, 이름 변경도 따라가며: 해시, 날짜, 작성자, 제목.",
+      "tool.git_file_at": "어떤 커밋 시점의 파일 내용(해시는 git_history에서)."
     },
     "de": {
       "name": "Git",
-      "description": "Geänderte Dateien in der Seitenleiste markiert, der Branch in der Statusleiste, Commits der gewählten Dateien, Pushen und Pullen mit Ihrem eigenen Git und die Commits einer Datei im Versionsverlauf. Nur Desktop.",
+      "description": "Geänderte Dateien in der Seitenleiste markiert, der Branch in der Statusleiste, Commits der gewählten Dateien, Pushen und Pullen mit Ihrem eigenen Git und die Commits einer Datei im Versionsverlauf.",
       "commit": "Änderungen committen…",
       "push": "Pushen",
       "pull": "Pullen",
@@ -298,13 +298,13 @@
       "state.renamed": "Umbenannt",
       "state.conflicted": "Im Konflikt",
       "state.deleted": "Gelöscht",
-      "tool.git_changes": "The open folder's branch and changed files, each changed text file's lines against its last commit. Read it before writing a commit message.",
-      "tool.git_history": "A file's Git commits, newest first, through renames: hash, date, author, subject.",
-      "tool.git_file_at": "A file's text as one of its commits had it (hash from git_history)."
+      "tool.git_changes": "Der Branch des geöffneten Ordners und die geänderten Dateien, bei jeder geänderten Textdatei die Zeilen gegenüber ihrem letzten Commit. Vor dem Schreiben einer Commit-Nachricht lesen.",
+      "tool.git_history": "Die Git-Commits einer Datei, neueste zuerst, auch über Umbenennungen hinweg: Hash, Datum, Autor, Betreff.",
+      "tool.git_file_at": "Der Text einer Datei, wie einer ihrer Commits ihn hatte (Hash aus git_history)."
     },
     "fr": {
       "name": "Git",
-      "description": "Les fichiers modifiés marqués dans la barre latérale, la branche dans la barre d’état, des commits des fichiers choisis, push et pull avec votre propre Git, et les commits d’un fichier dans l’historique des versions. Bureau uniquement.",
+      "description": "Les fichiers modifiés marqués dans la barre latérale, la branche dans la barre d’état, des commits des fichiers choisis, push et pull avec votre propre Git, et les commits d’un fichier dans l’historique des versions.",
       "commit": "Committer les modifications…",
       "push": "Pousser",
       "pull": "Tirer",
@@ -333,13 +333,13 @@
       "state.renamed": "Renommé",
       "state.conflicted": "En conflit",
       "state.deleted": "Supprimé",
-      "tool.git_changes": "The open folder's branch and changed files, each changed text file's lines against its last commit. Read it before writing a commit message.",
-      "tool.git_history": "A file's Git commits, newest first, through renames: hash, date, author, subject.",
-      "tool.git_file_at": "A file's text as one of its commits had it (hash from git_history)."
+      "tool.git_changes": "La branche du dossier ouvert et les fichiers modifiés, avec pour chaque fichier texte modifié ses lignes par rapport à son dernier commit. À lire avant d’écrire un message de commit.",
+      "tool.git_history": "Les commits Git d’un fichier, du plus récent au plus ancien, à travers les renommages : hash, date, auteur, sujet.",
+      "tool.git_file_at": "Le texte d’un fichier tel qu’un de ses commits l’avait (hash donné par git_history)."
     },
     "es": {
       "name": "Git",
-      "description": "Los archivos cambiados marcados en la barra lateral, la rama en la barra de estado, commits de los archivos que elijas, push y pull con tu propio Git y los commits de un archivo en el historial de versiones. Solo escritorio.",
+      "description": "Los archivos cambiados marcados en la barra lateral, la rama en la barra de estado, commits de los archivos que elijas, push y pull con tu propio Git y los commits de un archivo en el historial de versiones.",
       "commit": "Hacer commit de los cambios…",
       "push": "Enviar (push)",
       "pull": "Traer (pull)",
@@ -368,13 +368,13 @@
       "state.renamed": "Renombrado",
       "state.conflicted": "En conflicto",
       "state.deleted": "Eliminado",
-      "tool.git_changes": "The open folder's branch and changed files, each changed text file's lines against its last commit. Read it before writing a commit message.",
-      "tool.git_history": "A file's Git commits, newest first, through renames: hash, date, author, subject.",
-      "tool.git_file_at": "A file's text as one of its commits had it (hash from git_history)."
+      "tool.git_changes": "La rama de la carpeta abierta y los archivos cambiados, con las líneas de cada archivo de texto cambiado frente a su último commit. Léelo antes de escribir un mensaje de commit.",
+      "tool.git_history": "Los commits de Git de un archivo, del más reciente al más antiguo, a través de los cambios de nombre: hash, fecha, autor, asunto.",
+      "tool.git_file_at": "El texto de un archivo tal como lo tenía uno de sus commits (hash de git_history)."
     },
     "pt": {
       "name": "Git",
-      "description": "Os arquivos alterados marcados na barra lateral, o branch na barra de status, commits dos arquivos que você escolher, push e pull com o seu próprio Git e os commits de um arquivo no histórico de versões. Só desktop.",
+      "description": "Os arquivos alterados marcados na barra lateral, o branch na barra de status, commits dos arquivos que você escolher, push e pull com o seu próprio Git e os commits de um arquivo no histórico de versões.",
       "commit": "Fazer commit das alterações…",
       "push": "Enviar (push)",
       "pull": "Puxar (pull)",
@@ -403,13 +403,13 @@
       "state.renamed": "Renomeado",
       "state.conflicted": "Em conflito",
       "state.deleted": "Excluído",
-      "tool.git_changes": "The open folder's branch and changed files, each changed text file's lines against its last commit. Read it before writing a commit message.",
-      "tool.git_history": "A file's Git commits, newest first, through renames: hash, date, author, subject.",
-      "tool.git_file_at": "A file's text as one of its commits had it (hash from git_history)."
+      "tool.git_changes": "O branch da pasta aberta e os arquivos alterados, com as linhas de cada arquivo de texto alterado em relação ao último commit. Leia antes de escrever uma mensagem de commit.",
+      "tool.git_history": "Os commits Git de um arquivo, do mais recente ao mais antigo, passando por renomeações: hash, data, autor, assunto.",
+      "tool.git_file_at": "O texto de um arquivo como um dos seus commits o tinha (hash vindo de git_history)."
     },
     "ru": {
       "name": "Git",
-      "description": "Изменённые файлы отмечены на боковой панели, ветка — в строке состояния, коммиты выбранных файлов, push и pull вашим собственным Git и коммиты файла в истории версий. Только для компьютера.",
+      "description": "Изменённые файлы отмечены на боковой панели, ветка — в строке состояния, коммиты выбранных файлов, push и pull вашим собственным Git и коммиты файла в истории версий.",
       "commit": "Закоммитить изменения…",
       "push": "Отправить (push)",
       "pull": "Получить (pull)",
@@ -438,9 +438,9 @@
       "state.renamed": "Переименован",
       "state.conflicted": "Конфликт",
       "state.deleted": "Удалён",
-      "tool.git_changes": "The open folder's branch and changed files, each changed text file's lines against its last commit. Read it before writing a commit message.",
-      "tool.git_history": "A file's Git commits, newest first, through renames: hash, date, author, subject.",
-      "tool.git_file_at": "A file's text as one of its commits had it (hash from git_history)."
+      "tool.git_changes": "Ветка открытой папки и изменённые файлы, для каждого изменённого текстового файла — строки относительно последнего коммита. Прочтите перед тем, как писать сообщение коммита.",
+      "tool.git_history": "Коммиты Git для файла, от новых к старым, с учётом переименований: хеш, дата, автор, тема.",
+      "tool.git_file_at": "Текст файла, каким он был в одном из коммитов (хеш из git_history)."
     }
   }
 }

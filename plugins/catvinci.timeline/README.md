@@ -21,10 +21,11 @@ Draws events as a timeline, one per line: when | what | more.
 
 ## Permissions
 
-It asks only for **Tools for Textus AI**, so Textus AI can check a block before it writes one. It reads no files and draws everything on your device, on the desktop and on iOS.
+It asks only for **Tools for Textus AI**, so Textus AI can check a block before it writes one. It reads no files and draws everything on your device.
 
 ## Changes
 
+- **0.4.1** - Its page no longer says which devices it runs on: the store shows that.
 - **0.4.0** - A database can be shown as a timeline: pick Timeline among its views, and its dated rows line up in order; a click opens a row. Needs Textus 1.4.6.
 - **0.3.3** - A date no longer breaks in the middle ("2024-0" over "3"); a chart drawn while its block was folded fits once it opens.
 - **0.3.2** - long notes and dates wrap to fit a narrow island, the timeline uses the document's font, and an empty block says what to write

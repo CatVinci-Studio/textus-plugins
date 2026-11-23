@@ -12,10 +12,11 @@
 
 标记的写法与 Obsidian 的 Reminder 插件相同，同一份笔记在那边也能提醒。
 
-支持桌面版，需要 Textus 1.3.10 或更新版本。插件需要读取打开的文件夹里的文件，用来找到标记；在编辑器里写入，用来插入标记；显示通知；并为 Textus AI 提供下面两个工具。
+需要 Textus 1.4.3 或更新版本。插件需要读取打开的文件夹里的文件，用来找到标记；在编辑器里写入，用来插入标记；显示通知；并为 Textus AI 提供下面两个工具。
 
 ## 更新日志
 
+- **0.3.6** - Its page is in every language Textus speaks. It names the Textus it needs, 1.4.3.
 - **0.3.5** - The filter field and empty message follow Textus's language when you switch it. Needs Textus 1.4.3.
 - **0.3.4** - Opening a folder reads only the documents Textus finds a reminder mark in, not every document.
 - **0.3.3** - The store description now opens with what the plugin does.

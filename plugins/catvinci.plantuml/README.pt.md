@@ -12,7 +12,7 @@ Escreva um bloco de código com a linguagem `plantuml` e coloque nele texto Plan
 
 **Ajustes › Extensões › Plugins › PlantUML › Desenhado por** escolhe onde os diagramas são desenhados:
 
-- **Este computador** (padrão): nada sai dele. Desenhar no seu computador usa cerca de 100 MB a mais de memória.
+- **Este computador** (padrão): nada sai dele. Desenhar no seu computador usa mais memória.
 - **Servidor do PlantUML**: o texto de cada diagrama vai para plantuml.com, que o desenha. Não usa memória a mais.
 
 O plugin pede acesso à rede só para `www.plantuml.com`, e só o usa quando você escolhe o servidor do PlantUML. Funciona no computador, no iPhone e no iPad.
@@ -28,6 +28,7 @@ Bob --> Alice : Hi!
 
 ## Alterações
 
+- **0.2.7** - Its page no longer says which devices it runs on: the store shows that. It no longer gives a figure for the memory drawing on your computer takes.
 - **0.2.6** - Its package lists the libraries it carries, with their licenses.
 - **0.2.5** - A chart drawn while its block was folded (a phone) fits once the block opens, instead of keeping its old size.
 - **0.2.4** - `!theme` works; no empty gap in a narrow column; server mode shows PlantUML's own error and draws dark in dark themes.

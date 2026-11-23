@@ -12,13 +12,12 @@
 
 ## 权限
 
-- **网络，仅限 api.openverse.org**：在 Openverse 搜索。不需要账号或密钥；Openverse 每个地址每天大约允许 200 次搜索。
+- **网络，仅限 api.openverse.org**：在 Openverse 搜索。不需要账号或密钥；Openverse 限制每个地址每天的搜索次数。
 - **Textus AI 工具**：让 Textus AI 能搜索图片。
-
-桌面版和 iOS 都能用。
 
 ## 更新日志
 
+- **0.1.3** - Its page is in every language Textus speaks. It no longer gives a number for Openverse's daily limit, which can change.
 - **0.1.2** - The store description now opens with what the plugin does.
 - **0.1.1** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
 - **0.1.0** - first version: openly licensed pictures from Openverse for Textus AI, each with its credit line

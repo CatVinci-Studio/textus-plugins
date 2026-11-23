@@ -13,6 +13,7 @@ Word 문서(.docx)를 Word에서와 같은 모양 그대로 탭에서 읽습니�
 
 ## 변경 내역
 
+- **0.2.9** - Its page no longer says which devices it runs on: the store shows that.
 - **0.2.8** - Its package lists the libraries it carries, with their licenses.
 - **0.2.7** - The page follows Textus's language by itself. Needs Textus 1.4.3.
 - **0.2.6** - Zoom buttons and keys step by 1.25×, as the other viewers do.

@@ -4,7 +4,7 @@
 
 ## 准备
 
-同一台电脑上要开着 Zotero 7 或更新版本（Zotero 10 也可以），并在 Zotero 的 **设置 › 高级** 中打开“允许此计算机上的其他应用程序与 Zotero 通信”。插件只和你电脑上的 Zotero 通信，数据不会离开这台电脑。仅支持桌面版。
+同一台电脑上要开着 Zotero 7 或更新版本（Zotero 10 也可以），并在 Zotero 的 **设置 › 高级** 中打开“允许此计算机上的其他应用程序与 Zotero 通信”。插件只和你电脑上的 Zotero 通信，数据不会离开这台电脑。
 
 ## 插入引用
 
@@ -41,6 +41,7 @@
 
 ## 更新日志
 
+- **0.4.5** - Its page no longer says which devices it runs on: the store shows that.
 - **0.4.4** - Sorts names with Textus's own order instead of a copy of it, so the package is smaller. Needs Textus 1.4.3.
 - **0.4.3** - A citation now replaces the selected words; the References list no longer says Zotero is unreachable when it answers, and hover previews show up more reliably.
 - **0.4.2** - Shorter help and empty-state text.

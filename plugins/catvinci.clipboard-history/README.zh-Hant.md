@@ -1,8 +1,8 @@
 # 剪貼簿紀錄
 
-把你在文件裡拷貝或剪下的內容留在側欄，隨時可以再放回去。
+把你在文件裡拷貝或剪下的內容留在側邊欄，隨時可以再放回去。
 
-在文件裡拷貝或剪下文字後，它會出現在側欄的 **剪貼簿紀錄** 分頁，最新的在最上面。保留最近 30 筆，重新啟動 Textus 後也還在。再拷貝一次相同的文字，它會回到最上面；特別長的內容（超過 50,000 個字元）不會記錄。
+在文件裡拷貝或剪下文字後，它會出現在側邊欄的 **剪貼簿紀錄** 分頁，最新的在最上面。保留最近 30 筆，重新啟動 Textus 後也還在。再拷貝一次相同的文字，它會回到最上面；特別長的內容（超過 50,000 個字元）不會記錄。
 
 - 點一筆，就在游標處插入。
 - 在某一筆上按右鍵，可以 **拷貝** 或 **移除**。
@@ -17,6 +17,7 @@
 
 ## 更新紀錄
 
+- **0.1.5** - Its page shows its list of changes in English in every language.
 - **0.1.4** - The filter field and empty message follow Textus's language when you switch it. Needs Textus 1.4.3.
 - **0.1.3** - Each clip shows when it was copied, with a line between clips.
 - **0.1.2** - The panel's Clear button is back: one click empties the history. Shorter help and empty-state text.

@@ -12,7 +12,7 @@
 
 **設定 › 拡張機能 › プラグイン › PlantUML › 描画する場所** で、図を描く場所を選びます：
 
-- **このコンピュータ**（既定）：内容は外に出ません。このコンピュータで描くとメモリを約 100 MB 余分に使います。
+- **このコンピュータ**（既定）：内容は外に出ません。このコンピュータで描くとメモリを多めに使います。
 - **PlantUML サーバー**：各図のテキストが plantuml.com に送られ、そこで描かれます。余分なメモリは使いません。
 
 このプラグインが求めるのは `www.plantuml.com` へのネットワーク接続だけで、PlantUML サーバーを選んだときにしか使いません。デスクトップと iPhone・iPad で使えます。
@@ -28,6 +28,7 @@ Bob --> Alice : Hi!
 
 ## 更新履歴
 
+- **0.2.7** - Its page no longer says which devices it runs on: the store shows that. It no longer gives a figure for the memory drawing on your computer takes.
 - **0.2.6** - Its package lists the libraries it carries, with their licenses.
 - **0.2.5** - A chart drawn while its block was folded (a phone) fits once the block opens, instead of keeping its old size.
 - **0.2.4** - `!theme` works; no empty gap in a narrow column; server mode shows PlantUML's own error and draws dark in dark themes.

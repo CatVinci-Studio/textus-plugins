@@ -15,11 +15,11 @@ The Plugins menu and the command palette have **WakaTime: Set API Key…**, **Wa
 - Offline, the time waits in a queue and goes later, in batches.
 - Nothing is sent before the key is set, and an unsaved document is never sent. To stop, set the key to nothing.
 
-It works on desktop and iPhone and needs Textus 1.3.0 or later. It asks to read the editor and the open folder's files (for the document, its lines, `.wakatime-project` and `.git/HEAD`) and to reach `api.wakatime.com`, and nothing else on the network.
+It needs Textus 1.3.0 or later. It asks to read the editor and the open folder's files (for the document, its lines, `.wakatime-project` and `.git/HEAD`) and to reach `api.wakatime.com`, and nothing else on the network.
 
 ## Changes
 
-- **0.2.5** - Set the API key with a button on its page in Settings, and find its commands in the Plugins menu: on a phone, with no command palette, too.
+- **0.2.5** - Set the API key with a button on its page in Settings, and find its commands in the Plugins menu: on a phone, with no command palette, too. Its page is in every language Textus speaks.
 - **0.2.4** - Leaving the key empty now really turns it off; a garbled reply to Today's Writing Time shows the usual message.
 - **0.2.3** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
 - **0.2.2** - Finds `.wakatime-project` and the Git branch the same way on every system.

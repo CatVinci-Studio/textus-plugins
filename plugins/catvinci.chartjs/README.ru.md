@@ -27,6 +27,7 @@
 
 ## Изменения
 
+- **0.3.5** - Its page no longer says which devices it runs on: the store shows that.
 - **0.3.4** - Its package lists the libraries it carries, with their licenses.
 - **0.3.3** - A chart drawn while its block was folded (a phone) fits once the block opens, instead of keeping its old size.
 - **0.3.2** - Charts redraw to fit a narrower or wider panel, labels follow the theme's font and text size, and the error line is red again.

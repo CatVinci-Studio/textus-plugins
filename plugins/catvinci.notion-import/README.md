@@ -27,10 +27,11 @@ The report counts what came in, lists the links it couldn't find, the files it c
 
 ## Permissions
 
-Everything happens on your device: the plugin reads and writes files in the open folder only, and never uses the network. It works on desktop and iPhone and needs Textus 1.3.10 or later.
+Everything happens on your device: the plugin reads and writes files in the open folder only, and never uses the network. It needs Textus 1.3.10 or later.
 
 ## Changes
 
+- **0.7.12** - Its page is in every language Textus speaks. In Chinese, a database is 数据库, and 知识库 is only the Wiki plugin's name.
 - **0.7.11** - Its package lists the libraries it carries, with their licenses.
 - **0.7.10** - The database code it shares with Database brought up to date (its file columns filled).
 - **0.7.9** - Databases it makes keep a view another plugin draws (Textus 1.4.6).

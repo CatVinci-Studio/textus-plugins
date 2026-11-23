@@ -12,10 +12,11 @@ Write the mark in any line - a task, a heading, any line. At that time a notific
 
 The marks are written as Obsidian's Reminder plugin writes them, so the same notes remind you there too.
 
-It works on desktop and needs Textus 1.3.10 or later. It asks to read the open folder's files, to find the marks; to write in the editor, to put a mark in; to show notifications; and to give Textus AI the two tools below.
+It needs Textus 1.4.3 or later. It asks to read the open folder's files, to find the marks; to write in the editor, to put a mark in; to show notifications; and to give Textus AI the two tools below.
 
 ## Changes
 
+- **0.3.6** - Its page is in every language Textus speaks. It names the Textus it needs, 1.4.3.
 - **0.3.5** - The filter field and empty message follow Textus's language when you switch it. Needs Textus 1.4.3.
 - **0.3.4** - Opening a folder reads only the documents Textus finds a reminder mark in, not every document.
 - **0.3.3** - The store description now opens with what the plugin does.

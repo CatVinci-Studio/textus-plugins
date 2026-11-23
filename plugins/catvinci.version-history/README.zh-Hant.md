@@ -3,7 +3,7 @@
 把文件每次儲存的內容留作一個版本，可以查看改了什麼，也能把舊版本找回來。
 
 - 每次儲存，文件的文字都會留作一個版本。間隔很近的儲存（例如自動儲存每隔幾秒一次）算作同一個版本，最多每 15 分鐘產生一個新版本。最近一天的全部保留，一週內每小時留一個，三個月內每天留一個，更早的每週留一個。
-- 側欄的 **紀錄** 分頁列出目前文件的各個版本，最新的在最上面，依日期分組：今天、昨天，然後是日期。
+- 側邊欄的 **紀錄** 分頁列出目前文件的各個版本，最新的在最上面，依日期分組：今天、昨天，然後是日期。
 - 選一個版本，可以逐行看到從那之後改了什麼。
 - 可以和現在的文件或任意另一個版本比較，修改的字詞會標出來。修改旁的「還原」只拿回這一處；「更多」裡可以為版本命名或釘選（之後一直保留），或另開為新文件。在 Textus 之外的修改（其他 App、同步、git）也會留下修改前後的版本。
 - **還原** 會把舊內容當作一次修改交給文件，你可以像其他修改一樣接受或拒絕。**以新文件開啟** 則在旁邊開啟它。
@@ -17,6 +17,7 @@
 
 ## 更新紀錄
 
+- **0.5.1** - Its page shows its list of changes in English in every language.
 - **0.5.0** - From Textus 1.4.4 the versions other plugins keep of a document - Cloud Sync's - are listed too, each under its source's name, to compare and restore like the rest.
 - **0.4.1** - Restore is one word, so its button fits a narrow sidebar in every language.
 - **0.4.0** - Versions thin out with age instead of the last 50 going; each text is stored once; a deleted document's versions go a month later. Compare any two versions, word by word; take back one change; name and pin versions; changes made outside Textus are kept. Versions from 0.3 move over by themselves. Needs Textus 1.4.3. In a Git folder on the desktop, the document's commits show under its versions.

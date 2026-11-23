@@ -42,7 +42,7 @@ Lines about the look (`hide …`, `show …`) are passed over; any other line it
 
 ## Permissions
 
-The plugin reads the folder's documents to find their tasks, and writes to a document only to tick a task or add one. It also gives Textus AI the tools below. It works on the desktop and on iPhone and iPad.
+The plugin reads the folder's documents to find their tasks, and writes to a document only to tick a task or add one. It also gives Textus AI the tools below.
 
 ## Changes
 

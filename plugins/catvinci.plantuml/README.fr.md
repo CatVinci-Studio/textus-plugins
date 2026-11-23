@@ -12,7 +12,7 @@ Dessine des diagrammes UML et d’autres à partir de texte PlantUML dans un blo
 
 **Réglages › Extensions › Modules › PlantUML › Dessiné par** choisit où les diagrammes sont dessinés :
 
-- **Cet ordinateur** (par défaut) : rien n’en sort. Dessiner sur votre ordinateur prend environ 100 Mo de mémoire en plus.
+- **Cet ordinateur** (par défaut) : rien n’en sort. Dessiner sur votre ordinateur prend plus de mémoire.
 - **Serveur PlantUML** : le texte de chaque diagramme est envoyé à plantuml.com, qui le dessine. Pas de mémoire en plus.
 
 Le plugin demande l’accès au réseau pour `www.plantuml.com` seulement, et ne s’en sert que si vous choisissez le serveur PlantUML. Il fonctionne sur ordinateur, iPhone et iPad.
@@ -28,6 +28,7 @@ Bob --> Alice : Hi!
 
 ## Changements
 
+- **0.2.7** - Its page no longer says which devices it runs on: the store shows that. It no longer gives a figure for the memory drawing on your computer takes.
 - **0.2.6** - Its package lists the libraries it carries, with their licenses.
 - **0.2.5** - A chart drawn while its block was folded (a phone) fits once the block opens, instead of keeping its old size.
 - **0.2.4** - `!theme` works; no empty gap in a narrow column; server mode shows PlantUML's own error and draws dark in dark themes.

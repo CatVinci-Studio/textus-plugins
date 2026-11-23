@@ -23,6 +23,7 @@
 
 ## 更新紀錄
 
+- **0.7.9** - Its page no longer says which devices it runs on: the store shows that. It names the Textus it needs, 1.4.3.
 - **0.7.8** - Where the bar is too narrow for even the short month name (a phone's sidebar), the month goes on a row of its own above the buttons instead of losing its year. The calendar writes dates with Textus's own, so the package is smaller.
 - **0.7.7** - Weeks start as Textus's language has them, not the device's region, so they agree with the week numbers.
 - **0.7.6** - The page follows Textus's language by itself. Needs Textus 1.4.3.
@@ -47,5 +48,5 @@
 裝上這個外掛後，Textus AI 在對話中可以使用：
 
 - `read_daily_note`：讀取某一天的日記（預設今天）：從日記資料夾中給出它的路徑、是否存在以及全文。
-- `append_to_daily_note`：在某一天的日記（預設今天）末尾附加 Markdown 內容；如果還沒有這篇日記，先依範本新建。 想先放在側欄、之後再用的筆記用 add_note；帶日期的待辦用 add_task。
+- `append_to_daily_note`：在某一天的日記（預設今天）末尾附加 Markdown 內容；如果還沒有這篇日記，先依範本新建。 想先放在側邊欄、之後再用的筆記用 add_note；帶日期的待辦用 add_task。
 <!-- /ai-tools -->

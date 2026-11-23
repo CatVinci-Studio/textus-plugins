@@ -21,10 +21,11 @@
 
 ## 权限
 
-只需要 **Textus AI 工具** 权限，让 Textus AI 在写入代码块前先检查一遍。它不读取任何文件，全部在本机绘制，桌面版和 iOS 都能用。
+只需要 **Textus AI 工具** 权限，让 Textus AI 在写入代码块前先检查一遍。它不读取任何文件，全部在本机绘制。
 
 ## 更新日志
 
+- **0.4.1** - Its page no longer says which devices it runs on: the store shows that.
 - **0.4.0** - A database can be shown as a timeline: pick Timeline among its views, and its dated rows line up in order; a click opens a row. Needs Textus 1.4.6.
 - **0.3.3** - A date no longer breaks in the middle ("2024-0" over "3"); a chart drawn while its block was folded fits once it opens.
 - **0.3.2** - long notes and dates wrap to fit a narrow island, the timeline uses the document's font, and an empty block says what to write

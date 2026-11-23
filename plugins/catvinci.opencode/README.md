@@ -10,10 +10,11 @@ Textus starts [OpenCode](https://opencode.ai) with `opencode acp`, its Agent Cli
 
 It asks before edits, commands and web fetches; in plan mode it doesn't edit. Its sub-agents are off for now: OpenCode doesn't pass on their questions, so a turn would wait forever.
 
-It works on the desktop and needs Textus 1.4.3 or later. It asks for one permission: to start this agent on this computer.
+It needs Textus 1.4.3 or later. It asks for one permission: to start this agent on this computer.
 
 ## Changes
 
+- **0.1.4** - Its page is in every language Textus speaks. Needs Textus 1.4.3 itself, not a test version of it.
 - **0.1.3** - Asks before web fetches too, plan mode no longer edits, and sub-agents are off (their questions never arrived, so a turn hung). Needs Textus 1.4.3.
 - **0.1.2** - Asks before each edit and command, as it says: OpenCode on its own allowed them unasked.
 - **0.1.1** - Needs Textus 1.4.2 or later, for its new agent views.

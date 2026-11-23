@@ -12,7 +12,7 @@
 
 **설정 › 확장 › 플러그인 › PlantUML › 그리는 곳**에서 그릴 곳을 고릅니다:
 
-- **이 컴퓨터**(기본값): 내용이 밖으로 나가지 않습니다. 이 컴퓨터에서 그리면 메모리를 약 100MB 더 씁니다.
+- **이 컴퓨터**(기본값): 내용이 밖으로 나가지 않습니다. 이 컴퓨터에서 그리면 메모리를 더 씁니다.
 - **PlantUML 서버**: 각 다이어그램의 텍스트를 plantuml.com에 보내 그곳에서 그립니다. 메모리를 더 쓰지 않습니다.
 
 이 플러그인은 `www.plantuml.com`에 대한 네트워크 권한만 요청하며, PlantUML 서버를 골랐을 때만 씁니다. 데스크톱과 iPhone, iPad에서 쓸 수 있습니다.
@@ -28,6 +28,7 @@ Bob --> Alice : Hi!
 
 ## 변경 내역
 
+- **0.2.7** - Its page no longer says which devices it runs on: the store shows that. It no longer gives a figure for the memory drawing on your computer takes.
 - **0.2.6** - Its package lists the libraries it carries, with their licenses.
 - **0.2.5** - A chart drawn while its block was folded (a phone) fits once the block opens, instead of keeping its old size.
 - **0.2.4** - `!theme` works; no empty gap in a narrow column; server mode shows PlantUML's own error and draws dark in dark themes.

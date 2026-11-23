@@ -12,10 +12,10 @@
 
 **设置 › 扩展 › 插件 › PlantUML › 渲染方式** 决定在哪里画图：
 
-- **本机**（默认）：内容不会离开电脑。在本机画图约多占 100 MB 内存。
+- **本机**（默认）：内容不会离开电脑。在本机画图会多占一些内存。
 - **PlantUML 服务器**：每张图的文本会发给 plantuml.com，由它来画，不额外占内存。
 
-插件只申请访问 `www.plantuml.com` 的网络权限，而且只在你选择 PlantUML 服务器时才用。电脑、iPhone 和 iPad 上都能用。
+插件只申请访问 `www.plantuml.com` 的网络权限，而且只在你选择 PlantUML 服务器时才用。
 
 ## 示例
 
@@ -28,6 +28,7 @@ Bob --> Alice : Hi!
 
 ## 更新日志
 
+- **0.2.7** - Its page no longer says which devices it runs on: the store shows that. It no longer gives a figure for the memory drawing on your computer takes.
 - **0.2.6** - Its package lists the libraries it carries, with their licenses.
 - **0.2.5** - A chart drawn while its block was folded (a phone) fits once the block opens, instead of keeping its old size.
 - **0.2.4** - `!theme` works; no empty gap in a narrow column; server mode shows PlantUML's own error and draws dark in dark themes.

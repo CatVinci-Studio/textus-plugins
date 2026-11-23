@@ -11,7 +11,7 @@
 - 配置画不出来时，代码块里会说明哪里出了问题。
 - 导出 HTML、PDF、Word 时，图表会作为图片放进去。
 
-插件只申请一项权限：为 Textus AI 提供下面列出的 `check_echarts` 工具，让它在把代码块写进文档前先检查一遍。电脑、iPhone 和 iPad 上都能用。
+插件只申请一项权限：为 Textus AI 提供下面列出的 `check_echarts` 工具，让它在把代码块写进文档前先检查一遍。
 
 ## 示例
 
@@ -25,6 +25,7 @@
 
 ## 更新日志
 
+- **0.3.5** - Its page no longer says which devices it runs on: the store shows that.
 - **0.3.4** - Its package lists the libraries it carries, with their licenses.
 - **0.3.3** - A chart drawn while its block was folded (a phone) fits once the block opens, instead of keeping its old size.
 - **0.3.2** - Charts redraw when the panel width changes, and their text and default height follow the app's zoom and font.

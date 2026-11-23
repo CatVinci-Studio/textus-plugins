@@ -19,10 +19,11 @@
 
 ## 权限
 
-插件需要读写当前文件夹里的文件，用来查找和新建笔记；还要读取当前打开的是哪篇文档，以便找到前一天和后一天。它也为 Textus AI 提供两个工具，见下文。支持桌面版和 iPhone，需要 Textus 1.3.10 或更新版本。
+插件需要读写当前文件夹里的文件，用来查找和新建笔记；还要读取当前打开的是哪篇文档，以便找到前一天和后一天。它也为 Textus AI 提供两个工具，见下文。需要 Textus 1.4.3 或更新版本。
 
 ## 更新日志
 
+- **0.7.9** - Its page no longer says which devices it runs on: the store shows that. It names the Textus it needs, 1.4.3.
 - **0.7.8** - Where the bar is too narrow for even the short month name (a phone's sidebar), the month goes on a row of its own above the buttons instead of losing its year. The calendar writes dates with Textus's own, so the package is smaller.
 - **0.7.7** - Weeks start as Textus's language has them, not the device's region, so they agree with the week numbers.
 - **0.7.6** - The page follows Textus's language by itself. Needs Textus 1.4.3.
@@ -47,5 +48,5 @@
 装上这个插件后，Textus AI 在对话中可以使用：
 
 - `read_daily_note`：读取某一天的日记（默认今天）：从日记文件夹中给出它的路径、是否存在以及全文。
-- `append_to_daily_note`：在某一天的日记（默认今天）末尾追加 Markdown 内容；如果还没有这篇日记，先按模板新建。 想先放在侧栏、以后再用的笔记用 add_note；带日期的待办用 add_task。
+- `append_to_daily_note`：在某一天的日记（默认今天）末尾追加 Markdown 内容；如果还没有这篇日记，先按模板新建。 想先放在侧边栏、以后再用的笔记用 add_note；带日期的待办用 add_task。
 <!-- /ai-tools -->

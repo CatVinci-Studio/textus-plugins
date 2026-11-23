@@ -23,10 +23,11 @@
 
 ## 权限
 
-只需要 **Textus AI 工具** 权限，让 Textus AI 在写入代码块前先检查一遍。WaveDrom 随插件一起安装：它不读取任何文件，全部在本机绘制，桌面版和 iOS 都能用。
+只需要 **Textus AI 工具** 权限，让 Textus AI 在写入代码块前先检查一遍。WaveDrom 随插件一起安装：它不读取任何文件，全部在本机绘制。
 
 ## 更新日志
 
+- **0.3.6** - Its page no longer says which devices it runs on: the store shows that.
 - **0.3.5** - Its package lists the libraries it carries, with their licenses.
 - **0.3.4** - A very long diagram shrinks only as far as its labels stay readable, then scrolls sideways (a phone).
 - **0.3.3** - Readable in dark mode: the lines and text take the theme's colours on the page's own background; a diagram drawn while its block was folded fits once it opens. A long diagram shrinks to the column instead of being cut off.

@@ -25,7 +25,7 @@ Das Plugin nutzt [markmap](https://markmap.js.org). Es fragt nur nach einer Bere
 
 ## Änderungen
 
-- **0.3.8** - The mind map fills its block: a small one grows (up to twice its size) to the block's width and the height you give it, and it follows the note's zoom instead of being cut off on the right.
+- **0.3.8** - The mind map fills its block: a small one grows (up to twice its size) to the block's width and the height you give it, and it follows the note's zoom instead of being cut off on the right. Its page no longer says which devices it runs on: the store shows that.
 - **0.3.7** - Its package lists the libraries it carries, with their licenses.
 - **0.3.6** - A mind map drawn before its note was laid out no longer shows an error.
 - **0.3.5** - A chart drawn while its block was folded (a phone) fits once the block opens, instead of keeping its old size.

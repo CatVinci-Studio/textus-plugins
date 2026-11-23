@@ -39,6 +39,7 @@ Obsidian의 Linter처럼 쓰며, 모든 변경은 한 번에 되돌릴 수 있�
 
 ## 변경 내역
 
+- **0.5.2** - Its page shows its list of changes in English in every language.
 - **0.5.1** - Its package lists the libraries it carries, with their licenses.
 - **0.5.0** - Each finding opens a card that names the rule and fixes that block (Alt+Enter), or sets it aside with Ignore (Textus 1.4.4).
 - **0.4.1** - Remove Blank Lines and list switching leave a code block inside a longer fence (```` holding ```) alone.

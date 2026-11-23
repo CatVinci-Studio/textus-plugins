@@ -18,7 +18,7 @@ Notes are kept in a document of the open folder, so Obsidian and Cloud Sync see 
 
 Edit the file and the sidebar follows. Notes from older versions move into it once, oldest first. With no folder open, notes stay inside Textus.
 
-Runs on the desktop, iPhone, iPad and Android. On a phone, **New Quick Note…** is under **Plugins** in the title row's menu, and a note's actions are under its more button. There is no tray there, so it doesn't ask to keep Textus running.
+On a phone, **New Quick Note…** is under **Plugins** in the title row's menu, and a note's actions are under its more button. There is no tray there, so it doesn't ask to keep Textus running.
 
 ## Permissions
 
@@ -28,7 +28,7 @@ Runs on the desktop, iPhone, iPad and Android. On a phone, **New Quick Note…**
 
 ## Changes
 
-- **0.6.0** - On iPhone, iPad and Android too: **New Quick Note…** under Plugins and the sidebar tab, with New and each note's more button easy to tap. Only the desktop asks to keep Textus running in the background. Needs Textus 1.4.7.
+- **0.6.0** - On iPhone, iPad and Android too: **New Quick Note…** under Plugins and the sidebar tab, with New and each note's more button easy to tap. Only the desktop asks to keep Textus running in the background. Needs Textus 1.4.7. Its page no longer says which devices it runs on: the store shows that.
 - **0.5.5** - Its buttons' names and tooltips come from Textus, as on its other pages.
 - **0.5.4** - The page follows Textus's language by itself. Needs Textus 1.4.3.
 - **0.5.3** - New while searching clears the search, so the new note shows; right-clicking a note's text also offers undo, cut, copy and paste; a search with no match says so.

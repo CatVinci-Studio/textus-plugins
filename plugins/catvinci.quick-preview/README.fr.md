@@ -11,6 +11,7 @@ Le plugin demande à lire l’éditeur (pour savoir quel lien vous pointez) et �
 
 ## Changements
 
+- **0.2.4** - Its page says that on a tablet it needs a mouse or trackpad, instead of which devices it runs on.
 - **0.2.3** - The store description now opens with what the plugin does.
 - **0.2.2** - A link to a nested heading (`[[Note#A#B]]`) shows that heading's section, as a click opens it. Needs Textus 1.4.0.
 - **0.2.1** - Its page now says in one sentence what it does, what it can do, and what changed in each version.

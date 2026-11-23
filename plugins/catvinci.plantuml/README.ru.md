@@ -12,7 +12,7 @@
 
 **Настройки › Расширения › Плагины › PlantUML › Чем рисовать** — где рисуются диаграммы:
 
-- **Этот компьютер** (по умолчанию): ничего не уходит наружу. Рисование на компьютере занимает примерно на 100 МБ больше памяти.
+- **Этот компьютер** (по умолчанию): ничего не уходит наружу. Рисование на компьютере занимает больше памяти.
 - **Сервер PlantUML**: текст каждой диаграммы отправляется на plantuml.com, и диаграмму рисует он. Лишней памяти не нужно.
 
 Плагин просит доступ к сети только для `www.plantuml.com` и пользуется им, только если выбран сервер PlantUML. Работает на компьютере, iPhone и iPad.
@@ -28,6 +28,7 @@ Bob --> Alice : Hi!
 
 ## Изменения
 
+- **0.2.7** - Its page no longer says which devices it runs on: the store shows that. It no longer gives a figure for the memory drawing on your computer takes.
 - **0.2.6** - Its package lists the libraries it carries, with their licenses.
 - **0.2.5** - A chart drawn while its block was folded (a phone) fits once the block opens, instead of keeping its old size.
 - **0.2.4** - `!theme` works; no empty gap in a narrow column; server mode shows PlantUML's own error and draws dark in dark themes.

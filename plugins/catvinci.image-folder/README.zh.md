@@ -9,10 +9,11 @@
 - 文档里已有的图片留在原处。
 - 在设置了附件文件夹的 Obsidian 库里，以及在 Logseq 图谱里，图片留在那个应用放的位置。
 
-支持 PNG、JPEG、GIF、WebP、AVIF、BMP、SVG、ICO、HEIC 和 TIFF 图片。支持桌面版，需要 Textus 1.3.0 或更新版本。插件需要读写文件，用来移动图片、给图片文件夹改名；还需要读取和编辑当前文档，用来改动指向图片的链接。
+支持 PNG、JPEG、GIF、WebP、AVIF、BMP、SVG、ICO、HEIC 和 TIFF 图片。需要 Textus 1.4.0 或更新版本。插件需要读写文件，用来移动图片、给图片文件夹改名；还需要读取和编辑当前文档，用来改动指向图片的链接。
 
 ## 更新日志
 
+- **0.1.8** - Its page no longer says which devices it runs on: the store shows that. It names the Textus it needs, 1.4.0.
 - **0.1.7** - The store description now opens with what the plugin does.
 - **0.1.6** - Adding many pictures at once (a sync, a folder copied in) no longer reads the open document over and over.
 - **0.1.5** - In an Obsidian vault, pictures stay where the vault's attachment setting puts them again: the setting is read through Textus.

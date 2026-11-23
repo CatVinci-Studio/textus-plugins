@@ -6,11 +6,11 @@ Let Textus AI search the web with [Keenable](https://keenable.ai).
 - It works without a key, through Keenable's public search. For Keenable's full search, click **Set API Key…** on its page in Textus's Settings (or run **Keenable: Set API Key…** from the command palette) and paste your key. Do it again and leave the box empty to remove the key and go back to the public search. The key is kept in Textus's secret storage on this device.
 - What you ask is sent to Keenable only when Textus AI uses this tool in a conversation.
 
-The plugin asks for two permissions: AI tools, to give Textus AI the search tool below, and network access to `api.keenable.ai` only, to run the searches. It works on the desktop and on iPhone and iPad.
+The plugin asks for two permissions: AI tools, to give Textus AI the search tool below, and network access to `api.keenable.ai` only, to run the searches.
 
 ## Changes
 
-- **0.1.3** - Set the API key with a button on its page in Settings: on a phone, with no command palette, too.
+- **0.1.3** - Set the API key with a button on its page in Settings: on a phone, with no command palette, too. Its page is in every language Textus speaks.
 - **0.1.2** - Removing the API key really removes it, so search goes back to the public search; an unreadable answer gets a plain message.
 - **0.1.1** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
 - **0.1.0** - First version: web search for Textus AI through Keenable, with or without an API key.

@@ -12,6 +12,7 @@
 
 ## 更新履歴
 
+- **0.2.5** - Its page no longer says which devices it runs on: the store shows that.
 - **0.2.4** - With two documents open side by side, both show their heading numbers, not only the one you are typing in.
 - **0.2.3** - Front matter and code blocks no longer get numbers by mistake, and exports number only top-level headings, like the editor.
 - **0.2.2** - Its page now says in one sentence what it does, what it can do, and what changed in each version.

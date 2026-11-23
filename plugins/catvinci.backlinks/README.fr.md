@@ -39,6 +39,7 @@ L’onglet **Liens bidirectionnels** de la barre latérale montre ce qui lie le 
 
 ## Changements
 
+- **0.4.8** - Its page no longer says which devices it runs on: the store shows that.
 - **0.4.7** - Code kept for Textus versions it no longer runs on is gone.
 - **0.4.6** - The filter field and empty message follow Textus's language when you switch it. Needs Textus 1.4.3.
 - **0.4.5** - Unlinked mentions open on the right line, and Link Style is set by Textus itself (Textus 1.4.3).

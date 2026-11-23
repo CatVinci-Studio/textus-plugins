@@ -12,7 +12,7 @@
 
 **設定 › 擴充功能 › 外掛程式 › PlantUML › 算繪方式** 決定在哪裡畫圖：
 
-- **本機**（預設）：內容不會離開電腦。在本機畫圖約多佔 100 MB 記憶體。
+- **本機**（預設）：內容不會離開電腦。在本機畫圖會多佔一些記憶體。
 - **PlantUML 伺服器**：每張圖的文字會傳給 plantuml.com，由它來畫，不額外佔記憶體。
 
 外掛只要求連線到 `www.plantuml.com` 的網路權限，而且只在你選擇 PlantUML 伺服器時才使用。電腦、iPhone 和 iPad 上都能使用。
@@ -28,6 +28,7 @@ Bob --> Alice : Hi!
 
 ## 更新紀錄
 
+- **0.2.7** - Its page no longer says which devices it runs on: the store shows that. It no longer gives a figure for the memory drawing on your computer takes.
 - **0.2.6** - Its package lists the libraries it carries, with their licenses.
 - **0.2.5** - A chart drawn while its block was folded (a phone) fits once the block opens, instead of keeping its old size.
 - **0.2.4** - `!theme` works; no empty gap in a narrow column; server mode shows PlantUML's own error and draws dark in dark themes.

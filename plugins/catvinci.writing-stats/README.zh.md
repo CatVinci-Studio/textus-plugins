@@ -11,10 +11,11 @@
 
 中文、日文、韩文按字计数，其他文字按词计数；Markdown 的标记（`#`、`*`、链接地址、front matter）不计入。阅读时间按每分钟 230 个词或 400 个中日韩文字估算。
 
-支持桌面版和 iPhone，需要 Textus 1.3.0 或更新版本。插件需要读取编辑器和打开的文件夹里的文件来计数，并为 Textus AI 提供下面的工具。
+需要 Textus 1.4.3 或更新版本。插件需要读取编辑器和打开的文件夹里的文件来计数，并为 Textus AI 提供下面的工具。
 
 ## 更新日志
 
+- **0.2.8** - Its page is in every language Textus speaks. It names the Textus it needs, 1.4.3.
 - **0.2.7** - Code kept for Textus versions it no longer runs on is gone.
 - **0.2.6** - The filter field and empty message follow Textus's language when you switch it. Needs Textus 1.4.3.
 - **0.2.5** - Words and characters are counted as the status bar counts them (from Textus 1.4.3), and a Windows file's front matter is left out of the count.

@@ -1,8 +1,8 @@
 # 标签
 
-在侧栏列出打开的文件夹里的每个 `#标签`，以及有多少篇笔记用到它。
+在侧边栏列出打开的文件夹里的每个 `#标签`，以及有多少篇笔记用到它。
 
-- 侧栏的 **标签** 标签页列出所有标签，用得最多的在前面。嵌套标签（`#project/alpha`）和 Obsidian 一样显示成树，每个标签的数量也算上它下面各个子标签的笔记。在筛选框里输入文字可以缩小范围。
+- 侧边栏的 **标签** 标签页列出所有标签，用得最多的在前面。嵌套标签（`#project/alpha`）和 Obsidian 一样显示成树，每个标签的数量也算上它下面各个子标签的笔记。在筛选框里输入文字可以缩小范围。
 - 展开一个标签查看它的笔记，点一篇就打开。
 - 在标签上右键，选 **重命名…**，会在所有笔记里一起改，它下面的嵌套标签也跟着改（`#project/alpha` 变成 `#new/alpha`）。标签不分大小写。改成一个已有的标签名，两个标签就合并成一个。标签由字母、数字、`_`、`-` 和 `/` 组成，不能全是数字。
 - front matter 里的标签（`tags: [a, b]`，或 `tags:` 下面的列表）也会一起改；代码块、行内代码、链接地址，以及以它开头的更长标签（改 `#draft` 时的 `#drafts`）都不会被改动。
@@ -15,6 +15,7 @@
 
 ## 更新日志
 
+- **0.3.7** - Its page is in every language Textus speaks.
 - **0.3.6** - Sorts names with Textus's own order instead of a copy of it, so the package is smaller.
 - **0.3.5** - The filter field and empty message follow Textus's language when you switch it. Needs Textus 1.4.3.
 - **0.3.4** - Renaming leaves `[[#Heading]]` links alone, and a ``` line inside a `~~~` block no longer ends the code.

@@ -9,7 +9,7 @@ The plugins for [Textus](https://textus.md), the Markdown editor. None of them c
 | --- | --- |
 | Bookmarks | Bookmark a passage and come back to it from the sidebar - across documents. |
 | Calendar & Daily Notes | A calendar in the sidebar and a note for each day, kept in a folder of the open folder. |
-| Canvas | Open Obsidian's canvases (.canvas) in a tab: notes, pictures, links and groups on a board to drag and zoom. |
+| Canvas | View Obsidian's canvases (.canvas) in a tab: notes, pictures, links and groups on a board you can move around and zoom. For viewing only; it doesn't edit them. |
 | Chart.js | Simple charts from a Chart.js configuration. |
 | CJK Spacing | Puts a space between Chinese or Japanese text and Latin letters or numbers. |
 | Claude Code | Claude Code in Textus AI: it reads your folder, writes and edits your notes, and asks before it changes anything. |
@@ -17,13 +17,13 @@ The plugins for [Textus](https://textus.md), the Markdown editor. None of them c
 | Cloud Sync | Syncs your folder through S3, WebDAV or Nutstore, with older versions kept in the cloud and optional end-to-end encryption. Keeps both versions on conflict. |
 | Codex | Codex in Textus AI: it reads your folder, writes and edits your notes, and asks before it changes anything. |
 | DeepSeek Harness | DeepSeek Harness in Textus AI: DeepSeek's own agent reads your folder, writes and edits your notes, and asks before it changes anything. |
-| Desk Pet | A chibi companion that floats on your desktop or in the window while you write: Moyu, or the LLM-chan of the model Textus AI is using. She writes when you type, dozes when you stop, cheers when you save and leans in when Textus AI is at work. |
+| Desk Pet | A chibi companion that floats on your desktop or in the window while you write. She writes when you type, dozes when you stop and cheers when you save. She is Moyu, or the LLM-chan of the model Textus AI is using, who leans in when Textus AI is at work. |
 | ECharts | Charts from an ECharts option - bars, lines, pies and more. |
 | Emacs | Emacs keys in the editor: C-f C-b C-n C-p, C-a C-e, M-f M-b, M-< M->, the mark (C-SPC) and the region, C-k and C-w into a kill ring, C-y and M-y, C-/ undo and C-x prefixes. |
 | Excalidraw | Draw sketchy diagrams with Excalidraw in a tab: .excalidraw files, and Obsidian Excalidraw's drawings, edited and saved in the form they had. |
 | Function Plot | Graphs of functions, one per line: sin(x), x^2 - 1. |
 | Gemini CLI | Gemini CLI in Textus AI: Google's Gemini models read your folder, write and edit your notes, and ask before they change anything. |
-| Git | Changed files marked in the sidebar, the branch in the status bar, commits of the files you pick, pushing and pulling with your own Git, and a file's commits in Version History. Desktop. |
+| Git | Changed files marked in the sidebar, the branch in the status bar, commits of the files you pick, pushing and pulling with your own Git, and a file's commits in Version History. |
 | GitHub Copilot CLI | GitHub Copilot CLI in Textus AI: the models of your Copilot plan read your folder, write and edit your notes, and ask before they change anything. |
 | Graph View | Your notes and the links between them as a graph - for the whole folder, or around the document in front - with filters and colour groups. |
 | Heading Numbers | Numbers headings as you write - 1, 1.1, 1.2 - without changing the text; exports can carry the numbers too. |
@@ -39,17 +39,17 @@ The plugins for [Textus](https://textus.md), the Markdown editor. None of them c
 | Mind Map | Draws a Markdown outline - headings and lists - as a mind map. |
 | Notion Import | Brings in a Notion export (the .zip or its folder) as plain Markdown notes: pages within pages as folders, databases in Obsidian's Bases format, pictures and files beside their pages. Pair it with Wiki to see the pages tree and the databases. |
 | OpenCode | OpenCode in Textus AI: any model it is set up with reads your folder, writes and edits your notes, and asks before it changes anything. |
-| Openverse Pictures | Openly licensed pictures for Textus AI: it finds them on Openverse (Flickr, museums and more) - CC BY, CC BY-SA, CC0 and public domain only - each with the credit its licence asks for. No account or key; Openverse allows about 200 searches a day. |
+| Openverse Pictures | Openly licensed pictures for Textus AI: it finds them on Openverse (Flickr, museums and more) - CC BY, CC BY-SA, CC0 and public domain only - each with the credit its licence asks for. No account or key; Openverse limits how many searches can be made each day. |
 | PDF Viewer | Open PDFs in a tab beside your notes: pages, zoom, and text to select and copy. |
-| PlantUML | UML and other diagrams from PlantUML text, drawn on your computer - or by the PlantUML server, if you choose. Drawing on your computer takes about 100 MB more memory; the PlantUML server takes none. |
-| Pomodoro | A focus timer floating over the window or the desktop: 25 minutes of work, 5 of rest, a notification at each end. |
+| PlantUML | UML and other diagrams from PlantUML text, drawn on your computer - or by the PlantUML server, if you choose. Drawing on your computer takes more memory; the PlantUML server takes none. |
+| Pomodoro | A focus timer floating over the window or the desktop: a span of work, then a break, with a notification at each end. |
 | Quick Insert | Type / for Textus's headings, lists, tables, formulas and other blocks, : for emoji, and @ for a date (@tomorrow, @next friday). |
 | Quick Notes | Jot something down without leaving the document: notes in the sidebar, kept in Inbox.md or today's daily note, to insert later or open as a document. |
 | Quick Preview | Preview a linked document without opening it: rest the pointer on a Markdown link or a [[wikilink]] to read its opening, or the section or block it names, in a card beside it. Pin keeps the card open while you write. |
 | Qwen Code | Qwen Code in Textus AI: Alibaba's Qwen models read your folder, write and edit your notes, and ask before they change anything. |
 | Reminders | Reminders for the lines you date: write (@2026-11-02 09:00) in a line and a notification brings it back then - even with Textus's windows closed in background mode. A click opens the line. |
 | Sheet Music (ABC) | Sheet music from ABC notation. |
-| SSH Folders | Open a folder on a server through your own ssh and write there like in a folder on this computer: its documents in tabs, its files in the sidebar. Desktop. |
+| SSH Folders | Open a folder on a server through your own ssh and write there like in a folder on this computer: its documents in tabs, its files in the sidebar. |
 | Tags | Every #tag in the open folder in the sidebar, with how many notes use it: open one for its notes, rename a tag everywhere, or merge two by renaming one to the other. |
 | Task Board | Kanban boards kept in Markdown: a list per heading, a card per task, in a .md with kanban-plugin in its front matter, as Obsidian's Kanban writes it. |
 | Tasks | Every task (- [ ]) in the open folder's documents, in one list: tick one off there, or go to it. |

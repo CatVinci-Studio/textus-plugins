@@ -15,8 +15,6 @@
 - **⌃** 把这一栏收起来，再点小把手就展开。
 - **↗** 用浏览器打开，**↻** 刷新。
 
-只支持桌面版。
-
 ## 权限
 
 - 网络（任意地址）：加载你打开的网页。
@@ -24,6 +22,7 @@
 
 ## 更新日志
 
+- **0.2.3** - Its page no longer says which devices it runs on: the store shows that.
 - **0.2.2** - Shorter help and empty-state text.
 - **0.2.1** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
 - **0.2.0** - Ctrl/Cmd+clicked web links open in a tab only when you turn that on in the settings; otherwise they open in your browser.

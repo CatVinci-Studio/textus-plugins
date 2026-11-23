@@ -2,7 +2,7 @@
 
 Link notes, headings and blocks as you type `[[`, embed them with `![[`, and see in the sidebar what links to the document in front.
 
-Links like `[[Note]]` are built into Textus: you can write and follow them without any plugin. This plugin helps you write them, shows what they point to in place, and lists the links around the document you are reading. It works on the desktop and on iOS.
+Links like `[[Note]]` are built into Textus: you can write and follow them without any plugin. This plugin helps you write them, shows what they point to in place, and lists the links around the document you are reading.
 
 ## Linking as you type
 
@@ -39,6 +39,7 @@ The **Two-way Links** tab of the sidebar shows what links to the document in fro
 
 ## Changes
 
+- **0.4.8** - Its page no longer says which devices it runs on: the store shows that.
 - **0.4.7** - Code kept for Textus versions it no longer runs on is gone.
 - **0.4.6** - The filter field and empty message follow Textus's language when you switch it. Needs Textus 1.4.3.
 - **0.4.5** - Unlinked mentions open on the right line, and Link Style is set by Textus itself (Textus 1.4.3).

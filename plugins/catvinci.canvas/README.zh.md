@@ -11,11 +11,11 @@
 
 Excalidraw 绘图请用 **Excalidraw** 插件打开，在那里还能编辑。
 
-插件只申请读取文件的权限（用来显示白板上的笔记和图片），从不修改文件。电脑、iPhone 和 iPad 上都能用。
+插件只申请读取文件的权限（用来显示白板上的笔记和图片），从不修改文件。
 
 ## 更新日志
 
-- **0.1.7** - A pinch zooms the canvas through Textus, as PDFs and pictures do, instead of through the canvas's own two-finger code; a second finger no longer moves it.
+- **0.1.7** - A pinch zooms the canvas through Textus, as PDFs and pictures do, instead of through the canvas's own two-finger code; a second finger no longer moves it. Its page is in every language Textus speaks. Its description says it is for viewing; editing stays in Obsidian.
 - **0.1.6** - Excalidraw drawings now open with the new Excalidraw plugin, which edits them; Canvas no longer shows their exported picture.
 - **0.1.5** - The page follows Textus's language by itself. Needs Textus 1.4.3.
 - **0.1.4** - An empty or unreadable canvas now shows one clear message across the page. Card labels stay readable in every theme, and dragging no longer stops when the pointer leaves the canvas.

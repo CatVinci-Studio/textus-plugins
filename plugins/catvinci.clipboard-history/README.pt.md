@@ -17,6 +17,7 @@ Só fica guardado o que você copia nos seus documentos, nunca o que copia nos A
 
 ## Alterações
 
+- **0.1.5** - Its page shows its list of changes in English in every language.
 - **0.1.4** - The filter field and empty message follow Textus's language when you switch it. Needs Textus 1.4.3.
 - **0.1.3** - Each clip shows when it was copied, with a line between clips.
 - **0.1.2** - The panel's Clear button is back: one click empties the history. Shorter help and empty-state text.

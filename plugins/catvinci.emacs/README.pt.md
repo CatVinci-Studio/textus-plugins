@@ -16,6 +16,7 @@ Funciona no computador e no iPhone. Pede uma única permissão, teclas do editor
 
 ## Alterações
 
+- **0.1.7** - Its page says that on a tablet it needs a keyboard, instead of which devices it runs on.
 - **0.1.6** - C-x C-s and C-x C-g work again on Windows and Linux. The status bar shows Emacs only while it really has the keys.
 - **0.1.5** - Shorter help and empty-state text.
 - **0.1.4** - Its page now says in one sentence what it does, what it can do, and what changed in each version.

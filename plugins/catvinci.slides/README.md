@@ -29,11 +29,9 @@ Built on [Marp Core](https://github.com/marp-team/marp-core) (MIT), which brings
 - **Read and write files**: to find the pictures it shows, and to save the HTML deck beside the document.
 - **Tools for Textus AI**: so Textus AI can save the deck for you.
 
-It runs on the desktop and on iOS.
-
 ## Changes
 
-- **0.3.12** - Presenting on a phone or tablet: tap or swipe to move between slides, and Exit to stop - no keyboard needed. A click moves on in full screen too, as in a saved deck. In a narrow tab, Save HTML goes into the ⋯ menu instead of pushing Full Screen onto a second row.
+- **0.3.12** - Presenting on a phone or tablet: tap or swipe to move between slides, and Exit to stop - no keyboard needed. A click moves on in full screen too, as in a saved deck. In a narrow tab, Save HTML goes into the ⋯ menu instead of pushing Full Screen onto a second row. Its page is in every language Textus speaks.
 - **0.3.11** - Its package lists the libraries it carries, with their licenses.
 - **0.3.10** - Code kept for Textus versions it no longer runs on is gone. From Textus 1.4.4 the deck is also in File › Export, as Slides (HTML).
 - **0.3.9** - The page follows Textus's language by itself. Needs Textus 1.4.3.

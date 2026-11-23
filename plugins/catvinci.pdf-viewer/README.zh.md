@@ -2,7 +2,7 @@
 
 在笔记旁边的标签页里打开 PDF，可以阅读、查找和复制文字。
 
-- 从侧栏打开 PDF，或者把它拖进窗口。指向 PDF 某一页的链接，会直接打开到那一页。
+- 从侧边栏打开 PDF，或者把它拖进窗口。指向 PDF 某一页的链接，会直接打开到那一页。
 - 滚动翻页，或者用箭头按钮到上一页、下一页。
 - 用按钮、**Ctrl+滚轮**（Mac 上是 **⌘+滚轮**）或双指缩放。页面会围绕指针立刻放大缩小，停下后再变清晰。
 - PDF 打开时适应窗口宽度，调整窗口大小时也跟着变。点百分比可以在适应宽度和原始大小之间切换。
@@ -15,6 +15,7 @@
 
 ## 更新日志
 
+- **0.2.9** - Its page shows its list of changes in English in every language.
 - **0.2.8** - Its package lists the libraries it carries, with their licenses.
 - **0.2.7** - The page follows Textus's language by itself. Needs Textus 1.4.3.
 - **0.2.6** - Zoom buttons and keys step by 1.25×, as the other viewers do.

@@ -1,7 +1,7 @@
 {
   "id": "catvinci.bookmarks",
   "name": "%name%",
-  "version": "0.4.5",
+  "version": "0.4.6",
   "publisher": "catvinci",
   "author": "CatVinci Studio",
   "description": "%description%",
@@ -85,7 +85,7 @@
     },
     "zh": {
       "name": "书签",
-      "description": "给一段文字加书签，从侧栏随时跳回去，跨文档也可以。",
+      "description": "给一段文字加书签，从侧边栏随时跳回去，跨文档也可以。",
       "add": "给选中文字加书签",
       "remove": "删除书签",
       "select": "请先选中要加书签的文字。",
@@ -96,7 +96,7 @@
     },
     "zh-Hant": {
       "name": "書籤",
-      "description": "為一段文字加書籤，從側欄隨時跳回去，跨文件也可以。",
+      "description": "為一段文字加書籤，從側邊欄隨時跳回去，跨文件也可以。",
       "add": "為選取文字加書籤",
       "remove": "刪除書籤",
       "select": "請先選取要加書籤的文字。",

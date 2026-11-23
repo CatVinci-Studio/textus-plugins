@@ -28,7 +28,7 @@ Funciona no desktop, no iPhone, no iPad e no Android. No celular, **Nova nota r�
 
 ## Alterações
 
-- **0.6.0** - On iPhone, iPad and Android too: **New Quick Note…** under Plugins and the sidebar tab, with New and each note's more button easy to tap. Only the desktop asks to keep Textus running in the background. Needs Textus 1.4.7.
+- **0.6.0** - On iPhone, iPad and Android too: **New Quick Note…** under Plugins and the sidebar tab, with New and each note's more button easy to tap. Only the desktop asks to keep Textus running in the background. Needs Textus 1.4.7. Its page no longer says which devices it runs on: the store shows that.
 - **0.5.5** - Its buttons' names and tooltips come from Textus, as on its other pages.
 - **0.5.4** - The page follows Textus's language by itself. Needs Textus 1.4.3.
 - **0.5.3** - New while searching clears the search, so the new note shows; right-clicking a note's text also offers undo, cut, copy and paste; a search with no match says so.

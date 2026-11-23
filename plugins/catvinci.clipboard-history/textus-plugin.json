@@ -1,7 +1,7 @@
 {
   "id": "catvinci.clipboard-history",
   "name": "%name%",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "publisher": "catvinci",
   "author": "CatVinci Studio",
   "description": "%description%",
@@ -65,7 +65,7 @@
     },
     "zh": {
       "name": "剪贴板历史",
-      "description": "在文档里复制或剪切过的内容，按时间排在侧栏，点一下就能再插入。",
+      "description": "在文档里复制或剪切过的内容，按时间排在侧边栏，点一下就能再插入。",
       "empty": "还没有复制的内容",
       "copy": "复制",
       "remove": "移除",
@@ -73,7 +73,7 @@
     },
     "zh-Hant": {
       "name": "剪貼簿紀錄",
-      "description": "在文件裡拷貝或剪下過的內容，依時間排在側欄，點一下就能再插入。",
+      "description": "在文件裡拷貝或剪下過的內容，依時間排在側邊欄，點一下就能再插入。",
       "empty": "還沒有複製的內容",
       "copy": "拷貝",
       "remove": "移除",

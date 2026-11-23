@@ -9,7 +9,7 @@
 - 分支颜色跟随主题，切换主题时会重新绘制。
 - 导出 HTML、PDF、Word 时，导图会作为图片放进去，滚到看不见的导图也一样。
 
-插件基于 [markmap](https://markmap.js.org)。它只申请一项权限：为 Textus AI 提供下面列出的 `check_markmap` 工具，让它在把代码块写进文档前先检查一遍。电脑、iPhone 和 iPad 上都能用。
+插件基于 [markmap](https://markmap.js.org)。它只申请一项权限：为 Textus AI 提供下面列出的 `check_markmap` 工具，让它在把代码块写进文档前先检查一遍。
 
 ## 示例
 
@@ -25,7 +25,7 @@
 
 ## 更新日志
 
-- **0.3.8** - The mind map fills its block: a small one grows (up to twice its size) to the block's width and the height you give it, and it follows the note's zoom instead of being cut off on the right.
+- **0.3.8** - The mind map fills its block: a small one grows (up to twice its size) to the block's width and the height you give it, and it follows the note's zoom instead of being cut off on the right. Its page no longer says which devices it runs on: the store shows that.
 - **0.3.7** - Its package lists the libraries it carries, with their licenses.
 - **0.3.6** - A mind map drawn before its note was laid out no longer shows an error.
 - **0.3.5** - A chart drawn while its block was folded (a phone) fits once the block opens, instead of keeping its old size.

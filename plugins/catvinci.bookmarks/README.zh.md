@@ -1,10 +1,10 @@
 # 书签
 
-给一段文字加书签，之后从侧栏一点就能跳回去，不限文档。
+给一段文字加书签，之后从侧边栏一点就能跳回去，不限文档。
 
 选中一些文字，选择 **给选中文字加书签**：在选中的文字上右键，或用 **插件 › 给选中文字加书签**。文档要先保存，因为书签要记住它所在的文件。
 
-侧栏的 **书签** 标签页按文档列出所有书签，点一下就打开文档并跳到那段文字。右键书签，选 **删除书签** 即可删除。文档改名或移动后，书签会跟着走。
+侧边栏的 **书签** 标签页按文档列出所有书签，点一下就打开文档并跳到那段文字。右键书签，选 **删除书签** 即可删除。文档改名或移动后，书签会跟着走。
 
 ## Obsidian 库
 
@@ -20,6 +20,7 @@
 
 ## 更新日志
 
+- **0.4.6** - Its page shows its list of changes in English in every language.
 - **0.4.5** - The filter field and empty message follow Textus's language when you switch it. Needs Textus 1.4.3.
 - **0.4.4** - Obsidian's bookmarks are listed as before but no longer written: Textus 1.4 keeps plugins out of `.obsidian`. Needs Textus 1.4.0.
 - **0.4.3** - Rows are grouped by the document's path in the folder, one group per document; long passages end at a word with "…"; a failed block-id edit in a vault keeps the bookmark.

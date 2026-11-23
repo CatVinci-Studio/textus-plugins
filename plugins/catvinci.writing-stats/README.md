@@ -11,10 +11,11 @@ Open the **Writing Stats** tab in the sidebar:
 
 Chinese, Japanese and Korean are counted by character, other scripts by word. Markdown's own marks - `#`, `*`, link addresses, front matter - aren't counted. Reading time assumes 230 words or 400 CJK characters a minute.
 
-It works on desktop and iPhone and needs Textus 1.3.0 or later. It asks to read the editor and the open folder's files, to count them, and gives Textus AI the tool below.
+It needs Textus 1.4.3 or later. It asks to read the editor and the open folder's files, to count them, and gives Textus AI the tool below.
 
 ## Changes
 
+- **0.2.8** - Its page is in every language Textus speaks. It names the Textus it needs, 1.4.3.
 - **0.2.7** - Code kept for Textus versions it no longer runs on is gone.
 - **0.2.6** - The filter field and empty message follow Textus's language when you switch it. Needs Textus 1.4.3.
 - **0.2.5** - Words and characters are counted as the status bar counts them (from Textus 1.4.3), and a Windows file's front matter is left out of the count.

@@ -1,7 +1,7 @@
 {
   "id": "catvinci.pomodoro",
   "name": "%name%",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "publisher": "catvinci",
   "author": "CatVinci Studio",
   "description": "%description%",
@@ -95,7 +95,7 @@
   "l10n": {
     "en": {
       "name": "Pomodoro",
-      "description": "A focus timer floating over the window or the desktop: 25 minutes of work, 5 of rest, a notification at each end.",
+      "description": "A focus timer floating over the window or the desktop: a span of work, then a break, with a notification at each end.",
       "toggle": "Show or Hide the Pomodoro Timer",
       "startPause": "Start or Pause the Timer",
       "skip": "Skip to the Next Span",
@@ -114,7 +114,7 @@
     },
     "zh": {
       "name": "番茄钟",
-      "description": "浮在窗口或桌面上的专注计时器：专注 25 分钟、休息 5 分钟，每段结束时发通知。",
+      "description": "浮在窗口或桌面上的专注计时器：专注一段时间，再休息一会儿，每段结束时发通知。",
       "toggle": "显示或隐藏番茄钟",
       "startPause": "开始或暂停计时",
       "skip": "跳到下一段",
@@ -133,7 +133,7 @@
     },
     "zh-Hant": {
       "name": "番茄鐘",
-      "description": "浮在視窗或桌面上的專注計時器：專注 25 分鐘、休息 5 分鐘，每段結束時發通知。",
+      "description": "浮在視窗或桌面上的專注計時器：專注一段時間，再休息一會兒，每段結束時發通知。",
       "toggle": "顯示或隱藏番茄鐘",
       "startPause": "開始或暫停計時",
       "skip": "跳到下一段",
@@ -152,7 +152,7 @@
     },
     "ja": {
       "name": "ポモドーロ",
-      "description": "ウィンドウやデスクトップに浮かぶ集中タイマー。作業 25 分、休憩 5 分、区切りごとに通知します。",
+      "description": "ウィンドウやデスクトップに浮かぶ集中タイマー。作業と休憩を交互に繰り返し、区切りごとに通知します。",
       "toggle": "ポモドーロタイマーを表示／非表示",
       "startPause": "タイマーを開始／一時停止",
       "skip": "次の区切りへ",
@@ -171,7 +171,7 @@
     },
     "ko": {
       "name": "뽀모도로",
-      "description": "창이나 바탕화면 위에 떠 있는 집중 타이머: 25분 집중, 5분 휴식, 구간마다 알림.",
+      "description": "창이나 바탕화면 위에 떠 있는 집중 타이머: 집중과 휴식을 번갈아 하고, 구간마다 알림.",
       "toggle": "뽀모도로 타이머 보이기/숨기기",
       "startPause": "타이머 시작/일시정지",
       "skip": "다음 구간으로",
@@ -190,7 +190,7 @@
     },
     "es": {
       "name": "Pomodoro",
-      "description": "Un temporizador de concentración que flota sobre la ventana o el escritorio: 25 minutos de trabajo, 5 de descanso y un aviso al final de cada uno.",
+      "description": "Un temporizador de concentración que flota sobre la ventana o el escritorio: un rato de trabajo, luego un descanso, y un aviso al final de cada uno.",
       "toggle": "Mostrar u ocultar el pomodoro",
       "startPause": "Iniciar o pausar el temporizador",
       "skip": "Pasar al siguiente tramo",
@@ -209,7 +209,7 @@
     },
     "fr": {
       "name": "Pomodoro",
-      "description": "Un minuteur de concentration flottant sur la fenêtre ou le bureau : 25 minutes de travail, 5 de pause, une notification à chaque fin.",
+      "description": "Un minuteur de concentration flottant sur la fenêtre ou le bureau : un temps de travail, puis une pause, une notification à chaque fin.",
       "toggle": "Afficher ou masquer le pomodoro",
       "startPause": "Lancer ou mettre en pause",
       "skip": "Passer à la période suivante",
@@ -228,7 +228,7 @@
     },
     "de": {
       "name": "Pomodoro",
-      "description": "Ein Fokus-Timer, der über dem Fenster oder dem Schreibtisch schwebt: 25 Minuten Arbeit, 5 Minuten Pause, eine Benachrichtigung am Ende jeder Phase.",
+      "description": "Ein Fokus-Timer, der über dem Fenster oder dem Schreibtisch schwebt: eine Arbeitsphase, dann eine Pause, eine Benachrichtigung am Ende jeder Phase.",
       "toggle": "Pomodoro-Timer ein- oder ausblenden",
       "startPause": "Timer starten oder pausieren",
       "skip": "Zur nächsten Phase",
@@ -247,7 +247,7 @@
     },
     "ru": {
       "name": "Помодоро",
-      "description": "Таймер фокуса поверх окна или рабочего стола: 25 минут работы, 5 минут отдыха и уведомление в конце каждого отрезка.",
+      "description": "Таймер фокуса поверх окна или рабочего стола: отрезок работы, затем перерыв и уведомление в конце каждого.",
       "toggle": "Показать или скрыть помодоро",
       "startPause": "Запустить или приостановить таймер",
       "skip": "К следующему отрезку",
@@ -266,7 +266,7 @@
     },
     "pt": {
       "name": "Pomodoro",
-      "description": "Um temporizador de foco que flutua sobre a janela ou a área de trabalho: 25 minutos de trabalho, 5 de pausa e um aviso ao fim de cada um.",
+      "description": "Um temporizador de foco que flutua sobre a janela ou a área de trabalho: um período de trabalho, depois uma pausa, e um aviso ao fim de cada um.",
       "toggle": "Mostrar ou ocultar o pomodoro",
       "startPause": "Iniciar ou pausar o temporizador",
       "skip": "Ir para o próximo período",

@@ -25,6 +25,7 @@ Le plugin demande une seule permission, pour donner à Textus AI l’outil `chec
 
 ## Changements
 
+- **0.3.5** - Its page no longer says which devices it runs on: the store shows that.
 - **0.3.4** - Its package lists the libraries it carries, with their licenses.
 - **0.3.3** - A chart drawn while its block was folded (a phone) fits once the block opens, instead of keeping its old size.
 - **0.3.2** - Charts redraw when the panel width changes, and their text and default height follow the app's zoom and font.

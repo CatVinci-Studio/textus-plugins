@@ -11,7 +11,7 @@
 - 配置写错时，代码块下方会有一行说明错在哪里。
 - 导出 HTML、PDF、Word 时，图表会作为图片放进去。
 
-支持桌面版和 iPhone，需要 Textus 1.3.2 或更新版本。插件只申请一项权限：Textus AI 工具，让 Textus AI 在把 `chartjs` 代码块写进文档前先检查它。
+需要 Textus 1.3.2 或更新版本。插件只申请一项权限：Textus AI 工具，让 Textus AI 在把 `chartjs` 代码块写进文档前先检查它。
 
 ## 示例
 
@@ -27,6 +27,7 @@
 
 ## 更新日志
 
+- **0.3.5** - Its page no longer says which devices it runs on: the store shows that.
 - **0.3.4** - Its package lists the libraries it carries, with their licenses.
 - **0.3.3** - A chart drawn while its block was folded (a phone) fits once the block opens, instead of keeping its old size.
 - **0.3.2** - Charts redraw to fit a narrower or wider panel, labels follow the theme's font and text size, and the error line is red again.

@@ -22,6 +22,7 @@ Obsidian: в хранилище Obsidian читается и его `.obsidian.v
 
 ## Изменения
 
+- **0.2.10** - Its page no longer says which devices it runs on: the store shows that.
 - **0.2.9** - Needs Textus 1.3.0-beta.8 or later, the first with everything it uses.
 - **0.2.8** - Desktop only: a phone's on-screen keyboard types its letters into the text instead of running them as Vim keys.
 - **0.2.7** - The status bar's mode opens a menu that turns Vim off; `.obsidian.vimrc` is read again when you come back to Textus; leaving visual mode with **:** always works.

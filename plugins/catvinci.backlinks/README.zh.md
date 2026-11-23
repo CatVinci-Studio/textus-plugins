@@ -2,7 +2,7 @@
 
 输入 `[[` 链接笔记、标题或段落，用 `![[` 把它们嵌进来，并在侧边栏查看哪些笔记链接到当前文档。
 
-`[[笔记]]` 这样的双链是 Textus 自带的，不装插件也能写、能点开。这个插件帮你写链接，把链接指向的内容直接显示出来，并列出当前文档周围的链接。桌面版和 iOS 都能用。
+`[[笔记]]` 这样的双链是 Textus 自带的，不装插件也能写、能点开。这个插件帮你写链接，把链接指向的内容直接显示出来，并列出当前文档周围的链接。
 
 ## 边写边链接
 
@@ -39,6 +39,7 @@
 
 ## 更新日志
 
+- **0.4.8** - Its page no longer says which devices it runs on: the store shows that.
 - **0.4.7** - Code kept for Textus versions it no longer runs on is gone.
 - **0.4.6** - The filter field and empty message follow Textus's language when you switch it. Needs Textus 1.4.3.
 - **0.4.5** - Unlinked mentions open on the right line, and Link Style is set by Textus itself (Textus 1.4.3).

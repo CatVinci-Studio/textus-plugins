@@ -31,10 +31,9 @@ image: https://textus.md/og.png
 - **读取和编辑文档**：读取选中的链接，插入卡片。
 - **Textus AI 工具**：让 Textus AI 能为链接做卡片。
 
-桌面版和 iOS 都能用。
-
 ## 更新日志
 
+- **0.5.1** - Its page is in every language Textus speaks. Needs Textus 1.4.4 itself, not a test version of it.
 - **0.5.0** - Right-click a selected web address for Turn into a Link Card; the item no longer shows for other selections. Needs Textus 1.4.4.
 - **0.4.3** - Pictures and site icons show again; titles with an apostrophe are kept whole; **Fetch again** moved into the card's right-click menu; YouTube links show as cards with the video's still.
 - **0.4.2** - Its bars, lists and controls are Textus's own, grow with the interface and follow every theme; needs Textus 1.3.12.

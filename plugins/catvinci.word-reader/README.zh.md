@@ -9,10 +9,11 @@
 - **作为 Markdown 编辑** 把文件交给 Textus，转成可以编辑的 Markdown 文档。
 - 文件读不出来时，标签页里会说明。
 
-插件不申请任何权限，只读取你用它打开的文件。电脑、iPhone 和 iPad 上都能用。
+插件不申请任何权限，只读取你用它打开的文件。
 
 ## 更新日志
 
+- **0.2.9** - Its page no longer says which devices it runs on: the store shows that.
 - **0.2.8** - Its package lists the libraries it carries, with their licenses.
 - **0.2.7** - The page follows Textus's language by itself. Needs Textus 1.4.3.
 - **0.2.6** - Zoom buttons and keys step by 1.25×, as the other viewers do.

@@ -1,8 +1,8 @@
 # 剪贴板历史
 
-把你在文档里复制或剪切过的内容留在侧栏，随时可以再放回去。
+把你在文档里复制或剪切过的内容留在侧边栏，随时可以再放回去。
 
-在文档里复制或剪切文字后，它会出现在侧栏的 **剪贴板历史** 标签页里，最新的在最上面。保留最近 30 条，重启 Textus 后也还在。再次复制同样的文字，它会回到最上面；特别长的内容（超过 50,000 个字符）不会记录。
+在文档里复制或剪切文字后，它会出现在侧边栏的 **剪贴板历史** 标签页里，最新的在最上面。保留最近 30 条，重启 Textus 后也还在。再次复制同样的文字，它会回到最上面；特别长的内容（超过 50,000 个字符）不会记录。
 
 - 点一条，就在光标处插入它。
 - 右键一条，可以 **复制** 或 **移除**。
@@ -17,6 +17,7 @@
 
 ## 更新日志
 
+- **0.1.5** - Its page shows its list of changes in English in every language.
 - **0.1.4** - The filter field and empty message follow Textus's language when you switch it. Needs Textus 1.4.3.
 - **0.1.3** - Each clip shows when it was copied, with a line between clips.
 - **0.1.2** - The panel's Clear button is back: one click empties the history. Shorter help and empty-state text.

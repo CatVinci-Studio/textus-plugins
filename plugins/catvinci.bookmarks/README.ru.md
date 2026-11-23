@@ -20,6 +20,7 @@
 
 ## Изменения
 
+- **0.4.6** - Its page shows its list of changes in English in every language.
 - **0.4.5** - The filter field and empty message follow Textus's language when you switch it. Needs Textus 1.4.3.
 - **0.4.4** - Obsidian's bookmarks are listed as before but no longer written: Textus 1.4 keeps plugins out of `.obsidian`. Needs Textus 1.4.0.
 - **0.4.3** - Rows are grouped by the document's path in the folder, one group per document; long passages end at a word with "…"; a failed block-id edit in a vault keeps the bookmark.

@@ -10,10 +10,11 @@ Textus starts Anthropic's Claude Code through the Agent Client Protocol adapter 
 
 It starts in Claude Code's **Manual** mode, which asks before each edit and command; pick another mode in the menu beside the model. To run it through OpenRouter, put `ANTHROPIC_BASE_URL`, `ANTHROPIC_AUTH_TOKEN` and an empty `ANTHROPIC_API_KEY` in the `env` block of `~/.claude/settings.json`: Textus opened from the Dock doesn't see variables set in a terminal.
 
-It works on the desktop and needs Textus 1.4.3 or later. It asks for one permission: to start this agent on this computer.
+It needs Textus 1.4.3 or later. It asks for one permission: to start this agent on this computer.
 
 ## Changes
 
+- **0.1.4** - Its page is in every language Textus speaks. Needs Textus 1.4.3 itself, not a test version of it.
 - **0.1.3** - Starts in Manual mode, named by the plugin; its sign-in command needs no separate Claude Code install. Needs Textus 1.4.3, which also marks the changes Claude Code writes itself.
 - **0.1.2** - Uses Claude Code's ACP adapter 0.107.0. Needs Textus 1.4.2 or later, for its new agent views.
 - **0.1.1** - While Claude Code answers, other plugins (such as the desk pet) know which AI is at work.

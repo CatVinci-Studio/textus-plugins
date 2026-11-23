@@ -9,7 +9,7 @@ Write a code block with the language `markmap` and put an outline in it: heading
 - Branches take your theme's colors, and the map is drawn again when you switch themes.
 - An export to HTML, PDF or Word carries the map as a picture, even one scrolled out of sight.
 
-The plugin uses [markmap](https://markmap.js.org). It asks for one permission, to give Textus AI the `check_markmap` tool listed below: it checks a block before Textus AI writes it into a document. It works on the desktop and on iPhone and iPad.
+The plugin uses [markmap](https://markmap.js.org). It asks for one permission, to give Textus AI the `check_markmap` tool listed below: it checks a block before Textus AI writes it into a document.
 
 ## Example
 
@@ -25,7 +25,7 @@ The plugin uses [markmap](https://markmap.js.org). It asks for one permission, t
 
 ## Changes
 
-- **0.3.8** - The mind map fills its block: a small one grows (up to twice its size) to the block's width and the height you give it, and it follows the note's zoom instead of being cut off on the right.
+- **0.3.8** - The mind map fills its block: a small one grows (up to twice its size) to the block's width and the height you give it, and it follows the note's zoom instead of being cut off on the right. Its page no longer says which devices it runs on: the store shows that.
 - **0.3.7** - Its package lists the libraries it carries, with their licenses.
 - **0.3.6** - A mind map drawn before its note was laid out no longer shows an error.
 - **0.3.5** - A chart drawn while its block was folded (a phone) fits once the block opens, instead of keeping its old size.

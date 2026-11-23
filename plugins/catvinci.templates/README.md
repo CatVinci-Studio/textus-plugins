@@ -15,10 +15,11 @@ Templates are Markdown files in the open folder's **Templates** folder - in an O
 - Templater's common tags are filled in too: `<% tp.date.now("YYYY-MM-DD") %>` (with an offset in days, such as `-1`, or `"P1W"`), `tp.date.today`, `tomorrow` and `yesterday`, `<% tp.file.title %>`, `tp.file.creation_date()` and `tp.file.folder()`; `<% tp.file.cursor() %>` puts the caret there.
 - Scripts and other tags are never run: they stay as written, and a notice names them.
 
-It works on desktop and iPhone and needs Textus 1.3.10 or later. It asks to read and write files in the open folder, for the templates and new documents; to read and edit the document in front, to insert a template or save it as one; and gives Textus AI the two tools below.
+It needs Textus 1.4.3 or later. It asks to read and write files in the open folder, for the templates and new documents; to read and edit the document in front, to insert a template or save it as one; and gives Textus AI the two tools below.
 
 ## Changes
 
+- **0.5.6** - Its page no longer says which devices it runs on: the store shows that. It names the Textus it needs, 1.4.3.
 - **0.5.5** - Sorts names with Textus's own order instead of a copy of it, so the package is smaller. Needs Textus 1.4.3.
 - **0.5.4** - A taken name gets the next free one as the file is written, never a clash (Textus 1.4.3).
 - **0.5.3** - The store description now opens with what the plugin does.

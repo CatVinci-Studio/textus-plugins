@@ -1,7 +1,7 @@
 {
   "id": "catvinci.quick-insert",
   "name": "%name%",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "publisher": "catvinci",
   "author": "CatVinci Studio",
   "description": "%description%",
@@ -9,7 +9,7 @@
   "license": "MIT",
   "repository": "https://github.com/CatVinci-Studio/textus-plugins",
   "engines": {
-    "textus": ">=1.4.4-rc.1"
+    "textus": ">=1.4.4"
   },
   "platforms": [
     "desktop",

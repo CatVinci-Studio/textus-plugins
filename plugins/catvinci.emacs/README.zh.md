@@ -12,10 +12,11 @@
 
 在 Mac 上，Textus 的快捷键用 ⌘，所以所有 Ctrl 键都归 Emacs。在 Windows 和 Linux 上，Ctrl 键属于 Textus 和系统（复制、粘贴、剪切、全选、加粗、查找），所以只有 M- 键、C-SPC 和 C-g 归 Emacs；在插件设置里打开 **接管 Textus 用到的 Ctrl 键** 后，Ctrl 键也归 Emacs。
 
-支持桌面版和 iPhone。插件只申请一项权限：编辑器按键，用来在编辑器里接管这些键。
+在平板上要接键盘才能用。插件只申请一项权限：编辑器按键，用来在编辑器里接管这些键。
 
 ## 更新日志
 
+- **0.1.7** - Its page says that on a tablet it needs a keyboard, instead of which devices it runs on.
 - **0.1.6** - C-x C-s and C-x C-g work again on Windows and Linux. The status bar shows Emacs only while it really has the keys.
 - **0.1.5** - Shorter help and empty-state text.
 - **0.1.4** - Its page now says in one sentence what it does, what it can do, and what changed in each version.

@@ -1,8 +1,8 @@
 # 知识库
 
-页面里套页面，再把笔记做成表格、看板、日历、画廊和列表形式的知识库，全部是普通 Markdown 文件。
+页面里套页面，再把笔记做成表格、看板、日历、画廊和列表形式的数据库，全部是普通 Markdown 文件。
 
-知识库使用 **Obsidian 的 Bases 格式**（` ```base ` 代码块和 `.base` 文件），在 Obsidian 里也能打开同一个知识库。桌面版和 iOS 都能用。
+数据库使用 **Obsidian 的 Bases 格式**（` ```base ` 代码块和 `.base` 文件），在 Obsidian 里也能打开同一个数据库。
 
 ## 页面
 
@@ -14,9 +14,9 @@
 - **在「文件」里改页面文件夹的名字**，里面的页面会跟着改名，仍然是一个带子页面的页面。
 - **旧的结构**：`Plans.md` 旁边放一个 `Plans/` 文件夹装子页面，也照样能读。**插件 › 整理为文件夹单元…** 会先列出清单，再一次把它们都移进各自的文件夹。
 
-## 知识库
+## 数据库
 
-知识库就是页面里的一个 `base` 代码块，或在标签页里打开的一个 `.base` 文件。它的筛选条件选出笔记：每篇笔记是一行，笔记开头的属性就是各列。输入 `/` 选 **新建知识库…**（或 **插件 › 新建知识库…**）：会为知识库建一个文件夹，里面放一个装着这个代码块的页面。
+数据库就是页面里的一个 `base` 代码块，或在标签页里打开的一个 `.base` 文件。它的筛选条件选出笔记：每篇笔记是一行，笔记开头的属性就是各列。输入 `/` 选 **新建数据库…**（或 **插件 › 新建数据库…**）：会为数据库建一个文件夹，里面放一个装着这个代码块的页面。
 
 ````markdown
 ```base
@@ -37,29 +37,29 @@ views:
 ````
 
 - **视图**是代码块顶部的标签：表格、看板、日历、画廊（Bases 里的 `cards`）和列表。右键一个视图打开它的菜单：换布局、重命名、删除。点 **+** 添加视图。日历是 Textus 自己的，Obsidian 会把它当成不认识的视图。
-- **每一行都是一篇笔记。** 点单元格修改，属性写进那篇笔记的开头；**新建** 在知识库的文件夹里建一篇笔记。一行会像文件一样在标签页里打开。
+- **每一行都是一篇笔记。** 点单元格修改，属性写进那篇笔记的开头；**新建** 在数据库的文件夹里建一篇笔记。一行会像文件一样在标签页里打开。
 - **列**：点列头可以按它排序、筛选、改类型、重命名、隐藏，或从所有行删除这个属性；**+** 添加属性。拖动列头可以移动这一列，拖动列头右边缘可以调宽度（双击边缘恢复自动宽度）。列的顺序和宽度都存在 base 里，宽度用 Obsidian 的 `columnSize`。
 - **看板**：把卡片拖到另一列就改了它的值；按住列头拖动，可以按你想要的顺序排列各列（`groupOrder`）。
 - **日历**：按一个日期属性把行排进日历；点某一天，就新建一行，日期为那一天。
 - **筛选**、**排序**和列菜单里的设置，都按 Bases 的写法存在视图里，例如 `status == "Read"`、`tags.contains("ml")`、`due.isEmpty()`。Textus 暂时读不懂的筛选会原样保留，并在工具栏下方说明。
-- **在文档里的大小**：知识库和正文一样宽（选了 **wide** 就和窗格一样宽），列放不下时横向滚动；高度随行数增长，到 Textus 给块的上限（窗口高度的 70%，最多 1200 像素）后在里面滚动，下面还有行时底部渐隐。
-- **很长的知识库**先显示前 25 行（或视图里设的 `limit`），往下滚动会自动加载其余的，表头一直留在上方。鼠标移到知识库左侧会出现折叠把手，点一下折成一行；折叠状态和最后看的视图只记在这台设备上。
+- **在文档里的大小**：数据库和正文一样宽（选了 **wide** 就和窗格一样宽），列放不下时横向滚动；高度随行数增长，到 Textus 给块的上限（窗口高度的 70%，最多 1200 像素）后在里面滚动，下面还有行时底部渐隐。
+- **很长的数据库**先显示前 25 行（或视图里设的 `limit`），往下滚动会自动加载其余的，表头一直留在上方。鼠标移到数据库左侧会出现折叠把手，点一下折成一行；折叠状态和最后看的视图只记在这台设备上。
 - **公式**（base 里的 `formulas:`）会为每一行算出结果，可以当列显示，也能用来筛选和排序，例如 `(price / pages).toFixed(2)`。汇总（summaries）暂时还不显示。
 - **属性类型**在 Obsidian 库里使用 Obsidian 自己的 `.obsidian/types.json`。
-- **在嵌入的笔记里**（`![[页面]]`），知识库只占一行，点一下才画出来。
+- **在嵌入的笔记里**（`![[页面]]`），数据库只占一行，点一下才画出来。
 - **从 Dataview 转过来**：把光标放进 ` ```dataview ` 代码块，运行 **插件 › 把 Dataview 查询转成 Base**。带 `FROM`、`WHERE`、`SORT`、`LIMIT` 的 `TABLE` 和 `LIST` 会在原处变成同样的 base；`TASK`、`GROUP BY`、`FLATTEN` 和 `dataviewjs` 不转换，会说明原因，原文不变。
 
-Notion 的导出包请用 **Notion 导入** 插件导入，它写出的页面和知识库就由这个插件显示。
+Notion 的导出包请用 **Notion 导入** 插件导入，它写出的页面和数据库就由这个插件显示。
 
 ## 权限
 
-- **读写打开的文件夹中的文件**：读取笔记和属性，新建页面和知识库，把单元格的修改写进 front matter，移动或重命名页面并更新链接。
-- **读取和编辑文档**：插入新知识库或子页面的链接，把 Dataview 代码块转成 base。
-- **Textus AI 工具**：让 Textus AI 能新建知识库和页面、读取和添加行。
+- **读写打开的文件夹中的文件**：读取笔记和属性，新建页面和数据库，把单元格的修改写进 front matter，移动或重命名页面并更新链接。
+- **读取和编辑文档**：插入新数据库或子页面的链接，把 Dataview 代码块转成 base。
+- **Textus AI 工具**：让 Textus AI 能新建数据库和页面、读取和添加行。
 
 ## 更新日志
 
-- **0.8.3** - The bar stays on one line when there is room: in a zoomed block on a Mac it folded the view tabs into one button and put the sorts on a line of their own, and measured itself many times on every click. A block taller than Textus lets it be fades at its foot while more rows are below, instead of looking cut off. By touch, a board card or lane lifts after a short hold, so a swipe scrolls instead of dragging.
+- **0.8.3** - The bar stays on one line when there is room: in a zoomed block on a Mac it folded the view tabs into one button and put the sorts on a line of their own, and measured itself many times on every click. A block taller than Textus lets it be fades at its foot while more rows are below, instead of looking cut off. By touch, a board card or lane lifts after a short hold, so a swipe scrolls instead of dragging. Its page is in every language Textus speaks. Its tools for Textus AI are described in every language, and in Chinese a database is 数据库 while 知识库 is the plugin's name.
 - **0.8.2** - The `file.folder`, `file.path` and `file.mtime` columns show each page's folder, path and when it was last changed (they were empty).
 - **0.8.1** - Rows and cards make way at the pace of the rest of Textus.
 - **0.8.0** - Other plugins can add views beside the table, board, calendar, gallery and list - the Timeline plugin's timeline, for one - in the view menus. Needs Textus 1.4.6 for those.
@@ -94,8 +94,8 @@ Notion 的导出包请用 **Notion 导入** 插件导入，它写出的页面和
 
 装上这个插件后，Textus AI 在对话中可以使用：
 
-- `create_database`：以 Obsidian 的 Bases 格式建一个知识库：一个文件夹，里面每篇笔记的开头属性就是它的各项属性；文件夹里再放一个页面，用 ```base 块把它们显示成表格、看板、日历、画廊或列表。返回这个页面的链接，放在用户想要的位置。
-- `query_rows`：读取一个知识库的行：它的 base 选中的笔记（默认是它文件夹里的笔记），每行带名字、路径和属性，可筛选和排序。
-- `add_row`：在知识库中添加一行：在其文件夹里新建一篇以该行命名的文档，各项属性写在开头属性中。展示该文件夹的每个块都会显示它。 只用于知识库文件夹（create_database、query_rows）；普通待办用 add_task。
+- `create_database`：以 Obsidian 的 Bases 格式建一个数据库：一个文件夹，里面每篇笔记的开头属性就是它的各项属性；文件夹里再放一个页面，用 ```base 块把它们显示成表格、看板、日历、画廊或列表。返回这个页面的链接，放在用户想要的位置。
+- `query_rows`：读取一个数据库的行：它的 base 选中的笔记（默认是它文件夹里的笔记），每行带名字、路径和属性，可筛选和排序。
+- `add_row`：在数据库中添加一行：在其文件夹里新建一篇以该行命名的文档，各项属性写在开头属性中。展示该文件夹的每个块都会显示它。 只用于数据库文件夹（create_database、query_rows）；普通待办用 add_task。
 - `create_page`：新建一个页面：在打开的文件夹顶层新建以该标题命名的文档，或在父页面旁的同名文件夹中新建子页面；可设图标。返回它的路径，以及要放进父页面的 [[链接]]。
 <!-- /ai-tools -->
