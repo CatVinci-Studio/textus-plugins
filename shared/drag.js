@@ -22,8 +22,7 @@
   var MAX_STEP = 40;
   var FRAME_MS = 1000 / 60;
   var LONGEST_GAP_MS = 50;
-  /** A scroller that snaps (a board a list per screen) turns a page once
-   *  the pointer has rested at its edge this long, and again after as long. */
+  /** A scroller that snaps turns a page after the pointer rests this long. */
   var FLIP_MS = 600;
 
   // A lifted finger's moves are the drag's, not the page's scroll.
@@ -240,8 +239,8 @@
   }
 
   function snaps(el, axis) {
-    var type = root.getComputedStyle(el).scrollSnapType || "none";
-    return type !== "none" && (type.indexOf(axis) >= 0 || type.indexOf("both") >= 0);
+    var type = (root.getComputedStyle(el).scrollSnapType || "none").split(" ")[0];
+    return type === axis || type === "both";
   }
 
   /** The pointer near the edge of what scrolls around `node` scrolls it,
@@ -357,6 +356,7 @@
     var over = null;
     var last = null;
     var edges = edgeScroll();
+    var finger = down.pointerType === "touch";
     function listAt(x, y) {
       var lists = options.lists();
       for (var i = 0; i < lists.length; i++) {
@@ -387,15 +387,16 @@
         return n !== item;
       });
     }
-    /** The item to its place for a pointer at x, y. At the window's edge,
-     *  past the lists (a board's padding), the list just inside counts. */
+    /** The item to its place for a pointer at x, y. A finger at the
+     *  window's edge or past a short list counts for the list beside it. */
     function place(x, y) {
       var list =
         listAt(x, y) ||
-        listBeside(
-          Math.min(Math.max(x, EDGE), root.innerWidth - EDGE),
-          Math.min(Math.max(y, EDGE), root.innerHeight - EDGE),
-        );
+        (finger &&
+          listBeside(
+            Math.min(Math.max(x, EDGE), root.innerWidth - EDGE),
+            Math.min(Math.max(y, EDGE), root.innerHeight - EDGE),
+          ));
       if (!list) return;
       over = list;
       var rest = others(list);

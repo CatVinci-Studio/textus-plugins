@@ -221,7 +221,7 @@ describe("near a scroller's edge", () => {
     expect(drag.edgeStep(2000, 0, 1000)).toBe(40);
   });
 
-  function board(snap: string) {
+  function board(snap: string, tall = false, at = { x: 395, y: 110 }) {
     const g = globalThis as Record<string, unknown>;
     g.innerWidth = 400;
     g.innerHeight = 800;
@@ -231,7 +231,8 @@ describe("near a scroller's edge", () => {
       parentNode: null,
       scrollWidth: 2000,
       clientWidth: 400,
-      scrollHeight: 800,
+      scrollHeight: tall ? 3000 : 800,
+      scrollTop: 0,
       clientHeight: 800,
       scrollLeft: 0,
       style: { snap },
@@ -247,7 +248,7 @@ describe("near a scroller's edge", () => {
     };
     g.getComputedStyle = (n: { style: { snap?: string } }) =>
       n === el
-        ? { overflowX: "auto", overflowY: "hidden", scrollSnapType: snap }
+        ? { overflowX: "auto", overflowY: "auto", scrollSnapType: snap }
         : {
             overflowX: "visible",
             overflowY: "visible",
@@ -261,7 +262,7 @@ describe("near a scroller's edge", () => {
       { button: 0, clientX: 200, clientY: 110 },
       { item, lists: () => [], itemsOf: () => [item], onDrop() {} },
     );
-    fire("pointermove", 395, 110);
+    fire("pointermove", at.x, at.y);
     return { el, scrolls };
   }
 
@@ -287,10 +288,19 @@ describe("near a scroller's edge", () => {
     expect(el.scrollLeft).toBe(0);
     fire("pointerup", 395, 110);
   });
+  it("scrolls down a board that snaps only across", () => {
+    vi.useFakeTimers();
+    const { el, scrolls } = board("x mandatory", true, { x: 200, y: 795 });
+    vi.advanceTimersByTime(800);
+    expect(el.scrollTop).toBeGreaterThan(100);
+    expect(scrolls).toEqual([]);
+    fire("pointerup", 200, 795);
+  });
 });
 
 describe("a board's columns", () => {
-  it("take a card let go below a short column's last card", () => {
+  it("take a card a finger lets go below a short column's last card", () => {
+    vi.useFakeTimers();
     const g = globalThis as Record<string, unknown>;
     g.innerWidth = 1000;
     g.innerHeight = 800;
@@ -317,7 +327,7 @@ describe("a board's columns", () => {
     first.kids.push(item);
     let dropped: unknown = null;
     drag.sortable(
-      { button: 0, clientX: 50, clientY: 70 },
+      finger(50, 70),
       {
         item,
         lists: () => [first, second],
@@ -326,6 +336,7 @@ describe("a board's columns", () => {
         onDrop: (list: unknown, index: number) => (dropped = [list, index]),
       },
     );
+    vi.advanceTimersByTime(300);
     fire("pointermove", 300, 400);
     fire("pointerup", 300, 400);
     expect(dropped).toEqual([second, 0]);
