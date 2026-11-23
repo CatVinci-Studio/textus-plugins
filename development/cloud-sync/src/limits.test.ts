@@ -137,3 +137,23 @@ it("keeps a file deleted elsewhere in Sync trash where there is no Trash, and ne
     "two",
   ]);
 });
+
+it("never sends back an older copy of a file that grew too large elsewhere, and then syncs idle", async () => {
+  const store = new Counting();
+  const desk = device("macos", { "a.md": "small" });
+  await desk.sync(store);
+  const phone = device("ios");
+  await phone.sync(store, 8);
+  desk.map.set("/n/a.md", bytes("grown far too large"));
+  await desk.sync(store);
+  const before = await remoteFiles(store);
+  expect(await phone.sync(store, 8)).toMatchObject({
+    uploaded: 0,
+    large: ["a.md"],
+  });
+  expect(await remoteFiles(store)).toEqual(before);
+  expect(phone.file("a.md")).toBe("small");
+  const locks = store.locks;
+  await phone.sync(store, 8);
+  expect(store.locks).toBe(locks);
+});

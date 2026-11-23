@@ -75,3 +75,21 @@ it("takes a failed sync as no sync: coming back tries again", () => {
   life.changed("active");
   expect(log.at(-1)).toBe("sync");
 });
+it("goes on with a sync started by hand and cut short, automatic sync off or not", () => {
+  automatic = false;
+  const life = make();
+  busy = true;
+  life.changed("background");
+  busy = false;
+  life.finished(false);
+  life.changed("active");
+  expect(log).toEqual(["pause", "cancel", "resume", "sync"]);
+  // One that went through before the stop reached it: nothing more.
+  log = [];
+  busy = true;
+  life.changed("background");
+  busy = false;
+  life.finished(true);
+  life.changed("active");
+  expect(log).toEqual(["pause", "cancel", "resume"]);
+});

@@ -6,6 +6,7 @@ import { RemoteLock, type LockNote } from "./lock";
 import { checkDeletions, checkScanned } from "./guard";
 import { Pool } from "./pool";
 import { publish } from "./publish";
+import { unchanged } from "./unchanged";
 import {
   FORMAT,
   HEAD,
@@ -111,50 +112,6 @@ async function putBlock(store: ObjectStore, hashed: string, bytes: Uint8Array) {
   await store.put(blockKey(hashed), bytes);
 }
 
-/** Nothing changed here since the last sync, and the remote is still the
- *  revision it was then: done, with one request and no lock. Null when
- *  anything may have to move, and the sync runs in full. */
-async function unchanged(
-  options: Options,
-  files: Record<string, Entry>,
-): Promise<Result | null> {
-  const { local, store, base } = options;
-  if (!base.revision || options.cleanupDue || options.keep.chosen) return null;
-  const ours = Object.entries(files).filter(([path]) => local.wants(path));
-  if (
-    ours.length !== Object.keys(base.files).length ||
-    ours.some(([path, entry]) => base.files[path] !== entry.hash)
-  )
-    return null;
-  try {
-    const raw = await store.get(HEAD);
-    const remote = raw && parseManifest(raw);
-    if (!remote || remote.revision !== base.revision) return null;
-    local.limitRemote?.(remote.files);
-    // The same revision, but what this device takes of it changed (a folder
-    // no longer left out): its files there are fetched in full.
-    const theirs = Object.entries(remote.files).filter(([p]) => local.wants(p));
-    if (
-      theirs.length !== ours.length ||
-      theirs.some(([path, entry]) => base.files[path] !== entry.hash)
-    )
-      return null;
-  } catch {
-    // Half written (a WebDAV PUT isn't atomic): read again under the lock.
-    return null;
-  }
-  return {
-    uploaded: 0,
-    downloaded: 0,
-    removed: 0,
-    moved: 0,
-    conflicts: [],
-    deferred: [],
-    notTrashed: [],
-    unchanged: ours.length,
-  };
-}
-
 export async function synchronize(options: Options): Promise<Result> {
   const { local, store, signal } = options;
   const progress = options.progress ?? (() => {});
@@ -187,7 +144,9 @@ export async function synchronize(options: Options): Promise<Result> {
           updatedAt: "",
           files: Object.create(null),
         };
+    // Left out for its size there, a file here is neither sent nor deleted.
     local.limitRemote?.(remote.files);
+    for (const path in files) if (!local.wants(path)) delete files[path];
     // A previously joined folder must never silently recreate a missing repository.
     if (
       !raw &&

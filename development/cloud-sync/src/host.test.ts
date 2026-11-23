@@ -283,6 +283,11 @@ async function connected(
     commands,
     page: () => posted.filter((m) => m.type === "state").at(-1)!,
     tell: (m: unknown) => receive(m),
+    resolveView: (id: string, state: unknown, view: object) =>
+      (pages.get(id) as unknown as (v: unknown, c: unknown) => Promise<void>)(
+        { html: "", onDidDispose: disposable, ...view },
+        { state },
+      ),
     front: (tab: typeof front) => {
       front = tab;
     },
@@ -444,5 +449,36 @@ it("opens Cloud History on the document in front from a phone's menu, the delete
       title: "historyOf a.md",
       state: { path: "a.md", menu: false },
     },
+  );
+});
+
+it("switches Cloud History from a document's versions to the deleted files", async () => {
+  const f = await connected(["a.md"], { platform: "ios" });
+  const lists: { type: string; path?: string | null }[] = [];
+  let ask: (m: unknown) => void = () => {};
+  await f.resolveView(
+    "catvinci.cloud-sync.history",
+    { path: "a.md", menu: true },
+    {
+      onDidReceiveMessage: (fn: (m: unknown) => void) => {
+        ask = fn;
+        return { dispose() {} };
+      },
+      postMessage: async (m: { type: string; path?: string | null }) => {
+        lists.push(m);
+      },
+    },
+  );
+  ask({ type: "ready" });
+  await vi.waitFor(() =>
+    expect(lists.at(-1)).toMatchObject({
+      type: "list",
+      path: "a.md",
+      menu: true,
+    }),
+  );
+  ask({ type: "open", path: null });
+  await vi.waitFor(() =>
+    expect(lists.at(-1)).toMatchObject({ type: "list", path: null }),
   );
 });

@@ -897,6 +897,39 @@ async function clean(p, stale, dropped, history) {
   }
 }
 
+// development/cloud-sync/src/unchanged.ts
+async function unchanged(options, files) {
+  const { local, store, base } = options;
+  if (!base.revision || options.cleanupDue || options.keep.chosen) return null;
+  const parked = base.parked ?? {};
+  const ours = Object.entries(files).filter(
+    ([path, e]) => local.wants(path) && parked[path] !== e.hash
+  );
+  if (ours.length !== Object.keys(base.files).length || ours.some(([path, entry]) => base.files[path] !== entry.hash))
+    return null;
+  try {
+    const raw = await store.get(HEAD);
+    const remote = raw && parseManifest(raw);
+    if (!remote || remote.revision !== base.revision) return null;
+    local.limitRemote?.(remote.files);
+    const theirs = Object.entries(remote.files).filter(([p]) => local.wants(p));
+    if (theirs.length !== ours.length || theirs.some(([path, entry]) => base.files[path] !== entry.hash))
+      return null;
+  } catch {
+    return null;
+  }
+  return {
+    uploaded: 0,
+    downloaded: 0,
+    removed: 0,
+    moved: 0,
+    conflicts: [],
+    deferred: [],
+    notTrashed: [],
+    unchanged: ours.length
+  };
+}
+
 // development/cloud-sync/src/engine.ts
 var TRANSFERS = /* @__PURE__ */ new Set(["download", "conflict", "upload"]);
 async function download(store, entry, signal) {
@@ -935,34 +968,6 @@ async function upload(store, entry, bytes, known, signal, onStored = () => {
 async function putBlock(store, hashed, bytes) {
   await store.put(blockKey(hashed), bytes);
 }
-async function unchanged(options, files) {
-  const { local, store, base } = options;
-  if (!base.revision || options.cleanupDue || options.keep.chosen) return null;
-  const ours = Object.entries(files).filter(([path]) => local.wants(path));
-  if (ours.length !== Object.keys(base.files).length || ours.some(([path, entry]) => base.files[path] !== entry.hash))
-    return null;
-  try {
-    const raw = await store.get(HEAD);
-    const remote = raw && parseManifest(raw);
-    if (!remote || remote.revision !== base.revision) return null;
-    local.limitRemote?.(remote.files);
-    const theirs = Object.entries(remote.files).filter(([p]) => local.wants(p));
-    if (theirs.length !== ours.length || theirs.some(([path, entry]) => base.files[path] !== entry.hash))
-      return null;
-  } catch {
-    return null;
-  }
-  return {
-    uploaded: 0,
-    downloaded: 0,
-    removed: 0,
-    moved: 0,
-    conflicts: [],
-    deferred: [],
-    notTrashed: [],
-    unchanged: ours.length
-  };
-}
 async function synchronize(options) {
   const { local, store, signal } = options;
   const progress = options.progress ?? (() => {
@@ -994,6 +999,7 @@ async function synchronize(options) {
       files: /* @__PURE__ */ Object.create(null)
     };
     local.limitRemote?.(remote.files);
+    for (const path in files) if (!local.wants(path)) delete files[path];
     if (!raw && (Object.keys(options.base.files).length || Object.keys(options.base.parked ?? {}).length))
       throw new SyncError("remoteMissing");
     const now = new Date(store.now?.() ?? Date.now());
@@ -2609,6 +2615,8 @@ var Lifecycle = class {
     this.now = now;
     __publicField(this, "last", -Infinity);
     __publicField(this, "due", false);
+    /** A sync stopped as Textus left, automatic or not: it goes on. */
+    __publicField(this, "cut", false);
     __publicField(this, "away");
     this.away = state === "background";
     if (this.away) s.pause(true);
@@ -2623,26 +2631,30 @@ var Lifecycle = class {
       this.s.pause(true);
       if (this.s.busy()) {
         this.s.cancel();
-        this.last = -Infinity;
+        this.cut = true;
       }
     } else if (state === "active" && this.away) {
       this.away = false;
       this.s.pause(false);
-      if (this.now() - this.last >= RETURN_GAP) this.run();
+      if (this.cut || this.now() - this.last >= RETURN_GAP) this.run();
     }
   }
   /** A sync ended; `ok` when it went through. */
   finished(ok) {
     if (ok) this.last = this.now();
+    if (ok && this.away) this.cut = false;
     if (this.due) {
       this.due = false;
       this.run();
     }
   }
   run() {
-    if (this.away || !this.s.automatic()) return;
+    if (this.away || !(this.cut || this.s.automatic())) return;
     if (this.s.busy()) this.due = true;
-    else this.s.sync();
+    else {
+      this.cut = false;
+      this.s.sync();
+    }
   }
 };
 
@@ -2906,7 +2918,11 @@ function registerHistory(api, source) {
         if (m.type === "ready" || m.type === "open")
           reply({
             type: "list",
-            ...await list(m.path ?? path, !!opened?.menu)
+            // Opened on a file; "open" names another, or none (deleted).
+            ...await list(
+              m.type === "ready" ? path : m.path ?? null,
+              !!opened?.menu
+            )
           });
         else if (m.type === "preview" && m.path && m.hash)
           reply({

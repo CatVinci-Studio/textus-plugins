@@ -133,7 +133,11 @@ export function registerHistory(api: Textus.Api, source: Source) {
         if (m.type === "ready" || m.type === "open")
           reply({
             type: "list",
-            ...(await list(m.path ?? path, !!opened?.menu)),
+            // Opened on a file; "open" names another, or none (deleted).
+            ...(await list(
+              m.type === "ready" ? path : (m.path ?? null),
+              !!opened?.menu,
+            )),
           });
         else if (m.type === "preview" && m.path && m.hash)
           reply({

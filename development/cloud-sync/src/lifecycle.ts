@@ -20,6 +20,8 @@ export interface Syncing {
 export class Lifecycle {
   private last = -Infinity;
   private due = false;
+  /** A sync stopped as Textus left, automatic or not: it goes on. */
+  private cut = false;
   away: boolean;
   constructor(
     private s: Syncing,
@@ -39,25 +41,30 @@ export class Lifecycle {
       this.s.pause(true);
       if (this.s.busy()) {
         this.s.cancel();
-        this.last = -Infinity;
+        this.cut = true;
       }
     } else if (state === "active" && this.away) {
       this.away = false;
       this.s.pause(false);
-      if (this.now() - this.last >= RETURN_GAP) this.run();
+      if (this.cut || this.now() - this.last >= RETURN_GAP) this.run();
     }
   }
   /** A sync ended; `ok` when it went through. */
   finished(ok: boolean) {
     if (ok) this.last = this.now();
+    // Went through after all, before the stop reached it.
+    if (ok && this.away) this.cut = false;
     if (this.due) {
       this.due = false;
       this.run();
     }
   }
   private run() {
-    if (this.away || !this.s.automatic()) return;
+    if (this.away || !(this.cut || this.s.automatic())) return;
     if (this.s.busy()) this.due = true;
-    else this.s.sync();
+    else {
+      this.cut = false;
+      this.s.sync();
+    }
   }
 }
