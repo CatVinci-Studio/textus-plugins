@@ -101,6 +101,12 @@ function indexed(files: Record<string, string>, settings: Record<string, unknown
           return m ? [{ text: m[2], line: i, done: m[1] !== " ", due: null, tags: [] }] : [];
         }),
       })),
+    // [[Name]]: the file of that name anywhere in the folder.
+    resolveLink: async (link: string) => {
+      const name = link.slice(2, -2);
+      const rel = Object.keys(files).find((r) => r.split("/").pop() === name + ".md");
+      return rel ? "/root/" + rel : null;
+    },
   };
   let panel: Any = null;
   let block: Any = null;
@@ -109,13 +115,23 @@ function indexed(files: Record<string, string>, settings: Record<string, unknown
     registerCodeBlock: (_language: string, p: Any) => ((block = p), { dispose() {} }),
   };
   const opened: unknown[] = [];
-  const layout = { open: async (where: unknown) => void opened.push(where) };
+  // A path opens only when its file is there.
+  const layout = {
+    open: async (where: Any) => {
+      if (typeof where === "string" && !(where.replace("/root/", "") in files)) throw new Error("No such file");
+      opened.push(where);
+    },
+  };
   const notices: string[] = [];
-  const ui = { notice: async (text: string) => void notices.push(text) };
+  const messages: string[] = [];
+  const ui = {
+    notice: async (text: string) => void notices.push(text),
+    message: async (text: string) => void messages.push(text),
+  };
   const api: Any = { files: folder(files), metadata, views, layout, ui, settings: { get: async (key: string) => settings[key] } };
   if (editor) api.editor = editor;
   const { tools } = loadPlugin("catvinci.tasks", api);
-  return { tools, panel: () => panel, block: () => block, opened, notices };
+  return { tools, panel: () => panel, block: () => block, opened, notices, messages };
 }
 
 /** A ```tasks block drawn: what its page was sent, and a way to talk back. */
@@ -209,9 +225,11 @@ describe("Obsidian Tasks' way of writing tasks", () => {
     expect(reads).toBeGreaterThan(0);
   });
 
-  it("leaves out the cards of a board known by its front matter", async () => {
-    const { tools } = indexed({ "Plan.md": "- [ ] Write\n", "Board.md": "---\nkanban-plugin: board\n---\n\n## To do\n\n- [ ] Card\n" });
+  it("leaves out the cards of a board known by its front matter, in the tools and a block", async () => {
+    const { tools, block } = indexed({ "Plan.md": "- [ ] Write\n", "Board.md": "---\nkanban-plugin: board\n---\n\n## To do\n\n- [ ] Card\n" });
     expect((await tools.get("list_tasks")!({})).tasks.map((t: { text: string }) => t.text)).toEqual(["Write"]);
+    const drawn = (await drawBlock(block().render, "not done")).last();
+    expect(drawn.groups.flatMap((g: Any) => g.tasks.map((t: Any) => t.description))).toEqual(["Write"]);
   });
 });
 
@@ -232,7 +250,10 @@ describe("a ```tasks block", () => {
       ["Call", "todo", "⏫"],
       ["Draft", "in_progress", ""],
     ]);
-    expect(last().groups[0].tasks[0]).toMatchObject({ description: "Rent #home", file: "Home", tone: "danger" });
+    // Grouped by document, a row doesn't name it again.
+    expect(last().groups[0].tasks[0]).toMatchObject({ description: "Rent #home", file: "", tone: "danger" });
+    const ungrouped = (await drawBlock(block().render, "not done")).last().groups[0].tasks;
+    expect(ungrouped.find((t: Any) => t.description === "Rent #home").file).toBe("Home");
   });
 
   it("names a group without a date, and says how many of how many it shows", async () => {
@@ -252,6 +273,15 @@ describe("a ```tasks block", () => {
     expect(last().groups[0].tasks.map((t: Any) => t.description)).toEqual(["Draft"]);
     await say({ type: "open", path: call.path, line: call.line });
     expect(opened).toEqual([{ path: "/root/Work/Plan.md", line: 0 }]);
+  });
+
+  it("opens the note a [[link]] in a task names, or says there is none", async () => {
+    const { block, opened, messages } = indexed(files());
+    const { say } = await drawBlock(block().render, "not done");
+    await say({ type: "openNote", name: "Home", path: "/root/Work/Plan.md" });
+    expect(opened).toEqual(["/root/Home.md"]);
+    await say({ type: "openNote", name: "Nowhere", path: "/root/Work/Plan.md" });
+    expect(messages).toEqual(["noNote Nowhere"]);
   });
 });
 

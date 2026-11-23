@@ -8,7 +8,7 @@
 - Укажите у задачи дату (`📅 2026-11-01`, `due:2026-11-01` или `[due:: 2026-11-01]`), и она появится значком. Просроченные задачи и задачи со сроком в ближайшую неделю идут первыми, в разделе **Скоро срок**.
 - Поле сверху фильтрует список по словам, имени документа или заголовку.
 - Выполненные задачи скрыты, пока вы не включите **Показывать выполненные задачи** в **Настройки › Расширения › Плагины › Задачи**.
-- Карточки канбан-доски (документ с `kanban-plugin` в свойствах или `имя.kanban.md`) принадлежат доске и в список на боковой панели не попадают.
+- Карточки канбан-доски (документ с `kanban-plugin` в свойствах или `имя.kanban.md`) принадлежат доске и не попадают ни в список на боковой панели, ни в запросы задач.
 
 ## Задачи из Obsidian
 
@@ -38,7 +38,7 @@ sort by due
 - **Другое**: `priority is` (также `above`, `below`, `not`), `is recurring` и `is not recurring`.
 - **Порядок**: `sort by` и `group by` (status, due, scheduled, start, done, created, priority, path, folder, filename, heading или description, при желании с `reverse`) и `limit`. Без `sort by` задачи идут в порядке Obsidian Tasks: статус, срок, приоритет, путь.
 
-Строки о внешнем виде (`hide …`, `show …`) пропускаются; любая другая непонятная строка названа под счётчиком. Блок показывает и карточки досок. Отметьте задачу в блоке — она отметится в своём файле; щёлкните — и вы перейдёте к ней.
+Строки о внешнем виде (`hide …`, `show …`) пропускаются; любая другая непонятная строка названа под счётчиком. [[Ссылка]] в задаче открывает свою заметку. Отметьте задачу в блоке — она отметится в своём файле; щёлкните — и вы перейдёте к ней.
 
 ## Разрешения
 
@@ -46,6 +46,7 @@ sort by due
 
 ## Изменения
 
+- **0.5.0** - A task query no longer lists a Kanban board's cards, as the sidebar and Textus AI already didn't. Grouped by document, its rows don't repeat the document's name, and a [[link]] in a task opens its note.
 - **0.4.7** - The filter field and empty message follow Textus's language when you switch it. Needs Textus 1.4.3.
 - **0.4.6** - The tasks block keeps a gap inside its frame, as other blocks do.
 - **0.4.5** - The AI's new task under a heading never lands inside a code block, and **Move finished tasks to the end of their list** works in Windows (CRLF) notes.

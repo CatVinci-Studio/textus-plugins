@@ -8,7 +8,7 @@ Rassemble toutes les tâches de votre dossier dans une liste, pour les cocher su
 - Donnez une date à une tâche (`📅 2026-11-01`, `due:2026-11-01` ou `[due:: 2026-11-01]`) et elle s’affiche en badge. Les tâches en retard ou dues dans la semaine passent en tête, sous **Bientôt dues**.
 - Le champ du haut filtre la liste par mots, par nom de document ou par titre.
 - Les tâches terminées sont masquées, sauf si vous activez **Afficher les tâches terminées** dans **Réglages › Extensions › Modules › Tâches**.
-- Les cartes d’un tableau Kanban (un document avec `kanban-plugin` dans ses propriétés, ou `nom.kanban.md`) appartiennent au tableau et ne figurent pas dans la liste latérale.
+- Les cartes d’un tableau Kanban (un document avec `kanban-plugin` dans ses propriétés, ou `nom.kanban.md`) appartiennent au tableau et ne figurent ni dans la liste latérale ni dans les requêtes de tâches.
 
 ## Tâches écrites dans Obsidian
 
@@ -38,7 +38,7 @@ sort by due
 - **Autres** : `priority is` (aussi `above`, `below`, `not`), `is recurring` et `is not recurring`.
 - **Ordre** : `sort by` et `group by` (status, due, scheduled, start, done, created, priority, path, folder, filename, heading ou description, avec `reverse` au besoin) et `limit`. Sans `sort by`, les tâches suivent l’ordre d’Obsidian Tasks : statut, échéance, priorité, chemin.
 
-Les lignes sur l’apparence (`hide …`, `show …`) sont ignorées ; toute autre ligne non comprise est citée sous le total. Le bloc liste aussi les cartes des tableaux. Cochez une tâche dans le bloc pour la cocher dans son fichier ; cliquez dessus pour y aller.
+Les lignes sur l’apparence (`hide …`, `show …`) sont ignorées ; toute autre ligne non comprise est citée sous le total. Un [[lien]] dans une tâche ouvre sa note. Cochez une tâche dans le bloc pour la cocher dans son fichier ; cliquez dessus pour y aller.
 
 ## Permissions
 
@@ -46,6 +46,7 @@ Le plugin lit les documents du dossier pour trouver leurs tâches, et n’écrit
 
 ## Changements
 
+- **0.5.0** - A task query no longer lists a Kanban board's cards, as the sidebar and Textus AI already didn't. Grouped by document, its rows don't repeat the document's name, and a [[link]] in a task opens its note.
 - **0.4.7** - The filter field and empty message follow Textus's language when you switch it. Needs Textus 1.4.3.
 - **0.4.6** - The tasks block keeps a gap inside its frame, as other blocks do.
 - **0.4.5** - The AI's new task under a heading never lands inside a code block, and **Move finished tasks to the end of their list** works in Windows (CRLF) notes.

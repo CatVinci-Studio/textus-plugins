@@ -8,7 +8,7 @@ Sammelt alle Aufgaben Ihres Ordners in einer Liste, zum Abhaken an Ort und Stell
 - Geben Sie einer Aufgabe ein Datum (`📅 2026-11-01`, `due:2026-11-01` oder `[due:: 2026-11-01]`), und es erscheint als Abzeichen. Überfällige oder innerhalb einer Woche fällige Aufgaben stehen oben unter **Bald fällig**.
 - Das Feld oben filtert die Liste nach Wörtern, dem Namen des Dokuments oder seiner Überschrift.
 - Erledigte Aufgaben sind ausgeblendet, außer Sie schalten **Erledigte Aufgaben zeigen** unter **Einstellungen › Erweiterungen › Plugins › Aufgaben** ein.
-- Karten auf einem Kanban-Board (ein Dokument mit `kanban-plugin` in den Eigenschaften oder `name.kanban.md`) gehören zum Board und stehen nicht in der Seitenleiste.
+- Karten auf einem Kanban-Board (ein Dokument mit `kanban-plugin` in den Eigenschaften oder `name.kanban.md`) gehören zum Board und stehen weder in der Seitenleiste noch in Aufgabenabfragen.
 
 ## Aufgaben aus Obsidian
 
@@ -38,7 +38,7 @@ sort by due
 - **Sonstiges**: `priority is` (auch `above`, `below`, `not`), `is recurring` und `is not recurring`.
 - **Reihenfolge**: `sort by` und `group by` (status, due, scheduled, start, done, created, priority, path, folder, filename, heading oder description, auf Wunsch mit `reverse`) und `limit`. Ohne `sort by` gilt die Reihenfolge von Obsidian Tasks: Status, Fälligkeit, Priorität, Pfad.
 
-Zeilen zum Aussehen (`hide …`, `show …`) werden übergangen; jede andere Zeile, die nicht verstanden wird, steht unter der Anzahl. Der Block listet auch die Karten von Boards. Haken Sie dort eine Aufgabe ab, wird sie in ihrer Datei abgehakt; ein Klick springt zu ihr.
+Zeilen zum Aussehen (`hide …`, `show …`) werden übergangen; jede andere Zeile, die nicht verstanden wird, steht unter der Anzahl. Ein [[Link]] in einer Aufgabe öffnet seine Notiz. Haken Sie dort eine Aufgabe ab, wird sie in ihrer Datei abgehakt; ein Klick springt zu ihr.
 
 ## Berechtigungen
 
@@ -46,6 +46,7 @@ Das Plugin liest die Dokumente des Ordners, um ihre Aufgaben zu finden, und schr
 
 ## Änderungen
 
+- **0.5.0** - A task query no longer lists a Kanban board's cards, as the sidebar and Textus AI already didn't. Grouped by document, its rows don't repeat the document's name, and a [[link]] in a task opens its note.
 - **0.4.7** - The filter field and empty message follow Textus's language when you switch it. Needs Textus 1.4.3.
 - **0.4.6** - The tasks block keeps a gap inside its frame, as other blocks do.
 - **0.4.5** - The AI's new task under a heading never lands inside a code block, and **Move finished tasks to the end of their list** works in Windows (CRLF) notes.

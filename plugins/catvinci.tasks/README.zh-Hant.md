@@ -8,7 +8,7 @@
 - 替任務寫上日期（`📅 2026-11-01`、`due:2026-11-01` 或 `[due:: 2026-11-01]`），旁邊會顯示日期標籤；已過期和 7 天內到期的任務會集中列在最上面的 **即將到期** 裡。
 - 上方的輸入框可依文字、文件名稱或所在標題篩選任務。
 - 已完成的任務預設不顯示，可以在 **設定 › 擴充功能 › 外掛程式 › 任務** 裡開啟 **顯示已完成的任務**。
-- 看板上的卡片（開頭屬性裡有 `kanban-plugin` 的文件，或 `名稱.kanban.md`）屬於看板，不列在側邊欄裡。
+- 看板上的卡片（開頭屬性裡有 `kanban-plugin` 的文件，或 `名稱.kanban.md`）屬於看板，不列在側邊欄裡，任務查詢也不列。
 
 ## Obsidian 寫的任務
 
@@ -38,7 +38,7 @@ sort by due
 - **其他**：`priority is`（也可加 `above`、`below`、`not`）、`is recurring` 和 `is not recurring`。
 - **排序**：`sort by` 和 `group by`（status、due、scheduled、start、done、created、priority、path、folder、filename、heading 或 description，可加 `reverse`）以及 `limit`。沒寫 `sort by` 時，依 Obsidian Tasks 的順序：狀態、截止日期、優先順序、路徑。
 
-跟顯示有關的行（`hide …`、`show …`）會略過；其他看不懂的行會列在數量下方。查詢區塊也會列出看板上的卡片。在區塊裡勾選任務，就會勾選它所在檔案裡的那一行；點一下跳到它那裡。
+跟顯示有關的行（`hide …`、`show …`）會略過；其他看不懂的行會列在數量下方。任務裡的 [[連結]] 點一下就會開啟那篇筆記。在區塊裡勾選任務，就會勾選它所在檔案裡的那一行；點一下跳到它那裡。
 
 ## 權限
 
@@ -46,6 +46,7 @@ sort by due
 
 ## 更新紀錄
 
+- **0.5.0** - A task query no longer lists a Kanban board's cards, as the sidebar and Textus AI already didn't. Grouped by document, its rows don't repeat the document's name, and a [[link]] in a task opens its note.
 - **0.4.7** - The filter field and empty message follow Textus's language when you switch it. Needs Textus 1.4.3.
 - **0.4.6** - The tasks block keeps a gap inside its frame, as other blocks do.
 - **0.4.5** - The AI's new task under a heading never lands inside a code block, and **Move finished tasks to the end of their list** works in Windows (CRLF) notes.

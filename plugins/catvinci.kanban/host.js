@@ -19,7 +19,7 @@ const join = folderPaths.abs;
 // Textus AI's tools: boards named by their path in the folder, lists by
 // their title, cards by their text.
 
-/* global folderPaths, kanbanMarkdown */
+/* global folderPaths, kanbanMarkdown, wikiLinks */
 const NO_FOLDER = { error: "No folder is open." };
 
 async function boardFile(name) {
@@ -215,27 +215,9 @@ exports.activate = function (context) {
             });
           }
         }
-        // A [[link]] on a card: the note of that name in the folder, as
-        // Textus resolves a wiki link - or, with none, beside the board.
+        // A [[link]] on a card: the note it names, or one beside the board.
         if (message.type === "openNote") {
-          let note = null;
-          try {
-            note = await textus.metadata.resolveLink(
-              "[[" + message.name + "]]",
-              document.path,
-            );
-          } catch {
-            // No folder open.
-          }
-          const beside = join(
-            document.path.replace(/[\\/][^\\/]*$/, ""),
-            message.name.replace(/\.(md|markdown)$/i, "") + ".md",
-          );
-          try {
-            await textus.layout.open(note || beside);
-          } catch {
-            await textus.ui.message(textus.l10n.t("noNote", message.name));
-          }
+          await wikiLinks.open(message.name, document.path, textus.l10n.t("noNote", message.name));
           return;
         }
         // Gone from the board at once; the note's Undo puts it back.

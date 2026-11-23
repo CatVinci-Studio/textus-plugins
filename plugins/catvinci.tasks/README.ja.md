@@ -8,7 +8,7 @@
 - タスクに日付（`📅 2026-11-01`、`due:2026-11-01`、`[due:: 2026-11-01]`）を書くとバッジで表示され、期限を過ぎたものや 1 週間以内に迫ったものは、一番上の **期限が近い** にまとまります。
 - 上の入力欄で、語句・文書名・見出しから一覧を絞り込めます。
 - 完了したタスクは既定では隠れます。**設定 › 拡張機能 › プラグイン › タスク** の **完了したタスクも表示** で表示できます。
-- カンバンボード（フロントマターに `kanban-plugin` がある文書、または `名前.kanban.md`）のカードはボードのもので、サイドバーの一覧には出しません。
+- カンバンボード（フロントマターに `kanban-plugin` がある文書、または `名前.kanban.md`）のカードはボードのもので、サイドバーの一覧にもタスクのクエリにも出しません。
 
 ## Obsidian で書いたタスク
 
@@ -38,7 +38,7 @@ sort by due
 - **その他**：`priority is`（`above`・`below`・`not` も可）、`is recurring`、`is not recurring`。
 - **並べ方**：`sort by` と `group by`（status、due、scheduled、start、done、created、priority、path、folder、filename、heading、description。`reverse` も付けられます）、`limit`。`sort by` がなければ、Obsidian Tasks と同じく状態・期限・優先度・パスの順です。
 
-見た目の行（`hide …`、`show …`）は飛ばし、ほかに読めない行は件数の下に示します。クエリのブロックにはボードのカードも出ます。ブロックでチェックするとファイルのタスクにチェックが入り、クリックするとその場所へ移ります。
+見た目の行（`hide …`、`show …`）は飛ばし、ほかに読めない行は件数の下に示します。タスクの中の [[リンク]] をクリックするとそのノートが開きます。ブロックでチェックするとファイルのタスクにチェックが入り、クリックするとその場所へ移ります。
 
 ## 権限
 
@@ -46,6 +46,7 @@ sort by due
 
 ## 更新履歴
 
+- **0.5.0** - A task query no longer lists a Kanban board's cards, as the sidebar and Textus AI already didn't. Grouped by document, its rows don't repeat the document's name, and a [[link]] in a task opens its note.
 - **0.4.7** - The filter field and empty message follow Textus's language when you switch it. Needs Textus 1.4.3.
 - **0.4.6** - The tasks block keeps a gap inside its frame, as other blocks do.
 - **0.4.5** - The AI's new task under a heading never lands inside a code block, and **Move finished tasks to the end of their list** works in Windows (CRLF) notes.

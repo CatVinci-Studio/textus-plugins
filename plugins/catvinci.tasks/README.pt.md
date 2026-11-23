@@ -8,7 +8,7 @@ Reúne todas as tarefas da sua pasta numa lista, para marcá-las ali mesmo e con
 - Dê uma data a uma tarefa (`📅 2026-11-01`, `due:2026-11-01` ou `[due:: 2026-11-01]`) e ela aparece como etiqueta. Tarefas vencidas ou que vencem em uma semana vêm primeiro, em **Vencem em breve**.
 - O campo no topo filtra a lista por palavras, pelo nome do documento ou pelo título.
 - As tarefas concluídas ficam ocultas, a menos que você ligue **Mostrar tarefas concluídas** em **Ajustes › Extensões › Plugins › Tarefas**.
-- Os cartões de um quadro Kanban (um documento com `kanban-plugin` nas propriedades, ou `nome.kanban.md`) pertencem ao quadro e não entram na lista lateral.
+- Os cartões de um quadro Kanban (um documento com `kanban-plugin` nas propriedades, ou `nome.kanban.md`) pertencem ao quadro e não entram na lista lateral nem nas consultas de tarefas.
 
 ## Tarefas escritas no Obsidian
 
@@ -38,7 +38,7 @@ sort by due
 - **Outros**: `priority is` (também `above`, `below`, `not`), `is recurring` e `is not recurring`.
 - **Ordem**: `sort by` e `group by` (status, due, scheduled, start, done, created, priority, path, folder, filename, heading ou description, com `reverse` se quiser) e `limit`. Sem `sort by`, as tarefas seguem a ordem do Obsidian Tasks: status, vencimento, prioridade, caminho.
 
-Linhas sobre a aparência (`hide …`, `show …`) são ignoradas; qualquer outra linha que ele não entenda é citada abaixo da contagem. O bloco também lista os cartões dos quadros. Marque uma tarefa ali para marcá-la no arquivo; clique nela para ir até ela.
+Linhas sobre a aparência (`hide …`, `show …`) são ignoradas; qualquer outra linha que ele não entenda é citada abaixo da contagem. Um [[link]] numa tarefa abre a nota dele. Marque uma tarefa ali para marcá-la no arquivo; clique nela para ir até ela.
 
 ## Permissões
 
@@ -46,6 +46,7 @@ O plugin lê os documentos da pasta para achar as tarefas, e só escreve num doc
 
 ## Alterações
 
+- **0.5.0** - A task query no longer lists a Kanban board's cards, as the sidebar and Textus AI already didn't. Grouped by document, its rows don't repeat the document's name, and a [[link]] in a task opens its note.
 - **0.4.7** - The filter field and empty message follow Textus's language when you switch it. Needs Textus 1.4.3.
 - **0.4.6** - The tasks block keeps a gap inside its frame, as other blocks do.
 - **0.4.5** - The AI's new task under a heading never lands inside a code block, and **Move finished tasks to the end of their list** works in Windows (CRLF) notes.

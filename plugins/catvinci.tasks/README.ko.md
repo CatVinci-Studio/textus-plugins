@@ -8,7 +8,7 @@
 - 할 일에 날짜(`📅 2026-11-01`, `due:2026-11-01`, `[due:: 2026-11-01]`)를 쓰면 배지로 보입니다. 기한이 지났거나 일주일 안에 다가온 할 일은 맨 위 **곧 마감**에 먼저 나옵니다.
 - 위쪽 입력란으로 낱말, 문서 이름, 제목으로 목록을 거릅니다.
 - 끝난 할 일은 기본적으로 숨겨집니다. **설정 › 확장 › 플러그인 › 할 일**에서 **끝난 할 일도 보기**를 켜면 보입니다.
-- 칸반 보드(머리말에 `kanban-plugin`이 있는 문서나 `이름.kanban.md`)의 카드는 보드의 것이라 사이드바 목록에 넣지 않습니다.
+- 칸반 보드(머리말에 `kanban-plugin`이 있는 문서나 `이름.kanban.md`)의 카드는 보드의 것이라 사이드바 목록에도 할 일 쿼리에도 넣지 않습니다.
 
 ## Obsidian에서 쓴 할 일
 
@@ -38,7 +38,7 @@ sort by due
 - **기타**: `priority is`(`above`, `below`, `not`도 가능), `is recurring`, `is not recurring`.
 - **순서**: `sort by`와 `group by`(status, due, scheduled, start, done, created, priority, path, folder, filename, heading, description. `reverse`를 붙일 수 있음), `limit`. `sort by`가 없으면 Obsidian Tasks처럼 상태, 마감일, 우선순위, 경로 순입니다.
 
-보이는 방식에 관한 줄(`hide …`, `show …`)은 건너뛰고, 그 밖에 읽지 못한 줄은 개수 아래에 적어 줍니다. 쿼리 블록에는 보드의 카드도 나옵니다. 블록에서 체크하면 파일의 할 일이 체크되고, 클릭하면 그 자리로 갑니다.
+보이는 방식에 관한 줄(`hide …`, `show …`)은 건너뛰고, 그 밖에 읽지 못한 줄은 개수 아래에 적어 줍니다. 할 일 속 [[링크]]를 클릭하면 그 노트가 열립니다. 블록에서 체크하면 파일의 할 일이 체크되고, 클릭하면 그 자리로 갑니다.
 
 ## 권한
 
@@ -46,6 +46,7 @@ sort by due
 
 ## 변경 내역
 
+- **0.5.0** - A task query no longer lists a Kanban board's cards, as the sidebar and Textus AI already didn't. Grouped by document, its rows don't repeat the document's name, and a [[link]] in a task opens its note.
 - **0.4.7** - The filter field and empty message follow Textus's language when you switch it. Needs Textus 1.4.3.
 - **0.4.6** - The tasks block keeps a gap inside its frame, as other blocks do.
 - **0.4.5** - The AI's new task under a heading never lands inside a code block, and **Move finished tasks to the end of their list** works in Windows (CRLF) notes.

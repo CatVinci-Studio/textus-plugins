@@ -18,6 +18,7 @@
   "category": "notes",
   "main": [
     "lib/folder-paths.js",
+    "lib/wiki-links.js",
     "kanban-markdown.js",
     "host.js"
   ],

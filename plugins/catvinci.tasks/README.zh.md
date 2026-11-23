@@ -8,7 +8,7 @@
 - 给任务写上日期（`📅 2026-11-01`、`due:2026-11-01` 或 `[due:: 2026-11-01]`），旁边会显示日期标签；已过期和 7 天内到期的任务会集中列在最上面的 **即将到期** 里。
 - 顶部的输入框按文字、文档名或所在标题筛选任务。
 - 已完成的任务默认不显示，可以在 **设置 › 扩展 › 插件 › 任务** 里打开 **显示已完成的任务**。
-- 看板上的卡片（开头属性里有 `kanban-plugin` 的文档，或 `名称.kanban.md`）属于看板，不列在侧边栏里。
+- 看板上的卡片（开头属性里有 `kanban-plugin` 的文档，或 `名称.kanban.md`）属于看板，不列在侧边栏里，任务查询也不列。
 
 ## Obsidian 写的任务
 
@@ -38,7 +38,7 @@ sort by due
 - **其他**：`priority is`（也可加 `above`、`below`、`not`）、`is recurring` 和 `is not recurring`。
 - **排序**：`sort by` 和 `group by`（status、due、scheduled、start、done、created、priority、path、folder、filename、heading 或 description，可加 `reverse`）以及 `limit`。不写 `sort by` 时，按 Obsidian Tasks 的顺序：状态、截止日期、优先级、路径。
 
-关于显示的行（`hide …`、`show …`）会略过；其他读不懂的行会列在数量下面。查询块也会列出看板上的卡片。在块里勾选任务，就会勾选它所在文件里的那一行；点一下跳到它那里。
+关于显示的行（`hide …`、`show …`）会略过；其他读不懂的行会列在数量下面。任务里的 [[链接]] 点一下就打开那篇笔记。在块里勾选任务，就会勾选它所在文件里的那一行；点一下跳到它那里。
 
 ## 权限
 
@@ -46,6 +46,7 @@ sort by due
 
 ## 更新日志
 
+- **0.5.0** - A task query no longer lists a Kanban board's cards, as the sidebar and Textus AI already didn't. Grouped by document, its rows don't repeat the document's name, and a [[link]] in a task opens its note.
 - **0.4.7** - The filter field and empty message follow Textus's language when you switch it. Needs Textus 1.4.3.
 - **0.4.6** - The tasks block keeps a gap inside its frame, as other blocks do.
 - **0.4.5** - The AI's new task under a heading never lands inside a code block, and **Move finished tasks to the end of their list** works in Windows (CRLF) notes.

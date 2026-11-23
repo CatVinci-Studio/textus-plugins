@@ -59,27 +59,8 @@
 
   // A card's words with its [[wiki links]] as links to the notes they
   // name: a click on one opens the note, anywhere else edits the card.
-  const WIKI = /\[\[([^\]|#]+)(?:#[^\]|]*)?(?:\|([^\]]+))?\]\]/g;
-  function cardText(node, value) {
-    node.textContent = "";
-    let at = 0;
-    for (const m of value.matchAll(WIKI)) {
-      node.append(value.slice(at, m.index));
-      const link = document.createElement("a");
-      link.className = "note-link";
-      link.href = "#";
-      link.textContent = m[2] || m[1];
-      link.title = m[1];
-      link.onclick = (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        api.postMessage({ type: "openNote", name: m[1].trim() });
-      };
-      node.append(link);
-      at = m.index + m[0].length;
-    }
-    node.append(value.slice(at));
-  }
+  const cardText = (node, value) =>
+    window.wikiLinks.draw(node, value, (name) => api.postMessage({ type: "openNote", name: name }));
 
   /** Gone at once, with Undo on the note that says so. */
   function deleted(what, token) {
