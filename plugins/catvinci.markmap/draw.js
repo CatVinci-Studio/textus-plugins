@@ -36,6 +36,30 @@ function themeVars(svg, c, dark) {
   for (var name in set) svg.style.setProperty(name, set[name]);
 }
 
+// Fitted up to twice its natural size: a small outline fills a wide block
+// or a tall height= without its text growing past a heading's.
+var MOST_SCALE = 2;
+var FIT_RATIO = 0.95;
+
+// markmap's rect holds the nodes' boxes; a node's circle and line sit on
+// its box's bottom edge and reach this far past it.
+var EDGE = 8;
+
+/** The scale and offset that fit content `rect` ({ x1, y1, x2, y2 }) in a
+ *  box w x h, centred, at most `most` times its size. */
+function fitBox(w, h, rect, most) {
+  var x1 = rect.x1 - EDGE;
+  var y1 = rect.y1 - EDGE;
+  var dw = Math.max(rect.x2 + EDGE - x1, 1);
+  var dh = Math.max(rect.y2 + EDGE - y1, 1);
+  var k = Math.min((w / dw) * FIT_RATIO, (h / dh) * FIT_RATIO, most);
+  return {
+    k: k,
+    x: (w - dw * k) / 2 - x1 * k,
+    y: (h - dh * k) / 2 - y1 * k,
+  };
+}
+
 /** The map drawn in each box: let go before the next, or each redraw
  *  would keep its observer, hooks and tree. */
 var maps = new WeakMap();
@@ -60,7 +84,6 @@ function mindMap(el, source, meta, dark) {
   var map = window.markmap.Markmap.create(svg, {
     autoFit: true,
     duration: 0,
-    maxInitialScale: 1,
     // Plain wheel scrolls the note; ctrl or pinch zooms, drag pans.
     pan: false,
     scrollForPan: true,
@@ -83,6 +106,20 @@ function mindMap(el, source, meta, dark) {
         [w, h],
       ];
     });
+  // markmap's own fit measures the svg with getBoundingClientRect, which in
+  // a page at the document's zoom is the zoomed size: the map came out that
+  // much too big and was cut off on the right. The svg's layout size, in
+  // the units the map is drawn in, instead.
+  map.fit = function () {
+    var w = svg.clientWidth || el.clientWidth || 1;
+    var h = svg.clientHeight || Number(meta.height) || 360;
+    var fit = fitBox(w, h, map.state.rect, MOST_SCALE);
+    map.svg.call(
+      map.zoom.transform,
+      window.d3.zoomIdentity.translate(fit.x, fit.y).scale(fit.k),
+    );
+    return Promise.resolve();
+  };
   maps.set(el, map);
   return map.setData(root).then(function () {
     return map.fit();

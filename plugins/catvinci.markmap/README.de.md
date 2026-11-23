@@ -25,6 +25,7 @@ Das Plugin nutzt [markmap](https://markmap.js.org). Es fragt nur nach einer Bere
 
 ## Änderungen
 
+- **0.3.8** - Die Mindmap füllt ihren Block: Eine kleine wächst (bis aufs Doppelte) auf die Breite des Blocks und die angegebene Höhe, und sie folgt dem Zoom der Notiz, statt rechts abgeschnitten zu werden.
 - **0.3.7** - Das Paket listet die mitgelieferten Bibliotheken samt ihren Lizenzen auf.
 - **0.3.6** - Eine Mindmap, die gezeichnet wurde, bevor ihre Notiz angeordnet war, zeigt keinen Fehler mehr.
 - **0.3.5** - Ein Diagramm, das bei zugeklapptem Block (auf dem Handy) gezeichnet wurde, passt sich beim Aufklappen an die Breite an.
