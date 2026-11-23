@@ -55,11 +55,14 @@ interface Request {
 class Remote {
   files = new Map<string, Buffer>();
   failure: number | null = null;
+  /** Each request waits for it while set. */
+  held: Promise<void> | null = null;
   methods: string[] = [];
   paths: string[] = [];
   async request(req: Request) {
     const path = new URL(req.url).pathname,
       method = req.method;
+    await this.held;
     this.methods.push(method);
     this.paths.push(path);
     const headers = Object.fromEntries(
@@ -120,6 +123,7 @@ async function open(
   remote: Remote,
   initial: Record<string, string>,
   language = "en",
+  plugin = manifest,
 ) {
   await page.addInitScript(
     ({ manifest, files, initial, language }) => {
@@ -151,7 +155,7 @@ async function open(
         }),
       );
     },
-    { manifest, files, initial, language },
+    { manifest: plugin, files, initial, language },
   );
   await page.exposeFunction("fixtureCloudRequest", (request: Request) =>
     remote.request(request),
@@ -174,7 +178,9 @@ async function open(
         ? w.fixtureCloudRequest(args?.request)
         : original(name, args);
   });
-  await emit(page, "menu-open-folder");
+  // A phone opens folders by the system's picker, not the app's menu.
+  if (plugin === manifest) await emit(page, "menu-open-folder");
+  else await emit(page, "menu-open-recent-folder", "/work/notes");
   await expect(page.locator(".sidebar .tree-root-label")).toHaveText("notes");
   await emit(page, "menu-plugin-command", `${manifest.id}.open`);
   const panel = page.frameLocator(".plugin-webview-frame");
@@ -589,4 +595,64 @@ test("the connection card fits a narrow panel in German, the longest words", asy
     .locator("body")
     .evaluate((body) => [body.scrollWidth, body.clientWidth]);
   expect(content).toBeLessThanOrEqual(view);
+});
+
+/** As on an iPhone, with the plugin offered there (its manifest says so
+ *  from the release that opens it to phones). */
+const PHONE = {
+  userAgent:
+    "Mozilla/5.0 (iPhone; CPU OS 18_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148",
+  viewport: { width: 390, height: 844 },
+  hasTouch: true,
+};
+const onPhones = { ...manifest, platforms: ["desktop", "ios"] };
+/** The app hidden or shown, as when the user leaves it and comes back. */
+const setVisible = (page: Page, visible: boolean) =>
+  page.evaluate((visible) => {
+    Object.defineProperty(document, "visibilityState", {
+      configurable: true,
+      get: () => (visible ? "visible" : "hidden"),
+    });
+    document.dispatchEvent(new Event("visibilitychange"));
+  }, visible);
+
+test("on a phone, a sync stops as Textus leaves and goes on, unasked, when it is back", async ({
+  browser,
+  baseURL,
+}) => {
+  const context = await browser.newContext({ baseURL, ...PHONE });
+  const page = await context.newPage();
+  try {
+    const remote = new Remote();
+    await open(
+      page,
+      remote,
+      { "/work/notes/note.md": "# Phone" },
+      "en",
+      onPhones,
+    );
+    const panel = await configure(page, "webdav");
+    await panel.locator("#automatic").check();
+    await expect(panel.locator("#status")).toHaveText("Settings saved.");
+    let release = () => {};
+    remote.held = new Promise((done) => (release = done));
+    await panel.locator("#sync").click();
+    await expect(panel.locator("#cancel")).toBeVisible();
+    await setVisible(page, false);
+    remote.held = null;
+    release();
+    await expect(panel.locator("#status")).toHaveText(
+      "Paused while Textus is in the background; it goes on when you come back.",
+    );
+    expect(
+      [...remote.files.keys()].some((key) => key.endsWith("/v2/head.bin")),
+    ).toBe(false);
+    await setVisible(page, true);
+    await expect(panel.locator("#status")).toContainText("uploaded 1");
+    expect(
+      [...remote.files.keys()].some((key) => key.endsWith("/v2/head.bin")),
+    ).toBe(true);
+  } finally {
+    await context.close();
+  }
 });
