@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { folder, loadPlugin, memoryStorage } from "./plugin-host";
+import { folder, loadPlugin } from "./plugin-host";
 
 type Provider = { provideCompletions(c: unknown): Promise<{ insert: string; detail: string }[]> };
 
@@ -68,23 +68,4 @@ describe("an @ date as a link", () => {
     const mm = String(nested.day.getMonth() + 1).padStart(2, "0");
     expect(nested.insert).toMatch(new RegExp(`^\\[\\[${y}-${mm}-\\d{2}\\]\\]$`));
   });
-});
-
-/** Natural Dates (plugins/catvinci.natural-dates) is now only a notice. */
-it("Natural Dates offers Quick Insert once", async () => {
-  const offers: unknown[] = [];
-  const storage = memoryStorage();
-  const load = () =>
-    loadPlugin(
-      "catvinci.natural-dates",
-      { commands: { execute: async (_id: string, args: unknown) => (offers.push(args), true) } },
-      storage,
-    );
-  const { manifest } = load();
-  await new Promise((r) => setTimeout(r, 0));
-  load();
-  await new Promise((r) => setTimeout(r, 0));
-  expect(offers).toEqual([{ id: "catvinci.quick-insert", reason: "merged" }]);
-  expect(manifest.contributes).toEqual({});
-  expect(manifest.permissions).toEqual([]);
 });

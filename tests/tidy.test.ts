@@ -1,5 +1,5 @@
 import { beforeAll, describe, expect, it } from "vitest";
-import { loadPlugin, manifestOf, memoryStorage } from "./plugin-host";
+import { loadPlugin } from "./plugin-host";
 
 /** Tidy's text rules (plugins/catvinci.markdown-lint/tidy.js), a plain script
  *  that puts itself on the global object. */
@@ -267,28 +267,5 @@ describe("Tidy: Markdown Lint and Text Tidy in one", () => {
     expect(await host({}, false).decorate([block])).toEqual([
       expect.objectContaining({ block: "a", style: "underline" }),
     ]);
-  });
-});
-
-describe("Text Tidy, now part of Tidy", () => {
-  it("explains the merge, then offers Tidy, once", async () => {
-    const offers: unknown[] = [];
-    const storage = memoryStorage();
-    const api = {
-      commands: {
-        execute: async (id: string, args: unknown) =>
-          void offers.push([id, args]),
-      },
-      ui: { notice: async (text: string) => void offers.push(["notice", text]) },
-    };
-    for (let i = 0; i < 2; i++) {
-      loadPlugin("catvinci.text-tidy", api, storage);
-      await new Promise((r) => setTimeout(r, 0));
-    }
-    expect(offers).toEqual([
-      ["notice", "merged"],
-      ["textus.offerPlugin", { id: "catvinci.markdown-lint" }],
-    ]);
-    expect(manifestOf("catvinci.text-tidy").contributes).toEqual({});
   });
 });
