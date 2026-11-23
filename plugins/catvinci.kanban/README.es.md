@@ -11,7 +11,7 @@ Organiza el trabajo en tarjetas y listas sobre un tablero que se guarda como un 
 - **Añadir una tarjeta** al final de una lista. Haz clic en el texto de una tarjeta para editarlo y marca su casilla cuando esté hecha. Su botón ⋯ (o un clic derecho) la mueve a otra lista o la elimina; Deshacer en el aviso que sigue la recupera.
 - **Añadir lista** crea una lista nueva, lista para ponerle nombre. Haz clic en el título de una lista para renombrarla; una lista vacía se puede eliminar desde su menú ⋯.
 - En un teléfono, cada lista ocupa la pantalla: desliza para pasar a la siguiente.
-- Arrastra tarjetas dentro de una lista o a otra, y arrastra una lista por su cabecera para cambiar el orden. Las demás se apartan mientras arrastras.
+- Arrastra tarjetas dentro de una lista o a otra, y arrastra una lista por su cabecera para cambiar el orden. Las demás se apartan mientras arrastras. En una pantalla táctil, mantén pulsada una tarjeta un momento y luego arrástrala; en el borde de la pantalla de un teléfono, el tablero pasa a la lista siguiente. Si la mantienes pulsada y la sueltas sin moverla, se abre su menú.
 - Escribe un [[enlace]] en una tarjeta y haz clic en él para abrir esa nota.
 - **Editar como Markdown** abre el archivo como texto. El tablero sigue los cambios hechos ahí o en cualquier otro sitio.
 - Lo que el Kanban de Obsidian guarda en el archivo además de las listas, como sus ajustes y la marca de su lista de terminadas, queda como estaba.
@@ -37,6 +37,7 @@ kanban-plugin: board
 
 ## Cambios
 
+- **0.4.14** - En el teléfono y la tableta, mantén pulsada una tarjeta un momento para arrastrarla dentro de una lista o a otra; en el borde de la pantalla de un teléfono el tablero pasa a la lista siguiente, y la página ya no se desplaza bajo la tarjeta. Si la mantienes pulsada y la sueltas sin moverla, se abre su menú. Cerca del borde del tablero, este se desplaza, y una tarjeta soltada debajo de una lista corta entra en esa lista.
 - **0.4.13** - El menú ⋯ de una tarjeta (o un clic derecho) la mueve a otra lista o la elimina, con Deshacer, en lugar de una × que eliminaba al instante y se veía siempre en pantallas táctiles. Una lista nueva empieza con su nombre en edición. En un teléfono una lista ocupa la pantalla y al deslizar se detiene en la siguiente; en una pestaña estrecha, Editar como Markdown pasa al menú ⋯.
 - **0.4.12** - Las tarjetas y listas se apartan al mismo ritmo que el resto de Textus.
 - **0.4.11** - Una lista arrastrada por su cabecera se eleva y se desliza por el tablero como las pestañas de Textus; Esc la devuelve.

@@ -148,13 +148,16 @@
       },
     );
     li.append(box, text, menu);
-    // Dragged into a list, at the place it is let go.
+    // Dragged into a list, at the place it is let go; by touch, after a
+    // hold, and at the screen's edge on a phone the board turns to the next
+    // list. Held and let go without moving, it opens the card's menu.
     li.addEventListener("pointerdown", (e) => {
       if (e.target.closest("input, button, textarea, [contenteditable]")) return;
       drag.sortable(e, {
         item: li,
         lists: cardLists,
         itemsOf: cardsOf,
+        held: () => menu.click(),
         onDrop: (ul, index) => {
           const to = board.lists[cardLists().indexOf(ul)];
           list.cards.splice(list.cards.indexOf(card), 1);

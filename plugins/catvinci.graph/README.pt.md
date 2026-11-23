@@ -5,7 +5,7 @@ Desenha suas notas e os links entre elas como um grafo, da pasta inteira ou em v
 - **Ctrl+Alt+G** (**⌘⌥G** no Mac), ou **Plugins › Abrir a visão de grafo**, mostra a pasta inteira numa aba. **Ajustar** enquadra tudo.
 - A aba **Grafo** da barra lateral mostra as notas em volta do documento aberto. O botão no topo do painel Grafo da barra lateral abre a pasta inteira.
 - Contam os [[links wiki]] e os links para outros documentos; duas notas que se ligam uma à outra dividem uma só linha. Um [[link]] para uma nota ainda não escrita aparece como uma nota própria.
-- Clique numa nota para abri-la. Arraste uma nota para posicioná-la, arraste o fundo para se mover e use a roda ou o gesto de pinça para o zoom. Passe o ponteiro sobre uma nota para destacar os links dela.
+- Clique numa nota para abri-la. Arraste uma nota para posicioná-la, arraste o fundo para se mover e use a roda ou o gesto de pinça para o zoom. Passe o ponteiro sobre uma nota para destacar os links dela. No toque, o primeiro toque numa nota destaca os links dela e o segundo a abre.
 - O grafo se ajusta sozinho: os nomes aparecem ao aproximar, setas mostram a direção dos links quando são poucos, e uma nota com mais links fica maior. Sem grupos de cor, cada nota fica com a cor da sua pasta.
 - Quando os documentos da pasta mudam, o grafo é redesenhado.
 
@@ -25,6 +25,7 @@ Num cofre do Obsidian, os grupos de cor salvos no `graph.json` do Obsidian tamb�
 
 ## Alterações
 
+- **0.5.10** - No toque, o primeiro toque numa nota destaca ela e os links dela e o segundo a abre; as notas ficam mais fáceis de acertar com o dedo, e um segundo dedo dá zoom em vez de também mover o grafo. As configurações abrem no próprio popover do Textus.
 - **0.5.9** - Esc ao arrastar uma nota ou a vista devolve-a ao lugar, e um toque cancelado pelo sistema já não deixa um arrasto preso.
 - **0.5.8** - O grafo da barra lateral se espalha para caber no painel, em vez de começar como um pequeno amontoado com rótulos sobrepostos. Ordena os nomes com a ordem do próprio Textus em vez de uma cópia, então o pacote ficou menor.
 - **0.5.7** - A página segue o idioma do Textus sozinha. Requer o Textus 1.4.3.

@@ -11,7 +11,7 @@ Planen Sie Arbeit als Karten in Listen auf einem Board, das als einfache Markdow
 - **Karte hinzufügen** am Ende einer Liste. Klicken Sie auf den Text einer Karte, um ihn zu bearbeiten, und haken Sie ihr Kästchen ab, wenn sie erledigt ist. Ihre ⋯-Schaltfläche (oder ein Rechtsklick) verschiebt sie in eine andere Liste oder löscht sie; Rückgängig in der folgenden Meldung holt sie zurück.
 - **Liste hinzufügen** legt eine neue Liste an, deren Name gleich eingegeben wird. Ein Klick auf den Titel einer Liste benennt sie um; eine leere Liste lässt sich über ihr ⋯-Menü löschen.
 - Auf dem Telefon füllt jede Liste den Bildschirm: Wischen Sie zur nächsten.
-- Ziehen Sie Karten innerhalb einer Liste oder in eine andere, und eine Liste an ihrem Kopf, um die Reihenfolge zu ändern. Die anderen machen beim Ziehen Platz.
+- Ziehen Sie Karten innerhalb einer Liste oder in eine andere, und eine Liste an ihrem Kopf, um die Reihenfolge zu ändern. Die anderen machen beim Ziehen Platz. Auf einem Touchscreen halten Sie eine Karte kurz fest und ziehen sie dann; am Bildschirmrand eines Telefons blättert das Board zur nächsten Liste. Festgehalten und ohne Bewegung losgelassen, öffnet eine Karte ihr Menü.
 - Schreiben Sie einen [[Link]] in eine Karte und klicken Sie darauf, um diese Notiz zu öffnen.
 - **Als Markdown bearbeiten** öffnet die Datei als Text. Das Board folgt Änderungen, die dort oder anderswo gemacht werden.
 - Was Obsidians Kanban außer den Listen in der Datei ablegt, etwa seine Einstellungen und die Markierung seiner Erledigt-Liste, bleibt, wie es geschrieben ist.
@@ -37,6 +37,7 @@ kanban-plugin: board
 
 ## Änderungen
 
+- **0.4.14** - Auf Telefon und Tablet lässt sich eine Karte nach kurzem Festhalten innerhalb einer Liste oder in eine andere ziehen; am Bildschirmrand eines Telefons blättert das Board zur nächsten Liste, und die Seite scrollt beim Ziehen nicht mehr mit. Festgehalten und ohne Bewegung losgelassen, öffnet eine Karte ihr Menü. Nahe am Rand des Boards scrollt das Board, und eine unterhalb einer kurzen Liste losgelassene Karte landet in dieser Liste.
 - **0.4.13** - Das ⋯-Menü einer Karte (oder ein Rechtsklick) verschiebt sie in eine andere Liste oder löscht sie, mit Rückgängig - statt eines ×, das sofort löschte und auf Touchscreens immer zu sehen war. Eine neue Liste beginnt mit der Eingabe ihres Namens. Auf dem Telefon füllt eine Liste den Bildschirm und ein Wischen hält bei der nächsten; in einem schmalen Tab wandert Als Markdown bearbeiten ins ⋯-Menü.
 - **0.4.12** - Karten und Listen machen im selben Tempo Platz wie der Rest von Textus.
 - **0.4.11** - Eine Liste, an ihrem Kopf gezogen, hebt sich und gleitet über das Board wie Textus’ eigene Tabs; Esc legt sie zurück.

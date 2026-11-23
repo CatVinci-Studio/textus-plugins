@@ -11,7 +11,7 @@ Organize o trabalho em cartões e listas num quadro guardado como um arquivo Mar
 - **Adicionar um cartão** no fim de uma lista. Clique no texto de um cartão para editá-lo e marque a caixa quando estiver feito. O botão ⋯ (ou um clique direito) move-o para outra lista ou exclui-o; Desfazer no aviso que se segue traz ele de volta.
 - **Adicionar lista** cria uma lista nova, pronta para receber um nome. Clique no título de uma lista para renomeá-la; uma lista vazia pode ser excluída pelo menu ⋯.
 - No telefone, cada lista ocupa a tela: deslize para ir à próxima.
-- Arraste cartões dentro de uma lista ou para outra, e arraste uma lista pelo topo para mudar a ordem. Os outros abrem espaço enquanto você arrasta.
+- Arraste cartões dentro de uma lista ou para outra, e arraste uma lista pelo topo para mudar a ordem. Os outros abrem espaço enquanto você arrasta. Numa tela sensível ao toque, segure um cartão por um instante e depois arraste; na borda da tela de um celular, o quadro passa para a lista seguinte. Segurado e solto sem mover, o cartão abre o seu menu.
 - Escreva um [[link]] num cartão e clique nele para abrir essa nota.
 - **Editar como Markdown** abre o arquivo como texto. O quadro acompanha as mudanças feitas lá ou em qualquer outro lugar.
 - O que o Kanban do Obsidian guarda no arquivo além das listas, como os ajustes dele e a marca da lista de concluídos, fica como estava.
@@ -37,6 +37,7 @@ kanban-plugin: board
 
 ## Alterações
 
+- **0.4.14** - No celular e no tablet, segure um cartão por um instante para arrastá-lo dentro de uma lista ou para outra; na borda da tela de um celular o quadro passa para a lista seguinte, e a página não rola mais sob o cartão. Segurado e solto sem mover, o cartão abre o seu menu. Perto da borda do quadro, ele rola, e um cartão solto abaixo de uma lista curta entra nessa lista.
 - **0.4.13** - O menu ⋯ de um cartão (ou um clique direito) move-o para outra lista ou exclui-o, com Desfazer, em vez de um × que excluía na hora e ficava sempre visível em telas de toque. Uma lista nova já começa com o nome em edição. No telefone uma lista ocupa a tela e o deslize para na próxima; numa aba estreita, Editar como Markdown vai para o menu ⋯.
 - **0.4.12** - Os cartões e as listas abrem espaço ao mesmo ritmo que o resto do Textus.
 - **0.4.11** - Uma lista arrastada pelo cabeçalho se ergue e desliza pelo quadro como as abas do Textus; Esc a devolve.

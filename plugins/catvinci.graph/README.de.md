@@ -5,7 +5,7 @@ Zeichnet Ihre Notizen und die Links zwischen ihnen als Graph, für den ganzen Or
 - **Strg+Alt+G** (**⌘⌥G** auf dem Mac) oder **Plugins › Graphansicht öffnen** zeigt den ganzen Ordner in einem Tab. **Einpassen** holt alles ins Bild.
 - Der Reiter **Graph** in der Seitenleiste zeigt die Notizen rund um das geöffnete Dokument. Die Schaltfläche oben im Graph-Bereich der Seitenleiste öffnet den ganzen Ordner.
 - [[Wiki-Links]] und Links auf andere Dokumente zählen beide; zwei Notizen, die aufeinander verlinken, teilen sich eine Linie. Ein [[Link]] auf eine noch nicht geschriebene Notiz erscheint als eigene Notiz.
-- Ein Klick öffnet eine Notiz. Ziehen Sie eine Notiz, um sie zu platzieren, den Hintergrund, um sich zu bewegen, und zoomen Sie mit dem Mausrad oder per Zwei-Finger-Geste. Zeigen Sie auf eine Notiz, um ihre Links hervorzuheben.
+- Ein Klick öffnet eine Notiz. Ziehen Sie eine Notiz, um sie zu platzieren, den Hintergrund, um sich zu bewegen, und zoomen Sie mit dem Mausrad oder per Zwei-Finger-Geste. Zeigen Sie auf eine Notiz, um ihre Links hervorzuheben. Per Touch hebt ein erstes Tippen auf eine Notiz ihre Links hervor, ein zweites öffnet sie.
 - Der Graph passt sich selbst an: Namen erscheinen beim Hineinzoomen, Pfeile zeigen die Richtung der Links, wenn es wenige genug sind, und Notizen mit mehr Links sind größer. Ohne Farbgruppen bekommt jede Notiz die Farbe ihres Ordners.
 - Ändern sich Dokumente im Ordner, wird der Graph neu gezeichnet.
 
@@ -25,6 +25,7 @@ In einem Obsidian-Vault färben auch die in Obsidians `graph.json` gespeicherten
 
 ## Änderungen
 
+- **0.5.10** - Per Touch hebt ein erstes Tippen eine Notiz und ihre Links hervor, ein zweites öffnet sie; Notizen sind mit dem Finger leichter zu treffen, und ein zweiter Finger zoomt, statt den Graphen auch zu verschieben. Die Einstellungen öffnen sich in Textus’ eigenem Popover.
 - **0.5.9** - Esc beim Ziehen einer Notiz oder der Ansicht setzt sie zurück, und eine vom System abgebrochene Berührung lässt kein Ziehen mehr hängen.
 - **0.5.8** - Der Graph in der Seitenleiste breitet sich auf sein Feld aus, statt als kleiner Klumpen mit übereinanderliegenden Beschriftungen zu beginnen. Sortiert Namen mit Textus’ eigener Reihenfolge statt einer Kopie davon; das Paket ist kleiner.
 - **0.5.7** - Die Seite folgt der Sprache von Textus von selbst. Benötigt Textus 1.4.3.

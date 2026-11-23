@@ -5,7 +5,7 @@ Dibuja tus notas y los enlaces entre ellas como un grafo, de toda la carpeta o a
 - **Ctrl+Alt+G** (**⌘⌥G** en un Mac), o **Plugins › Abrir la vista de grafo**, muestra toda la carpeta en una pestaña. **Ajustar** lo encuadra todo.
 - La pestaña **Grafo** de la barra lateral muestra las notas alrededor del documento abierto. El botón de arriba del panel Grafo de la barra lateral abre toda la carpeta.
 - Cuentan los [[enlaces wiki]] y los enlaces a otros documentos; dos notas que se enlazan entre sí comparten una línea. Un [[enlace]] a una nota aún no escrita aparece como una nota propia.
-- Haz clic en una nota para abrirla. Arrastra una nota para colocarla, arrastra el fondo para moverte y usa la rueda o pellizca para hacer zoom. Pasa el puntero sobre una nota para resaltar sus enlaces.
+- Haz clic en una nota para abrirla. Arrastra una nota para colocarla, arrastra el fondo para moverte y usa la rueda o pellizca para hacer zoom. Pasa el puntero sobre una nota para resaltar sus enlaces. En una pantalla táctil, un primer toque en una nota resalta sus enlaces y un segundo la abre.
 - El grafo se adapta solo: los nombres aparecen al acercarte, las flechas indican la dirección de los enlaces cuando son pocos y una nota con más enlaces se ve más grande. Sin grupos de color, cada nota toma el color de su carpeta.
 - Cuando cambian los documentos de la carpeta, el grafo se vuelve a dibujar.
 
@@ -25,6 +25,7 @@ En una bóveda de Obsidian, los grupos de color guardados en el `graph.json` de 
 
 ## Cambios
 
+- **0.5.10** - En una pantalla táctil, un primer toque en una nota la resalta junto con sus enlaces y un segundo la abre; las notas son más fáciles de tocar con el dedo, y un segundo dedo hace zoom en vez de mover también el grafo. Los ajustes se abren en el propio popover de Textus.
 - **0.5.9** - Esc mientras arrastras una nota o la vista la devuelve a su sitio, y un toque que el sistema cancela ya no deja un arrastre atascado.
 - **0.5.8** - El grafo de la barra lateral se extiende para llenar su panel, en vez de empezar como un pequeño grupo con etiquetas encimadas. Ordena los nombres con el orden propio de Textus en lugar de una copia, así el paquete es más pequeño.
 - **0.5.7** - La página sigue el idioma de Textus por sí sola. Requiere Textus 1.4.3.

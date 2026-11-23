@@ -1,7 +1,8 @@
 // A force-directed graph on a canvas: nodes pushed apart, links pulling
 // together, settling over a few seconds. Drag the background to move, the
 // wheel (or a pinch) to zoom, a node to place it; hover lights its links,
-// a click opens it (with Ctrl or Cmd, beside the one in front). It adapts by itself:
+// a click opens it (with Ctrl or Cmd, beside the one in front). By touch,
+// with no hover, a first tap lights a node's links and a second opens it. It adapts by itself:
 // labels as it is zoomed in, arrows when there are few enough links to
 // read them, a node's size by its links. The forces are in graph-forces.js.
 (function (root) {
@@ -322,12 +323,14 @@
       return colors.tones[folderIndex.get(folder) % TONES.length] || null;
     }
 
+    let touch = false;
     function nodeAt(px, py) {
       let best = null;
       let bestD = Infinity;
       for (const n of nodes) {
         const p = toScreen(n);
-        const r = radius(n) * Math.min(1.6, Math.max(0.6, view.k)) + 4;
+        // A fingertip is less exact than a pointer.
+        const r = radius(n) * Math.min(1.6, Math.max(0.6, view.k)) + (touch ? 12 : 4);
         const d = (p.x - px) ** 2 + (p.y - py) ** 2;
         if (d < r * r && d < bestD) {
           best = n;
@@ -343,51 +346,63 @@
     }
 
     // A node dragged, or the view panned, once the press moves (the
-    // shared drag: Esc or a cancelled pointer puts it back); a press that
-    // doesn't move is a click, which opens a note.
+    // shared drag: Esc or a cancelled pointer puts it back; a finger at
+    // once, the canvas being all graph); a press that doesn't move is a
+    // click, which opens a note.
+    // A second finger is a pinch, which Textus turns into zooming.
+    const fingers = new Set();
+    const lift = (e) => fingers.delete(e.pointerId);
+    window.addEventListener("pointerup", lift, true);
+    window.addEventListener("pointercancel", lift, true);
     canvas.addEventListener("pointerdown", function (e) {
+      touch = e.pointerType === "touch";
+      if (touch && fingers.add(e.pointerId).size > 1) return;
       const p = point(e);
       const n = nodeAt(p.x, p.y);
       const was = n ? { x: n.x, y: n.y } : { x: view.x, y: view.y };
-      root.drag.track(e, {
-        start: function () {
-          if (n) {
-            dragging = n;
-            heat(0.3);
-          } else panning = { x: p.x, y: p.y, vx: view.x, vy: view.y };
+      root.drag.track(
+        e,
+        {
+          start: function () {
+            if (n) {
+              dragging = n;
+              heat(0.3);
+            } else panning = { x: p.x, y: p.y, vx: view.x, vy: view.y };
+          },
+          move: function (x, y) {
+            const at = point({ clientX: x, clientY: y });
+            if (dragging) {
+              const w = toWorld(at.x, at.y);
+              dragging.x = w.x;
+              dragging.y = w.y;
+              dragging.vx = dragging.vy = 0;
+              heat(0.3);
+            } else if (panning) {
+              fitted = false;
+              view.x = panning.vx + (at.x - panning.x) / view.k;
+              view.y = panning.vy + (at.y - panning.y) / view.k;
+              draw();
+            }
+          },
+          end: function (_x, _y, dropped) {
+            if (!dropped && dragging) {
+              dragging.x = was.x;
+              dragging.y = was.y;
+              heat(0.3);
+            } else if (!dropped && panning) {
+              view.x = was.x;
+              view.y = was.y;
+              draw();
+            }
+            dragging = null;
+            panning = null;
+          },
         },
-        move: function (x, y) {
-          const at = point({ clientX: x, clientY: y });
-          if (dragging) {
-            const w = toWorld(at.x, at.y);
-            dragging.x = w.x;
-            dragging.y = w.y;
-            dragging.vx = dragging.vy = 0;
-            heat(0.3);
-          } else if (panning) {
-            fitted = false;
-            view.x = panning.vx + (at.x - panning.x) / view.k;
-            view.y = panning.vy + (at.y - panning.y) / view.k;
-            draw();
-          }
-        },
-        end: function (_x, _y, dropped) {
-          if (!dropped && dragging) {
-            dragging.x = was.x;
-            dragging.y = was.y;
-            heat(0.3);
-          } else if (!dropped && panning) {
-            view.x = was.x;
-            view.y = was.y;
-            draw();
-          }
-          dragging = null;
-          panning = null;
-        },
-      });
+        { hold: false },
+      );
     });
     canvas.addEventListener("pointermove", function (e) {
-      if (dragging || panning) return;
+      if (dragging || panning || e.pointerType === "touch") return;
       const p = point(e);
       const n = nodeAt(p.x, p.y);
       if (n !== hover) {
@@ -400,6 +415,10 @@
     canvas.addEventListener("click", function (e) {
       const p = point(e);
       const n = nodeAt(p.x, p.y);
+      if (touch && n !== hover) {
+        hover = n;
+        return draw();
+      }
       if (n && n.kind === "note") options.onOpen(n.id, e.metaKey || e.ctrlKey);
     });
     canvas.addEventListener(
@@ -421,8 +440,8 @@
       },
       { passive: false },
     );
-    canvas.addEventListener("pointerleave", function () {
-      if (hover) {
+    canvas.addEventListener("pointerleave", function (e) {
+      if (hover && e.pointerType !== "touch") {
         hover = null;
         draw();
       }

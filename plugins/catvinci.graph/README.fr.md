@@ -5,7 +5,7 @@ Dessine vos notes et les liens entre elles sous forme de graphe, pour tout le do
 - **Ctrl+Alt+G** (**⌘⌥G** sur Mac), ou **Plugins › Ouvrir la vue en graphe**, montre tout le dossier dans un onglet. **Ajuster** fait tout tenir à l’écran.
 - L’onglet **Graphe** de la barre latérale montre les notes autour du document ouvert. Le bouton en haut du panneau Graphe de la barre latérale ouvre tout le dossier.
 - Les [[liens wiki]] comme les liens vers d’autres documents comptent ; deux notes liées l’une à l’autre partagent un seul trait. Un [[lien]] vers une note pas encore écrite apparaît comme une note à part entière.
-- Cliquez sur une note pour l’ouvrir. Faites glisser une note pour la placer, le fond pour vous déplacer, et zoomez à la molette ou en pinçant. Survolez une note pour mettre ses liens en évidence.
+- Cliquez sur une note pour l’ouvrir. Faites glisser une note pour la placer, le fond pour vous déplacer, et zoomez à la molette ou en pinçant. Survolez une note pour mettre ses liens en évidence. Au toucher, un premier appui sur une note met ses liens en évidence, un second l’ouvre.
 - Le graphe s’adapte tout seul : les noms apparaissent quand vous zoomez, des flèches montrent le sens des liens quand ils sont assez peu nombreux, et une note très liée est plus grande. Sans groupes de couleur, chaque note prend la couleur de son dossier.
 - Quand les documents du dossier changent, le graphe est redessiné.
 
@@ -25,6 +25,7 @@ Dans un coffre Obsidian, les groupes de couleur enregistrés dans le `graph.json
 
 ## Changements
 
+- **0.5.10** - Au toucher, un premier appui sur une note la met en évidence avec ses liens, un second l’ouvre ; les notes sont plus faciles à atteindre du doigt, et un second doigt zoome au lieu de déplacer aussi le graphe. Les réglages s’ouvrent dans le popover de Textus.
 - **0.5.9** - Échap pendant qu'on fait glisser une note ou la vue la remet en place, et un toucher annulé par le système ne laisse plus un glissement bloqué.
 - **0.5.8** - Le graphe de la barre latérale s'étale pour remplir son panneau, au lieu de commencer en petit amas aux étiquettes superposées. Trie les noms dans l’ordre de Textus lui-même plutôt qu’avec une copie : le paquet est plus léger.
 - **0.5.7** - La page suit la langue de Textus d’elle-même. Nécessite Textus 1.4.3.

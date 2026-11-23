@@ -11,7 +11,7 @@ Organisez le travail en cartes et en listes sur un tableau enregistré comme un 
 - **Ajouter une carte** en bas d’une liste. Cliquez sur le texte d’une carte pour le modifier et cochez sa case quand elle est faite. Son bouton ⋯ (ou un clic droit) la déplace vers une autre liste ou la supprime ; Annuler dans la notification qui suit la rétablit.
 - **Ajouter une liste** crée une nouvelle liste, prête à être nommée. Cliquez sur le titre d’une liste pour la renommer ; une liste vide peut être supprimée depuis son menu ⋯.
 - Sur un téléphone, chaque liste occupe l’écran : balayez pour passer à la suivante.
-- Faites glisser les cartes dans une liste ou vers une autre, et une liste par son en-tête pour changer l’ordre. Les autres s’écartent pendant le glissement.
+- Faites glisser les cartes dans une liste ou vers une autre, et une liste par son en-tête pour changer l’ordre. Les autres s’écartent pendant le glissement. Sur un écran tactile, maintenez une carte un instant, puis faites-la glisser ; au bord de l’écran d’un téléphone, le tableau passe à la liste suivante. Maintenue puis relâchée sans bouger, une carte ouvre son menu.
 - Écrivez un [[lien]] dans une carte et cliquez dessus pour ouvrir cette note.
 - **Modifier en Markdown** ouvre le fichier en texte. Le tableau suit les changements faits là ou ailleurs.
 - Ce que le Kanban d’Obsidian garde dans le fichier en plus des listes, comme ses réglages et la marque de sa liste terminée, reste tel quel.
@@ -37,6 +37,7 @@ kanban-plugin: board
 
 ## Changements
 
+- **0.4.14** - Sur téléphone et tablette, maintenez une carte un instant pour la faire glisser dans une liste ou vers une autre ; au bord de l’écran d’un téléphone, le tableau passe à la liste suivante, et la page ne défile plus sous la carte. Maintenue puis relâchée sans bouger, une carte ouvre son menu. Près du bord du tableau, celui-ci défile, et une carte lâchée sous une liste courte entre dans cette liste.
 - **0.4.13** - Le menu ⋯ d’une carte (ou un clic droit) la déplace vers une autre liste ou la supprime, avec Annuler, au lieu d’un × qui supprimait tout de suite et restait visible sur un écran tactile. Une nouvelle liste commence par la saisie de son nom. Sur un téléphone, une liste occupe l’écran et un balayage s’arrête sur la suivante ; dans un onglet étroit, Modifier en Markdown passe dans le menu ⋯.
 - **0.4.12** - Les cartes et les listes s'écartent au même rythme que le reste de Textus.
 - **0.4.11** - Une liste tirée par son en-tête se soulève et glisse le long du tableau comme les onglets de Textus ; Échap la remet en place.
