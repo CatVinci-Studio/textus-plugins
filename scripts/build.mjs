@@ -45,6 +45,12 @@ const DIST = join(ROOT, "dist");
 const REPOSITORY = "https://github.com/CatVinci-Studio/textus-plugins";
 const ID = /^[a-z0-9]+(?:-[a-z0-9]+)*\.[a-z0-9]+(?:-[a-z0-9]+)*$/;
 const VERSION = /^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?$/;
+// The store's categories, as the manifest's schema lists them.
+let categories;
+const CATEGORIES = () =>
+  (categories ??= JSON.parse(
+    readFileSync(join(ROOT, "packages/textus-plugin/textus-plugin.schema.json"), "utf8"),
+  ).properties.category.enum);
 const check = process.argv.includes("--check");
 
 const libs = JSON.parse(readFileSync(join(ROOT, "libs.json"), "utf8"));
@@ -85,6 +91,11 @@ function manifestOf(id) {
   // Keep running in the background may name ios: it runs there without it.
   if (manifest.background && manifest.platforms?.includes("ios"))
     throw new Error(`${id}: works in the background, so not on ios`);
+  // Where the store lists it; the plugins merged into others aren't listed.
+  if (!CATEGORIES().includes(manifest.category) && !UNLISTED.has(id))
+    throw new Error(`${id}: category must be one of ${CATEGORIES().join(", ")}`);
+  if (manifest.needsTextusAi !== undefined && typeof manifest.needsTextusAi !== "boolean")
+    throw new Error(`${id}: needsTextusAi is true or false`);
   return manifest;
 }
 

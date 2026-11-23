@@ -15,6 +15,7 @@
     "desktop",
     "ios"
   ],
+  "category": "editing",
   "main": [
     "commands.js",
     "host.js"

@@ -12,6 +12,7 @@
     "textus": ">=1.3.0-beta.8"
   },
   "platforms": ["desktop"],
+  "category": "editing",
   "main": ["mappings.js", "flash.js", "cmdline.js", "normal.js", "host.js"],
   "activationEvents": [
     "onStartupFinished"

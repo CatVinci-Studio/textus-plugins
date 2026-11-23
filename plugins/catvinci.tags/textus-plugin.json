@@ -15,6 +15,7 @@
     "desktop",
     "ios"
   ],
+  "category": "notes",
   "main": [
     "lib/markdown-keep.js",
     "tag-edit.js",

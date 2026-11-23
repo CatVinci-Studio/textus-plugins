@@ -15,6 +15,7 @@
     "desktop",
     "ios"
   ],
+  "category": "files",
   "main": "host.js",
   "permissions": [],
   "contributes": {

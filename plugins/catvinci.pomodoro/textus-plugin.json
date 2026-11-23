@@ -14,6 +14,7 @@
   "platforms": [
     "desktop"
   ],
+  "category": "companions",
   "main": [
     "timer.js",
     "host.js"

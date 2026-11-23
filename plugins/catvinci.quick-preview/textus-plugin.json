@@ -15,6 +15,7 @@
     "desktop",
     "ios"
   ],
+  "category": "notes",
   "main": [
     "lib/note-parts.js",
     "host.js"

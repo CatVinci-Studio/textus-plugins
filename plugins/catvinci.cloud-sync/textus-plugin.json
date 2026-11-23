@@ -11,6 +11,7 @@
   },
   "icon": "icon.svg",
   "platforms": ["desktop"],
+  "category": "sync",
   "main": "host.js",
   "permissions": ["files.read", "files.write", "network:*"],
   "activationEvents": ["onStartupFinished"],

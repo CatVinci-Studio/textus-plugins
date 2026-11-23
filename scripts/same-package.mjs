@@ -1,4 +1,5 @@
 // Whether a plugin version built now is the package already released.
+// Its manifest may differ in the keys only the catalog reads (catalog-only.mjs).
 // Zips made before folder entries were left out carry a folder dated when
 // they were built, so the bytes differ though every file is the same:
 // this compares the files. When they match, the catalog keeps the
@@ -7,6 +8,7 @@
 import { createHash } from "node:crypto";
 import { readFileSync, writeFileSync } from "node:fs";
 import JSZip from "jszip";
+import { sameButCatalogOnly } from "./catalog-only.mjs";
 
 const [released, built, id] = process.argv.slice(2);
 
@@ -19,9 +21,17 @@ async function filesOf(path) {
 }
 
 const [have, made] = await Promise.all([filesOf(released), filesOf(built)]);
+// A manifest differing only in keys the catalog alone reads is the same:
+// the catalog lists them from this repository's manifest.
 const same =
   have.size === made.size &&
-  [...made].every(([name, bytes]) => have.get(name)?.equals(bytes));
+  [...made].every(
+    ([name, bytes]) =>
+      have.get(name)?.equals(bytes) ||
+      (name === "textus-plugin.json" &&
+        have.has(name) &&
+        sameButCatalogOnly(have.get(name).toString("utf8"), bytes.toString("utf8"))),
+  );
 if (!same) process.exit(1);
 
 const bytes = readFileSync(released);

@@ -12,6 +12,7 @@
     "textus": ">=1.4.3"
   },
   "platforms": ["desktop"],
+  "category": "sync",
   "main": ["lib/folder-paths.js", "lib/conventions.js", "notes.js", "host.js"],
   "activationEvents": [
     "onHover"

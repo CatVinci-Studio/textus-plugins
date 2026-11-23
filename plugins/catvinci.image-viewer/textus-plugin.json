@@ -12,6 +12,7 @@
     "textus": ">=1.4.3"
   },
   "platforms": ["desktop", "ios"],
+  "category": "files",
   "main": "host.js",
   "permissions": [],
   "contributes": {

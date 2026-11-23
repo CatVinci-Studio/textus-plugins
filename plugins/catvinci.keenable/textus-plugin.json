@@ -12,6 +12,8 @@
     "textus": ">=1.3.0"
   },
   "platforms": ["desktop", "ios"],
+  "category": "ai",
+  "needsTextusAi": true,
   "main": ["host.js"],
   "permissions": ["ai.tools", "network:api.keenable.ai"],
   "activationEvents": ["onStartupFinished"],

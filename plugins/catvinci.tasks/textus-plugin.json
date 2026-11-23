@@ -12,6 +12,7 @@
     "textus": ">=1.4.3"
   },
   "platforms": ["desktop", "ios"],
+  "category": "notes",
   "main": [
     "lib/folder-paths.js",
     "lib/text-lines.js",
