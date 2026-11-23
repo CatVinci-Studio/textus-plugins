@@ -164,13 +164,18 @@
     hits[current].scrollIntoView({ block: "center" });
     $("find-count").textContent = t("findCount", current + 1, hits.length);
   }
+  // Put back in its place, so the bar is fitted again (data-fit-steps).
+  function showFind(shown) {
+    $("find-box").hidden = !shown;
+    $("bar").insertBefore($("find-box"), $("find-open"));
+  }
   function openFind() {
-    $("find-box").hidden = false;
+    showFind(true);
     $("find-input").focus();
     $("find-input").select();
   }
   function closeFind() {
-    $("find-box").hidden = true;
+    showFind(false);
     $("find-input").value = "";
     clearTimeout(typing);
     clearHits();
