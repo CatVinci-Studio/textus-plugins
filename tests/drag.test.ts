@@ -187,6 +187,17 @@ describe("a finger, as Textus's own lists take one", () => {
     ]);
   });
 
+  it("joined by a second finger before it has held still is a pinch: nothing lifts", () => {
+    vi.useFakeTimers();
+    const { calls, handlers } = recorder();
+    drag.track({ ...finger(100, 100), pointerId: 1 }, handlers);
+    send("pointerdown", { pointerId: 2, clientX: 200, clientY: 200 });
+    vi.advanceTimersByTime(1000);
+    fire("pointerup", 100, 100);
+    expect(calls).toEqual([]);
+    expect(listeners.pointerdown ?? []).toEqual([]);
+  });
+
   it("on a surface that takes every touch itself drags at once", () => {
     const { calls, handlers } = recorder();
     drag.track(finger(100, 100), handlers, { hold: false });

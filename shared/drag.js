@@ -165,18 +165,23 @@
 
   /** A finger's press that lifts once it has held still HOLD_MS: start,
    *  then move once it travels; let go without travelling, it ends dropping
-   *  nothing and was a long press (`held`). */
+   *  nothing and was a long press (`held`). A second finger down first
+   *  makes it the page's (a pinch). */
   function holdThen(down, handlers) {
     var from = { x: down.clientX, y: down.clientY };
     var following = null;
     function stop() {
       clearTimeout(timer);
       root.removeEventListener("pointermove", moved);
+      root.removeEventListener("pointerdown", other, true);
       root.removeEventListener("pointerup", stop);
       root.removeEventListener("pointercancel", stop);
     }
     function moved(e) {
       if (Math.hypot(e.clientX - from.x, e.clientY - from.y) > SLOP_PX) stop();
+    }
+    function other(e) {
+      if (e.pointerId !== down.pointerId) stop();
     }
     var timer = setTimeout(function () {
       stop();
@@ -198,6 +203,7 @@
       );
     }, HOLD_MS);
     root.addEventListener("pointermove", moved);
+    root.addEventListener("pointerdown", other, true);
     root.addEventListener("pointerup", stop);
     root.addEventListener("pointercancel", stop);
     return {
@@ -470,5 +476,6 @@
     });
   }
 
+  // edgeStep is here for the tests.
   root.drag = { track: track, sortable: sortable, indexAt: indexAt, edgeStep: edgeStep };
 })(globalThis);
