@@ -25,6 +25,7 @@ El plugin usa [markmap](https://markmap.js.org). Pide un solo permiso, para dar 
 
 ## Cambios
 
+- **0.3.8** - El mapa mental llena su bloque: uno pequeño crece (hasta el doble) al ancho del bloque y a la altura que le des, y sigue el zoom de la nota en lugar de cortarse por la derecha.
 - **0.3.7** - El paquete incluye la lista de bibliotecas que lleva, con sus licencias.
 - **0.3.6** - Un mapa mental dibujado antes de que su nota se maquetara ya no muestra un error.
 - **0.3.5** - Un gráfico dibujado con su bloque plegado (en el móvil) se ajusta al ancho al abrirlo.

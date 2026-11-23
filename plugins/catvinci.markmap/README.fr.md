@@ -25,6 +25,7 @@ Le plugin utilise [markmap](https://markmap.js.org). Il demande une seule permis
 
 ## Changements
 
+- **0.3.8** - La carte mentale remplit son bloc : une petite carte s’agrandit (jusqu’au double) à la largeur du bloc et à la hauteur donnée, et suit le zoom de la note au lieu d’être coupée à droite.
 - **0.3.7** - Le paquet liste les bibliothèques qu’il embarque, avec leurs licences.
 - **0.3.6** - Une carte mentale dessinée avant la mise en page de sa note n'affiche plus d'erreur.
 - **0.3.5** - Un graphique dessiné quand son bloc était replié (sur téléphone) s'adapte à la largeur quand on l'ouvre.
