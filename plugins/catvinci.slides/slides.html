@@ -5,7 +5,7 @@
     <style id="deck"></style>
   </head>
   <body>
-    <div class="tx-bar" id="bar">
+    <div class="tx-bar" id="bar" data-fit-steps="compact">
       <div class="tx-pager">
         <button class="tx-icon-button" id="prev"><span class="tx-icon" data-icon="left"></span></button>
         <span class="tx-value" id="count"></span>
@@ -13,9 +13,12 @@
       </div>
       <span class="tx-spacer"></span>
       <button class="tx-button small" id="export"></button>
+      <button class="tx-icon-button" id="more"><span class="tx-icon" data-icon="more"></span></button>
       <button class="tx-button small primary" id="full"></button>
     </div>
     <main id="stage"></main>
+    <button class="tx-button small primary" id="exit"><span class="tx-icon" data-icon="close"></span><span id="exit-label"></span></button>
+    <script src="textus-resource:present.js"></script>
     <script src="textus-resource:page.js"></script>
   </body>
 </html>
