@@ -2,13 +2,15 @@ import { pendingIn } from "./pending";
 import { defaults, normalizeConfig, withConnection } from "./config";
 import { parseBase } from "./content";
 import { synchronize } from "./engine";
-import { scopeOf } from "./scope";
+import { DeletionQuestion } from "./guard";
+import { lockNoteIn } from "./lock";
+import { readGitignore, scopeOf } from "./scope";
 import { openEncryptedStore } from "./encrypted-store";
 import { openPlainStore } from "./plain-store";
 import { Workspace } from "./local";
 import { Pacer } from "./pacer";
 import { masked, Settings } from "./settings";
-import { fewPerSecond, statusText } from "./status";
+import { doneText, fewPerSecond, statusText } from "./status";
 import { RemoteStore, testConnection } from "./transport";
 import { recoverLock, testDraft, type Draft } from "./connection";
 import {
@@ -32,9 +34,10 @@ class Controller {
   private settings: Settings;
   private views = new Set<Textus.Webview>();
   private pacer = new Pacer(
-    () => void this.operation("sync"),
+    () => void this.sync(false),
     () => this.state.busy,
   );
+  private deletions = new DeletionQuestion();
   private item?: Textus.StatusItemHandle;
   private shown: string | null = null;
   private clock?: ReturnType<typeof setInterval>;
@@ -92,13 +95,36 @@ class Controller {
     this.state.error = error;
     this.broadcast();
   }
+  private stopped?: SyncError;
   private fail(error: unknown) {
     const e =
       error instanceof SyncError ? error : new SyncError("unknownError");
+    this.stopped = e;
     this.message(e.code, true, ...e.args);
     // Provider response bodies and raw network errors can contain credentials.
     this.ctx.log.warn(e.code);
     return e.code;
+  }
+  /** A sync; one stopped before deleting many files from the cloud asks
+   *  the person, and runs again with what they agreed to. */
+  async sync(byHand = true, allowDeletions = 0): Promise<string | null> {
+    const code = await this.operation(
+      "sync",
+      undefined,
+      undefined,
+      allowDeletions,
+    );
+    if (code !== "manyDeletions" || this.disposed) return code;
+    const count = Number(this.stopped?.args[0]);
+    const yes = await this.deletions.ask(count, byHand, (n) =>
+      this.api.ui.confirm(this.t("confirmDeletions", n), {
+        danger: true,
+        okLabel: this.t("deleteInCloud"),
+      }),
+    );
+    if (yes) return this.sync(byHand, count);
+    if (yes === false) this.message("deletionsKept");
+    return code;
   }
   async refresh() {
     const root = await this.api.files.root();
@@ -207,6 +233,7 @@ class Controller {
     kind: "sync" | "test" | "unlock",
     restore?: Restore,
     draft?: Draft,
+    allowDeletions = 0,
   ): Promise<string | null> {
     if (this.state.busy || this.disposed) return "busy";
     this.state.busy = true;
@@ -255,21 +282,7 @@ class Controller {
       this.pacer.started();
       // The folder's .gitignore, read each sync: it changes as Git's does.
       const gitignore = config.gitignore
-        ? await this.api.files
-            .read(`${root.replace(/[/\\]$/, "")}/.gitignore`)
-            .then((bytes) => new TextDecoder().decode(bytes))
-            // None there: no rules. Unreadable: no sync, rather than one
-            // without the rules the user asked for.
-            .catch(async (err: unknown) => {
-              if (
-                await this.api.files
-                  .stat(`${root.replace(/[/\\]$/, "")}/.gitignore`)
-                  // Refused is there: only a missing one has no rules.
-                  .catch(() => true)
-              )
-                throw err;
-              return "";
-            })
+        ? await readGitignore(this.api.files, root)
         : "";
       this.workspace = new Workspace(
         this.api,
@@ -309,6 +322,8 @@ class Controller {
         signal: this.abort.signal,
         saveBase: (next) => this.ctx.storage.global.set(key, next),
         pending: pendingIn(this.ctx.storage.global, key),
+        lockNote: lockNoteIn(this.ctx.storage.global, key),
+        allowDeletions,
         progress: fewPerSecond((phase, current, total) => {
           this.state.progress = total ? current / total : null;
           this.message(phase, false, current, total);
@@ -323,21 +338,8 @@ class Controller {
       }
       this.state.result = result;
       this.state.lastRun = at;
-      // Only what happened: "uploaded 2, 1 conflict copy".
-      const parts = (
-        [
-          ["doneUploaded", result.uploaded],
-          ["doneDownloaded", result.downloaded],
-          ["doneRemoved", result.removed],
-          ["doneMoved", result.moved],
-          ["doneConflicts", result.conflicts.length],
-          ["doneDeferred", result.deferred.length],
-        ] as const
-      )
-        .filter(([, n]) => n > 0)
-        .map(([key, n]) => this.t(key, n));
-      if (parts.length)
-        this.message("done", false, parts.join(this.t("listSeparator")));
+      const done = doneText(result, this.t);
+      if (done) this.message("done", false, done);
       else this.message("unchanged");
       return null;
     } catch (error) {
@@ -421,13 +423,9 @@ class Controller {
           this.state.busy = false;
           this.broadcast();
         }
-      } else if (
-        m.type === "sync" ||
-        m.type === "test" ||
-        m.type === "unlock"
-      ) {
+      } else if (m.type === "sync") await this.sync();
+      else if (m.type === "test" || m.type === "unlock")
         await this.operation(m.type);
-      }
     } catch (error) {
       this.fail(error);
     }
@@ -456,7 +454,7 @@ class Controller {
       api.commands.register(`${ID}.open`, () =>
         api.layout.openView(`${ID}.panel`),
       ),
-      api.commands.register(`${ID}.sync`, () => this.operation("sync")),
+      api.commands.register(`${ID}.sync`, () => this.sync()),
       // The tab, the sidebar and Settings show one page over one state.
       api.views.registerWebview(`${ID}.panel`, {
         resolve: (view) => this.resolve(view),

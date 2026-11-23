@@ -1,6 +1,7 @@
 import { defaults, identity, normalizeConfig } from "./config";
 import { hash } from "./content";
 import { validatePassword } from "./encryption";
+import { scanKey } from "./scan-cache";
 import {
   SyncError,
   type Config,
@@ -141,6 +142,7 @@ export class Settings {
     const config = await this.load(root);
     await this.ctx.secrets.delete(await this.secretKey(root, config));
     await this.ctx.storage.global.set(`config:${await this.scope(root)}`, null);
+    await this.ctx.storage.global.set(await scanKey(root), null);
   }
   /** The folder's keep setting, as a sync that carried `carried` left it,
    *  taken as this one's; false when one was picked meanwhile (it goes out

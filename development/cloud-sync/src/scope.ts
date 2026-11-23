@@ -207,3 +207,19 @@ export function scopeOf(
     obsidian: config.obsidian,
   };
 }
+
+/** The folder's .gitignore: none there, no rules; unreadable, an error -
+ *  no sync rather than one without the rules the person asked for. */
+export async function readGitignore(
+  files: Pick<Textus.Api["files"], "read" | "stat">,
+  root: string,
+): Promise<string> {
+  const path = `${root.replace(/[/\\]$/, "")}/.gitignore`;
+  try {
+    return new TextDecoder().decode(await files.read(path));
+  } catch (err) {
+    // Refused is there: only a missing one has no rules.
+    if (await files.stat(path).catch(() => true)) throw err;
+    return "";
+  }
+}

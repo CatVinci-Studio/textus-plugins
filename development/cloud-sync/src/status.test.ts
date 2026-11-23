@@ -1,5 +1,5 @@
 import { expect, it } from "vitest";
-import { fewPerSecond, statusText, type Status } from "./status";
+import { doneText, fewPerSecond, statusText, type Status } from "./status";
 
 const t = (key: string, ...args: unknown[]) => [key, ...args].join(" ");
 const now = Date.parse("2026-11-05T12:00:00Z");
@@ -15,6 +15,7 @@ const synced: Status = {
     moved: 0,
     conflicts: [],
     deferred: [],
+    notTrashed: [],
     unchanged: 0,
   },
 };
@@ -64,4 +65,12 @@ it("passes a sync's progress on a few times a second, never dropping a new phase
     "transferring 10/10",
     "publishing 10/10",
   ]);
+});
+
+it("lists what a sync did, files the Trash refused too, and nothing when nothing happened", () => {
+  const result = { ...synced.result!, uploaded: 2, notTrashed: ["a.md"] };
+  expect(doneText(result, t)).toBe(
+    "doneUploaded 2listSeparatordoneNotTrashed 1",
+  );
+  expect(doneText({ ...result, uploaded: 0, notTrashed: [] }, t)).toBeNull();
 });

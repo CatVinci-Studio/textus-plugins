@@ -259,7 +259,7 @@
   function showResult(result) {
     const container = element("results");
     container.replaceChildren();
-    for (const key of ["conflicts", "deferred"]) {
+    for (const key of ["conflicts", "deferred", "notTrashed"]) {
       const entries = result?.[key];
       if (!entries?.length) continue;
       const title = document.createElement("h3");

@@ -1,5 +1,6 @@
 import { expect, it } from "vitest";
 import { normalizeConfig } from "./config";
+import { scanKey } from "./scan-cache";
 import { Settings, masked } from "./settings";
 
 function fixture() {
@@ -236,8 +237,12 @@ it("disconnects by removing this folder's keys and settings only", async () => {
     account: "bob",
     secret: "b-secret",
   });
+  f.global.set(await scanKey("/notes"), { format: 1, files: {} });
+  f.global.set(await scanKey("/other"), { format: 1, files: {} });
   await f.settings.forget("/notes");
   expect(f.secrets.size).toBe(1);
+  expect(f.global.get(await scanKey("/notes"))).toBeNull();
+  expect(f.global.get(await scanKey("/other"))).not.toBeNull();
   await expect(f.settings.credentials("/other", config)).resolves.toMatchObject(
     { account: "bob" },
   );

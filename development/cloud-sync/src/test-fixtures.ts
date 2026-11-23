@@ -40,6 +40,8 @@ export class MemoryLocal implements LocalFiles {
   deferred = new Set<string>();
   binary = new Set<string>();
   trashed: [string, Uint8Array][] = [];
+  /** A device with no Trash (a phone): every trash is refused. */
+  noTrash = false;
   base: Base = emptyBase();
   beforeApply?: () => void;
   /** What this device leaves out, as the user's rules would. */
@@ -76,6 +78,7 @@ export class MemoryLocal implements LocalFiles {
     if (this.deferred.has(path)) return "deferred" as const;
     const old = this.files.get(path);
     if (!old || (await hash(old)) !== expected) return false;
+    if (this.noTrash) return "refused" as const;
     this.trashed.push([path, old]);
     this.files.delete(path);
     return true;

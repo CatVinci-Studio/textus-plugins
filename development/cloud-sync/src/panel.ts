@@ -298,7 +298,7 @@ for (const id of ["sync", "unlock", "cancel", "openSettings", "disconnect"])
 function showResult(result?: Result) {
   const container = element("results");
   container.replaceChildren();
-  for (const key of ["conflicts", "deferred"] as const) {
+  for (const key of ["conflicts", "deferred", "notTrashed"] as const) {
     const entries = result?.[key];
     if (!entries?.length) continue;
     const title = document.createElement("h3");

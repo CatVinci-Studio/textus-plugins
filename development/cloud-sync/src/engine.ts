@@ -2,18 +2,18 @@ import { isObsidianSetting } from "./config";
 import { hash, parseManifest } from "./content";
 import { conflictPath, moves, plan } from "./planner";
 import { PendingBlocks, resume, type PendingStore } from "./pending";
+import { RemoteLock, type LockNote } from "./lock";
+import { checkDeletions, checkScanned } from "./guard";
 import { Pool } from "./pool";
 import { publish } from "./publish";
 import {
   FORMAT,
   HEAD,
-  LOCK,
   MAX_TRASH,
   SyncError,
   TRANSFER_BYTES,
   TRASH_DAYS,
   blockKey,
-  encode,
   checkAbort,
   type Base,
   type Entry,
@@ -46,6 +46,10 @@ export interface Options {
   parallel?: number;
   /** Where blocks stored by a run that stopped before publishing are kept. */
   pending?: PendingStore;
+  /** Where this device notes the lock it holds (RemoteLock). */
+  lockNote?: LockNote;
+  /** Deletions from the cloud the person agreed to (checkDeletions). */
+  allowDeletions?: number;
 }
 
 export async function download(
@@ -145,6 +149,7 @@ async function unchanged(
     moved: 0,
     conflicts: [],
     deferred: [],
+    notTrashed: [],
     unchanged: ours.length,
   };
 }
@@ -152,28 +157,19 @@ async function unchanged(
 export async function synchronize(options: Options): Promise<Result> {
   const { local, store, signal } = options;
   const progress = options.progress ?? (() => {});
-  const owner = {
-    id: crypto.randomUUID(),
-    startedAt: new Date().toISOString(),
-  };
   checkAbort(signal);
   await local.check();
   progress("scanning", 0, 0);
   const files = await local.scan();
+  checkScanned(files, options.base, local);
   checkAbort(signal);
   const idle = await unchanged(options, files);
   if (idle) return idle;
   checkAbort(signal);
   progress("locking", 0, 0);
-  if (!(await store.create(LOCK, encode(owner)))) throw new SyncError("locked");
-  const ownLock = async () => {
-    const raw = await store.get(LOCK);
-    if (
-      !raw ||
-      new TextDecoder().decode(raw) !== new TextDecoder().decode(encode(owner))
-    )
-      throw new SyncError("lockLost");
-  };
+  const lock = new RemoteLock(store, options.lockNote, signal);
+  await lock.take();
+  const ownLock = () => lock.check();
   let completed = false;
   let blocks: PendingBlocks | undefined;
   const pool = new Pool(options.parallel ?? 4, TRANSFER_BYTES);
@@ -248,10 +244,18 @@ export async function synchronize(options: Options): Promise<Result> {
       moved: 0,
       conflicts: [],
       deferred: [],
+      notTrashed: [],
       unchanged: 0,
     };
     const ourBase = { ...base.files };
     const actions = plan(files, ours(remote.files), ourBase);
+    checkDeletions(
+      actions,
+      files,
+      remote.files,
+      ourBase,
+      options.allowDeletions,
+    );
     // Twins left out here still clash with an upload of the other.
     const names = new Map(
       Object.keys(remote.files).map((p) => [
@@ -370,7 +374,8 @@ export async function synchronize(options: Options): Promise<Result> {
         if (removed === true) {
           delete base.files[path];
           result.removed++;
-        } else result.deferred.push(path);
+        } else if (removed === "refused") result.notTrashed.push(path);
+        else result.deferred.push(path);
         continue;
       }
       if (kind === "download" || kind === "conflict") {
@@ -393,8 +398,8 @@ export async function synchronize(options: Options): Promise<Result> {
         // in place). Kept as two files, it was sent back over the new one.
         if (applied === false && kind === "download" && l) {
           const gone = await local.remove(path, l.hash);
-          if (gone === "deferred") {
-            result.deferred.push(path);
+          if (gone === "deferred" || gone === "refused") {
+            result[gone === "refused" ? "notTrashed" : "deferred"].push(path);
             continue;
           }
           const placed = gone && (await local.apply(path, bytes, null));
@@ -468,7 +473,8 @@ export async function synchronize(options: Options): Promise<Result> {
     });
     await blocks.done();
     // Left to do (a file open, changed meanwhile): next time runs in full.
-    if (!result.deferred.length && next.revision) base.revision = next.revision;
+    if (!result.deferred.length && !result.notTrashed.length && next.revision)
+      base.revision = next.revision;
     await options.saveBase(base);
     completed = true;
     return result;
@@ -479,8 +485,7 @@ export async function synchronize(options: Options): Promise<Result> {
     // Cancellation cannot prevent releasing our lock. A lock belonging to a
     // replacement run is never removed, even after manual recovery elsewhere.
     try {
-      await ownLock();
-      await store.remove(LOCK);
+      await lock.release();
     } catch {
       if (completed) throw new SyncError("unlockFailed");
     }
