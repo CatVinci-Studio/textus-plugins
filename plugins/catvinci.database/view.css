@@ -400,6 +400,20 @@ html.more-right::after {
   pointer-events: none;
 }
 
+/* More below a block's foot (the block in a document is held to Textus's
+   height and scrolls inside): the foot fades, as the right edge does. */
+html.more-below::before {
+  content: "";
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 3;
+  height: var(--space-8);
+  background: linear-gradient(to bottom, transparent, var(--doc-bg, var(--ui-bg)));
+  pointer-events: none;
+}
+
 /* A filter's values to tick, under its chip (filter-popover.js): the
    shared bubble, its rows the list's. */
 .filter-popover {
