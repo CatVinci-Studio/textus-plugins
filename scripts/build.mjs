@@ -81,10 +81,9 @@ function manifestOf(id) {
     !platforms.every((p) => p === "desktop" || p === "ios")
   )
     throw new Error(`${id}: platforms must list desktop, ios or both`);
-  const inBackground =
-    !!manifest.background ||
-    (manifest.requires ?? []).some((r) => r.setting === "runInBackground");
-  if (inBackground && manifest.platforms?.includes("ios"))
+  // Background code is the desktop's only. A plugin that only requires
+  // Keep running in the background may name ios: it runs there without it.
+  if (manifest.background && manifest.platforms?.includes("ios"))
     throw new Error(`${id}: works in the background, so not on ios`);
   return manifest;
 }

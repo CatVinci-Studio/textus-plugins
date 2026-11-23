@@ -3,7 +3,7 @@
 Apunta algo sin salir del documento; la nota va al archivo de bandeja de entrada de tu carpeta o a la nota diaria de hoy.
 
 - **Ctrl+Alt+N** (**⌘⌥N** en un Mac), o **Plugins › Nueva nota rápida…**, pide una nota y la guarda.
-- **Nueva nota rápida…** también está en el icono de la bandeja o de la barra de menús. El plugin pide a Textus que siga funcionando en segundo plano, así que está ahí aunque cierres todas las ventanas.
+- En el escritorio, **Nueva nota rápida…** también está en el icono de la bandeja o de la barra de menús. El plugin pide a Textus que siga funcionando en segundo plano, así que está ahí aunque cierres todas las ventanas.
 - La pestaña **Notas rápidas** de la barra lateral lista las notas, la más reciente arriba. Haz clic en **Nueva** para escribir una ahí, o edita una nota directamente en la lista.
 - El menú de acciones de cada nota (su botón de más opciones, o clic derecho) tiene **Insertar** (en el cursor del documento), **Abrir** y **Eliminar**. Una nota guardada en un documento se abre ahí, en su línea.
 - ¿Borraste una sin querer? **Deshacer**, abajo, la recupera durante unos segundos. Una nota nueva que se deja vacía desaparece sola.
@@ -18,7 +18,7 @@ Las notas se guardan en un documento de la carpeta abierta, así que Obsidian y 
 
 Edita el archivo y la barra lateral lo sigue. Las notas de versiones anteriores pasan a él una sola vez, de la más antigua a la más reciente. Sin carpeta abierta, las notas se quedan dentro de Textus.
 
-Funciona en escritorio.
+Funciona en escritorio, iPhone, iPad y Android. En un teléfono, **Nueva nota rápida…** está en **Plugins**, en el menú de la fila del título, y las acciones de cada nota están en su botón de más opciones. Ahí no hay bandeja, así que no pide que Textus siga funcionando en segundo plano.
 
 ## Permisos
 
@@ -28,6 +28,7 @@ Funciona en escritorio.
 
 ## Cambios
 
+- **0.6.0** - También en iPhone, iPad y Android: **Nueva nota rápida…** en Plugins y la pestaña de la barra lateral, con Nueva y el botón de más opciones de cada nota fáciles de tocar. Solo en el escritorio pide que Textus siga funcionando en segundo plano. Requiere Textus 1.4.7.
 - **0.5.5** - Los nombres y las descripciones emergentes de sus botones vienen de Textus, como en sus otras páginas.
 - **0.5.4** - La página sigue el idioma de Textus por sí sola. Requiere Textus 1.4.3.
 - **0.5.3** - Crear una nota durante una búsqueda la borra, así la nota nueva se ve; el clic derecho en el texto de una nota también ofrece deshacer, cortar, copiar y pegar; una búsqueda sin resultados lo indica.

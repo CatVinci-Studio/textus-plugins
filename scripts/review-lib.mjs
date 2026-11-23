@@ -97,11 +97,9 @@ export function review({ entry, pkg, source, previous = null, libs = {} }) {
     !platforms.every((p) => p === "desktop" || p === "ios")
   )
     add("fail", "package", 'The manifest names no platforms: ["desktop", "ios"], or ["desktop"] for one iOS can\'t run.');
-  else if (
-    platforms.includes("ios") &&
-    (manifest.background ||
-      (manifest.requires ?? []).some((r) => r.setting === "runInBackground"))
-  )
+  // Requiring Keep running in the background alone is fine on iOS: Textus
+  // there runs it without and doesn't ask.
+  else if (platforms.includes("ios") && manifest.background)
     add("fail", "package", "It works in the background, which iOS has none of: its platforms can't name ios.");
   // One file, a list run in order, or none (a plugin of agents only).
   const main = [].concat(manifest.main ?? []);

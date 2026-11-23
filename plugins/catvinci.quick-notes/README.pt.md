@@ -3,7 +3,7 @@
 Anote algo sem sair do documento; a nota vai para o arquivo de caixa de entrada da sua pasta ou para a nota diária de hoje.
 
 - **Ctrl+Alt+N** (**⌘⌥N** no Mac), ou **Plugins › Nova nota rápida…**, pede uma nota e a salva.
-- **Nova nota rápida…** também fica no ícone da bandeja ou da barra de menus. O plugin pede ao Textus para continuar rodando em segundo plano, então ela está lá mesmo com todas as janelas fechadas.
+- No desktop, **Nova nota rápida…** também fica no ícone da bandeja ou da barra de menus. O plugin pede ao Textus para continuar rodando em segundo plano, então ela está lá mesmo com todas as janelas fechadas.
 - A aba **Notas rápidas** da barra lateral lista as notas, a mais recente no topo. Clique em **Nova** para escrever uma ali, ou edite uma nota direto na lista.
 - O menu de ações de cada nota (o botão de mais opções, ou clique direito) tem **Inserir** (no cursor do documento), **Abrir** e **Excluir**. Uma nota guardada num documento abre lá, na linha dela.
 - Excluiu sem querer? **Desfazer**, embaixo, traz a nota de volta por alguns segundos. Uma nota nova deixada vazia some sozinha.
@@ -18,7 +18,7 @@ As notas ficam num documento da pasta aberta, então o Obsidian e o Cloud Sync a
 
 Edite o arquivo e a barra lateral acompanha. As notas de versões antigas vão para ele uma vez, da mais antiga à mais nova. Sem pasta aberta, as notas ficam dentro do Textus.
 
-Funciona no desktop.
+Funciona no desktop, no iPhone, no iPad e no Android. No celular, **Nova nota rápida…** fica em **Plugins**, no menu da linha do título, e as ações de cada nota ficam no botão de mais opções dela. Lá não há bandeja, então ele não pede para o Textus continuar rodando em segundo plano.
 
 ## Permissões
 
@@ -28,6 +28,7 @@ Funciona no desktop.
 
 ## Alterações
 
+- **0.6.0** - Também no iPhone, no iPad e no Android: **Nova nota rápida…** em Plugins e a aba da barra lateral, com Nova e o botão de mais opções de cada nota fáceis de tocar. Só no desktop ele pede para o Textus continuar rodando em segundo plano. Requer o Textus 1.4.7.
 - **0.5.5** - Os nomes e as dicas dos botões vêm do Textus, como nas outras páginas.
 - **0.5.4** - A página segue o idioma do Textus sozinha. Requer o Textus 1.4.3.
 - **0.5.3** - Criar uma nota durante uma busca limpa a busca, então a nota nova aparece; o clique direito no texto de uma nota também oferece desfazer, recortar, copiar e colar; uma busca sem resultados avisa.
