@@ -3,9 +3,9 @@
 Sends the time you spend writing in Textus to your [WakaTime](https://wakatime.com) account, so it shows on your dashboard beside your coding.
 
 1. Copy your API key from [wakatime.com/settings/api-key](https://wakatime.com/settings/api-key).
-2. Run **WakaTime: Set API Key…** from the command palette and paste it. The key is kept in Textus's secret storage.
+2. Click **Set API Key…** on WakaTime's page in Textus's Settings and paste it. The key is kept in Textus's secret storage.
 
-The command palette also has **WakaTime: Today's Writing Time**, which shows today's total as WakaTime counts it, and **WakaTime: Open Dashboard**.
+The Plugins menu and the command palette have **WakaTime: Set API Key…**, **WakaTime: Today's Writing Time**, which shows today's total as WakaTime counts it, and **WakaTime: Open Dashboard**.
 
 ## What counts and what is sent
 
@@ -19,6 +19,7 @@ It works on desktop and iPhone and needs Textus 1.3.0 or later. It asks to read 
 
 ## Changes
 
+- **0.2.5** - Set the API key with a button on its page in Settings, and find its commands in the Plugins menu: on a phone, with no command palette, too.
 - **0.2.4** - Leaving the key empty now really turns it off; a garbled reply to Today's Writing Time shows the usual message.
 - **0.2.3** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
 - **0.2.2** - Finds `.wakatime-project` and the Git branch the same way on every system.

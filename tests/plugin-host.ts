@@ -29,6 +29,18 @@ export function manifestOf(id: string): Any {
   );
 }
 
+/** The commands a phone reaches with no command palette: the Plugins
+ *  menu's, and the buttons on the plugin's page in Settings. */
+export function onPhone(manifest: Any): string[] {
+  const c = manifest.contributes ?? {};
+  return [
+    ...(c.menus?.["app/plugins"] ?? []).map((m: Any) => m.command),
+    ...(c.settings ?? [])
+      .filter((s: Any) => s.type === "button")
+      .map((s: Any) => s.command),
+  ];
+}
+
 const noop = (): Any =>
   new Proxy(function () {}, {
     get: (_t, key) =>
