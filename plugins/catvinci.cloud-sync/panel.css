@@ -60,6 +60,8 @@ form + form {
 .tx-row > input:not([type="checkbox"]),
 .tx-row > .tx-select {
   flex: 0 1 50%;
+}
+.tx-row > input:not([type="checkbox"]) {
   min-height: var(--control-height);
 }
 .tx-row > input.number {
