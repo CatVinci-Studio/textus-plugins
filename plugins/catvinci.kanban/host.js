@@ -238,6 +238,13 @@ exports.activate = function (context) {
           }
           return;
         }
+        // Gone from the board at once; the note's Undo puts it back.
+        if (message.type === "deleted") {
+          const said = textus.l10n.t(message.what === "list" ? "listDeleted" : "cardDeleted");
+          const undone = await textus.ui.notice(said, { action: textus.l10n.t("undo") });
+          if (undone) webview.postMessage({ type: "undo", id: message.id });
+          return;
+        }
         if (message.type === "markdown")
           await textus.layout.open(document.path, { asDocument: true });
       });

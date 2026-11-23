@@ -8,8 +8,9 @@ Organiza el trabajo en tarjetas y listas sobre un tablero que se guarda como un 
 
 ## En el tablero
 
-- **Añadir una tarjeta** al final de una lista. Haz clic en el texto de una tarjeta para editarlo, marca su casilla cuando esté hecha y usa su botón × para quitarla.
-- **Añadir lista** crea una lista nueva. Haz clic en el título de una lista para renombrarla; una lista vacía se puede quitar.
+- **Añadir una tarjeta** al final de una lista. Haz clic en el texto de una tarjeta para editarlo y marca su casilla cuando esté hecha. Su botón ⋯ (o un clic derecho) la mueve a otra lista o la elimina; Deshacer en el aviso que sigue la recupera.
+- **Añadir lista** crea una lista nueva, lista para ponerle nombre. Haz clic en el título de una lista para renombrarla; una lista vacía se puede eliminar desde su menú ⋯.
+- En un teléfono, cada lista ocupa la pantalla: desliza para pasar a la siguiente.
 - Arrastra tarjetas dentro de una lista o a otra, y arrastra una lista por su cabecera para cambiar el orden. Las demás se apartan mientras arrastras.
 - Escribe un [[enlace]] en una tarjeta y haz clic en él para abrir esa nota.
 - **Editar como Markdown** abre el archivo como texto. El tablero sigue los cambios hechos ahí o en cualquier otro sitio.
@@ -36,6 +37,7 @@ kanban-plugin: board
 
 ## Cambios
 
+- **0.4.13** - El menú ⋯ de una tarjeta (o un clic derecho) la mueve a otra lista o la elimina, con Deshacer, en lugar de una × que eliminaba al instante y se veía siempre en pantallas táctiles. Una lista nueva empieza con su nombre en edición. En un teléfono una lista ocupa la pantalla y al deslizar se detiene en la siguiente; en una pestaña estrecha, Editar como Markdown pasa al menú ⋯.
 - **0.4.12** - Las tarjetas y listas se apartan al mismo ritmo que el resto de Textus.
 - **0.4.11** - Una lista arrastrada por su cabecera se eleva y se desliza por el tablero como las pestañas de Textus; Esc la devuelve.
 - **0.4.10** - La casilla de una tarjeta queda centrada en su primera línea con cualquier tamaño de texto.
