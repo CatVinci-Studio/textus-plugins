@@ -1,5 +1,7 @@
 import { pendingIn } from "./pending";
 import { defaults, normalizeConfig, withConnection } from "./config";
+import { receive, type Host } from "./messages";
+import { StatusBar } from "./status-bar";
 import { parseBase } from "./content";
 import { synchronize } from "./engine";
 import { DeletionQuestion } from "./guard";
@@ -10,7 +12,7 @@ import { openPlainStore } from "./plain-store";
 import { Workspace } from "./local";
 import { Pacer } from "./pacer";
 import { masked, Settings } from "./settings";
-import { doneText, fewPerSecond, statusText } from "./status";
+import { doneText, fewPerSecond } from "./status";
 import { RemoteStore, testConnection } from "./transport";
 import { recoverLock, testDraft, type Draft } from "./connection";
 import {
@@ -25,29 +27,26 @@ import {
   SyncError,
   checkAbort,
   type Config,
-  type ConnectionInput,
   type ObjectStore,
   type Result,
 } from "./model";
 
-class Controller {
-  private settings: Settings;
-  private views = new Set<Textus.Webview>();
+class Controller implements Host {
+  readonly settings: Settings;
+  readonly views = new Set<Textus.Webview>();
   private pacer = new Pacer(
     () => void this.sync(false),
     () => this.state.busy,
   );
   private deletions = new DeletionQuestion();
-  private item?: Textus.StatusItemHandle;
-  private shown: string | null = null;
-  private clock?: ReturnType<typeof setInterval>;
+  private bar?: StatusBar;
   /** Stores whose exclusive create was proven this session. */
   private tested = new Set<string>();
   private abort?: AbortController;
   /** The latest run's workspace; its own trash and rename events arrive late. */
   private workspace?: Workspace;
   private disposed = false;
-  private state: ViewState = {
+  state: ViewState = {
     root: null,
     config: { ...defaults },
     configured: false,
@@ -58,45 +57,27 @@ class Controller {
   };
   constructor(
     private ctx: Textus.PluginContext,
-    private api: Textus.Api,
+    readonly api: Textus.Api,
   ) {
     this.settings = new Settings(ctx);
   }
-  private t = (key: string, ...args: unknown[]) =>
-    this.api.l10n.t(key, ...args);
-  private send(view: Textus.Webview, message: unknown) {
+  t = (key: string, ...args: unknown[]) => this.api.l10n.t(key, ...args);
+  send(view: Textus.Webview, message: unknown) {
     // A tab can close while a status update crosses the asynchronous bridge.
     void view.postMessage(message).catch(() => this.views.delete(view));
   }
-  private broadcast() {
+  broadcast() {
     for (const view of this.views)
       this.send(view, { type: "state", ...this.state });
-    this.showStatus();
+    this.bar?.show();
   }
-  private showStatus() {
-    const text = this.disposed
-      ? null
-      : statusText(this.state, Date.now(), this.t, this.api.env.language);
-    if (!text) {
-      this.item?.dispose();
-      this.item = undefined;
-    } else if (!this.item)
-      this.item = this.api.ui.statusItem("status", {
-        text,
-        tooltip: this.state.message,
-        command: `${ID}.open`,
-      });
-    else if (text !== this.shown)
-      this.item.update({ text, tooltip: this.state.message });
-    this.shown = text;
-  }
-  private message(key: string, error = false, ...args: unknown[]) {
+  message(key: string, error = false, ...args: unknown[]) {
     this.state.message = this.t(key, ...args);
     this.state.error = error;
     this.broadcast();
   }
   private stopped?: SyncError;
-  private fail(error: unknown) {
+  fail(error: unknown) {
     const e =
       error instanceof SyncError ? error : new SyncError("unknownError");
     this.stopped = e;
@@ -175,8 +156,7 @@ class Controller {
         : null,
     );
   }
-  /** The folder's saved settings, or null before it has a connection. */
-  private saved = () => (this.state.configured ? this.state.config : null);
+  saved = () => (this.state.configured ? this.state.config : null);
   private async store() {
     const root = await this.api.files.root();
     if (!root) throw new SyncError("noFolder");
@@ -352,83 +332,8 @@ class Controller {
       this.pacer.finished();
     }
   }
-  private async receive(message: unknown) {
-    if (!message || typeof message !== "object") return;
-    const m = message as {
-      type?: string;
-      config?: Partial<Config>;
-      credentials?: ConnectionInput;
-      options?: Partial<Config>;
-    };
-    try {
-      if (m.type === "ready") {
-        this.broadcast();
-        return;
-      }
-      // From the sidebar's page: the form is on the plugin's own page.
-      if (m.type === "openSettings") {
-        await this.api.layout.openSettings();
-        return;
-      }
-      if (m.type === "cancel") {
-        this.abort?.abort();
-        this.message("cancelling");
-        return;
-      }
-      // The sync options apply as they change, a sync running or not.
-      if (m.type === "options" && m.options && this.state.root) {
-        await this.settings.saveOptions(this.state.root, m.options);
-        await this.refresh();
-        this.message("optionsSaved");
-        return;
-      }
-      if (this.state.busy) throw new SyncError("busy");
-      if (m.type === "disconnect" && this.state.root) {
-        if (
-          !(await this.api.ui.confirm(this.t("confirmDisconnect"), {
-            danger: true,
-            okLabel: this.t("disconnect"),
-          }))
-        )
-          return;
-        await this.settings.forget(this.state.root);
-        await this.refresh();
-        this.message("disconnected");
-        return;
-      }
-      if (m.type === "test" && m.config && m.credentials) {
-        await this.operation("test", undefined, {
-          config: m.config,
-          credentials: m.credentials,
-        });
-        return;
-      }
-      if (m.type === "save" && m.config && m.credentials) {
-        const root = await this.api.files.root();
-        if (!root || root !== this.state.root)
-          throw new SyncError("rootChanged");
-        this.state.busy = true;
-        this.broadcast();
-        try {
-          // The connection from the form, the options as they are.
-          await this.settings.save(
-            root,
-            withConnection(this.saved(), m.config),
-            m.credentials,
-          );
-          await this.refresh();
-          for (const view of this.views) this.send(view, { type: "saved" });
-          this.message("saved");
-        } finally {
-          this.state.busy = false;
-          this.broadcast();
-        }
-      } else if (m.type === "sync") await this.sync();
-      else if (m.type === "test" || m.type === "unlock")
-        await this.operation(m.type);
-    } catch (error) {
-      this.fail(error);
-    }
+  cancel() {
+    this.abort?.abort();
   }
   /** One page over one state; in the sidebar (`compact`) only the
    *  status and Sync now, the connection being set up on the plugin's own
@@ -437,7 +342,7 @@ class Controller {
   async resolve(view: Textus.Webview, place?: "sidebar" | "settings") {
     this.views.add(view);
     view.onDidReceiveMessage((m) => {
-      void this.receive(m);
+      void receive(this, m);
     });
     view.onDidDispose(() => this.views.delete(view));
     const html = await this.ctx.plugin.readText("panel.html");
@@ -476,15 +381,16 @@ class Controller {
       }),
       { dispose: () => this.stop() },
     );
-    this.clock = setInterval(() => this.showStatus(), 30_000);
+    this.bar = new StatusBar(api, this.t, () =>
+      this.disposed ? null : this.state,
+    );
     await this.refresh();
   }
   stop() {
     this.disposed = true;
-    clearInterval(this.clock);
     this.pacer.stop();
     this.abort?.abort();
-    this.showStatus();
+    this.bar?.stop();
   }
 }
 

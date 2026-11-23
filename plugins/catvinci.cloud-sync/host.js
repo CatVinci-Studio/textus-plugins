@@ -259,6 +259,152 @@ function descend(path) {
   return relativePath(path) && path.split("/").every((p) => !p.startsWith(".") && !ignored.has(p.toLowerCase()));
 }
 
+// development/cloud-sync/src/messages.ts
+async function receive(host, message) {
+  if (!message || typeof message !== "object") return;
+  const m = message;
+  const { api, settings, state } = host;
+  try {
+    if (m.type === "ready") {
+      host.broadcast();
+      return;
+    }
+    if (m.type === "openSettings") {
+      await api.layout.openSettings();
+      return;
+    }
+    if (m.type === "cancel") {
+      host.cancel();
+      host.message("cancelling");
+      return;
+    }
+    if (m.type === "options" && m.options && state.root) {
+      await settings.saveOptions(state.root, m.options);
+      await host.refresh();
+      host.message("optionsSaved");
+      return;
+    }
+    if (state.busy) throw new SyncError("busy");
+    if (m.type === "disconnect" && state.root) {
+      if (!await api.ui.confirm(host.t("confirmDisconnect"), {
+        danger: true,
+        okLabel: host.t("disconnect")
+      }))
+        return;
+      await settings.forget(state.root);
+      await host.refresh();
+      host.message("disconnected");
+      return;
+    }
+    if (m.type === "test" && m.config && m.credentials) {
+      await host.operation("test", void 0, {
+        config: m.config,
+        credentials: m.credentials
+      });
+      return;
+    }
+    if (m.type === "save" && m.config && m.credentials) {
+      const root = await api.files.root();
+      if (!root || root !== state.root) throw new SyncError("rootChanged");
+      state.busy = true;
+      host.broadcast();
+      try {
+        await settings.save(
+          root,
+          withConnection(host.saved(), m.config),
+          m.credentials
+        );
+        await host.refresh();
+        for (const view of host.views) host.send(view, { type: "saved" });
+        host.message("saved");
+      } finally {
+        host.state.busy = false;
+        host.broadcast();
+      }
+    } else if (m.type === "sync") await host.sync();
+    else if (m.type === "test" || m.type === "unlock")
+      await host.operation(m.type);
+  } catch (error) {
+    host.fail(error);
+  }
+}
+
+// development/cloud-sync/src/status.ts
+var units = [
+  ["day", 864e5],
+  ["hour", 36e5],
+  ["minute", 6e4]
+];
+function statusText(s, now, t, language) {
+  if (!s.configured) return null;
+  if (s.busy) return t("statusSyncing");
+  if (s.error) return t("statusError");
+  if (s.result?.conflicts.length) return t("statusConflict");
+  if (!s.lastRun) return t("statusNever");
+  const age = now - Date.parse(s.lastRun);
+  const unit = units.find(([, ms]) => age >= ms);
+  if (!unit) return t("statusJustNow");
+  const when = new Intl.RelativeTimeFormat(language, { style: "short" }).format(
+    -Math.floor(age / unit[1]),
+    unit[0]
+  );
+  return t("statusSynced", when);
+}
+function fewPerSecond(report, now = Date.now) {
+  let shown = "", at = -Infinity;
+  return (phase, current, total) => {
+    if (phase === shown && current < total && now() - at < 200) return;
+    shown = phase;
+    at = now();
+    report(phase, current, total);
+  };
+}
+function doneText(result, t) {
+  const parts = [
+    ["doneUploaded", result.uploaded],
+    ["doneDownloaded", result.downloaded],
+    ["doneRemoved", result.removed],
+    ["doneMoved", result.moved],
+    ["doneConflicts", result.conflicts.length],
+    ["doneDeferred", result.deferred.length],
+    ["doneNotTrashed", result.notTrashed.length]
+  ].filter(([, n]) => n > 0).map(([key, n]) => t(key, n));
+  return parts.length ? parts.join(t("listSeparator")) : null;
+}
+
+// development/cloud-sync/src/status-bar.ts
+var StatusBar = class {
+  constructor(api, t, state) {
+    this.api = api;
+    this.t = t;
+    this.state = state;
+    __publicField(this, "item");
+    __publicField(this, "shown", null);
+    __publicField(this, "clock");
+    this.clock = setInterval(() => this.show(), 3e4);
+  }
+  show() {
+    const state = this.state();
+    const text = state ? statusText(state, Date.now(), this.t, this.api.env.language) : null;
+    if (!text) {
+      this.item?.dispose();
+      this.item = void 0;
+    } else if (!this.item)
+      this.item = this.api.ui.statusItem("status", {
+        text,
+        tooltip: state.message,
+        command: `${ID}.open`
+      });
+    else if (text !== this.shown)
+      this.item.update({ text, tooltip: state.message });
+    this.shown = text;
+  }
+  stop() {
+    clearInterval(this.clock);
+    this.show();
+  }
+};
+
 // development/cloud-sync/src/content.ts
 async function hash(bytes) {
   const sum = await crypto.subtle.digest("SHA-256", bytes.slice().buffer);
@@ -2491,49 +2637,6 @@ var Settings = class {
   }
 };
 
-// development/cloud-sync/src/status.ts
-var units = [
-  ["day", 864e5],
-  ["hour", 36e5],
-  ["minute", 6e4]
-];
-function statusText(s, now, t, language) {
-  if (!s.configured) return null;
-  if (s.busy) return t("statusSyncing");
-  if (s.error) return t("statusError");
-  if (s.result?.conflicts.length) return t("statusConflict");
-  if (!s.lastRun) return t("statusNever");
-  const age = now - Date.parse(s.lastRun);
-  const unit = units.find(([, ms]) => age >= ms);
-  if (!unit) return t("statusJustNow");
-  const when = new Intl.RelativeTimeFormat(language, { style: "short" }).format(
-    -Math.floor(age / unit[1]),
-    unit[0]
-  );
-  return t("statusSynced", when);
-}
-function fewPerSecond(report, now = Date.now) {
-  let shown = "", at = -Infinity;
-  return (phase, current, total) => {
-    if (phase === shown && current < total && now() - at < 200) return;
-    shown = phase;
-    at = now();
-    report(phase, current, total);
-  };
-}
-function doneText(result, t) {
-  const parts = [
-    ["doneUploaded", result.uploaded],
-    ["doneDownloaded", result.downloaded],
-    ["doneRemoved", result.removed],
-    ["doneMoved", result.moved],
-    ["doneConflicts", result.conflicts.length],
-    ["doneDeferred", result.deferred.length],
-    ["doneNotTrashed", result.notTrashed.length]
-  ].filter(([, n]) => n > 0).map(([key, n]) => t(key, n));
-  return parts.length ? parts.join(t("listSeparator")) : null;
-}
-
 // development/cloud-sync/src/connection.ts
 async function testDraft(config, credentials, fetch2, signal) {
   const store = new RemoteStore(config, credentials, fetch2);
@@ -2731,9 +2834,7 @@ var Controller = class {
       () => this.state.busy
     ));
     __publicField(this, "deletions", new DeletionQuestion());
-    __publicField(this, "item");
-    __publicField(this, "shown", null);
-    __publicField(this, "clock");
+    __publicField(this, "bar");
     /** Stores whose exclusive create was proven this session. */
     __publicField(this, "tested", /* @__PURE__ */ new Set());
     __publicField(this, "abort");
@@ -2751,7 +2852,6 @@ var Controller = class {
     });
     __publicField(this, "t", (key, ...args) => this.api.l10n.t(key, ...args));
     __publicField(this, "stopped");
-    /** The folder's saved settings, or null before it has a connection. */
     __publicField(this, "saved", () => this.state.configured ? this.state.config : null);
     __publicField(this, "page", (name) => this.ctx.plugin.readText(name));
     this.settings = new Settings(ctx);
@@ -2762,22 +2862,7 @@ var Controller = class {
   broadcast() {
     for (const view of this.views)
       this.send(view, { type: "state", ...this.state });
-    this.showStatus();
-  }
-  showStatus() {
-    const text = this.disposed ? null : statusText(this.state, Date.now(), this.t, this.api.env.language);
-    if (!text) {
-      this.item?.dispose();
-      this.item = void 0;
-    } else if (!this.item)
-      this.item = this.api.ui.statusItem("status", {
-        text,
-        tooltip: this.state.message,
-        command: `${ID}.open`
-      });
-    else if (text !== this.shown)
-      this.item.update({ text, tooltip: this.state.message });
-    this.shown = text;
+    this.bar?.show();
   }
   message(key, error = false, ...args) {
     this.state.message = this.t(key, ...args);
@@ -3012,73 +3097,8 @@ var Controller = class {
       this.pacer.finished();
     }
   }
-  async receive(message) {
-    if (!message || typeof message !== "object") return;
-    const m = message;
-    try {
-      if (m.type === "ready") {
-        this.broadcast();
-        return;
-      }
-      if (m.type === "openSettings") {
-        await this.api.layout.openSettings();
-        return;
-      }
-      if (m.type === "cancel") {
-        this.abort?.abort();
-        this.message("cancelling");
-        return;
-      }
-      if (m.type === "options" && m.options && this.state.root) {
-        await this.settings.saveOptions(this.state.root, m.options);
-        await this.refresh();
-        this.message("optionsSaved");
-        return;
-      }
-      if (this.state.busy) throw new SyncError("busy");
-      if (m.type === "disconnect" && this.state.root) {
-        if (!await this.api.ui.confirm(this.t("confirmDisconnect"), {
-          danger: true,
-          okLabel: this.t("disconnect")
-        }))
-          return;
-        await this.settings.forget(this.state.root);
-        await this.refresh();
-        this.message("disconnected");
-        return;
-      }
-      if (m.type === "test" && m.config && m.credentials) {
-        await this.operation("test", void 0, {
-          config: m.config,
-          credentials: m.credentials
-        });
-        return;
-      }
-      if (m.type === "save" && m.config && m.credentials) {
-        const root = await this.api.files.root();
-        if (!root || root !== this.state.root)
-          throw new SyncError("rootChanged");
-        this.state.busy = true;
-        this.broadcast();
-        try {
-          await this.settings.save(
-            root,
-            withConnection(this.saved(), m.config),
-            m.credentials
-          );
-          await this.refresh();
-          for (const view of this.views) this.send(view, { type: "saved" });
-          this.message("saved");
-        } finally {
-          this.state.busy = false;
-          this.broadcast();
-        }
-      } else if (m.type === "sync") await this.sync();
-      else if (m.type === "test" || m.type === "unlock")
-        await this.operation(m.type);
-    } catch (error) {
-      this.fail(error);
-    }
+  cancel() {
+    this.abort?.abort();
   }
   /** One page over one state; in the sidebar (`compact`) only the
    *  status and Sync now, the connection being set up on the plugin's own
@@ -3087,7 +3107,7 @@ var Controller = class {
   async resolve(view, place) {
     this.views.add(view);
     view.onDidReceiveMessage((m) => {
-      void this.receive(m);
+      void receive(this, m);
     });
     view.onDidDispose(() => this.views.delete(view));
     const html = await this.ctx.plugin.readText("panel.html");
@@ -3125,15 +3145,18 @@ var Controller = class {
       }),
       { dispose: () => this.stop() }
     );
-    this.clock = setInterval(() => this.showStatus(), 3e4);
+    this.bar = new StatusBar(
+      api,
+      this.t,
+      () => this.disposed ? null : this.state
+    );
     await this.refresh();
   }
   stop() {
     this.disposed = true;
-    clearInterval(this.clock);
     this.pacer.stop();
     this.abort?.abort();
-    this.showStatus();
+    this.bar?.stop();
   }
 };
 var controller;
