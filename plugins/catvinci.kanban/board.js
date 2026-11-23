@@ -251,7 +251,7 @@
     });
   };
 
-  api.onMessage((message) => {
+  api.onDidReceiveMessage((message) => {
     if (message.type === "file") {
       // Changed elsewhere: what is there now wins over an unsaved move.
       const dropped = timer !== 0;

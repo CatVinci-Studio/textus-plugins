@@ -7,7 +7,7 @@
   const page = document.getElementById("page");
   const problem = document.getElementById("problem");
   const empty = document.getElementById("empty");
-  api.onMessage(function (message) {
+  api.onDidReceiveMessage(function (message) {
     problem.hidden = !message.problem;
     problem.textContent = message.problem || "";
     empty.hidden = !!message.html || page.childElementCount > 0;

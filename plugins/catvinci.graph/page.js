@@ -193,7 +193,7 @@
   }
 
   let first = true;
-  api.onMessage((message) => {
+  api.onDidReceiveMessage((message) => {
     if (message.type === "color") {
       change(
         "groups",

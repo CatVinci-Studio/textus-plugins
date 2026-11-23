@@ -172,7 +172,8 @@ function page(character) {
       img.classList.toggle("hop", on && hop);
     }
   }
-  api.onMessage((m) => {
+  // Older Textus has only onMessage.
+  api["onDidReceiveMessage" in api ? "onDidReceiveMessage" : "onMessage"]((m) => {
     if (m.pose) show(m.pose, m.hop);
     if (typeof m.paused === "boolean") document.body.classList.toggle("paused", m.paused);
     if (typeof m.turned === "boolean") document.querySelector(".stage").classList.toggle("turned", m.turned);

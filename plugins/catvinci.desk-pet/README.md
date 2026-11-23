@@ -23,7 +23,7 @@ Moyu is CatVinci Studio's own character. The LLM-chan are the community's person
 
 ## Changes
 
-- **0.1.10** - Its page is in every language Textus speaks. Its description begins with what she does, and no longer counts the characters or languages.
+- **0.1.10** - Its page is in every language Textus speaks. Its description begins with what she does, and no longer counts the characters or languages. Its page receives Textus's messages by the API's current name.
 - **0.1.9** - Code kept for Textus versions it no longer runs on is gone.
 - **0.1.8** - What she says sits above her, two lines at most, and never covers her face.
 - **0.1.7** - A visiting LLM-chan keeps her pose and greeting when a new page opens, and stays still while Textus is in the background. Her hop is gentler, and the bubble's tail points at her middle.

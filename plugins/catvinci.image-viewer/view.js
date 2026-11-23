@@ -132,7 +132,7 @@
     $("info").textContent = t("failed");
   };
 
-  api.onMessage((message) => {
+  api.onDidReceiveMessage((message) => {
     if (message.type === "failed") return failed();
     if (message.type !== "file") return;
     const svg = /\.svg$/i.test(message.name);

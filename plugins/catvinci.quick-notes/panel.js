@@ -145,7 +145,7 @@
     document.querySelectorAll("#notes textarea").forEach(fit),
   );
 
-  api.onMessage((message) => {
+  api.onDidReceiveMessage((message) => {
     if (message.type === "notes") render(message.notes);
     if (message.type === "focus") {
       const area = document.querySelector(

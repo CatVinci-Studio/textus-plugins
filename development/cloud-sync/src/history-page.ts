@@ -146,7 +146,8 @@ restore.onclick = () => {
 };
 $("back").onclick = () => api.postMessage({ type: "open", path: null });
 
-api.onMessage((raw) => {
+// Older Textus has only onMessage.
+api["onDidReceiveMessage" in api ? "onDidReceiveMessage" : "onMessage"]((raw) => {
   const m = raw as Listing & {
     type: string;
     hash?: string;

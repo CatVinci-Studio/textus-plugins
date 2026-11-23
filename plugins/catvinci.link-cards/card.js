@@ -26,7 +26,7 @@
     if (chosen === "refresh") api.postMessage({ type: "refresh" });
   });
 
-  api.onMessage((m) => {
+  api.onDidReceiveMessage((m) => {
     if (!m || m.type !== "card") return;
     refresh = m.refresh || null;
     const card = m.card || {};

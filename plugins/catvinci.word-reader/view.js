@@ -173,7 +173,7 @@
     }
   });
 
-  api.onMessage(async (message) => {
+  api.onDidReceiveMessage(async (message) => {
     if (message.type === "failed") {
       $("status").textContent = t("failed", message.message);
       return;

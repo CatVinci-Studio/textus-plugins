@@ -26,7 +26,7 @@ x^2 / 4 - 1
 
 ## Изменения
 
-- **0.3.4** - Its page no longer says which devices it runs on: the store shows that.
+- **0.3.4** - Its page no longer says which devices it runs on: the store shows that. Its page receives Textus's messages by the API's current name.
 - **0.3.3** - A chart drawn while its block was folded (a phone) fits once the block opens, instead of keeping its old size.
 - **0.3.2** - Steep curves like tan(x) keep their shape and break at asymptotes; a function with nothing to draw says so; π and 2xsin(x) are read; Textus AI's check uses the fence's x range.
 - **0.3.1** - Its page now says in one sentence what it does, what it can do, and what changed in each version.

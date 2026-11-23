@@ -90,7 +90,8 @@
       return drawing;
     }
 
-    api.onMessage(function (message) {
+    // Older Textus has only onMessage.
+    api["onDidReceiveMessage" in api ? "onDidReceiveMessage" : "onMessage"](function (message) {
       if (!message || message.type !== "source") return;
       last = {
         source: message.source,

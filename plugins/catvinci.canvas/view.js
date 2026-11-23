@@ -288,7 +288,7 @@
     status.hidden = false;
   }
 
-  api.onMessage((m) => {
+  api.onDidReceiveMessage((m) => {
     if (!m) return;
     if (m.type === "canvas") drawCanvas(m.canvas);
     else if (m.type === "file") fillFile(m);

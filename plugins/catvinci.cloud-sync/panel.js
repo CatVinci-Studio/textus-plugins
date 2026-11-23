@@ -273,7 +273,7 @@
       container.append(title, list);
     }
   }
-  api.onMessage((value) => {
+  api["onDidReceiveMessage" in api ? "onDidReceiveMessage" : "onMessage"]((value) => {
     const m = value;
     if (m.type === "saved") {
       editing = false;

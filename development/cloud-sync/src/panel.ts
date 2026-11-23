@@ -313,7 +313,8 @@ function showResult(result?: Result) {
   }
 }
 
-api.onMessage((value) => {
+// Older Textus has only onMessage.
+api["onDidReceiveMessage" in api ? "onDidReceiveMessage" : "onMessage"]((value) => {
   const m = value as State;
   // Saved: the form closes onto the connection's card.
   if (m.type === "saved") {

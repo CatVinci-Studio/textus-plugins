@@ -28,7 +28,7 @@
     api.setState({ index: index });
   }
 
-  api.onMessage(function (deck) {
+  api.onDidReceiveMessage(function (deck) {
     document.getElementById("deck").textContent = deck.css;
     stage.innerHTML = deck.html;
     show(index);

@@ -7,7 +7,7 @@
   $("edit").onclick = () => api.postMessage({ type: "edit" });
   $("status").textContent = t("loading");
   // Only Textus's messages: the page shown can't post as it.
-  api.onMessage((m) => {
+  api.onDidReceiveMessage((m) => {
     if (!m || typeof m !== "object") return;
     if (m.type === "file") {
       const bytes = m.bytes instanceof Uint8Array ? m.bytes : new Uint8Array(m.bytes || []);

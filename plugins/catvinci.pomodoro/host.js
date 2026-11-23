@@ -106,7 +106,8 @@ function page() {
   const $ = (id) => document.getElementById(id);
   // Keys: Enter or Space on the focused button (clicks come as a poke).
   $("timer").onclick = () => api.postMessage({ type: "toggle" });
-  api.onMessage((m) => {
+  // Older Textus has only onMessage.
+  api["onDidReceiveMessage" in api ? "onDidReceiveMessage" : "onMessage"]((m) => {
     $("clock").textContent = m.clock;
     $("label").textContent = m.label;
     $("ring").setAttribute("stroke-dashoffset", String(314.16 * (1 - Math.min(1, Math.max(0, m.done)))));

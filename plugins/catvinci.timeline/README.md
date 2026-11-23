@@ -25,7 +25,7 @@ It asks only for **Tools for Textus AI**, so Textus AI can check a block before 
 
 ## Changes
 
-- **0.4.1** - Its page no longer says which devices it runs on: the store shows that.
+- **0.4.1** - Its page no longer says which devices it runs on: the store shows that. Its page receives Textus's messages by the API's current name.
 - **0.4.0** - A database can be shown as a timeline: pick Timeline among its views, and its dated rows line up in order; a click opens a row. Needs Textus 1.4.6.
 - **0.3.3** - A date no longer breaks in the middle ("2024-0" over "3"); a chart drawn while its block was folded fits once it opens.
 - **0.3.2** - long notes and dates wrap to fit a narrow island, the timeline uses the document's font, and an empty block says what to write

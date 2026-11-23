@@ -27,7 +27,7 @@ Vous les trouvez dans le menu Extensions, ou d’un clic droit dans un document 
 
 ## Changements
 
-- **0.1.3** - Its page is in every language Textus speaks.
+- **0.1.3** - Its page is in every language Textus speaks. Its page receives Textus's messages by the API's current name.
 - **0.1.2** - Its package lists the libraries it carries, with their licenses.
 - **0.1.1** - Preview MDX on a phone, where the preview shows alone, draws the document it was opened from instead of an empty page.
 - **0.1.0** - First version: problems underlined by MDX's compiler, Preview MDX, Save as Markdown and Save as MDX, and check_mdx for Textus AI.

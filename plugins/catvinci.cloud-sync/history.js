@@ -115,7 +115,7 @@
     api.postMessage({ type: "restore", path: shown.path, hash: chosen.hash });
   };
   $("back").onclick = () => api.postMessage({ type: "open", path: null });
-  api.onMessage((raw) => {
+  api["onDidReceiveMessage" in api ? "onDidReceiveMessage" : "onMessage"]((raw) => {
     const m = raw;
     if (m.type === "list") render(m);
     else if (m.type === "preview" && m.hash === chosen?.hash) {

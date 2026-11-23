@@ -15,7 +15,7 @@ Excalidraw の図は **Excalidraw** プラグインで開き、そこで編集�
 
 ## 更新履歴
 
-- **0.1.7** - A pinch zooms the canvas through Textus, as PDFs and pictures do, instead of through the canvas's own two-finger code; a second finger no longer moves it. Its page is in every language Textus speaks. Its description says it is for viewing; editing stays in Obsidian.
+- **0.1.7** - A pinch zooms the canvas through Textus, as PDFs and pictures do, instead of through the canvas's own two-finger code; a second finger no longer moves it. Its page is in every language Textus speaks. Its description says it is for viewing; editing stays in Obsidian. Its page receives Textus's messages by the API's current name.
 - **0.1.6** - Excalidraw drawings now open with the new Excalidraw plugin, which edits them; Canvas no longer shows their exported picture.
 - **0.1.5** - The page follows Textus's language by itself. Needs Textus 1.4.3.
 - **0.1.4** - An empty or unreadable canvas now shows one clear message across the page. Card labels stay readable in every theme, and dragging no longer stops when the pointer leaves the canvas.

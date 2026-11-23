@@ -65,7 +65,7 @@
     body.replaceChildren(...parts);
   }
 
-  api.onMessage((m) => {
+  api.onDidReceiveMessage((m) => {
     if (m && m.type === "result") draw(m.result);
   });
   api.postMessage({ type: "ready" });

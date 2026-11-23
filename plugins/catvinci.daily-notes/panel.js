@@ -124,7 +124,7 @@
     api.postMessage({ type: "open", date: dateOf(now) });
   };
 
-  api.onMessage((message) => {
+  api.onDidReceiveMessage((message) => {
     if (message.type !== "dates") return;
     hasFolder = message.dates !== null;
     noted = new Set(message.dates || []);
