@@ -6,14 +6,17 @@ type Box = { id?: string; top: number; height: number; hidden?: boolean };
 let fits: ($: (id: string) => unknown, bar: unknown) => boolean;
 let start: ($: (id: string) => unknown) => void;
 let more: (root: unknown, x: number, y: number, inTab: boolean, innerHeight?: number) => { right: boolean; below: boolean };
+let cut: (count: number, rect: (i: number) => { top: number; bottom: number }, foot: number, head: number) => number;
 
 beforeAll(async () => {
   const script = "../plugins/catvinci.database/bar-fit.js";
   (globalThis as Record<string, unknown>).window = globalThis;
   await import(/* @vite-ignore */ script);
+  await import(/* @vite-ignore */ "../plugins/catvinci.database/edges.js");
   fits = (globalThis as Record<string, never>).databaseBarFits;
   start = (globalThis as Record<string, never>).databaseBarFit;
   more = (globalThis as Record<string, never>).databaseMore;
+  cut = (globalThis as Record<string, never>).databaseCut;
 });
 
 const el = (b: Box, children: unknown[] = []) => ({
@@ -99,5 +102,27 @@ describe("a database block's foot", () => {
     // Classic scroll bars (Windows, Linux): 13px of a 203px frame.
     const wide = { scrollWidth: 900, clientWidth: 600, scrollHeight: 202, clientHeight: 190 };
     expect(more(wide, 0, 0, false, 203)).toEqual({ right: true, below: false });
+  });
+});
+
+describe("a database block held to Textus's height", () => {
+  // A table's head 120 down the page, then rows 36 tall.
+  const rows = Array.from({ length: 25 }, (_, i) => ({ top: 156 + i * 36, bottom: 192 + i * 36 }));
+  const rect = (i: number) => rows[i];
+  it("ends between two rows: the row its foot runs through is covered", () => {
+    // A 560 frame runs through the row from 552 to 588.
+    expect(cut(rows.length, rect, 560, 156)).toBe(8);
+  });
+  it("covers nothing when its foot is already between two rows", () => {
+    expect(cut(rows.length, rect, 552, 156)).toBe(0);
+    expect(cut(0, rect, 560, 156)).toBe(0);
+  });
+  it("covers nothing past the last row", () => {
+    expect(cut(3, rect, 560, 156)).toBe(0);
+  });
+  it("never covers the only row in sight under the head", () => {
+    // A 60 frame, the head stuck at its top 56 tall over the row from 52 to 88.
+    const under = (i: number) => ({ top: rows[i].top - 140, bottom: rows[i].bottom - 140 });
+    expect(cut(rows.length, under, 60, 56)).toBe(0);
   });
 });

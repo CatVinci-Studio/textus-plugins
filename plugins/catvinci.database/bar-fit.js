@@ -29,19 +29,6 @@ window.databaseBarFits = function ($, bar) {
   );
 };
 
-// Whether the page goes on past its right edge or its foot (view.js fades
-// them). Below counts in a document only: a .base file's tab scrolls as
-// any tab does. A sideways scroll bar (`innerHeight` past the root's
-// height) is not more rows: the block is sized to the rows without it.
-window.databaseMore = function (root, scrollX, scrollY, inTab, innerHeight) {
-  "use strict";
-  const bar = Math.max(0, (innerHeight || root.clientHeight) - root.clientHeight);
-  return {
-    right: root.scrollWidth - root.clientWidth - scrollX > 1,
-    below: !inTab && root.scrollHeight - root.clientHeight - scrollY > bar + 1,
-  };
-};
-
 window.databaseBarFit = function ($) {
   "use strict";
   // The bar gives way a step at a time until it fits on one line: the page

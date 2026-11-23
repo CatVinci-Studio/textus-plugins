@@ -38,11 +38,11 @@ views:
 
 - **ビュー** はブロック上部のタブです：表、ボード、カレンダー、ギャラリー（Bases の `cards`）、リスト。ビューを右クリックするとメニューが開き、レイアウトの変更、名前の変更、削除ができます。**+** でビューを追加します。カレンダーは Textus 独自のもので、Obsidian では知らないビューとして表示されます。
 - **どの行もノートです。** セルをクリックすると変更でき、プロパティはそのノートの front matter に書かれます。**新規** でデータベースのフォルダにノートを作ります。行はファイルと同じようにタブで開きます。
-- **列**：列の見出しをクリックすると、並べ替え、絞り込み、種類の変更、名前の変更、非表示、全行からのプロパティ削除ができます。**+** でプロパティを追加します。見出しをドラッグすると列が移動し、右端をドラッグすると幅が変わります（端をダブルクリックすると元の幅に戻ります）。順番と幅はデータベースに保存され、幅は Obsidian の `columnSize` として書かれます。
+- **列**：列の見出しをクリックすると、並べ替え、絞り込み、種類の変更、名前の変更、非表示、全行からのプロパティ削除ができます。**+** でプロパティを追加します。見出しをドラッグすると列が移動し、右端をドラッグすると幅が変わります（端をダブルクリックすると最初の幅に戻ります）。列の幅はデータベースの幅が変わっても変わりません。順番と幅はデータベースに保存され、幅は Obsidian の `columnSize` として書かれます。
 - **ボード**：カードを別のリストにドラッグすると値が変わります。リストを見出しでドラッグすると、好きな順に並べられます（`groupOrder`）。
 - **カレンダー**：行は日付のプロパティで置かれます。日をクリックすると、その日付の行を作ります。
 - **フィルター**、**並べ替え**、列のメニューは、Bases と同じ書き方でビューに保存されます：`status == "Read"`、`tags.contains("ml")`、`due.isEmpty()`。Textus がまだ読めないフィルターはそのまま残し、バーの下でそう伝えます。
-- **文書の中での大きさ**：データベースは本文の幅（**ワイド表示** ならペインの幅）で、列がそれより広いと横にスクロールします。高さは行の分だけで、Textus のブロックの上限（ウインドウの 70%、最大 1200 px）を超えると中でスクロールし、下にまだあるあいだは下端が薄くなります。
+- **文書の中での大きさ**：データベースは本文の幅（**ワイド表示** ならペインの幅）で、列がそれより広いと横にスクロールします。高さは行の分だけで、Textus のブロックの上限（ウインドウの 70%、最大 1200 px）を超えると中でスクロールします。そのとき表とリストは行と行のあいだで切れ、行の途中では切れません。ほかのビューは、下にまだあるあいだ下端が薄くなります。
 - **長いデータベース** は最初の 25 行（またはビューの `limit`）を表示し、下へスクロールすると残りを読み込みます。表の見出しは見えたままです。ブロックの左にマウスを乗せると出る三角で、ブロックを 1 行に畳めます。畳んだ状態と最後に開いていたビューは、この端末にだけ保存されます。
 - **数式**（データベースの `formulas:`）は行ごとに計算され、列、フィルター、並べ替えに使えます：`(price / pages).toFixed(2)`。集計はまだ表示しません。
 - **プロパティの種類** は、フォルダが保管庫なら `.obsidian/types.json` にある Obsidian のものを使います。
@@ -59,7 +59,7 @@ Notion の書き出しは **Notion インポート** プラグインで取り込
 
 ## 更新履歴
 
-- **0.8.3** - The bar stays on one line when there is room: in a zoomed block on a Mac it folded the view tabs into one button and put the sorts on a line of their own, and measured itself many times on every click. A block taller than Textus lets it be fades at its foot while more rows are below, instead of looking cut off. By touch, a board card or lane lifts after a short hold, so a swipe scrolls instead of dragging. Its page is in every language Textus speaks. Its tools for Textus AI are described in every language, and in Chinese a database is 数据库 while 知识库 is the plugin's name.
+- **0.8.3** - The bar stays on one line when there is room: in a zoomed block on a Mac it folded the view tabs into one button and put the sorts on a line of their own, and measured itself many times on every click. A table or list taller than Textus lets a block be ends between two rows instead of through one; other views fade at the foot while more is below. A column keeps its width however wide the block is, instead of stretching to fill it. By touch, a board card or lane lifts after a short hold, so a swipe scrolls instead of dragging. Its page is in every language Textus speaks. Its tools for Textus AI are described in every language, and in Chinese a database is 数据库 while 知识库 is the plugin's name.
 - **0.8.2** - The `file.folder`, `file.path` and `file.mtime` columns show each page's folder, path and when it was last changed (they were empty).
 - **0.8.1** - Rows and cards make way at the pace of the rest of Textus.
 - **0.8.0** - Other plugins can add views beside the table, board, calendar, gallery and list - the Timeline plugin's timeline, for one - in the view menus. Needs Textus 1.4.6 for those.

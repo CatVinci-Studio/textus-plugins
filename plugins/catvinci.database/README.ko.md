@@ -38,11 +38,11 @@ views:
 
 - **보기**는 블록 위쪽의 탭입니다: 표, 보드, 캘린더, 갤러리(Bases의 `cards`), 목록. 보기를 오른쪽 클릭하면 배치 바꾸기, 이름 바꾸기, 삭제가 있는 메뉴가 열립니다. **+**로 보기를 추가합니다. 캘린더는 Textus만의 보기라 Obsidian에서는 모르는 보기로 나옵니다.
 - **모든 행은 노트입니다.** 칸을 클릭해 고치면 그 노트의 프런트 매터에 속성이 써집니다. **새로 만들기**는 데이터베이스 폴더에 노트를 만듭니다. 행은 파일처럼 탭에서 열립니다.
-- **열**: 열 머리를 클릭해 정렬, 필터, 유형 바꾸기, 이름 바꾸기, 숨기기를 하거나 모든 행에서 속성을 삭제합니다. **+**로 속성을 추가합니다. 머리를 끌어 열을 옮기고, 오른쪽 가장자리를 끌어 너비를 정합니다(가장자리를 더블클릭하면 다시 맞춥니다). 순서와 너비는 데이터베이스에 저장되며, 너비는 Obsidian의 `columnSize`로 저장됩니다.
+- **열**: 열 머리를 클릭해 정렬, 필터, 유형 바꾸기, 이름 바꾸기, 숨기기를 하거나 모든 행에서 속성을 삭제합니다. **+**로 속성을 추가합니다. 머리를 끌어 열을 옮기고, 오른쪽 가장자리를 끌어 너비를 정합니다(가장자리를 더블클릭하면 처음 너비로 돌아갑니다). 열 너비는 데이터베이스 너비가 바뀌어도 그대로입니다. 순서와 너비는 데이터베이스에 저장되며, 너비는 Obsidian의 `columnSize`로 저장됩니다.
 - **보드**: 카드를 다른 목록으로 끌어 값을 바꿉니다. 목록 머리를 끌어 목록 순서를 원하는 대로 바꿉니다(`groupOrder`).
 - **캘린더**: 날짜 속성에 따라 행이 놓입니다. 날을 클릭하면 그 날짜로 행을 만듭니다.
 - **필터**, **정렬**, 열 메뉴는 Bases가 쓰는 방식 그대로 보기에 저장됩니다: `status == "Read"`, `tags.contains("ml")`, `due.isEmpty()`. Textus가 아직 읽지 못하는 필터는 그대로 두고 막대 아래에 알려 줍니다.
-- **문서 안에서의 크기**: 데이터베이스는 글 너비만큼(**넓게 보기**로 하면 창 너비만큼) 넓고, 열이 더 넓으면 옆으로 스크롤됩니다. 높이는 행만큼이지만 Textus의 블록 한도(창의 70%, 최대 1200px)를 넘으면 안에서 스크롤되고, 아래에 더 있을 때는 아래쪽이 흐려집니다.
+- **문서 안에서의 크기**: 데이터베이스는 글 너비만큼(**넓게 보기**로 하면 창 너비만큼) 넓고, 열이 더 넓으면 옆으로 스크롤됩니다. 높이는 행만큼이지만 Textus의 블록 한도(창의 70%, 최대 1200px)를 넘으면 안에서 스크롤됩니다. 이때 표와 목록은 행 사이에서 끊기고 행 중간에서는 끊기지 않습니다. 다른 보기는 아래에 더 있을 때 아래쪽이 흐려집니다.
 - **긴 데이터베이스**는 처음 25행(또는 보기의 `limit`)을 보여 주고, 아래로 스크롤하면 나머지를 불러옵니다. 표 머리는 계속 보입니다. 포인터를 올렸을 때 블록 왼쪽에 나오는 꺾쇠로 블록을 한 줄로 접습니다. 접힌 상태와 마지막 보기는 이 기기에만 저장됩니다.
 - **수식**(데이터베이스의 `formulas:`)은 행마다 계산되며 열, 필터, 정렬에 쓸 수 있습니다: `(price / pages).toFixed(2)`. 요약은 아직 표시하지 않습니다.
 - 폴더가 보관소이면 **속성 유형**은 `.obsidian/types.json`에 있는 Obsidian의 유형을 씁니다.
@@ -59,7 +59,7 @@ Notion 내보내기는 **Notion 가져오기** 플러그인으로 들어옵니�
 
 ## 변경 내역
 
-- **0.8.3** - The bar stays on one line when there is room: in a zoomed block on a Mac it folded the view tabs into one button and put the sorts on a line of their own, and measured itself many times on every click. A block taller than Textus lets it be fades at its foot while more rows are below, instead of looking cut off. By touch, a board card or lane lifts after a short hold, so a swipe scrolls instead of dragging. Its page is in every language Textus speaks. Its tools for Textus AI are described in every language, and in Chinese a database is 数据库 while 知识库 is the plugin's name.
+- **0.8.3** - The bar stays on one line when there is room: in a zoomed block on a Mac it folded the view tabs into one button and put the sorts on a line of their own, and measured itself many times on every click. A table or list taller than Textus lets a block be ends between two rows instead of through one; other views fade at the foot while more is below. A column keeps its width however wide the block is, instead of stretching to fill it. By touch, a board card or lane lifts after a short hold, so a swipe scrolls instead of dragging. Its page is in every language Textus speaks. Its tools for Textus AI are described in every language, and in Chinese a database is 数据库 while 知识库 is the plugin's name.
 - **0.8.2** - The `file.folder`, `file.path` and `file.mtime` columns show each page's folder, path and when it was last changed (they were empty).
 - **0.8.1** - Rows and cards make way at the pace of the rest of Textus.
 - **0.8.0** - Other plugins can add views beside the table, board, calendar, gallery and list - the Timeline plugin's timeline, for one - in the view menus. Needs Textus 1.4.6 for those.
