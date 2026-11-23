@@ -44,6 +44,10 @@
    fingertip's room (2.75rem, the 44 points of a touch target) without
    growing: an invisible layer centred on the button. */
 @media (any-hover: none) {
+  /* Room inside the page for that layer: New sits at its top right edge. */
+  #bar {
+    padding: var(--space-2) var(--space-3) var(--space-2) var(--space-1);
+  }
   #new,
   .note-foot .tx-icon-button {
     position: relative;
