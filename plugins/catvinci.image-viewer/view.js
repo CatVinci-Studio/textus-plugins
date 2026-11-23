@@ -25,14 +25,26 @@
   // Where it was scrolled to, as a share of the stage, kept as it goes out of sight.
   let at = saved.at || null;
   const keep = () => api.setState({ zoom, fit, turns, source, at });
-  api.onDidChangeVisibility((visible) => {
-    if (visible || !stage.scrollHeight) return;
+  // Kept as it scrolls too: the page may be out of sight, with nothing laid
+  // out to measure, by the time it is told.
+  const remember = () => {
+    if (!stage.scrollHeight) return;
     at = {
       x: stage.scrollLeft / stage.scrollWidth,
       y: stage.scrollTop / stage.scrollHeight,
     };
     keep();
-  });
+  };
+  let resting;
+  stage.addEventListener(
+    "scroll",
+    () => {
+      clearTimeout(resting);
+      resting = setTimeout(remember, 200);
+    },
+    { passive: true },
+  );
+  api.onDidChangeVisibility((visible) => visible || remember());
 
   $("source").textContent = t("source");
 

@@ -31,14 +31,26 @@
   // Where it was read to, as a share of the pages, kept as it goes out of sight.
   let at = saved.at || null;
   const keep = () => api.setState({ zoom: fit ? 0 : zoom, at });
-  api.onDidChangeVisibility((visible) => {
-    if (visible || !pages.scrollHeight) return;
+  // Kept as it scrolls too: the page may be out of sight, with nothing laid
+  // out to measure, by the time it is told.
+  const remember = () => {
+    if (!pages.scrollHeight) return;
     at = {
       x: pages.scrollLeft / pages.scrollWidth,
       y: pages.scrollTop / pages.scrollHeight,
     };
     keep();
-  });
+  };
+  let resting;
+  pages.addEventListener(
+    "scroll",
+    () => {
+      clearTimeout(resting);
+      resting = setTimeout(remember, 200);
+    },
+    { passive: true },
+  );
+  api.onDidChangeVisibility((visible) => visible || remember());
   function setZoom(next, x, y) {
     const before = zoom;
     zoom = Math.min(2, Math.max(0.5, Math.round(next * 100) / 100));
