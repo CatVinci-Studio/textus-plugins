@@ -92,11 +92,12 @@ body.in-tab #bar {
   position: sticky;
   z-index: 4;
 }
-/* A column's width: its head's right edge, dragged. */
+/* A column's width: its head's right edge, dragged; inside the head, as
+   the next head is drawn over anything past it. */
 .col-resize {
   position: absolute;
   top: 0;
-  right: -4px;
+  right: 0;
   z-index: 1;
   width: var(--space-2);
   height: 100%;
@@ -424,7 +425,6 @@ html.more-below::before {
   z-index: 3;
   height: 0;
   background: var(--doc-bg, var(--ui-bg));
-  pointer-events: none;
 }
 html:not(.rows-below) #foot,
 html.rows-below::before {
