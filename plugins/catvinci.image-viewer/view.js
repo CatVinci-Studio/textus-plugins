@@ -22,7 +22,17 @@
   // spinning back - the view only, the file stays as it is.
   let turns = saved.turns || 0;
   let source = !!saved.source;
-  const keep = () => api.setState({ zoom, fit, turns, source });
+  // Where it was scrolled to, as a share of the stage, kept as it goes out of sight.
+  let at = saved.at || null;
+  const keep = () => api.setState({ zoom, fit, turns, source, at });
+  api.onDidChangeVisibility((visible) => {
+    if (visible || !stage.scrollHeight) return;
+    at = {
+      x: stage.scrollLeft / stage.scrollWidth,
+      y: stage.scrollTop / stage.scrollHeight,
+    };
+    keep();
+  });
 
   $("source").textContent = t("source");
 
@@ -151,6 +161,10 @@
         " · " +
         size(message.bytes.length);
       show();
+      if (at) {
+        stage.scrollLeft = at.x * stage.scrollWidth;
+        stage.scrollTop = at.y * stage.scrollHeight;
+      }
       // Turned already when restored: no spin on the way in.
       requestAnimationFrame(() => image.classList.add("settled"));
     };

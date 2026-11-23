@@ -22,6 +22,17 @@
   let zoom = saved.zoom || 1;
   let fit = !saved.zoom;
   let natural = 0;
+  // Where it was read to, as a share of the pages, kept as it goes out of sight.
+  let at = saved.at || null;
+  const keep = () => api.setState({ zoom: fit ? 0 : zoom, at });
+  api.onDidChangeVisibility((visible) => {
+    if (visible || !pages.scrollHeight) return;
+    at = {
+      x: pages.scrollLeft / pages.scrollWidth,
+      y: pages.scrollTop / pages.scrollHeight,
+    };
+    keep();
+  });
   function setZoom(next, x, y) {
     const before = zoom;
     zoom = Math.min(2, Math.max(0.5, Math.round(next * 100) / 100));
@@ -36,7 +47,7 @@
         (pages.scrollLeft + x - box.left) * ratio - (x - box.left);
       pages.scrollTop = (pages.scrollTop + y - box.top) * ratio - (y - box.top);
     }
-    api.setState({ zoom: fit ? 0 : zoom });
+    keep();
   }
   function zoomBy(next, x, y) {
     fit = false;
@@ -201,6 +212,10 @@
         Math.max(0, ...pageList().map((page) => page.offsetWidth)) + 2 * pad;
       setZoom(zoom);
       fitWidth();
+      if (at) {
+        pages.scrollLeft = at.x * pages.scrollWidth;
+        pages.scrollTop = at.y * pages.scrollHeight;
+      }
       showPage();
     } catch (err) {
       $("status").textContent = t("failed", (err && err.message) || err);
