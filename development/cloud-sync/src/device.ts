@@ -13,6 +13,10 @@ export interface Device {
   /** Where a file deleted elsewhere goes when the system has no Trash: a
    *  folder in the synced one that isn't synced. */
   ownTrash?: string;
+  /** A folder the system already syncs (iCloud Drive): said, not refused. */
+  synced?: RegExp;
+  /** A folder that can't be synced, and the page's words for why. */
+  unsupported?: [RegExp, string];
 }
 
 const DESKTOP: Device = { phone: false, parallel: 32, maxFileMiB: 128 };
@@ -26,8 +30,16 @@ const DEVICES: Record<string, Device> = {
       /^.*\/Containers\/Data\/Application\/[0-9a-f-]{36}\/Documents(?=\/|$)/i,
       "documents:",
     ],
+    synced: /\/Mobile Documents\//,
   },
-  android: { phone: true, parallel: 2, maxFileMiB: 32, ownTrash: "Sync trash" },
+  android: {
+    phone: true,
+    parallel: 2,
+    maxFileMiB: 32,
+    ownTrash: "Sync trash",
+    // Opened without access to all files: no binary writes, no Trash.
+    unsupported: [/^content:\/\//, "contentFolder"],
+  },
 };
 
 export const deviceOf = (platform?: string): Device =>

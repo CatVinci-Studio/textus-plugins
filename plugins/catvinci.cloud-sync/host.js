@@ -137,9 +137,17 @@ var DEVICES = {
     container: [
       /^.*\/Containers\/Data\/Application\/[0-9a-f-]{36}\/Documents(?=\/|$)/i,
       "documents:"
-    ]
+    ],
+    synced: /\/Mobile Documents\//
   },
-  android: { phone: true, parallel: 2, maxFileMiB: 32, ownTrash: "Sync trash" }
+  android: {
+    phone: true,
+    parallel: 2,
+    maxFileMiB: 32,
+    ownTrash: "Sync trash",
+    // Opened without access to all files: no binary writes, no Trash.
+    unsupported: [/^content:\/\//, "contentFolder"]
+  }
 };
 var deviceOf = (platform) => platform && Object.hasOwn(DEVICES, platform) && DEVICES[platform] || DESKTOP;
 function folderKey(root, platform) {
@@ -300,6 +308,12 @@ async function receive(host, message) {
       await api.layout.openSettings();
       return;
     }
+    if (m.type === "openConflict") {
+      const path = state.result?.conflicts.find((p) => p === m.path);
+      if (path && state.root)
+        await api.layout.open(`${state.root.replace(/[/\\]$/, "")}/${path}`);
+      return;
+    }
     if (m.type === "cancel") {
       host.cancel();
       host.message("cancelling");
@@ -394,7 +408,8 @@ function doneText(result, t) {
     ["doneMoved", result.moved],
     ["doneConflicts", result.conflicts.length],
     ["doneDeferred", result.deferred.length],
-    ["doneNotTrashed", result.notTrashed.length]
+    ["doneNotTrashed", result.notTrashed.length],
+    ["doneTooLarge", result.tooLarge?.length ?? 0]
   ].filter(([, n]) => n > 0).map(([key, n]) => t(key, n));
   return parts.length ? parts.join(t("listSeparator")) : null;
 }
@@ -2849,11 +2864,12 @@ var row = (v) => ({
 });
 function registerHistory(api, source) {
   const relative = (root, path) => path.startsWith(root) ? path.slice(root.length).replace(/^[/\\]/, "") : path;
-  async function list(path) {
+  async function list(path, menu) {
     const { files, history } = await read((await source.remote()).store);
     if (path)
       return {
         path,
+        menu,
         current: files[path] ? { size: files[path].size, ...history.current[path] } : null,
         versions: (history.versions[path] ?? []).map(row)
       };
@@ -2880,14 +2896,18 @@ function registerHistory(api, source) {
     }
   }
   const resolve = (view, state) => {
-    const path = state?.path?.replace(/\\/g, "/") ?? null;
+    const opened = state;
+    const path = opened?.path?.replace(/\\/g, "/") ?? null;
     const reply = (m) => void view.postMessage(m).catch(() => {
     });
     view.onDidReceiveMessage(async (raw) => {
       const m = raw;
       try {
         if (m.type === "ready" || m.type === "open")
-          reply({ type: "list", ...await list(m.path ?? path) });
+          reply({
+            type: "list",
+            ...await list(m.path ?? path, !!opened?.menu)
+          });
         else if (m.type === "preview" && m.path && m.hash)
           reply({
             type: "preview",
@@ -2945,10 +2965,13 @@ function registerHistory(api, source) {
     }),
     api.commands.register(`${ID}.history`, async (path) => {
       const root = await api.files.root();
-      const rel = typeof path === "string" && root ? relative(root, path) : null;
+      const menu = typeof path !== "string" && source.phone;
+      const file = typeof path === "string" ? path : menu ? (await api.layout.activeTab())?.path : null;
+      const inFolder = file && root ? relative(root, file) : null;
+      const rel = inFolder !== file ? inFolder : null;
       await api.layout.openView(`${ID}.history`, {
         title: rel ? api.l10n.t("historyOf", rel.split("/").pop()) : api.l10n.t("deletedFiles"),
-        state: { path: rel }
+        state: { path: rel, menu }
       });
     })
   ];
@@ -3059,8 +3082,15 @@ var Controller = class {
       ),
       error: false,
       progress: null,
-      account: configured ? account : void 0
+      account: configured ? account : void 0,
+      phone: this.settings.device.phone
     };
+    const { unsupported, synced } = this.settings.device;
+    if (root && unsupported?.[0].test(root)) {
+      this.state.message = this.t(unsupported[1]);
+      this.state.error = true;
+    } else if (root && synced?.test(root))
+      this.state.note = this.t("icloudFolder");
     if (root && configured) {
       const key = await this.settings.baseKey(root, config);
       const last = await this.ctx.storage.global.get(`last:${key}`);
@@ -3082,7 +3112,8 @@ var Controller = class {
     const root = await this.api.files.root();
     if (!root) throw new SyncError("noFolder");
     if (root !== this.state.root) throw new SyncError("rootChanged");
-    if (root.startsWith("content://")) throw new SyncError("contentFolder");
+    const unsupported = this.settings.device.unsupported;
+    if (unsupported?.[0].test(root)) throw new SyncError(unsupported[1]);
     const config = await this.settings.load(root);
     const credentials = await this.settings.credentials(root, config);
     const store = new RemoteStore(config, credentials, this.api.net.fetch);
@@ -3113,6 +3144,9 @@ var Controller = class {
     this.tested.add(key);
     checkAbort(this.abort?.signal);
     return { key, opened };
+  }
+  get phone() {
+    return this.settings.device.phone;
   }
   /** The remote folder as the history page reads it. */
   async remote() {
@@ -3305,7 +3339,7 @@ var Controller = class {
     this.bar = new StatusBar(
       api,
       this.t,
-      () => this.disposed ? null : this.state
+      () => this.disposed || this.settings.device.phone ? null : this.state
     );
     await this.refresh();
     this.lifecycle?.opened();

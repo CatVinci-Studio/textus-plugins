@@ -10,6 +10,8 @@ interface Row {
 }
 interface Listing {
   path: string | null;
+  /** Opened from the menu on the document in front (a phone's way in). */
+  menu?: boolean;
   current?: { size: number; at?: string; device?: string } | null;
   versions?: Row[];
   deleted?: Row[];
@@ -98,7 +100,9 @@ function render(l: Listing) {
   preview.hidden = true;
   list.replaceChildren();
   if (started === undefined) started = l.path;
-  $("head").hidden = started !== null || l.path === null;
+  // A way to the deleted files from a file's versions, unless it was
+  // opened on that file from the file's own menu.
+  $("head").hidden = l.path === null || (started !== null && !l.menu);
   if (l.path === null) {
     title.textContent = api.t("deletedFiles");
     for (const d of l.deleted ?? [])
@@ -147,27 +151,29 @@ restore.onclick = () => {
 $("back").onclick = () => api.postMessage({ type: "open", path: null });
 
 // Older Textus has only onMessage.
-api["onDidReceiveMessage" in api ? "onDidReceiveMessage" : "onMessage"]((raw) => {
-  const m = raw as Listing & {
-    type: string;
-    hash?: string;
-    text?: string;
-    binary?: boolean;
-    message?: string;
-  };
-  if (m.type === "list") render(m);
-  else if (m.type === "preview" && m.hash === chosen?.hash) {
-    previewNote.textContent = m.binary
-      ? api.t("noPreview")
-      : api.t("restoreHint");
-    previewText.hidden = !!m.binary;
-    previewText.textContent = m.text ?? "";
-  } else if (m.type === "restored") {
-    restoredNote = true;
-    api.postMessage({ type: "open", path: m.path });
-  } else if (m.type === "error") {
-    say(m.message ?? "");
-    restore.disabled = false;
-  }
-});
+api["onDidReceiveMessage" in api ? "onDidReceiveMessage" : "onMessage"](
+  (raw) => {
+    const m = raw as Listing & {
+      type: string;
+      hash?: string;
+      text?: string;
+      binary?: boolean;
+      message?: string;
+    };
+    if (m.type === "list") render(m);
+    else if (m.type === "preview" && m.hash === chosen?.hash) {
+      previewNote.textContent = m.binary
+        ? api.t("noPreview")
+        : api.t("restoreHint");
+      previewText.hidden = !!m.binary;
+      previewText.textContent = m.text ?? "";
+    } else if (m.type === "restored") {
+      restoredNote = true;
+      api.postMessage({ type: "open", path: m.path });
+    } else if (m.type === "error") {
+      say(m.message ?? "");
+      restore.disabled = false;
+    }
+  },
+);
 api.postMessage({ type: "ready" });

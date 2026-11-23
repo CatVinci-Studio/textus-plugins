@@ -139,7 +139,14 @@ class Controller implements Host {
       error: false,
       progress: null,
       account: configured ? account : undefined,
+      phone: this.settings.device.phone,
     };
+    const { unsupported, synced } = this.settings.device;
+    if (root && unsupported?.[0].test(root)) {
+      this.state.message = this.t(unsupported[1]);
+      this.state.error = true;
+    } else if (root && synced?.test(root))
+      this.state.note = this.t("icloudFolder");
     if (root && configured) {
       const key = await this.settings.baseKey(root, config);
       const last = (await this.ctx.storage.global.get(`last:${key}`)) as {
@@ -167,8 +174,8 @@ class Controller implements Host {
     const root = await this.api.files.root();
     if (!root) throw new SyncError("noFolder");
     if (root !== this.state.root) throw new SyncError("rootChanged");
-    // An Android folder opened without access to all files.
-    if (root.startsWith("content://")) throw new SyncError("contentFolder");
+    const unsupported = this.settings.device.unsupported;
+    if (unsupported?.[0].test(root)) throw new SyncError(unsupported[1]);
     const config = await this.settings.load(root);
     const credentials = await this.settings.credentials(root, config);
     const store = new RemoteStore(config, credentials, this.api.net.fetch);
@@ -208,6 +215,9 @@ class Controller implements Host {
     return { key, opened };
   }
   page = (name: string) => this.ctx.plugin.readText(name);
+  get phone() {
+    return this.settings.device.phone;
+  }
   /** The remote folder as the history page reads it. */
   async remote() {
     const { root, config, store } = await this.store();
@@ -411,8 +421,9 @@ class Controller implements Host {
         api.app.onDidChangeState((state) => this.lifecycle?.changed(state)),
       );
     }
+    // A phone's tab row has no room for it: the sidebar's tab says it.
     this.bar = new StatusBar(api, this.t, () =>
-      this.disposed ? null : this.state,
+      this.disposed || this.settings.device.phone ? null : this.state,
     );
     await this.refresh();
     this.lifecycle?.opened();

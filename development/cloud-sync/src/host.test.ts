@@ -97,7 +97,7 @@ it("shows the whole page in the tab and Settings, its status in the sidebar", as
  *  on `platform`; `hold` keeps requests waiting until released. */
 async function connected(
   names: string[],
-  { platform = "macos", automatic = false } = {},
+  { platform = "macos", automatic = false, conflicts = [] as string[] } = {},
 ) {
   let held: Promise<void> | null = null;
   const requests: string[] = [];
@@ -139,7 +139,11 @@ async function connected(
   const files = new Map(
     names.map((n) => [`/notes/${n}`, new TextEncoder().encode(n)]),
   );
-  const commands = new Map<string, () => Promise<unknown>>();
+  const commands = new Map<string, (arg?: unknown) => Promise<unknown>>();
+  const pages = new Map<string, Resolve>();
+  const opened = vi.fn(async (_path: string) => {});
+  const openView = vi.fn(async (_id: string, _options: unknown) => {});
+  let front: { kind: string; path: string | null } | null = null;
   const shown = { tooltip: "", texts: [] as string[] };
   const confirm = vi.fn(async (_text: string) => false);
   (globalThis as unknown as { textus: unknown }).textus = {
@@ -147,7 +151,6 @@ async function connected(
     env: { language: "en", platform },
     app: { state: "active", onDidChangeState: on("state") },
     net: { fetch },
-    layout: { tabs: async () => [] },
     files: {
       root: async () => "/notes",
       list: async (dir: string) =>
@@ -174,7 +177,7 @@ async function connected(
       onDidChangeRoot: disposable,
     },
     commands: {
-      register: (id: string, run: () => Promise<unknown>) => {
+      register: (id: string, run: (arg?: unknown) => Promise<unknown>) => {
         commands.set(id, run);
         return disposable();
       },
@@ -193,7 +196,19 @@ async function connected(
         };
       },
     },
-    views: { registerWebview: disposable, registerSettingsPage: disposable },
+    views: {
+      registerWebview: (id: string, p: { resolve: Resolve }) => {
+        pages.set(id, p.resolve);
+        return disposable();
+      },
+      registerSettingsPage: disposable,
+    },
+    layout: {
+      tabs: async () => [],
+      open: opened,
+      openView,
+      activeTab: async () => front,
+    },
   };
   const global = new Map<string, unknown>(),
     secrets = new Map<string, string>();
@@ -230,10 +245,47 @@ async function connected(
     account: "TEST_ACCESS_KEY",
     secret: "test-only-secret",
   });
+  if (conflicts.length)
+    global.set(`last:${await settings.baseKey("/notes", config)}`, {
+      at: new Date().toISOString(),
+      result: {
+        uploaded: 0,
+        downloaded: 0,
+        removed: 0,
+        moved: 0,
+        conflicts,
+        deferred: [],
+        notTrashed: [],
+        unchanged: 0,
+      },
+    });
   await activate(ctx);
+  // The sidebar's page, as it hears the plugin.
+  const posted: { type: string; message?: string; [key: string]: unknown }[] =
+    [];
+  let receive: (m: unknown) => void = () => {};
+  await pages.get("catvinci.cloud-sync.sidebar")!({
+    html: "",
+    onDidReceiveMessage: (fn: (m: unknown) => void) => {
+      receive = fn;
+      return disposable();
+    },
+    onDidDispose: disposable,
+    postMessage: async (m: (typeof posted)[number]) => {
+      posted.push(m);
+    },
+  });
   return {
     requests,
     listeners,
+    opened,
+    openView,
+    commands,
+    page: () => posted.filter((m) => m.type === "state").at(-1)!,
+    tell: (m: unknown) => receive(m),
+    front: (tab: typeof front) => {
+      front = tab;
+    },
     hold: () => {
       let release = () => {};
       held = new Promise((done) => (release = done));
@@ -326,7 +378,7 @@ it("on a phone, stops a sync as Textus leaves and goes on with it, unasked, when
   await vi.waitFor(() => expect(f.requests.length).toBeGreaterThan(0));
   f.listeners.state("background" as never);
   release();
-  await vi.waitFor(() => expect(f.shown.tooltip).toBe("pausedAway"));
+  await vi.waitFor(() => expect(f.page().message).toBe("pausedAway"));
   expect(f.objects.has(HEAD_AT)).toBe(false);
   f.listeners.state("active" as never);
   await vi.waitFor(() => expect(f.objects.has(HEAD_AT)).toBe(true));
@@ -336,4 +388,61 @@ it("on a computer, leaves when it syncs to the pacer, as before", async () => {
   expect(f.listeners.state).toBeUndefined();
   await new Promise((done) => setTimeout(done, 50));
   expect(f.requests).toEqual([]);
+});
+
+it("on a phone, keeps to the sidebar's page, which opens the last sync's conflict copies and no other file", async () => {
+  const copy = "Sync conflicts/a (1234abcd).md";
+  const f = await connected(["a.md"], { platform: "ios", conflicts: [copy] });
+  f.tell({ type: "ready" });
+  await vi.waitFor(() => expect(f.page()).toBeDefined());
+  expect(f.page()).toMatchObject({
+    phone: true,
+    result: { conflicts: [copy] },
+  });
+  expect(f.shown.texts).toEqual([]);
+  f.tell({ type: "openConflict", path: "../secret.md" });
+  f.tell({ type: "openConflict", path: copy });
+  await vi.waitFor(() => expect(f.opened).toHaveBeenCalledOnce());
+  expect(f.opened).toHaveBeenCalledWith(`/notes/${copy}`);
+});
+it("opens Cloud History on the document in front from a phone's menu, the deleted files on a computer's", async () => {
+  const phone = await connected(["a.md"], { platform: "ios" });
+  phone.front({ kind: "document", path: "/notes/a.md" });
+  await phone.commands.get("catvinci.cloud-sync.history")!();
+  expect(phone.openView).toHaveBeenLastCalledWith(
+    "catvinci.cloud-sync.history",
+    {
+      title: "historyOf a.md",
+      state: { path: "a.md", menu: true },
+    },
+  );
+  // A document from outside the folder: the deleted files.
+  phone.front({ kind: "document", path: "/elsewhere/b.md" });
+  await phone.commands.get("catvinci.cloud-sync.history")!();
+  expect(phone.openView).toHaveBeenLastCalledWith(
+    "catvinci.cloud-sync.history",
+    {
+      title: "deletedFiles",
+      state: { path: null, menu: true },
+    },
+  );
+  deactivate();
+  const desk = await connected(["a.md"]);
+  desk.front({ kind: "document", path: "/notes/a.md" });
+  await desk.commands.get("catvinci.cloud-sync.history")!();
+  expect(desk.openView).toHaveBeenLastCalledWith(
+    "catvinci.cloud-sync.history",
+    {
+      title: "deletedFiles",
+      state: { path: null, menu: false },
+    },
+  );
+  await desk.commands.get("catvinci.cloud-sync.history")!("/notes/a.md");
+  expect(desk.openView).toHaveBeenLastCalledWith(
+    "catvinci.cloud-sync.history",
+    {
+      title: "historyOf a.md",
+      state: { path: "a.md", menu: false },
+    },
+  );
 });

@@ -1,5 +1,5 @@
 import { expect, it } from "vitest";
-import { folderKey } from "./device";
+import { deviceOf, folderKey } from "./device";
 import { Workspace } from "./local";
 import { bytes, memoryFolder, memoryStorage } from "./test-fixtures";
 
@@ -42,4 +42,16 @@ it("reads only what changed after an iOS update moved the folder", async () => {
   };
   expect(await scan(A)).toBe(1);
   expect(await scan(B)).toBe(0);
+});
+it("knows an iCloud Drive folder on iOS and a folder Android can't sync", () => {
+  const icloud =
+    "/private/var/mobile/Library/Mobile Documents/com~apple~CloudDocs/Notes";
+  expect(deviceOf("ios").synced?.test(icloud)).toBe(true);
+  expect(deviceOf("ios").synced?.test(simulator(A))).toBe(false);
+  expect(deviceOf("macos").synced).toBeUndefined();
+  const [content] = deviceOf("android").unsupported!;
+  expect(content.test("content://com.android.externalstorage/tree/x")).toBe(
+    true,
+  );
+  expect(content.test("/storage/emulated/0/Notes")).toBe(false);
 });

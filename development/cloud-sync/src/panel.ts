@@ -1,4 +1,10 @@
-import { KEEP_DAYS, PARALLEL, type Config, type Result } from "./model";
+import {
+  KEEP_DAYS,
+  MAX_FILE_MIB,
+  PARALLEL,
+  type Config,
+  type Result,
+} from "./model";
 import { providers } from "./config";
 
 const api = acquireTextusApi();
@@ -33,6 +39,8 @@ interface State {
   result?: Result;
   lastRun?: string;
   account?: string;
+  phone?: boolean;
+  note?: string;
 }
 let state: State | null = null;
 /** The connection's form is open over a saved one (Edit). */
@@ -96,6 +104,7 @@ const OPTION_PICKS: [string, readonly number[], (v: string) => string][] = [
   ["saveGap", [0, 1, 3, 5, 10], delayLabel],
   ["keepDays", KEEP_DAYS, keepLabel],
   ["parallel", PARALLEL, String],
+  ["maxFileMiB", MAX_FILE_MIB, (v) => api.t("sizeMb", v)],
 ];
 const optionLabel = (id: string, value: string) =>
   OPTION_PICKS.find(([k]) => k === id)![2](value);
@@ -151,6 +160,8 @@ function show() {
   element("connected").hidden = form || !root;
   element("connection").hidden = !form || !root;
   for (const id of ["options", "rules"]) element(id).hidden = !configured;
+  // Its memory and battery: a phone's own choice.
+  element("maxFileMiB-field").hidden = !state.phone;
   element("cancel-edit").hidden = !editing;
   element("c-service").textContent = api.t(config.provider);
   element("c-endpoint").textContent = config.endpoint;
@@ -222,6 +233,7 @@ function sendOptions(wait = 0) {
         saveGap: Number(input("saveGap").value),
         keepDays: Number(input("keepDays").value),
         parallel: Number(input("parallel").value),
+        maxFileMiB: Number(input("maxFileMiB").value),
         exclude: element<HTMLTextAreaElement>("exclude").value,
         gitignore: input("gitignore").checked,
         obsidian: input("obsidian").checked,
@@ -295,7 +307,9 @@ element("test-saved").onclick = () => api.postMessage({ type: "test" });
 for (const id of ["sync", "unlock", "cancel", "openSettings", "disconnect"])
   element(id).onclick = () => api.postMessage({ type: id });
 
-function showResult(result?: Result) {
+/** A list under its title: the conflict copies to open, files left out
+ *  for their size folded under a line, the rest as they are. */
+function showResult(result?: Result, limit = 0) {
   const container = element("results");
   container.replaceChildren();
   for (const key of ["conflicts", "deferred", "notTrashed"] as const) {
@@ -303,59 +317,84 @@ function showResult(result?: Result) {
     if (!entries?.length) continue;
     const title = document.createElement("h3");
     title.textContent = api.t(key);
-    const list = document.createElement("ul");
+    const list = document.createElement(key === "conflicts" ? "div" : "ul");
+    if (key === "conflicts") list.className = "tx-list";
     for (const path of entries) {
-      const row = document.createElement("li");
+      const row = document.createElement(key === "conflicts" ? "button" : "li");
       row.textContent = path;
+      if (row instanceof HTMLButtonElement) {
+        row.type = "button";
+        row.className = "tx-list-row";
+        row.onclick = () => api.postMessage({ type: "openConflict", path });
+      }
       list.append(row);
     }
     container.append(title, list);
   }
+  const large = result?.tooLarge ?? [];
+  if (!large.length) return;
+  const fold = document.createElement("details");
+  fold.className = "tx-disclosure";
+  const line = document.createElement("summary");
+  line.textContent = api.t("tooLargeFiles", large.length, limit);
+  const list = document.createElement("ul");
+  for (const path of large) {
+    const row = document.createElement("li");
+    row.textContent = path;
+    list.append(row);
+  }
+  fold.append(line, list);
+  container.append(fold);
 }
 
 // Older Textus has only onMessage.
-api["onDidReceiveMessage" in api ? "onDidReceiveMessage" : "onMessage"]((value) => {
-  const m = value as State;
-  // Saved: the form closes onto the connection's card.
-  if (m.type === "saved") {
-    editing = false;
-    typed = false;
-    api.postMessage({ type: "ready" });
-    return;
-  }
-  if (m.type !== "state") return;
-  const first = !state || state.root !== m.root;
-  const was = state;
-  state = m;
-  if (first || (!typed && !editing)) fillForm(m.config, m.root);
-  if (first || was?.configured !== m.configured) editing = false;
-  // Not under the rules being typed.
-  if (document.activeElement?.closest(".options") == null || first)
-    fillOptions(m.config);
-  element("status").textContent = m.message || api.t("loading");
-  element("status").dataset.error = String(m.error);
-  element("cancel").hidden = !m.busy;
-  // Textus's progress bar (tx-progress): how far, or a sweep when unknown.
-  const progress = element("progress");
-  progress.hidden = !m.busy;
-  progress.classList.toggle("is-indeterminate", m.progress == null);
-  progress.style.setProperty("--value", String(m.progress ?? 0));
-  // What is synced where, as saved.
-  const summary = element("summary");
-  summary.hidden = !m.configured;
-  summary.textContent = [
-    api.t(m.config.provider),
-    m.config.prefix,
-    m.config.automatic
-      ? api.t("summaryAuto", m.config.interval)
-      : api.t("summaryManual"),
-  ].join(" · ");
-  const last = element("last-run");
-  last.hidden = !m.lastRun;
-  last.textContent = m.lastRun
-    ? `${api.t("lastRun")} · ${new Date(m.lastRun).toLocaleString(api.language)}`
-    : "";
-  showResult(m.result);
-  show();
-});
+api["onDidReceiveMessage" in api ? "onDidReceiveMessage" : "onMessage"](
+  (value) => {
+    const m = value as State;
+    // Saved: the form closes onto the connection's card.
+    if (m.type === "saved") {
+      editing = false;
+      typed = false;
+      api.postMessage({ type: "ready" });
+      return;
+    }
+    if (m.type !== "state") return;
+    const first = !state || state.root !== m.root;
+    const was = state;
+    state = m;
+    if (first || (!typed && !editing)) fillForm(m.config, m.root);
+    if (first || was?.configured !== m.configured) editing = false;
+    // Not under the rules being typed.
+    if (document.activeElement?.closest(".options") == null || first)
+      fillOptions(m.config);
+    element("status").textContent = m.message || api.t("loading");
+    element("status").dataset.error = String(m.error);
+    element("cancel").hidden = !m.busy;
+    // Textus's progress bar (tx-progress): how far, or a sweep when unknown.
+    const progress = element("progress");
+    progress.hidden = !m.busy;
+    progress.classList.toggle("is-indeterminate", m.progress == null);
+    progress.style.setProperty("--value", String(m.progress ?? 0));
+    // What is synced where, as saved.
+    const summary = element("summary");
+    summary.hidden = !m.configured;
+    summary.textContent = [
+      api.t(m.config.provider),
+      m.config.prefix,
+      m.config.automatic
+        ? api.t("summaryAuto", m.config.interval)
+        : api.t("summaryManual"),
+    ].join(" · ");
+    const last = element("last-run");
+    last.hidden = !m.lastRun;
+    last.textContent = m.lastRun
+      ? `${api.t("lastRun")} · ${new Date(m.lastRun).toLocaleString(api.language)}`
+      : "";
+    showResult(m.result, m.config.maxFileMiB);
+    const note = element("note");
+    note.hidden = !m.note;
+    note.textContent = m.note ?? "";
+    show();
+  },
+);
 api.postMessage({ type: "ready" });

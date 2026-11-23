@@ -22,6 +22,8 @@ interface Source {
   remote(): Promise<{ root: string; store: ObjectStore }>;
   operation(kind: "sync", restore: Restore): Promise<string | null>;
   page(name: string): Promise<string>;
+  /** No right-click: the menu's entry opens on the document in front. */
+  readonly phone: boolean;
 }
 
 const LABELS: Record<string, string> = {
@@ -85,11 +87,12 @@ export function registerHistory(api: Textus.Api, source: Source) {
     path.startsWith(root)
       ? path.slice(root.length).replace(/^[/\\]/, "")
       : path;
-  async function list(path: string | null) {
+  async function list(path: string | null, menu: boolean) {
     const { files, history } = await read((await source.remote()).store);
     if (path)
       return {
         path,
+        menu,
         current: files[path]
           ? { size: files[path].size, ...history.current[path] }
           : null,
@@ -121,14 +124,17 @@ export function registerHistory(api: Textus.Api, source: Source) {
     }
   }
   const resolve = (view: Textus.Webview, state: unknown) => {
-    const path =
-      (state as { path?: string } | null)?.path?.replace(/\\/g, "/") ?? null;
+    const opened = state as { path?: string; menu?: boolean } | null;
+    const path = opened?.path?.replace(/\\/g, "/") ?? null;
     const reply = (m: object) => void view.postMessage(m).catch(() => {});
     view.onDidReceiveMessage(async (raw) => {
       const m = raw as { type?: string; path?: string; hash?: string };
       try {
         if (m.type === "ready" || m.type === "open")
-          reply({ type: "list", ...(await list(m.path ?? path)) });
+          reply({
+            type: "list",
+            ...(await list(m.path ?? path, !!opened?.menu)),
+          });
         else if (m.type === "preview" && m.path && m.hash)
           reply({
             type: "preview",
@@ -158,7 +164,9 @@ export function registerHistory(api: Textus.Api, source: Source) {
   const offer = api.history as Textus.History | undefined;
   const relOf = async (path: string) => {
     const root = await api.files.root();
-    return root ? relative(root.replace(/\\/g, "/"), path.replace(/\\/g, "/")) : null;
+    return root
+      ? relative(root.replace(/\\/g, "/"), path.replace(/\\/g, "/"))
+      : null;
   };
   const offered = offer
     ? [
@@ -190,13 +198,21 @@ export function registerHistory(api: Textus.Api, source: Source) {
     }),
     api.commands.register(`${ID}.history`, async (path?: unknown) => {
       const root = await api.files.root();
-      const rel =
-        typeof path === "string" && root ? relative(root, path) : null;
+      const menu = typeof path !== "string" && source.phone;
+      const file =
+        typeof path === "string"
+          ? path
+          : menu
+            ? (await api.layout.activeTab())?.path
+            : null;
+      const inFolder = file && root ? relative(root, file) : null;
+      // A document from outside the folder has no history here.
+      const rel = inFolder !== file ? inFolder : null;
       await api.layout.openView(`${ID}.history`, {
         title: rel
           ? api.l10n.t("historyOf", rel.split("/").pop())
           : api.l10n.t("deletedFiles"),
-        state: { path: rel },
+        state: { path: rel, menu },
       });
     }),
   ];

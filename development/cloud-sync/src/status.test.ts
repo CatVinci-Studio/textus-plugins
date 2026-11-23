@@ -73,4 +73,11 @@ it("lists what a sync did, files the Trash refused too, and nothing when nothing
     "doneUploaded 2listSeparatordoneNotTrashed 1",
   );
   expect(doneText({ ...result, uploaded: 0, notTrashed: [] }, t)).toBeNull();
+  // Files too large for this device, said; none from before 0.8.1.
+  expect(
+    doneText(
+      { ...result, uploaded: 0, notTrashed: [], tooLarge: ["v.mov"] },
+      t,
+    ),
+  ).toBe("doneTooLarge 1");
 });

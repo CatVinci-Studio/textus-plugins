@@ -214,4 +214,8 @@ export interface ViewState {
   lastRun?: string;
   /** The saved account, its start only (masked). */
   account?: string;
+  /** On a phone: its own choices show (the largest file). */
+  phone?: boolean;
+  /** Something to know about the folder, shown under the status. */
+  note?: string;
 }

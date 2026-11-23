@@ -242,7 +242,11 @@
       "doneNotTrashed": "not moved to the Trash {0}",
       "notTrashed": "Deleted on another device, but this device couldn't move them to the Trash: left in place, tried again at the next sync",
       "pausedAway": "Paused while Textus is in the background; it goes on when you come back.",
-      "contentFolder": "This folder was opened without access to all files, so it can't be synced. Allow Textus to access all files, then open the folder again."
+      "contentFolder": "This folder was opened without access to all files, so it can't be synced. Allow Textus to access all files, then open the folder again.",
+      "largestFile": "Largest file to sync",
+      "tooLargeFiles": "Over {1} MB, not synced on this device: {0}",
+      "doneTooLarge": "too large {0}",
+      "icloudFolder": "This folder is in iCloud Drive, which already syncs it: Cloud Sync isn't needed here."
     },
     "zh": {
       "name": "云同步",
@@ -413,7 +417,11 @@
       "doneNotTrashed": "{0} 个没能移到废纸篓",
       "notTrashed": "别的设备上已删除，但这台设备没能把它们移到废纸篓：先留在原处，下次同步再试",
       "pausedAway": "Textus 在后台时暂停同步，回来后接着同步。",
-      "contentFolder": "这个文件夹是在没有“访问所有文件”权限时打开的，无法同步。请允许 Textus 访问所有文件，再重新打开这个文件夹。"
+      "contentFolder": "这个文件夹是在没有“访问所有文件”权限时打开的，无法同步。请允许 Textus 访问所有文件，再重新打开这个文件夹。",
+      "largestFile": "同步的最大文件",
+      "tooLargeFiles": "{0} 个文件超过 {1} MB，这台设备没有同步",
+      "doneTooLarge": "过大 {0}",
+      "icloudFolder": "这个文件夹在 iCloud 云盘里，已经由 iCloud 同步，这里不需要再开云同步。"
     },
     "zh-Hant": {
       "name": "雲端同步",
@@ -584,7 +592,11 @@
       "doneNotTrashed": "{0} 個無法移到垃圾桶",
       "notTrashed": "已在其他裝置上刪除，但這台裝置無法將它們移到垃圾桶：先留在原處，下次同步時再試",
       "pausedAway": "Textus 在背景時暫停同步，回來後接著同步。",
-      "contentFolder": "這個資料夾是在沒有「存取所有檔案」權限時開啟的，無法同步。請允許 Textus 存取所有檔案，再重新開啟這個資料夾。"
+      "contentFolder": "這個資料夾是在沒有「存取所有檔案」權限時開啟的，無法同步。請允許 Textus 存取所有檔案，再重新開啟這個資料夾。",
+      "largestFile": "同步的最大檔案",
+      "tooLargeFiles": "{0} 個檔案超過 {1} MB，這台裝置沒有同步",
+      "doneTooLarge": "過大 {0}",
+      "icloudFolder": "這個資料夾在 iCloud 雲碟裡，已經由 iCloud 同步，這裡不需要再開啟雲端同步。"
     },
     "ja": {
       "name": "クラウド同期",
@@ -755,7 +767,11 @@
       "doneNotTrashed": "ゴミ箱に移せず {0} 件",
       "notTrashed": "別の端末で削除されましたが、この端末ではゴミ箱に移せませんでした。そのまま残し、次の同期でもう一度試します",
       "pausedAway": "Textus がバックグラウンドにある間は同期を止めています。戻ると続きから同期します。",
-      "contentFolder": "このフォルダは「すべてのファイルへのアクセス」なしで開かれたため、同期できません。Textus にすべてのファイルへのアクセスを許可してから、フォルダを開き直してください。"
+      "contentFolder": "このフォルダは「すべてのファイルへのアクセス」なしで開かれたため、同期できません。Textus にすべてのファイルへのアクセスを許可してから、フォルダを開き直してください。",
+      "largestFile": "同期するファイルの上限サイズ",
+      "tooLargeFiles": "{1} MB を超える {0} 個のファイルはこの端末では同期していません",
+      "doneTooLarge": "大きすぎ {0}",
+      "icloudFolder": "このフォルダは iCloud Drive にあり、すでに iCloud が同期しています。ここでクラウド同期を使う必要はありません。"
     },
     "ko": {
       "name": "클라우드 동기화",
@@ -926,7 +942,11 @@
       "doneNotTrashed": "휴지통으로 옮기지 못함 {0}개",
       "notTrashed": "다른 기기에서 삭제되었지만 이 기기에서 휴지통으로 옮기지 못했습니다. 그대로 두고 다음 동기화 때 다시 시도합니다",
       "pausedAway": "Textus가 백그라운드에 있는 동안 동기화를 멈췄습니다. 돌아오면 이어서 동기화합니다.",
-      "contentFolder": "이 폴더는 '모든 파일에 대한 접근' 권한 없이 열려 동기화할 수 없습니다. Textus에 모든 파일 접근을 허용한 뒤 폴더를 다시 여세요."
+      "contentFolder": "이 폴더는 '모든 파일에 대한 접근' 권한 없이 열려 동기화할 수 없습니다. Textus에 모든 파일 접근을 허용한 뒤 폴더를 다시 여세요.",
+      "largestFile": "동기화할 최대 파일 크기",
+      "tooLargeFiles": "{1}MB를 넘는 파일 {0}개는 이 기기에서 동기화하지 않았습니다",
+      "doneTooLarge": "너무 큼 {0}",
+      "icloudFolder": "이 폴더는 iCloud Drive에 있어 이미 iCloud가 동기화합니다. 여기서는 클라우드 동기화가 필요 없습니다."
     },
     "es": {
       "name": "Sincronización en la nube",
@@ -1097,7 +1117,11 @@
       "doneNotTrashed": "sin mover a la Papelera {0}",
       "notTrashed": "Eliminados en otro dispositivo, pero este no pudo moverlos a la Papelera: se quedan donde están y se vuelve a intentar en la próxima sincronización",
       "pausedAway": "En pausa mientras Textus está en segundo plano; sigue cuando vuelvas.",
-      "contentFolder": "Esta carpeta se abrió sin acceso a todos los archivos, así que no se puede sincronizar. Permite que Textus acceda a todos los archivos y vuelve a abrir la carpeta."
+      "contentFolder": "Esta carpeta se abrió sin acceso a todos los archivos, así que no se puede sincronizar. Permite que Textus acceda a todos los archivos y vuelve a abrir la carpeta.",
+      "largestFile": "Archivo más grande que se sincroniza",
+      "tooLargeFiles": "Más de {1} MB, sin sincronizar en este dispositivo: {0}",
+      "doneTooLarge": "demasiado grandes {0}",
+      "icloudFolder": "Esta carpeta está en iCloud Drive, que ya la sincroniza: aquí no hace falta la sincronización en la nube."
     },
     "fr": {
       "name": "Synchro cloud",
@@ -1268,7 +1292,11 @@
       "doneNotTrashed": "non placés dans la Corbeille {0}",
       "notTrashed": "Supprimés sur un autre appareil, mais cet appareil n’a pas pu les placer dans la Corbeille : laissés en place, nouvel essai à la prochaine synchronisation",
       "pausedAway": "En pause tant que Textus est en arrière-plan ; la synchro reprend à votre retour.",
-      "contentFolder": "Ce dossier a été ouvert sans l’accès à tous les fichiers : il ne peut pas être synchronisé. Autorisez Textus à accéder à tous les fichiers, puis rouvrez le dossier."
+      "contentFolder": "Ce dossier a été ouvert sans l’accès à tous les fichiers : il ne peut pas être synchronisé. Autorisez Textus à accéder à tous les fichiers, puis rouvrez le dossier.",
+      "largestFile": "Plus gros fichier synchronisé",
+      "tooLargeFiles": "Plus de {1} Mo, non synchronisés sur cet appareil : {0}",
+      "doneTooLarge": "trop volumineux {0}",
+      "icloudFolder": "Ce dossier est dans iCloud Drive, qui le synchronise déjà : la synchro cloud n’est pas utile ici."
     },
     "de": {
       "name": "Cloud-Sync",
@@ -1439,7 +1467,11 @@
       "doneNotTrashed": "nicht in den Papierkorb gelegt {0}",
       "notTrashed": "Auf einem anderen Gerät gelöscht, aber dieses Gerät konnte sie nicht in den Papierkorb legen: Sie bleiben, wo sie sind, und die nächste Synchronisierung versucht es erneut",
       "pausedAway": "Pausiert, solange Textus im Hintergrund ist; geht weiter, sobald du zurückkommst.",
-      "contentFolder": "Dieser Ordner wurde ohne Zugriff auf alle Dateien geöffnet und kann daher nicht synchronisiert werden. Erlaube Textus den Zugriff auf alle Dateien und öffne den Ordner erneut."
+      "contentFolder": "Dieser Ordner wurde ohne Zugriff auf alle Dateien geöffnet und kann daher nicht synchronisiert werden. Erlaube Textus den Zugriff auf alle Dateien und öffne den Ordner erneut.",
+      "largestFile": "Größte synchronisierte Datei",
+      "tooLargeFiles": "Über {1} MB, auf diesem Gerät nicht synchronisiert: {0}",
+      "doneTooLarge": "zu groß {0}",
+      "icloudFolder": "Dieser Ordner liegt in iCloud Drive, das ihn bereits synchronisiert: Cloud-Sync brauchst du hier nicht."
     },
     "ru": {
       "name": "Облачная синхронизация",
@@ -1610,7 +1642,11 @@
       "doneNotTrashed": "не перемещено в корзину {0}",
       "notTrashed": "Удалены на другом устройстве, но это устройство не смогло переместить их в корзину: оставлены на месте, следующая синхронизация попробует снова",
       "pausedAway": "Приостановлено, пока Textus в фоне; продолжится, когда вы вернётесь.",
-      "contentFolder": "Эта папка открыта без доступа ко всем файлам, поэтому её нельзя синхронизировать. Разрешите Textus доступ ко всем файлам и откройте папку снова."
+      "contentFolder": "Эта папка открыта без доступа ко всем файлам, поэтому её нельзя синхронизировать. Разрешите Textus доступ ко всем файлам и откройте папку снова.",
+      "largestFile": "Наибольший синхронизируемый файл",
+      "tooLargeFiles": "Больше {1} МБ, не синхронизируются на этом устройстве: {0}",
+      "doneTooLarge": "слишком большие {0}",
+      "icloudFolder": "Эта папка в iCloud Drive, которая уже её синхронизирует: облачная синхронизация здесь не нужна."
     },
     "pt": {
       "name": "Sincronização na nuvem",
@@ -1781,7 +1817,11 @@
       "doneNotTrashed": "não movidos para a Lixeira {0}",
       "notTrashed": "Excluídos em outro dispositivo, mas este dispositivo não conseguiu movê-los para a Lixeira: ficam onde estão e a próxima sincronização tenta de novo",
       "pausedAway": "Em pausa enquanto o Textus está em segundo plano; continua quando você voltar.",
-      "contentFolder": "Esta pasta foi aberta sem acesso a todos os arquivos, por isso não pode ser sincronizada. Permita que o Textus acesse todos os arquivos e abra a pasta de novo."
+      "contentFolder": "Esta pasta foi aberta sem acesso a todos os arquivos, por isso não pode ser sincronizada. Permita que o Textus acesse todos os arquivos e abra a pasta de novo.",
+      "largestFile": "Maior arquivo sincronizado",
+      "tooLargeFiles": "Mais de {1} MB, não sincronizados neste dispositivo: {0}",
+      "doneTooLarge": "grandes demais {0}",
+      "icloudFolder": "Esta pasta está no iCloud Drive, que já a sincroniza: aqui a sincronização na nuvem não é necessária."
     }
   },
   "repository": "https://github.com/CatVinci-Studio/textus-plugins"

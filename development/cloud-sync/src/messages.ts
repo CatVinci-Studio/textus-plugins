@@ -39,6 +39,7 @@ export async function receive(host: Host, message: unknown) {
     config?: Partial<Config>;
     credentials?: ConnectionInput;
     options?: Partial<Config>;
+    path?: string;
   };
   const { api, settings, state } = host;
   try {
@@ -49,6 +50,13 @@ export async function receive(host: Host, message: unknown) {
     // From the sidebar's page: the form is on the plugin's own page.
     if (m.type === "openSettings") {
       await api.layout.openSettings();
+      return;
+    }
+    // A conflict copy the last sync made, and no other file.
+    if (m.type === "openConflict") {
+      const path = state.result?.conflicts.find((p) => p === m.path);
+      if (path && state.root)
+        await api.layout.open(`${state.root.replace(/[/\\]$/, "")}/${path}`);
       return;
     }
     if (m.type === "cancel") {

@@ -656,3 +656,51 @@ test("on a phone, a sync stops as Textus leaves and goes on, unasked, when it is
     await context.close();
   }
 });
+
+test("on a phone, the page is one column, offers the largest file, and opens a conflict copy from its list", async ({
+  browser,
+  baseURL,
+}) => {
+  const remote = new Remote();
+  const desk = await device(browser, baseURL!, remote, {
+    "/work/notes/note.md": "base",
+  });
+  const context = await browser.newContext({ baseURL, ...PHONE });
+  const page = await context.newPage();
+  try {
+    const panel = await open(page, remote, {}, "en", onPhones);
+    // One field a line, as wide as the page, and nothing wider.
+    const field = (await panel.locator("#account").boundingBox())!;
+    const form = (await panel.locator("#fields").boundingBox())!;
+    expect(field.width).toBeGreaterThan(form.width * 0.8);
+    const [content, view] = await panel
+      .locator("body")
+      .evaluate((body) => [body.scrollWidth, body.clientWidth]);
+    expect(content).toBeLessThanOrEqual(view);
+    await configure(page, "webdav");
+    await expect(panel.locator("#maxFileMiB-name")).toHaveText("32 MB");
+    await configure(desk.page, "webdav");
+    await sync(desk.page);
+    await sync(page);
+    for (const [p, text] of [
+      [desk.page, "edit on the computer"],
+      [page, "edit on the phone"],
+    ] as const)
+      await p.evaluate((text) => {
+        (window as unknown as { __devFs: Record<string, string> }).__devFs[
+          "/work/notes/note.md"
+        ] = text;
+      }, text);
+    await sync(desk.page);
+    await sync(page);
+    const copy = panel.locator("#results .tx-list-row");
+    await expect(copy).toHaveText(/^Sync conflicts\/note \(\w{8}\)\.md$/);
+    await copy.click();
+    await expect(
+      page.locator('[data-active-tab="true"] .ProseMirror'),
+    ).toHaveText("edit on the computer");
+  } finally {
+    await context.close();
+    await desk.context.close();
+  }
+});
