@@ -5,28 +5,55 @@ body {
 body {
   display: flex;
   flex-direction: column;
+  container-type: inline-size;
 }
-/* A tab view's bar (design-language.md 5.4): Textus's own controls. */
-#bar,
-#find-bar {
+/* A tab view's bar (design-language.md 5.4): Textus's own controls. One
+   row: short of room, Edit as Markdown goes into the ⋯ menu; in a phone's
+   width find takes a row of its own, as in PDF Viewer. */
+#bar {
   flex: none;
+  flex-wrap: nowrap;
+  row-gap: var(--space-1);
   min-height: var(--bar-height);
   padding: var(--space-1) var(--space-3);
   border-bottom: 1px solid var(--ui-border);
-  flex-wrap: wrap;
-  row-gap: var(--space-1);
 }
-/* The field gives way first in a narrow island. */
-#find-bar .tx-find {
-  flex: 1 1 auto;
+#bar > :not(#find-box) {
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+#find-box {
+  flex: 0 1 auto;
   min-width: 0;
 }
-#find-bar .tx-input {
+#find-input {
   flex: 1 1 auto;
   min-width: 0;
   width: auto;
   max-width: var(--find-field-width);
   min-height: var(--control-height-sm);
+}
+#bar > #more,
+#bar[data-fit="compact"] > #edit {
+  display: none;
+}
+#bar[data-fit="compact"] > #more {
+  display: inline-flex;
+}
+@container (max-width: 22em) {
+  #bar {
+    flex-wrap: wrap;
+  }
+  #find-box {
+    order: 9;
+    flex: 1 1 100%;
+  }
+  #bar > #edit {
+    display: none;
+  }
+  #bar > #more {
+    display: inline-flex;
+  }
 }
 #page,
 #find-count {

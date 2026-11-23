@@ -5,16 +5,22 @@
   const $ = (id) => document.getElementById(id);
   const pages = $("pages");
   $("edit").textContent = t("edit");
-  $("edit").onclick = () => api.postMessage({ type: "edit" });
+  const edit = () => api.postMessage({ type: "edit" });
+  $("edit").onclick = edit;
+  // A narrow bar keeps Edit as Markdown in this menu (data-fit-steps).
+  $("more").onclick = async () => {
+    if ((await api.menu([{ label: t("edit"), value: "edit" }], $("more"))) === "edit") edit();
+  };
   for (const [id, key] of [
     ["zoom-out", "zoomOut"],
     ["zoom-in", "zoomIn"],
     ["find-open", "find"],
-    ["find-close", "closeFind"],
+    ["more", "more"],
   ])
     for (const attr of ["aria-label", "title"])
       $(id).setAttribute(attr, t(key));
   $("find-input").placeholder = t("find");
+  $("find-input").setAttribute("aria-label", t("find"));
 
   // Zoom: the pages scaled as a whole, from 50% to 200%. They open fitted
   // to the tab's width (never above 100%) until the reader zooms.
@@ -147,12 +153,14 @@
     $("find-count").textContent = t("findCount", current + 1, hits.length);
   }
   function openFind() {
-    $("find-bar").hidden = false;
+    $("find-box").hidden = false;
     $("find-input").focus();
     $("find-input").select();
   }
   function closeFind() {
-    $("find-bar").hidden = true;
+    $("find-box").hidden = true;
+    $("find-input").value = "";
+    clearTimeout(typing);
     clearHits();
     $("find-count").textContent = "";
   }
@@ -165,8 +173,8 @@
     if (event.key === "Enter") step(event.shiftKey ? -1 : 1);
     if (event.key === "Escape") closeFind();
   });
-  $("find-open").onclick = openFind;
-  $("find-close").onclick = closeFind;
+  $("find-open").onclick = () =>
+    $("find-box").hidden ? openFind() : closeFind();
   document.addEventListener("keydown", (event) => {
     const mod = event.metaKey || event.ctrlKey;
     if (mod && event.key.toLowerCase() === "f") {
