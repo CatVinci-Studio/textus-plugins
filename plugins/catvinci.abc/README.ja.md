@@ -23,15 +23,15 @@ C D E F | G A B c |
 
 ## 更新履歴
 
-- **0.3.4** - パッケージに、同梱しているライブラリとそのライセンスの一覧を添えました。
-- **0.3.3** - ブロックが折りたたまれていた間（スマートフォン）に描いた図は、開くと幅に合わせて描き直されます。
-- **0.3.2** - 楽譜全体を縮めず、小節を列の幅で折り返すように。音符をクリックしても赤くならないように。`check_abc` が完全なモード名、任意の音価、`+:` 行、`` ` `` と `$` を受け付けるように。`height=` を廃止。
-- **0.3.1** - 紹介ページを書き直しました。何をするかを一文で示し、できることと各バージョンの変更を載せています。
-- **0.3.0** - Textus AI が `abc` ブロックを書く前に検査できるように（`check_abc`）。
-- **0.2.0** - 音符がテーマの文字色に合わせて描かれるように。Textus 1.3.2 が必要。
-- **0.1.3** - Textus で名前が変わった文書の色を使うように。
-- **0.1.2** - 書き出した画像が楽譜の幅と高さを保つように。
-- **0.1.0-0.1.1** - 最初の版：`abc` ブロックをソースの下に描画、`height=`、書き出しでは画像に。ストアページとアイコン。
+- **0.3.4** - Its package lists the libraries it carries, with their licenses.
+- **0.3.3** - A chart drawn while its block was folded (a phone) fits once the block opens, instead of keeping its old size.
+- **0.3.2** - Bars wrap to the column instead of the whole score shrinking; clicking a note no longer turns it red; `check_abc` accepts full mode names, any note length, `+:` lines, `` ` `` and `$`; `height=` is gone.
+- **0.3.1** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
+- **0.3.0** - Textus AI can check an `abc` block before writing it (`check_abc`).
+- **0.2.0** - The notes follow the theme's text color; needs Textus 1.3.2.
+- **0.1.3** - Uses Textus's renamed document colors.
+- **0.1.2** - Exported pictures keep the music's width and height.
+- **0.1.0-0.1.1** - First versions: `abc` blocks drawn under their source, `height=`, pictures in exports; store page and icon.
 
 <!-- ai-tools -->
 ## Textus AI のツール

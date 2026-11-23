@@ -13,15 +13,15 @@
 
 ## Изменения
 
-- **0.2.8** - В пакет добавлен список входящих в него библиотек и их лицензий.
-- **0.2.7** - Страница сама следует языку Textus. Нужен Textus 1.4.3.
-- **0.2.6** - Кнопки и клавиши масштаба меняют его в 1,25 раза, как в других просмотрщиках.
-- **0.2.5** - У кнопки закрытия строки поиска есть название для экранных дикторов и всплывающая подсказка.
-- **0.2.4** - Открывается по ширине вкладки; щипок или Ctrl+колесо (⌘ на Mac) масштабирует страницы; страница шире вкладки прокручивается до обоих краёв; в узкой вкладке панели переносятся, а масштаб сохраняется при смене языка.
-- **0.2.3** - Панель в едином порядке Textus: что показано, затем поиск и масштаб.
-- **0.2.2** - Панели, списки и элементы управления теперь из Textus, растут вместе с интерфейсом и следуют любой теме; нужен Textus 1.3.12.
-- **0.2.1** - Его страница теперь одной фразой говорит, что он делает, что умеет и что менялось в каждой версии.
-- **0.2.0** - Рисуется собственными элементами Textus и оттенками темы; вкладка переключается вместе с языком интерфейса. Нужен Textus 1.3.2.
-- **0.1.3** - Использует переменные дизайна Textus 1.3.
-- **0.1.2** - Нечитаемый файл сообщает об этом; поиск пропускает стили документа.
-- **0.1.0-0.1.1** - Первые версии: файлы .docx во вкладке с вёрсткой Word, текущая страница, поиск, масштаб и «Редактировать как Markdown».
+- **0.2.8** - Its package lists the libraries it carries, with their licenses.
+- **0.2.7** - The page follows Textus's language by itself. Needs Textus 1.4.3.
+- **0.2.6** - Zoom buttons and keys step by 1.25×, as the other viewers do.
+- **0.2.5** - The find bar's close button is named for screen readers and shows a tooltip.
+- **0.2.4** - Opens fitted to the tab's width; a pinch or Ctrl+wheel (⌘ on a Mac) zooms the pages; a page wider than the tab scrolls to both edges; the bars wrap in a narrow tab and the zoom is kept when the language changes.
+- **0.2.3** - Its bar keeps Textus's one order: what it shows, then find and zoom.
+- **0.2.2** - Its bars, lists and controls are Textus's own, grow with the interface and follow every theme; needs Textus 1.3.12.
+- **0.2.1** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
+- **0.2.0** - Drawn with Textus's own controls and theme tones; the tab follows the interface language when it changes. Needs Textus 1.3.2.
+- **0.1.3** - Uses Textus 1.3's design variables.
+- **0.1.2** - A file that can't be read says so; find skips the document's styles.
+- **0.1.0-0.1.1** - First versions: .docx files in a tab as Word lays them out, the page you are on, find, zoom and Edit as Markdown.

@@ -12,14 +12,14 @@
 
 ## 更新紀錄
 
-- **0.2.4** - 兩篇文件並排開啟時，兩篇都顯示標題編號，不再只有正在輸入的那篇有。
-- **0.2.3** - 開頭屬性和程式碼區塊不會再被誤加編號；匯出時也和編輯器一樣，只替最上層的標題編號。
-- **0.2.2** - 介紹頁重寫：一句話說明它做什麼，再講它能做的事，並列出每個版本的更新。
-- **0.2.1** - 手動編過號的文件，或開頭屬性寫了 `number headings: off` 的文件，不再顯示編號。
-- **0.2.0** - Textus AI 可以把標題編號寫進 Markdown，或拿掉編號。
-- **0.1.3** - 標明執行平台：電腦、iPhone 和 iPad。
-- **0.1.2** - 編號從文件本身最高一層的標題開始，不再需要設定。
-- **0.1.0-0.1.1** - 最初的版本：寫作時在標題前顯示編號，匯出 HTML 和 PDF 時也一併帶上。
+- **0.2.4** - With two documents open side by side, both show their heading numbers, not only the one you are typing in.
+- **0.2.3** - Front matter and code blocks no longer get numbers by mistake, and exports number only top-level headings, like the editor.
+- **0.2.2** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
+- **0.2.1** - No numbers on a document numbered by hand, or one whose front matter says `number headings: off`.
+- **0.2.0** - Textus AI can write heading numbers into Markdown, or take them out.
+- **0.1.3** - Says where it runs: the desktop, iPhone and iPad.
+- **0.1.2** - Numbering starts at the document's own top heading level instead of a setting.
+- **0.1.0-0.1.1** - First versions: numbers before headings while writing, and in HTML and PDF exports.
 
 <!-- ai-tools -->
 ## Textus AI 工具

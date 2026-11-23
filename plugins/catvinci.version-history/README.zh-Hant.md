@@ -17,20 +17,20 @@
 
 ## 更新紀錄
 
-- **0.5.0** - 從 Textus 1.4.4 起，其他外掛保存的文件版本（例如雲端同步的）也會列出，依來源分組，可以和其他版本一樣比較、還原。
-- **0.4.1** - 「還原」按鈕改短，任何語言下都能放進窄側邊欄。
-- **0.4.0** - 版本依時間越舊留得越稀，不再只留最近 50 個；相同的內容只存一份；文件刪除一個月後清掉它的版本。任意兩版比較並按字詞標出修改；只還原某一處修改；為版本命名、釘選；Textus 之外的修改也留版本。0.3 的版本會自動搬過來。需要 Textus 1.4.3。桌面版在 Git 資料夾中，文件的提交顯示在版本下方。
-- **0.3.8** - 文件一打開就第一次儲存時，儲存前的內容不再遺失。
-- **0.3.7** - 文件第一次儲存前的內容也會留作一個版本；文件重新命名或移動後，它的版本跟著走。
-- **0.3.6** - 輸入時的自動儲存只寫入最新的版本，不再把文件的所有版本重寫一遍，長文件儲存時輕快得多。
-- **0.3.5** - 自動儲存更新版本時，展開的版本不再收合，「還原」總能找到它。儲存空間滿了會先騰出其他文件的舊版本，存不下時面板會提示。版本列可以用鍵盤操作；側欄窄時按鈕會換行。
-- **0.3.4** - 側欄裡的面板不再單獨顯示標題，和側欄其他標籤一致。 說明和空狀態文字更簡短。 側邊欄面板和頁面依 Textus 1.3.13 的版面調整。
+- **0.5.0** - From Textus 1.4.4 the versions other plugins keep of a document - Cloud Sync's - are listed too, each under its source's name, to compare and restore like the rest.
+- **0.4.1** - Restore is one word, so its button fits a narrow sidebar in every language.
+- **0.4.0** - Versions thin out with age instead of the last 50 going; each text is stored once; a deleted document's versions go a month later. Compare any two versions, word by word; take back one change; name and pin versions; changes made outside Textus are kept. Versions from 0.3 move over by themselves. Needs Textus 1.4.3. In a Git folder on the desktop, the document's commits show under its versions.
+- **0.3.8** - The text from before the first save is no longer lost when that save comes right as the document opens.
+- **0.3.7** - The text a document had before its first save is kept as a version too, and a document's versions follow it when it is renamed or moved.
+- **0.3.6** - Autosave while you type writes only the newest version, not every version of the document, so long documents save with much less work.
+- **0.3.5** - An open version stays open while autosave updates it, and Restore always finds it. When storage is full, older versions of other documents make room, and the panel says when a save couldn't be kept. Rows work from the keyboard; buttons wrap in a narrow sidebar.
+- **0.3.4** - In the sidebar the panel draws no title of its own, as the sidebar's other tabs. Shorter help and empty-state text. Its sidebar panel and page follow Textus 1.3.13's layout.
 - **0.3.3** - Its bars, lists and controls are Textus's own, grow with the interface and follow every theme; needs Textus 1.3.12.
-- **0.3.2** - 介紹頁重寫：一句話說明它做什麼，再講它能做的事，並列出每個版本的更新。
-- **0.3.1** - 只更新了與其他外掛共用的路徑程式碼，使用上沒有變化。
-- **0.3.0** - Textus AI 可以列出文件的版本並比較（`list_versions`、`diff_versions`）。
-- **0.2.0** - 改用 Textus 自己的控制項。需要 Textus 1.3.2。
-- **0.1.0-0.1.3** - 最初的版本：每次儲存留一個版本、查看之後的改動、還原時當作修改由你接受或拒絕、以新文件開啟、間隔很近的儲存算一個版本、依日期分組、空間滿時先刪最舊的版本。
+- **0.3.2** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
+- **0.3.1** - Only the path code shared with other plugins changed; nothing changes in use.
+- **0.3.0** - Textus AI can list a document's versions and compare them (`list_versions`, `diff_versions`).
+- **0.2.0** - Textus's own controls. Needs Textus 1.3.2.
+- **0.1.0-0.1.3** - First versions: a version on each save, what changed since, restore as an edit to accept or reject, open as a new document, saves close together kept as one, versions grouped by day, the oldest dropped when storage is full.
 
 <!-- ai-tools -->
 ## Textus AI 工具

@@ -22,14 +22,14 @@ Obsidian: в хранилище Obsidian читается и его `.obsidian.v
 
 ## Изменения
 
-- **0.2.9** - Нужен Textus 1.3.0-beta.8 или новее — первая версия, где есть всё, что он использует.
-- **0.2.8** - Только для компьютера: экранная клавиатура телефона печатает буквы в текст, а не выполняет их как клавиши Vim.
-- **0.2.7** - Режим в строке состояния открывает меню, которое выключает Vim; `.obsidian.vimrc` перечитывается, когда вы возвращаетесь в Textus; выход из визуального режима через **:** работает всегда.
-- **0.2.6** - Короче подсказки и тексты пустых состояний.
-- **0.2.5** - Его код разделён на небольшие файлы по задачам; в работе ничего не меняется.
-- **0.2.4** - Его страница теперь одной фразой говорит, что он делает, что умеет и что менялось в каждой версии.
-- **0.2.3** - Читает `.obsidian.vimrc` хранилища Obsidian; повторная привязка тех же клавиш заменяет прежнюю.
-- **0.2.2** - **zz**, **zt** и **zb** ставят строку с курсором в середину, вверх или вниз окна.
-- **0.2.1** - Указано, где работает: компьютер, iPhone и iPad.
-- **0.2.0** - **:** открывает палитру команд с командами Vim в начале; flash показывает метки после одной буквы; обычный режим на Mac печатает латиницей.
-- **0.1.0-0.1.1** - Первые версии: режимы, перемещения, операторы, счётчики, повтор точкой, flash с **ds**, **cs** и **ys**, командная строка (**:w**, **:q**, **:wq**, **:12**), привязки клавиш как в vimrc и клавиши регистра.
+- **0.2.9** - Needs Textus 1.3.0-beta.8 or later, the first with everything it uses.
+- **0.2.8** - Desktop only: a phone's on-screen keyboard types its letters into the text instead of running them as Vim keys.
+- **0.2.7** - The status bar's mode opens a menu that turns Vim off; `.obsidian.vimrc` is read again when you come back to Textus; leaving visual mode with **:** always works.
+- **0.2.6** - Shorter help and empty-state text.
+- **0.2.5** - Its code is split into smaller files by what each part does; nothing changes in use.
+- **0.2.4** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
+- **0.2.3** - Reads an Obsidian vault's `.obsidian.vimrc`; mapping the same keys again replaces the earlier mapping.
+- **0.2.2** - **zz**, **zt** and **zb** bring the caret's line to the middle, top or bottom of the window.
+- **0.2.1** - Says where it runs: the desktop, iPhone and iPad.
+- **0.2.0** - **:** opens the command palette with Vim's commands first; flash shows its labels after one letter; normal mode types Roman on a Mac.
+- **0.1.0-0.1.1** - First versions: modes, motions, operators, counts, dot repeat, flash with **ds**, **cs** and **ys**, the command line (**:w**, **:q**, **:wq**, **:12**), vimrc key mappings and the case keys.

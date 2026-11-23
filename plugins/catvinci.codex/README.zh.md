@@ -14,7 +14,7 @@ Textus 用 `npx` 运行 Agent Client Protocol 适配器 `@agentclientprotocol/co
 
 ## 更新日志
 
-- **0.1.3** - 在浏览器里用 ChatGPT 登录（以前会先试 API key，然后停在那里），从 Read-only 模式开始。需要 Textus 1.4.3，Codex 自己写进文件的改动也会标出来。
-- **0.1.2** - 需要 Textus 1.4.2 或更新版本，以使用新的助手界面。
-- **0.1.1** - Codex 回答时，其他插件（比如桌宠）能知道是哪个 AI 在工作。
-- **0.1.0** - 第一版：在 Textus AI 里用 Codex。
+- **0.1.3** - Signs in with ChatGPT in the browser (before, it tried an API key and stopped there), and starts in Read-only. Needs Textus 1.4.3, which also marks the changes Codex writes itself.
+- **0.1.2** - Needs Textus 1.4.2 or later, for its new agent views.
+- **0.1.1** - While Codex answers, other plugins (such as the desk pet) know which AI is at work.
+- **0.1.0** - First version: Codex in Textus AI.

@@ -37,25 +37,25 @@ kanban-plugin: board
 
 ## Cambios
 
-- **0.4.14** - En el teléfono y la tableta, mantén pulsada una tarjeta un momento para arrastrarla dentro de una lista o a otra; en el borde de la pantalla de un teléfono el tablero pasa a la lista siguiente, y la página ya no se desplaza bajo la tarjeta. Si la mantienes pulsada y la sueltas sin moverla, se abre su menú. Cerca del borde del tablero, este se desplaza, y una tarjeta soltada debajo de una lista corta entra en esa lista.
-- **0.4.13** - El menú ⋯ de una tarjeta (o un clic derecho) la mueve a otra lista o la elimina, con Deshacer, en lugar de una × que eliminaba al instante y se veía siempre en pantallas táctiles. Una lista nueva empieza con su nombre en edición. En un teléfono una lista ocupa la pantalla y al deslizar se detiene en la siguiente; en una pestaña estrecha, Editar como Markdown pasa al menú ⋯.
-- **0.4.12** - Las tarjetas y listas se apartan al mismo ritmo que el resto de Textus.
-- **0.4.11** - Una lista arrastrada por su cabecera se eleva y se desliza por el tablero como las pestañas de Textus; Esc la devuelve.
-- **0.4.10** - La casilla de una tarjeta queda centrada en su primera línea con cualquier tamaño de texto.
-- **0.4.9** - Hacer clic derecho en una tarjeta o en el nombre de una lista mientras la editas (para pegar) ya no termina la edición, y el Intro de un método de entrada en iPhone y iPad elige palabras en lugar de guardar. La página sigue el idioma de Textus por sí sola. Requiere Textus 1.4.3.
-- **0.4.8** - Un tablero con saltos de línea de Windows (CRLF) los conserva, y un tablero cambiado en otro sitio mientras lo editas muestra ese cambio en vez de sobrescribirlo, y lo avisa. La descripción de la tienda empieza ahora por lo que hace el plugin.
-- **0.4.7** - Una línea en blanco dentro de una tarjeta ya no la divide, y Escape ya no deja una tarjeta vacía. La IA no toca las notas normales y el tablero cabe en paneles estrechos.
-- **0.4.6** - El tablero se difumina en los bordes cuando las listas pasan de la ventana.
-- **0.4.5** - Una tarjeta o lista arrastrada se queda justo bajo el puntero y se eleva como todo lo que se arrastra en Textus. Sus barras, listas y controles son ahora los de Textus, crecen con la interfaz y siguen cada tema; necesita Textus 1.3.12.
-- **0.4.4** - Arrastrar una tarjeta o una lista ya no selecciona texto por el camino.
-- **0.4.3** - Su página dice ahora en una frase qué hace, qué puede hacer y qué cambió en cada versión.
-- **0.4.2** - Tarjetas y listas siguen al puntero al arrastrarlas, y las demás se apartan. Requiere Textus 1.3.10.
-- **0.4.1** - Conserva la marca que el Kanban de Obsidian pone en una lista de terminadas.
-- **0.4.0** - Ahora se llama Tablero de tareas (antes Kanban). Los tableros nuevos son archivos .md normales con `kanban-plugin` en su front matter, como los escribe Obsidian; los .kanban.md siguen abriéndose.
-- **0.3.1** - Textus AI distingue los tableros de las tareas escritas en documentos.
-- **0.3.0** - Textus AI puede listar y leer tableros, añadir tarjetas y moverlas.
-- **0.2.0** - Controles y menús propios de Textus.
-- **0.1.0-0.1.3** - Primeras versiones: tableros en Markdown, tarjetas arrastradas entre listas, listas movidas por su cabecera, [[enlaces]] que abren notas, Editar como Markdown, cambios hechos en otro sitio mostrados al momento, ajustes de Obsidian conservados.
+- **0.4.14** - On a phone or tablet, hold a card a moment to drag it within a list or to another; at the screen's edge on a phone the board turns to the next list, and the page no longer scrolls under the card. Held and let go without moving, a card opens its menu. Dragged near the board's edge, the board scrolls, and a card let go below a short list goes into that list.
+- **0.4.13** - A card's ⋯ menu (or a right-click) moves it to another list or deletes it, with Undo, instead of an × that deleted at once - always showing on a touch screen. A new list starts with its name being written. On a phone a list fills the screen and a swipe settles on the next; in a narrow tab, Edit as Markdown goes into the ⋯ menu.
+- **0.4.12** - Cards and lists make way at the pace of the rest of Textus.
+- **0.4.11** - A list dragged by its head lifts and slides along the board as Textus's own tabs do; Esc puts it back.
+- **0.4.10** - A card's checkbox sits on the middle of its first line at any text size.
+- **0.4.9** - Right-clicking a card or list name while you edit it (to paste) no longer ends the edit, and an input method's Enter on iPhone and iPad picks its words instead of saving. The page follows Textus's language by itself. Needs Textus 1.4.3.
+- **0.4.8** - A board with Windows (CRLF) line endings keeps them, and a board changed while you edit (saved as Markdown in Textus, or by a plugin) shows that change instead of writing over it, and says so. The store description now opens with what the plugin does.
+- **0.4.7** - A blank line inside a card no longer splits it, and Escape no longer leaves an empty card. The AI leaves ordinary notes alone, and the board fits narrow panels.
+- **0.4.6** - The board fades at its edges where lists run past the window.
+- **0.4.5** - A dragged card or list stays right under the pointer and lifts like everything dragged in Textus. Its bars, lists and controls are Textus's own, grow with the interface and follow every theme; needs Textus 1.3.12.
+- **0.4.4** - Dragging a card or a list no longer selects text on the way.
+- **0.4.3** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
+- **0.4.2** - Cards and lists follow the pointer as you drag, the others making way. Needs Textus 1.3.10.
+- **0.4.1** - Keeps the mark Obsidian's Kanban puts on a done list.
+- **0.4.0** - Renamed Task Board (was Kanban). New boards are plain .md files with `kanban-plugin` in their front matter, as Obsidian writes them; .kanban.md boards still open.
+- **0.3.1** - Textus AI tells boards apart from tasks written in documents.
+- **0.3.0** - Textus AI can list and read boards, add cards and move them.
+- **0.2.0** - Textus's own controls and menus.
+- **0.1.0-0.1.3** - First versions: boards as Markdown, cards dragged between lists, lists moved by their head, [[links]] that open notes, Edit as Markdown, changes made elsewhere shown at once, Obsidian's settings kept.
 
 <!-- ai-tools -->
 ## Herramientas para Textus AI

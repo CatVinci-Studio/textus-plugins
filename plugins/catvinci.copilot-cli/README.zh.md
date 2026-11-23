@@ -12,6 +12,6 @@ Autopilot 会自己一直做下去，用掉更多高级请求次数。Textus 固
 
 只在电脑上可用，需要 Textus 1.4.3 或更新版本。它只要一个权限：在这台电脑上启动这个助手。
 
-## 更新
+## 更新日志
 
-- **0.1.0** - 第一个版本：在 Textus AI 里用 GitHub Copilot CLI。
+- **0.1.0** - First version: GitHub Copilot CLI in Textus AI.

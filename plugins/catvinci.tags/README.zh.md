@@ -15,15 +15,15 @@
 
 ## 更新日志
 
-- **0.3.6** - 名字排序改用 Textus 自带的顺序，不再自带一份，安装包更小。
-- **0.3.5** - 切换 Textus 的语言后，筛选框和空列表提示会跟着变。需要 Textus 1.4.3。
-- **0.3.4** - 重命名不再改动 `[[#标题]]` 链接；`~~~` 代码块里的 ``` 行不再被当成代码块结束。
-- **0.3.3** - 标签不分大小写，和数量的算法一致；重命名时嵌套标签一起改，不再改动链接地址或 front matter 里 `project-x` 这样的标签；拒绝 `a/`、`a//b` 这样的标签名。
-- **0.3.2** - 介绍页重写：一句话说明它做什么，再讲它能做的事，并列出每个版本的更新。
-- **0.3.1** - 用得一样多的标签按自然顺序排列（「Week2」在「Week10」前面）。
-- **0.3.0** - 嵌套标签显示成树，数量算上子标签的笔记；Textus AI 查标签时也会找到它的子标签。
-- **0.2.0** - Textus AI 可以列出你的标签和带某个标签的笔记（`list_tags`、`notes_with_tag`）。
-- **0.1.0-0.1.1** - 最初的版本：标签和使用数量、查看标签下的笔记、在所有笔记里重命名与合并；支持桌面和 iOS。
+- **0.3.6** - Sorts names with Textus's own order instead of a copy of it, so the package is smaller.
+- **0.3.5** - The filter field and empty message follow Textus's language when you switch it. Needs Textus 1.4.3.
+- **0.3.4** - Renaming leaves `[[#Heading]]` links alone, and a ``` line inside a `~~~` block no longer ends the code.
+- **0.3.3** - Tags match in any letter case, as their counts do; renaming a tag moves its nested tags too and no longer touches link addresses or front-matter tags like `project-x`; tags like `a/` or `a//b` are refused.
+- **0.3.2** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
+- **0.3.1** - Tags used equally often are listed in natural name order ("Week2" before "Week10").
+- **0.3.0** - Nested tags form a tree, each counting the notes of the tags under it; Textus AI finds a tag's nested tags too.
+- **0.2.0** - Textus AI can list your tags and the notes with a tag (`list_tags`, `notes_with_tag`).
+- **0.1.0-0.1.1** - First versions: tags with their counts, a tag's notes, renaming and merging in every note; runs on desktop and iOS.
 
 <!-- ai-tools -->
 ## Textus AI 工具

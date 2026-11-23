@@ -46,21 +46,21 @@ Le plugin lit les documents du dossier pour trouver leurs tâches, et n’écrit
 
 ## Changements
 
-- **0.4.7** - Le champ de filtre et le message vide suivent la langue de Textus quand vous la changez. Nécessite Textus 1.4.3.
-- **0.4.6** - Le bloc de tâches garde une marge à l'intérieur de son cadre, comme les autres blocs.
-- **0.4.5** - Une tâche que l'IA ajoute sous un titre n'atterrit plus dans un bloc de code, et « Placer les tâches terminées en fin de liste » fonctionne dans les notes aux fins de ligne Windows (CRLF).
-- **0.4.4** - Une requête de tâches dans un document s’affiche à la taille du texte de l’interface : une colonne plus large en montre davantage au lieu d’agrandir le texte (Textus 1.4.1).
-- **0.4.3** - Les tâches contenant un commentaire HTML se cochent désormais, et une coche refusée en donne la raison. `group by status` trie dans le bon ordre, les blocs de tâches tiennent dans les panneaux étroits, les échéances ressemblent à celles de la barre latérale et la frappe reste plus légère.
-- **0.4.2** - Textes d'aide et d'état vide plus courts.
-- **0.4.1** - Ses barres, listes et contrôles sont désormais ceux de Textus, grandissent avec l’interface et suivent chaque thème ; nécessite Textus 1.3.12. Nouveau réglage **Placer les tâches terminées en fin de liste** : une tâche cochée passe après les tâches ouvertes (demande une fois de lire et modifier le document).
-- **0.4.0** - Utilise les dates intégrées à Textus 1.3.10, désormais nécessaire.
-- **0.3.1** - Contient le code de dates partagé mis à jour ; rien d’autre ne change.
-- **0.3.0** - Obsidian Tasks : `[/]` et `[-]`, les champs de tâche, les dates de fin, les tâches répétées et les blocs de requête `tasks` ; les tableaux marqués `kanban-plugin` sont exclus de la liste.
-- **0.2.1** - Les cartes d’un tableau Kanban (`nom.kanban.md`) ne sont plus listées.
-- **0.2.0** - Textus AI peut lister, ajouter et cocher des tâches.
-- **0.1.3** - La liste suit la langue de l’interface quand elle change.
-- **0.1.2** - Échéances en heure locale ; totaux avec les formes du pluriel de chaque langue.
-- **0.1.0-0.1.1** - Premières versions : toutes les tâches du dossier dans une liste latérale, à cocher ou à ouvrir, avec filtre, échéances et Bientôt dues.
+- **0.4.7** - The filter field and empty message follow Textus's language when you switch it. Needs Textus 1.4.3.
+- **0.4.6** - The tasks block keeps a gap inside its frame, as other blocks do.
+- **0.4.5** - The AI's new task under a heading never lands inside a code block, and **Move finished tasks to the end of their list** works in Windows (CRLF) notes.
+- **0.4.4** - A task query in a document draws at the interface's text size, so a wider column shows more of it rather than larger text (Textus 1.4.1).
+- **0.4.3** - Ticking a task with an HTML comment in it now works, and a refused tick tells you why. `group by status` sorts in the right order, task blocks fit narrow panes, due dates look like the sidebar's, and typing stays lighter.
+- **0.4.2** - Shorter help and empty-state text.
+- **0.4.1** - Its bars, lists and controls are Textus's own, grow with the interface and follow every theme; needs Textus 1.3.12. A new setting, **Move finished tasks to the end of their list**: a task ticked in a document or in the list goes after the open ones (it asks once to read and edit the document in front).
+- **0.4.0** - Uses the dates built into Textus 1.3.10, which it now needs.
+- **0.3.1** - Ships the updated shared date code; nothing else changed.
+- **0.3.0** - Obsidian Tasks: `[/]` and `[-]`, the task fields, done dates, repeating tasks and `tasks` query blocks; boards marked with `kanban-plugin` are left out of the list.
+- **0.2.1** - Cards on a Kanban board (`name.kanban.md`) are no longer listed.
+- **0.2.0** - Textus AI can list, add and tick off tasks.
+- **0.1.3** - The list follows the interface language when it changes.
+- **0.1.2** - Due dates in local time; counts in each language's plural forms.
+- **0.1.0-0.1.1** - First versions: every task in the folder in a sidebar list, ticked off or opened from there, with a filter, due dates and Due soon.
 
 <!-- ai-tools -->
 ## Outils pour Textus AI

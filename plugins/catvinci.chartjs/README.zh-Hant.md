@@ -27,15 +27,15 @@
 
 ## 更新紀錄
 
-- **0.3.4** - 安裝包內附上所帶第三方函式庫的清單和授權。
-- **0.3.3** - 區塊摺疊時（手機上）畫的圖，展開後會重新配合寬度，不再保持原本的大小。
-- **0.3.2** - 面板變窄或變寬時圖表會重新繪製以符合寬度；標籤跟隨主題字型和文字大小；錯誤提示重新顯示為紅色。
-- **0.3.1** - 介紹頁重寫：一句話說明它做什麼，再講它能做的事，並列出每個版本的更新。
-- **0.3.0** - Textus AI 可以在寫入 `chartjs` 區塊前先檢查它（`check_chartjs`）。
-- **0.2.0** - 資料系列採用佈景主題的顏色；需要 Textus 1.3.2。
-- **0.1.3** - 改用 Textus 重新命名後的文件顏色。
-- **0.1.2** - 輸入時圖表一律顯示最新的內容。
-- **0.1.0-0.1.1** - 最初的版本：`chartjs` 區塊畫在原始碼下方、支援 `height=`、匯出時轉為圖片；商店頁面與圖示。
+- **0.3.4** - Its package lists the libraries it carries, with their licenses.
+- **0.3.3** - A chart drawn while its block was folded (a phone) fits once the block opens, instead of keeping its old size.
+- **0.3.2** - Charts redraw to fit a narrower or wider panel, labels follow the theme's font and text size, and the error line is red again.
+- **0.3.1** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
+- **0.3.0** - Textus AI can check a `chartjs` block before writing it (`check_chartjs`).
+- **0.2.0** - Series take the theme's colors; needs Textus 1.3.2.
+- **0.1.3** - Uses Textus's renamed document colors.
+- **0.1.2** - While you type, the chart always shows the latest text.
+- **0.1.0-0.1.1** - First versions: `chartjs` blocks drawn under their source, `height=`, pictures in exports; store page and icon.
 
 <!-- ai-tools -->
 ## Textus AI 工具

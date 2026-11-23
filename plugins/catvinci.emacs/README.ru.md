@@ -16,9 +16,9 @@
 
 ## Изменения
 
-- **0.1.6** - C-x C-s и C-x C-g снова работают в Windows и Linux. Строка состояния показывает Emacs, только когда клавиши действительно у него.
-- **0.1.5** - Короче подсказки и тексты пустых состояний.
-- **0.1.4** - Его страница теперь одной фразой говорит, что он делает, что умеет и что менялось в каждой версии.
-- **0.1.3** - Указано, где работает: компьютер и iPhone.
-- **0.1.2** - C-x больше не залипает; C-d и C-y не трогают буфер обмена и область.
-- **0.1.0-0.1.1** - Первые версии: перемещения, метка и область, kill ring с C-y и M-y, M-u M-l M-c, отмена и клавиши C-x; страница в магазине и значок.
+- **0.1.6** - C-x C-s and C-x C-g work again on Windows and Linux. The status bar shows Emacs only while it really has the keys.
+- **0.1.5** - Shorter help and empty-state text.
+- **0.1.4** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
+- **0.1.3** - Says where it runs: desktop and iPhone.
+- **0.1.2** - C-x no longer sticks; C-d and C-y leave the clipboard and the region alone.
+- **0.1.0-0.1.1** - First versions: moves, the mark and region, a kill ring with C-y and M-y, M-u M-l M-c, undo and C-x keys; store page and icon.

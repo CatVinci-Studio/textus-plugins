@@ -17,8 +17,8 @@
 
 ## 변경 내역
 
-- **0.1.4** - 필터 칸과 빈 목록 안내가 Textus 언어를 바꾸면 따라 바뀝니다. Textus 1.4.3이 필요합니다.
-- **0.1.3** - 각 항목 아래에 복사한 시각을 표시하고, 항목 사이에 구분선을 넣었습니다.
-- **0.1.2** - 패널의 지우기 버튼이 돌아왔습니다. 한 번에 기록을 비웁니다. 설명과 빈 상태 문구를 짧게 줄였습니다.
-- **0.1.1** - 소개 페이지를 새로 썼습니다. 무엇을 하는지 한 문장으로, 할 수 있는 일과 버전별 변경 내역을 담았습니다.
-- **0.1.0** - 첫 버전: 최근 30개의 복사 내용을 사이드바에 보여 주고, 누르면 넣고, 오른쪽 클릭으로 다시 복사하거나 제거합니다. Textus 1.3.10이 필요합니다.
+- **0.1.4** - The filter field and empty message follow Textus's language when you switch it. Needs Textus 1.4.3.
+- **0.1.3** - Each clip shows when it was copied, with a line between clips.
+- **0.1.2** - The panel's Clear button is back: one click empties the history. Shorter help and empty-state text.
+- **0.1.1** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
+- **0.1.0** - First version: the last 30 copies in the sidebar, put in with a click, copied again or removed with a right-click. Needs Textus 1.3.10.

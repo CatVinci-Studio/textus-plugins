@@ -39,19 +39,19 @@ La pestaña **Enlaces bidireccionales** de la barra lateral muestra qué enlaza 
 
 ## Cambios
 
-- **0.4.7** - Se quitó el código que quedaba para versiones de Textus en las que ya no funciona.
-- **0.4.6** - El campo de filtro y el mensaje vacío siguen el idioma de Textus al cambiarlo. Requiere Textus 1.4.3.
-- **0.4.5** - Las menciones sin enlazar se abren en la línea correcta y el estilo de enlace lo guarda el propio Textus (Textus 1.4.3).
-- **0.4.4** - Convertir enlaces deja intactos los enlaces de un bloque de código y convierte los que vienen después; Menciones sin enlace ya no muestra ni enlaza nombres en el front matter o en el código.
-- **0.4.3** - Los enlaces estándar a notas que aún no existen ahora aparecen en Enlaces salientes, los enlaces a encabezados de la misma nota ya no listan la propia nota y arrastrar un divisor ya no redibuja el panel.
-- **0.4.2** - Textos de ayuda y de estado vacío más breves. Su panel lateral y su página siguen el diseño de Textus 1.3.13.
-- **0.4.1** - En una nota sin enlaces todavía, [[ escribe un enlace estándar: el [[ que se escribía se tomaba por un enlace wiki que la nota ya tenía.
-- **0.4.0** - Enlaces nuevos: estándar o [[wiki]]… elige cómo escribe la carpeta los enlaces nuevos, y Convertir enlaces pasa los de una nota o de toda la carpeta de una forma a la otra; [[ escribe como la carpeta, un enlace estándar si nada dice otra cosa.
-- **0.3.1** - Su página dice ahora en una frase qué hace, qué puede hacer y qué cambió en cada versión.
-- **0.3.0** - completado de notas, encabezados y bloques con `[[`; incrustaciones con `![[`; el nombre pasa de Enlaces entrantes a Enlaces bidireccionales
-- **0.2.1** - la descripción dice "enlaces bidireccionales", para que la búsqueda de la tienda lo encuentre
-- **0.2.0** - una herramienta para Textus AI, `list_backlinks`
-- **0.1.0-0.1.1** - primeras versiones: menciones enlazadas y sin enlace con **Enlazar**, enlaces salientes y un filtro; se sugiere para documentos con enlaces wiki
+- **0.4.7** - Code kept for Textus versions it no longer runs on is gone.
+- **0.4.6** - The filter field and empty message follow Textus's language when you switch it. Needs Textus 1.4.3.
+- **0.4.5** - Unlinked mentions open on the right line, and Link Style is set by Textus itself (Textus 1.4.3).
+- **0.4.4** - The Convert Links commands leave links inside a code block alone and convert the ones after it, and Unlinked mentions no longer lists or links names in front matter or code.
+- **0.4.3** - Standard links to notes that don't exist yet now show under Outgoing links, a note's links to its own headings no longer list the note itself, and dragging a divider no longer redraws the panel.
+- **0.4.2** - Shorter help and empty-state text. Its sidebar panel and page follow Textus 1.3.13's layout.
+- **0.4.1** - In a note with no links yet, [[ writes a standard link: the [[ being typed was taken for a wiki link the note already had.
+- **0.4.0** - New Links: Standard or [[Wiki]]… chooses how the folder writes new links, and Convert Links turns a note's or the whole folder's links from one way into the other; [[ writes the folder's way, a standard link where nothing says otherwise.
+- **0.3.1** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
+- **0.3.0** - `[[` completion for notes, headings and blocks; `![[` embeds; renamed from Backlinks to Two-way Links
+- **0.2.1** - the description says "two-way links", so a store search finds it
+- **0.2.0** - a tool for Textus AI, `list_backlinks`
+- **0.1.0-0.1.1** - first versions: linked and unlinked mentions with **Link**, outgoing links and a filter; suggested for documents with wiki links
 
 <!-- ai-tools -->
 ## Herramientas para Textus AI

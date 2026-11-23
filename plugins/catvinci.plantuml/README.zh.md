@@ -28,13 +28,13 @@ Bob --> Alice : Hi!
 
 ## 更新日志
 
-- **0.2.6** - 安装包里附上所带第三方库的清单和许可。
-- **0.2.5** - 块折叠时（手机上）画的图，展开后会重新适配宽度，不再保持原来的大小。
-- **0.2.4** - `!theme` 主题可用；窄栏里不再留空白；服务器模式会显示 PlantUML 自己的错误，深色主题下用深色图。
-- **0.2.3** - 说明和空状态文字更简短。
-- **0.2.2** - 介绍页重写：一句话说明它做什么，再讲它能做的事，并列出每个版本的更新。
-- **0.2.1** - 打包更新后的公共图表页面，绘图效果不变。
-- **0.2.0** - 打包从主题取色的公共图表页面。需要 Textus 1.3.2。
-- **0.1.3** - 按 Textus 1.3 的新名称读取主题的正文文字颜色和脚注字号。
-- **0.1.2** - PlantUML 服务器画的图重新能显示；说明在本机画图约多占 100 MB 内存。
-- **0.1.0-0.1.1** - 最初的版本：在本机或由 PlantUML 服务器绘制 `plantuml` 代码块，支持 `height=`，导出时作为图片。
+- **0.2.6** - Its package lists the libraries it carries, with their licenses.
+- **0.2.5** - A chart drawn while its block was folded (a phone) fits once the block opens, instead of keeping its old size.
+- **0.2.4** - `!theme` works; no empty gap in a narrow column; server mode shows PlantUML's own error and draws dark in dark themes.
+- **0.2.3** - Shorter help and empty-state text.
+- **0.2.2** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
+- **0.2.1** - Ships the updated shared chart page; diagrams are drawn as before.
+- **0.2.0** - Ships the shared chart page that takes its colors from the theme. Needs Textus 1.3.2.
+- **0.1.3** - Uses the theme's document text color and footnote size under their Textus 1.3 names.
+- **0.1.2** - Drawings from the PlantUML server show again; says that drawing on your computer takes about 100 MB more memory.
+- **0.1.0-0.1.1** - First versions: `plantuml` code blocks drawn on your computer or by the PlantUML server, `height=`, and exports as a picture.

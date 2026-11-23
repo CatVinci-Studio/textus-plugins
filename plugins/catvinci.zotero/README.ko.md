@@ -41,17 +41,17 @@
 
 ## 변경 내역
 
-- **0.4.4** - 이름 정렬에 Textus 자체 순서를 써서, 복사본을 따로 갖지 않아 패키지가 작아졌습니다. Textus 1.4.3이 필요합니다.
-- **0.4.3** - 인용이 이제 선택한 단어를 대신합니다. Zotero가 응답하는데도 참고문헌 목록이 연결할 수 없다고 하던 문제를 고쳤고, 마우스를 올렸을 때 미리보기가 더 안정적으로 나옵니다.
-- **0.4.2** - 설명과 빈 상태 문구를 짧게 줄였습니다.
-- **0.4.1** - 코드를 역할별로 작은 파일로 나눴습니다. 사용법은 바뀌지 않습니다.
-- **0.4.0** - 문헌 노트 템플릿을 Textus 내장 템플릿 엔진으로 채움, Textus 1.3.10 필요
-- **0.3.0** - Zotero에서 문헌 노트 만들기(템플릿과 Obsidian 보관소 설정 지원), `[[@citekey]]` 형식의 인용
-- **0.2.1** - 단축키를 Ctrl+Alt+C에서 Ctrl+Alt+R로 변경
-- **0.2.0** - Textus AI 도구 `search_library` 추가
-- **0.1.3** - 데스크톱 전용으로 제공
-- **0.1.2** - Zotero 10의 로컬 API 지원, 참고문헌 목록을 다시 만들면 교체, 코드 안의 내용은 인용으로 읽지 않음
-- **0.1.0-0.1.1** - 첫 버전: 인용 넣기(최근 문헌 먼저), 인용 호버 카드, 참고문헌 목록, 네 가지 인용 방식
+- **0.4.4** - Sorts names with Textus's own order instead of a copy of it, so the package is smaller. Needs Textus 1.4.3.
+- **0.4.3** - A citation now replaces the selected words; the References list no longer says Zotero is unreachable when it answers, and hover previews show up more reliably.
+- **0.4.2** - Shorter help and empty-state text.
+- **0.4.1** - Its code is split into smaller files by what each part does; nothing changes in use.
+- **0.4.0** - literature note templates are filled by Textus's own template engine; needs Textus 1.3.10
+- **0.3.0** - literature notes from Zotero, with a template and an Obsidian vault's settings; citations as `[[@citekey]]`
+- **0.2.1** - the shortcut moves from Ctrl+Alt+C to Ctrl+Alt+R
+- **0.2.0** - a tool for Textus AI, `search_library`
+- **0.1.3** - listed for the desktop only
+- **0.1.2** - works with Zotero 10's local API; the references list is replaced when made again, and code is never read for citations
+- **0.1.0-0.1.1** - first versions: citing with recent works first, hover cards for citations, the references list, four citation styles
 
 <!-- ai-tools -->
 ## Textus AI 도구

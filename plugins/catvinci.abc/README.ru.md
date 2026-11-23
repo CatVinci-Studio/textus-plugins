@@ -23,15 +23,15 @@ C D E F | G A B c |
 
 ## Изменения
 
-- **0.3.4** - В пакет добавлен список входящих в него библиотек и их лицензий.
-- **0.3.3** - График, нарисованный при свёрнутом блоке (на телефоне), подстраивается под ширину, когда блок открыт.
-- **0.3.2** - Такты переносятся по ширине колонки, а не сжимается вся партитура; нота больше не краснеет при щелчке; `check_abc` принимает полные названия ладов, любую длительность, строки `+:`, `` ` `` и `$`; `height=` убран.
-- **0.3.1** - Его страница теперь одной фразой говорит, что он делает, что умеет и что менялось в каждой версии.
-- **0.3.0** - Textus AI может проверить блок `abc` перед записью (`check_abc`).
-- **0.2.0** - Ноты рисуются цветом текста темы; нужен Textus 1.3.2.
-- **0.1.3** - Использует переименованные в Textus цвета документа.
-- **0.1.2** - Экспортированные картинки сохраняют ширину и высоту нот.
-- **0.1.0-0.1.1** - Первые версии: блоки `abc` рисуются под исходным текстом, `height=`, картинки при экспорте; страница в магазине и значок.
+- **0.3.4** - Its package lists the libraries it carries, with their licenses.
+- **0.3.3** - A chart drawn while its block was folded (a phone) fits once the block opens, instead of keeping its old size.
+- **0.3.2** - Bars wrap to the column instead of the whole score shrinking; clicking a note no longer turns it red; `check_abc` accepts full mode names, any note length, `+:` lines, `` ` `` and `$`; `height=` is gone.
+- **0.3.1** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
+- **0.3.0** - Textus AI can check an `abc` block before writing it (`check_abc`).
+- **0.2.0** - The notes follow the theme's text color; needs Textus 1.3.2.
+- **0.1.3** - Uses Textus's renamed document colors.
+- **0.1.2** - Exported pictures keep the music's width and height.
+- **0.1.0-0.1.1** - First versions: `abc` blocks drawn under their source, `height=`, pictures in exports; store page and icon.
 
 <!-- ai-tools -->
 ## Инструменты для Textus AI

@@ -39,16 +39,16 @@ Obsidian の Linter のように使え、どの変更も 1 回で取り消せま
 
 ## 更新履歴
 
-- **0.5.1** - パッケージに、同梱しているライブラリとそのライセンスの一覧を添えました。
-- **0.5.0** - 見つかった箇所ごとにカードが開き、規則を示してそのブロックを修正（Alt+Enter）、または「無視」で外せます（Textus 1.4.4）。
-- **0.4.1** - 空行の削除とリストの切り替えは、長いフェンス（```` の中に ```）に入ったコードブロックを変更しません。
-- **0.4.0** - 選択した行を箇条書き・番号付き・タスクリストに切り替え（番号は各階層 1 から、タスクのチェックは保持）。
-- **0.3.2** - 説明と空の状態の文言を短くしました。
-- **0.3.1** - 紹介ページを書き直しました。何をするかを一文で示し、できることと各バージョンの変更を載せています。
-- **0.3.0** - 名前を整形に変更（旧 Markdown チェック）。「テキスト整形」の 6 つのテキストコマンドを統合。波線や個々の規則をオフにする設定。Obsidian 独自の書き方はそのまま残すように。
-- **0.2.1** - タグ、リンク、リマインダー、参照定義に印を付けないように。「和欧文スペース」が触れないものと同じ一覧です。
-- **0.2.0** - Textus AI が Markdown を検査できるように（`lint_markdown`）。
-- **0.1.0-0.1.2** - 最初のバージョン：規則を説明する波線と「Markdown を修正」。ストアのページとアイコン。デスクトップと iOS に対応。
+- **0.5.1** - Its package lists the libraries it carries, with their licenses.
+- **0.5.0** - Each finding opens a card that names the rule and fixes that block (Alt+Enter), or sets it aside with Ignore (Textus 1.4.4).
+- **0.4.1** - Remove Blank Lines and list switching leave a code block inside a longer fence (```` holding ```) alone.
+- **0.4.0** - Switch selected lines to a bullet, numbered or task list (numbered counts from 1 at each level; a task keeps its tick).
+- **0.3.2** - Shorter help and empty-state text.
+- **0.3.1** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
+- **0.3.0** - Renamed Tidy (was Markdown Lint): Text Tidy's six text commands moved in; settings to turn off underlines or single rules; Obsidian's own syntax left as written.
+- **0.2.1** - Tags, links, reminders and reference definitions are never flagged: the same list CJK Spacing leaves alone.
+- **0.2.0** - Textus AI can check Markdown (`lint_markdown`).
+- **0.1.0-0.1.2** - First versions: underlines that explain the rule, and Fix Markdown; store page and icon; runs on desktop and iOS.
 
 <!-- ai-tools -->
 ## Textus AI のツール

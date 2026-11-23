@@ -11,10 +11,10 @@
 
 ## 更新紀錄
 
-- **0.2.3** - 商店簡介改為開頭一句就說明外掛做什麼。
-- **0.2.2** - 指向巢狀標題的連結（`[[筆記#A#B]]`）顯示那個標題的段落，和點擊開啟的位置一致。需要 Textus 1.4.0。
-- **0.2.1** - 介紹頁重寫：一句話說明它做什麼，再講它能做的事，並列出每個版本的更新。
-- **0.2.0** - 指向某個區塊（`#^id`）的連結會顯示那一段。需要 Textus 1.3.9。
-- **0.1.3** - 標明執行平台：電腦、iPhone 和 iPad。
-- **0.1.2** - 卡片長度固定，不再需要設定。
-- **0.1.0-0.1.1** - 最初的版本：指向文件的連結顯示卡片，內容是文件開頭或連結所指的那一節，附「開啟」和「釘住」。
+- **0.2.3** - The store description now opens with what the plugin does.
+- **0.2.2** - A link to a nested heading (`[[Note#A#B]]`) shows that heading's section, as a click opens it. Needs Textus 1.4.0.
+- **0.2.1** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
+- **0.2.0** - A link to a block (`#^id`) shows that block. Needs Textus 1.3.9.
+- **0.1.3** - Says where it runs: the desktop, iPhone and iPad.
+- **0.1.2** - The card's length is fixed instead of a setting.
+- **0.1.0-0.1.1** - First versions: a card for links to documents, with the document's opening or the section the link names, and Open and Pin.

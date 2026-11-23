@@ -27,15 +27,15 @@ Läuft auf dem Desktop und auf dem iPhone und braucht Textus 1.3.2 oder neuer. E
 
 ## Änderungen
 
-- **0.3.4** - Das Paket listet die mitgelieferten Bibliotheken samt ihren Lizenzen auf.
-- **0.3.3** - Ein Diagramm, das bei zugeklapptem Block (auf dem Handy) gezeichnet wurde, passt sich beim Aufklappen an die Breite an.
-- **0.3.2** - Diagramme werden neu gezeichnet, wenn das Feld schmaler oder breiter wird; Beschriftungen folgen Schrift und Textgröße des Themes, und die Fehlerzeile ist wieder rot.
-- **0.3.1** - Seine Seite sagt jetzt in einem Satz, was es tut, was es kann und was sich in jeder Version geändert hat.
-- **0.3.0** - Textus AI kann einen `chartjs`-Block prüfen, bevor es ihn schreibt (`check_chartjs`).
-- **0.2.0** - Datenreihen bekommen die Farben des Themes; braucht Textus 1.3.2.
-- **0.1.3** - Nutzt die umbenannten Dokumentfarben von Textus.
-- **0.1.2** - Beim Tippen zeigt das Diagramm immer den neuesten Text.
-- **0.1.0-0.1.1** - Erste Versionen: `chartjs`-Blöcke unter ihrer Quelle gezeichnet, `height=`, Bilder beim Export; Seite im Store und Symbol.
+- **0.3.4** - Its package lists the libraries it carries, with their licenses.
+- **0.3.3** - A chart drawn while its block was folded (a phone) fits once the block opens, instead of keeping its old size.
+- **0.3.2** - Charts redraw to fit a narrower or wider panel, labels follow the theme's font and text size, and the error line is red again.
+- **0.3.1** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
+- **0.3.0** - Textus AI can check a `chartjs` block before writing it (`check_chartjs`).
+- **0.2.0** - Series take the theme's colors; needs Textus 1.3.2.
+- **0.1.3** - Uses Textus's renamed document colors.
+- **0.1.2** - While you type, the chart always shows the latest text.
+- **0.1.0-0.1.1** - First versions: `chartjs` blocks drawn under their source, `height=`, pictures in exports; store page and icon.
 
 <!-- ai-tools -->
 ## Werkzeuge für Textus AI

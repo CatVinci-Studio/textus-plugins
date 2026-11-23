@@ -20,16 +20,16 @@
 
 ## 更新紀錄
 
-- **0.4.5** - 切換 Textus 的語言後，篩選框和空清單提示會跟著變。需要 Textus 1.4.3。
-- **0.4.4** - 仍會列出 Obsidian 的書籤，但不再寫回：Textus 1.4 起外掛不能改 `.obsidian`。需要 Textus 1.4.0。
-- **0.4.3** - 列表依文件在資料夾中的路徑分組，每份文件一組；長段落在詞邊界截斷並加上「…」；在儲存庫中寫入區塊 ID 失敗時書籤仍會儲存。
-- **0.4.2** - 說明和空狀態文字更簡短。
-- **0.4.1** - 介紹頁重寫：一句話說明它做什麼，再講它能做的事，並列出每個版本的更新。
-- **0.4.0** - 在 Obsidian 儲存庫裡，新書籤也會寫進 Obsidian 的 `bookmarks.json`，刪除和改名也會同步過去。
-- **0.3.0** - 列出儲存庫裡 Obsidian 自己的筆記、標題和區塊書籤。
-- **0.2.1** - 路徑處理改用與其他外掛共用的程式碼，使用上沒有變化。
-- **0.2.0** - Textus AI 可以列出你的書籤（`list_bookmarks`）。
-- **0.1.0-0.1.2** - 最初的版本：為選取文字加書籤、側欄依文件列出、文件改名後書籤跟著走；商店頁面和圖示；支援桌面和 iOS。
+- **0.4.5** - The filter field and empty message follow Textus's language when you switch it. Needs Textus 1.4.3.
+- **0.4.4** - Obsidian's bookmarks are listed as before but no longer written: Textus 1.4 keeps plugins out of `.obsidian`. Needs Textus 1.4.0.
+- **0.4.3** - Rows are grouped by the document's path in the folder, one group per document; long passages end at a word with "…"; a failed block-id edit in a vault keeps the bookmark.
+- **0.4.2** - Shorter help and empty-state text.
+- **0.4.1** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
+- **0.4.0** - In an Obsidian vault, new bookmarks are written to Obsidian's `bookmarks.json` too, and removed and renamed there.
+- **0.3.0** - Lists the vault's own Obsidian bookmarks of notes, headings and blocks.
+- **0.2.1** - Paths handled by code shared with other plugins; nothing changes in use.
+- **0.2.0** - Textus AI can list your bookmarks (`list_bookmarks`).
+- **0.1.0-0.1.2** - First versions: bookmark a selection, the sidebar list by document, bookmarks that follow renames; store page and icon; runs on desktop and iOS.
 
 <!-- ai-tools -->
 ## Textus AI 工具

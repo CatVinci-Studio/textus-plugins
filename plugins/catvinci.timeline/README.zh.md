@@ -25,15 +25,15 @@
 
 ## 更新日志
 
-- **0.4.0** - 数据库可以按时间轴显示：在它的视图里选「时间轴图」，带日期的行按先后排开，点一行打开它。需要 Textus 1.4.6。
-- **0.3.3** - 日期不再从中间断开（「2024-0」下面一个「3」）；块折叠时画的图展开后会重新适配宽度。
-- **0.3.2** - 长说明和日期在窄面板里自动换行，时间轴改用文档字体，空块会提示怎么写
-- **0.3.1** - 介绍页重写：一句话说明它做什么，再讲它能做的事，并列出每个版本的更新。
-- **0.3.0** - 新增 Textus AI 工具 `check_timeline`
-- **0.2.0** - 使用主题颜色，切换主题时重新绘制
-- **0.1.3** - 在 Textus 1.3 上文字使用主题颜色
-- **0.1.2** - 快速编辑时不再出现旧图盖住新图
-- **0.1.0-0.1.1** - 最初版本：把事件画成时间轴，可设置高度，导出时带上图片
+- **0.4.0** - A database can be shown as a timeline: pick Timeline among its views, and its dated rows line up in order; a click opens a row. Needs Textus 1.4.6.
+- **0.3.3** - A date no longer breaks in the middle ("2024-0" over "3"); a chart drawn while its block was folded fits once it opens.
+- **0.3.2** - long notes and dates wrap to fit a narrow island, the timeline uses the document's font, and an empty block says what to write
+- **0.3.1** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
+- **0.3.0** - a tool for Textus AI, `check_timeline`
+- **0.2.0** - the theme's colors, drawn again when the theme changes
+- **0.1.3** - text in the theme's colors on Textus 1.3
+- **0.1.2** - keeps up with quick edits: an older drawing never replaces a newer one
+- **0.1.0-0.1.1** - first versions: events drawn as a timeline, a height setting, pictures in exports
 
 <!-- ai-tools -->
 ## Textus AI 工具

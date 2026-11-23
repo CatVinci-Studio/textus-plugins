@@ -11,10 +11,10 @@
 
 ## 更新日志
 
-- **0.2.3** - 商店简介改为开头一句就说明插件做什么。
-- **0.2.2** - 指向嵌套标题的链接（`[[笔记#A#B]]`）显示那个标题的段落，和点击打开的位置一致。需要 Textus 1.4.0。
-- **0.2.1** - 介绍页重写：一句话说明它做什么，再讲它能做的事，并列出每个版本的更新。
-- **0.2.0** - 指向某个块（`#^id`）的链接显示那一段。需要 Textus 1.3.9。
-- **0.1.3** - 标明运行平台：电脑、iPhone 和 iPad。
-- **0.1.2** - 卡片长度固定，不再需要设置。
-- **0.1.0-0.1.1** - 最初的版本：指向文档的链接显示卡片，内容是文档开头或链接指到的那一节，带「打开」和「钉住」。
+- **0.2.3** - The store description now opens with what the plugin does.
+- **0.2.2** - A link to a nested heading (`[[Note#A#B]]`) shows that heading's section, as a click opens it. Needs Textus 1.4.0.
+- **0.2.1** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
+- **0.2.0** - A link to a block (`#^id`) shows that block. Needs Textus 1.3.9.
+- **0.1.3** - Says where it runs: the desktop, iPhone and iPad.
+- **0.1.2** - The card's length is fixed instead of a setting.
+- **0.1.0-0.1.1** - First versions: a card for links to documents, with the document's opening or the section the link names, and Open and Pin.

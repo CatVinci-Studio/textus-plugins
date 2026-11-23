@@ -26,14 +26,14 @@ x^2 / 4 - 1
 
 ## 更新日志
 
-- **0.3.3** - 块折叠时（手机上）画的图，展开后会重新适配宽度，不再保持原来的大小。
-- **0.3.2** - tan(x) 这类陡峭曲线保持形状，在渐近线处断开；没有可画部分的函数会给出提示；可以写 π 和 2xsin(x)；Textus AI 的检查会按围栏上的 x 范围进行。
-- **0.3.1** - 介绍页重写：一句话说明它做什么，再讲它能做的事，并列出每个版本的更新。
-- **0.3.0** - 新增 Textus AI 工具 `check_function_plot`
-- **0.2.0** - 曲线和坐标轴使用主题颜色，切换主题时重新绘制
-- **0.1.3** - 在 Textus 1.3 上文字使用主题颜色
-- **0.1.2** - -x^2 按 -(x^2) 计算；范围端点为 0 时不再被忽略
-- **0.1.0-0.1.1** - 最初版本：把 x 的函数画成图，可设置高度和范围，导出时带上图片
+- **0.3.3** - A chart drawn while its block was folded (a phone) fits once the block opens, instead of keeping its old size.
+- **0.3.2** - Steep curves like tan(x) keep their shape and break at asymptotes; a function with nothing to draw says so; π and 2xsin(x) are read; Textus AI's check uses the fence's x range.
+- **0.3.1** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
+- **0.3.0** - a tool for Textus AI, `check_function_plot`
+- **0.2.0** - curves and axes in the theme's colors, drawn again when the theme changes
+- **0.1.3** - text in the theme's colors on Textus 1.3
+- **0.1.2** - -x^2 reads as -(x^2), and a range that ends at 0 is kept
+- **0.1.0-0.1.1** - first versions: functions of x drawn as a picture, height and range settings, pictures in exports
 
 <!-- ai-tools -->
 ## Textus AI 工具

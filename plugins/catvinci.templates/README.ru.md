@@ -19,19 +19,19 @@
 
 ## Изменения
 
-- **0.5.5** - Сортирует имена в порядке самого Textus, а не своей копии, поэтому пакет стал меньше. Нужен Textus 1.4.3.
-- **0.5.4** - Если имя занято, файл при записи получает следующее свободное, без конфликтов (Textus 1.4.3).
-- **0.5.3** - Описание в магазине теперь начинается с того, что делает плагин.
-- **0.5.2** - Теперь видны шаблоны из скрытой папки шаблонов или папки со строчными буквами, а также из её подпапок. После вставки курсор стоит сразу за шаблоном.
-- **0.5.1** - **Создать из шаблона…** в контекстном меню файла или папки создаёт документ в этой папке.
-- **0.5.0** - Шаблоны заполняет сам Textus, так же как ежедневные заметки; нужен Textus 1.3.10.
-- **0.4.1** - Шаблоны идут в естественном порядке: 2 раньше 10.
-- **0.4.0** - Частые теги Templater `tp.date` и `tp.file`, форматы даты и времени из настроек шаблонов хранилища Obsidian; невыполненные теги перечисляет уведомление.
-- **0.3.0** - Шаблоны стали файлами Markdown в папке Templates (в Obsidian — в папке шаблонов хранилища), один раз перенесёнными туда из прежнего места хранения; `{{date:ФОРМАТ}}` и `{{time:ФОРМАТ}}`.
-- **0.2.0** - Textus AI может перечислить ваши шаблоны и создать документ по одному из них.
-- **0.1.3** - Указано, где работает: компьютер и iPhone.
-- **0.1.2** - «Создать из шаблона» не принимает уже занятое имя.
-- **0.1.0-0.1.1** - Первые версии: новые документы, вставка фрагментов и сохранение шаблонов, `{{date}}`, `{{time}}` и `{{title}}`; страница в магазине и значок.
+- **0.5.5** - Sorts names with Textus's own order instead of a copy of it, so the package is smaller. Needs Textus 1.4.3.
+- **0.5.4** - A taken name gets the next free one as the file is written, never a clash (Textus 1.4.3).
+- **0.5.3** - The store description now opens with what the plugin does.
+- **0.5.2** - Templates in a hidden or lowercase templates folder, and in its subfolders, now show up. After Insert, the caret lands right after the template.
+- **0.5.1** - **New from Template…** from a file's or folder's right-click menu makes the document in that folder.
+- **0.5.0** - Templates are filled in by Textus itself, the same way as daily notes; needs Textus 1.3.10.
+- **0.4.1** - Templates are listed in natural order: 2 before 10.
+- **0.4.0** - Templater's common `tp.date` and `tp.file` tags, and an Obsidian vault's Templates date and time formats; tags that aren't run are named in a notice.
+- **0.3.0** - Templates are Markdown files in the Templates folder (a vault's own templates folder in Obsidian), moved there once from where older versions kept them; `{{date:FORMAT}}` and `{{time:FORMAT}}`.
+- **0.2.0** - Textus AI can list your templates and make a document from one.
+- **0.1.3** - Says where it runs: desktop and iPhone.
+- **0.1.2** - New from Template refuses a name that is already taken.
+- **0.1.0-0.1.1** - First versions: new documents, inserted snippets and saved templates, with `{{date}}`, `{{time}}` and `{{title}}`; store page and icon.
 
 <!-- ai-tools -->
 ## Инструменты для Textus AI

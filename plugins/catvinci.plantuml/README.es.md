@@ -28,13 +28,13 @@ Bob --> Alice : Hi!
 
 ## Cambios
 
-- **0.2.6** - El paquete incluye la lista de bibliotecas que lleva, con sus licencias.
-- **0.2.5** - Un gráfico dibujado con su bloque plegado (en el móvil) se ajusta al ancho al abrirlo.
-- **0.2.4** - `!theme` funciona; sin hueco vacío en una columna estrecha; en modo servidor se ve el error de PlantUML y los temas oscuros tienen un dibujo oscuro.
-- **0.2.3** - Textos de ayuda y de estado vacío más breves.
-- **0.2.2** - Su página dice ahora en una frase qué hace, qué puede hacer y qué cambió en cada versión.
-- **0.2.1** - Incluye la página de gráficos compartida actualizada; los diagramas se dibujan igual que antes.
-- **0.2.0** - Incluye la página de gráficos compartida que toma los colores del tema. Requiere Textus 1.3.2.
-- **0.1.3** - Usa el color del texto del documento y el tamaño de las notas al pie del tema con sus nombres de Textus 1.3.
-- **0.1.2** - Los dibujos del servidor de PlantUML vuelven a verse; indica que dibujar en tu equipo usa unos 100 MB más de memoria.
-- **0.1.0-0.1.1** - Primeras versiones: bloques `plantuml` dibujados en tu equipo o por el servidor de PlantUML, `height=` y exportación como imagen.
+- **0.2.6** - Its package lists the libraries it carries, with their licenses.
+- **0.2.5** - A chart drawn while its block was folded (a phone) fits once the block opens, instead of keeping its old size.
+- **0.2.4** - `!theme` works; no empty gap in a narrow column; server mode shows PlantUML's own error and draws dark in dark themes.
+- **0.2.3** - Shorter help and empty-state text.
+- **0.2.2** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
+- **0.2.1** - Ships the updated shared chart page; diagrams are drawn as before.
+- **0.2.0** - Ships the shared chart page that takes its colors from the theme. Needs Textus 1.3.2.
+- **0.1.3** - Uses the theme's document text color and footnote size under their Textus 1.3 names.
+- **0.1.2** - Drawings from the PlantUML server show again; says that drawing on your computer takes about 100 MB more memory.
+- **0.1.0-0.1.1** - First versions: `plantuml` code blocks drawn on your computer or by the PlantUML server, `height=`, and exports as a picture.

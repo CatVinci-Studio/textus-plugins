@@ -28,18 +28,18 @@ Fonctionne sur ordinateur, iPhone, iPad et Android. Sur un téléphone, **Nouvel
 
 ## Changements
 
-- **0.6.0** - Aussi sur iPhone, iPad et Android : **Nouvelle note rapide…** dans Plugins et l’onglet de la barre latérale, avec Nouvelle et le bouton « plus » de chaque note faciles à toucher. Seul l’ordinateur demande à Textus de tourner en arrière-plan. Nécessite Textus 1.4.7.
-- **0.5.5** - Les noms et infobulles de ses boutons viennent de Textus, comme sur ses autres pages.
-- **0.5.4** - La page suit la langue de Textus d’elle-même. Nécessite Textus 1.4.3.
-- **0.5.3** - Créer une note pendant une recherche efface celle-ci pour afficher la nouvelle note ; le clic droit dans le texte d'une note propose aussi annuler, couper, copier et coller ; une recherche sans résultat l'indique.
-- **0.5.2** - Dans la barre latérale, le panneau n’affiche plus son propre titre, comme les autres onglets. Textes d'aide et d'état vide plus courts. Son panneau latéral et sa page suivent la mise en page de Textus 1.3.13. Sans note, la liste explique son usage et propose Nouvelle ; la zone d'une note grandit avec son texte.
-- **0.5.1** - Ses barres, listes et contrôles sont désormais ceux de Textus, grandissent avec l’interface et suivent chaque thème ; nécessite Textus 1.3.12.
-- **0.5.0** - Les dates et le modèle de la note du jour sont remplis par Textus lui-même, comme dans Calendrier et notes du jour et dans Modèles. Nécessite Textus 1.3.10.
-- **0.4.0** - Les notes sont gardées dans un document du dossier : `Inbox.md` ou la note du jour. Celles des anciennes versions y sont déplacées une fois.
-- **0.3.1** - Textus AI distingue les notes rapides du journal et des tâches.
-- **0.3.0** - Textus AI peut ajouter une note rapide (`add_note`).
-- **0.2.0** - Contrôles propres à Textus, et un menu d’actions pour chaque note.
-- **0.1.0-0.1.4** - Premières versions : le raccourci et la zone de notification, la liste latérale, insérer, ouvrir, supprimer avec Annuler, recherche quand elles sont nombreuses, dates sur une ligne à part ; ordinateur seulement.
+- **0.6.0** - On iPhone, iPad and Android too: **New Quick Note…** under Plugins and the sidebar tab, with New and each note's more button easy to tap. Only the desktop asks to keep Textus running in the background. Needs Textus 1.4.7.
+- **0.5.5** - Its buttons' names and tooltips come from Textus, as on its other pages.
+- **0.5.4** - The page follows Textus's language by itself. Needs Textus 1.4.3.
+- **0.5.3** - New while searching clears the search, so the new note shows; right-clicking a note's text also offers undo, cut, copy and paste; a search with no match says so.
+- **0.5.2** - In the sidebar the panel draws no title of its own, as the sidebar's other tabs. Shorter help and empty-state text. Its sidebar panel and page follow Textus 1.3.13's layout. An empty list says what Quick Notes is for and offers New; a note's box grows with its text.
+- **0.5.1** - Its bars, lists and controls are Textus's own, grow with the interface and follow every theme; needs Textus 1.3.12.
+- **0.5.0** - Dates and the daily note's template are filled by Textus itself, the same way as in Calendar & Daily Notes and Templates. Needs Textus 1.3.10.
+- **0.4.0** - Notes are kept in a document of the folder: `Inbox.md` or today's daily note. Notes from older versions move in once.
+- **0.3.1** - Textus AI tells quick notes apart from the daily journal and to-dos.
+- **0.3.0** - Textus AI can add a quick note (`add_note`).
+- **0.2.0** - Textus's own controls, and an actions menu for each note.
+- **0.1.0-0.1.4** - First versions: the shortcut and the tray, the sidebar list, insert, open, delete with Undo, search once there are many, dates on a line of their own; desktop only.
 
 <!-- ai-tools -->
 ## Outils pour Textus AI

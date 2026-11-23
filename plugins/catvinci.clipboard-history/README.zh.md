@@ -17,8 +17,8 @@
 
 ## 更新日志
 
-- **0.1.4** - 切换 Textus 的语言后，筛选框和空列表提示会跟着变。需要 Textus 1.4.3。
-- **0.1.3** - 每条内容下面显示复制的时间，条目之间有分隔线。
-- **0.1.2** - 面板上的“清空”按钮回来了，一键清空历史。 说明和空状态文字更简短。
-- **0.1.1** - 介绍页重写：一句话说明它做什么，再讲它能做的事，并列出每个版本的更新。
-- **0.1.0** - 第一个版本：侧栏列出最近 30 次复制，点一下插入，右键可再次复制或移除。需要 Textus 1.3.10。
+- **0.1.4** - The filter field and empty message follow Textus's language when you switch it. Needs Textus 1.4.3.
+- **0.1.3** - Each clip shows when it was copied, with a line between clips.
+- **0.1.2** - The panel's Clear button is back: one click empties the history. Shorter help and empty-state text.
+- **0.1.1** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
+- **0.1.0** - First version: the last 30 copies in the sidebar, put in with a click, copied again or removed with a right-click. Needs Textus 1.3.10.

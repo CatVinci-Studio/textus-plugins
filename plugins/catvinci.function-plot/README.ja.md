@@ -26,14 +26,14 @@ x^2 / 4 - 1
 
 ## 更新履歴
 
-- **0.3.3** - ブロックが折りたたまれていた間（スマートフォン）に描いた図は、開くと幅に合わせて描き直されます。
-- **0.3.2** - tan(x) のような急な曲線も形を保ち、漸近線で途切れます。描く部分がない関数はそう伝えます。π や 2xsin(x) も読めます。Textus AI のチェックはフェンスの x の範囲を使います。
-- **0.3.1** - 紹介ページを書き直しました。何をするかを一文で示し、できることと各バージョンの変更を載せています。
-- **0.3.0** - Textus AI のツール `check_function_plot` を追加
-- **0.2.0** - 曲線と軸にテーマの色を使い、テーマを変えると描き直すように
-- **0.1.3** - Textus 1.3 で文字にテーマの色を使うように
-- **0.1.2** - -x^2 を -(x^2) として計算、範囲の端が 0 のときも正しく扱うように
-- **0.1.0-0.1.1** - 最初のバージョン：x の関数をグラフに描画、高さと範囲の指定、書き出し時の画像
+- **0.3.3** - A chart drawn while its block was folded (a phone) fits once the block opens, instead of keeping its old size.
+- **0.3.2** - Steep curves like tan(x) keep their shape and break at asymptotes; a function with nothing to draw says so; π and 2xsin(x) are read; Textus AI's check uses the fence's x range.
+- **0.3.1** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
+- **0.3.0** - a tool for Textus AI, `check_function_plot`
+- **0.2.0** - curves and axes in the theme's colors, drawn again when the theme changes
+- **0.1.3** - text in the theme's colors on Textus 1.3
+- **0.1.2** - -x^2 reads as -(x^2), and a range that ends at 0 is kept
+- **0.1.0-0.1.1** - first versions: functions of x drawn as a picture, height and range settings, pictures in exports
 
 <!-- ai-tools -->
 ## Textus AI のツール

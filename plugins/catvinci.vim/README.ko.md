@@ -22,14 +22,14 @@ Obsidian: Obsidian 보관소에서는 그 보관소의 `.obsidian.vimrc`(Vimrc S
 
 ## 변경 내역
 
-- **0.2.9** - Textus 1.3.0-beta.8 이상이 필요합니다. 사용하는 기능이 모두 있는 첫 버전입니다.
-- **0.2.8** - 데스크톱 전용: 휴대폰의 화면 키보드는 글자를 본문에 입력해 Vim 키로 동작하지 않습니다.
-- **0.2.7** - 상태 표시줄의 모드에서 메뉴를 열어 Vim을 끕니다. Textus로 돌아오면 `.obsidian.vimrc`를 다시 읽습니다. 비주얼 모드에서 **:**로 항상 빠져나옵니다.
-- **0.2.6** - 설명과 빈 상태 문구를 짧게 줄였습니다.
-- **0.2.5** - 코드를 역할별로 작은 파일로 나눴습니다. 사용법은 바뀌지 않습니다.
-- **0.2.4** - 소개 페이지를 새로 썼습니다. 무엇을 하는지 한 문장으로, 할 수 있는 일과 버전별 변경 내역을 담았습니다.
-- **0.2.3** - Obsidian 보관소의 `.obsidian.vimrc`를 읽습니다. 같은 키를 다시 매핑하면 이전 매핑을 바꿉니다.
-- **0.2.2** - **zz**, **zt**, **zb**로 커서 줄을 창의 가운데, 위, 아래로.
-- **0.2.1** - 실행되는 곳을 밝힘: 데스크톱, iPhone, iPad.
-- **0.2.0** - **:**로 Vim 명령이 맨 앞에 오는 명령 팔레트를 엽니다. flash는 한 글자 뒤에 라벨을 보여 줍니다. Mac에서 노멀 모드는 영문 입력.
-- **0.1.0-0.1.1** - 첫 버전들: 모드, 이동, 연산자, 횟수, 점 반복, flash와 **ds**·**cs**·**ys**, 명령줄(**:w**, **:q**, **:wq**, **:12**), vimrc식 키 매핑, 대소문자 키.
+- **0.2.9** - Needs Textus 1.3.0-beta.8 or later, the first with everything it uses.
+- **0.2.8** - Desktop only: a phone's on-screen keyboard types its letters into the text instead of running them as Vim keys.
+- **0.2.7** - The status bar's mode opens a menu that turns Vim off; `.obsidian.vimrc` is read again when you come back to Textus; leaving visual mode with **:** always works.
+- **0.2.6** - Shorter help and empty-state text.
+- **0.2.5** - Its code is split into smaller files by what each part does; nothing changes in use.
+- **0.2.4** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
+- **0.2.3** - Reads an Obsidian vault's `.obsidian.vimrc`; mapping the same keys again replaces the earlier mapping.
+- **0.2.2** - **zz**, **zt** and **zb** bring the caret's line to the middle, top or bottom of the window.
+- **0.2.1** - Says where it runs: the desktop, iPhone and iPad.
+- **0.2.0** - **:** opens the command palette with Vim's commands first; flash shows its labels after one letter; normal mode types Roman on a Mac.
+- **0.1.0-0.1.1** - First versions: modes, motions, operators, counts, dot repeat, flash with **ds**, **cs** and **ys**, the command line (**:w**, **:q**, **:wq**, **:12**), vimrc key mappings and the case keys.

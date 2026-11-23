@@ -11,6 +11,6 @@ Textus 用 `gemini --acp`（它的 Agent Client Protocol 服务）通过 `npx` �
 
 只在电脑上可用，需要 Textus 1.4.3 或更高版本。它只申请一个权限：在这台电脑上启动这个 AI 程序。
 
-## 更新记录
+## 更新日志
 
-- **0.1.0** - 第一版：在 Textus AI 里用 Gemini CLI。
+- **0.1.0** - First version: Gemini CLI in Textus AI.

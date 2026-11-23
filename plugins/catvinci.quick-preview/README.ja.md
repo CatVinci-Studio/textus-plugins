@@ -11,10 +11,10 @@
 
 ## 更新履歴
 
-- **0.2.3** - ストアの説明が、最初の一文でプラグインの働きを伝えるようになりました。
-- **0.2.2** - 入れ子の見出しへのリンク（`[[ノート#A#B]]`）は、クリックで開く位置と同じ見出しの部分を表示します。Textus 1.4.0 以降が必要です。
-- **0.2.1** - 紹介ページを書き直しました。何をするかを一文で示し、できることと各バージョンの変更を載せています。
-- **0.2.0** - ブロックへのリンク（`#^id`）では、そのブロックを表示します。Textus 1.3.9 が必要です。
-- **0.1.3** - 動く環境を明記：デスクトップ、iPhone、iPad。
-- **0.1.2** - カードの長さを設定ではなく固定に。
-- **0.1.0-0.1.1** - 最初のバージョン：文書へのリンクにカードを表示。文書の冒頭かリンクが指す節を見せ、「開く」と「固定」付き。
+- **0.2.3** - The store description now opens with what the plugin does.
+- **0.2.2** - A link to a nested heading (`[[Note#A#B]]`) shows that heading's section, as a click opens it. Needs Textus 1.4.0.
+- **0.2.1** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
+- **0.2.0** - A link to a block (`#^id`) shows that block. Needs Textus 1.3.9.
+- **0.1.3** - Says where it runs: the desktop, iPhone and iPad.
+- **0.1.2** - The card's length is fixed instead of a setting.
+- **0.1.0-0.1.1** - First versions: a card for links to documents, with the document's opening or the section the link names, and Open and Pin.

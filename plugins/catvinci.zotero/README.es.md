@@ -41,17 +41,17 @@ La clave de cita sale del campo Citation Key del elemento (o de una línea `Cita
 
 ## Cambios
 
-- **0.4.4** - Ordena los nombres con el orden propio de Textus en lugar de una copia, así el paquete es más pequeño. Requiere Textus 1.4.3.
-- **0.4.3** - Una cita ahora reemplaza las palabras seleccionadas; la lista de referencias ya no dice que Zotero no responde cuando sí lo hace, y la vista previa al pasar el ratón aparece con más fiabilidad.
-- **0.4.2** - Textos de ayuda y de estado vacío más breves.
-- **0.4.1** - Su código se divide en archivos más pequeños según lo que hace cada parte; nada cambia al usarlo.
-- **0.4.0** - las plantillas de notas de lectura las rellena el motor de plantillas de Textus; requiere Textus 1.3.10
-- **0.3.0** - notas de lectura desde Zotero, con plantilla y los ajustes de una bóveda de Obsidian; citas como `[[@citekey]]`
-- **0.2.1** - el atajo pasa de Ctrl+Alt+C a Ctrl+Alt+R
-- **0.2.0** - una herramienta para Textus AI, `search_library`
-- **0.1.3** - solo para escritorio
-- **0.1.2** - funciona con la API local de Zotero 10; la lista de referencias se sustituye al rehacerla y el código ya no se lee como citas
-- **0.1.0-0.1.1** - primeras versiones: citar con las obras recientes primero, fichas al pasar sobre una cita, la lista de referencias y cuatro formas de citar
+- **0.4.4** - Sorts names with Textus's own order instead of a copy of it, so the package is smaller. Needs Textus 1.4.3.
+- **0.4.3** - A citation now replaces the selected words; the References list no longer says Zotero is unreachable when it answers, and hover previews show up more reliably.
+- **0.4.2** - Shorter help and empty-state text.
+- **0.4.1** - Its code is split into smaller files by what each part does; nothing changes in use.
+- **0.4.0** - literature note templates are filled by Textus's own template engine; needs Textus 1.3.10
+- **0.3.0** - literature notes from Zotero, with a template and an Obsidian vault's settings; citations as `[[@citekey]]`
+- **0.2.1** - the shortcut moves from Ctrl+Alt+C to Ctrl+Alt+R
+- **0.2.0** - a tool for Textus AI, `search_library`
+- **0.1.3** - listed for the desktop only
+- **0.1.2** - works with Zotero 10's local API; the references list is replaced when made again, and code is never read for citations
+- **0.1.0-0.1.1** - first versions: citing with recent works first, hover cards for citations, the references list, four citation styles
 
 <!-- ai-tools -->
 ## Herramientas para Textus AI

@@ -11,7 +11,7 @@
 
 插件需要读写文件：读取绘图和它链接的图片，只写入你正在编辑的绘图。桌面端和 iPhone、iPad 都能用。
 
-## Changes
+## 更新日志
 
-- **0.1.1** - 安装包里附上所带第三方库的清单和许可。
-- **0.1.0** - 第一个版本：在标签页里用 Excalidraw 编辑 `.excalidraw` 文件和 Obsidian Excalidraw 的绘图。
+- **0.1.1** - Its package lists the libraries it carries, with their licenses.
+- **0.1.0** - first version: `.excalidraw` and Obsidian Excalidraw drawings edited in a tab with Excalidraw.

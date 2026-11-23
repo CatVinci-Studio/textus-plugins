@@ -20,16 +20,16 @@ Cuando la carpeta abierta es una bóveda de Obsidian (tiene una carpeta `.obsidi
 
 ## Cambios
 
-- **0.4.5** - El campo de filtro y el mensaje vacío siguen el idioma de Textus al cambiarlo. Requiere Textus 1.4.3.
-- **0.4.4** - Los marcadores de Obsidian se siguen listando, pero ya no se escriben: desde Textus 1.4 los plugins no cambian `.obsidian`. Necesita Textus 1.4.0.
-- **0.4.3** - La lista se agrupa por la ruta del documento en la carpeta, un grupo por documento; los pasajes largos terminan en una palabra con "…"; si falla el id de bloque en una bóveda, el marcador se guarda igual.
-- **0.4.2** - Textos de ayuda y de estado vacío más breves.
-- **0.4.1** - Su página dice ahora en una frase qué hace, qué puede hacer y qué cambió en cada versión.
-- **0.4.0** - En una bóveda de Obsidian, los marcadores nuevos se escriben también en su `bookmarks.json`, y se quitan y renombran allí.
-- **0.3.0** - Lista los marcadores propios de Obsidian de la bóveda: notas, encabezados y bloques.
-- **0.2.1** - Las rutas se manejan con código compartido con otros plugins; nada cambia al usarlo.
-- **0.2.0** - Textus AI puede listar tus marcadores (`list_bookmarks`).
-- **0.1.0-0.1.2** - Primeras versiones: marcar la selección, la lista por documento en la barra lateral, marcadores que siguen los cambios de nombre; página de la tienda e icono; funciona en escritorio e iOS.
+- **0.4.5** - The filter field and empty message follow Textus's language when you switch it. Needs Textus 1.4.3.
+- **0.4.4** - Obsidian's bookmarks are listed as before but no longer written: Textus 1.4 keeps plugins out of `.obsidian`. Needs Textus 1.4.0.
+- **0.4.3** - Rows are grouped by the document's path in the folder, one group per document; long passages end at a word with "…"; a failed block-id edit in a vault keeps the bookmark.
+- **0.4.2** - Shorter help and empty-state text.
+- **0.4.1** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
+- **0.4.0** - In an Obsidian vault, new bookmarks are written to Obsidian's `bookmarks.json` too, and removed and renamed there.
+- **0.3.0** - Lists the vault's own Obsidian bookmarks of notes, headings and blocks.
+- **0.2.1** - Paths handled by code shared with other plugins; nothing changes in use.
+- **0.2.0** - Textus AI can list your bookmarks (`list_bookmarks`).
+- **0.1.0-0.1.2** - First versions: bookmark a selection, the sidebar list by document, bookmarks that follow renames; store page and icon; runs on desktop and iOS.
 
 <!-- ai-tools -->
 ## Herramientas para Textus AI

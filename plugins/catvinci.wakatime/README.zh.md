@@ -19,10 +19,10 @@
 
 ## 更新日志
 
-- **0.2.5** - 可以在设置里它的页面上用按钮设置 API 密钥，命令也放进了「插件」菜单：没有命令面板的手机上也能用。
-- **0.2.4** - 把密钥留空现在会真正关闭发送；查看今天写作时间时遇到异常回复，会显示常规的提示。
-- **0.2.3** - 介绍页重写：一句话说明它做什么，再讲它能做的事，并列出每个版本的更新。
-- **0.2.2** - 在各个系统上都用同样的方式找到 `.wakatime-project` 和 Git 分支。
-- **0.2.1** - 注明可运行的平台：桌面版和 iPhone。
-- **0.2.0** - 只算你在前台窗口里的工作；离线排队、分批发送；项目、分支和行数；今天的写作时间。
-- **0.1.0** - 第一个版本：Textus 里的写作时间显示在 WakaTime 统计面板上。
+- **0.2.5** - Set the API key with a button on its page in Settings, and find its commands in the Plugins menu: on a phone, with no command palette, too.
+- **0.2.4** - Leaving the key empty now really turns it off; a garbled reply to Today's Writing Time shows the usual message.
+- **0.2.3** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
+- **0.2.2** - Finds `.wakatime-project` and the Git branch the same way on every system.
+- **0.2.1** - Says where it runs: desktop and iPhone.
+- **0.2.0** - Only your own work in a window in front counts; an offline queue sent in batches; project, branch and lines; Today's Writing Time.
+- **0.1.0** - First version: writing time in Textus on your WakaTime dashboard.

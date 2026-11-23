@@ -21,5 +21,5 @@
 
 ## 更新日志
 
-- **0.1.1** - 改用 Textus 1.4.6 正式发布的插件接口。
-- **0.1.0** - 第一个版本。需要 Textus 1.4.6。
+- **0.1.1** - Uses the plugin API as Textus 1.4.6 ships it.
+- **0.1.0** - First version. Needs Textus 1.4.6.

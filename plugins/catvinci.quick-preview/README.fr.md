@@ -11,10 +11,10 @@ Le plugin demande à lire l’éditeur (pour savoir quel lien vous pointez) et �
 
 ## Changements
 
-- **0.2.3** - La description de la boutique commence désormais par ce que fait le plugin.
-- **0.2.2** - Un lien vers un titre imbriqué (`[[Note#A#B]]`) montre la section de ce titre, celle qu'ouvre un clic. Nécessite Textus 1.4.0.
-- **0.2.1** - Sa page dit maintenant en une phrase ce qu'il fait, ce qu'il permet et ce qui a changé à chaque version.
-- **0.2.0** - Un lien vers un bloc (`#^id`) affiche ce bloc. Nécessite Textus 1.3.9.
-- **0.1.3** - Indique où il fonctionne : ordinateur, iPhone et iPad.
-- **0.1.2** - La longueur de la carte est fixe, plus d’un réglage.
-- **0.1.0-0.1.1** - Premières versions : une carte pour les liens vers des documents, avec le début du document ou la section nommée par le lien, et Ouvrir et Épingler.
+- **0.2.3** - The store description now opens with what the plugin does.
+- **0.2.2** - A link to a nested heading (`[[Note#A#B]]`) shows that heading's section, as a click opens it. Needs Textus 1.4.0.
+- **0.2.1** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
+- **0.2.0** - A link to a block (`#^id`) shows that block. Needs Textus 1.3.9.
+- **0.1.3** - Says where it runs: the desktop, iPhone and iPad.
+- **0.1.2** - The card's length is fixed instead of a setting.
+- **0.1.0-0.1.1** - First versions: a card for links to documents, with the document's opening or the section the link names, and Open and Pin.

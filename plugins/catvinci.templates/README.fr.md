@@ -19,19 +19,19 @@ Fonctionne sur ordinateur et sur iPhone et demande Textus 1.3.10 ou plus récent
 
 ## Changements
 
-- **0.5.5** - Trie les noms dans l’ordre de Textus lui-même plutôt qu’avec une copie : le paquet est plus léger. Nécessite Textus 1.4.3.
-- **0.5.4** - Un nom déjà pris reçoit le suivant libre au moment de l’écriture, sans conflit (Textus 1.4.3).
-- **0.5.3** - La description de la boutique commence désormais par ce que fait le plugin.
-- **0.5.2** - Les modèles d'un dossier de modèles caché ou en minuscules, et de ses sous-dossiers, apparaissent désormais. Après l'insertion, le curseur se place juste après le modèle.
-- **0.5.1** - **Nouveau depuis un modèle…** depuis le menu contextuel d'un fichier ou d'un dossier crée le document dans ce dossier.
-- **0.5.0** - Les modèles sont remplis par Textus lui-même, comme les notes du jour ; demande Textus 1.3.10.
-- **0.4.1** - Les modèles sont listés dans l'ordre naturel : 2 avant 10.
-- **0.4.0** - Les balises courantes `tp.date` et `tp.file` de Templater, et les formats de date et d'heure des modèles d'un coffre Obsidian ; une notification nomme les balises non exécutées.
-- **0.3.0** - Les modèles sont des fichiers Markdown du dossier Templates (dans Obsidian, le dossier de modèles du coffre), déplacés là une fois depuis l'endroit où les anciennes versions les gardaient ; `{{date:FORMAT}}` et `{{time:FORMAT}}`.
-- **0.2.0** - Textus AI peut lister vos modèles et créer un document à partir de l'un d'eux.
-- **0.1.3** - Indique où il fonctionne : ordinateur et iPhone.
-- **0.1.2** - Nouveau depuis un modèle refuse un nom déjà pris.
-- **0.1.0-0.1.1** - Premières versions : nouveaux documents, extraits insérés et modèles enregistrés, avec `{{date}}`, `{{time}}` et `{{title}}` ; page dans la boutique et icône.
+- **0.5.5** - Sorts names with Textus's own order instead of a copy of it, so the package is smaller. Needs Textus 1.4.3.
+- **0.5.4** - A taken name gets the next free one as the file is written, never a clash (Textus 1.4.3).
+- **0.5.3** - The store description now opens with what the plugin does.
+- **0.5.2** - Templates in a hidden or lowercase templates folder, and in its subfolders, now show up. After Insert, the caret lands right after the template.
+- **0.5.1** - **New from Template…** from a file's or folder's right-click menu makes the document in that folder.
+- **0.5.0** - Templates are filled in by Textus itself, the same way as daily notes; needs Textus 1.3.10.
+- **0.4.1** - Templates are listed in natural order: 2 before 10.
+- **0.4.0** - Templater's common `tp.date` and `tp.file` tags, and an Obsidian vault's Templates date and time formats; tags that aren't run are named in a notice.
+- **0.3.0** - Templates are Markdown files in the Templates folder (a vault's own templates folder in Obsidian), moved there once from where older versions kept them; `{{date:FORMAT}}` and `{{time:FORMAT}}`.
+- **0.2.0** - Textus AI can list your templates and make a document from one.
+- **0.1.3** - Says where it runs: desktop and iPhone.
+- **0.1.2** - New from Template refuses a name that is already taken.
+- **0.1.0-0.1.1** - First versions: new documents, inserted snippets and saved templates, with `{{date}}`, `{{time}}` and `{{title}}`; store page and icon.
 
 <!-- ai-tools -->
 ## Outils pour Textus AI

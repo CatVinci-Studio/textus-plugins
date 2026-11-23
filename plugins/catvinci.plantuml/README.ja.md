@@ -28,13 +28,13 @@ Bob --> Alice : Hi!
 
 ## 更新履歴
 
-- **0.2.6** - パッケージに、同梱しているライブラリとそのライセンスの一覧を添えました。
-- **0.2.5** - ブロックが折りたたまれていた間（スマートフォン）に描いた図は、開くと幅に合わせて描き直されます。
-- **0.2.4** - `!theme` が使えるようになりました。狭い列で余白が残らなくなりました。サーバーモードでは PlantUML 自身のエラーを表示し、ダークテーマでは暗い図になります。
-- **0.2.3** - 説明と空の状態の文言を短くしました。
-- **0.2.2** - 紹介ページを書き直しました。何をするかを一文で示し、できることと各バージョンの変更を載せています。
-- **0.2.1** - 更新された共通のグラフページを同梱。描画はこれまでどおりです。
-- **0.2.0** - テーマから色を取る共通のグラフページを同梱。Textus 1.3.2 が必要です。
-- **0.1.3** - テーマの本文の文字色と脚注のサイズを Textus 1.3 の新しい名前で読みます。
-- **0.1.2** - PlantUML サーバーの図がまた表示されるように。このコンピュータで描くとメモリを約 100 MB 余分に使うことを明記。
-- **0.1.0-0.1.1** - 最初のバージョン：`plantuml` コードブロックをこのコンピュータか PlantUML サーバーで描画、`height=`、書き出しでは画像に。
+- **0.2.6** - Its package lists the libraries it carries, with their licenses.
+- **0.2.5** - A chart drawn while its block was folded (a phone) fits once the block opens, instead of keeping its old size.
+- **0.2.4** - `!theme` works; no empty gap in a narrow column; server mode shows PlantUML's own error and draws dark in dark themes.
+- **0.2.3** - Shorter help and empty-state text.
+- **0.2.2** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
+- **0.2.1** - Ships the updated shared chart page; diagrams are drawn as before.
+- **0.2.0** - Ships the shared chart page that takes its colors from the theme. Needs Textus 1.3.2.
+- **0.1.3** - Uses the theme's document text color and footnote size under their Textus 1.3 names.
+- **0.1.2** - Drawings from the PlantUML server show again; says that drawing on your computer takes about 100 MB more memory.
+- **0.1.0-0.1.1** - First versions: `plantuml` code blocks drawn on your computer or by the PlantUML server, `height=`, and exports as a picture.

@@ -12,14 +12,14 @@ Le plugin lit les titres du document ouvert (permission de lire l’éditeur) et
 
 ## Changements
 
-- **0.2.4** - Avec deux documents ouverts côte à côte, les deux affichent les numéros de leurs titres, pas seulement celui où vous écrivez.
-- **0.2.3** - Les propriétés et les blocs de code ne reçoivent plus de numéros par erreur, et les exports ne numérotent que les titres de premier niveau, comme l'éditeur.
-- **0.2.2** - Sa page dit maintenant en une phrase ce qu'il fait, ce qu'il permet et ce qui a changé à chaque version.
-- **0.2.1** - Pas de numéros sur un document numéroté à la main, ni sur un document dont les propriétés disent `number headings: off`.
-- **0.2.0** - Textus AI peut écrire les numéros dans les titres d’un Markdown, ou les retirer.
-- **0.1.3** - Indique où il fonctionne : ordinateur, iPhone et iPad.
-- **0.1.2** - La numérotation part du niveau de titre le plus haut du document, plus d’un réglage.
-- **0.1.0-0.1.1** - Premières versions : numéros devant les titres pendant l’écriture et dans les exports HTML et PDF.
+- **0.2.4** - With two documents open side by side, both show their heading numbers, not only the one you are typing in.
+- **0.2.3** - Front matter and code blocks no longer get numbers by mistake, and exports number only top-level headings, like the editor.
+- **0.2.2** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
+- **0.2.1** - No numbers on a document numbered by hand, or one whose front matter says `number headings: off`.
+- **0.2.0** - Textus AI can write heading numbers into Markdown, or take them out.
+- **0.1.3** - Says where it runs: the desktop, iPhone and iPad.
+- **0.1.2** - Numbering starts at the document's own top heading level instead of a setting.
+- **0.1.0-0.1.1** - First versions: numbers before headings while writing, and in HTML and PDF exports.
 
 <!-- ai-tools -->
 ## Outils pour Textus AI

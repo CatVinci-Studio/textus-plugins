@@ -25,15 +25,15 @@
 
 ## 更新履歴
 
-- **0.4.0** - データベースをタイムラインで表示できます。ビューで「タイムライン」を選ぶと日付のある行が順に並び、クリックで開きます。Textus 1.4.6 が必要です。
-- **0.3.3** - 日付が途中で折り返されなくなりました。折りたたみ中に描いた図は開くと幅に合います。
-- **0.3.2** - 長い説明や日付が狭いパネルで折り返すように。文書のフォントで描き、空のブロックには書き方を表示
-- **0.3.1** - 紹介ページを書き直しました。何をするかを一文で示し、できることと各バージョンの変更を載せています。
-- **0.3.0** - Textus AI のツール `check_timeline` を追加
-- **0.2.0** - テーマの色を使い、テーマを変えると描き直すように
-- **0.1.3** - Textus 1.3 で文字にテーマの色を使うように
-- **0.1.2** - すばやく編集しても、古い図が新しい図を上書きしないように
-- **0.1.0-0.1.1** - 最初のバージョン：出来事をタイムラインに描画、高さの指定、書き出し時の画像
+- **0.4.0** - A database can be shown as a timeline: pick Timeline among its views, and its dated rows line up in order; a click opens a row. Needs Textus 1.4.6.
+- **0.3.3** - A date no longer breaks in the middle ("2024-0" over "3"); a chart drawn while its block was folded fits once it opens.
+- **0.3.2** - long notes and dates wrap to fit a narrow island, the timeline uses the document's font, and an empty block says what to write
+- **0.3.1** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
+- **0.3.0** - a tool for Textus AI, `check_timeline`
+- **0.2.0** - the theme's colors, drawn again when the theme changes
+- **0.1.3** - text in the theme's colors on Textus 1.3
+- **0.1.2** - keeps up with quick edits: an older drawing never replaces a newer one
+- **0.1.0-0.1.1** - first versions: events drawn as a timeline, a height setting, pictures in exports
 
 <!-- ai-tools -->
 ## Textus AI のツール

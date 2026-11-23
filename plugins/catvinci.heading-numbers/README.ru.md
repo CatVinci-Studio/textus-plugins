@@ -12,14 +12,14 @@
 
 ## Изменения
 
-- **0.2.4** - Если два документа открыты рядом, номера заголовков видны в обоих, а не только в том, где вы печатаете.
-- **0.2.3** - Свойства и блоки кода больше не получают номера по ошибке, а при экспорте, как и в редакторе, нумеруются только заголовки верхнего уровня.
-- **0.2.2** - Его страница теперь одной фразой говорит, что он делает, что умеет и что менялось в каждой версии.
-- **0.2.1** - Нет номеров в документе, пронумерованном вручную, и в документе со свойством `number headings: off`.
-- **0.2.0** - Textus AI может вписать номера в заголовки Markdown или убрать их.
-- **0.1.3** - Указано, где работает: компьютер, iPhone и iPad.
-- **0.1.2** - Нумерация начинается с самого высокого уровня заголовков в документе, а не по настройке.
-- **0.1.0-0.1.1** - Первые версии: номера перед заголовками при письме и при экспорте в HTML и PDF.
+- **0.2.4** - With two documents open side by side, both show their heading numbers, not only the one you are typing in.
+- **0.2.3** - Front matter and code blocks no longer get numbers by mistake, and exports number only top-level headings, like the editor.
+- **0.2.2** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
+- **0.2.1** - No numbers on a document numbered by hand, or one whose front matter says `number headings: off`.
+- **0.2.0** - Textus AI can write heading numbers into Markdown, or take them out.
+- **0.1.3** - Says where it runs: the desktop, iPhone and iPad.
+- **0.1.2** - Numbering starts at the document's own top heading level instead of a setting.
+- **0.1.0-0.1.1** - First versions: numbers before headings while writing, and in HTML and PDF exports.
 
 <!-- ai-tools -->
 ## Инструменты для Textus AI

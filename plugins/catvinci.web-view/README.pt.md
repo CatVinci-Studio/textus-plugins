@@ -24,8 +24,8 @@ Funciona no desktop.
 
 ## Alterações
 
-- **0.2.2** - Textos de ajuda e de estado vazio mais curtos.
-- **0.2.1** - Sua página agora diz numa frase o que ele faz, o que pode fazer e o que mudou em cada versão.
-- **0.2.0** - Links da web clicados com Ctrl/⌘ abrem numa aba só quando você liga isso nos ajustes; senão, abrem no navegador.
-- **0.1.2** - Só desktop.
-- **0.1.0-0.1.1** - Primeiras versões: um endereço ou uma pesquisa numa aba, páginas recentes, abrir ou pesquisar a seleção, links clicados com Ctrl/⌘, escolha do buscador.
+- **0.2.2** - Shorter help and empty-state text.
+- **0.2.1** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
+- **0.2.0** - Ctrl/Cmd+clicked web links open in a tab only when you turn that on in the settings; otherwise they open in your browser.
+- **0.1.2** - Desktop only.
+- **0.1.0-0.1.1** - First versions: an address or a search in a tab, recent pages, the selection opened or searched, Ctrl/Cmd+clicked links, a choice of search engine.

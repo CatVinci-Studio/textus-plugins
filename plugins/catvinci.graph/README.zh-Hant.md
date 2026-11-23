@@ -25,21 +25,21 @@
 
 ## 更新紀錄
 
-- **0.5.10** - 在觸控螢幕上，第一次點筆記會標亮它和相連的線，第二次才開啟；手指更容易點中筆記，第二根手指只縮放、不再同時拖曳圖譜。設定改在 Textus 自己的彈出視窗裡開啟。
-- **0.5.9** - 拖動筆記或畫面時按 Esc 會放回原處；被系統打斷的觸控不會再讓拖動卡住。
-- **0.5.8** - 側欄裡的關係圖會鋪開適配面板，不再一開始擠成一小團、標籤疊在一起。名稱排序改用 Textus 內建的順序，不再自帶一份，安裝包更小。
-- **0.5.7** - 頁面語言由 Textus 自動跟隨。需要 Textus 1.4.3。
-- **0.5.6** - 圖譜分頁頂部的統計和按鈕始終可見：在圖上捲動或雙指縮放，不會再把它們推到上方被遮住。標籤不再擠成一團：連結最多的筆記優先顯示名稱，其餘的放大後再出現。大資料夾開啟時直接就是排好的樣子，不再一點點展開；筆記連結的圖片等附件預設不進圖譜，可在設定裡開啟「附件」。切換文件或儲存時，整張圖不再重新抖動排列。
-- **0.5.5** - 指向還沒寫的筆記的標準 Markdown 連結依 Textus 的方式定位，並與指向同一筆記的 [[連結]] 合併。Ctrl/Cmd 點按會在目前文件旁邊開啟筆記。標籤隨介面文字大小變化，資料夾顏色跟隨主題。側欄圖譜不再有自己的設定。
-- **0.5.4** - 觸控板捏合縮放隨手勢平滑變化；搭配 Textus 1.3.13，在 Mac 上捏合縮放的是關係圖，不再縮放後面的文件。 說明和空狀態文字更簡短。 側邊欄面板和頁面依 Textus 1.3.13 的版面調整。
+- **0.5.10** - By touch, a first tap on a note lights it and its links and a second opens it; notes are easier to hit with a finger, and a second finger zooms instead of also moving the graph. Its settings open in Textus's own popover.
+- **0.5.9** - Esc while dragging a note or the view puts it back, and a touch the system cancels no longer leaves a drag stuck.
+- **0.5.8** - The graph in the sidebar spreads out to fit its panel, instead of starting as a small clump with labels on top of each other. Sorts names with Textus's own order instead of a copy of it, so the package is smaller.
+- **0.5.7** - The page follows Textus's language by itself. Needs Textus 1.4.3.
+- **0.5.6** - The counts and buttons at the top of the graph tab stay in view: scrolling or pinching over the graph no longer pushes them up under the tab. Labels no longer pile on top of each other: the most linked notes keep theirs and the rest show as you zoom in. A big folder opens already laid out instead of unfolding, and pictures and other attachments a note links to stay out of the graph unless you turn on Attachments in its settings. Switching documents or saving no longer shakes the whole graph loose to settle again.
+- **0.5.5** - Standard Markdown links to notes not written yet are placed as Textus places them, and merge with [[links]] to the same note. Fit spreads a small graph over the whole pane, so names no longer sit on each other. Ctrl/Cmd-click opens a note beside the one in front. Labels follow the interface text size, and folder colours follow the theme. The sidebar graph has no settings of its own any more.
+- **0.5.4** - A trackpad pinch zooms smoothly, in step with the gesture; with Textus 1.3.13 a pinch on a Mac zooms the graph, not the document behind it. Shorter help and empty-state text. Its sidebar panel and page follow Textus 1.3.13's layout.
 - **0.5.3** - Its bars, lists and controls are Textus's own, grow with the interface and follow every theme; needs Textus 1.3.12.
-- **0.5.2** - Obsidian 的顏色群組取自最近的儲存庫，儲存庫在開啟的資料夾之上也可以。需要 Textus 1.3.10。
-- **0.5.1** - 在 Obsidian 儲存庫裡，`.obsidian/graph.json` 中的顏色群組也會用來上色。
-- **0.5.0** - [[連結]] 對應到哪篇筆記，與在 Textus 裡點擊連結時一致。
-- **0.4.0** - Textus AI 可以查看一份文件周圍的筆記（`list_neighbours`）。
-- **0.3.0** - 改用 Textus 自己的控制項和選單，顏色跟隨主題。
-- **0.2.0-0.2.1** - 新增設定面板：篩選、搜尋和顏色分組；標籤可當作節點；箭頭標出連結方向；側欄圖譜可調深度。
-- **0.1.0-0.1.1** - 最初的版本：分頁裡看整個資料夾，側欄裡看目前文件周圍的筆記，依資料夾上色，上千篇筆記也順暢。
+- **0.5.2** - Obsidian's colour groups come from the nearest vault, even one above the open folder. Needs Textus 1.3.10.
+- **0.5.1** - In an Obsidian vault, the colour groups in `.obsidian/graph.json` colour the notes too.
+- **0.5.0** - [[Links]] are matched to notes the same way Textus matches them when you click one.
+- **0.4.0** - Textus AI can see the notes around a document (`list_neighbours`).
+- **0.3.0** - Textus's own controls and menus; colours from the theme.
+- **0.2.0-0.2.1** - A settings panel with filters, search and colour groups; tags as nodes; arrows for link direction; the sidebar graph's depth.
+- **0.1.0-0.1.1** - First versions: the whole folder in a tab and the notes around the open document in the sidebar, coloured by folder, smooth with thousands of notes.
 
 <!-- ai-tools -->
 ## Textus AI 工具

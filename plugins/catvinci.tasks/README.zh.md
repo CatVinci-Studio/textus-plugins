@@ -46,21 +46,21 @@ sort by due
 
 ## 更新日志
 
-- **0.4.7** - 切换 Textus 的语言后，筛选框和空列表提示会跟着变。需要 Textus 1.4.3。
-- **0.4.6** - 任务块和其他块一样，内容离边框留出空隙。
-- **0.4.5** - AI 在某个标题下添加的任务不会再落进代码块；“完成的待办移到列表末尾”在 Windows（CRLF）换行的笔记里也有效。
-- **0.4.4** - 文档里的任务查询按界面文字大小显示，栏位变宽时显示更多内容，而不是把字放大（Textus 1.4.1）。
-- **0.4.3** - 带 HTML 注释的待办现在也能勾选，勾选不成时会提示原因。`group by status` 分组顺序正确，任务块在窄面板里自动换行，截止日期样式与侧栏一致，打字更轻快。
-- **0.4.2** - 说明和空状态文字更简短。
-- **0.4.1** - 工具栏、列表和各个控件都改用 Textus 自己的，随界面一起缩放，适配每个主题；需要 Textus 1.3.12。新增设置「完成的待办移到列表末尾」：在文档或列表里勾选的待办会排到未完成项后面（第一次会请求读取和编辑当前文档的权限）。
-- **0.4.0** - 使用 Textus 1.3.10 内置的日期功能，因此需要 Textus 1.3.10。
-- **0.3.1** - 打包更新后的公共日期代码，其他没有变化。
-- **0.3.0** - 支持 Obsidian Tasks：`[/]` 和 `[-]`、任务字段、完成日期、重复任务和 `tasks` 查询块；开头属性标了 `kanban-plugin` 的看板不列入列表。
-- **0.2.1** - 看板（`名称.kanban.md`）上的卡片不再列出。
-- **0.2.0** - Textus AI 可以列出、添加和勾选任务。
-- **0.1.3** - 界面语言改变时，列表随之切换。
-- **0.1.2** - 截止日期按本地时间计算；数量按各语言的复数形式显示。
-- **0.1.0-0.1.1** - 最初的版本：把文件夹里所有任务列在侧边栏，可以勾选或跳转，带筛选、截止日期和「即将到期」。
+- **0.4.7** - The filter field and empty message follow Textus's language when you switch it. Needs Textus 1.4.3.
+- **0.4.6** - The tasks block keeps a gap inside its frame, as other blocks do.
+- **0.4.5** - The AI's new task under a heading never lands inside a code block, and **Move finished tasks to the end of their list** works in Windows (CRLF) notes.
+- **0.4.4** - A task query in a document draws at the interface's text size, so a wider column shows more of it rather than larger text (Textus 1.4.1).
+- **0.4.3** - Ticking a task with an HTML comment in it now works, and a refused tick tells you why. `group by status` sorts in the right order, task blocks fit narrow panes, due dates look like the sidebar's, and typing stays lighter.
+- **0.4.2** - Shorter help and empty-state text.
+- **0.4.1** - Its bars, lists and controls are Textus's own, grow with the interface and follow every theme; needs Textus 1.3.12. A new setting, **Move finished tasks to the end of their list**: a task ticked in a document or in the list goes after the open ones (it asks once to read and edit the document in front).
+- **0.4.0** - Uses the dates built into Textus 1.3.10, which it now needs.
+- **0.3.1** - Ships the updated shared date code; nothing else changed.
+- **0.3.0** - Obsidian Tasks: `[/]` and `[-]`, the task fields, done dates, repeating tasks and `tasks` query blocks; boards marked with `kanban-plugin` are left out of the list.
+- **0.2.1** - Cards on a Kanban board (`name.kanban.md`) are no longer listed.
+- **0.2.0** - Textus AI can list, add and tick off tasks.
+- **0.1.3** - The list follows the interface language when it changes.
+- **0.1.2** - Due dates in local time; counts in each language's plural forms.
+- **0.1.0-0.1.1** - First versions: every task in the folder in a sidebar list, ticked off or opened from there, with a filter, due dates and Due soon.
 
 <!-- ai-tools -->
 ## Textus AI 工具

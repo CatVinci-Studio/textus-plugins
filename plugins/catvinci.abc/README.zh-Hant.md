@@ -23,15 +23,15 @@ C D E F | G A B c |
 
 ## 更新紀錄
 
-- **0.3.4** - 安裝包內附上所帶第三方函式庫的清單和授權。
-- **0.3.3** - 區塊摺疊時（手機上）畫的圖，展開後會重新配合寬度，不再保持原本的大小。
-- **0.3.2** - 小節依欄寬換行，不再整體縮小；點擊音符不再變紅；`check_abc` 接受完整調式名稱、任意音符長度、`+:` 行、`` ` `` 和 `$`；移除 `height=`。
-- **0.3.1** - 介紹頁重寫：一句話說明它做什麼，再講它能做的事，並列出每個版本的更新。
-- **0.3.0** - Textus AI 可以在寫入 `abc` 區塊前先檢查它（`check_abc`）。
-- **0.2.0** - 音符跟隨佈景主題的文字顏色；需要 Textus 1.3.2。
-- **0.1.3** - 改用 Textus 重新命名後的文件顏色。
-- **0.1.2** - 匯出的圖片保留樂譜的寬度與高度。
-- **0.1.0-0.1.1** - 最初的版本：`abc` 區塊畫在原始碼下方、支援 `height=`、匯出時轉為圖片；商店頁面與圖示。
+- **0.3.4** - Its package lists the libraries it carries, with their licenses.
+- **0.3.3** - A chart drawn while its block was folded (a phone) fits once the block opens, instead of keeping its old size.
+- **0.3.2** - Bars wrap to the column instead of the whole score shrinking; clicking a note no longer turns it red; `check_abc` accepts full mode names, any note length, `+:` lines, `` ` `` and `$`; `height=` is gone.
+- **0.3.1** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
+- **0.3.0** - Textus AI can check an `abc` block before writing it (`check_abc`).
+- **0.2.0** - The notes follow the theme's text color; needs Textus 1.3.2.
+- **0.1.3** - Uses Textus's renamed document colors.
+- **0.1.2** - Exported pictures keep the music's width and height.
+- **0.1.0-0.1.1** - First versions: `abc` blocks drawn under their source, `height=`, pictures in exports; store page and icon.
 
 <!-- ai-tools -->
 ## Textus AI 工具

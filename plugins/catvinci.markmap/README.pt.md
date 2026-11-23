@@ -25,18 +25,18 @@ O plugin usa o [markmap](https://markmap.js.org). Pede uma única permissão, pa
 
 ## Alterações
 
-- **0.3.8** - O mapa mental preenche o seu bloco: um mapa pequeno cresce (até ao dobro) para a largura do bloco e a altura que lhe der, e acompanha o zoom da nota em vez de ficar cortado à direita.
-- **0.3.7** - O pacote lista as bibliotecas que inclui, com as suas licenças.
-- **0.3.6** - Um mapa mental desenhado antes de a nota ser diagramada já não mostra um erro.
-- **0.3.5** - Um gráfico desenhado com o bloco recolhido (no telemóvel) ajusta-se à largura ao abrir.
-- **0.3.4** - Editar um mapa mental por muito tempo já não faz o Textus usar cada vez mais memória.
-- **0.3.3** - Rolar sobre um mapa mental agora rola a nota; use o gesto de pinça ou Ctrl e a roda para dar zoom. O mapa usa a fonte e as cores do seu tema, também no modo escuro, e abre inteiro na tela.
-- **0.3.2** - Sua página agora diz numa frase o que ele faz, o que pode fazer e o que mudou em cada versão.
-- **0.3.1** - Um mapa mental fora da área visível é exportado como imagem e não como código.
-- **0.3.0** - O Textus AI pode verificar um bloco `markmap` antes de escrevê-lo.
-- **0.2.0** - As cores dos ramos vêm dos tons do tema. Requer Textus 1.3.2.
-- **0.1.3** - Usa a cor do texto do documento e o tamanho das notas de rodapé do tema pelos nomes do Textus 1.3.
-- **0.1.0-0.1.2** - Primeiras versões: blocos `markmap` desenhados no documento, `height=` e exportação como imagem nas cores da exportação.
+- **0.3.8** - The mind map fills its block: a small one grows (up to twice its size) to the block's width and the height you give it, and it follows the note's zoom instead of being cut off on the right.
+- **0.3.7** - Its package lists the libraries it carries, with their licenses.
+- **0.3.6** - A mind map drawn before its note was laid out no longer shows an error.
+- **0.3.5** - A chart drawn while its block was folded (a phone) fits once the block opens, instead of keeping its old size.
+- **0.3.4** - Editing a mind map for a long time no longer makes Textus use more and more memory.
+- **0.3.3** - Scrolling over a mind map now scrolls the note; pinch or Ctrl-scroll to zoom. The map uses your theme's font and colors, in dark mode too, and opens fully fitted.
+- **0.3.2** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
+- **0.3.1** - A mind map scrolled out of sight exports as its picture instead of its source.
+- **0.3.0** - Textus AI can check a `markmap` block before it writes one.
+- **0.2.0** - Branch colors come from the theme's tones. Needs Textus 1.3.2.
+- **0.1.3** - Uses the theme's document text color and footnote size under their Textus 1.3 names.
+- **0.1.0-0.1.2** - First versions: `markmap` code blocks drawn in the document, `height=`, and exports as a picture in the export's colors.
 
 <!-- ai-tools -->
 ## Ferramentas para o Textus AI

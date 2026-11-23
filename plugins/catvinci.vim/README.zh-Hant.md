@@ -22,14 +22,14 @@ Obsidian：在 Obsidian 庫裡，也會讀取庫裡的 `.obsidian.vimrc`（Vimrc
 
 ## 更新紀錄
 
-- **0.2.9** - 需要 Textus 1.3.0-beta.8 或更新版本，那是它用到的功能都具備的第一個版本。
-- **0.2.8** - 只在電腦上提供：手機的螢幕鍵盤會把字母直接打進內文，無法當成 Vim 按鍵。
-- **0.2.7** - 狀態列的模式會打開選單，可在其中關閉 Vim；回到 Textus 時會重新讀取 `.obsidian.vimrc`；在可視模式用 **:** 一定能離開。
-- **0.2.6** - 說明和空狀態文字更簡短。
-- **0.2.5** - 程式碼按職責拆成了幾個小檔案，使用上沒有變化。
-- **0.2.4** - 介紹頁重寫：一句話說明它做什麼，再講它能做的事，並列出每個版本的更新。
-- **0.2.3** - 讀取 Obsidian 庫裡的 `.obsidian.vimrc`；同樣的按鍵再對應一次會取代先前的對應。
-- **0.2.2** - **zz**、**zt**、**zb** 把游標所在行移到視窗中間、頂端或底部。
-- **0.2.1** - 標明執行平台：電腦、iPhone 和 iPad。
-- **0.2.0** - **:** 開啟命令面板，Vim 的命令排在最前面；flash 按一個字母就顯示標籤；Mac 上一般模式使用英文輸入。
-- **0.1.0-0.1.1** - 最初的版本：各種模式、移動、運算子、計數、. 重複，flash 以及 **ds**、**cs**、**ys**，命令列（**:w**、**:q**、**:wq**、**:12**），vimrc 式按鍵對應和大小寫按鍵。
+- **0.2.9** - Needs Textus 1.3.0-beta.8 or later, the first with everything it uses.
+- **0.2.8** - Desktop only: a phone's on-screen keyboard types its letters into the text instead of running them as Vim keys.
+- **0.2.7** - The status bar's mode opens a menu that turns Vim off; `.obsidian.vimrc` is read again when you come back to Textus; leaving visual mode with **:** always works.
+- **0.2.6** - Shorter help and empty-state text.
+- **0.2.5** - Its code is split into smaller files by what each part does; nothing changes in use.
+- **0.2.4** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
+- **0.2.3** - Reads an Obsidian vault's `.obsidian.vimrc`; mapping the same keys again replaces the earlier mapping.
+- **0.2.2** - **zz**, **zt** and **zb** bring the caret's line to the middle, top or bottom of the window.
+- **0.2.1** - Says where it runs: the desktop, iPhone and iPad.
+- **0.2.0** - **:** opens the command palette with Vim's commands first; flash shows its labels after one letter; normal mode types Roman on a Mac.
+- **0.1.0-0.1.1** - First versions: modes, motions, operators, counts, dot repeat, flash with **ds**, **cs** and **ys**, the command line (**:w**, **:q**, **:wq**, **:12**), vimrc key mappings and the case keys.

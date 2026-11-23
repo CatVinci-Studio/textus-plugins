@@ -6,19 +6,6 @@
 
 ## 页面
 
-- **0.8.3** - 有空间时工具栏保持一行：以前在 Mac 上缩放过的块里，视图标签会收成一个按钮，排序被挤到单独一行，而且每次点击都要反复测量。比 Textus 允许的高度更高的块，下面还有行时底部会渐隐，不再像被截断。触屏上，看板的卡片和分组要按住一下才会拿起，滑动就是滚动。
-- **0.8.2** - `file.folder`、`file.path`、`file.mtime` 列会显示每页的文件夹、路径和最后修改时间（以前是空的）。
-- **0.8.1** - 行和卡片让位时的动画和 Textus 其他地方一致。
-- **0.8.0** - 其他插件可以在表格、看板、日历、画廊、列表之外添加视图（比如时间轴图插件的时间轴），在视图菜单里选。这些视图需要 Textus 1.4.6。
-- **0.7.16** - 名字排序改用 Textus 自带的顺序，不再自带一份，安装包更小。看板里的列表拖动方式和 Textus 自己的标签一样；列宽也可以用方向键调整。
-- **0.7.15** - 切换 Textus 的语言后，筛选框和空列表提示会跟着变。需要 Textus 1.4.3。
-- **0.7.14** - 列把手的位置改用 Textus 的统一规则，和正文表格相同。日历视图和单元格编辑改用 Textus 的共用工具。需要 Textus 1.4.3。
-- **0.7.13** - 列用和正文表格一样的把手拖动，拿起和让位的样子也一样。需要 Textus 1.4.3。
-- **0.7.12** - 视图标签的名字会被截断时（例如「Calenda」），顶栏改为再收紧一步。菜单用词和 Textus 表格菜单一致（英文大小写，德、西、葡语的行操作）。
-- **0.7.11** - 筛选条件（是、不是、为空）改用 Textus 自己的菜单选择，不再弹出系统下拉框；选项前的勾选框也换成 Textus 的样式。
-- **0.7.10** - 在表格里重命名一行与在页面树里一样：有子页面的页面保留子页面并留在它的知识库中，只改页面自己的标题。打开的 `.base` 文件会显示在 Textus 里保存或插件写入的修改，不再用旧内容覆盖较新的文件：期间做的修改会被拒绝，并提示你再改一次。把属性改成某些笔记已有的名字时会先询问，并保留它们原有的值。
-- **0.7.9** - 表格更紧凑：每列默认同样宽（标题列稍宽），放不下就横向滚动；每行只占一行，长内容截断，悬停显示全文；行距更紧。标签和链接不再压到旁边的列。屏幕上的知识库只在它的行变化时重画，不再在文件夹里每次保存时都重画。知识库顶部的工具栏不再在一行和两行之间来回跳动。
-- **0.7.8** - 在任何文件夹里都能重新设置列类型（数字、日期、勾选、列表）：类型记在知识库文件里，Obsidian 自己的类型照样读取。嵌在文档里的知识库按界面文字大小显示，栏位变宽时显示更多内容，而不是把字放大；单元格右键菜单里的剪切、复制、粘贴在 Textus 1.4.1 上可用。
 - **有子页面的页面是一个文件夹**：`Plans/Plans.md` 是页面本身，子页面放在同一个 `Plans/` 文件夹里，和 Obsidian 的“文件夹笔记”一样。输入 `/` 选 **新建子页面…**，或选 **插件 › 新建子页面…**。第一个子页面会自动把 `Plans.md` 移进它的文件夹，指向它的链接跟着更新。
 - **侧边栏的「页面树」标签**把文件夹显示成页面树。右键一个页面可以新建子页面、重命名、设图标或移到废纸篓（连同下面的页面，会先确认）；把页面拖到另一个页面上，它就成了那个页面的子页面。移动后链接都会跟着更新。
 - **页面图标**：**设置页面图标…**（在「插件」菜单里，或在「文件」标签里右键一篇文档）选一个表情符号，存在页面 front matter 的 `icon` 里。
@@ -72,22 +59,35 @@ Notion 的导出包请用 **Notion 导入** 插件导入，它写出的页面和
 
 ## 更新日志
 
-- **0.7.7** - 所有按钮和菜单都显示成你的语言，日语、韩语、德语、西班牙语、法语、葡萄牙语和俄语也补全了；看板泳道的提示不再显示内部名称。 表格按页面宽度排好，长名字先换行，放不下才横向滚动；页面树里有图标的页面直接显示它的图标，不再叠一个文件图标。需要 Textus 1.4.0。
-- **0.7.6** - 块变窄时工具栏保持一行：先收起计数，再收起“新建”的文字，视图标签收进菜单；空间够时排序和筛选也放在这一行。单选、标签和复选框的筛选改成像 Notion 那样在列表里打勾，带“清除选择”。拖动视图标签，松手就停在那里；视图比块宽时两边渐隐。配合 Textus 1.3.13，可以在右键菜单里宽屏显示、缩小显示。 说明和空状态文字更简短。
-- **0.7.5** - 很长的标题或文字在列宽内换行，不再把整张表撑开；表格行的右键菜单和文档里的表格一样（在下方插入行、在右侧插入列，再是「行」「列」）；日期小月历在任何窗口、放大后也会在格子下方弹出；新建一行时显示完整的表格格子；输入框右键用 Textus 自己的菜单；在 Mac 上也能拖动视图标签；需要 Textus 1.3.12。界面里的“数据库”改称“知识库”，插件在各语言里的名字和 Notion 的 Wiki 一致。
-- **0.7.4** - 表格往下滚时表头固定；滚到底自动加载更多行，不再有“再显示”按钮；视图菜单只在右键里；列的默认宽度按块的宽度成比例；每个块上次的视图记在本机，不写进笔记；折叠改用 Textus 自己的左侧折叠把手，不再有自己的折叠箭头；拖动列头时整列跟着移动、其他列让位，和侧栏标签一样；评分列整列统一显示；同一个筛选条件只保留一次，互相矛盾的条件（状态是“已完成”，再加状态是“进行中”）以新的为准；看板、编辑框、评分改用 Textus 自己的控件；每一行右键可以打开或移到废纸篓；视图标签可以拖动排序；日期可以手打，也可以在弹出的小月历里点选；页面第一次建子页面、被移进自己的文件夹后，插入的子页面链接按新位置写；需要 Textus 1.3.12
-- **0.7.3** - 同步双向链接里判断笔记链接写法的修复。
-- **0.7.2** - 文档缩放时，拖动的列跟着指针走，拖动时不再选中文字；日期按显示的样子编辑（2026-11-08），不再变成系统的月/日/年；新页面和数据库用标准链接 [Week 1](Week%201.md) 链接，文件夹或页面本来用双链时仍写双链
-- **0.7.1** - 新数据库和子页面的链接按文件夹的链接写法写入；需要 Textus 1.3.10
-- **0.7.0** - 拖动列头调整顺序、拖动边缘调整宽度（`columnSize`）；右键打开视图菜单；行在标签页里打开；选项颜色按文字决定；**把 Dataview 查询转成 Base**
-- **0.6.0** - 数据库改用 Obsidian Bases（` ```base ` 代码块和 `.base` 文件），支持视图、筛选、排序、`groupOrder`、`limit`、公式、折叠和 **再显示**；页面树可以重命名、移到废纸篓和拖动；页面文件夹改名时页面跟着改
-- **0.5.0** - 改名为「知识库」，合并了页面树和 Notion 导入；有子页面的页面变成文件夹，**整理为文件夹单元…** 移动旧结构的页面
-- **0.4.3** - 看板和画廊卡片上的标签和长内容自动换行
-- **0.4.1-0.4.2** - 更好地读取 Notion 的日期和关联；之后 Notion 导入移到 Notion 导入插件
-- **0.4.0** - 新增 Textus AI 工具，读取数据库的行、添加行
-- **0.3.0** - 属性、筛选和选项使用 Textus 自己的菜单，代码块不再有边框
-- **0.2.0** - 和 Notion 一样的筛选和排序、单选选项、属性类型，在表格里直接新建列和页面
-- **0.1.0-0.1.1** - 最初版本：把文件夹里的文档显示成表格、看板、日历或画廊并直接编辑；导入 Notion 的 CSV；新建数据库的 Textus AI 工具
+- **0.8.3** - The bar stays on one line when there is room: in a zoomed block on a Mac it folded the view tabs into one button and put the sorts on a line of their own, and measured itself many times on every click. A block taller than Textus lets it be fades at its foot while more rows are below, instead of looking cut off. By touch, a board card or lane lifts after a short hold, so a swipe scrolls instead of dragging.
+- **0.8.2** - The `file.folder`, `file.path` and `file.mtime` columns show each page's folder, path and when it was last changed (they were empty).
+- **0.8.1** - Rows and cards make way at the pace of the rest of Textus.
+- **0.8.0** - Other plugins can add views beside the table, board, calendar, gallery and list - the Timeline plugin's timeline, for one - in the view menus. Needs Textus 1.4.6 for those.
+- **0.7.16** - Sorts names with Textus's own order instead of a copy of it, so the package is smaller. A board's lists move as Textus's own tabs do, and a column's width can also be set with the arrow keys.
+- **0.7.15** - The filter field and empty message follow Textus's language when you switch it. Needs Textus 1.4.3.
+- **0.7.14** - A column's grip is placed by Textus's shared rule, the same one as the document's tables. The calendar view and cell editing use Textus's shared page tools. Needs Textus 1.4.3.
+- **0.7.13** - A column is pulled by the same grip as the document's tables, and lifts and slides the same way. Needs Textus 1.4.3.
+- **0.7.12** - A view tab whose name would be cut short ("Calenda") makes the bar give way a step instead. Menu words match the app's table menu (Title Case; German, Spanish and Portuguese row words).
+- **0.7.11** - A filter's verb (is, is not, is empty) is picked from Textus's own menu instead of the system's dropdown, and its option boxes are Textus's own checkboxes.
+- **0.7.10** - Renaming a row in a table renames it as the Pages tree does: a page with sub-pages keeps them and stays in its database, and only the page's own title heading changes. An open `.base` file shows changes saved in Textus or written by a plugin, and never writes an older copy over a newer file: a change made meanwhile is refused with a note to make it again. Renaming a property to a name some notes already have asks first and keeps their value.
+- **0.7.9** - Tables are denser: every column has one width (the title's wider) and the table scrolls sideways when they don't fit, each row is one line with longer values cut short and shown whole on hover, and rows sit closer. Tags and links no longer run over the next column. A base on screen draws again only when its rows change, not at every save in the folder. A base's bar no longer jumps back and forth between one line and two.
+- **0.7.8** - Setting a column's type (number, date, checkbox, list) works again in every folder: the type is kept in the base, and Obsidian's own types are still read. A base in a document draws at the interface's text size, so a wider column shows more of it rather than larger text; Cut, Copy and Paste in a cell's right-click menu work with Textus 1.4.1.
+- **0.7.7** - Every button and menu now shows its words in your language, including Japanese, Korean, German, Spanish, French, Portuguese and Russian; a board lane's tooltip no longer shows a raw name. A table now fits its page and wraps long names before it scrolls sideways; a page's icon shows in place of the file icon in the Pages tree. Needs Textus 1.4.0.
+- **0.7.6** - In a narrow block the bar keeps to one line: the count goes first, then New's word, then the view tabs fold into a menu; sorts and filters ride in the bar while there's room. A filter on a select, tags or a checkbox is ticked in a list, as in Notion, with Clear selection. A dragged view tab stays where it's let go, and a view wider than the block fades at its edges. With Textus 1.3.13 the block can be shown wide, across the pane, and drawn smaller, from its right-click menu. Shorter help and empty-state text.
+- **0.7.5** - A long title or text wraps within a column of a set width instead of stretching the table; a row's right-click menu is laid out as a Markdown table's (insert a row below or a column to the right, then Row and Column); the date month opens and sits under its field in every window, zoomed too; a new row is drafted in the table's own cells; a field's right-click menu is Textus's own; a view's tab can be dragged on a Mac too; needs Textus 1.3.12. Its name is Notion's word for a wiki in each language (Wiki in English); a database is a base, as Obsidian calls it (New Base…).
+- **0.7.4** - a table's head stays in view while its rows scroll; more rows load as you scroll down, no Show more; a view's menu is on right-click only; columns start at widths in proportion to the block; the view you leave a block in is kept on this device, not in the note; a block folds with Textus's own caret on its left, no fold arrow of its own; a column is dragged by its head as the sidebar's tabs are, the others sliding aside; a rating column shows the same way all down; a filter added twice is kept once, and one that contradicts another (status is Done, then status is Doing) takes its place; its board, fields and stars are Textus's own controls; a row's right-click menu opens it or moves it to the Trash; view tabs are dragged into a new order; a date is typed or picked from a small month under its field; a new sub-page's link in a page just moved into its folder points from where the page is now; needs Textus 1.3.12
+- **0.7.3** - Shares Two-way Links' fix for working out how a note links.
+- **0.7.2** - a dragged column stays under the pointer in a zoomed document, and dragging selects no text; a date is edited as it is shown, 2026-11-08, not in the system's order; new pages and databases are linked with standard links, [Week 1](Week%201.md), unless the folder or the page already uses [[wiki links]]
+- **0.7.1** - new databases and sub-pages are linked the way the folder writes links; needs Textus 1.3.10
+- **0.7.0** - drag column heads to reorder and their edges to resize (`columnSize`); a view's menu on right-click; rows open in a tab; option colors from their words; **Convert Dataview query to base**
+- **0.6.0** - databases are Obsidian bases (` ```base ` blocks and `.base` files) with views, filters, sorts, `groupOrder`, `limit`, formulas, folding and **Show more**; the Pages tab can rename, delete to the Trash and drag; page folders follow renames
+- **0.5.0** - renamed Workspace: Pages and Notion Import merged in; a page with sub-pages becomes a folder, and **Organize Pages into Folders…** moves older pages
+- **0.4.3** - card tags and long values wrap on boards and galleries
+- **0.4.1-0.4.2** - Notion dates and relations read better; then the Notion import moves to the Notion Import plugin
+- **0.4.0** - tools for Textus AI to read a database's rows and add rows
+- **0.3.0** - Textus's own menus for properties, filters and options, and no frame around the block
+- **0.2.0** - Notion-style filters and sorts, select options, property types, and columns and pages made in the table
+- **0.1.0-0.1.1** - first versions: a folder's documents as a table, board, calendar or gallery, edited in place; a Notion CSV import; a tool for Textus AI to make a database
 
 <!-- ai-tools -->
 ## Textus AI 工具

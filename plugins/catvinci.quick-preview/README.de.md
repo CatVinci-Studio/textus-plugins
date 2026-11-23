@@ -11,10 +11,10 @@ Das Plugin fragt nach Lesezugriff auf den Editor (um zu sehen, auf welchen Link 
 
 ## Änderungen
 
-- **0.2.3** - Die Store-Beschreibung beginnt jetzt mit dem, was das Plugin tut.
-- **0.2.2** - Ein Link auf eine verschachtelte Überschrift (`[[Notiz#A#B]]`) zeigt deren Abschnitt, denselben, den ein Klick öffnet. Benötigt Textus 1.4.0.
-- **0.2.1** - Seine Seite sagt jetzt in einem Satz, was es tut, was es kann und was sich in jeder Version geändert hat.
-- **0.2.0** - Ein Link auf einen Block (`#^id`) zeigt diesen Block. Benötigt Textus 1.3.9.
-- **0.1.3** - Nennt, wo es läuft: Desktop, iPhone und iPad.
-- **0.1.2** - Die Länge der Karte ist fest statt einer Einstellung.
-- **0.1.0-0.1.1** - Erste Versionen: eine Karte für Links zu Dokumenten, mit dem Anfang des Dokuments oder dem Abschnitt, den der Link nennt, dazu Öffnen und Anheften.
+- **0.2.3** - The store description now opens with what the plugin does.
+- **0.2.2** - A link to a nested heading (`[[Note#A#B]]`) shows that heading's section, as a click opens it. Needs Textus 1.4.0.
+- **0.2.1** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
+- **0.2.0** - A link to a block (`#^id`) shows that block. Needs Textus 1.3.9.
+- **0.1.3** - Says where it runs: the desktop, iPhone and iPad.
+- **0.1.2** - The card's length is fixed instead of a setting.
+- **0.1.0-0.1.1** - First versions: a card for links to documents, with the document's opening or the section the link names, and Open and Pin.

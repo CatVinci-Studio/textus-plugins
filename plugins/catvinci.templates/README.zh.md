@@ -19,19 +19,19 @@
 
 ## 更新日志
 
-- **0.5.5** - 名字排序改用 Textus 自带的顺序，不再自带一份，安装包更小。需要 Textus 1.4.3。
-- **0.5.4** - 名字被占用时，在写入的同时取下一个空闲的名字，不会撞名（Textus 1.4.3）。
-- **0.5.3** - 商店简介改为开头一句就说明插件做什么。
-- **0.5.2** - 隐藏的或小写的模板文件夹及其子文件夹里的模板，现在都会列出来。插入后，光标会停在模板后面。
-- **0.5.1** - 从文件或文件夹的右键菜单选**从模板新建…**，文档会建在那个文件夹里。
-- **0.5.0** - 模板改由 Textus 自己填写，和每日笔记的写法一致；需要 Textus 1.3.10。
-- **0.4.1** - 模板按自然顺序排列：2 排在 10 前面。
-- **0.4.0** - 支持 Templater 常用的 `tp.date` 和 `tp.file` 标签，以及 Obsidian 库模板设置里的日期、时间格式；没执行的标签会在通知里列出。
-- **0.3.0** - 模板变成 Templates 文件夹里的 Markdown 文件（在 Obsidian 里是库自己的模板文件夹），旧版本存的模板会搬过去一次；支持 `{{date:格式}}` 和 `{{time:格式}}`。
-- **0.2.0** - Textus AI 可以列出你的模板，并用模板新建文档。
-- **0.1.3** - 注明可运行的平台：桌面版和 iPhone。
-- **0.1.2** - 从模板新建时，已有同名文档就不新建。
-- **0.1.0-0.1.1** - 最早的版本：新建文档、插入片段、存为模板，支持 `{{date}}`、`{{time}}` 和 `{{title}}`；商店页面和图标。
+- **0.5.5** - Sorts names with Textus's own order instead of a copy of it, so the package is smaller. Needs Textus 1.4.3.
+- **0.5.4** - A taken name gets the next free one as the file is written, never a clash (Textus 1.4.3).
+- **0.5.3** - The store description now opens with what the plugin does.
+- **0.5.2** - Templates in a hidden or lowercase templates folder, and in its subfolders, now show up. After Insert, the caret lands right after the template.
+- **0.5.1** - **New from Template…** from a file's or folder's right-click menu makes the document in that folder.
+- **0.5.0** - Templates are filled in by Textus itself, the same way as daily notes; needs Textus 1.3.10.
+- **0.4.1** - Templates are listed in natural order: 2 before 10.
+- **0.4.0** - Templater's common `tp.date` and `tp.file` tags, and an Obsidian vault's Templates date and time formats; tags that aren't run are named in a notice.
+- **0.3.0** - Templates are Markdown files in the Templates folder (a vault's own templates folder in Obsidian), moved there once from where older versions kept them; `{{date:FORMAT}}` and `{{time:FORMAT}}`.
+- **0.2.0** - Textus AI can list your templates and make a document from one.
+- **0.1.3** - Says where it runs: desktop and iPhone.
+- **0.1.2** - New from Template refuses a name that is already taken.
+- **0.1.0-0.1.1** - First versions: new documents, inserted snippets and saved templates, with `{{date}}`, `{{time}}` and `{{title}}`; store page and icon.
 
 <!-- ai-tools -->
 ## Textus AI 工具

@@ -11,8 +11,8 @@
 
 ## 更新日志
 
-- **0.1.5** - 商店简介改为开头一句就说明插件做什么。
-- **0.1.4** - 完整打出的命令排在第一位，回车就是它（\in 还是 \in）；不带花括号的命令写入后自动加一个空格；配合 Textus 1.3.13，写入后列表不再弹出。
-- **0.1.3** - 介绍页重写：一句话说明它做什么，再讲它能做的事，并列出每个版本的更新。
-- **0.1.2** - 注明可运行的平台：桌面版和 iPhone。
-- **0.1.0-0.1.1** - 最早的版本：200 多个命令并附上画出来的样子，按字母顺序查找，自动放好花括号和光标，成对的伸缩括号；商店页面和图标。
+- **0.1.5** - The store description now opens with what the plugin does.
+- **0.1.4** - A command typed out whole comes first, so Enter keeps it (\in stays \in); a command without braces is written with a space after it; with Textus 1.3.13 the list closes once a command is written.
+- **0.1.3** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
+- **0.1.2** - Says where it runs: desktop and iPhone.
+- **0.1.0-0.1.1** - First versions: over 200 commands with what each draws, letters in order, braces and caret in place, growing bracket pairs; store page and icon.

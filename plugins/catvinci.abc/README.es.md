@@ -23,15 +23,15 @@ C D E F | G A B c |
 
 ## Cambios
 
-- **0.3.4** - El paquete incluye la lista de bibliotecas que lleva, con sus licencias.
-- **0.3.3** - Un gráfico dibujado con su bloque plegado (en el móvil) se ajusta al ancho al abrirlo.
-- **0.3.2** - Los compases se reparten en líneas según la columna en vez de encoger toda la partitura; hacer clic en una nota ya no la pone roja; `check_abc` acepta nombres de modo completos, cualquier duración de nota, líneas `+:`, `` ` `` y `$`; se quita `height=`.
-- **0.3.1** - Su página dice ahora en una frase qué hace, qué puede hacer y qué cambió en cada versión.
-- **0.3.0** - Textus AI puede revisar un bloque `abc` antes de escribirlo (`check_abc`).
-- **0.2.0** - Las notas siguen el color de texto del tema; necesita Textus 1.3.2.
-- **0.1.3** - Usa los colores del documento con sus nuevos nombres en Textus.
-- **0.1.2** - Las imágenes exportadas conservan el ancho y el alto de la música.
-- **0.1.0-0.1.1** - Primeras versiones: bloques `abc` dibujados bajo su código, `height=`, imágenes al exportar; página en la tienda e icono.
+- **0.3.4** - Its package lists the libraries it carries, with their licenses.
+- **0.3.3** - A chart drawn while its block was folded (a phone) fits once the block opens, instead of keeping its old size.
+- **0.3.2** - Bars wrap to the column instead of the whole score shrinking; clicking a note no longer turns it red; `check_abc` accepts full mode names, any note length, `+:` lines, `` ` `` and `$`; `height=` is gone.
+- **0.3.1** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
+- **0.3.0** - Textus AI can check an `abc` block before writing it (`check_abc`).
+- **0.2.0** - The notes follow the theme's text color; needs Textus 1.3.2.
+- **0.1.3** - Uses Textus's renamed document colors.
+- **0.1.2** - Exported pictures keep the music's width and height.
+- **0.1.0-0.1.1** - First versions: `abc` blocks drawn under their source, `height=`, pictures in exports; store page and icon.
 
 <!-- ai-tools -->
 ## Herramientas para Textus AI

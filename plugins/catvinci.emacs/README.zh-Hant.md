@@ -16,9 +16,9 @@
 
 ## 更新紀錄
 
-- **0.1.6** - 在 Windows 和 Linux 上，C-x C-s 與 C-x C-g 又能正常使用了。狀態列只在真正接管按鍵時才顯示 Emacs。
-- **0.1.5** - 說明和空狀態文字更簡短。
-- **0.1.4** - 介紹頁重寫：一句話說明它做什麼，再講它能做的事，並列出每個版本的更新。
-- **0.1.3** - 標明可執行的平台：桌面版與 iPhone。
-- **0.1.2** - C-x 不再卡住；C-d 和 C-y 不再更動剪貼簿與選取範圍。
-- **0.1.0-0.1.1** - 最初的版本：移動、標記與選取範圍、含 C-y 和 M-y 的 kill ring、M-u M-l M-c、復原與 C-x 組合鍵；商店頁面與圖示。
+- **0.1.6** - C-x C-s and C-x C-g work again on Windows and Linux. The status bar shows Emacs only while it really has the keys.
+- **0.1.5** - Shorter help and empty-state text.
+- **0.1.4** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
+- **0.1.3** - Says where it runs: desktop and iPhone.
+- **0.1.2** - C-x no longer sticks; C-d and C-y leave the clipboard and the region alone.
+- **0.1.0-0.1.1** - First versions: moves, the mark and region, a kill ring with C-y and M-y, M-u M-l M-c, undo and C-x keys; store page and icon.

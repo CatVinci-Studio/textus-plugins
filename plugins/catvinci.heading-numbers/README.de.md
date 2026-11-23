@@ -12,14 +12,14 @@ Das Plugin liest die Überschriften des offenen Dokuments (Berechtigung, den Edi
 
 ## Änderungen
 
-- **0.2.4** - Sind zwei Dokumente nebeneinander offen, zeigen beide ihre Überschriftennummern, nicht nur das, in dem du gerade schreibst.
-- **0.2.3** - Front Matter und Codeblöcke bekommen keine falschen Nummern mehr, und Exporte nummerieren wie der Editor nur Überschriften der obersten Ebene.
-- **0.2.2** - Seine Seite sagt jetzt in einem Satz, was es tut, was es kann und was sich in jeder Version geändert hat.
-- **0.2.1** - Keine Nummern bei einem von Hand nummerierten Dokument oder einem mit `number headings: off` in den Eigenschaften.
-- **0.2.0** - Textus AI kann Nummern in die Überschriften eines Markdown-Texts schreiben oder sie entfernen.
-- **0.1.3** - Nennt, wo es läuft: Desktop, iPhone und iPad.
-- **0.1.2** - Die Nummerierung beginnt bei der obersten Überschriftenebene des Dokuments statt nach einer Einstellung.
-- **0.1.0-0.1.1** - Erste Versionen: Nummern vor Überschriften beim Schreiben und in HTML- und PDF-Exporten.
+- **0.2.4** - With two documents open side by side, both show their heading numbers, not only the one you are typing in.
+- **0.2.3** - Front matter and code blocks no longer get numbers by mistake, and exports number only top-level headings, like the editor.
+- **0.2.2** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
+- **0.2.1** - No numbers on a document numbered by hand, or one whose front matter says `number headings: off`.
+- **0.2.0** - Textus AI can write heading numbers into Markdown, or take them out.
+- **0.1.3** - Says where it runs: the desktop, iPhone and iPad.
+- **0.1.2** - Numbering starts at the document's own top heading level instead of a setting.
+- **0.1.0-0.1.1** - First versions: numbers before headings while writing, and in HTML and PDF exports.
 
 <!-- ai-tools -->
 ## Werkzeuge für Textus AI

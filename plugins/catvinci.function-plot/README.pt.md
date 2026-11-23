@@ -26,14 +26,14 @@ Pede apenas **Ferramentas para o Textus AI**, para que o Textus AI possa verific
 
 ## Alterações
 
-- **0.3.3** - Um gráfico desenhado com o bloco recolhido (no telemóvel) ajusta-se à largura ao abrir.
-- **0.3.2** - Curvas íngremes como tan(x) mantêm a forma e se interrompem nas assíntotas; uma função sem nada para desenhar avisa; π e 2xsin(x) são lidos; a verificação do Textus AI usa o intervalo de x da cerca.
-- **0.3.1** - Sua página agora diz numa frase o que ele faz, o que pode fazer e o que mudou em cada versão.
-- **0.3.0** - uma ferramenta para o Textus AI, `check_function_plot`
-- **0.2.0** - curvas e eixos nas cores do tema, redesenhados quando o tema muda
-- **0.1.3** - texto nas cores do tema no Textus 1.3
-- **0.1.2** - -x^2 é lido como -(x^2), e um intervalo que termina em 0 é respeitado
-- **0.1.0-0.1.1** - primeiras versões: funções de x desenhadas como imagem, altura e intervalo ajustáveis, imagens na exportação
+- **0.3.3** - A chart drawn while its block was folded (a phone) fits once the block opens, instead of keeping its old size.
+- **0.3.2** - Steep curves like tan(x) keep their shape and break at asymptotes; a function with nothing to draw says so; π and 2xsin(x) are read; Textus AI's check uses the fence's x range.
+- **0.3.1** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
+- **0.3.0** - a tool for Textus AI, `check_function_plot`
+- **0.2.0** - curves and axes in the theme's colors, drawn again when the theme changes
+- **0.1.3** - text in the theme's colors on Textus 1.3
+- **0.1.2** - -x^2 reads as -(x^2), and a range that ends at 0 is kept
+- **0.1.0-0.1.1** - first versions: functions of x drawn as a picture, height and range settings, pictures in exports
 
 <!-- ai-tools -->
 ## Ferramentas para o Textus AI

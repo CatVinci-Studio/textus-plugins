@@ -13,11 +13,11 @@
 
 ## 更新日志
 
-- **0.1.7** - 商店简介改为开头一句就说明插件做什么。
-- **0.1.6** - 一次加入很多图片（同步、整个文件夹拷进来）时，不再反复读取打开的文档。
-- **0.1.5** - 在 Obsidian 库里，图片重新放回库的附件设置所指的位置：设置改由 Textus 读取。
-- **0.1.4** - 文档设置了 Typora 图片文件夹时，图片留在原处；还没查完所有指向文件夹的链接时，不再移动文件夹。
-- **0.1.3** - 介绍页重写：一句话说明它做什么，再讲它能做的事，并列出每个版本的更新。
-- **0.1.2** - 在 Obsidian 库设置了附件文件夹、或在 Logseq 图谱里时，图片留在原处。
-- **0.1.1** - 改用更短的名字：图片跟随文档。
-- **0.1.0** - 第一个版本：粘贴和拖入的图片移到 `Note.assets/`，文档改名时图片文件夹跟着改。
+- **0.1.7** - The store description now opens with what the plugin does.
+- **0.1.6** - Adding many pictures at once (a sync, a folder copied in) no longer reads the open document over and over.
+- **0.1.5** - In an Obsidian vault, pictures stay where the vault's attachment setting puts them again: the setting is read through Textus.
+- **0.1.4** - Leaves pictures where a document's Typora image folder setting puts them, and no longer moves a folder while some links to it may still be unchecked.
+- **0.1.3** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
+- **0.1.2** - Leaves pictures where an Obsidian vault's attachment folder setting or a Logseq graph puts them.
+- **0.1.1** - A shorter name: Images Follow Document.
+- **0.1.0** - First version: pasted and dropped pictures move into `Note.assets/`, and the folder follows a renamed document.

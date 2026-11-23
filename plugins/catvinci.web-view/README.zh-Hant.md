@@ -24,8 +24,8 @@
 
 ## 更新紀錄
 
-- **0.2.2** - 說明和空狀態文字更簡短。
-- **0.2.1** - 介紹頁重寫：一句話說明它做什麼，再講它能做的事，並列出每個版本的更新。
-- **0.2.0** - 按住 Ctrl/⌘ 點擊的網頁連結，只有在設定裡開啟後才會在分頁中開啟；否則用瀏覽器開啟。
-- **0.1.2** - 只支援桌面版。
-- **0.1.0-0.1.1** - 最初的版本：在分頁裡開啟網址或搜尋、最近的網頁、開啟或搜尋選取內容、按住 Ctrl/⌘ 點擊連結、可選搜尋引擎。
+- **0.2.2** - Shorter help and empty-state text.
+- **0.2.1** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
+- **0.2.0** - Ctrl/Cmd+clicked web links open in a tab only when you turn that on in the settings; otherwise they open in your browser.
+- **0.1.2** - Desktop only.
+- **0.1.0-0.1.1** - First versions: an address or a search in a tab, recent pages, the selection opened or searched, Ctrl/Cmd+clicked links, a choice of search engine.

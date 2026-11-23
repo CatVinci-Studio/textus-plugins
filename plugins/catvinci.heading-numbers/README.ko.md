@@ -12,14 +12,14 @@
 
 ## 변경 내역
 
-- **0.2.4** - 두 문서를 나란히 열면 입력 중인 문서뿐 아니라 두 문서 모두 제목 번호가 표시됩니다.
-- **0.2.3** - 머리말과 코드 블록에 번호가 잘못 붙지 않습니다. 내보낼 때도 편집기처럼 맨 위 단계의 제목에만 번호를 붙입니다.
-- **0.2.2** - 소개 페이지를 새로 썼습니다. 무엇을 하는지 한 문장으로, 할 수 있는 일과 버전별 변경 내역을 담았습니다.
-- **0.2.1** - 손으로 번호를 붙인 문서나 머리말에 `number headings: off`가 있는 문서에는 번호를 표시하지 않습니다.
-- **0.2.0** - Textus AI가 Markdown 제목에 번호를 넣거나 뺄 수 있습니다.
-- **0.1.3** - 실행되는 곳을 밝힘: 데스크톱, iPhone, iPad.
-- **0.1.2** - 번호를 시작할 수준을 설정 대신 문서의 제목에서 정합니다.
-- **0.1.0-0.1.1** - 첫 버전들: 쓰는 동안 제목 앞에 번호 표시, HTML과 PDF 내보내기에도 번호.
+- **0.2.4** - With two documents open side by side, both show their heading numbers, not only the one you are typing in.
+- **0.2.3** - Front matter and code blocks no longer get numbers by mistake, and exports number only top-level headings, like the editor.
+- **0.2.2** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
+- **0.2.1** - No numbers on a document numbered by hand, or one whose front matter says `number headings: off`.
+- **0.2.0** - Textus AI can write heading numbers into Markdown, or take them out.
+- **0.1.3** - Says where it runs: the desktop, iPhone and iPad.
+- **0.1.2** - Numbering starts at the document's own top heading level instead of a setting.
+- **0.1.0-0.1.1** - First versions: numbers before headings while writing, and in HTML and PDF exports.
 
 <!-- ai-tools -->
 ## Textus AI 도구

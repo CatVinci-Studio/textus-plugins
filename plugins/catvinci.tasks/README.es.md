@@ -46,21 +46,21 @@ El plugin lee los documentos de la carpeta para encontrar sus tareas, y escribe 
 
 ## Cambios
 
-- **0.4.7** - El campo de filtro y el mensaje vacío siguen el idioma de Textus al cambiarlo. Requiere Textus 1.4.3.
-- **0.4.6** - El bloque de tareas deja un margen dentro de su marco, como los demás bloques.
-- **0.4.5** - Una tarea que la IA añade bajo un encabezado ya no cae dentro de un bloque de código, y «Mover las tareas terminadas al final de su lista» funciona en notas con saltos de línea de Windows (CRLF).
-- **0.4.4** - Una consulta de tareas en un documento se dibuja al tamaño de texto de la interfaz: una columna más ancha muestra más en lugar de letra más grande (Textus 1.4.1).
-- **0.4.3** - Ya se pueden marcar tareas con un comentario HTML, y si no se puede marcar una, se avisa del motivo. `group by status` ordena bien, los bloques de tareas caben en paneles estrechos, las fechas de vencimiento se ven como en la barra lateral y escribir es más ligero.
-- **0.4.2** - Textos de ayuda y de estado vacío más breves.
-- **0.4.1** - Sus barras, listas y controles son ahora los de Textus, crecen con la interfaz y siguen cada tema; necesita Textus 1.3.12. Nuevo ajuste **Mover las tareas terminadas al final de su lista**: una tarea marcada pasa detrás de las abiertas (pide una vez leer y editar el documento).
-- **0.4.0** - Usa las fechas integradas en Textus 1.3.10, que ahora requiere.
-- **0.3.1** - Incluye el código de fechas compartido actualizado; nada más cambia.
-- **0.3.0** - Obsidian Tasks: `[/]` y `[-]`, los campos de tarea, fechas de hecha, tareas que se repiten y bloques de consulta `tasks`; los tableros marcados con `kanban-plugin` quedan fuera de la lista.
-- **0.2.1** - Las tarjetas de un tablero Kanban (`nombre.kanban.md`) ya no se listan.
-- **0.2.0** - Textus AI puede listar, añadir y marcar tareas.
-- **0.1.3** - La lista sigue el idioma de la interfaz cuando cambia.
-- **0.1.2** - Vencimientos en hora local; recuentos con las formas de plural de cada idioma.
-- **0.1.0-0.1.1** - Primeras versiones: todas las tareas de la carpeta en una lista lateral, para marcarlas o ir a ellas, con filtro, vencimientos y Vencen pronto.
+- **0.4.7** - The filter field and empty message follow Textus's language when you switch it. Needs Textus 1.4.3.
+- **0.4.6** - The tasks block keeps a gap inside its frame, as other blocks do.
+- **0.4.5** - The AI's new task under a heading never lands inside a code block, and **Move finished tasks to the end of their list** works in Windows (CRLF) notes.
+- **0.4.4** - A task query in a document draws at the interface's text size, so a wider column shows more of it rather than larger text (Textus 1.4.1).
+- **0.4.3** - Ticking a task with an HTML comment in it now works, and a refused tick tells you why. `group by status` sorts in the right order, task blocks fit narrow panes, due dates look like the sidebar's, and typing stays lighter.
+- **0.4.2** - Shorter help and empty-state text.
+- **0.4.1** - Its bars, lists and controls are Textus's own, grow with the interface and follow every theme; needs Textus 1.3.12. A new setting, **Move finished tasks to the end of their list**: a task ticked in a document or in the list goes after the open ones (it asks once to read and edit the document in front).
+- **0.4.0** - Uses the dates built into Textus 1.3.10, which it now needs.
+- **0.3.1** - Ships the updated shared date code; nothing else changed.
+- **0.3.0** - Obsidian Tasks: `[/]` and `[-]`, the task fields, done dates, repeating tasks and `tasks` query blocks; boards marked with `kanban-plugin` are left out of the list.
+- **0.2.1** - Cards on a Kanban board (`name.kanban.md`) are no longer listed.
+- **0.2.0** - Textus AI can list, add and tick off tasks.
+- **0.1.3** - The list follows the interface language when it changes.
+- **0.1.2** - Due dates in local time; counts in each language's plural forms.
+- **0.1.0-0.1.1** - First versions: every task in the folder in a sidebar list, ticked off or opened from there, with a filter, due dates and Due soon.
 
 <!-- ai-tools -->
 ## Herramientas para Textus AI

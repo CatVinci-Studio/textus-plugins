@@ -43,15 +43,15 @@
 
 ## 更新日志
 
-- **0.5.0** - `/` 菜单直接列出 Textus 自己的块（和格式菜单一样），始终和软件一致；去掉了其中的“转换为…”，因为选一个块就会把当前行变成它（块把手 ⋮⋮ 里也有“转换为”）。需要 Textus 1.4.4
-- **0.4.3** - 支持繁体日期写法，如 後天、3天後、下週五。只输入 @ 时先列出界面语言的日期，日期链接按当前笔记的位置写对。
-- **0.4.2** - 同步双向链接里判断笔记链接写法的修复。
-- **0.4.1** - 日期链接写成标准链接 [2026-11-08](Journal/2026-11-08.md)，文件夹或笔记本来用双链时仍写双链
-- **0.4.0** - 日期链接按文件夹的链接写法写入，使用 Textus 1.3.10 的日期功能；需要 Textus 1.3.10
-- **0.3.1** - 带上更新后的共用日期代码
-- **0.3.0** - 合并了「自然语言日期」：`@` 日期支持中文、英文和日文，可写成每日笔记链接，并为 Textus AI 提供 `parse_date` 工具
-- **0.2.0** - `/` 菜单里的 **今天的日期** 改由 `@今天` 代替
-- **0.1.0-0.1.1** - 最初版本：`/` 菜单、**转换为…**、`:` 后插入表情
+- **0.5.0** - The `/` menu lists Textus's own blocks, the Format menu's, so it always matches the app; Turn into… is gone from it, since picking a block turns the line you're on (the block handle's ⋮⋮ also has Turn Into). Needs Textus 1.4.4
+- **0.4.3** - Dates in Traditional Chinese like 後天, 3天後 and 下週五 now work. A bare @ lists your app language's dates first, and day links are right relative to the note.
+- **0.4.2** - Shares Two-way Links' fix for working out how a note links.
+- **0.4.1** - a day's link is a standard link, [2026-11-08](Journal/2026-11-08.md), unless the folder or the note already uses [[wiki links]]
+- **0.4.0** - day links are written the way the folder writes links, on Textus 1.3.10's dates; needs Textus 1.3.10
+- **0.3.1** - carries the updated shared date code
+- **0.3.0** - Natural Dates merged in: `@` dates in English, Chinese and Japanese, links to daily notes, and the `parse_date` tool for Textus AI
+- **0.2.0** - **Today's date** leaves the `/` menu for `@today`
+- **0.1.0-0.1.1** - first versions: the `/` menu, **Turn into…**, emoji after `:`
 
 <!-- ai-tools -->
 ## Textus AI 工具

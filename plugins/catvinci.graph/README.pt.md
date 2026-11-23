@@ -25,21 +25,21 @@ Num cofre do Obsidian, os grupos de cor salvos no `graph.json` do Obsidian tamb�
 
 ## Alterações
 
-- **0.5.10** - No toque, o primeiro toque numa nota destaca ela e os links dela e o segundo a abre; as notas ficam mais fáceis de acertar com o dedo, e um segundo dedo dá zoom em vez de também mover o grafo. As configurações abrem no próprio popover do Textus.
-- **0.5.9** - Esc ao arrastar uma nota ou a vista devolve-a ao lugar, e um toque cancelado pelo sistema já não deixa um arrasto preso.
-- **0.5.8** - O grafo da barra lateral se espalha para caber no painel, em vez de começar como um pequeno amontoado com rótulos sobrepostos. Ordena os nomes com a ordem do próprio Textus em vez de uma cópia, então o pacote ficou menor.
-- **0.5.7** - A página segue o idioma do Textus sozinha. Requer o Textus 1.4.3.
-- **0.5.6** - As contagens e os botões no topo da aba do grafo continuam à vista: rolar ou fazer pinça sobre o grafo já não os empurra para baixo da aba. Os rótulos já não se amontoam: as notas com mais ligações ficam com o seu e os restantes aparecem ao aproximar. Uma pasta grande abre já arrumada em vez de se desdobrar, e as imagens e outros anexos que uma nota liga ficam fora do grafo, a menos que ative Anexos nas definições. Trocar de documento ou salvar já não sacode o grafo inteiro para que se reorganize.
-- **0.5.5** - Links Markdown padrão para notas ainda não escritas ficam onde o Textus as cria e se juntam aos [[links]] para a mesma nota. Ctrl/Cmd-clique abre a nota ao lado da que está na frente. Os rótulos seguem o tamanho do texto da interface, e as cores das pastas seguem o tema. O grafo da barra lateral não tem mais ajustes próprios.
-- **0.5.4** - Um movimento de pinça no trackpad faz zoom suavemente, acompanhando o gesto; com o Textus 1.3.13, no Mac a pinça amplia o grafo, não o documento por trás. Textos de ajuda e de estado vazio mais curtos. O painel lateral e a página seguem o layout do Textus 1.3.13.
-- **0.5.3** - Suas barras, listas e controles agora são os do Textus, crescem com a interface e seguem cada tema; requer Textus 1.3.12.
-- **0.5.2** - Os grupos de cor do Obsidian vêm do cofre mais próximo, mesmo acima da pasta aberta. Requer Textus 1.3.10.
-- **0.5.1** - Num cofre do Obsidian, os grupos de cor de `.obsidian/graph.json` também colorem as notas.
-- **0.5.0** - Os [[links]] são ligados às notas do mesmo jeito que ao clicar neles no Textus.
-- **0.4.0** - O Textus AI pode ver as notas em volta de um documento (`list_neighbours`).
-- **0.3.0** - Controles e menus do próprio Textus; cores do tema.
-- **0.2.0-0.2.1** - Painel de ajustes com filtros, pesquisa e grupos de cor; tags como nós; setas para a direção dos links; profundidade do grafo lateral.
-- **0.1.0-0.1.1** - Primeiras versões: a pasta inteira numa aba e as notas em volta do documento aberto na barra lateral, coloridas por pasta, fluidas mesmo com milhares de notas.
+- **0.5.10** - By touch, a first tap on a note lights it and its links and a second opens it; notes are easier to hit with a finger, and a second finger zooms instead of also moving the graph. Its settings open in Textus's own popover.
+- **0.5.9** - Esc while dragging a note or the view puts it back, and a touch the system cancels no longer leaves a drag stuck.
+- **0.5.8** - The graph in the sidebar spreads out to fit its panel, instead of starting as a small clump with labels on top of each other. Sorts names with Textus's own order instead of a copy of it, so the package is smaller.
+- **0.5.7** - The page follows Textus's language by itself. Needs Textus 1.4.3.
+- **0.5.6** - The counts and buttons at the top of the graph tab stay in view: scrolling or pinching over the graph no longer pushes them up under the tab. Labels no longer pile on top of each other: the most linked notes keep theirs and the rest show as you zoom in. A big folder opens already laid out instead of unfolding, and pictures and other attachments a note links to stay out of the graph unless you turn on Attachments in its settings. Switching documents or saving no longer shakes the whole graph loose to settle again.
+- **0.5.5** - Standard Markdown links to notes not written yet are placed as Textus places them, and merge with [[links]] to the same note. Fit spreads a small graph over the whole pane, so names no longer sit on each other. Ctrl/Cmd-click opens a note beside the one in front. Labels follow the interface text size, and folder colours follow the theme. The sidebar graph has no settings of its own any more.
+- **0.5.4** - A trackpad pinch zooms smoothly, in step with the gesture; with Textus 1.3.13 a pinch on a Mac zooms the graph, not the document behind it. Shorter help and empty-state text. Its sidebar panel and page follow Textus 1.3.13's layout.
+- **0.5.3** - Its bars, lists and controls are Textus's own, grow with the interface and follow every theme; needs Textus 1.3.12.
+- **0.5.2** - Obsidian's colour groups come from the nearest vault, even one above the open folder. Needs Textus 1.3.10.
+- **0.5.1** - In an Obsidian vault, the colour groups in `.obsidian/graph.json` colour the notes too.
+- **0.5.0** - [[Links]] are matched to notes the same way Textus matches them when you click one.
+- **0.4.0** - Textus AI can see the notes around a document (`list_neighbours`).
+- **0.3.0** - Textus's own controls and menus; colours from the theme.
+- **0.2.0-0.2.1** - A settings panel with filters, search and colour groups; tags as nodes; arrows for link direction; the sidebar graph's depth.
+- **0.1.0-0.1.1** - First versions: the whole folder in a tab and the notes around the open document in the sidebar, coloured by folder, smooth with thousands of notes.
 
 <!-- ai-tools -->
 ## Ferramentas para o Textus AI

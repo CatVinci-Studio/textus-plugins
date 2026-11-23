@@ -25,15 +25,15 @@ Es braucht nur **Werkzeuge für Textus AI**, damit Textus AI einen Block prüfen
 
 ## Änderungen
 
-- **0.4.0** - Eine Datenbank lässt sich als Zeitleiste zeigen: unter ihren Ansichten Zeitleiste wählen, die Zeilen mit Datum stehen der Reihe nach; ein Klick öffnet eine Zeile. Braucht Textus 1.4.6.
-- **0.3.3** - Ein Datum bricht nicht mehr mitten im Wort um; bei zugeklapptem Block Gezeichnetes passt sich beim Aufklappen an.
-- **0.3.2** - lange Notizen und Daten brechen in einem schmalen Bereich um, die Schrift des Dokuments wird verwendet, und ein leerer Block sagt, was hineingehört
-- **0.3.1** - Seine Seite sagt jetzt in einem Satz, was es tut, was es kann und was sich in jeder Version geändert hat.
-- **0.3.0** - ein Werkzeug für Textus AI, `check_timeline`
-- **0.2.0** - die Farben des Themes, neu gezeichnet beim Themewechsel
-- **0.1.3** - Text in den Farben des Themes unter Textus 1.3
-- **0.1.2** - hält mit schnellem Tippen Schritt: eine ältere Zeichnung ersetzt keine neuere mehr
-- **0.1.0-0.1.1** - erste Versionen: Ereignisse als Zeitleiste, Höhe einstellbar, Bilder im Export
+- **0.4.0** - A database can be shown as a timeline: pick Timeline among its views, and its dated rows line up in order; a click opens a row. Needs Textus 1.4.6.
+- **0.3.3** - A date no longer breaks in the middle ("2024-0" over "3"); a chart drawn while its block was folded fits once it opens.
+- **0.3.2** - long notes and dates wrap to fit a narrow island, the timeline uses the document's font, and an empty block says what to write
+- **0.3.1** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
+- **0.3.0** - a tool for Textus AI, `check_timeline`
+- **0.2.0** - the theme's colors, drawn again when the theme changes
+- **0.1.3** - text in the theme's colors on Textus 1.3
+- **0.1.2** - keeps up with quick edits: an older drawing never replaces a newer one
+- **0.1.0-0.1.1** - first versions: events drawn as a timeline, a height setting, pictures in exports
 
 <!-- ai-tools -->
 ## Werkzeuge für Textus AI

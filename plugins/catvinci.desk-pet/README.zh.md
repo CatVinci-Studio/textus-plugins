@@ -23,13 +23,13 @@
 
 ## 更新日志
 
-- **0.1.9** - 删掉了为已经不支持的旧版 Textus 留的代码。
-- **0.1.8** - 她说的话显示在头顶上方，最多两行，不再挡住脸。
-- **0.1.7** - 打开新页面时，来串门的大模型娘会保留姿势和招呼；Textus 在后台时她保持不动。跳动更轻了，气泡的小尾巴对准她的正中。
-- **0.1.6** - 对话气泡的小尾巴和气泡之间不再有一条线。
-- **0.1.5** - 一开始就在左边时，她从第一帧起就朝向中间；对话气泡改用 Textus 自己的，桌宠缩小时气泡文字跟着变小（有可读的下限），换行也更均匀；需要 Textus 1.3.12
-- **0.1.4** - 介绍页重写：一句话说明它做什么，再讲它能做的事，并列出每个版本的更新。
-- **0.1.3** - 大模型娘只在 Textus AI 面板开着时来串门，面板一关就回家。
-- **0.1.2** - 所有角色重新绘制；她可以待在任意一边，并转身朝向中间。
-- **0.1.1** - Textus AI 干活时，墨羽用第一人称说话（「我来帮忙啦」），写得顺手时为你鼓劲。
-- **0.1.0** - 第一个版本：墨羽和 11 位大模型娘，浮在窗口里或桌面上，台词支持 10 种语言。
+- **0.1.9** - Code kept for Textus versions it no longer runs on is gone.
+- **0.1.8** - What she says sits above her, two lines at most, and never covers her face.
+- **0.1.7** - A visiting LLM-chan keeps her pose and greeting when a new page opens, and stays still while Textus is in the background. Her hop is gentler, and the bubble's tail points at her middle.
+- **0.1.6** - The speech bubble's tail joins its box with no line between them.
+- **0.1.5** - started on the left, she faces the middle from the first frame; her speech bubble is Textus's own, and when she is small its words shrink with her (to a readable floor) and wrap into even lines; needs Textus 1.3.12
+- **0.1.4** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
+- **0.1.3** - The model's LLM-chan visits only while the Textus AI panel is open, and goes home when it closes.
+- **0.1.2** - Every character redrawn; she sits at either side and turns to face the middle.
+- **0.1.1** - Moyu speaks for herself when Textus AI works ("I'm here to help"), and cheers on fluent writing.
+- **0.1.0** - First version: Moyu and eleven LLM-chan in a floating view, in the window or on the desktop, with lines in 10 languages.

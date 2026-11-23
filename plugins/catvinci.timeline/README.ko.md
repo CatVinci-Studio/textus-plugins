@@ -25,15 +25,15 @@
 
 ## 변경 내역
 
-- **0.4.0** - 데이터베이스를 타임라인으로 볼 수 있습니다. 보기에서 "타임라인"을 고르면 날짜가 있는 행이 순서대로 놓이고, 클릭하면 열립니다. Textus 1.4.6 필요.
-- **0.3.3** - 날짜가 중간에서 끊기지 않습니다. 접힌 동안 그린 그림은 펼치면 너비에 맞습니다.
-- **0.3.2** - 긴 설명과 날짜가 좁은 패널에서 줄바꿈되고, 문서 글꼴로 그리며, 빈 블록에는 쓰는 법을 보여 줍니다
-- **0.3.1** - 소개 페이지를 새로 썼습니다. 무엇을 하는지 한 문장으로, 할 수 있는 일과 버전별 변경 내역을 담았습니다.
-- **0.3.0** - Textus AI 도구 `check_timeline` 추가
-- **0.2.0** - 테마 색 사용, 테마를 바꾸면 다시 그림
-- **0.1.3** - Textus 1.3에서 글자에 테마 색 사용
-- **0.1.2** - 빠르게 고쳐도 예전 그림이 새 그림을 덮지 않음
-- **0.1.0-0.1.1** - 첫 버전: 사건을 타임라인으로 그림, 높이 지정, 내보낼 때 이미지 포함
+- **0.4.0** - A database can be shown as a timeline: pick Timeline among its views, and its dated rows line up in order; a click opens a row. Needs Textus 1.4.6.
+- **0.3.3** - A date no longer breaks in the middle ("2024-0" over "3"); a chart drawn while its block was folded fits once it opens.
+- **0.3.2** - long notes and dates wrap to fit a narrow island, the timeline uses the document's font, and an empty block says what to write
+- **0.3.1** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
+- **0.3.0** - a tool for Textus AI, `check_timeline`
+- **0.2.0** - the theme's colors, drawn again when the theme changes
+- **0.1.3** - text in the theme's colors on Textus 1.3
+- **0.1.2** - keeps up with quick edits: an older drawing never replaces a newer one
+- **0.1.0-0.1.1** - first versions: events drawn as a timeline, a height setting, pictures in exports
 
 <!-- ai-tools -->
 ## Textus AI 도구

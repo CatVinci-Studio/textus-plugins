@@ -19,19 +19,19 @@
 
 ## 변경 내역
 
-- **0.5.5** - 이름 정렬에 Textus 자체 순서를 써서, 복사본을 따로 갖지 않아 패키지가 작아졌습니다. Textus 1.4.3이 필요합니다.
-- **0.5.4** - 이름이 이미 있으면 파일을 쓰는 순간 다음 빈 이름을 써서 겹치지 않습니다(Textus 1.4.3).
-- **0.5.3** - 스토어 설명이 첫 문장에서 플러그인이 하는 일을 알려 줍니다.
-- **0.5.2** - 숨김 폴더나 소문자 템플릿 폴더, 그 하위 폴더의 템플릿도 보이게 됨. 넣은 뒤 커서가 템플릿 바로 뒤에 놓임.
-- **0.5.1** - 파일이나 폴더의 오른쪽 클릭 메뉴에서 **템플릿으로 새로 만들기…**를 고르면 그 폴더에 만들어짐.
-- **0.5.0** - 템플릿을 Textus가 직접 채웁니다. 데일리 노트와 같은 방식입니다. Textus 1.3.10 필요.
-- **0.4.1** - 템플릿을 자연스러운 순서(2가 10보다 앞)로 나열합니다.
-- **0.4.0** - Templater의 자주 쓰는 `tp.date`와 `tp.file` 태그, Obsidian 보관함 템플릿 설정의 날짜·시간 형식. 실행하지 않은 태그는 알림으로 알려 줍니다.
-- **0.3.0** - 템플릿이 Templates 폴더(Obsidian에서는 보관함의 템플릿 폴더)의 Markdown 파일이 됩니다. 예전 버전이 저장한 것은 한 번 옮깁니다. `{{date:형식}}`과 `{{time:형식}}`.
-- **0.2.0** - Textus AI가 템플릿 목록을 보고 템플릿으로 문서를 만들 수 있습니다.
-- **0.1.3** - 실행되는 곳을 밝힘: 데스크톱과 iPhone.
-- **0.1.2** - 템플릿으로 새로 만들기가 이미 있는 이름을 거절합니다.
-- **0.1.0-0.1.1** - 첫 버전: 새 문서, 조각 넣기, 템플릿으로 저장, `{{date}}`, `{{time}}`, `{{title}}`. 스토어 페이지와 아이콘.
+- **0.5.5** - Sorts names with Textus's own order instead of a copy of it, so the package is smaller. Needs Textus 1.4.3.
+- **0.5.4** - A taken name gets the next free one as the file is written, never a clash (Textus 1.4.3).
+- **0.5.3** - The store description now opens with what the plugin does.
+- **0.5.2** - Templates in a hidden or lowercase templates folder, and in its subfolders, now show up. After Insert, the caret lands right after the template.
+- **0.5.1** - **New from Template…** from a file's or folder's right-click menu makes the document in that folder.
+- **0.5.0** - Templates are filled in by Textus itself, the same way as daily notes; needs Textus 1.3.10.
+- **0.4.1** - Templates are listed in natural order: 2 before 10.
+- **0.4.0** - Templater's common `tp.date` and `tp.file` tags, and an Obsidian vault's Templates date and time formats; tags that aren't run are named in a notice.
+- **0.3.0** - Templates are Markdown files in the Templates folder (a vault's own templates folder in Obsidian), moved there once from where older versions kept them; `{{date:FORMAT}}` and `{{time:FORMAT}}`.
+- **0.2.0** - Textus AI can list your templates and make a document from one.
+- **0.1.3** - Says where it runs: desktop and iPhone.
+- **0.1.2** - New from Template refuses a name that is already taken.
+- **0.1.0-0.1.1** - First versions: new documents, inserted snippets and saved templates, with `{{date}}`, `{{time}}` and `{{title}}`; store page and icon.
 
 <!-- ai-tools -->
 ## Textus AI 도구

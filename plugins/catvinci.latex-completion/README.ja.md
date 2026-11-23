@@ -11,8 +11,8 @@
 
 ## 更新履歴
 
-- **0.1.5** - ストアの説明が、最初の一文でプラグインの働きを伝えるようになりました。
-- **0.1.4** - 最後まで入力したコマンドが先頭に来るので、Enter でそのまま確定します（\in は \in のまま）。波かっこのないコマンドは後ろにスペースを付けて書き込みます。Textus 1.3.13 では書き込むと一覧が閉じたままになります。
-- **0.1.3** - 紹介ページを書き直しました。何をするかを一文で示し、できることと各バージョンの変更を載せています。
-- **0.1.2** - 動く場所（デスクトップと iPhone）を明記。
-- **0.1.0-0.1.1** - 最初の版：描画結果つきの 200 以上のコマンド、文字を順に拾う検索、波かっことカーソルの位置、伸び縮みする対のかっこ。ストアページとアイコン。
+- **0.1.5** - The store description now opens with what the plugin does.
+- **0.1.4** - A command typed out whole comes first, so Enter keeps it (\in stays \in); a command without braces is written with a space after it; with Textus 1.3.13 the list closes once a command is written.
+- **0.1.3** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
+- **0.1.2** - Says where it runs: desktop and iPhone.
+- **0.1.0-0.1.1** - First versions: over 200 commands with what each draws, letters in order, braces and caret in place, growing bracket pairs; store page and icon.

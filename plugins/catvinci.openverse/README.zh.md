@@ -19,9 +19,9 @@
 
 ## 更新日志
 
-- **0.1.2** - 商店简介改为开头一句就说明插件做什么。
-- **0.1.1** - 介绍页重写：一句话说明它做什么，再讲它能做的事，并列出每个版本的更新。
-- **0.1.0** - 第一个版本：为 Textus AI 提供 Openverse 上开放授权的图片，每张都带署名
+- **0.1.2** - The store description now opens with what the plugin does.
+- **0.1.1** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
+- **0.1.0** - first version: openly licensed pictures from Openverse for Textus AI, each with its credit line
 
 <!-- ai-tools -->
 ## Textus AI 工具

@@ -14,4 +14,4 @@
 
 ## 更新日志
 
-- **0.1.0** - 第一个版本：打开 Logseq 图谱时提出采用 Logseq 的设置。需要 Textus 1.4.6。
+- **0.1.0** - First version: Logseq's settings offered when a Logseq graph is opened. Needs Textus 1.4.6.

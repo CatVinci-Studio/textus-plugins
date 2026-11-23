@@ -14,7 +14,7 @@
 
 ## 更新日志
 
-- **0.1.3** - 连点几下不会再漏掉一下；改了专注或休息时长，还没开始的计时器马上显示新时长；时间文字随计时器大小缩放。
-- **0.1.2** - 点一下计时器又能开始和暂停了（0.1.0 和 0.1.1 里点了没反应）。
-- **0.1.1** - 适配每个主题，随界面一起缩放；需要 Textus 1.3.12。
-- **0.1.0** - 第一个版本：浮动的专注计时器，带休息、通知、右键菜单，可以自己设专注和休息的时长。
+- **0.1.3** - Quick clicks no longer lose one; a new focus or break length shows on a timer not yet started; the clock grows and shrinks with the timer.
+- **0.1.2** - A click on the timer starts and pauses it again (it did nothing in 0.1.0 and 0.1.1).
+- **0.1.1** - Follows every theme and grows with the interface; needs Textus 1.3.12.
+- **0.1.0** - First version: a floating focus timer with breaks, notifications, a right-click menu, and its own focus and break lengths.

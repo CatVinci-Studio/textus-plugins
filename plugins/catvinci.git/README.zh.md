@@ -12,12 +12,12 @@
 
 不会切换分支。需要装好 Git（Mac 上是命令行工具）和 Textus 1.4.6。
 
-## 更新
+## 更新日志
 
-- **0.3.0** - 推送和拉取，分支旁显示待推送、待拉取的数目（Textus 1.4.6）。
-- **0.2.0** - 上次提交后改过的块在页边标出（Textus 1.4.4）。
-- **0.1.1** - 第一次提交的确认按钮改为"提交"。
-- **0.1.0** - 第一版。
+- **0.3.0** - Push and Pull, and what waits to be pushed or pulled beside the branch (Textus 1.4.6).
+- **0.2.0** - Blocks changed since the last commit are marked in the margin (Textus 1.4.4).
+- **0.1.1** - The first-commit confirmation's button reads "Commit".
+- **0.1.0** - First version.
 
 <!-- ai-tools -->
 ## Textus AI 工具

@@ -13,11 +13,11 @@ Elle prend en charge les images PNG, JPEG, GIF, WebP, AVIF, BMP, SVG, ICO, HEIC 
 
 ## Changements
 
-- **0.1.7** - La description de la boutique commence désormais par ce que fait le plugin.
-- **0.1.6** - Ajouter beaucoup d’images d’un coup (une synchronisation, un dossier copié) ne relit plus sans cesse le document ouvert.
-- **0.1.5** - Dans un coffre Obsidian, les images restent de nouveau là où le réglage des pièces jointes du coffre les place : le réglage est lu par Textus.
-- **0.1.4** - Laisse les images là où les met le réglage de dossier d'images Typora d'un document, et ne déplace plus un dossier tant que des liens vers lui peuvent rester non vérifiés.
-- **0.1.3** - Sa page dit maintenant en une phrase ce qu'il fait, ce qu'il permet et ce qui a changé à chaque version.
-- **0.1.2** - Laisse les images là où les met le dossier de pièces jointes d'un coffre Obsidian ou un graphe Logseq.
-- **0.1.1** - Un nom plus court : Images avec le document.
-- **0.1.0** - Première version : les images collées et déposées vont dans `Note.assets/`, et le dossier suit le document renommé.
+- **0.1.7** - The store description now opens with what the plugin does.
+- **0.1.6** - Adding many pictures at once (a sync, a folder copied in) no longer reads the open document over and over.
+- **0.1.5** - In an Obsidian vault, pictures stay where the vault's attachment setting puts them again: the setting is read through Textus.
+- **0.1.4** - Leaves pictures where a document's Typora image folder setting puts them, and no longer moves a folder while some links to it may still be unchecked.
+- **0.1.3** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
+- **0.1.2** - Leaves pictures where an Obsidian vault's attachment folder setting or a Logseq graph puts them.
+- **0.1.1** - A shorter name: Images Follow Document.
+- **0.1.0** - First version: pasted and dropped pictures move into `Note.assets/`, and the folder follows a renamed document.

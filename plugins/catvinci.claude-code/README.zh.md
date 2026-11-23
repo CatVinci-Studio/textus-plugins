@@ -14,7 +14,7 @@ Textus 用 `npx` 运行 Agent Client Protocol 适配器 `@agentclientprotocol/cl
 
 ## 更新日志
 
-- **0.1.3** - 由插件指定从 Manual 模式开始；登录命令不用另装 Claude Code。需要 Textus 1.4.3，Claude Code 自己写进文件的改动也会标出来。
-- **0.1.2** - 改用 Claude Code 的 ACP 适配器 0.107.0；需要 Textus 1.4.2 或更新版本，以使用新的助手界面。
-- **0.1.1** - Claude Code 回答时，其他插件（比如桌宠）能知道是哪个 AI 在工作。
-- **0.1.0** - 第一版：在 Textus AI 里用 Claude Code。
+- **0.1.3** - Starts in Manual mode, named by the plugin; its sign-in command needs no separate Claude Code install. Needs Textus 1.4.3, which also marks the changes Claude Code writes itself.
+- **0.1.2** - Uses Claude Code's ACP adapter 0.107.0. Needs Textus 1.4.2 or later, for its new agent views.
+- **0.1.1** - While Claude Code answers, other plugins (such as the desk pet) know which AI is at work.
+- **0.1.0** - First version: Claude Code in Textus AI.

@@ -8,8 +8,8 @@
 
 这个插件不需要任何权限：只读取你在其中打开的文件。
 
-## 更新
+## 更新日志
 
-- **0.1.2** - 页面语言由 Textus 自动跟随。需要 Textus 1.4.3。
-- **0.1.1** - 页面只接收 Textus 发来的消息：所显示的 HTML 文件里的脚本无法改变它显示的内容。
-- **0.1.0** - 第一个版本：在标签页里把 .html 文件显示成网页，以及编辑源码。
+- **0.1.2** - The page follows Textus's language by itself. Needs Textus 1.4.3.
+- **0.1.1** - The page listens only to Textus: scripts in the HTML file it shows can't change what it displays.
+- **0.1.0** - First version: .html files in a tab as pages, and Edit source.

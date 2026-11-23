@@ -27,16 +27,16 @@ Pede apenas **Ferramentas para o Textus AI**, para que o Textus AI possa verific
 
 ## Alterações
 
-- **0.3.5** - O pacote lista as bibliotecas que inclui, com as suas licenças.
-- **0.3.4** - Um diagrama muito longo só encolhe enquanto os rótulos continuam legíveis; depois rola na horizontal (celular).
-- **0.3.3** - Legível no modo escuro: linhas e texto nas cores do tema; o que foi desenhado com o bloco recolhido ajusta-se ao abrir. Um diagrama longo encolhe para a largura da coluna em vez de ser cortado.
-- **0.3.2** - Os diagramas usam a fonte e a cor de linha do tema, acompanham o zoom do documento, e `height=` agora muda o tamanho do próprio diagrama.
-- **0.3.1** - Sua página agora diz em uma frase o que ele faz, o que pode fazer e o que mudou em cada versão.
-- **0.3.0** - uma ferramenta para o Textus AI, `check_wavedrom`
-- **0.2.0** - redesenhado quando o tema muda, com a página de gráficos do Textus 1.3.2
-- **0.1.3** - texto nas cores do tema no Textus 1.3
-- **0.1.2** - as exportações trazem o diagrama nas cores da exportação
-- **0.1.0-0.1.1** - primeiras versões: WaveJSON desenhado com o WaveDrom, aparência escura, altura ajustável, imagens na exportação
+- **0.3.5** - Its package lists the libraries it carries, with their licenses.
+- **0.3.4** - A very long diagram shrinks only as far as its labels stay readable, then scrolls sideways (a phone).
+- **0.3.3** - Readable in dark mode: the lines and text take the theme's colours on the page's own background; a diagram drawn while its block was folded fits once it opens. A long diagram shrinks to the column instead of being cut off.
+- **0.3.2** - Diagrams take the theme's font and line colour, grow with the document's zoom, and `height=` now resizes the diagram itself.
+- **0.3.1** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
+- **0.3.0** - a tool for Textus AI, `check_wavedrom`
+- **0.2.0** - drawn again when the theme changes, with the chart page of Textus 1.3.2
+- **0.1.3** - text in the theme's colors on Textus 1.3
+- **0.1.2** - exports carry the diagram in the export's colors
+- **0.1.0-0.1.1** - first versions: WaveJSON drawn with WaveDrom, dark skin, a height setting, pictures in exports
 
 <!-- ai-tools -->
 ## Ferramentas para o Textus AI

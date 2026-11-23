@@ -12,6 +12,6 @@ Textus 用 `npx` 运行 [Qwen Code](https://github.com/QwenLM/qwen-code) 的 `qw
 
 只在电脑上可用，需要 Textus 1.4.3 或更新版本。它只要一个权限：在这台电脑上启动这个助手。
 
-## 更新
+## 更新日志
 
-- **0.1.0** - 第一个版本：在 Textus AI 里用 Qwen Code。
+- **0.1.0** - First version: Qwen Code in Textus AI.

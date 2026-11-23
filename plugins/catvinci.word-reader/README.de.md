@@ -13,15 +13,15 @@ Das Plugin fragt nach keinen Berechtigungen: Es liest nur die Datei, die Sie dam
 
 ## Änderungen
 
-- **0.2.8** - Das Paket listet die mitgelieferten Bibliotheken samt ihren Lizenzen auf.
-- **0.2.7** - Die Seite folgt der Sprache von Textus von selbst. Benötigt Textus 1.4.3.
-- **0.2.6** - Zoom-Knöpfe und -Tasten gehen in Schritten von 1,25×, wie in den anderen Ansichten.
-- **0.2.5** - Die Schließen-Schaltfläche der Suchleiste hat einen Namen für Screenreader und zeigt einen Tooltip.
-- **0.2.4** - Öffnet passend zur Breite des Tabs; Zwei-Finger-Zoom oder Strg+Mausrad (⌘ auf dem Mac) zoomt die Seiten; eine Seite, die breiter als der Tab ist, lässt sich bis zu beiden Rändern scrollen; die Leisten brechen in einem schmalen Tab um, und der Zoom bleibt beim Sprachwechsel erhalten.
-- **0.2.3** - Die Leiste folgt der Reihenfolge von Textus: was sie zeigt, dann Suche und Zoom.
-- **0.2.2** - Leisten, Listen und Steuerelemente sind jetzt die von Textus, wachsen mit der Oberfläche und folgen jedem Theme; braucht Textus 1.3.12.
-- **0.2.1** - Seine Seite sagt jetzt in einem Satz, was es tut, was es kann und was sich in jeder Version geändert hat.
-- **0.2.0** - Mit den eigenen Bedienelementen von Textus und den Tönen des Themes gezeichnet; der Tab folgt der Sprache der Oberfläche, wenn diese wechselt. Benötigt Textus 1.3.2.
-- **0.1.3** - Nutzt die Design-Variablen von Textus 1.3.
-- **0.1.2** - Eine unlesbare Datei wird gemeldet; die Suche überspringt die Formatvorlagen des Dokuments.
-- **0.1.0-0.1.1** - Erste Versionen: .docx-Dateien in einem Tab mit Words Layout, die aktuelle Seite, Suche, Zoom und Als Markdown bearbeiten.
+- **0.2.8** - Its package lists the libraries it carries, with their licenses.
+- **0.2.7** - The page follows Textus's language by itself. Needs Textus 1.4.3.
+- **0.2.6** - Zoom buttons and keys step by 1.25×, as the other viewers do.
+- **0.2.5** - The find bar's close button is named for screen readers and shows a tooltip.
+- **0.2.4** - Opens fitted to the tab's width; a pinch or Ctrl+wheel (⌘ on a Mac) zooms the pages; a page wider than the tab scrolls to both edges; the bars wrap in a narrow tab and the zoom is kept when the language changes.
+- **0.2.3** - Its bar keeps Textus's one order: what it shows, then find and zoom.
+- **0.2.2** - Its bars, lists and controls are Textus's own, grow with the interface and follow every theme; needs Textus 1.3.12.
+- **0.2.1** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
+- **0.2.0** - Drawn with Textus's own controls and theme tones; the tab follows the interface language when it changes. Needs Textus 1.3.2.
+- **0.1.3** - Uses Textus 1.3's design variables.
+- **0.1.2** - A file that can't be read says so; find skips the document's styles.
+- **0.1.0-0.1.1** - First versions: .docx files in a tab as Word lays them out, the page you are on, find, zoom and Edit as Markdown.

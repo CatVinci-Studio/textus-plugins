@@ -19,12 +19,12 @@ Não pede nenhuma. Só lê o arquivo que você abre, no computador e no iOS.
 
 ## Alterações
 
-- **0.2.5** - A página segue o idioma do Textus sozinha. Requer o Textus 1.4.3.
-- **0.2.4** - Uma imagem girada e ampliada agora rola até todas as bordas, e uma imagem de lado cabe na janela. O zoom e o giro continuam quando o painel é movido, o quarto giro não volta mais girando ao contrário e a barra cabe num painel estreito.
-- **0.2.3** - Um movimento de pinça no trackpad faz zoom suavemente, acompanhando o gesto; com o Textus 1.3.13, no Mac a pinça amplia a imagem, não o documento por trás. A barra segue a ordem do Textus: o que mostra, depois busca e zoom.
-- **0.2.2** - Suas barras, listas e controles agora são os do Textus, crescem com a interface e seguem cada tema; requer Textus 1.3.12.
-- **0.2.1** - Sua página agora diz numa frase o que ele faz, o que pode fazer e o que mudou em cada versão.
-- **0.2.0** - os botões e a barra de aba do próprio Textus; os rótulos seguem a troca de idioma da interface
-- **0.1.3** - as cores dos temas do Textus 1.3
-- **0.1.2** - a porcentagem alterna entre ajustada e tamanho real
-- **0.1.0-0.1.1** - primeiras versões: zoom, ajuste, arrastar, girar, teclas, o código de um SVG e um aviso para arquivo que não abre
+- **0.2.5** - The page follows Textus's language by itself. Needs Textus 1.4.3.
+- **0.2.4** - A turned and zoomed picture now scrolls to every edge, and a sideways picture fits the window. Zoom and turn are kept when the panel moves, a fourth turn no longer spins back, and the bar fits a narrow panel.
+- **0.2.3** - A trackpad pinch zooms smoothly, in step with the gesture; with Textus 1.3.13 a pinch on a Mac zooms the picture, not the document behind it. Its bar keeps Textus's one order: what it shows, then find and zoom.
+- **0.2.2** - Its bars, lists and controls are Textus's own, grow with the interface and follow every theme; needs Textus 1.3.12.
+- **0.2.1** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
+- **0.2.0** - Textus's own buttons and tab bar; labels follow the interface language when it changes
+- **0.1.3** - colors from Textus 1.3's themes
+- **0.1.2** - the percentage switches between fit and actual size
+- **0.1.0-0.1.1** - first versions: zoom, fit, drag, rotate, keys, an SVG's source, and a message for a file that can't be opened

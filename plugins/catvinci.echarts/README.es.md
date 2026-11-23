@@ -25,14 +25,14 @@ El plugin pide un solo permiso, para dar a Textus AI la herramienta `check_echar
 
 ## Cambios
 
-- **0.3.4** - El paquete incluye la lista de bibliotecas que lleva, con sus licencias.
-- **0.3.3** - Un gráfico dibujado con su bloque plegado (en el móvil) se ajusta al ancho al abrirlo.
-- **0.3.2** - Los gráficos se redibujan al cambiar el ancho del panel, y su texto y altura por defecto siguen el zoom y la fuente de la app.
-- **0.3.1** - Su descripción ya no menciona mapas, que un bloque no puede cargar.
-- **0.3.0** - Textus AI puede revisar un bloque `echarts` antes de escribirlo.
-- **0.2.0** - Los colores de las series salen de los tonos del tema. Requiere Textus 1.3.2.
-- **0.1.3** - Usa el color del texto del documento y el tamaño de las notas al pie del tema con sus nombres de Textus 1.3.
-- **0.1.0-0.1.2** - Primeras versiones: bloques `echarts` dibujados en el documento, `height=` y exportación como imagen.
+- **0.3.4** - Its package lists the libraries it carries, with their licenses.
+- **0.3.3** - A chart drawn while its block was folded (a phone) fits once the block opens, instead of keeping its old size.
+- **0.3.2** - Charts redraw when the panel width changes, and their text and default height follow the app's zoom and font.
+- **0.3.1** - Its description no longer lists maps, which a block can't load.
+- **0.3.0** - Textus AI can check an `echarts` block before it writes one.
+- **0.2.0** - Series colors come from the theme's tones. Needs Textus 1.3.2.
+- **0.1.3** - Uses the theme's document text color and footnote size under their Textus 1.3 names.
+- **0.1.0-0.1.2** - First versions: `echarts` code blocks drawn in the document, `height=`, and exports as a picture.
 
 <!-- ai-tools -->
 ## Herramientas para Textus AI

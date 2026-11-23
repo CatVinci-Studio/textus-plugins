@@ -25,18 +25,18 @@
 
 ## 更新日志
 
-- **0.3.8** - 思维导图会填满所在的块：小的导图会按块的宽度和你设定的高度放大（最多两倍）；笔记缩放时导图跟着缩放，不再被右边截掉。
-- **0.3.7** - 安装包里附上所带第三方库的清单和许可。
-- **0.3.6** - 笔记还没排好版时画出的导图不再报错。
-- **0.3.5** - 块折叠时（手机上）画的图，展开后会重新适配宽度，不再保持原来的大小。
-- **0.3.4** - 长时间编辑导图，Textus 占用的内存不再越来越多。
-- **0.3.3** - 在导图上滚动，现在滚动的是笔记；要缩放请双指捏合或按住 Ctrl 滚动。导图跟随主题的字体和颜色（深色模式也一样），打开时完整显示。
-- **0.3.2** - 介绍页重写：一句话说明它做什么，再讲它能做的事，并列出每个版本的更新。
-- **0.3.1** - 滚到看不见的导图，导出时也是图片，而不是源码。
-- **0.3.0** - Textus AI 写 `markmap` 代码块前可以先检查。
-- **0.2.0** - 分支颜色取自主题色调。需要 Textus 1.3.2。
-- **0.1.3** - 按 Textus 1.3 的新名称读取主题的正文文字颜色和脚注字号。
-- **0.1.0-0.1.2** - 最初的版本：在文档里绘制 `markmap` 代码块，支持 `height=`，导出时按导出的配色作为图片。
+- **0.3.8** - The mind map fills its block: a small one grows (up to twice its size) to the block's width and the height you give it, and it follows the note's zoom instead of being cut off on the right.
+- **0.3.7** - Its package lists the libraries it carries, with their licenses.
+- **0.3.6** - A mind map drawn before its note was laid out no longer shows an error.
+- **0.3.5** - A chart drawn while its block was folded (a phone) fits once the block opens, instead of keeping its old size.
+- **0.3.4** - Editing a mind map for a long time no longer makes Textus use more and more memory.
+- **0.3.3** - Scrolling over a mind map now scrolls the note; pinch or Ctrl-scroll to zoom. The map uses your theme's font and colors, in dark mode too, and opens fully fitted.
+- **0.3.2** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
+- **0.3.1** - A mind map scrolled out of sight exports as its picture instead of its source.
+- **0.3.0** - Textus AI can check a `markmap` block before it writes one.
+- **0.2.0** - Branch colors come from the theme's tones. Needs Textus 1.3.2.
+- **0.1.3** - Uses the theme's document text color and footnote size under their Textus 1.3 names.
+- **0.1.0-0.1.2** - First versions: `markmap` code blocks drawn in the document, `height=`, and exports as a picture in the export's colors.
 
 <!-- ai-tools -->
 ## Textus AI 工具

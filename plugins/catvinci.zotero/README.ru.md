@@ -41,17 +41,17 @@
 
 ## Изменения
 
-- **0.4.4** - Сортирует имена в порядке самого Textus, а не своей копии, поэтому пакет стал меньше. Нужен Textus 1.4.3.
-- **0.4.3** - Цитата теперь заменяет выделенные слова; список литературы больше не пишет, что Zotero недоступен, когда он отвечает, а предпросмотр при наведении появляется надёжнее.
-- **0.4.2** - Короче подсказки и тексты пустых состояний.
-- **0.4.1** - Его код разделён на небольшие файлы по задачам; в работе ничего не меняется.
-- **0.4.0** - шаблоны заметок о литературе заполняет встроенный шаблонизатор Textus; нужен Textus 1.3.10
-- **0.3.0** - заметки о литературе из Zotero, с шаблоном и настройками хранилища Obsidian; цитаты в виде `[[@citekey]]`
-- **0.2.1** - сочетание клавиш сменилось с Ctrl+Alt+C на Ctrl+Alt+R
-- **0.2.0** - инструмент для Textus AI, `search_library`
-- **0.1.3** - только для компьютера
-- **0.1.2** - работает с локальным API Zotero 10; список литературы при повторной вставке заменяется, а код больше не читается как цитаты
-- **0.1.0-0.1.1** - первые версии: цитирование с недавними работами вверху, карточки при наведении на цитату, список литературы, четыре способа записи
+- **0.4.4** - Sorts names with Textus's own order instead of a copy of it, so the package is smaller. Needs Textus 1.4.3.
+- **0.4.3** - A citation now replaces the selected words; the References list no longer says Zotero is unreachable when it answers, and hover previews show up more reliably.
+- **0.4.2** - Shorter help and empty-state text.
+- **0.4.1** - Its code is split into smaller files by what each part does; nothing changes in use.
+- **0.4.0** - literature note templates are filled by Textus's own template engine; needs Textus 1.3.10
+- **0.3.0** - literature notes from Zotero, with a template and an Obsidian vault's settings; citations as `[[@citekey]]`
+- **0.2.1** - the shortcut moves from Ctrl+Alt+C to Ctrl+Alt+R
+- **0.2.0** - a tool for Textus AI, `search_library`
+- **0.1.3** - listed for the desktop only
+- **0.1.2** - works with Zotero 10's local API; the references list is replaced when made again, and code is never read for citations
+- **0.1.0-0.1.1** - first versions: citing with recent works first, hover cards for citations, the references list, four citation styles
 
 <!-- ai-tools -->
 ## Инструменты для Textus AI

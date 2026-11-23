@@ -27,15 +27,15 @@
 
 ## 更新履歴
 
-- **0.3.4** - パッケージに、同梱しているライブラリとそのライセンスの一覧を添えました。
-- **0.3.3** - ブロックが折りたたまれていた間（スマートフォン）に描いた図は、開くと幅に合わせて描き直されます。
-- **0.3.2** - パネルの幅が変わるとグラフを描き直して合わせます。ラベルはテーマのフォントと文字サイズに従い、エラー行は再び赤で表示されます。
-- **0.3.1** - 紹介ページを書き直しました。何をするかを一文で示し、できることと各バージョンの変更を載せています。
-- **0.3.0** - Textus AI が `chartjs` ブロックを書く前に検査できるように（`check_chartjs`）。
-- **0.2.0** - 系列にテーマの色を使うように。Textus 1.3.2 が必要。
-- **0.1.3** - Textus で名前が変わった文書の色を使うように。
-- **0.1.2** - 入力中、グラフが常に最新の内容を表示するように。
-- **0.1.0-0.1.1** - 最初の版：`chartjs` ブロックをソースの下に描画、`height=`、書き出しでは画像に。ストアページとアイコン。
+- **0.3.4** - Its package lists the libraries it carries, with their licenses.
+- **0.3.3** - A chart drawn while its block was folded (a phone) fits once the block opens, instead of keeping its old size.
+- **0.3.2** - Charts redraw to fit a narrower or wider panel, labels follow the theme's font and text size, and the error line is red again.
+- **0.3.1** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
+- **0.3.0** - Textus AI can check a `chartjs` block before writing it (`check_chartjs`).
+- **0.2.0** - Series take the theme's colors; needs Textus 1.3.2.
+- **0.1.3** - Uses Textus's renamed document colors.
+- **0.1.2** - While you type, the chart always shows the latest text.
+- **0.1.0-0.1.1** - First versions: `chartjs` blocks drawn under their source, `height=`, pictures in exports; store page and icon.
 
 <!-- ai-tools -->
 ## Textus AI のツール

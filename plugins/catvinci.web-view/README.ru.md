@@ -24,8 +24,8 @@
 
 ## Изменения
 
-- **0.2.2** - Короче подсказки и тексты пустых состояний.
-- **0.2.1** - Его страница теперь одной фразой говорит, что он делает, что умеет и что менялось в каждой версии.
-- **0.2.0** - Веб-ссылки по Ctrl/⌘+щелчку открываются во вкладке, только если вы включили это в настройках; иначе — в браузере.
-- **0.1.2** - Только для компьютера.
-- **0.1.0-0.1.1** - Первые версии: адрес или поиск во вкладке, недавние страницы, открытие или поиск выделенного, ссылки по Ctrl/⌘+щелчку, выбор поисковика.
+- **0.2.2** - Shorter help and empty-state text.
+- **0.2.1** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
+- **0.2.0** - Ctrl/Cmd+clicked web links open in a tab only when you turn that on in the settings; otherwise they open in your browser.
+- **0.1.2** - Desktop only.
+- **0.1.0-0.1.1** - First versions: an address or a search in a tab, recent pages, the selection opened or searched, Ctrl/Cmd+clicked links, a choice of search engine.

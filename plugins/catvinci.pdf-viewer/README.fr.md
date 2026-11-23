@@ -15,15 +15,15 @@ Il ne demande aucune autorisation : Textus lui transmet le PDF que vous ouvrez.
 
 ## Changements
 
-- **0.2.8** - Le paquet liste les bibliothèques qu’il embarque, avec leurs licences.
-- **0.2.7** - La page suit la langue de Textus d’elle-même. Nécessite Textus 1.4.3.
-- **0.2.6** - Les boutons et touches de zoom avancent par 1,25×, comme dans les autres visionneuses.
-- **0.2.5** - Un long PDF parcouru jusqu’au bout occupe bien moins de mémoire : les pages hors de vue libèrent aussi leurs images.
-- **0.2.4** - La barre passe à la ligne dans un panneau étroit, et la recherche ne mélange plus les résultats d'un mot précédent.
-- **0.2.3** - Sa barre suit l'ordre de Textus : ce qu'elle montre, puis recherche et zoom.
-- **0.2.2** - Ses barres, listes et contrôles sont désormais ceux de Textus, grandissent avec l’interface et suivent chaque thème ; nécessite Textus 1.3.12.
-- **0.2.1** - Sa page dit maintenant en une phrase ce qu'il fait, ce qu'il permet et ce qui a changé à chaque version.
-- **0.2.0** - Contrôles propres à Textus. Nécessite Textus 1.3.2.
-- **0.1.3** - L’apparence de Textus 1.3 ; les boutons suivent la langue de l’interface quand elle change.
-- **0.1.2** - Les pages numérisées affichent leurs images, les liens vers une page fonctionnent, les pages hors de vue libèrent la mémoire, les fichiers illisibles le disent ; ouverture à la largeur de la fenêtre ; le zoom étire autour du pointeur puis redevient net.
-- **0.1.0-0.1.1** - Premières versions : pages, zoom, texte à sélectionner et copier, recherche, réouverture là où vous en étiez, texte chinois, japonais et coréen sans polices incorporées.
+- **0.2.8** - Its package lists the libraries it carries, with their licenses.
+- **0.2.7** - The page follows Textus's language by itself. Needs Textus 1.4.3.
+- **0.2.6** - Zoom buttons and keys step by 1.25×, as the other viewers do.
+- **0.2.5** - A long PDF scrolled end to end holds far less memory: pages out of sight let go of their pictures too.
+- **0.2.4** - Its bar wraps in a narrow panel, and find no longer mixes in results for an earlier word.
+- **0.2.3** - Its bar keeps Textus's one order: what it shows, then find and zoom.
+- **0.2.2** - Its bars, lists and controls are Textus's own, grow with the interface and follow every theme; needs Textus 1.3.12.
+- **0.2.1** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
+- **0.2.0** - Textus's own controls. Needs Textus 1.3.2.
+- **0.1.3** - Textus 1.3's look; the buttons follow the interface language when it changes.
+- **0.1.2** - Scanned pages show their images, links to a page work, pages out of sight free their memory, unreadable files say so; opens at the window's width; zoom stretches around the pointer and then turns sharp.
+- **0.1.0-0.1.1** - First versions: pages, zoom, text to select and copy, find, reopening where you left off, Chinese, Japanese and Korean text without embedded fonts.

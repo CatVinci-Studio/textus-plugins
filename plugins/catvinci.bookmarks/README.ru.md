@@ -20,16 +20,16 @@
 
 ## Изменения
 
-- **0.4.5** - Поле фильтра и пустое сообщение следуют языку Textus при его смене. Нужен Textus 1.4.3.
-- **0.4.4** - Закладки Obsidian по-прежнему показываются, но больше не записываются: с Textus 1.4 плагины не меняют `.obsidian`. Нужен Textus 1.4.0.
-- **0.4.3** - Список сгруппирован по пути документа в папке, одна группа на документ; длинные фрагменты обрезаются по слову с «…»; если ID блока в хранилище записать не удалось, закладка всё равно сохраняется.
-- **0.4.2** - Короче подсказки и тексты пустых состояний.
-- **0.4.1** - Его страница теперь одной фразой говорит, что он делает, что умеет и что менялось в каждой версии.
-- **0.4.0** - В хранилище Obsidian новые закладки записываются и в его `bookmarks.json`, удаляются и переименовываются там же.
-- **0.3.0** - Показывает собственные закладки Obsidian из хранилища: заметки, заголовки и блоки.
-- **0.2.1** - Пути обрабатывает код, общий с другими плагинами; в работе ничего не меняется.
-- **0.2.0** - Textus AI может показать ваши закладки (`list_bookmarks`).
-- **0.1.0-0.1.2** - Первые версии: закладка на выделение, список по документам в боковой панели, закладки следуют за переименованием; страница в магазине и значок; работает на компьютере и iOS.
+- **0.4.5** - The filter field and empty message follow Textus's language when you switch it. Needs Textus 1.4.3.
+- **0.4.4** - Obsidian's bookmarks are listed as before but no longer written: Textus 1.4 keeps plugins out of `.obsidian`. Needs Textus 1.4.0.
+- **0.4.3** - Rows are grouped by the document's path in the folder, one group per document; long passages end at a word with "…"; a failed block-id edit in a vault keeps the bookmark.
+- **0.4.2** - Shorter help and empty-state text.
+- **0.4.1** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
+- **0.4.0** - In an Obsidian vault, new bookmarks are written to Obsidian's `bookmarks.json` too, and removed and renamed there.
+- **0.3.0** - Lists the vault's own Obsidian bookmarks of notes, headings and blocks.
+- **0.2.1** - Paths handled by code shared with other plugins; nothing changes in use.
+- **0.2.0** - Textus AI can list your bookmarks (`list_bookmarks`).
+- **0.1.0-0.1.2** - First versions: bookmark a selection, the sidebar list by document, bookmarks that follow renames; store page and icon; runs on desktop and iOS.
 
 <!-- ai-tools -->
 ## Инструменты для Textus AI

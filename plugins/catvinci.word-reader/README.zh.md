@@ -13,15 +13,15 @@
 
 ## 更新日志
 
-- **0.2.8** - 安装包里附上所带第三方库的清单和许可。
-- **0.2.7** - 页面语言由 Textus 自动跟随。需要 Textus 1.4.3。
-- **0.2.6** - 缩放按钮和快捷键每次 1.25 倍，和其他看图插件一致。
-- **0.2.5** - 查找栏的关闭按钮有了名称，读屏软件能读出，悬停也有提示。
-- **0.2.4** - 打开时按标签页宽度显示；双指缩放或 Ctrl+滚轮（Mac 上 ⌘）缩放页面；比标签页宽的页面可以左右滚动到两边；窄标签页里工具栏会换行，切换语言后缩放比例保留。
-- **0.2.3** - 工具栏按 Textus 统一的顺序排列：先是内容信息，再是查找和缩放。
-- **0.2.2** - 工具栏、列表和各个控件都改用 Textus 自己的，随界面一起缩放，适配每个主题；需要 Textus 1.3.12。
-- **0.2.1** - 介绍页重写：一句话说明它做什么，再讲它能做的事，并列出每个版本的更新。
-- **0.2.0** - 使用 Textus 自己的控件和主题色调；界面语言改变时标签页随之切换。需要 Textus 1.3.2。
-- **0.1.3** - 使用 Textus 1.3 的设计变量。
-- **0.1.2** - 文件读不出来时会说明；查找时跳过文档的样式内容。
-- **0.1.0-0.1.1** - 最初的版本：在标签页里按 Word 的排版显示 .docx，显示当前页码，支持查找、缩放和「作为 Markdown 编辑」。
+- **0.2.8** - Its package lists the libraries it carries, with their licenses.
+- **0.2.7** - The page follows Textus's language by itself. Needs Textus 1.4.3.
+- **0.2.6** - Zoom buttons and keys step by 1.25×, as the other viewers do.
+- **0.2.5** - The find bar's close button is named for screen readers and shows a tooltip.
+- **0.2.4** - Opens fitted to the tab's width; a pinch or Ctrl+wheel (⌘ on a Mac) zooms the pages; a page wider than the tab scrolls to both edges; the bars wrap in a narrow tab and the zoom is kept when the language changes.
+- **0.2.3** - Its bar keeps Textus's one order: what it shows, then find and zoom.
+- **0.2.2** - Its bars, lists and controls are Textus's own, grow with the interface and follow every theme; needs Textus 1.3.12.
+- **0.2.1** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
+- **0.2.0** - Drawn with Textus's own controls and theme tones; the tab follows the interface language when it changes. Needs Textus 1.3.2.
+- **0.1.3** - Uses Textus 1.3's design variables.
+- **0.1.2** - A file that can't be read says so; find skips the document's styles.
+- **0.1.0-0.1.1** - First versions: .docx files in a tab as Word lays them out, the page you are on, find, zoom and Edit as Markdown.

@@ -11,8 +11,8 @@ Funciona en escritorio y en iPhone y necesita Textus 1.3.0 o posterior. Pide un 
 
 ## Cambios
 
-- **0.1.5** - La descripción de la tienda empieza ahora por lo que hace el plugin.
-- **0.1.4** - Un comando escrito entero va primero, así que Intro lo mantiene (\in sigue siendo \in); un comando sin llaves se escribe con un espacio detrás; con Textus 1.3.13 la lista se cierra al escribir un comando.
-- **0.1.3** - Su página dice ahora en una frase qué hace, qué puede hacer y qué cambió en cada versión.
-- **0.1.2** - Indica dónde funciona: escritorio y iPhone.
-- **0.1.0-0.1.1** - Primeras versiones: más de 200 comandos con lo que dibuja cada uno, búsqueda por letras en orden, llaves y cursor en su sitio, pares de paréntesis que crecen; página en la tienda e icono.
+- **0.1.5** - The store description now opens with what the plugin does.
+- **0.1.4** - A command typed out whole comes first, so Enter keeps it (\in stays \in); a command without braces is written with a space after it; with Textus 1.3.13 the list closes once a command is written.
+- **0.1.3** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
+- **0.1.2** - Says where it runs: desktop and iPhone.
+- **0.1.0-0.1.1** - First versions: over 200 commands with what each draws, letters in order, braces and caret in place, growing bracket pairs; store page and icon.

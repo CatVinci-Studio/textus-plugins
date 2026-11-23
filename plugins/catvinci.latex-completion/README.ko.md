@@ -11,8 +11,8 @@
 
 ## 변경 내역
 
-- **0.1.5** - 스토어 설명이 첫 문장에서 플러그인이 하는 일을 알려 줍니다.
-- **0.1.4** - 끝까지 입력한 명령이 맨 앞에 와서 Enter로 그대로 확정됩니다(\in은 \in 그대로). 중괄호가 없는 명령은 뒤에 공백을 붙여 씁니다. Textus 1.3.13에서는 명령을 쓴 뒤 목록이 다시 열리지 않습니다.
-- **0.1.3** - 소개 페이지를 새로 썼습니다. 무엇을 하는지 한 문장으로, 할 수 있는 일과 버전별 변경 내역을 담았습니다.
-- **0.1.2** - 실행되는 곳을 밝힘: 데스크톱과 iPhone.
-- **0.1.0-0.1.1** - 첫 버전: 그려지는 모양과 함께 보이는 200개 넘는 명령, 순서대로 고른 글자로 찾기, 중괄호와 커서 위치, 늘어나는 괄호 쌍. 스토어 페이지와 아이콘.
+- **0.1.5** - The store description now opens with what the plugin does.
+- **0.1.4** - A command typed out whole comes first, so Enter keeps it (\in stays \in); a command without braces is written with a space after it; with Textus 1.3.13 the list closes once a command is written.
+- **0.1.3** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
+- **0.1.2** - Says where it runs: desktop and iPhone.
+- **0.1.0-0.1.1** - First versions: over 200 commands with what each draws, letters in order, braces and caret in place, growing bracket pairs; store page and icon.

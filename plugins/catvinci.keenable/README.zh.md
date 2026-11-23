@@ -10,10 +10,10 @@
 
 ## 更新日志
 
-- **0.1.3** - 可以在设置里它的页面上用按钮设置 API 密钥：没有命令面板的手机上也能用。
-- **0.1.2** - 清空 API 密钥后会真正删除它，搜索回到公开搜索；收到无法读取的回复时给出明确提示。
-- **0.1.1** - 介绍页重写：一句话说明它做什么，再讲它能做的事，并列出每个版本的更新。
-- **0.1.0** - 第一个版本：Textus AI 通过 Keenable 搜索网页，有没有 API 密钥都能用。
+- **0.1.3** - Set the API key with a button on its page in Settings: on a phone, with no command palette, too.
+- **0.1.2** - Removing the API key really removes it, so search goes back to the public search; an unreadable answer gets a plain message.
+- **0.1.1** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
+- **0.1.0** - First version: web search for Textus AI through Keenable, with or without an API key.
 
 <!-- ai-tools -->
 ## Textus AI 工具

@@ -11,8 +11,8 @@ Läuft auf dem Desktop und auf dem iPhone und braucht Textus 1.3.0 oder neuer. E
 
 ## Änderungen
 
-- **0.1.5** - Die Store-Beschreibung beginnt jetzt mit dem, was das Plugin tut.
-- **0.1.4** - Ein ganz ausgeschriebener Befehl steht oben, sodass Enter ihn behält (\in bleibt \in); ein Befehl ohne Klammern wird mit einem Leerzeichen danach geschrieben; mit Textus 1.3.13 schließt sich die Liste, sobald ein Befehl geschrieben ist.
-- **0.1.3** - Seine Seite sagt jetzt in einem Satz, was es tut, was es kann und was sich in jeder Version geändert hat.
-- **0.1.2** - Nennt, wo es läuft: Desktop und iPhone.
-- **0.1.0-0.1.1** - Erste Versionen: über 200 Befehle mit dem, was jeder zeichnet, Suche nach Buchstaben in Reihenfolge, Klammern und Cursor an ihrem Platz, mitwachsende Klammerpaare; Seite im Store und Symbol.
+- **0.1.5** - The store description now opens with what the plugin does.
+- **0.1.4** - A command typed out whole comes first, so Enter keeps it (\in stays \in); a command without braces is written with a space after it; with Textus 1.3.13 the list closes once a command is written.
+- **0.1.3** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
+- **0.1.2** - Says where it runs: desktop and iPhone.
+- **0.1.0-0.1.1** - First versions: over 200 commands with what each draws, letters in order, braces and caret in place, growing bracket pairs; store page and icon.

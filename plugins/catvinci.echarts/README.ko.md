@@ -25,14 +25,14 @@
 
 ## 변경 내역
 
-- **0.3.4** - 패키지에 포함된 라이브러리 목록과 라이선스를 함께 담았습니다.
-- **0.3.3** - 블록이 접혀 있을 때(휴대폰) 그린 그림이 펼치면 너비에 맞게 다시 그려집니다.
-- **0.3.2** - 패널 너비가 바뀌면 차트를 다시 그립니다. 글자와 기본 높이는 앱의 확대/축소와 글꼴을 따릅니다.
-- **0.3.1** - 설명에서 지도를 뺐습니다. 블록은 지도 데이터를 불러올 수 없습니다.
-- **0.3.0** - Textus AI가 `echarts` 블록을 쓰기 전에 확인할 수 있습니다.
-- **0.2.0** - 시리즈 색을 테마의 색조에서 가져옵니다. Textus 1.3.2가 필요합니다.
-- **0.1.3** - 테마의 본문 글자색과 각주 크기를 Textus 1.3의 새 이름으로 읽습니다.
-- **0.1.0-0.1.2** - 첫 버전들: 문서 안에서 `echarts` 코드 블록 그리기, `height=`, 내보낼 때 그림으로.
+- **0.3.4** - Its package lists the libraries it carries, with their licenses.
+- **0.3.3** - A chart drawn while its block was folded (a phone) fits once the block opens, instead of keeping its old size.
+- **0.3.2** - Charts redraw when the panel width changes, and their text and default height follow the app's zoom and font.
+- **0.3.1** - Its description no longer lists maps, which a block can't load.
+- **0.3.0** - Textus AI can check an `echarts` block before it writes one.
+- **0.2.0** - Series colors come from the theme's tones. Needs Textus 1.3.2.
+- **0.1.3** - Uses the theme's document text color and footnote size under their Textus 1.3 names.
+- **0.1.0-0.1.2** - First versions: `echarts` code blocks drawn in the document, `height=`, and exports as a picture.
 
 <!-- ai-tools -->
 ## Textus AI 도구

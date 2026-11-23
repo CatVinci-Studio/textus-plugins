@@ -15,16 +15,16 @@
 
 ## 更新日志
 
-- **0.2.7** - 删掉了为已经不支持的旧版 Textus 留的代码。
-- **0.2.6** - 切换 Textus 的语言后，筛选框和空列表提示会跟着变。需要 Textus 1.4.3。
-- **0.2.5** - 字数和字符数与状态栏一致（Textus 1.4.3 起）；Windows 换行的文件，开头属性也不再算进字数。
-- **0.2.4** - 商店简介改为开头一句就说明插件做什么。
-- **0.2.3** - “今天”只统计你自己写的字，不再算入同步或 AI 的改动；大文件夹里也不再变慢。每日目标填负数时不再显示已达成。
-- **0.2.2** - 介绍页重写：一句话说明它做什么，再讲它能做的事，并列出每个版本的更新。
-- **0.2.1** - 更新共用的路径代码。
-- **0.2.0** - Textus AI 可以统计一篇文档或一个文件夹的字数。
-- **0.1.1** - 注明可运行的平台：桌面版和 iPhone。
-- **0.1.0** - 第一个版本：当前文档、选中内容、今天对照目标、连续天数和整个文件夹。
+- **0.2.7** - Code kept for Textus versions it no longer runs on is gone.
+- **0.2.6** - The filter field and empty message follow Textus's language when you switch it. Needs Textus 1.4.3.
+- **0.2.5** - Words and characters are counted as the status bar counts them (from Textus 1.4.3), and a Windows file's front matter is left out of the count.
+- **0.2.4** - The store description now opens with what the plugin does.
+- **0.2.3** - Today now counts only the words you type yourself, not changes from sync or AI, and stays quick in large folders. A negative daily goal is no longer shown as met.
+- **0.2.2** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
+- **0.2.1** - Updated shared path code.
+- **0.2.0** - Textus AI can count the words of a document or a folder.
+- **0.1.1** - Says where it runs: desktop and iPhone.
+- **0.1.0** - First version: the document, the selection, today against a goal, the streak and the whole folder.
 
 <!-- ai-tools -->
 ## Textus AI 工具

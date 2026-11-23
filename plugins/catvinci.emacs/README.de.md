@@ -16,9 +16,9 @@ Läuft auf dem Desktop und auf dem iPhone. Es fragt nach einer einzigen Berechti
 
 ## Änderungen
 
-- **0.1.6** - C-x C-s und C-x C-g funktionieren unter Windows und Linux wieder. Die Statusleiste zeigt Emacs nur, solange es die Tasten wirklich hat.
-- **0.1.5** - Kürzere Hilfe- und Leertexte.
-- **0.1.4** - Seine Seite sagt jetzt in einem Satz, was es tut, was es kann und was sich in jeder Version geändert hat.
-- **0.1.3** - Nennt, wo es läuft: Desktop und iPhone.
-- **0.1.2** - C-x bleibt nicht mehr hängen; C-d und C-y lassen Zwischenablage und Region in Ruhe.
-- **0.1.0-0.1.1** - Erste Versionen: Bewegungen, Marke und Region, Kill-Ring mit C-y und M-y, M-u M-l M-c, Rückgängig und C-x-Tasten; Seite im Store und Symbol.
+- **0.1.6** - C-x C-s and C-x C-g work again on Windows and Linux. The status bar shows Emacs only while it really has the keys.
+- **0.1.5** - Shorter help and empty-state text.
+- **0.1.4** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
+- **0.1.3** - Says where it runs: desktop and iPhone.
+- **0.1.2** - C-x no longer sticks; C-d and C-y leave the clipboard and the region alone.
+- **0.1.0-0.1.1** - First versions: moves, the mark and region, a kill ring with C-y and M-y, M-u M-l M-c, undo and C-x keys; store page and icon.

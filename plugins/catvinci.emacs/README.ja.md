@@ -16,9 +16,9 @@ Mac では Textus のショートカットが ⌘ なので、Ctrl キーはす�
 
 ## 更新履歴
 
-- **0.1.6** - Windows と Linux で C-x C-s と C-x C-g が再び使えるようになりました。ステータスバーの Emacs 表示は、実際にキーを受け取っているときだけ出ます。
-- **0.1.5** - 説明と空の状態の文言を短くしました。
-- **0.1.4** - 紹介ページを書き直しました。何をするかを一文で示し、できることと各バージョンの変更を載せています。
-- **0.1.3** - 動く場所（デスクトップと iPhone）を明記。
-- **0.1.2** - C-x が残り続けないように。C-d と C-y がクリップボードとリージョンに触れないように。
-- **0.1.0-0.1.1** - 最初の版：移動、マークとリージョン、C-y と M-y の kill ring、M-u M-l M-c、取り消しと C-x キー。ストアページとアイコン。
+- **0.1.6** - C-x C-s and C-x C-g work again on Windows and Linux. The status bar shows Emacs only while it really has the keys.
+- **0.1.5** - Shorter help and empty-state text.
+- **0.1.4** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
+- **0.1.3** - Says where it runs: desktop and iPhone.
+- **0.1.2** - C-x no longer sticks; C-d and C-y leave the clipboard and the region alone.
+- **0.1.0-0.1.1** - First versions: moves, the mark and region, a kill ring with C-y and M-y, M-u M-l M-c, undo and C-x keys; store page and icon.

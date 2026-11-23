@@ -25,15 +25,15 @@ Pede apenas **Ferramentas para o Textus AI**, para que o Textus AI possa verific
 
 ## Alterações
 
-- **0.4.0** - Um banco de dados pode ser mostrado como linha do tempo: escolha Linha do tempo entre as visões e as linhas com data ficam em ordem; um clique abre uma linha. Requer Textus 1.4.6.
-- **0.3.3** - Uma data já não se parte a meio; o que foi desenhado com o bloco recolhido ajusta-se ao abrir.
-- **0.3.2** - notas e datas longas quebram a linha num painel estreito, usa a fonte do documento e um bloco vazio diz o que escrever
-- **0.3.1** - Sua página agora diz numa frase o que ele faz, o que pode fazer e o que mudou em cada versão.
-- **0.3.0** - uma ferramenta para o Textus AI, `check_timeline`
-- **0.2.0** - as cores do tema, redesenhada quando o tema muda
-- **0.1.3** - texto nas cores do tema no Textus 1.3
-- **0.1.2** - acompanha edições rápidas: um desenho antigo não substitui mais um novo
-- **0.1.0-0.1.1** - primeiras versões: eventos desenhados como linha do tempo, altura ajustável, imagens na exportação
+- **0.4.0** - A database can be shown as a timeline: pick Timeline among its views, and its dated rows line up in order; a click opens a row. Needs Textus 1.4.6.
+- **0.3.3** - A date no longer breaks in the middle ("2024-0" over "3"); a chart drawn while its block was folded fits once it opens.
+- **0.3.2** - long notes and dates wrap to fit a narrow island, the timeline uses the document's font, and an empty block says what to write
+- **0.3.1** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
+- **0.3.0** - a tool for Textus AI, `check_timeline`
+- **0.2.0** - the theme's colors, drawn again when the theme changes
+- **0.1.3** - text in the theme's colors on Textus 1.3
+- **0.1.2** - keeps up with quick edits: an older drawing never replaces a newer one
+- **0.1.0-0.1.1** - first versions: events drawn as a timeline, a height setting, pictures in exports
 
 <!-- ai-tools -->
 ## Ferramentas para o Textus AI

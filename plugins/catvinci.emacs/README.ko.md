@@ -16,9 +16,9 @@ Mac에서는 Textus 단축키가 ⌘에 있으므로 모든 Ctrl 키가 Emacs �
 
 ## 변경 내역
 
-- **0.1.6** - Windows와 Linux에서 C-x C-s와 C-x C-g가 다시 작동합니다. 상태 표시줄의 Emacs 표시는 실제로 키를 받고 있을 때만 나타납니다.
-- **0.1.5** - 설명과 빈 상태 문구를 짧게 줄였습니다.
-- **0.1.4** - 소개 페이지를 새로 썼습니다. 무엇을 하는지 한 문장으로, 할 수 있는 일과 버전별 변경 내역을 담았습니다.
-- **0.1.3** - 실행되는 곳을 밝힘: 데스크톱과 iPhone.
-- **0.1.2** - C-x가 더 이상 남아 있지 않습니다. C-d와 C-y가 클립보드와 영역을 건드리지 않습니다.
-- **0.1.0-0.1.1** - 첫 버전: 이동, 마크와 영역, C-y와 M-y가 있는 kill ring, M-u M-l M-c, 실행 취소와 C-x 키. 스토어 페이지와 아이콘.
+- **0.1.6** - C-x C-s and C-x C-g work again on Windows and Linux. The status bar shows Emacs only while it really has the keys.
+- **0.1.5** - Shorter help and empty-state text.
+- **0.1.4** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
+- **0.1.3** - Says where it runs: desktop and iPhone.
+- **0.1.2** - C-x no longer sticks; C-d and C-y leave the clipboard and the region alone.
+- **0.1.0-0.1.1** - First versions: moves, the mark and region, a kill ring with C-y and M-y, M-u M-l M-c, undo and C-x keys; store page and icon.

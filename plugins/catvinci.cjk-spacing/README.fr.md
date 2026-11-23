@@ -21,15 +21,15 @@ Met une espace entre le texte chinois ou japonais et les lettres latines ou les 
 
 ## Changements
 
-- **0.3.0** - À partir de Textus 1.4.4, un paragraphe où manque une espace entre texte CJK et latin est souligné ; sa carte ajoute les espaces. À désactiver dans les réglages du plugin.
-- **0.2.4** - Un bloc de code dans une clôture plus longue (```` contenant ```) reste intact.
-- **0.2.3** - L'outil pour Textus AI dit ce qu'il fait : chinois et japonais, pas coréen.
-- **0.2.2** - laisse tels quels les identifiants de bloc, champs Dataview, surlignages et champs Tasks d’Obsidian
-- **0.2.1** - laisse tels quels les #tags, rappels et commentaires %% ; à l’enregistrement, seuls les blocs de texte changent
-- **0.2.0** - un outil pour Textus AI, `fix_cjk_spacing`
-- **0.1.3** - fonctionne sur ordinateur et sur iOS
-- **0.1.2** - laisse tels quels les liens, liens wiki, notes de bas de page, tags et front matter
-- **0.1.0-0.1.1** - premières versions : la commande dans le menu contextuel et le menu Plugins, et l’espacement à l’enregistrement
+- **0.3.0** - From Textus 1.4.4, a paragraph missing a space between CJK and Latin text is underlined; its card adds the spaces. Turn it off in the plugin's settings.
+- **0.2.4** - A code block inside a longer fence (```` holding ```) is left alone.
+- **0.2.3** - Its Textus AI tool says what it does: Chinese and Japanese, not Korean.
+- **0.2.2** - leaves Obsidian's block ids, Dataview fields, highlights and Tasks fields as written
+- **0.2.1** - leaves #tags, reminders and %% comments alone; on save only prose blocks change
+- **0.2.0** - a tool for Textus AI, `fix_cjk_spacing`
+- **0.1.3** - runs on the desktop and on iOS
+- **0.1.2** - leaves links, wiki links, footnotes, tags and front matter alone
+- **0.1.0-0.1.1** - first versions: the command in the right-click and Plugins menus, and spacing on save
 
 <!-- ai-tools -->
 ## Outils pour Textus AI

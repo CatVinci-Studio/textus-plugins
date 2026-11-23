@@ -16,17 +16,17 @@
 
 ## 更新日志
 
-- **0.3.5** - 切换 Textus 的语言后，筛选框和空列表提示会跟着变。需要 Textus 1.4.3。
-- **0.3.4** - 打开文件夹时只读 Textus 找到提醒标记的文档，不再逐个读所有文档。
-- **0.3.3** - 商店简介改为开头一句就说明插件做什么。
-- **0.3.2** - 两个窗口不再互相清掉提醒，关闭文件夹后列表随之清空。输错的时间会被拒绝，不再插入错误的标记。
-- **0.3.1** - 说明和空状态文字更简短。
-- **0.3.0** - 标记里的日期改由 Textus 自己写；需要 Textus 1.3.10。
-- **0.2.2-0.2.3** - 更新共用的日期代码。
-- **0.2.1** - 告诉 Textus AI 只有截止日期的待办该交给任务插件。
-- **0.2.0** - Textus AI 可以列出即将到来的提醒，也能添加提醒。
-- **0.1.1** - 只在桌面版运行，因为它要在后台工作。
-- **0.1.0** - 第一个版本：`(@日期 时间)` 标记变成由 Textus 保管的通知，在后台也会提醒；提醒我… 和侧边栏列表。
+- **0.3.5** - The filter field and empty message follow Textus's language when you switch it. Needs Textus 1.4.3.
+- **0.3.4** - Opening a folder reads only the documents Textus finds a reminder mark in, not every document.
+- **0.3.3** - The store description now opens with what the plugin does.
+- **0.3.2** - Two open windows no longer clear each other's reminders, and the list empties when you close the folder. A mistyped time is refused instead of inserting a broken mark.
+- **0.3.1** - Shorter help and empty-state text.
+- **0.3.0** - Marks written with Textus's own dates; needs Textus 1.3.10.
+- **0.2.2-0.2.3** - Updated shared date code.
+- **0.2.1** - Textus AI is told when a due date belongs in Tasks instead.
+- **0.2.0** - Textus AI can list the coming reminders and add one.
+- **0.1.1** - Desktop only, since it runs in the background.
+- **0.1.0** - First version: `(@date time)` marks as notifications Textus keeps, even in the background; Remind Me… and the sidebar list.
 
 <!-- ai-tools -->
 ## Textus AI 工具

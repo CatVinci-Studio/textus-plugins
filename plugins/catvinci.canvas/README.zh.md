@@ -15,11 +15,11 @@ Excalidraw 绘图请用 **Excalidraw** 插件打开，在那里还能编辑。
 
 ## 更新日志
 
-- **0.1.7** - 双指捏合改由 Textus 统一转成缩放，和 PDF、图片一样，不再用白板自己的双指代码；第二根手指不会再拖动白板。
-- **0.1.6** - Excalidraw 绘图改由新的 Excalidraw 插件打开并可编辑；白板插件不再显示它们导出的图片。
-- **0.1.5** - 页面语言由 Textus 自动跟随。需要 Textus 1.4.3。
-- **0.1.4** - 空白或无法读取的画布现在整页只显示一条清楚的提示。卡片文字在每个主题下都清晰可读，拖动时指针移出画布也不会中断。
-- **0.1.3** - 说明和空状态文字更简短。 工具栏按 Textus 统一的顺序排列：先是内容信息，再是查找和缩放。
-- **0.1.2** - 工具栏、列表和各个控件都改用 Textus 自己的，随界面一起缩放，适配每个主题；需要 Textus 1.3.12。
-- **0.1.1** - 介绍页重写：一句话说明它做什么，再讲它能做的事，并列出每个版本的更新。
-- **0.1.0** - 第一个版本：在标签页里拖动、缩放 Obsidian 白板，显示上面的笔记和图片；Excalidraw 绘图显示导出的图片。
+- **0.1.7** - A pinch zooms the canvas through Textus, as PDFs and pictures do, instead of through the canvas's own two-finger code; a second finger no longer moves it.
+- **0.1.6** - Excalidraw drawings now open with the new Excalidraw plugin, which edits them; Canvas no longer shows their exported picture.
+- **0.1.5** - The page follows Textus's language by itself. Needs Textus 1.4.3.
+- **0.1.4** - An empty or unreadable canvas now shows one clear message across the page. Card labels stay readable in every theme, and dragging no longer stops when the pointer leaves the canvas.
+- **0.1.3** - Shorter help and empty-state text. Its bar keeps Textus's one order: what it shows, then find and zoom.
+- **0.1.2** - Its bars, lists and controls are Textus's own, grow with the interface and follow every theme; needs Textus 1.3.12.
+- **0.1.1** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
+- **0.1.0** - first version: Obsidian canvases in a tab to drag and zoom, notes and pictures shown on the board, and Excalidraw drawings by their exported picture.

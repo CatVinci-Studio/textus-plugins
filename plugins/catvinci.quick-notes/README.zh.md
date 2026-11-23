@@ -28,18 +28,18 @@
 
 ## 更新日志
 
-- **0.6.0** - 也能在 iPhone、iPad 和安卓上用了：**插件** 菜单里的 **新建快速笔记…** 和侧栏标签页都能用，新建按钮和每条笔记的「更多」按钮手指好点。只有桌面版会请你让 Textus 在后台运行。需要 Textus 1.4.7。
-- **0.5.5** - 按钮的名称和提示改由 Textus 提供，和其他页面一致。
-- **0.5.4** - 页面语言由 Textus 自动跟随。需要 Textus 1.4.3。
-- **0.5.3** - 搜索时新建会先清空搜索，新笔记能直接显示；在笔记文字上右键也有撤销、剪切、复制、粘贴；搜索没有结果时会提示。
-- **0.5.2** - 侧栏里的面板不再单独显示标题，和侧栏其他标签一致。 说明和空状态文字更简短。 侧边栏面板和页面按 Textus 1.3.13 的布局调整。 没有笔记时说明用途并给出「新建」；笔记框随文字长高。
-- **0.5.1** - 工具栏、列表和各个控件都改用 Textus 自己的，随界面一起缩放，适配每个主题；需要 Textus 1.3.12。
-- **0.5.0** - 日期和日记模板由 Textus 自己填写，和「日历与每日笔记」「模板」插件的做法一致。需要 Textus 1.3.10。
-- **0.4.0** - 笔记存进文件夹里的文档：`Inbox.md` 或今天的日记。旧版本的笔记会一次性移进来。
-- **0.3.1** - Textus AI 能分清快速笔记、日记和待办。
-- **0.3.0** - Textus AI 可以添加快速笔记（`add_note`）。
-- **0.2.0** - 改用 Textus 自己的控件，每条笔记有操作菜单。
-- **0.1.0-0.1.4** - 最初的版本：快捷键和托盘入口、侧栏列表、插入、打开、可撤销的删除、笔记多时出现搜索、日期单独一行；只支持桌面版。
+- **0.6.0** - On iPhone, iPad and Android too: **New Quick Note…** under Plugins and the sidebar tab, with New and each note's more button easy to tap. Only the desktop asks to keep Textus running in the background. Needs Textus 1.4.7.
+- **0.5.5** - Its buttons' names and tooltips come from Textus, as on its other pages.
+- **0.5.4** - The page follows Textus's language by itself. Needs Textus 1.4.3.
+- **0.5.3** - New while searching clears the search, so the new note shows; right-clicking a note's text also offers undo, cut, copy and paste; a search with no match says so.
+- **0.5.2** - In the sidebar the panel draws no title of its own, as the sidebar's other tabs. Shorter help and empty-state text. Its sidebar panel and page follow Textus 1.3.13's layout. An empty list says what Quick Notes is for and offers New; a note's box grows with its text.
+- **0.5.1** - Its bars, lists and controls are Textus's own, grow with the interface and follow every theme; needs Textus 1.3.12.
+- **0.5.0** - Dates and the daily note's template are filled by Textus itself, the same way as in Calendar & Daily Notes and Templates. Needs Textus 1.3.10.
+- **0.4.0** - Notes are kept in a document of the folder: `Inbox.md` or today's daily note. Notes from older versions move in once.
+- **0.3.1** - Textus AI tells quick notes apart from the daily journal and to-dos.
+- **0.3.0** - Textus AI can add a quick note (`add_note`).
+- **0.2.0** - Textus's own controls, and an actions menu for each note.
+- **0.1.0-0.1.4** - First versions: the shortcut and the tray, the sidebar list, insert, open, delete with Undo, search once there are many, dates on a line of their own; desktop only.
 
 <!-- ai-tools -->
 ## Textus AI 工具

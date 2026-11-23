@@ -19,19 +19,19 @@ Läuft auf dem Desktop und auf dem iPhone und braucht Textus 1.3.10 oder neuer. 
 
 ## Änderungen
 
-- **0.5.5** - Sortiert Namen mit Textus’ eigener Reihenfolge statt einer Kopie davon; das Paket ist kleiner. Benötigt Textus 1.4.3.
-- **0.5.4** - Ist ein Name vergeben, bekommt die Datei beim Schreiben den nächsten freien, nie einen doppelten (Textus 1.4.3).
-- **0.5.3** - Die Store-Beschreibung beginnt jetzt mit dem, was das Plugin tut.
-- **0.5.2** - Vorlagen in einem versteckten oder kleingeschriebenen Vorlagenordner und in seinen Unterordnern erscheinen jetzt. Nach dem Einfügen steht der Cursor direkt hinter der Vorlage.
-- **0.5.1** - **Neu aus Vorlage …** im Kontextmenü einer Datei oder eines Ordners legt das Dokument in diesem Ordner an.
-- **0.5.0** - Vorlagen füllt Textus selbst aus, genauso wie Tagesnotizen; braucht Textus 1.3.10.
-- **0.4.1** - Vorlagen stehen in natürlicher Reihenfolge: 2 vor 10.
-- **0.4.0** - Die gängigen `tp.date`- und `tp.file`-Tags von Templater und die Datums- und Zeitformate der Vorlagen-Einstellungen eines Obsidian-Vaults; nicht ausgeführte Tags nennt eine Meldung.
-- **0.3.0** - Vorlagen sind Markdown-Dateien im Ordner Templates (in Obsidian der Vorlagenordner des Vaults), einmal dorthin verschoben, wo ältere Versionen sie aufbewahrten; `{{date:FORMAT}}` und `{{time:FORMAT}}`.
-- **0.2.0** - Textus AI kann Ihre Vorlagen auflisten und aus einer ein Dokument anlegen.
-- **0.1.3** - Nennt, wo es läuft: Desktop und iPhone.
-- **0.1.2** - Neu aus Vorlage lehnt einen schon vergebenen Namen ab.
-- **0.1.0-0.1.1** - Erste Versionen: neue Dokumente, eingefügte Textbausteine und gespeicherte Vorlagen mit `{{date}}`, `{{time}}` und `{{title}}`; Seite im Store und Symbol.
+- **0.5.5** - Sorts names with Textus's own order instead of a copy of it, so the package is smaller. Needs Textus 1.4.3.
+- **0.5.4** - A taken name gets the next free one as the file is written, never a clash (Textus 1.4.3).
+- **0.5.3** - The store description now opens with what the plugin does.
+- **0.5.2** - Templates in a hidden or lowercase templates folder, and in its subfolders, now show up. After Insert, the caret lands right after the template.
+- **0.5.1** - **New from Template…** from a file's or folder's right-click menu makes the document in that folder.
+- **0.5.0** - Templates are filled in by Textus itself, the same way as daily notes; needs Textus 1.3.10.
+- **0.4.1** - Templates are listed in natural order: 2 before 10.
+- **0.4.0** - Templater's common `tp.date` and `tp.file` tags, and an Obsidian vault's Templates date and time formats; tags that aren't run are named in a notice.
+- **0.3.0** - Templates are Markdown files in the Templates folder (a vault's own templates folder in Obsidian), moved there once from where older versions kept them; `{{date:FORMAT}}` and `{{time:FORMAT}}`.
+- **0.2.0** - Textus AI can list your templates and make a document from one.
+- **0.1.3** - Says where it runs: desktop and iPhone.
+- **0.1.2** - New from Template refuses a name that is already taken.
+- **0.1.0-0.1.1** - First versions: new documents, inserted snippets and saved templates, with `{{date}}`, `{{time}}` and `{{title}}`; store page and icon.
 
 <!-- ai-tools -->
 ## Werkzeuge für Textus AI
