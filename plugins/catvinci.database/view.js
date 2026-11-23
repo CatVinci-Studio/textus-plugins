@@ -480,10 +480,14 @@
   });
   databaseBarFit($);
 
-  // Whether the page goes on past its right edge, for the fade there.
+  // Whether the page goes on past its right or bottom edge, for the fade
+  // there: a block in a document is held to Textus's height and scrolls
+  // inside, and a row cut by its foot must read as going on, not clipped.
   const edge = () => {
     const root = document.documentElement;
-    root.classList.toggle("more-right", root.scrollWidth - root.clientWidth - window.scrollX > 1);
+    const more = databaseMore(root, window.scrollX, window.scrollY, document.body.classList.contains("in-tab"), window.innerHeight);
+    root.classList.toggle("more-right", more.right);
+    root.classList.toggle("more-below", more.below);
   };
   window.addEventListener("scroll", edge, { passive: true });
   window.addEventListener("resize", edge);
