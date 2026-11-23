@@ -8,7 +8,7 @@ Schreiben Sie einen Codeblock mit der Sprache `abc`. Die Noten erscheinen direkt
 - Die Noten haben die Textfarbe des Themes und werden beim Wechsel zwischen hell und dunkel neu gezeichnet.
 - Exporte nach HTML, PDF und Word enthalten die Noten als Bild.
 
-Läuft auf dem Desktop und auf dem iPhone und braucht Textus 1.3.2 oder neuer. Es fragt nach einer einzigen Berechtigung, Werkzeuge für Textus AI, damit Textus AI einen `abc`-Block prüfen kann, bevor er ihn in ein Dokument schreibt.
+Es braucht Textus 1.3.2 oder neuer. Es fragt nach einer einzigen Berechtigung, Werkzeuge für Textus AI, damit Textus AI einen `abc`-Block prüfen kann, bevor er ihn in ein Dokument schreibt.
 
 ## Beispiel
 

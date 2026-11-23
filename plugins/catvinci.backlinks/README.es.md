@@ -2,7 +2,7 @@
 
 Enlaza notas, encabezados y bloques al escribir `[[`, incrústalos con `![[` y mira en la barra lateral qué enlaza al documento abierto.
 
-Los enlaces como `[[Nota]]` vienen con Textus: puedes escribirlos y seguirlos sin ningún plugin. Este plugin te ayuda a escribirlos, muestra en su sitio lo que enlazan y reúne los enlaces alrededor del documento que estás leyendo. Funciona en escritorio y en iOS.
+Los enlaces como `[[Nota]]` vienen con Textus: puedes escribirlos y seguirlos sin ningún plugin. Este plugin te ayuda a escribirlos, muestra en su sitio lo que enlazan y reúne los enlaces alrededor del documento que estás leyendo.
 
 ## Enlazar mientras escribes
 

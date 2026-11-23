@@ -9,7 +9,7 @@
 - 分支顏色跟著佈景主題，切換主題時會重新繪製。
 - 匯出 HTML、PDF、Word 時，心智圖會以圖片放進去，捲到看不見的心智圖也一樣。
 
-外掛以 [markmap](https://markmap.js.org) 繪製。它只要求一項權限：為 Textus AI 提供下方列出的 `check_markmap` 工具，讓它把區塊寫進文件前先檢查一遍。電腦、iPhone 和 iPad 上都能使用。
+外掛以 [markmap](https://markmap.js.org) 繪製。它只要求一項權限：為 Textus AI 提供下方列出的 `check_markmap` 工具，讓它把區塊寫進文件前先檢查一遍。
 
 ## 範例
 

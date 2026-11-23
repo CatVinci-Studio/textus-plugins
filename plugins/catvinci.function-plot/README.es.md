@@ -22,7 +22,7 @@ x^2 / 4 - 1
 
 ## Permisos
 
-Solo pide **Herramientas para Textus AI**, para que Textus AI pueda revisar un bloque antes de escribirlo. No lee archivos y lo dibuja todo en tu equipo, en escritorio y en iOS.
+Solo pide **Herramientas para Textus AI**, para que Textus AI pueda revisar un bloque antes de escribirlo. No lee archivos y lo dibuja todo en tu equipo.
 
 ## Cambios
 

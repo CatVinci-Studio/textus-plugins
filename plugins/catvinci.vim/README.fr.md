@@ -18,7 +18,7 @@ Réglages, dans **Réglages › Extensions › Modules › Vim** :
 
 Obsidian : dans un coffre Obsidian, son `.obsidian.vimrc` (celui du plugin Vimrc Support) est lu aussi, après vos propres lignes, et relu quand il change. Ouvrez le coffre lui-même, pas un dossier à l’intérieur.
 
-Le plugin demande à recevoir les touches dans l’éditeur (pour exécuter celles de Vim) et à lire les fichiers (seulement pour lire `.obsidian.vimrc`). Il fonctionne sur ordinateur.
+Le plugin demande à recevoir les touches dans l’éditeur (pour exécuter celles de Vim) et à lire les fichiers (seulement pour lire `.obsidian.vimrc`).
 
 ## Changements
 

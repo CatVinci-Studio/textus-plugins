@@ -9,7 +9,7 @@
 - 가지 색은 테마를 따르고, 테마를 바꾸면 다시 그려집니다.
 - HTML, PDF, Word로 내보내면 맵이 그림으로 들어갑니다. 스크롤해서 보이지 않는 맵도 마찬가지입니다.
 
-그리기에는 [markmap](https://markmap.js.org)을 씁니다. 요청하는 권한은 하나로, 아래에 있는 `check_markmap` 도구를 Textus AI에 주어 문서에 블록을 쓰기 전에 확인하게 하기 위해서입니다. 데스크톱과 iPhone, iPad에서 쓸 수 있습니다.
+그리기에는 [markmap](https://markmap.js.org)을 씁니다. 요청하는 권한은 하나로, 아래에 있는 `check_markmap` 도구를 Textus AI에 주어 문서에 블록을 쓰기 전에 확인하게 하기 위해서입니다.
 
 ## 예시
 

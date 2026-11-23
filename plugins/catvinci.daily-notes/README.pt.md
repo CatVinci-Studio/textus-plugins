@@ -19,7 +19,7 @@ Num cofre do Obsidian valem os ajustes de notas diárias do próprio cofre: past
 
 ## Permissões
 
-O plugin lê e escreve ficheiros na pasta aberta para encontrar e criar as notas, e lê qual documento está aberto para saber o dia anterior e o seguinte. Também dá ao Textus AI as duas ferramentas abaixo. Funciona no computador e no iPhone e precisa do Textus 1.3.10 ou mais recente.
+O plugin lê e escreve ficheiros na pasta aberta para encontrar e criar as notas, e lê qual documento está aberto para saber o dia anterior e o seguinte. Também dá ao Textus AI as duas ferramentas abaixo. Precisa do Textus 1.4.3 ou mais recente.
 
 ## Alterações
 

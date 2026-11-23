@@ -23,7 +23,7 @@ Dibuja diagramas de tiempos digitales y campos de registros a partir de WaveJSON
 
 ## Permisos
 
-Solo pide **Herramientas para Textus AI**, para que Textus AI pueda revisar un bloque antes de escribirlo. WaveDrom viene con el plugin: no lee archivos y lo dibuja todo en tu equipo, en escritorio y en iOS.
+Solo pide **Herramientas para Textus AI**, para que Textus AI pueda revisar un bloque antes de escribirlo. WaveDrom viene con el plugin: no lee archivos y lo dibuja todo en tu equipo.
 
 ## Cambios
 

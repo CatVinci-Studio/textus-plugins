@@ -15,7 +15,7 @@ Ouvre les images et les fichiers SVG dans un onglet, pour zoomer, les faire pivo
 
 ## Autorisations
 
-Elle n’en demande aucune. Elle lit seulement le fichier que vous ouvrez, sur ordinateur comme sur iOS.
+Elle n’en demande aucune. Elle lit seulement le fichier que vous ouvrez.
 
 ## Changements
 

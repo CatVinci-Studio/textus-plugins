@@ -2,7 +2,7 @@
 
 Crie links para notas, títulos e blocos ao digitar `[[`, incorpore-os com `![[` e veja na barra lateral o que aponta para o documento aberto.
 
-Links como `[[Nota]]` já vêm no Textus: você pode escrevê-los e segui-los sem nenhum plugin. Este plugin ajuda a escrevê-los, mostra no lugar o que eles apontam e reúne os links em volta do documento que você está lendo. Funciona no computador e no iOS.
+Links como `[[Nota]]` já vêm no Textus: você pode escrevê-los e segui-los sem nenhum plugin. Este plugin ajuda a escrevê-los, mostra no lugar o que eles apontam e reúne os links em volta do documento que você está lendo.
 
 ## Links enquanto você digita
 

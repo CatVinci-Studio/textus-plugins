@@ -9,7 +9,7 @@ Lesen Sie Word-Dokumente (.docx) in einem Tab, so gesetzt wie in Word.
 - **Als Markdown bearbeiten** übergibt die Datei an Textus, das daraus ein Markdown-Dokument macht, in dem Sie schreiben können.
 - Kann eine Datei nicht gelesen werden, sagt der Tab das.
 
-Das Plugin fragt nach keinen Berechtigungen: Es liest nur die Datei, die Sie damit öffnen. Es läuft auf dem Desktop sowie auf iPhone und iPad.
+Das Plugin fragt nach keinen Berechtigungen: Es liest nur die Datei, die Sie damit öffnen.
 
 ## Änderungen
 

@@ -4,7 +4,7 @@ Zitiere beim Schreiben aus deiner Zotero-Bibliothek.
 
 ## Bevor du anfängst
 
-Zotero 7 oder neuer (auch Zotero 10) muss auf demselben Computer laufen, mit **Einstellungen › Erweitert › „Anderen Anwendungen auf diesem Computer erlauben, mit Zotero zu kommunizieren“** eingeschaltet. Das Plugin spricht nur mit Zotero auf deinem Computer; nichts verlässt ihn. Es läuft auf dem Desktop.
+Zotero 7 oder neuer (auch Zotero 10) muss auf demselben Computer laufen, mit **Einstellungen › Erweitert › „Anderen Anwendungen auf diesem Computer erlauben, mit Zotero zu kommunizieren“** eingeschaltet. Das Plugin spricht nur mit Zotero auf deinem Computer; nichts verlässt ihn.
 
 ## Zitieren
 

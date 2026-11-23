@@ -18,7 +18,7 @@ Die Notizen stehen in einem Dokument des geöffneten Ordners, so sehen Obsidian 
 
 Ändern Sie die Datei, folgt die Seitenleiste. Notizen aus älteren Versionen wandern einmal dorthin, die älteste zuerst. Ohne geöffneten Ordner bleiben die Notizen in Textus.
 
-Läuft auf dem Desktop, auf iPhone, iPad und Android. Auf dem Telefon steht **Neue Schnellnotiz…** unter **Plugins** im Menü der Titelzeile, und die Aktionen einer Notiz liegen hinter ihrer Mehr-Schaltfläche. Dort gibt es keinen Infobereich, daher bittet das Plugin nicht darum, Textus im Hintergrund laufen zu lassen.
+Auf dem Telefon steht **Neue Schnellnotiz…** unter **Plugins** im Menü der Titelzeile, und die Aktionen einer Notiz liegen hinter ihrer Mehr-Schaltfläche. Dort gibt es keinen Infobereich, daher bittet das Plugin nicht darum, Textus im Hintergrund laufen zu lassen.
 
 ## Berechtigungen
 

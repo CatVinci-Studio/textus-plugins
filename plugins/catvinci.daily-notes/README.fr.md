@@ -19,7 +19,7 @@ Dans un coffre Obsidian, ce sont ses propres réglages de notes du jour qui déc
 
 ## Permissions
 
-L'extension lit et écrit des fichiers du dossier ouvert pour trouver et créer les notes, et lit quel document est affiché pour connaître la veille et le lendemain. Elle donne aussi à Textus AI les deux outils ci-dessous. Elle fonctionne sur ordinateur et sur iPhone et demande Textus 1.3.10 ou plus récent.
+L'extension lit et écrit des fichiers du dossier ouvert pour trouver et créer les notes, et lit quel document est affiché pour connaître la veille et le lendemain. Elle donne aussi à Textus AI les deux outils ci-dessous. Elle demande Textus 1.4.3 ou plus récent.
 
 ## Changements
 

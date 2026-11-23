@@ -9,7 +9,7 @@ Lee documentos de Word (.docx) en una pestaña, con el mismo diseño que en Word
 - **Editar como Markdown** pasa el archivo a Textus, que lo convierte en un documento Markdown en el que puedes escribir.
 - Si un archivo no se puede leer, la pestaña lo dice.
 
-El plugin no pide permisos: solo lee el archivo que abres con él. Funciona en el escritorio y en iPhone y iPad.
+El plugin no pide permisos: solo lee el archivo que abres con él.
 
 ## Cambios
 

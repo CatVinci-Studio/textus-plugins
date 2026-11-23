@@ -9,7 +9,7 @@ Escreva um bloco de código com a linguagem `markmap` e coloque nele um esboço:
 - Os ramos usam as cores do seu tema, e o mapa é desenhado de novo quando você troca de tema.
 - Ao exportar para HTML, PDF ou Word, o mapa vai como imagem, mesmo fora da área visível.
 
-O plugin usa o [markmap](https://markmap.js.org). Pede uma única permissão, para dar ao Textus AI a ferramenta `check_markmap` listada abaixo: ela verifica um bloco antes de o Textus AI escrevê-lo num documento. Funciona no computador, no iPhone e no iPad.
+O plugin usa o [markmap](https://markmap.js.org). Pede uma única permissão, para dar ao Textus AI a ferramenta `check_markmap` listada abaixo: ela verifica um bloco antes de o Textus AI escrevê-lo num documento.
 
 ## Exemplo
 

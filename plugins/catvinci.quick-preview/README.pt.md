@@ -7,7 +7,7 @@ Leia aonde um link leva sem abri-lo: deixe o ponteiro sobre um link para outro d
 - O cartão mostra até cerca de 1.500 caracteres, cortados no fim de um parágrafo. **Abrir** vai ao documento; **Fixar** mantém o cartão aberto enquanto você escreve.
 - Só documentos da pasta aberta são mostrados.
 
-O plugin pede para ler o editor (para saber em que link você aponta) e ler arquivos (para mostrar o documento ligado). Nunca muda um arquivo. Funciona no computador, no iPhone e no iPad.
+O plugin pede para ler o editor (para saber em que link você aponta) e ler arquivos (para mostrar o documento ligado). Nunca muda um arquivo. Num tablet, funciona com um mouse ou trackpad conectado.
 
 ## Alterações
 

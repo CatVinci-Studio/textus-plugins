@@ -8,7 +8,7 @@
 - 音符採用佈景主題的文字顏色，切換淺色與深色時會重新繪製。
 - 匯出 HTML、PDF、Word 時，樂譜會以圖片放入。
 
-支援桌面版與 iPhone，需要 Textus 1.3.2 以上版本。外掛只要求一項權限：Textus AI 工具，讓 Textus AI 在把 `abc` 區塊寫進文件前先檢查。
+需要 Textus 1.3.2 以上版本。外掛只要求一項權限：Textus AI 工具，讓 Textus AI 在把 `abc` 區塊寫進文件前先檢查。
 
 ## 範例
 

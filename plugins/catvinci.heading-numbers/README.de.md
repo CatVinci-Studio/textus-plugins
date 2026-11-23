@@ -8,7 +8,7 @@ Zeigt beim Schreiben Nummern vor Ihren Überschriften (1, 1.1, 1.2), ohne den Te
 - Obsidian: `number headings: off` in den Eigenschaften eines Dokuments (die Einstellung des Obsidian-Plugins Number Headings) schaltet die Nummern für dieses Dokument ab.
 - **Nummern in Exporten** (**Einstellungen › Erweiterungen › Plugins › Überschriften-Nummern**, standardmäßig an): HTML- und PDF-Exporte zeigen dieselben Nummern.
 
-Das Plugin liest die Überschriften des offenen Dokuments (Berechtigung, den Editor zu lesen) und gibt Textus AI das unten aufgeführte Werkzeug `number_headings` (Berechtigung für KI-Werkzeuge). Das Werkzeug gibt den Text mit eingefügten oder entfernten Nummern zurück; es ändert keine Datei. Es läuft auf dem Desktop sowie auf iPhone und iPad.
+Das Plugin liest die Überschriften des offenen Dokuments (Berechtigung, den Editor zu lesen) und gibt Textus AI das unten aufgeführte Werkzeug `number_headings` (Berechtigung für KI-Werkzeuge). Das Werkzeug gibt den Text mit eingefügten oder entfernten Nummern zurück; es ändert keine Datei.
 
 ## Änderungen
 

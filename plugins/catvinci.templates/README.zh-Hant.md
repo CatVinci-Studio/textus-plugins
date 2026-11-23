@@ -15,7 +15,7 @@
 - Templater 的常用標籤也會填入：`<% tp.date.now("YYYY-MM-DD") %>`（可加上天數偏移，例如 `-1`，或 `"P1W"`）、`tp.date.today`、`tomorrow` 和 `yesterday`、`<% tp.file.title %>`、`tp.file.creation_date()` 和 `tp.file.folder()`；`<% tp.file.cursor() %>` 會把游標放在那裡。
 - 指令碼和其他標籤一律不執行：保留原樣，並以一則通知列出。
 
-支援桌面版與 iPhone，需要 Textus 1.3.10 以上版本。外掛需要讀寫開啟的資料夾裡的檔案，用來存放範本和新文件；讀取和編輯目前的文件，用來插入範本或存為範本；並為 Textus AI 提供下方兩項工具。
+需要 Textus 1.4.3 以上版本。外掛需要讀寫開啟的資料夾裡的檔案，用來存放範本和新文件；讀取和編輯目前的文件，用來插入範本或存為範本；並為 Textus AI 提供下方兩項工具。
 
 ## 更新紀錄
 

@@ -18,7 +18,7 @@ Ajustes, en **Ajustes › Extensiones › Complementos › Vim**:
 
 Obsidian: en una bóveda de Obsidian también se lee su `.obsidian.vimrc` (el del plugin Vimrc Support), después de tus propias líneas, y se vuelve a leer cuando cambia. Abre la bóveda misma, no una carpeta dentro de ella.
 
-El plugin pide tomar las teclas en el editor (para ejecutar las de Vim) y leer archivos (solo para leer `.obsidian.vimrc`). Funciona en el escritorio.
+El plugin pide tomar las teclas en el editor (para ejecutar las de Vim) y leer archivos (solo para leer `.obsidian.vimrc`).
 
 ## Cambios
 

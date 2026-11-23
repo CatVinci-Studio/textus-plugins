@@ -19,7 +19,7 @@ In einem Obsidian-Vault gelten stattdessen seine eigenen Einstellungen für Tage
 
 ## Berechtigungen
 
-Das Plugin liest und schreibt Dateien im geöffneten Ordner, um die Notizen zu finden und anzulegen, und liest, welches Dokument gerade offen ist, um den Tag davor und danach zu kennen. Außerdem gibt es Textus AI die beiden Werkzeuge unten. Es läuft auf dem Desktop und auf dem iPhone und braucht Textus 1.3.10 oder neuer.
+Das Plugin liest und schreibt Dateien im geöffneten Ordner, um die Notizen zu finden und anzulegen, und liest, welches Dokument gerade offen ist, um den Tag davor und danach zu kennen. Außerdem gibt es Textus AI die beiden Werkzeuge unten. Es braucht Textus 1.4.3 oder neuer.
 
 ## Änderungen
 

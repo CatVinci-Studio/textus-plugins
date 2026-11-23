@@ -8,7 +8,7 @@ Dessine des partitions à partir de la notation ABC écrite dans un bloc de code
 - Les notes prennent la couleur du texte du thème et sont redessinées quand vous passez du clair au sombre.
 - Les exports HTML, PDF et Word contiennent la musique sous forme d'image.
 
-Il fonctionne sur ordinateur et sur iPhone et demande Textus 1.3.2 ou plus récent. Il demande une seule permission, les outils de Textus AI, pour que Textus AI puisse vérifier un bloc `abc` avant de l'écrire dans un document.
+Il demande Textus 1.3.2 ou plus récent. Il demande une seule permission, les outils de Textus AI, pour que Textus AI puisse vérifier un bloc `abc` avant de l'écrire dans un document.
 
 ## Exemple
 

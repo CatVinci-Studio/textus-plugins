@@ -15,8 +15,6 @@ Ouvre des pages web dans un onglet à côté de vos notes, pour les lire sans qu
 - **⌃** replie la barre ; la petite poignée la ramène.
 - **↗** ouvre la page dans votre navigateur, **↻** la recharge.
 
-Fonctionne sur ordinateur.
-
 ## Autorisations
 
 - Réseau, toute adresse : pour charger les pages web que vous ouvrez.

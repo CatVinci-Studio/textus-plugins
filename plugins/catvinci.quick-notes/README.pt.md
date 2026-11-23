@@ -18,7 +18,7 @@ As notas ficam num documento da pasta aberta, então o Obsidian e o Cloud Sync a
 
 Edite o arquivo e a barra lateral acompanha. As notas de versões antigas vão para ele uma vez, da mais antiga à mais nova. Sem pasta aberta, as notas ficam dentro do Textus.
 
-Funciona no desktop, no iPhone, no iPad e no Android. No celular, **Nova nota rápida…** fica em **Plugins**, no menu da linha do título, e as ações de cada nota ficam no botão de mais opções dela. Lá não há bandeja, então ele não pede para o Textus continuar rodando em segundo plano.
+No celular, **Nova nota rápida…** fica em **Plugins**, no menu da linha do título, e as ações de cada nota ficam no botão de mais opções dela. Lá não há bandeja, então ele não pede para o Textus continuar rodando em segundo plano.
 
 ## Permissões
 

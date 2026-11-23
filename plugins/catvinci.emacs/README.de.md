@@ -12,7 +12,7 @@ Die Tasten wirken, sobald das Plugin installiert ist. **Plugins › Emacs-Tasten
 
 Auf dem Mac liegen die Kürzel von Textus auf ⌘, daher gehören alle Ctrl-Tasten Emacs. Unter Windows und Linux gehören Strg-Tasten Textus und dem System (Kopieren, Einfügen, Ausschneiden, Alles auswählen, Fett, Suchen); deshalb gehören nur die M-Tasten, C-SPC und C-g Emacs, bis Sie **Auch die Strg-Tasten der App übernehmen** in den Einstellungen des Plugins einschalten.
 
-Läuft auf dem Desktop und auf dem iPhone. Es fragt nach einer einzigen Berechtigung, Editortasten, um diese Tasten im Editor zu übernehmen.
+Auf einem Tablet funktioniert es mit angeschlossener Tastatur. Es fragt nach einer einzigen Berechtigung, Editortasten, um diese Tasten im Editor zu übernehmen.
 
 ## Änderungen
 

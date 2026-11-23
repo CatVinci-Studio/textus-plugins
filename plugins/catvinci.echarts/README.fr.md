@@ -11,7 +11,7 @@ Dessine un graphique dans votre document à partir d’une option ECharts écrit
 - Si l’option ne peut pas être dessinée, le bloc indique ce qui ne va pas.
 - Un export en HTML, PDF ou Word contient le graphique sous forme d’image.
 
-Le plugin demande une seule permission, pour donner à Textus AI l’outil `check_echarts` listé plus bas : il vérifie un bloc avant que Textus AI ne l’écrive dans un document. Il fonctionne sur ordinateur, iPhone et iPad.
+Le plugin demande une seule permission, pour donner à Textus AI l’outil `check_echarts` listé plus bas : il vérifie un bloc avant que Textus AI ne l’écrive dans un document.
 
 ## Exemple
 

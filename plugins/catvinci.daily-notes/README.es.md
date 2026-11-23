@@ -19,7 +19,7 @@ En una bóveda de Obsidian mandan sus propios ajustes de notas diarias: carpeta,
 
 ## Permisos
 
-El complemento lee y escribe archivos de la carpeta abierta para encontrar y crear las notas, y lee qué documento tienes delante para saber cuál es el día anterior y el siguiente. Además da a Textus AI las dos herramientas de abajo. Funciona en escritorio y en iPhone y necesita Textus 1.3.10 o posterior.
+El complemento lee y escribe archivos de la carpeta abierta para encontrar y crear las notas, y lee qué documento tienes delante para saber cuál es el día anterior y el siguiente. Además da a Textus AI las dos herramientas de abajo. Necesita Textus 1.4.3 o posterior.
 
 ## Cambios
 

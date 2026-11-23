@@ -7,7 +7,7 @@ Lee adónde lleva un enlace sin abrirlo: deja el puntero sobre un enlace a otro 
 - La tarjeta muestra hasta unos 1.500 caracteres, cortados al final de un párrafo. **Abrir** va al documento; **Fijar** mantiene la tarjeta abierta mientras escribes.
 - Solo se previsualizan documentos de la carpeta abierta.
 
-El plugin pide leer el editor (para saber qué enlace señalas) y leer archivos (para mostrar el documento enlazado). Nunca cambia un archivo. Funciona en el escritorio y en iPhone y iPad.
+El plugin pide leer el editor (para saber qué enlace señalas) y leer archivos (para mostrar el documento enlazado). Nunca cambia un archivo. En una tableta funciona con un ratón o un trackpad conectado.
 
 ## Cambios
 

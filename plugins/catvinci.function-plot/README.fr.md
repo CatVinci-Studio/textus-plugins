@@ -22,7 +22,7 @@ x^2 / 4 - 1
 
 ## Autorisations
 
-Il ne demande que **Outils pour Textus AI**, pour que Textus AI puisse vérifier un bloc avant de l’écrire. Il ne lit aucun fichier et dessine tout sur votre appareil, sur ordinateur comme sur iOS.
+Il ne demande que **Outils pour Textus AI**, pour que Textus AI puisse vérifier un bloc avant de l’écrire. Il ne lit aucun fichier et dessine tout sur votre appareil.
 
 ## Changements
 

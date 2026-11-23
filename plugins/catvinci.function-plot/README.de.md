@@ -22,7 +22,7 @@ x^2 / 4 - 1
 
 ## Berechtigungen
 
-Es braucht nur **Werkzeuge für Textus AI**, damit Textus AI einen Block prüfen kann, bevor es ihn schreibt. Es liest keine Dateien und zeichnet alles auf deinem Gerät, auf dem Desktop und unter iOS.
+Es braucht nur **Werkzeuge für Textus AI**, damit Textus AI einen Block prüfen kann, bevor es ihn schreibt. Es liest keine Dateien und zeichnet alles auf deinem Gerät.
 
 ## Änderungen
 

@@ -7,7 +7,7 @@ Schlägt LaTeX-Befehle vor, während Sie eine Formel schreiben.
 - Auch Buchstaben in der richtigen Reihenfolge finden einen Befehl: `\rarr` ist `\rightarrow`, `\lra` ist `\leftrightarrow`.
 - **Enter** oder **Tab** schreibt den gewählten, mit dem Cursor in seinen geschweiften Klammern; **Esc** schließt die Liste. `\left(`, `\left[` und `\left\{` kommen mit ihrem `\right`.
 
-Läuft auf dem Desktop und auf dem iPhone und braucht Textus 1.3.0 oder neuer. Es fragt nach einer einzigen Berechtigung, den Editor zu lesen, um zu sehen, was Sie in die Formel tippen.
+Es braucht Textus 1.3.0 oder neuer. Es fragt nach einer einzigen Berechtigung, den Editor zu lesen, um zu sehen, was Sie in die Formel tippen.
 
 ## Änderungen
 

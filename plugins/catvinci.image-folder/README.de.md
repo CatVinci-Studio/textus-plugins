@@ -9,7 +9,7 @@ Es gibt nichts einzuschalten oder einzustellen; nach der Installation arbeitet e
 - Bilder, die schon in Ihren Dokumenten sind, bleiben, wo sie sind.
 - In einem Obsidian-Vault mit eingestelltem Anhangsordner und in einem Logseq-Graphen bleiben Bilder dort, wo diese App sie ablegt.
 
-Es verarbeitet PNG-, JPEG-, GIF-, WebP-, AVIF-, BMP-, SVG-, ICO-, HEIC- und TIFF-Bilder. Es läuft auf dem Desktop und braucht Textus 1.3.0 oder neuer. Es fragt nach Lese- und Schreibzugriff auf Dateien, um Bilder zu verschieben und ihre Ordner umzubenennen, und nach Lesen und Bearbeiten des geöffneten Dokuments, um den Link auf ein verschobenes Bild zu ändern.
+Es verarbeitet PNG-, JPEG-, GIF-, WebP-, AVIF-, BMP-, SVG-, ICO-, HEIC- und TIFF-Bilder. Es braucht Textus 1.4.0 oder neuer. Es fragt nach Lese- und Schreibzugriff auf Dateien, um Bilder zu verschieben und ihre Ordner umzubenennen, und nach Lesen und Bearbeiten des geöffneten Dokuments, um den Link auf ein verschobenes Bild zu ändern.
 
 ## Änderungen
 

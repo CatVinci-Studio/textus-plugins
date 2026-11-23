@@ -18,7 +18,7 @@ Las notas se guardan en un documento de la carpeta abierta, así que Obsidian y 
 
 Edita el archivo y la barra lateral lo sigue. Las notas de versiones anteriores pasan a él una sola vez, de la más antigua a la más reciente. Sin carpeta abierta, las notas se quedan dentro de Textus.
 
-Funciona en escritorio, iPhone, iPad y Android. En un teléfono, **Nueva nota rápida…** está en **Plugins**, en el menú de la fila del título, y las acciones de cada nota están en su botón de más opciones. Ahí no hay bandeja, así que no pide que Textus siga funcionando en segundo plano.
+En un teléfono, **Nueva nota rápida…** está en **Plugins**, en el menú de la fila del título, y las acciones de cada nota están en su botón de más opciones. Ahí no hay bandeja, así que no pide que Textus siga funcionando en segundo plano.
 
 ## Permisos
 

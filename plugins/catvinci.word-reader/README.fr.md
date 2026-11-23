@@ -9,7 +9,7 @@ Lisez les documents Word (.docx) dans un onglet, mis en page comme dans Word.
 - **Modifier en Markdown** confie le fichier à Textus, qui en fait un document Markdown dans lequel vous pouvez écrire.
 - Un fichier illisible est signalé dans l’onglet.
 
-Le plugin ne demande aucune permission : il lit seulement le fichier que vous ouvrez avec lui. Il fonctionne sur ordinateur, iPhone et iPad.
+Le plugin ne demande aucune permission : il lit seulement le fichier que vous ouvrez avec lui.
 
 ## Changements
 

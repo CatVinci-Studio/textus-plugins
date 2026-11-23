@@ -264,7 +264,7 @@ back by its next sync, without asking. A running sync renews a note of its
 lock every 10 seconds; the next sync takes the lock back once the note is 30
 seconds old, waiting out the rest if it starts sooner, and leaves it alone if
 the note is renewed meanwhile (a sync still running in another window). Another device's lock is
-never taken: after a crash there, **Sync stuck? › Recover stale lock** removes
+never taken: after a crash there, **Recovery › Recover stale lock** removes
 it only after confirmation. Check that all other devices have stopped syncing
 first. Locks never expire on the remote, so a slow device cannot lose its
 write ownership just because a timer expired.

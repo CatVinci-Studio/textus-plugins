@@ -11,7 +11,7 @@ Escreva um bloco de código com a linguagem `echarts` e coloque nele uma opção
 - Se a opção não puder ser desenhada, o bloco diz o que deu errado.
 - Ao exportar para HTML, PDF ou Word, o gráfico vai como imagem.
 
-O plugin pede uma única permissão, para dar ao Textus AI a ferramenta `check_echarts` listada abaixo: ela verifica um bloco antes de o Textus AI escrevê-lo num documento. Funciona no computador, no iPhone e no iPad.
+O plugin pede uma única permissão, para dar ao Textus AI a ferramenta `check_echarts` listada abaixo: ela verifica um bloco antes de o Textus AI escrevê-lo num documento.
 
 ## Exemplo
 

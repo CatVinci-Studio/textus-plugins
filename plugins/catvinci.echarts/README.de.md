@@ -11,7 +11,7 @@ Schreiben Sie einen Codeblock mit der Sprache `echarts` und setzen Sie eine ECha
 - Lässt sich die Option nicht zeichnen, sagt der Block, was nicht stimmt.
 - Beim Export als HTML, PDF oder Word kommt das Diagramm als Bild mit.
 
-Das Plugin fragt nur nach einer Berechtigung: um Textus AI das unten aufgeführte Werkzeug `check_echarts` zu geben, das einen Block prüft, bevor Textus AI ihn in ein Dokument schreibt. Es läuft auf dem Desktop sowie auf iPhone und iPad.
+Das Plugin fragt nur nach einer Berechtigung: um Textus AI das unten aufgeführte Werkzeug `check_echarts` zu geben, das einen Block prüft, bevor Textus AI ihn in ein Dokument schreibt.
 
 ## Beispiel
 

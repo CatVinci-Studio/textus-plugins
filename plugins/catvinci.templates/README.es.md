@@ -15,7 +15,7 @@ Las plantillas son archivos Markdown en la carpeta **Templates** de la carpeta a
 - También se rellenan las etiquetas comunes de Templater: `<% tp.date.now("YYYY-MM-DD") %>` (con un desfase en días, como `-1`, o `"P1W"`), `tp.date.today`, `tomorrow` y `yesterday`, `<% tp.file.title %>`, `tp.file.creation_date()` y `tp.file.folder()`; `<% tp.file.cursor() %>` deja el cursor ahí.
 - Los scripts y las demás etiquetas nunca se ejecutan: se quedan como están y un aviso los nombra.
 
-Funciona en escritorio y en iPhone y necesita Textus 1.3.10 o posterior. Pide leer y escribir archivos de la carpeta abierta, para las plantillas y los documentos nuevos; leer y editar el documento que tienes delante, para insertar una plantilla o guardarlo como tal; y da a Textus AI las dos herramientas de abajo.
+Necesita Textus 1.4.3 o posterior. Pide leer y escribir archivos de la carpeta abierta, para las plantillas y los documentos nuevos; leer y editar el documento que tienes delante, para insertar una plantilla o guardarlo como tal; y da a Textus AI las dos herramientas de abajo.
 
 ## Cambios
 

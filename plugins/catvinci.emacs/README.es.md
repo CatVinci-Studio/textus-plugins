@@ -12,7 +12,7 @@ Las teclas funcionan en cuanto instalas el complemento. **Complementos › Activ
 
 En Mac, los atajos de Textus van con ⌘, así que todas las teclas Ctrl son de Emacs. En Windows y Linux, las teclas Ctrl son de Textus y del sistema (copiar, pegar, cortar, seleccionar todo, negrita, buscar), así que solo las teclas M-, C-SPC y C-g son de Emacs hasta que actives **Usar también las teclas Ctrl de la app** en los ajustes del complemento.
 
-Funciona en escritorio y en iPhone. Pide un solo permiso, teclas del editor, para tomar estas teclas en el editor.
+En una tableta funciona con un teclado conectado. Pide un solo permiso, teclas del editor, para tomar estas teclas en el editor.
 
 ## Cambios
 

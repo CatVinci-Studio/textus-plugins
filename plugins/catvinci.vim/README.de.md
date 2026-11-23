@@ -18,7 +18,7 @@ Einstellungen unter **Einstellungen › Erweiterungen › Plugins › Vim**:
 
 Obsidian: In einem Obsidian-Vault wird auch dessen `.obsidian.vimrc` (die des Plugins Vimrc Support) gelesen, nach Ihren eigenen Zeilen, und neu gelesen, wenn sie sich ändert. Öffnen Sie den Vault selbst, keinen Ordner darin.
 
-Das Plugin fragt nach der Berechtigung, Tasten im Editor anzunehmen (um Vims Tasten auszuführen), und Dateien zu lesen (nur um `.obsidian.vimrc` zu lesen). Es läuft auf dem Desktop.
+Das Plugin fragt nach der Berechtigung, Tasten im Editor anzunehmen (um Vims Tasten auszuführen), und Dateien zu lesen (nur um `.obsidian.vimrc` zu lesen).
 
 ## Änderungen
 

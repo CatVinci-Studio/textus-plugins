@@ -11,7 +11,7 @@ Escribe un bloque de código con el lenguaje `chartjs` que contenga una configur
 - Si la configuración tiene un error, una línea bajo el bloque dice qué está mal.
 - Al exportar a HTML, PDF o Word, el gráfico va como imagen.
 
-Funciona en escritorio y en iPhone y necesita Textus 1.3.2 o posterior. Pide un solo permiso, herramientas de Textus AI, para que Textus AI pueda revisar un bloque `chartjs` antes de escribirlo en un documento.
+Necesita Textus 1.3.2 o posterior. Pide un solo permiso, herramientas de Textus AI, para que Textus AI pueda revisar un bloque `chartjs` antes de escribirlo en un documento.
 
 ## Ejemplo
 

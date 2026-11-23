@@ -7,7 +7,7 @@ Propose des commandes LaTeX pendant que vous tapez une formule.
 - Des lettres dans l'ordre trouvent aussi une commande : `\rarr` donne `\rightarrow`, `\lra` donne `\leftrightarrow`.
 - **Entrée** ou **Tab** écrit celle choisie, le curseur entre ses accolades ; **Échap** ferme la liste. `\left(`, `\left[` et `\left\{` arrivent avec leur `\right`.
 
-Elle fonctionne sur ordinateur et sur iPhone et demande Textus 1.3.0 ou plus récent. Elle demande une seule permission, lire l'éditeur, pour voir ce que vous tapez dans la formule.
+Elle demande Textus 1.3.0 ou plus récent. Elle demande une seule permission, lire l'éditeur, pour voir ce que vous tapez dans la formule.
 
 ## Changements
 

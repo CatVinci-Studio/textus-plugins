@@ -18,7 +18,7 @@ Configurações, em **Ajustes › Extensões › Plugins › Vim**:
 
 Obsidian: num cofre do Obsidian, o `.obsidian.vimrc` dele (o do plugin Vimrc Support) também é lido, depois das suas linhas, e lido de novo quando muda. Abra o próprio cofre, não uma pasta dentro dele.
 
-O plugin pede para receber as teclas no editor (para executar as do Vim) e para ler arquivos (só para ler `.obsidian.vimrc`). Funciona no computador.
+O plugin pede para receber as teclas no editor (para executar as do Vim) e para ler arquivos (só para ler `.obsidian.vimrc`).
 
 ## Alterações
 

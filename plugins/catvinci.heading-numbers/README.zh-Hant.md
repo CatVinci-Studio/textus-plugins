@@ -8,7 +8,7 @@
 - Obsidian：在文件開頭屬性寫上 `number headings: off`（Obsidian 的 Number Headings 外掛使用的設定），這份文件就不顯示編號。
 - **匯出時帶編號**（**設定 › 擴充功能 › 外掛程式 › 標題編號**，預設開啟）：匯出 HTML 和 PDF 時顯示相同的編號。
 
-外掛會讀取目前文件的標題（讀取編輯器的權限），並為 Textus AI 提供下方的 `number_headings` 工具（AI 工具權限）。這個工具回傳寫入或拿掉編號後的文字，不會修改任何檔案。電腦、iPhone 和 iPad 上都能使用。
+外掛會讀取目前文件的標題（讀取編輯器的權限），並為 Textus AI 提供下方的 `number_headings` 工具（AI 工具權限）。這個工具回傳寫入或拿掉編號後的文字，不會修改任何檔案。
 
 ## 更新紀錄
 

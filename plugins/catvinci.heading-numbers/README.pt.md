@@ -8,7 +8,7 @@ Mostra números antes dos seus títulos enquanto você escreve (1, 1.1, 1.2) sem
 - Obsidian: `number headings: off` nas propriedades de um documento (a configuração do plugin Number Headings do Obsidian) desliga os números nesse documento.
 - **Números nas exportações** (**Ajustes › Extensões › Plugins › Numeração de títulos**, ligado por padrão): as exportações em HTML e PDF mostram os mesmos números.
 
-O plugin lê os títulos do documento aberto (permissão para ler o editor) e dá ao Textus AI a ferramenta `number_headings` abaixo (permissão de ferramentas de IA). A ferramenta devolve o texto com os números escritos ou retirados; não muda nenhum arquivo. Funciona no computador, no iPhone e no iPad.
+O plugin lê os títulos do documento aberto (permissão para ler o editor) e dá ao Textus AI a ferramenta `number_headings` abaixo (permissão de ferramentas de IA). A ferramenta devolve o texto com os números escritos ou retirados; não muda nenhum arquivo.
 
 ## Alterações
 

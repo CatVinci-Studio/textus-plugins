@@ -9,7 +9,7 @@ Dessine un plan Markdown, fait de titres et de listes, en carte mentale dans un 
 - Les branches prennent les couleurs de votre thème, et la carte se redessine quand vous changez de thème.
 - Un export en HTML, PDF ou Word contient la carte sous forme d’image, même si elle est hors de vue.
 
-Le plugin utilise [markmap](https://markmap.js.org). Il demande une seule permission, pour donner à Textus AI l’outil `check_markmap` listé plus bas : il vérifie un bloc avant que Textus AI ne l’écrive dans un document. Il fonctionne sur ordinateur, iPhone et iPad.
+Le plugin utilise [markmap](https://markmap.js.org). Il demande une seule permission, pour donner à Textus AI l’outil `check_markmap` listé plus bas : il vérifie un bloc avant que Textus AI ne l’écrive dans un document.
 
 ## Exemple
 

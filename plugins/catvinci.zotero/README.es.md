@@ -4,7 +4,7 @@ Cita desde tu biblioteca de Zotero mientras escribes.
 
 ## Antes de empezar
 
-Zotero 7 o posterior (también Zotero 10) debe estar abierto en el mismo equipo, con **Ajustes › Avanzado › Permitir que otras aplicaciones de este equipo se comuniquen con Zotero** activado. El plugin solo habla con el Zotero de tu equipo; nada sale de él. Funciona en escritorio.
+Zotero 7 o posterior (también Zotero 10) debe estar abierto en el mismo equipo, con **Ajustes › Avanzado › Permitir que otras aplicaciones de este equipo se comuniquen con Zotero** activado. El plugin solo habla con el Zotero de tu equipo; nada sale de él.
 
 ## Citar
 

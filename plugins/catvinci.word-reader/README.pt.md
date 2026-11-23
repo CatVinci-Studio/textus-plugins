@@ -9,7 +9,7 @@ Leia documentos do Word (.docx) numa aba, com o mesmo layout do Word.
 - **Editar como Markdown** entrega o arquivo ao Textus, que o transforma num documento Markdown em que você pode escrever.
 - Se um arquivo não puder ser lido, a aba avisa.
 
-O plugin não pede permissões: só lê o arquivo que você abre com ele. Funciona no computador, no iPhone e no iPad.
+O plugin não pede permissões: só lê o arquivo que você abre com ele.
 
 ## Alterações
 

@@ -2,7 +2,7 @@
 
 Verlinke Notizen, Überschriften und Blöcke beim Tippen von `[[`, bette sie mit `![[` ein und sieh in der Seitenleiste, was auf das geöffnete Dokument verlinkt.
 
-Links wie `[[Notiz]]` sind in Textus eingebaut: Du kannst sie ohne Plugin schreiben und öffnen. Dieses Plugin hilft beim Schreiben, zeigt an Ort und Stelle, worauf ein Link zeigt, und sammelt die Links rund um das Dokument, das du liest. Es läuft auf dem Desktop und unter iOS.
+Links wie `[[Notiz]]` sind in Textus eingebaut: Du kannst sie ohne Plugin schreiben und öffnen. Dieses Plugin hilft beim Schreiben, zeigt an Ort und Stelle, worauf ein Link zeigt, und sammelt die Links rund um das Dokument, das du liest.
 
 ## Beim Tippen verlinken
 

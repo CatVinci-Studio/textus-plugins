@@ -15,8 +15,6 @@ Abre páginas da web numa aba ao lado das suas notas, para lê-las sem sair do T
 - **⌃** recolhe a barra; a pequena alça a traz de volta.
 - **↗** abre a página no navegador, **↻** recarrega.
 
-Funciona no desktop.
-
 ## Permissões
 
 - Rede, qualquer endereço: para carregar as páginas da web que você abre.

@@ -8,7 +8,7 @@ Escribe un bloque de código con el lenguaje `abc`. La música aparece grabada j
 - Las notas usan el color de texto del tema y se dibujan de nuevo al cambiar entre claro y oscuro.
 - Al exportar a HTML, PDF o Word, la música va como imagen.
 
-Funciona en escritorio y en iPhone y necesita Textus 1.3.2 o posterior. Pide un solo permiso, herramientas de Textus AI, para que Textus AI pueda revisar un bloque `abc` antes de escribirlo en un documento.
+Necesita Textus 1.3.2 o posterior. Pide un solo permiso, herramientas de Textus AI, para que Textus AI pueda revisar un bloque `abc` antes de escribirlo en un documento.
 
 ## Ejemplo
 

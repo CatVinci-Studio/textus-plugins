@@ -7,7 +7,7 @@ Lisez où mène un lien sans l’ouvrir : laissez le pointeur sur un lien vers u
 - La carte affiche jusqu’à environ 1 500 caractères, coupés à la fin d’un paragraphe. **Ouvrir** va au document ; **Épingler** garde la carte ouverte pendant que vous écrivez.
 - Seuls les documents du dossier ouvert sont prévisualisés.
 
-Le plugin demande à lire l’éditeur (pour savoir quel lien vous pointez) et à lire les fichiers (pour afficher le document lié). Il ne modifie jamais un fichier. Il fonctionne sur ordinateur, iPhone et iPad.
+Le plugin demande à lire l’éditeur (pour savoir quel lien vous pointez) et à lire les fichiers (pour afficher le document lié). Il ne modifie jamais un fichier. Sur une tablette, il fonctionne avec une souris ou un trackpad connectés.
 
 ## Changements
 

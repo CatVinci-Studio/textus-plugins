@@ -15,7 +15,7 @@ Abre imagens e arquivos SVG numa aba, onde você pode dar zoom, girá-los e ler 
 
 ## Permissões
 
-Não pede nenhuma. Só lê o arquivo que você abre, no computador e no iOS.
+Não pede nenhuma. Só lê o arquivo que você abre.
 
 ## Alterações
 

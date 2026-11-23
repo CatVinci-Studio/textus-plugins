@@ -15,7 +15,7 @@ Abre imágenes y archivos SVG en una pestaña, donde puedes ampliarlos, girarlos
 
 ## Permisos
 
-No pide ninguno. Solo lee el archivo que abres, en escritorio y en iOS.
+No pide ninguno. Solo lee el archivo que abres.
 
 ## Cambios
 

@@ -15,7 +15,7 @@ Les modèles sont des fichiers Markdown du dossier **Templates** du dossier ouve
 - Les balises courantes de Templater sont remplies aussi : `<% tp.date.now("YYYY-MM-DD") %>` (avec un décalage en jours, comme `-1`, ou `"P1W"`), `tp.date.today`, `tomorrow` et `yesterday`, `<% tp.file.title %>`, `tp.file.creation_date()` et `tp.file.folder()` ; `<% tp.file.cursor() %>` y place le curseur.
 - Les scripts et les autres balises ne sont jamais exécutés : ils restent tels quels, et une notification les nomme.
 
-Fonctionne sur ordinateur et sur iPhone et demande Textus 1.3.10 ou plus récent. Il demande à lire et écrire des fichiers du dossier ouvert, pour les modèles et les nouveaux documents ; à lire et modifier le document affiché, pour insérer un modèle ou l'enregistrer comme modèle ; et donne à Textus AI les deux outils ci-dessous.
+Demande Textus 1.4.3 ou plus récent. Il demande à lire et écrire des fichiers du dossier ouvert, pour les modèles et les nouveaux documents ; à lire et modifier le document affiché, pour insérer un modèle ou l'enregistrer comme modèle ; et donne à Textus AI les deux outils ci-dessous.
 
 ## Changements
 

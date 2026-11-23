@@ -15,7 +15,7 @@ Vorlagen sind Markdown-Dateien im Ordner **Templates** des geöffneten Ordners (
 - Auch die gängigen Tags von Templater werden ausgefüllt: `<% tp.date.now("YYYY-MM-DD") %>` (mit einem Versatz in Tagen wie `-1` oder `"P1W"`), `tp.date.today`, `tomorrow` und `yesterday`, `<% tp.file.title %>`, `tp.file.creation_date()` und `tp.file.folder()`; `<% tp.file.cursor() %>` setzt den Cursor dorthin.
 - Skripte und andere Tags werden nie ausgeführt: Sie bleiben, wie sie sind, und eine Meldung nennt sie.
 
-Läuft auf dem Desktop und auf dem iPhone und braucht Textus 1.3.10 oder neuer. Es fragt nach Lese- und Schreibzugriff auf Dateien im geöffneten Ordner, für Vorlagen und neue Dokumente, nach Lesen und Bearbeiten des geöffneten Dokuments, um eine Vorlage einzufügen oder es als Vorlage zu speichern, und gibt Textus AI die beiden Werkzeuge unten.
+Es braucht Textus 1.4.3 oder neuer. Es fragt nach Lese- und Schreibzugriff auf Dateien im geöffneten Ordner, für Vorlagen und neue Dokumente, nach Lesen und Bearbeiten des geöffneten Dokuments, um eine Vorlage einzufügen oder es als Vorlage zu speichern, und gibt Textus AI die beiden Werkzeuge unten.
 
 ## Änderungen
 

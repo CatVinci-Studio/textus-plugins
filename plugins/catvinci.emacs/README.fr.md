@@ -12,7 +12,7 @@ Les touches marchent dès l'installation. **Extensions › Activer ou désactive
 
 Sur Mac, les raccourcis de Textus sont sur ⌘, donc toutes les touches Ctrl sont à Emacs. Sous Windows et Linux, les touches Ctrl sont à Textus et au système (copier, coller, couper, tout sélectionner, gras, rechercher) : seules les touches M-, C-SPC et C-g sont à Emacs tant que vous n'activez pas **Prendre aussi les touches Ctrl de l’app** dans les réglages de l'extension.
 
-Fonctionne sur ordinateur et sur iPhone. Demande une seule permission, les touches de l'éditeur, pour prendre ces touches dans l'éditeur.
+Sur une tablette, fonctionne avec un clavier connecté. Demande une seule permission, les touches de l'éditeur, pour prendre ces touches dans l'éditeur.
 
 ## Changements
 

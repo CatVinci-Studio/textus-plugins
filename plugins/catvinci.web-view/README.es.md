@@ -15,8 +15,6 @@ Abre páginas web en una pestaña junto a tus notas, para leerlas sin salir de T
 - **⌃** pliega la barra; el pequeño tirador la trae de vuelta.
 - **↗** abre la página en tu navegador, **↻** la recarga.
 
-Funciona en escritorio.
-
 ## Permisos
 
 - Red, cualquier dirección: para cargar las páginas web que abres.

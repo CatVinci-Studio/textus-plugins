@@ -9,7 +9,7 @@ Rien à activer ni à régler : elle fonctionne seule une fois installée.
 - Les images déjà présentes dans vos documents restent où elles sont.
 - Dans un coffre Obsidian qui définit un dossier de pièces jointes, et dans un graphe Logseq, les images restent là où cette application les met.
 
-Elle prend en charge les images PNG, JPEG, GIF, WebP, AVIF, BMP, SVG, ICO, HEIC et TIFF. Elle fonctionne sur ordinateur et demande Textus 1.3.0 ou plus récent. Elle demande à lire et écrire des fichiers, pour déplacer les images et renommer leurs dossiers, et à lire et modifier le document affiché, pour changer le lien vers une image déplacée.
+Elle prend en charge les images PNG, JPEG, GIF, WebP, AVIF, BMP, SVG, ICO, HEIC et TIFF. Elle demande Textus 1.4.0 ou plus récent. Elle demande à lire et écrire des fichiers, pour déplacer les images et renommer leurs dossiers, et à lire et modifier le document affiché, pour changer le lien vers une image déplacée.
 
 ## Changements
 

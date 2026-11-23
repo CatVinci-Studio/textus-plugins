@@ -9,7 +9,7 @@ No hay nada que activar ni ajustar; funciona solo en cuanto lo instalas.
 - Las imágenes que ya están en tus documentos se quedan donde están.
 - En una bóveda de Obsidian con carpeta de adjuntos configurada, y en un grafo de Logseq, las imágenes se quedan donde las pone esa app.
 
-Trabaja con imágenes PNG, JPEG, GIF, WebP, AVIF, BMP, SVG, ICO, HEIC y TIFF. Funciona en escritorio y necesita Textus 1.3.0 o posterior. Pide leer y escribir archivos, para mover las imágenes y renombrar sus carpetas, y leer y editar el documento que tienes delante, para cambiar el enlace a una imagen movida.
+Trabaja con imágenes PNG, JPEG, GIF, WebP, AVIF, BMP, SVG, ICO, HEIC y TIFF. Necesita Textus 1.4.0 o posterior. Pide leer y escribir archivos, para mover las imágenes y renombrar sus carpetas, y leer y editar el documento que tienes delante, para cambiar el enlace a una imagen movida.
 
 ## Cambios
 

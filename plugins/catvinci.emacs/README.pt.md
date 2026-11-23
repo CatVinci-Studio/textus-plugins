@@ -12,7 +12,7 @@ As teclas funcionam assim que o plugin é instalado. **Plugins › Ligar ou desl
 
 No Mac, os atalhos do Textus estão no ⌘, por isso todas as teclas Ctrl são do Emacs. No Windows e no Linux, as teclas Ctrl são do Textus e do sistema (copiar, colar, cortar, selecionar tudo, negrito, procurar), por isso só as teclas M-, C-SPC e C-g são do Emacs até ligar **Usar também as teclas Ctrl do app** nos ajustes do plugin.
 
-Funciona no computador e no iPhone. Pede uma única permissão, teclas do editor, para tomar estas teclas no editor.
+Num tablet, funciona com um teclado conectado. Pede uma única permissão, teclas do editor, para tomar estas teclas no editor.
 
 ## Alterações
 

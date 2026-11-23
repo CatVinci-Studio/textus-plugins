@@ -15,7 +15,7 @@ Os modelos são ficheiros Markdown na pasta **Templates** da pasta aberta (num c
 - As etiquetas comuns do Templater também são preenchidas: `<% tp.date.now("YYYY-MM-DD") %>` (com um desvio em dias, como `-1`, ou `"P1W"`), `tp.date.today`, `tomorrow` e `yesterday`, `<% tp.file.title %>`, `tp.file.creation_date()` e `tp.file.folder()`; `<% tp.file.cursor() %>` põe o cursor aí.
 - Scripts e outras etiquetas nunca são executados: ficam como estão, e um aviso indica-os.
 
-Funciona no computador e no iPhone e precisa do Textus 1.3.10 ou mais recente. Pede para ler e escrever ficheiros da pasta aberta, para os modelos e os documentos novos; para ler e editar o documento aberto, para inserir um modelo ou guardá-lo como modelo; e dá ao Textus AI as duas ferramentas abaixo.
+Precisa do Textus 1.4.3 ou mais recente. Pede para ler e escrever ficheiros da pasta aberta, para os modelos e os documentos novos; para ler e editar o documento aberto, para inserir um modelo ou guardá-lo como modelo; e dá ao Textus AI as duas ferramentas abaixo.
 
 ## Alterações
 

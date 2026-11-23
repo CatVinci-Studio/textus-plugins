@@ -22,7 +22,7 @@ x^2 / 4 - 1
 
 ## Permissões
 
-Pede apenas **Ferramentas para o Textus AI**, para que o Textus AI possa verificar um bloco antes de escrevê-lo. Não lê arquivos e desenha tudo no seu aparelho, no computador e no iOS.
+Pede apenas **Ferramentas para o Textus AI**, para que o Textus AI possa verificar um bloco antes de escrevê-lo. Não lê arquivos e desenha tudo no seu aparelho.
 
 ## Alterações
 

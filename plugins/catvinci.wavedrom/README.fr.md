@@ -23,7 +23,7 @@ Dessine des chronogrammes numériques et des champs de registres à partir de Wa
 
 ## Autorisations
 
-Il ne demande que **Outils pour Textus AI**, pour que Textus AI puisse vérifier un bloc avant de l’écrire. WaveDrom est fourni avec le plugin : il ne lit aucun fichier et dessine tout sur votre appareil, sur ordinateur comme sur iOS.
+Il ne demande que **Outils pour Textus AI**, pour que Textus AI puisse vérifier un bloc avant de l’écrire. WaveDrom est fourni avec le plugin : il ne lit aucun fichier et dessine tout sur votre appareil.
 
 ## Changements
 

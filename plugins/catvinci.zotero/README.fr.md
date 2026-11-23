@@ -4,7 +4,7 @@ Citez depuis votre bibliothèque Zotero en écrivant.
 
 ## Avant de commencer
 
-Zotero 7 ou plus récent (Zotero 10 aussi) doit être ouvert sur le même ordinateur, avec **Paramètres › Avancé › Autoriser les autres applications de cet ordinateur à communiquer avec Zotero** activé. Le plugin ne parle qu’au Zotero de votre ordinateur ; rien n’en sort. Il fonctionne sur ordinateur.
+Zotero 7 ou plus récent (Zotero 10 aussi) doit être ouvert sur le même ordinateur, avec **Paramètres › Avancé › Autoriser les autres applications de cet ordinateur à communiquer avec Zotero** activé. Le plugin ne parle qu’au Zotero de votre ordinateur ; rien n’en sort.
 
 ## Citer
 

@@ -15,8 +15,6 @@
 - **⌃** klappt die Leiste weg; der kleine Griff holt sie zurück.
 - **↗** öffnet die Seite im Browser, **↻** lädt sie neu.
 
-Läuft auf dem Desktop.
-
 ## Berechtigungen
 
 - Netzwerk, jede Adresse: um die Webseiten zu laden, die Sie öffnen.

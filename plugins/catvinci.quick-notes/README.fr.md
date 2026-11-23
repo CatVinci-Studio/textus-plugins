@@ -18,7 +18,7 @@ Les notes sont gardées dans un document du dossier ouvert, donc Obsidian et Clo
 
 Modifiez le fichier et la barre latérale suit. Les notes des anciennes versions y sont déplacées une fois, de la plus ancienne à la plus récente. Sans dossier ouvert, les notes restent dans Textus.
 
-Fonctionne sur ordinateur, iPhone, iPad et Android. Sur un téléphone, **Nouvelle note rapide…** est dans **Plugins**, au menu de la ligne de titre, et les actions d’une note sont sous son bouton « plus ». Il n’y a pas de zone de notification, donc il ne demande pas à Textus de tourner en arrière-plan.
+Sur un téléphone, **Nouvelle note rapide…** est dans **Plugins**, au menu de la ligne de titre, et les actions d’une note sont sous son bouton « plus ». Il n’y a pas de zone de notification, donc il ne demande pas à Textus de tourner en arrière-plan.
 
 ## Autorisations
 

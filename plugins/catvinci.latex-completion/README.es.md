@@ -7,7 +7,7 @@ Sugiere comandos de LaTeX mientras escribes una fórmula.
 - Las letras en orden también encuentran un comando: `\rarr` es `\rightarrow`, `\lra` es `\leftrightarrow`.
 - **Intro** o **Tab** escribe el elegido, con el cursor dentro de sus llaves; **Esc** cierra la lista. `\left(`, `\left[` y `\left\{` llegan con su `\right`.
 
-Funciona en escritorio y en iPhone y necesita Textus 1.3.0 o posterior. Pide un solo permiso, leer el editor, para ver lo que escribes en la fórmula.
+Necesita Textus 1.3.0 o posterior. Pide un solo permiso, leer el editor, para ver lo que escribes en la fórmula.
 
 ## Cambios
 

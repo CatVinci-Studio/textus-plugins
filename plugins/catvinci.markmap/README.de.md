@@ -9,7 +9,7 @@ Schreiben Sie einen Codeblock mit der Sprache `markmap` und setzen Sie eine Glie
 - Die Äste übernehmen die Farben Ihres Themes, und die Mindmap wird beim Wechsel des Themes neu gezeichnet.
 - Beim Export als HTML, PDF oder Word kommt die Mindmap als Bild mit, auch wenn sie gerade nicht zu sehen ist.
 
-Das Plugin nutzt [markmap](https://markmap.js.org). Es fragt nur nach einer Berechtigung: um Textus AI das unten aufgeführte Werkzeug `check_markmap` zu geben, das einen Block prüft, bevor Textus AI ihn in ein Dokument schreibt. Es läuft auf dem Desktop sowie auf iPhone und iPad.
+Das Plugin nutzt [markmap](https://markmap.js.org). Es fragt nur nach einer Berechtigung: um Textus AI das unten aufgeführte Werkzeug `check_markmap` zu geben, das einen Block prüft, bevor Textus AI ihn in ein Dokument schreibt.
 
 ## Beispiel
 

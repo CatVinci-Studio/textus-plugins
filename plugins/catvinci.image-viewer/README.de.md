@@ -15,7 +15,7 @@
 
 ## Berechtigungen
 
-Keine. Es liest nur die Datei, die du öffnest, auf dem Desktop und unter iOS.
+Keine. Es liest nur die Datei, die du öffnest.
 
 ## Änderungen
 

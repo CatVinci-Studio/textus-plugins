@@ -7,7 +7,7 @@ Lesen Sie, wohin ein Link führt, ohne ihn zu öffnen: Ruht der Zeiger auf einem
 - Die Karte zeigt bis zu etwa 1.500 Zeichen, am Ende eines Absatzes abgeschnitten. **Öffnen** geht zum Dokument; **Anheften** hält die Karte offen, während Sie schreiben.
 - Nur Dokumente im geöffneten Ordner werden angezeigt.
 
-Das Plugin fragt nach Lesezugriff auf den Editor (um zu sehen, auf welchen Link Sie zeigen) und auf Dateien (um das verlinkte Dokument zu zeigen). Es ändert nie eine Datei. Es läuft auf dem Desktop sowie auf iPhone und iPad.
+Das Plugin fragt nach Lesezugriff auf den Editor (um zu sehen, auf welchen Link Sie zeigen) und auf Dateien (um das verlinkte Dokument zu zeigen). Es ändert nie eine Datei. Auf einem Tablet funktioniert es mit angeschlossener Maus oder angeschlossenem Trackpad.
 
 ## Änderungen
 

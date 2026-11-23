@@ -11,7 +11,7 @@ Dessine des graphiques simples (courbes, barres, secteurs et autres) à partir d
 - Si la configuration contient une erreur, une ligne sous le bloc dit ce qui ne va pas.
 - Les exports HTML, PDF et Word contiennent le graphique sous forme d'image.
 
-Il fonctionne sur ordinateur et sur iPhone et demande Textus 1.3.2 ou plus récent. Il demande une seule permission, les outils de Textus AI, pour que Textus AI puisse vérifier un bloc `chartjs` avant de l'écrire dans un document.
+Il demande Textus 1.3.2 ou plus récent. Il demande une seule permission, les outils de Textus AI, pour que Textus AI puisse vérifier un bloc `chartjs` avant de l'écrire dans un document.
 
 ## Exemple
 

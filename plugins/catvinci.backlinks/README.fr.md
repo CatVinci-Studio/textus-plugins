@@ -2,7 +2,7 @@
 
 Liez des notes, des titres et des blocs en tapant `[[`, intégrez-les avec `![[` et voyez dans la barre latérale ce qui lie le document ouvert.
 
-Les liens comme `[[Note]]` sont intégrés à Textus : vous pouvez les écrire et les suivre sans plugin. Ce plugin vous aide à les écrire, affiche sur place ce vers quoi ils pointent et rassemble les liens autour du document que vous lisez. Il fonctionne sur ordinateur et sur iOS.
+Les liens comme `[[Note]]` sont intégrés à Textus : vous pouvez les écrire et les suivre sans plugin. Ce plugin vous aide à les écrire, affiche sur place ce vers quoi ils pointent et rassemble les liens autour du document que vous lisez.
 
 ## Lier en écrivant
 

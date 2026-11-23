@@ -11,7 +11,7 @@ Schreiben Sie einen Codeblock mit der Sprache `chartjs`, der eine Chart.js-4-Kon
 - Enthält die Konfiguration einen Fehler, sagt eine Zeile unter dem Block, was nicht stimmt.
 - Exporte nach HTML, PDF und Word enthalten das Diagramm als Bild.
 
-Läuft auf dem Desktop und auf dem iPhone und braucht Textus 1.3.2 oder neuer. Es fragt nach einer einzigen Berechtigung, Werkzeuge für Textus AI, damit Textus AI einen `chartjs`-Block prüfen kann, bevor er ihn in ein Dokument schreibt.
+Es braucht Textus 1.3.2 oder neuer. Es fragt nach einer einzigen Berechtigung, Werkzeuge für Textus AI, damit Textus AI einen `chartjs`-Block prüfen kann, bevor er ihn in ein Dokument schreibt.
 
 ## Beispiel
 
