@@ -38,11 +38,11 @@ views:
 
 - **檢視** 是區塊頂端的分頁：表格、看板、日曆、畫廊（Bases 的 `cards`）和清單。在檢視上按右鍵會開啟它的選單：版面、重新命名、刪除。**+** 新增一個檢視。日曆是 Textus 自己的檢視；Obsidian 會把它當成不認得的檢視來顯示。
 - **每一列都是一篇筆記。** 點一下儲存格就能修改，屬性會寫進那篇筆記的 front matter。**新增** 會在資料庫的資料夾裡建立一篇筆記。一列會像檔案一樣在分頁中開啟。
-- **欄**：點欄的標頭，可以依它排序、篩選、改變類型、重新命名、隱藏，或從每一列刪除這個屬性；**+** 新增一個屬性。拖曳標頭可以移動欄，拖曳它的右邊緣可以設定寬度（在邊緣上按兩下，就會重新符合內容）。順序和寬度保存在資料庫裡，寬度寫成 Obsidian 的 `columnSize`。
+- **欄**：點欄的標頭，可以依它排序、篩選、改變類型、重新命名、隱藏，或從每一列刪除這個屬性；**+** 新增一個屬性。拖曳標頭可以移動欄，拖曳它的右邊緣可以設定寬度（在邊緣上按兩下，就會回到原本的寬度）。欄寬不隨資料庫的寬度改變。順序和寬度保存在資料庫裡，寬度寫成 Obsidian 的 `columnSize`。
 - **看板**：把卡片拖到另一個清單，就會改變它的值。按住清單頂端拖曳，可以把清單排成你要的順序（`groupOrder`）。
 - **日曆**：列依某個日期屬性排在日曆上；點某一天，就會在那個日期新增一列。
 - **篩選**、**排序** 和欄選單的設定，都以 Bases 的寫法保存在檢視裡：`status == "Read"`、`tags.contains("ml")`、`due.isEmpty()`。Textus 還讀不懂的篩選條件會原樣保留，並在工具列下方註明。
-- **在文件裡的大小**：資料庫和文字一樣寬（開啟 **寬螢幕顯示** 時和窗格一樣寬），欄比較寬時可以左右捲動；高度隨列數增加，最高到 Textus 對區塊的限制（視窗的 70%，最多 1200 px），超過後在裡面捲動，底部還有內容時會漸漸淡出。
+- **在文件裡的大小**：資料庫和文字一樣寬（開啟 **寬螢幕顯示** 時和窗格一樣寬），欄比較寬時可以左右捲動；高度隨列數增加，最高到 Textus 對區塊的限制（視窗的 70%，最多 1200 px），超過後在裡面捲動。這時表格和清單只在兩列之間截斷，不會切到半列；其他檢視在下面還有內容時，底部會漸漸淡出。
 - **很長的資料庫** 先顯示前 25 列（或檢視的 `limit`）；往下捲動時載入其餘的列，表格的標頭會一直留在畫面上。滑鼠移到區塊上時，左側的箭頭可以把它摺成一行；摺疊狀態和你離開時所在的檢視只保存在這台裝置上。
 - **公式**（資料庫裡的 `formulas:`）會針對每一列算出結果，可以當作欄、篩選和排序使用：`(price / pages).toFixed(2)`。匯總列目前還不會畫出來。
 - 資料夾是 Obsidian 儲存庫時，**屬性類型** 採用 Obsidian 的設定，來自 `.obsidian/types.json`。
@@ -59,7 +59,7 @@ Notion 的匯出檔透過 **Notion 匯入** 外掛帶進來，它寫出的頁面
 
 ## 更新紀錄
 
-- **0.8.3** - The bar stays on one line when there is room: in a zoomed block on a Mac it folded the view tabs into one button and put the sorts on a line of their own, and measured itself many times on every click. A block taller than Textus lets it be fades at its foot while more rows are below, instead of looking cut off. By touch, a board card or lane lifts after a short hold, so a swipe scrolls instead of dragging. Its page is in every language Textus speaks. Its tools for Textus AI are described in every language, and in Chinese a database is 数据库 while 知识库 is the plugin's name.
+- **0.8.3** - The bar stays on one line when there is room: in a zoomed block on a Mac it folded the view tabs into one button and put the sorts on a line of their own, and measured itself many times on every click. A table or list taller than Textus lets a block be ends between two rows instead of through one; other views fade at the foot while more is below. A column keeps its width however wide the block is, instead of stretching to fill it. By touch, a board card or lane lifts after a short hold, so a swipe scrolls instead of dragging. Its page is in every language Textus speaks. Its tools for Textus AI are described in every language, and in Chinese a database is 数据库 while 知识库 is the plugin's name.
 - **0.8.2** - The `file.folder`, `file.path` and `file.mtime` columns show each page's folder, path and when it was last changed (they were empty).
 - **0.8.1** - Rows and cards make way at the pace of the rest of Textus.
 - **0.8.0** - Other plugins can add views beside the table, board, calendar, gallery and list - the Timeline plugin's timeline, for one - in the view menus. Needs Textus 1.4.6 for those.

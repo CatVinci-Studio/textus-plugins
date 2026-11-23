@@ -48,10 +48,8 @@ body.in-tab #bar {
    stays where it is when a wide table is scrolled sideways. */
 .tx-table-frame {
   overflow: clip;
-  /* As wide as the block when the columns can wrap to it; wider, and the
-     page scrolls, only when they can't. */
+  /* As wide as its columns: wider than the block, and the page scrolls. */
   width: fit-content;
-  min-width: 100%;
   box-sizing: border-box;
 }
 #bar,
@@ -120,10 +118,12 @@ body.in-tab #bar {
   text-align: center;
 }
 /* Dense, as a database reads: every column one width, the title's wider,
-   the block scrolling sideways when they don't fit rather than squeezing
-   them; a column dragged wider keeps its own width (on its cells). The
-   first row sets the widths, so a long value never stretches a column. */
+   whatever the block's width or the values; the block scrolls sideways
+   when they don't fit. A column dragged wider keeps its own width (on its
+   cells). A table of no width of its own is laid out by its head alone:
+   the columns' widths, not shared out across the block. */
 .tx-table {
+  width: 0;
   table-layout: fixed;
 }
 .tx-table th {
@@ -412,6 +412,23 @@ html.more-below::before {
   height: var(--space-8);
   background: linear-gradient(to bottom, transparent, var(--doc-bg, var(--ui-bg)));
   pointer-events: none;
+}
+
+/* A table or list held to Textus's height ends between two rows, not
+   through one (edges.js covers the rest of its foot); other views fade. */
+#foot {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 3;
+  height: 0;
+  background: var(--doc-bg, var(--ui-bg));
+  pointer-events: none;
+}
+html:not(.rows-below) #foot,
+html.rows-below::before {
+  display: none;
 }
 
 /* A filter's values to tick, under its chip (filter-popover.js): the
