@@ -12,6 +12,7 @@
     "textus": ">=1.4.4-rc.1"
   },
   "platforms": ["desktop", "ios"],
+  "category": "editing",
   "main": [
     "cards.js",
     "host.js"

@@ -12,6 +12,7 @@
     "textus": ">=1.3.0-beta.2"
   },
   "platforms": ["desktop"],
+  "category": "files",
   "main": "host.js",
   "permissions": [
     "network:*",

@@ -15,6 +15,7 @@
     "desktop",
     "ios"
   ],
+  "category": "files",
   "main": [
     "lib/lz-string.js",
     "lib/folder-paths.js",

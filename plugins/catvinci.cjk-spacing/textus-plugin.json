@@ -12,6 +12,7 @@
     "textus": ">=1.3.0-beta.2"
   },
   "platforms": ["desktop", "ios"],
+  "category": "editing",
   "main": ["lib/markdown-keep.js", "spacing.js", "host.js"],
   "permissions": ["editor.read", "editor.write", "files.write", "ai.tools"],
   "activationEvents": ["onStartupFinished"],

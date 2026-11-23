@@ -12,6 +12,7 @@
     "textus": ">=1.3.0-beta.8"
   },
   "platforms": ["desktop", "ios"],
+  "category": "sync",
   "main": ["lib/folder-paths.js", "beat.js", "host.js"],
   "permissions": [
     "editor.read",

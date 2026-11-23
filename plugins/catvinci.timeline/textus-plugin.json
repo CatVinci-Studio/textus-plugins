@@ -12,6 +12,7 @@
     "textus": ">=1.3.2"
   },
   "platforms": ["desktop", "ios"],
+  "category": "diagrams",
   "main": ["lib/chart-host.js", "check.js", "database-view.js", "host.js"],
   "activationEvents": ["onStartupFinished"],
   "permissions": ["ai.tools"],

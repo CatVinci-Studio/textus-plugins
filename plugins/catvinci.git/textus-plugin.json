@@ -12,6 +12,7 @@
     "textus": ">=1.4.6-rc.4"
   },
   "platforms": ["desktop"],
+  "category": "sync",
   "main": ["lib/folder-paths.js", "lib/text-diff.js", "host.js"],
   "permissions": ["files.read", "git.commit", "git.sync", "editor.read", "ai.tools"],
   "activationEvents": ["onStartupFinished"],

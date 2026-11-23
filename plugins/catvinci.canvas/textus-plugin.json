@@ -15,6 +15,7 @@
     "desktop",
     "ios"
   ],
+  "category": "files",
   "main": [
     "lib/folder-paths.js",
     "canvas-model.js",

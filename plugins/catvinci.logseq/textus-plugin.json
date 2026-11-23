@@ -15,6 +15,7 @@
     "desktop",
     "ios"
   ],
+  "category": "import",
   "main": [
     "logseq-config.js",
     "host.js"

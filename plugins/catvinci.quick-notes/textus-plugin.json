@@ -12,6 +12,7 @@
     "textus": ">=1.4.3"
   },
   "platforms": ["desktop"],
+  "category": "notes",
   "main": ["lib/folder-paths.js", "lib/conventions.js", "host.js"],
   "permissions": [
     "files.read",

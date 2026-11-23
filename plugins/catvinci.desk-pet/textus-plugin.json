@@ -15,6 +15,7 @@
     "desktop",
     "ios"
   ],
+  "category": "companions",
   "main": [
     "host.js"
   ],

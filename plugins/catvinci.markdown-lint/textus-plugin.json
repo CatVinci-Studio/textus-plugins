@@ -15,6 +15,7 @@
     "desktop",
     "ios"
   ],
+  "category": "editing",
   "main": [
     "lib/markdownlint.js",
     "lib/markdown-keep.js",

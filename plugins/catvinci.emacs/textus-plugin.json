@@ -12,6 +12,7 @@
     "textus": ">=1.3.0-beta.2"
   },
   "platforms": ["desktop", "ios"],
+  "category": "editing",
   "main": "host.js",
   "activationEvents": [
     "onStartupFinished"

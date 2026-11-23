@@ -12,6 +12,7 @@
     "textus": ">=1.3.10"
   },
   "platforms": ["desktop", "ios"],
+  "category": "import",
   "main": [
     "lib/folder-paths.js",
     "lib/link-style.js",
