@@ -3,7 +3,7 @@
 Notieren Sie etwas, ohne das Dokument zu verlassen; die Notiz landet in der Eingangsdatei Ihres Ordners oder in der heutigen Tagesnotiz.
 
 - **Strg+Alt+N** (**⌘⌥N** auf dem Mac) oder **Plugins › Neue Schnellnotiz…** fragt nach einer Notiz und speichert sie.
-- **Neue Schnellnotiz…** steht auch im Symbol im Infobereich oder in der Menüleiste. Das Plugin bittet Textus, im Hintergrund weiterzulaufen, daher ist es auch da, wenn alle Fenster geschlossen sind.
+- Auf dem Desktop steht **Neue Schnellnotiz…** auch im Symbol im Infobereich oder in der Menüleiste. Das Plugin bittet Textus, im Hintergrund weiterzulaufen, daher ist es auch da, wenn alle Fenster geschlossen sind.
 - Der Reiter **Schnellnotizen** in der Seitenleiste listet die Notizen, die neueste oben. Klicken Sie auf **Neu**, um dort eine zu schreiben, oder ändern Sie eine Notiz direkt in der Liste.
 - Das Aktionsmenü jeder Notiz (ihre Mehr-Schaltfläche oder Rechtsklick) bietet **Einfügen** (an der Einfügemarke im Dokument), **Öffnen** und **Löschen**. Eine Notiz, die in einem Dokument steht, öffnet sich dort an ihrer Zeile.
 - Aus Versehen gelöscht? **Rückgängig** unten holt sie für ein paar Sekunden zurück. Eine neue, leer gelassene Notiz verschwindet von selbst.
@@ -18,7 +18,7 @@ Die Notizen stehen in einem Dokument des geöffneten Ordners, so sehen Obsidian 
 
 Ändern Sie die Datei, folgt die Seitenleiste. Notizen aus älteren Versionen wandern einmal dorthin, die älteste zuerst. Ohne geöffneten Ordner bleiben die Notizen in Textus.
 
-Läuft auf dem Desktop.
+Läuft auf dem Desktop, auf iPhone, iPad und Android. Auf dem Telefon steht **Neue Schnellnotiz…** unter **Plugins** im Menü der Titelzeile, und die Aktionen einer Notiz liegen hinter ihrer Mehr-Schaltfläche. Dort gibt es keinen Infobereich, daher bittet das Plugin nicht darum, Textus im Hintergrund laufen zu lassen.
 
 ## Berechtigungen
 
@@ -28,6 +28,7 @@ Läuft auf dem Desktop.
 
 ## Änderungen
 
+- **0.6.0** - Jetzt auch auf iPhone, iPad und Android: **Neue Schnellnotiz…** unter Plugins und der Reiter in der Seitenleiste, mit Neu und der Mehr-Schaltfläche jeder Notiz leicht zu tippen. Nur auf dem Desktop bittet es darum, Textus im Hintergrund laufen zu lassen. Benötigt Textus 1.4.7.
 - **0.5.5** - Namen und Tooltips seiner Buttons kommen von Textus, wie auf seinen anderen Seiten.
 - **0.5.4** - Die Seite folgt der Sprache von Textus von selbst. Benötigt Textus 1.4.3.
 - **0.5.3** - Neu während einer Suche leert die Suche, damit die neue Notiz erscheint; ein Rechtsklick in den Text einer Notiz bietet auch Rückgängig, Ausschneiden, Kopieren und Einfügen; eine Suche ohne Treffer sagt es.

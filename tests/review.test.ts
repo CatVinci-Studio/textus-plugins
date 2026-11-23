@@ -113,11 +113,15 @@ describe("review", () => {
     expect(fails({ platforms: undefined })).toHaveLength(1);
     expect(fails({ platforms: ["android"] })).toHaveLength(1);
     expect(
+      fails({ background: "host.js", platforms: ["desktop", "ios"] }),
+    ).toHaveLength(1);
+    // Only asking to keep Textus running: iOS runs it without that.
+    expect(
       fails({
         requires: [{ setting: "runInBackground" }],
         platforms: ["desktop", "ios"],
       }),
-    ).toHaveLength(1);
+    ).toHaveLength(0);
     expect(
       fails({
         requires: [{ setting: "runInBackground" }],

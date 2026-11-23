@@ -3,7 +3,7 @@
 Jot a note down without leaving the document; it goes into your folder's inbox file or today's daily note.
 
 - **Ctrl+Alt+N** (**⌘⌥N** on a Mac), or **Plugins › New Quick Note…**, asks for a note and saves it.
-- **New Quick Note…** is also in the tray or menu bar icon. The plugin asks Textus to keep running in the background, so it is there even with every window closed.
+- On the desktop, **New Quick Note…** is also in the tray or menu bar icon. The plugin asks Textus to keep running in the background, so it is there even with every window closed.
 - The **Quick Notes** tab in the sidebar lists the notes, newest first. Click **New** to write one there, or edit a note right in the list.
 - Each note's actions menu (its more button, or right-click) has **Insert** (at the caret in the document), **Open** and **Delete**. A note kept in a document opens there, at its line.
 - Deleted one by mistake? **Undo** at the bottom brings it back for a few seconds. A new note left empty goes by itself.
@@ -18,7 +18,7 @@ Notes are kept in a document of the open folder, so Obsidian and Cloud Sync see 
 
 Edit the file and the sidebar follows. Notes from older versions move into it once, oldest first. With no folder open, notes stay inside Textus.
 
-Runs on the desktop.
+Runs on the desktop, iPhone, iPad and Android. On a phone, **New Quick Note…** is under **Plugins** in the title row's menu, and a note's actions are under its more button. There is no tray there, so it doesn't ask to keep Textus running.
 
 ## Permissions
 
@@ -28,6 +28,7 @@ Runs on the desktop.
 
 ## Changes
 
+- **0.6.0** - On iPhone, iPad and Android too: **New Quick Note…** under Plugins and the sidebar tab, with New and each note's more button easy to tap. Only the desktop asks to keep Textus running in the background. Needs Textus 1.4.7.
 - **0.5.5** - Its buttons' names and tooltips come from Textus, as on its other pages.
 - **0.5.4** - The page follows Textus's language by itself. Needs Textus 1.4.3.
 - **0.5.3** - New while searching clears the search, so the new note shows; right-clicking a note's text also offers undo, cut, copy and paste; a search with no match says so.

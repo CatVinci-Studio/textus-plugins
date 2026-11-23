@@ -40,3 +40,22 @@
   font-size: var(--text-caption);
   white-space: nowrap;
 }
+/* By touch (a phone's drawer, an iPad), New and each note's actions take a
+   fingertip's room (2.75rem, the 44 points of a touch target) without
+   growing: an invisible layer centred on the button. */
+@media (any-hover: none) {
+  #new,
+  .note-foot .tx-icon-button {
+    position: relative;
+  }
+  #new::after,
+  .note-foot .tx-icon-button::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: max(100%, 2.75rem);
+    height: max(100%, 2.75rem);
+    transform: translate(-50%, -50%);
+  }
+}

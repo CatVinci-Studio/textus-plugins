@@ -3,7 +3,7 @@
 Notez une idée sans quitter le document ; la note va dans le fichier boîte de réception de votre dossier ou dans la note du jour.
 
 - **Ctrl+Alt+N** (**⌘⌥N** sur Mac), ou **Plugins › Nouvelle note rapide…**, demande une note et l’enregistre.
-- **Nouvelle note rapide…** est aussi dans l’icône de la zone de notification ou de la barre des menus. Le plugin demande à Textus de continuer à tourner en arrière-plan : elle y reste même toutes fenêtres fermées.
+- Sur ordinateur, **Nouvelle note rapide…** est aussi dans l’icône de la zone de notification ou de la barre des menus. Le plugin demande à Textus de continuer à tourner en arrière-plan : elle y reste même toutes fenêtres fermées.
 - L’onglet **Notes rapides** de la barre latérale liste les notes, la plus récente en haut. Cliquez sur **Nouvelle** pour en écrire une là, ou modifiez une note directement dans la liste.
 - Le menu d’actions de chaque note (son bouton « plus », ou clic droit) propose **Insérer** (au curseur dans le document), **Ouvrir** et **Supprimer**. Une note gardée dans un document s’y ouvre, à sa ligne.
 - Supprimée par erreur ? **Annuler**, en bas, la ramène pendant quelques secondes. Une nouvelle note laissée vide disparaît d’elle-même.
@@ -18,7 +18,7 @@ Les notes sont gardées dans un document du dossier ouvert, donc Obsidian et Clo
 
 Modifiez le fichier et la barre latérale suit. Les notes des anciennes versions y sont déplacées une fois, de la plus ancienne à la plus récente. Sans dossier ouvert, les notes restent dans Textus.
 
-Fonctionne sur ordinateur.
+Fonctionne sur ordinateur, iPhone, iPad et Android. Sur un téléphone, **Nouvelle note rapide…** est dans **Plugins**, au menu de la ligne de titre, et les actions d’une note sont sous son bouton « plus ». Il n’y a pas de zone de notification, donc il ne demande pas à Textus de tourner en arrière-plan.
 
 ## Autorisations
 
@@ -28,6 +28,7 @@ Fonctionne sur ordinateur.
 
 ## Changements
 
+- **0.6.0** - Aussi sur iPhone, iPad et Android : **Nouvelle note rapide…** dans Plugins et l’onglet de la barre latérale, avec Nouvelle et le bouton « plus » de chaque note faciles à toucher. Seul l’ordinateur demande à Textus de tourner en arrière-plan. Nécessite Textus 1.4.7.
 - **0.5.5** - Les noms et infobulles de ses boutons viennent de Textus, comme sur ses autres pages.
 - **0.5.4** - La page suit la langue de Textus d’elle-même. Nécessite Textus 1.4.3.
 - **0.5.3** - Créer une note pendant une recherche efface celle-ci pour afficher la nouvelle note ; le clic droit dans le texte d'une note propose aussi annuler, couper, copier et coller ; une recherche sans résultat l'indique.
