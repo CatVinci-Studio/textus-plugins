@@ -163,6 +163,62 @@ describe("storage protocols over HTTP", () => {
       expect(objects.size).toBe(count);
     },
   );
+  it("creates on Kodo with a native insertOnly upload", async () => {
+    const calls: { url: string; method: string; body?: Uint8Array }[] = [];
+    const reply = (status: number, data = new Uint8Array()) =>
+      ({
+        status,
+        ok: status >= 200 && status < 300,
+        headers: {},
+        bytes: async () => data,
+        text: async () => new TextDecoder().decode(data),
+        json: async () => JSON.parse(new TextDecoder().decode(data)),
+      }) as Awaited<ReturnType<Fetch>>;
+    const kodo = (fetch: Fetch) =>
+      new RemoteStore(
+        normalizeConfig({
+          provider: "kodo",
+          endpoint: "https://s3.cn-south-1.qiniucs.com",
+          bucket: "bucket",
+          region: "cn-south-1",
+          prefix: "notes",
+        }),
+        { account, secret },
+        fetch,
+        async () => {},
+      );
+
+    const store = kodo(async (url, init = {}) => {
+      calls.push({
+        url: String(url),
+        method: String(init.method),
+        body: init.body as Uint8Array | undefined,
+      });
+      return String(url).startsWith("https://up-")
+        ? reply(614)
+        : reply(404);
+    });
+    expect(await store.create("v1/lock.json", bytes("one"))).toBe(false);
+    expect(calls[0].method).toBe("POST");
+    expect(calls[0].url).toBe("https://up-z2.qiniup.com/");
+    const form = new TextDecoder().decode(calls[0].body);
+    expect(form).toContain(`name="key"` + String.fromCharCode(13,10,13,10) + `notes/v1/lock.json`);
+    expect(form).toContain(`name="token"` + String.fromCharCode(13,10,13,10) + `${account}:`);
+
+    let post = 0;
+    const lost = kodo(async (url, init = {}) => {
+      const target = String(url);
+      if (target.startsWith("https://up-")) {
+        post += 1;
+        if (post === 1) throw new Error("connection lost after the write");
+        return reply(614);
+      }
+      if (init.method === "GET") return reply(200, bytes("one"));
+      return reply(404);
+    });
+    expect(await lost.create("v1/lock.json", bytes("one"))).toBe(true);
+  });
+
   it("tells the time by the server's clock, not this device's", async () => {
     const ahead = Date.now() + 86_400_000;
     const store = new RemoteStore(

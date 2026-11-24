@@ -15,7 +15,7 @@ export const TRASH_DAYS = 30;
 export const MAX_TRASH = 2000;
 
 export interface Config {
-  provider: "s3" | "webdav" | "nutstore";
+  provider: "s3" | "kodo" | "webdav" | "nutstore";
   endpoint: string;
   region: string;
   bucket: string;

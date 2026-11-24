@@ -1,5 +1,6 @@
 import { AwsV4Signer } from "aws4fetch";
 import { hash } from "./content";
+import { multipart, uploadHost, uploadToken } from "./kodo";
 import { providers, relativePath } from "./config";
 import {
   LOCK,
@@ -218,6 +219,7 @@ export class RemoteStore implements ObjectStore {
     this.require(res);
   }
   async create(key: string, bytes: Uint8Array): Promise<boolean> {
+    if (this.config.provider === "kodo") return this.kodoCreate(key, bytes);
     if (providers[this.config.provider].transport === "s3") {
       // Sent again after no answer, a refusal may be to our own first try.
       let resent = false;
@@ -254,6 +256,78 @@ export class RemoteStore implements ObjectStore {
     } finally {
       await this.remove(temporary).catch(() => {});
     }
+  }
+  /** Kodo's conditional create: a native form upload with `insertOnly`.
+   *  614 means the key exists. A retry after no answer compares the bytes,
+   *  as the S3 create does, so our own landed upload counts as created. */
+  private async kodoCreate(
+    key: string,
+    bytes: Uint8Array,
+  ): Promise<boolean> {
+    const host = uploadHost(this.config.region);
+    if (!host) throw new SyncError("invalidConfig");
+    const fullKey = this.config.prefix ? `${this.config.prefix}/${key}` : key;
+    const boundary = `----textus${crypto.randomUUID().replace(/-/g, "")}`;
+    const token = await uploadToken(
+      this.credentials.account,
+      this.credentials.secret,
+      this.config.bucket,
+      fullKey,
+      Math.floor(Date.now() / 1000) + 3600,
+    );
+    const body = multipart(boundary, token, fullKey, bytes);
+    const url = `https://${host}/`;
+    let unsure = false;
+    for (let attempt = 0; attempt < 3; attempt++) {
+      const quiet = this.quietUntil - Date.now();
+      if (quiet > 0) await this.sleep(quiet);
+      let response: Response;
+      try {
+        response = await this.fetch(url, {
+          method: "POST",
+          headers: {
+            "Content-Type": `multipart/form-data; boundary=${boundary}`,
+          },
+          body,
+        });
+      } catch {
+        unsure = true;
+        if (attempt >= 2) throw new SyncError("networkError");
+        await this.sleep(500 * 2 ** attempt);
+        continue;
+      }
+      const date = Date.parse(response.headers["date"] ?? "");
+      if (Number.isFinite(date)) this.skew = date - Date.now();
+      if (response.status >= 200 && response.status < 300) return true;
+      if (response.status === 614) {
+        if (!unsure) return false;
+        for (let read = 0; read < 2; read++) {
+          const there = await this.get(key);
+          if (there && (await hash(there)) === (await hash(bytes))) return true;
+          await this.sleep(100);
+        }
+        return false;
+      }
+      if (response.status === 400 || response.status === 631)
+        throw new SyncError("invalidConfig");
+      if (response.status === 401 || response.status === 403)
+        this.require(response);
+      if (
+        [429, 500, 502, 503, 504].includes(response.status) &&
+        attempt < 2
+      ) {
+        unsure = true;
+        const asked = Number(response.headers["retry-after"] ?? "0");
+        if (asked > 5) throw new SyncError("rateLimited");
+        const wait = Math.max(500 * 2 ** attempt, asked * 1000);
+        if (response.status === 429)
+          this.quietUntil = Math.max(this.quietUntil, Date.now() + wait);
+        await this.sleep(wait);
+        continue;
+      }
+      this.require(response);
+    }
+    throw new SyncError("networkError");
   }
   async remove(key: string): Promise<void> {
     const res = await this.request(

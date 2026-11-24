@@ -49,7 +49,7 @@ describe("connection and data boundaries", () => {
   );
   it("lets every service sync every minute, and waits after saves only as set", () => {
     const at = (
-      provider: "s3" | "webdav" | "nutstore",
+      provider: "s3" | "kodo" | "webdav" | "nutstore",
       more: { interval?: number; saveGap?: number } = {},
     ) =>
       normalizeConfig({
@@ -58,15 +58,27 @@ describe("connection and data boundaries", () => {
         bucket: "notes",
         ...more,
       });
-    for (const p of ["s3", "webdav", "nutstore"] as const)
+    for (const p of ["s3", "kodo", "webdav", "nutstore"] as const)
       expect(at(p, { interval: 1 }).interval).toBe(1);
     // A connection that never set it waits as its service suggests.
     expect(at("s3").saveGap).toBe(0);
+    expect(at("kodo").saveGap).toBe(0);
     expect(at("webdav").saveGap).toBe(0);
     expect(at("nutstore").saveGap).toBe(3);
     expect(at("nutstore", { saveGap: 0 }).saveGap).toBe(0);
     expect(at("webdav", { saveGap: 10 }).saveGap).toBe(10);
     expect(() => at("s3", { saveGap: 61 })).toThrow("invalidSaveGap");
+  });
+
+  it("gives Kodo a Qiniu S3 endpoint and keeps its region", () => {
+    const config = normalizeConfig({
+      provider: "kodo",
+      endpoint: "",
+      region: "cn-south-1",
+      bucket: "bucket",
+    });
+    expect(config.endpoint).toBe("https://s3.cn-south-1.qiniucs.com");
+    expect(config.region).toBe("cn-south-1");
   });
 
   it("allows only documented project data and supported workspace documents", () => {
