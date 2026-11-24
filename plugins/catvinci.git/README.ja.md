@@ -14,6 +14,7 @@ Git で管理しているフォルダで：
 
 ## 更新履歴
 
+- **0.3.2** - Its icon is Git's own logo.
 - **0.3.1** - Its page is in every language Textus speaks. Needs Textus 1.4.6 itself, not a test version of it. Its description no longer ends in "Desktop.", and its tools for Textus AI are described in every language.
 - **0.3.0** - Push and Pull, and what waits to be pushed or pulled beside the branch (Textus 1.4.6).
 - **0.2.0** - Blocks changed since the last commit are marked in the margin (Textus 1.4.4).

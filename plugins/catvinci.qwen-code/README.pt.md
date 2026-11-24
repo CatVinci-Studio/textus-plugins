@@ -14,5 +14,6 @@ Precisa do Textus 1.4.3 ou mais recente. Pede uma única permissão: iniciar est
 
 ## Alterações
 
+- **0.1.2** - Its icon is Qwen Code's own logo.
 - **0.1.1** - Its page is in every language Textus speaks. Needs Textus 1.4.3 itself, not a test version of it.
 - **0.1.0** - First version: Qwen Code in Textus AI.

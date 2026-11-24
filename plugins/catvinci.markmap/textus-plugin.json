@@ -1,11 +1,11 @@
 {
   "id": "catvinci.markmap",
   "name": "%name%",
-  "version": "0.3.8",
+  "version": "0.3.9",
   "publisher": "catvinci",
   "author": "CatVinci Studio",
   "description": "%description%",
-  "icon": "icon.svg",
+  "icon": "icon.png",
   "license": "MIT",
   "repository": "https://github.com/CatVinci-Studio/textus-plugins",
   "engines": {
