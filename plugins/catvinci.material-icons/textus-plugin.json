@@ -15,6 +15,7 @@
     "desktop",
     "ios"
   ],
+  "category": "files",
   "permissions": [],
   "contributes": {
     "fileIconThemes": [

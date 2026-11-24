@@ -8,7 +8,7 @@
 - 常见文件夹有自己的图标，展开和收起各一个：images、assets、docs、src、test、public、dist、scripts、attachments 等。
 - 在 **设置 › 外观 › 文件图标** 里选 **Material** 后，侧边栏的文件、搜索结果和快速打开都用这套图标。选 **默认** 换回 Textus 自己的图标。
 
-它带了这套主题 1,256 个图标里的 125 个，写作和日常代码用得到的那些；其余的文件和文件夹用这套主题里普通的文件、文件夹图标。
+它带了这套主题里写作和日常代码用得到的图标；其他文件和文件夹用普通的文件、文件夹图标。
 
 ## 权限
 
@@ -16,8 +16,8 @@
 
 ## 致谢
 
-图标来自 [Material Icon Theme](https://github.com/material-extensions/vscode-material-icon-theme) 5.40.0，MIT 许可证；见 `THIRD-PARTY-NOTICES.md`。
+图标来自 [Material Icon Theme](https://github.com/material-extensions/vscode-material-icon-theme)，MIT 许可证；见 `THIRD-PARTY-NOTICES.md`。
 
 ## 更新日志
 
-- **0.1.0** - 第一个版本：来自 Material Icon Theme 的文件和文件夹图标。需要 Textus 1.4.7。
+- **0.1.0** - First version: file and folder icons from Material Icon Theme. Needs Textus 1.4.7.

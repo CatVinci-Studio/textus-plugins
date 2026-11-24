@@ -28,6 +28,6 @@ access-list 101 permit tcp any host 10.0.0.5 eq www
 
 無。它只把這個語言的規則交給 Textus，不執行任何程式碼。
 
-## 更新
+## 更新紀錄
 
-- **0.1.0** - 第一版：為程式碼區塊中的 Cisco IOS 設定上色。需要 Textus 1.4.7。
+- **0.1.0** - First version: Cisco IOS configurations coloured in code blocks. Needs Textus 1.4.7.

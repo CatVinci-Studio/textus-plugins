@@ -8,7 +8,7 @@ File and folder icons from VS Code's Material Icon Theme in the sidebar, search 
 - Gives common folders their own icon, open and closed: images, assets, docs, src, test, public, dist, scripts, attachments and more.
 - Shows in the sidebar's files, search results and quick open once you pick **Material** in **Settings › Appearance › File icons**. **Default** brings back Textus's own icons.
 
-It carries 125 of the theme's 1,256 icons, the ones for writing and everyday code; any other file or folder gets its plain file or folder icon.
+It carries the theme's icons for writing and everyday code; any other file or folder gets its plain file or folder icon.
 
 ## Permissions
 
@@ -16,7 +16,7 @@ None. It only gives Textus a set of icons; it reads nothing itself.
 
 ## Credits
 
-The icons come from [Material Icon Theme](https://github.com/material-extensions/vscode-material-icon-theme) 5.40.0, MIT License; see `THIRD-PARTY-NOTICES.md`.
+The icons come from [Material Icon Theme](https://github.com/material-extensions/vscode-material-icon-theme), MIT License; see `THIRD-PARTY-NOTICES.md`.
 
 ## Changes
 
