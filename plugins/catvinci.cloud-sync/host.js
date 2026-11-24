@@ -176,6 +176,7 @@ var defaults = {
 };
 var providers = {
   s3: { transport: "s3", endpoint: "", saveGap: 0, parallel: 8 },
+  kodo: { transport: "s3", endpoint: "", saveGap: 0, parallel: 8 },
   webdav: { transport: "dav", endpoint: "", saveGap: 0, parallel: 4 },
   nutstore: {
     transport: "dav",
@@ -203,7 +204,7 @@ function normalizeConfig(input, device = deviceOf()) {
   if (spec.transport === "s3") {
     if (!/^[a-z0-9][a-z0-9.-]{1,61}[a-z0-9]$/.test(c.bucket) || c.bucket.includes(".."))
       throw new SyncError("invalidBucket");
-    c.endpoint || (c.endpoint = `https://s3.${c.region}.amazonaws.com`);
+    c.endpoint || (c.endpoint = c.provider === "kodo" ? `https://s3.${c.region}.qiniucs.com` : `https://s3.${c.region}.amazonaws.com`);
   } else {
     c.region = "";
     c.bucket = "";
@@ -1804,6 +1805,88 @@ function guessServiceRegion(url, headers) {
   return [HOST_SERVICES[service] || service, region || ""];
 }
 
+// development/cloud-sync/src/kodo.ts
+var HOSTS = {
+  "cn-east-1": "up-z0.qiniup.com",
+  "cn-east-2": "up-cn-east-2.qiniup.com",
+  "cn-north-1": "up-z1.qiniup.com",
+  "cn-south-1": "up-z2.qiniup.com",
+  "us-north-1": "up-na0.qiniup.com",
+  "ap-southeast-1": "up-as0.qiniup.com",
+  "ap-southeast-2": "up-ap-southeast-2.qiniup.com",
+  "ap-southeast-3": "up-ap-southeast-3.qiniup.com"
+};
+function uploadHost(region) {
+  return HOSTS[region.toLowerCase()] ?? null;
+}
+var base64url = (bytes) => {
+  let binary = "";
+  for (const byte of bytes) binary += String.fromCharCode(byte);
+  return btoa(binary).replace(/\+/g, "-").replace(/\//g, "_");
+};
+function encodePolicy(policy) {
+  return base64url(new TextEncoder().encode(policy));
+}
+function putPolicy(bucket, key, deadline) {
+  return JSON.stringify({
+    scope: `${bucket}:${key}`,
+    deadline,
+    insertOnly: 1
+  });
+}
+async function signEncodedPolicy(secretKey, encodedPolicy) {
+  const key = await crypto.subtle.importKey(
+    "raw",
+    new TextEncoder().encode(secretKey),
+    { name: "HMAC", hash: "SHA-1" },
+    false,
+    ["sign"]
+  );
+  const signature = await crypto.subtle.sign(
+    "HMAC",
+    key,
+    new TextEncoder().encode(encodedPolicy)
+  );
+  return base64url(new Uint8Array(signature));
+}
+async function uploadToken(accessKey, secretKey, bucket, key, deadline) {
+  const encoded = encodePolicy(putPolicy(bucket, key, deadline));
+  return `${accessKey}:${await signEncodedPolicy(secretKey, encoded)}:${encoded}`;
+}
+function multipart(boundary, token, key, bytes) {
+  const encoder3 = new TextEncoder();
+  const parts = [];
+  const field = (name, value) => encoder3.encode(
+    `--${boundary}\r
+Content-Disposition: form-data; name="${name}"\r
+\r
+${value}\r
+`
+  );
+  parts.push(field("token", token), field("key", key));
+  parts.push(
+    encoder3.encode(
+      `--${boundary}\r
+Content-Disposition: form-data; name="file"; filename="blob"\r
+Content-Type: application/octet-stream\r
+\r
+`
+    ),
+    bytes,
+    encoder3.encode(`\r
+--${boundary}--\r
+`)
+  );
+  const total = parts.reduce((sum, part) => sum + part.length, 0);
+  const body = new Uint8Array(total);
+  let offset = 0;
+  for (const part of parts) {
+    body.set(part, offset);
+    offset += part.length;
+  }
+  return body;
+}
+
 // development/cloud-sync/src/transport.ts
 var encodePath = (path) => path.split("/").map(encodeURIComponent).join("/");
 var pause2 = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -1982,6 +2065,7 @@ var RemoteStore = class {
     this.require(res);
   }
   async create(key, bytes) {
+    if (this.config.provider === "kodo") return this.kodoCreate(key, bytes);
     if (providers[this.config.provider].transport === "s3") {
       let resent = false;
       const res = await this.request(
@@ -2016,6 +2100,72 @@ var RemoteStore = class {
       await this.remove(temporary).catch(() => {
       });
     }
+  }
+  /** Kodo's conditional create: a native form upload with `insertOnly`.
+   *  614 means the key exists. A retry after no answer compares the bytes,
+   *  as the S3 create does, so our own landed upload counts as created. */
+  async kodoCreate(key, bytes) {
+    const host = uploadHost(this.config.region);
+    if (!host) throw new SyncError("invalidConfig");
+    const fullKey = this.config.prefix ? `${this.config.prefix}/${key}` : key;
+    const boundary = `----textus${crypto.randomUUID().replace(/-/g, "")}`;
+    const token = await uploadToken(
+      this.credentials.account,
+      this.credentials.secret,
+      this.config.bucket,
+      fullKey,
+      Math.floor(Date.now() / 1e3) + 3600
+    );
+    const body = multipart(boundary, token, fullKey, bytes);
+    const url = `https://${host}/`;
+    let unsure = false;
+    for (let attempt = 0; attempt < 3; attempt++) {
+      const quiet = this.quietUntil - Date.now();
+      if (quiet > 0) await this.sleep(quiet);
+      let response;
+      try {
+        response = await this.fetch(url, {
+          method: "POST",
+          headers: {
+            "Content-Type": `multipart/form-data; boundary=${boundary}`
+          },
+          body
+        });
+      } catch {
+        unsure = true;
+        if (attempt >= 2) throw new SyncError("networkError");
+        await this.sleep(500 * 2 ** attempt);
+        continue;
+      }
+      const date = Date.parse(response.headers["date"] ?? "");
+      if (Number.isFinite(date)) this.skew = date - Date.now();
+      if (response.status >= 200 && response.status < 300) return true;
+      if (response.status === 614) {
+        if (!unsure) return false;
+        for (let read2 = 0; read2 < 2; read2++) {
+          const there = await this.get(key);
+          if (there && await hash(there) === await hash(bytes)) return true;
+          await this.sleep(100);
+        }
+        return false;
+      }
+      if (response.status === 400 || response.status === 631)
+        throw new SyncError("invalidConfig");
+      if (response.status === 401 || response.status === 403)
+        this.require(response);
+      if ([429, 500, 502, 503, 504].includes(response.status) && attempt < 2) {
+        unsure = true;
+        const asked = Number(response.headers["retry-after"] ?? "0");
+        if (asked > 5) throw new SyncError("rateLimited");
+        const wait = Math.max(500 * 2 ** attempt, asked * 1e3);
+        if (response.status === 429)
+          this.quietUntil = Math.max(this.quietUntil, Date.now() + wait);
+        await this.sleep(wait);
+        continue;
+      }
+      this.require(response);
+    }
+    throw new SyncError("networkError");
   }
   async remove(key) {
     const res = await this.request(

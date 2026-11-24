@@ -13,6 +13,7 @@
   // development/cloud-sync/src/config.ts
   var providers = {
     s3: { transport: "s3", endpoint: "", saveGap: 0, parallel: 8 },
+    kodo: { transport: "s3", endpoint: "", saveGap: 0, parallel: 8 },
     webdav: { transport: "dav", endpoint: "", saveGap: 0, parallel: 4 },
     nutstore: {
       transport: "dav",
@@ -47,6 +48,7 @@
   document.querySelector("section.sync-status")?.setAttribute("aria-label", api.t("name"));
   var signIn = {
     s3: ["accountS3", "secretS3"],
+    kodo: ["accountS3", "secretS3"],
     webdav: ["accountDav", "secretDav"],
     nutstore: ["accountNutstore", "secretNutstore"]
   };
@@ -65,7 +67,7 @@
   }
   picker(
     "provider",
-    ["s3", "webdav", "nutstore"],
+    ["s3", "kodo", "webdav", "nutstore"],
     (p) => api.t(p),
     () => {
       input("endpoint").value = "";
@@ -102,17 +104,18 @@
     element("password-field").hidden = !encrypt;
     element("confirm-field").hidden = !encrypt;
     element("provider-name").textContent = api.t(provider);
-    element("bucket-field").hidden = provider !== "s3";
-    element("s3-more").hidden = provider !== "s3";
+    const s3 = provider === "s3" || provider === "kodo";
+    element("bucket-field").hidden = !s3;
+    element("s3-more").hidden = !s3;
     element("endpoint-field").hidden = provider === "nutstore";
     element("nutstore-help").hidden = provider !== "nutstore";
     const [account, secret] = signIn[provider] ?? signIn.s3;
     element("account-label").textContent = api.t(account);
     element("secret-label").textContent = api.t(secret);
-    input("endpoint").required = provider !== "s3";
+    input("endpoint").required = provider !== "s3" && provider !== "kodo";
     if (provider === "nutstore")
       input("endpoint").value = providers.nutstore.endpoint;
-    input("bucket").required = provider === "s3";
+    input("bucket").required = provider === "s3" || provider === "kodo";
     for (const id of ["account", "secret", "sync-password"]) {
       input(id).placeholder = editing ? api.t("keptIfEmpty") : "";
       input(id).required = !editing && id !== "sync-password";
@@ -135,7 +138,7 @@
     element("c-endpoint").textContent = config.endpoint;
     element("c-endpoint-row").hidden = config.provider === "nutstore";
     element("c-bucket").textContent = config.bucket;
-    element("c-bucket-row").hidden = config.provider !== "s3";
+    element("c-bucket-row").hidden = config.provider !== "s3" && config.provider !== "kodo";
     element("c-account-label").textContent = api.t(
       (signIn[config.provider] ?? signIn.s3)[0]
     );

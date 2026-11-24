@@ -31,6 +31,7 @@ export const defaults: Config = {
 // few transfers at once (parallel).
 export const providers = {
   s3: { transport: "s3", endpoint: "", saveGap: 0, parallel: 8 },
+  kodo: { transport: "s3", endpoint: "", saveGap: 0, parallel: 8 },
   webdav: { transport: "dav", endpoint: "", saveGap: 0, parallel: 4 },
   nutstore: {
     transport: "dav",
@@ -80,7 +81,10 @@ export function normalizeConfig(
       c.bucket.includes("..")
     )
       throw new SyncError("invalidBucket");
-    c.endpoint ||= `https://s3.${c.region}.amazonaws.com`;
+    c.endpoint ||=
+      c.provider === "kodo"
+        ? `https://s3.${c.region}.qiniucs.com`
+        : `https://s3.${c.region}.amazonaws.com`;
   } else {
     c.region = "";
     c.bucket = "";

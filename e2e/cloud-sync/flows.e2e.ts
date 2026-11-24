@@ -78,6 +78,26 @@ class Remote {
       body: data.toString("base64"),
     });
     if (this.failure) return response(this.failure);
+    const url = new URL(req.url);
+    if (method === "POST" && url.hostname.startsWith("up-")) {
+      const form = body.toString("utf8");
+      const crlf = String.fromCharCode(13, 10);
+      const key = form.split(`name="key"${crlf}${crlf}`)[1]?.split(crlf)[0];
+      const fileAt = form.indexOf('name="file"; filename="blob"');
+      const fileStart = fileAt < 0 ? -1 : form.indexOf(`${crlf}${crlf}`, fileAt);
+      const file = fileStart < 0 ? Buffer.alloc(0) : body.subarray(fileStart + 4);
+      const end = file.indexOf(`${crlf}--`);
+      const bytes = end < 0 ? file : file.subarray(0, end);
+      if (!key) return response(400);
+      const stored = `/dav/test-bucket/${key}`;
+      if (this.files.has(stored)) {
+        return this.files.get(stored)!.equals(bytes)
+          ? response(200)
+          : response(614);
+      }
+      this.files.set(stored, bytes);
+      return response(200);
+    }
     // Every folder already exists, as MKCOL's 405 says.
     if (method === "MKCOL") return response(405);
     if (method === "PROPFIND") return response(207);
@@ -191,7 +211,7 @@ async function open(
 /** The service picked from the page's menu, drawn by Textus over it. */
 async function pickProvider(
   page: Page,
-  provider: "s3" | "webdav" | "nutstore",
+  provider: "s3" | "kodo" | "webdav" | "nutstore",
   language = "en",
 ) {
   const strings = (manifest as { l10n: Record<string, Record<string, string>> })
@@ -219,7 +239,7 @@ async function encryptOn(panel: FrameLocator) {
 }
 async function configure(
   page: Page,
-  provider: "s3" | "webdav" | "nutstore",
+  provider: "s3" | "kodo" | "webdav" | "nutstore",
   password = syncPassword,
   enter = false,
 ) {
@@ -227,7 +247,14 @@ async function configure(
   await pickProvider(page, provider);
   if (provider !== "nutstore")
     await panel.locator("#endpoint").fill("https://fixture.invalid/dav");
-  if (provider === "s3") await panel.locator("#bucket").fill("test-bucket");
+  if (provider === "s3" || provider === "kodo")
+    await panel.locator("#bucket").fill("test-bucket");
+  if (provider === "kodo") {
+    await panel
+      .locator("#s3-more")
+      .evaluate((element) => ((element as HTMLDetailsElement).open = true));
+    await panel.locator("#region").fill("cn-south-1");
+  }
   await panel.locator("#account").fill("fixture-account");
   await panel.locator("#secret").fill("fixture-secret");
   await encryptOn(panel);
@@ -267,7 +294,7 @@ async function device(
   return { context, page };
 }
 
-for (const provider of ["s3", "webdav", "nutstore"] as const) {
+for (const provider of ["s3", "kodo", "webdav", "nutstore"] as const) {
   test(`${provider}: the packaged plugin saves secrets, connects, and syncs through Textus's sandbox`, async ({
     page,
   }) => {
