@@ -16,6 +16,7 @@ Docusaurus, Nextra 같은 사이트 도구가 쓰는, 컴포넌트가 들어간 
 
 ## 변경 내역
 
+- **0.1.4** - Its icon is MDX's own logo.
 - **0.1.3** - Its page is in every language Textus speaks.
 - **0.1.2** - Its package lists the libraries it carries, with their licenses.
 - **0.1.1** - Preview MDX on a phone, where the preview shows alone, draws the document it was opened from instead of an empty page.

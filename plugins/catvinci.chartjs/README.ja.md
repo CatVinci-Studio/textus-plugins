@@ -27,6 +27,7 @@ Textus 1.3.2 以降が必要です。求める権限は「Textus AI ツール」
 
 ## 更新履歴
 
+- **0.3.6** - Its icon is Chart.js's own logo.
 - **0.3.5** - Its page no longer says which devices it runs on: the store shows that.
 - **0.3.4** - Its package lists the libraries it carries, with their licenses.
 - **0.3.3** - A chart drawn while its block was folded (a phone) fits once the block opens, instead of keeping its old size.

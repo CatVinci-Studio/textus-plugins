@@ -13,5 +13,6 @@ Textus 1.4.3 이상이 필요합니다. 요청하는 권한은 하나로, 이 �
 
 ## 변경 내역
 
+- **0.1.2** - A simpler icon, drawn in the text colour.
 - **0.1.1** - Its page is in every language Textus speaks. Needs Textus 1.4.3 itself, not a test version of it.
 - **0.1.0** - First version: Gemini CLI in Textus AI.

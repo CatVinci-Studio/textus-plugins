@@ -17,6 +17,7 @@ Lässt Textus AI auf [Openverse](https://openverse.org) frei lizenzierte Bilder 
 
 ## Änderungen
 
+- **0.1.4** - Its icon is Openverse's own logo.
 - **0.1.3** - Its page is in every language Textus speaks. It no longer gives a number for Openverse's daily limit, which can change.
 - **0.1.2** - The store description now opens with what the plugin does.
 - **0.1.1** - Its page now says in one sentence what it does, what it can do, and what changed in each version.

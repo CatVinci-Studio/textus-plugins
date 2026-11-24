@@ -27,6 +27,7 @@ Encontre isso no menu Plugins, ou clique com o botão direito num documento `.md
 
 ## Alterações
 
+- **0.1.4** - Its icon is MDX's own logo.
 - **0.1.3** - Its page is in every language Textus speaks.
 - **0.1.2** - Its package lists the libraries it carries, with their licenses.
 - **0.1.1** - Preview MDX on a phone, where the preview shows alone, draws the document it was opened from instead of an empty page.

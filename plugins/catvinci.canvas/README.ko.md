@@ -15,6 +15,7 @@ Excalidraw 그림은 **Excalidraw** 플러그인으로 열리며, 거기서 편�
 
 ## 변경 내역
 
+- **0.1.8** - Its icon is JSON Canvas's own logo.
 - **0.1.7** - A pinch zooms the canvas through Textus, as PDFs and pictures do, instead of through the canvas's own two-finger code; a second finger no longer moves it. Its page is in every language Textus speaks. Its description says it is for viewing; editing stays in Obsidian. Needs Textus 1.4.7.
 - **0.1.6** - Excalidraw drawings now open with the new Excalidraw plugin, which edits them; Canvas no longer shows their exported picture.
 - **0.1.5** - The page follows Textus's language by itself. Needs Textus 1.4.3.

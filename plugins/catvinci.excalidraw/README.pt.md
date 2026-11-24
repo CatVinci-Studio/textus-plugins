@@ -13,6 +13,7 @@ O plugin pede para ler e gravar arquivos: lê o desenho e as imagens a que ele f
 
 ## Alterações
 
+- **0.1.3** - Its icon is Excalidraw's own logo.
 - **0.1.2** - Its page is in every language Textus speaks.
 - **0.1.1** - Its package lists the libraries it carries, with their licenses.
 - **0.1.0** - first version: `.excalidraw` and Obsidian Excalidraw drawings edited in a tab with Excalidraw.

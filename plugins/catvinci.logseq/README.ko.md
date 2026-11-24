@@ -14,5 +14,6 @@ Logseq 그래프를 Logseq가 쓰는 방식대로 엽니다. 페이지 이름 �
 
 ## 변경 내역
 
+- **0.1.2** - A simpler icon, drawn in the text colour.
 - **0.1.1** - Its page is in every language Textus speaks. Needs Textus 1.4.6 itself, not a test version of it.
 - **0.1.0** - First version: Logseq's settings offered when a Logseq graph is opened. Needs Textus 1.4.6.

@@ -10,6 +10,7 @@ The plugin asks for two permissions: AI tools, to give Textus AI the search tool
 
 ## Changes
 
+- **0.1.4** - A simpler icon, drawn in the text colour.
 - **0.1.3** - Set the API key with a button on its page in Settings: on a phone, with no command palette, too. Its page is in every language Textus speaks.
 - **0.1.2** - Removing the API key really removes it, so search goes back to the public search; an unreadable answer gets a plain message.
 - **0.1.1** - Its page now says in one sentence what it does, what it can do, and what changed in each version.

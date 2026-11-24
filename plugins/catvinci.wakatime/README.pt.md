@@ -19,6 +19,7 @@ Precisa do Textus 1.3.0 ou mais recente. Pede para ler o editor e os arquivos da
 
 ## Alterações
 
+- **0.2.6** - Its icon is WakaTime's own logo.
 - **0.2.5** - Set the API key with a button on its page in Settings, and find its commands in the Plugins menu: on a phone, with no command palette, too. Its page is in every language Textus speaks.
 - **0.2.4** - Leaving the key empty now really turns it off; a garbled reply to Today's Writing Time shows the usual message.
 - **0.2.3** - Its page now says in one sentence what it does, what it can do, and what changed in each version.

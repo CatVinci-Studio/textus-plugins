@@ -25,6 +25,7 @@ El plugin pide un solo permiso, para dar a Textus AI la herramienta `check_echar
 
 ## Cambios
 
+- **0.3.6** - A simpler icon, drawn in the text colour.
 - **0.3.5** - Its page no longer says which devices it runs on: the store shows that.
 - **0.3.4** - Its package lists the libraries it carries, with their licenses.
 - **0.3.3** - A chart drawn while its block was folded (a phone) fits once the block opens, instead of keeping its old size.

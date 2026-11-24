@@ -14,5 +14,6 @@ Textus запускает [Qwen Code](https://github.com/QwenLM/qwen-code) ко�
 
 ## Изменения
 
+- **0.1.2** - Its icon is Qwen Code's own logo.
 - **0.1.1** - Its page is in every language Textus speaks. Needs Textus 1.4.3 itself, not a test version of it.
 - **0.1.0** - First version: Qwen Code in Textus AI.

@@ -31,6 +31,7 @@ Notion 내보내기를 열린 폴더 안의 일반 Markdown 파일로 바꿉니�
 
 ## 변경 내역
 
+- **0.7.13** - A simpler icon, drawn in the text colour.
 - **0.7.12** - Its page is in every language Textus speaks. In Chinese, a database is 数据库, and 知识库 is only the Wiki plugin's name. Every language calls the Wiki plugin by its current name.
 - **0.7.11** - Its package lists the libraries it carries, with their licenses.
 - **0.7.10** - The database code it shares with Database brought up to date (its file columns filled).
