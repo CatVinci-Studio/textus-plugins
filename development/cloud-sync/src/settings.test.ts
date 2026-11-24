@@ -3,6 +3,13 @@ import { normalizeConfig } from "./config";
 import { scanKey } from "./scan-cache";
 import { Settings, masked } from "./settings";
 
+/** The storage keys a sync leaves under the folder's base key: its
+ *  last-synced state, this device's run notes, the encryption unlock. */
+const stateKeys = (key: string) =>
+  ["encrypted-base", "pending", "lock", "last", "cleaned", "vault"].map(
+    (prefix) => `${prefix}:${key}`,
+  );
+
 function fixture(platform?: string) {
   const global = new Map<string, unknown>(),
     secrets = new Map<string, string>();
@@ -239,10 +246,20 @@ it("disconnects by removing this folder's keys and settings only", async () => {
   });
   f.global.set(await scanKey("/notes"), { format: 1, files: {} });
   f.global.set(await scanKey("/other"), { format: 1, files: {} });
+  // What a sync leaves behind under the folder's base key: its last-synced
+  // state and this device's notes of the run.
+  const key = await f.settings.baseKey("/notes", config);
+  for (const stateKey of stateKeys(key))
+    f.global.set(stateKey, { kept: true });
+  const otherKey = await f.settings.baseKey("/other", config);
+  f.global.set(`encrypted-base:${otherKey}`, { kept: true });
   await f.settings.forget("/notes");
   expect(f.secrets.size).toBe(1);
   expect(f.global.get(await scanKey("/notes"))).toBeNull();
   expect(f.global.get(await scanKey("/other"))).not.toBeNull();
+  for (const stateKey of stateKeys(key))
+    expect(f.global.get(stateKey)).toBeNull();
+  expect(f.global.get(`encrypted-base:${otherKey}`)).not.toBeNull();
   await expect(f.settings.credentials("/other", config)).resolves.toMatchObject(
     { account: "bob" },
   );

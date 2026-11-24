@@ -2782,12 +2782,25 @@ var Settings = class {
     return next;
   }
   /** The folder's connection removed from this device: its keys and its
-   *  settings. Nothing in the folder or the cloud changes. */
+   *  settings. Nothing in the folder or the cloud changes. The sync state
+   *  goes too: reconnecting must count as a first connection, or a remote
+   *  folder emptied elsewhere (or by a broken build) could never be
+   *  re-uploaded - the engine takes a base with no remote for lost data. */
   async forget(root) {
     const config = await this.load(root);
+    const key = await this.baseKey(root, config);
     await this.ctx.secrets.delete(await this.secretKey(root, config));
     await this.ctx.storage.global.set(`config:${await this.scope(root)}`, null);
     await this.ctx.storage.global.set(await scanKey(this.folder(root)), null);
+    for (const prefix of [
+      "encrypted-base",
+      "pending",
+      "lock",
+      "last",
+      "cleaned",
+      "vault"
+    ])
+      await this.ctx.storage.global.set(`${prefix}:${key}`, null);
   }
   /** The folder's keep setting, as a sync that carried `carried` left it,
    *  taken as this one's; false when one was picked meanwhile (it goes out
