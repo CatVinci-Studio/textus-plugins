@@ -60,6 +60,7 @@ const signIn: Record<string, [string, string]> = {
   s3: ["accountS3", "secretS3"],
   webdav: ["accountDav", "secretDav"],
   nutstore: ["accountNutstore", "secretNutstore"],
+  github: ["accountGithub", "secretGithub"],
 };
 
 /** A pick from Textus's own menu into a hidden field, its name on a button. */
@@ -84,7 +85,7 @@ function picker(
 }
 picker(
   "provider",
-  ["s3", "webdav", "nutstore"],
+  ["s3", "webdav", "nutstore", "github"],
   (p) => api.t(p),
   () => {
     input("endpoint").value = "";
@@ -130,17 +131,20 @@ function formToggles() {
   element("password-field").hidden = !encrypt;
   element("confirm-field").hidden = !encrypt;
   element("provider-name").textContent = api.t(provider);
-  element("bucket-field").hidden = provider !== "s3";
+  const git = provider === "github";
+  element("bucket-field").hidden = provider !== "s3" && !git;
+  element("bucket-label").textContent = api.t(git ? "repo" : "bucket");
   element("s3-more").hidden = provider !== "s3";
-  element("endpoint-field").hidden = provider === "nutstore";
+  element("endpoint-field").hidden = provider === "nutstore" || git;
   element("nutstore-help").hidden = provider !== "nutstore";
+  element("github-help").hidden = !git;
   const [account, secret] = signIn[provider] ?? signIn.s3;
   element("account-label").textContent = api.t(account);
   element("secret-label").textContent = api.t(secret);
-  input("endpoint").required = provider !== "s3";
+  input("endpoint").required = provider !== "s3" && !git;
   if (provider === "nutstore")
     input("endpoint").value = providers.nutstore.endpoint;
-  input("bucket").required = provider === "s3";
+  input("bucket").required = provider === "s3" || git;
   // A saved connection's keys stay unless new ones are typed.
   for (const id of ["account", "secret", "sync-password"]) {
     input(id).placeholder = editing ? api.t("keptIfEmpty") : "";
@@ -165,9 +169,14 @@ function show() {
   element("cancel-edit").hidden = !editing;
   element("c-service").textContent = api.t(config.provider);
   element("c-endpoint").textContent = config.endpoint;
-  element("c-endpoint-row").hidden = config.provider === "nutstore";
+  element("c-endpoint-row").hidden =
+    config.provider === "nutstore" || config.provider === "github";
   element("c-bucket").textContent = config.bucket;
-  element("c-bucket-row").hidden = config.provider !== "s3";
+  element("c-bucket-row").hidden =
+    config.provider !== "s3" && config.provider !== "github";
+  element("c-bucket-label").textContent = api.t(
+    config.provider === "github" ? "repo" : "bucket",
+  );
   element("c-account-label").textContent = api.t(
     (signIn[config.provider] ?? signIn.s3)[0],
   );

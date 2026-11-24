@@ -11,7 +11,7 @@ import {
 
 export type Fetch = Textus.Net["fetch"];
 type Response = Awaited<ReturnType<Fetch>>;
-const encodePath = (path: string) =>
+export const encodePath = (path: string) =>
   path.split("/").map(encodeURIComponent).join("/");
 const pause = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -26,9 +26,9 @@ const REPEATABLE = new Set([
   "PROPFIND",
   "MKCOL",
 ]);
-const ATTEMPTS = 4;
+export const ATTEMPTS = 4;
 /** The longest a server may ask to be left before a sync stops for now. */
-const LONGEST_WAIT_S = 60;
+export const LONGEST_WAIT_S = 60;
 
 export class RemoteStore implements ObjectStore {
   private dirs = new Map<string, Promise<void>>();
@@ -271,12 +271,12 @@ export class RemoteStore implements ObjectStore {
 
 /** A pause before sending again: doubling from half a second, give or
  *  take a fifth, so requests that met the same busy server spread out. */
-function backoff(attempt: number): number {
+export function backoff(attempt: number): number {
   return 500 * 2 ** attempt * (0.8 + Math.random() * 0.4);
 }
 
 /** Retry-After in seconds: a number, or a date (HTTP's two forms). */
-function retryAfter(value: string | undefined): number {
+export function retryAfter(value: string | undefined): number {
   if (!value) return 0;
   const seconds = Number(value);
   if (Number.isFinite(seconds)) return Math.max(0, seconds);

@@ -14,7 +14,8 @@ import { Pacer } from "./pacer";
 import { Lifecycle } from "./lifecycle";
 import { masked, Settings } from "./settings";
 import { doneText, fewPerSecond } from "./status";
-import { RemoteStore, testConnection } from "./transport";
+import { testConnection } from "./transport";
+import { openStore, type Store } from "./store";
 import { recoverLock, testDraft, type Draft } from "./connection";
 import {
   deviceName,
@@ -178,7 +179,7 @@ class Controller implements Host {
     if (unsupported?.[0].test(root)) throw new SyncError(unsupported[1]);
     const config = await this.settings.load(root);
     const credentials = await this.settings.credentials(root, config);
-    const store = new RemoteStore(config, credentials, this.api.net.fetch);
+    const store = openStore(config, credentials, this.api.net.fetch);
     // A busy server asked for a pause: said, so the sync isn't taken as stuck.
     store.onWait = (seconds) =>
       this.message("waiting", false, Math.ceil(seconds));
@@ -188,7 +189,7 @@ class Controller implements Host {
   private async open(
     root: string,
     config: Config,
-    store: RemoteStore,
+    store: Store,
     { test = false, quiet = false } = {},
   ) {
     const key = await this.settings.baseKey(root, config);

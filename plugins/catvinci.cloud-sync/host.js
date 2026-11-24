@@ -2041,254 +2041,6 @@ var RemoteStore = class {
     if (res.status !== 404) this.require(res);
   }
 };
-
-// development/cloud-sync/src/github-store.ts
-// A GitHub repository as the same store the S3 and WebDAV services offer:
-// every key lives at `prefix/key` on the default branch. Writes stage in
-// memory and land as one commit, so a whole sync costs a handful of
-// requests and the repo's history stays readable.
-var GITHUB_TRIES = 4;
-var GitHubStore = class {
-  constructor(config, credentials, fetch2, sleep = pause2) {
-    this.config = config;
-    this.credentials = credentials;
-    this.fetch = fetch2;
-    this.sleep = sleep;
-    __publicField(this, "quietUntil", 0);
-    /** Told when GitHub asks to wait, in seconds: the status says so. */
-    __publicField(this, "onWait");
-    /** The repository's default branch, asked for once. */
-    __publicField(this, "branchName", "");
-    /** Writes waiting for the next commit: full path to bytes, or null
-     *  to delete. `get` and `has` see staged writes; `create` and `remove`
-     *  commit straight away, because other devices must see a lock. */
-    __publicField(this, "staged", /* @__PURE__ */ new Map());
-    /** Full path to blob sha, as the branch's last commit has it. */
-    __publicField(this, "tree", null);
-    if (!credentials.secret) throw new SyncError("credentialsRequired");
-  }
-  now() {
-    return Date.now();
-  }
-  header(response, name) {
-    const value = response.headers[name];
-    if (value) return value;
-    for (const [key, got] of Object.entries(response.headers ?? {}))
-      if (key.toLowerCase() === name) return got;
-    return void 0;
-  }
-  url(path) {
-    return `${this.config.endpoint}/repos/${this.config.bucket}${path}`;
-  }
-  async request(method, path, body) {
-    for (let attempt = 0; ; attempt++) {
-      const quiet = this.quietUntil - Date.now();
-      if (quiet > 0) await this.sleep(quiet);
-      let response;
-      try {
-        response = await this.fetch(this.url(path), {
-          method,
-          body: body === void 0 ? void 0 : JSON.stringify(body),
-          headers: {
-            Authorization: `Bearer ${this.credentials.secret}`,
-            Accept: "application/vnd.github+json",
-            "Content-Type": "application/json",
-            "X-GitHub-Api-Version": "2022-11-28"
-          }
-        });
-      } catch {
-        if (attempt + 1 >= GITHUB_TRIES) throw new SyncError("networkError");
-        await this.sleep(backoff(attempt));
-        continue;
-      }
-      const remaining = this.header(response, "x-ratelimit-remaining");
-      const busy = [429, 503].includes(response.status) || response.status === 403 && remaining === "0";
-      if (!busy || attempt + 1 >= GITHUB_TRIES) return response;
-      const reset = Number(this.header(response, "x-ratelimit-reset"));
-      const asked = Math.max(
-        retryAfter(this.header(response, "retry-after")),
-        Number.isFinite(reset) && reset > 0 ? reset * 1e3 - Date.now() : 0
-      ) / 1e3;
-      if (asked > LONGEST_WAIT_S) throw new SyncError("rateLimited");
-      const wait = Math.max(backoff(attempt), asked * 1e3);
-      this.quietUntil = Math.max(this.quietUntil, Date.now() + wait);
-      if (asked) this.onWait?.(asked);
-      await this.sleep(wait);
-    }
-  }
-  require(response) {
-    if (response.status >= 200 && response.status < 300) return;
-    if ([401, 403].includes(response.status))
-      throw new SyncError("permissionError", [response.status]);
-    if (response.status === 404) throw new SyncError("remoteMissing");
-    throw new SyncError("httpError", [response.status]);
-  }
-  full(key) {
-    if (!relativePath(key)) throw new SyncError("invalidPath");
-    return `${this.config.prefix}/${key}`;
-  }
-  /** The branch to sync, from the repository's own default. */
-  async branch() {
-    if (this.branchName) return this.branchName;
-    const res = await this.request("GET", "");
-    this.require(res);
-    const data = await res.json();
-    if (typeof data?.default_branch !== "string" || !data.default_branch)
-      throw new SyncError("httpError", [res.status]);
-    this.branchName = data.default_branch;
-    return this.branchName;
-  }
-  /** The branch's commit and tree, or null when there is none yet. */
-  async commitHead() {
-    const branch = await this.branch();
-    const res = await this.request(
-      "GET",
-      `/branches/${encodeURIComponent(branch)}`
-    );
-    if (res.status === 404) return null;
-    this.require(res);
-    const data = await res.json();
-    const sha = data?.commit?.sha;
-    const tree = data?.commit?.commit?.tree?.sha;
-    if (!sha || !tree) throw new SyncError("httpError", [res.status]);
-    return { sha, tree };
-  }
-  /** Path to blob sha under the prefix, from the branch's tree. */
-  async loadTree() {
-    if (this.tree) return this.tree;
-    const map = /* @__PURE__ */ new Map();
-    const head = await this.commitHead();
-    if (head) {
-      const res = await this.request(
-        "GET",
-        `/git/trees/${head.tree}?recursive=1`
-      );
-      this.require(res);
-      // A repo beyond GitHub's one tree answer would hide our files, but
-      // a Textus workspace never gets near the 100,000-entry cut.
-      const base = `${this.config.prefix}/`;
-      for (const item of (await res.json())?.tree ?? [])
-        if (item.type === "blob" && item.path.startsWith(base))
-          map.set(item.path, item.sha);
-    }
-    this.tree = map;
-    return map;
-  }
-  async blobBytes(sha) {
-    const res = await this.request("GET", `/git/blobs/${sha}`);
-    this.require(res);
-    return base64ToBytes((await res.json())?.content ?? "");
-  }
-  async get(key) {
-    const path = this.full(key);
-    if (this.staged.has(path)) {
-      const bytes = this.staged.get(path);
-      return bytes ? bytes.slice() : null;
-    }
-    const sha = (await this.loadTree()).get(path);
-    return sha ? this.blobBytes(sha) : null;
-  }
-  async has(key) {
-    const path = this.full(key);
-    if (this.staged.has(path)) return this.staged.get(path) !== null;
-    return (await this.loadTree()).has(path);
-  }
-  async put(key, bytes) {
-    this.staged.set(this.full(key), bytes);
-  }
-  async create(key, bytes) {
-    const path = this.full(key);
-    const tree = await this.loadTree();
-    const waiting = this.staged.get(path);
-    if (tree.has(path) || waiting !== void 0 && waiting !== null) {
-      const there = waiting !== void 0 ? waiting : await this.blobBytes(tree.get(path));
-      return !!there && await hash(there) === await hash(bytes);
-    }
-    if (waiting === null) this.staged.delete(path);
-    this.staged.set(path, bytes);
-    await this.commit(`Textus: connect ${key}`);
-    return true;
-  }
-  async remove(key) {
-    const path = this.full(key);
-    this.staged.set(path, null);
-    // The lock and the connection probes must leave at once; everything
-    // else leaves with the sync's own commit. Releasing the lock is the
-    // last write of a sync, so it carries the sync's staged blocks,
-    // history and manifest as one commit.
-    if (key === LOCK) await this.commit("Textus sync");
-    else if (/^v1\/probes\//.test(key)) await this.commit(`Textus: release ${key}`);
-  }
-  /** One commit carrying every staged write. A ref that moved meanwhile
-   *  (another device, the user) is rebuilt on top of, not forced over. */
-  async commit(message) {
-    if (!this.staged.size) return;
-    const entries = [...this.staged];
-    this.staged.clear();
-    const blobs = /* @__PURE__ */ new Map();
-    for (const [path, bytes] of entries) {
-      if (bytes === null) continue;
-      const res = await this.request("POST", "/git/blobs", {
-        content: bytesToBase64(bytes),
-        encoding: "base64"
-      });
-      this.require(res);
-      blobs.set(path, (await res.json()).sha);
-    }
-    for (let attempt = 0; ; attempt++) {
-      const head = await this.commitHead();
-      const res = await this.request("POST", "/git/trees", {
-        base_tree: head?.tree,
-        tree: entries.map(([path, bytes]) => ({
-          path,
-          mode: "100644",
-          type: "blob",
-          sha: bytes === null ? null : blobs.get(path)
-        }))
-      });
-      this.require(res);
-      const treeSha = (await res.json()).sha;
-      const made = await this.request("POST", "/git/commits", {
-        message,
-        tree: treeSha,
-        parents: head ? [head.sha] : []
-      });
-      this.require(made);
-      const commitSha = (await made.json()).sha;
-      const branch = await this.branch();
-      const ref = await this.request(
-        head ? "PATCH" : "POST",
-        head ? `/git/refs/heads/${encodeURIComponent(branch)}` : "/git/refs",
-        head ? { sha: commitSha } : { ref: `refs/heads/${branch}`, sha: commitSha }
-      );
-      if ([409, 422].includes(ref.status) && attempt + 1 < GITHUB_TRIES)
-        continue;
-      this.require(ref);
-      this.tree ??= /* @__PURE__ */ new Map();
-      for (const [path, bytes] of entries) {
-        if (bytes === null) this.tree.delete(path);
-        else this.tree.set(path, blobs.get(path));
-      }
-      return;
-    }
-  }
-};
-function remoteStoreFor(config, credentials, fetch2, sleep) {
-  return providers[config.provider].transport === "git" ? new GitHubStore(config, credentials, fetch2, sleep) : new RemoteStore(config, credentials, fetch2, sleep);
-}
-function bytesToBase64(bytes) {
-  let binary = "";
-  for (let at = 0; at < bytes.length; at += 8192)
-    binary += String.fromCharCode(...bytes.subarray(at, at + 8192));
-  return btoa(binary);
-}
-function base64ToBytes(value) {
-  const clean = value.replace(/\s/g, "");
-  const binary = atob(clean);
-  const bytes = new Uint8Array(binary.length);
-  for (let at = 0; at < binary.length; at++) bytes[at] = binary.charCodeAt(at);
-  return bytes;
-}
 function backoff(attempt) {
   return 500 * 2 ** attempt * (0.8 + Math.random() * 0.4);
 }
@@ -3058,9 +2810,280 @@ var Settings = class {
   }
 };
 
+// development/cloud-sync/src/github-store.ts
+var pause3 = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+var base64 = (bytes) => {
+  let binary = "";
+  for (let at = 0; at < bytes.length; at += 8192)
+    binary += String.fromCharCode(...bytes.subarray(at, at + 8192));
+  return btoa(binary);
+};
+var unbase64 = (value) => {
+  const binary = atob(value.replace(/\s/g, ""));
+  const bytes = new Uint8Array(binary.length);
+  for (let at = 0; at < binary.length; at++) bytes[at] = binary.charCodeAt(at);
+  return bytes;
+};
+var GitHubStore = class {
+  constructor(config, credentials, fetch2, sleep = pause3) {
+    this.config = config;
+    this.credentials = credentials;
+    this.fetch = fetch2;
+    this.sleep = sleep;
+    __publicField(this, "quietUntil", 0);
+    /** Told when GitHub asks to wait, in seconds: the status says so. */
+    __publicField(this, "onWait");
+    /** The repository's default branch, asked for once. */
+    __publicField(this, "branchName", "");
+    /** Writes waiting for the next commit: full path to bytes, or null to
+     *  delete. `get` and `has` see staged writes; `create` and `remove`
+     *  commit straight away, because another device must see a lock. */
+    __publicField(this, "staged", /* @__PURE__ */ new Map());
+    /** Full path to blob sha, as the branch's last commit has it. */
+    __publicField(this, "tree", null);
+    if (!credentials.secret) throw new SyncError("credentialsRequired");
+  }
+  now() {
+    return Date.now();
+  }
+  header(response, name) {
+    const value = response.headers[name];
+    if (value) return value;
+    for (const [key, got] of Object.entries(response.headers ?? {}))
+      if (key.toLowerCase() === name) return got;
+    return void 0;
+  }
+  url(path) {
+    return `${this.config.endpoint}/repos/${this.config.bucket}${path}`;
+  }
+  /** One API call, sent again while GitHub is busy or out of reach;
+   *  waiting as long as it asks, and no longer than a sync can. */
+  async request(method, path, body) {
+    for (let attempt = 0; ; attempt++) {
+      const quiet = this.quietUntil - Date.now();
+      if (quiet > 0) await this.sleep(quiet);
+      let response;
+      try {
+        response = await this.fetch(this.url(path), {
+          method,
+          body: body === void 0 ? void 0 : JSON.stringify(body),
+          headers: {
+            Authorization: `Bearer ${this.credentials.secret}`,
+            Accept: "application/vnd.github+json",
+            "Content-Type": "application/json",
+            "X-GitHub-Api-Version": "2022-11-28"
+          }
+        });
+      } catch {
+        if (attempt + 1 >= ATTEMPTS) throw new SyncError("networkError");
+        await this.sleep(backoff(attempt));
+        continue;
+      }
+      const remaining = this.header(response, "x-ratelimit-remaining");
+      const busy = [429, 503].includes(response.status) || response.status === 403 && remaining === "0";
+      if (!busy || attempt + 1 >= ATTEMPTS) return response;
+      const reset = Number(this.header(response, "x-ratelimit-reset"));
+      const asked = Math.max(
+        retryAfter(this.header(response, "retry-after")),
+        Number.isFinite(reset) && reset > 0 ? reset * 1e3 - Date.now() : 0
+      ) / 1e3;
+      if (asked > LONGEST_WAIT_S) throw new SyncError("rateLimited");
+      const wait = Math.max(backoff(attempt), asked * 1e3);
+      this.quietUntil = Math.max(this.quietUntil, Date.now() + wait);
+      if (asked) this.onWait?.(asked);
+      await this.sleep(wait);
+    }
+  }
+  require(response) {
+    if (response.status >= 200 && response.status < 300) return;
+    if ([401, 403].includes(response.status))
+      throw new SyncError("permissionError", [response.status]);
+    throw new SyncError("httpError", [response.status]);
+    throw new SyncError("httpError", [response.status]);
+  }
+  full(key) {
+    if (!relativePath(key)) throw new SyncError("invalidPath");
+    return `${this.config.prefix}/${key}`;
+  }
+  /** The branch to sync, from the repository's own default. */
+  async branch() {
+    if (this.branchName) return this.branchName;
+    const res = await this.request("GET", "");
+    this.require(res);
+    const data = await res.json();
+    if (typeof data?.default_branch !== "string" || !data.default_branch)
+      throw new SyncError("httpError", [res.status]);
+    this.branchName = data.default_branch;
+    return this.branchName;
+  }
+  /** The branch's commit and tree, or null when there is none yet. */
+  async commitHead() {
+    const branch = await this.branch();
+    const res = await this.request(
+      "GET",
+      `/branches/${encodeURIComponent(branch)}`
+    );
+    if (res.status === 404) return null;
+    this.require(res);
+    const data = await res.json();
+    const sha = data?.commit?.sha;
+    const tree = data?.commit?.commit?.tree?.sha;
+    if (!sha || !tree) throw new SyncError("httpError", [res.status]);
+    return { sha, tree };
+  }
+  /** Path to blob sha under the prefix, from the branch's tree. */
+  async loadTree() {
+    if (this.tree) return this.tree;
+    const map = /* @__PURE__ */ new Map();
+    const head = await this.commitHead();
+    if (head) {
+      const res = await this.request(
+        "GET",
+        `/git/trees/${head.tree}?recursive=1`
+      );
+      this.require(res);
+      const data = await res.json();
+      const base = `${this.config.prefix}/`;
+      for (const item of data?.tree ?? [])
+        if (item.type === "blob" && item.path?.startsWith(base))
+          map.set(item.path, item.sha);
+    }
+    this.tree = map;
+    return map;
+  }
+  async blobBytes(sha) {
+    const res = await this.request("GET", `/git/blobs/${sha}`);
+    this.require(res);
+    const data = await res.json();
+    return unbase64(data?.content ?? "");
+  }
+  async get(key) {
+    const path = this.full(key);
+    if (this.staged.has(path)) {
+      const bytes = this.staged.get(path);
+      return bytes ? bytes.slice() : null;
+    }
+    const sha = (await this.loadTree()).get(path);
+    return sha ? this.blobBytes(sha) : null;
+  }
+  async has(key) {
+    const path = this.full(key);
+    if (this.staged.has(path)) return this.staged.get(path) !== null;
+    return (await this.loadTree()).has(path);
+  }
+  async put(key, bytes) {
+    this.staged.set(this.full(key), bytes);
+  }
+  async create(key, bytes) {
+    const path = this.full(key);
+    const tree = await this.loadTree();
+    const waiting = this.staged.get(path);
+    if (tree.has(path) || waiting !== void 0 && waiting !== null) {
+      const there = waiting !== void 0 ? waiting : await this.blobBytes(tree.get(path));
+      return !!there && await hash(there) === await hash(bytes);
+    }
+    if (waiting === null) this.staged.delete(path);
+    this.staged.set(path, bytes);
+    await this.commit(`Textus: connect ${key}`);
+    return true;
+  }
+  async remove(key) {
+    const path = this.full(key);
+    this.staged.set(path, null);
+    if (key === LOCK) await this.commit("Textus sync");
+    else if (/^v1\/probes\//.test(key))
+      await this.commit(`Textus: release ${key}`);
+  }
+  /** The first file of an empty repository, through the contents API:
+   *  GitHub's git database answers 409 to a blob until one commit exists,
+   *  and the contents API makes that commit (and the branch) itself. */
+  async firstFile(path, bytes, message) {
+    const res = await this.request("PUT", `/contents/${encodePath(path)}`, {
+      message,
+      content: base64(bytes),
+      branch: await this.branch()
+    });
+    this.require(res);
+    this.tree = null;
+  }
+  /** One commit carrying every staged write. A ref that moved meanwhile
+   *  (another device, the person) is rebuilt on top of, not forced over. */
+  async commit(message) {
+    if (!this.staged.size) return;
+    const entries = [...this.staged];
+    this.staged.clear();
+    let changed = entries;
+    if (!await this.commitHead()) {
+      const first = changed.find(([, bytes]) => bytes !== null);
+      if (!first) return;
+      await this.firstFile(first[0], first[1], message);
+      changed = changed.filter(([path]) => path !== first[0]);
+    }
+    const known = await this.loadTree();
+    changed = changed.filter(
+      ([path, bytes]) => bytes !== null || known.has(path)
+    );
+    if (!changed.length) return;
+    if (changed.every(([path, bytes]) => bytes === null && known.has(path)) && changed.length === known.size) {
+      this.tree = /* @__PURE__ */ new Map();
+      return;
+    }
+    const blobs = /* @__PURE__ */ new Map();
+    for (const [path, bytes] of changed) {
+      if (bytes === null) continue;
+      const res = await this.request("POST", "/git/blobs", {
+        content: base64(bytes),
+        encoding: "base64"
+      });
+      this.require(res);
+      blobs.set(path, (await res.json()).sha);
+    }
+    for (let attempt = 0; ; attempt++) {
+      const head = await this.commitHead();
+      const res = await this.request("POST", "/git/trees", {
+        base_tree: head?.tree,
+        tree: changed.map(([path, bytes]) => ({
+          path,
+          mode: "100644",
+          type: "blob",
+          sha: bytes === null ? null : blobs.get(path)
+        }))
+      });
+      this.require(res);
+      const treeSha = (await res.json()).sha;
+      const made = await this.request("POST", "/git/commits", {
+        message,
+        tree: treeSha,
+        parents: head ? [head.sha] : []
+      });
+      this.require(made);
+      const commitSha = (await made.json()).sha;
+      const branch = await this.branch();
+      const ref = await this.request(
+        head ? "PATCH" : "POST",
+        head ? `/git/refs/heads/${encodeURIComponent(branch)}` : "/git/refs",
+        head ? { sha: commitSha } : { ref: `refs/heads/${branch}`, sha: commitSha }
+      );
+      if ([409, 422].includes(ref.status) && attempt + 1 < ATTEMPTS) continue;
+      this.require(ref);
+      this.tree ?? (this.tree = /* @__PURE__ */ new Map());
+      for (const [path, bytes] of changed) {
+        if (bytes === null) this.tree.delete(path);
+        else this.tree.set(path, blobs.get(path));
+      }
+      return;
+    }
+  }
+};
+
+// development/cloud-sync/src/store.ts
+function openStore(config, credentials, fetch2, sleep) {
+  return providers[config.provider].transport === "git" ? new GitHubStore(config, credentials, fetch2, sleep) : new RemoteStore(config, credentials, fetch2, sleep);
+}
+
 // development/cloud-sync/src/connection.ts
 async function testDraft(config, credentials, fetch2, signal) {
-  const store = remoteStoreFor(config, credentials, fetch2);
+  const store = openStore(config, credentials, fetch2);
   await testConnection(
     config.encrypt ? await openEncryptedStore(store, credentials.syncPassword ?? "", {
       signal
@@ -3391,7 +3414,7 @@ var Controller = class {
     if (unsupported?.[0].test(root)) throw new SyncError(unsupported[1]);
     const config = await this.settings.load(root);
     const credentials = await this.settings.credentials(root, config);
-    const store = remoteStoreFor(config, credentials, this.api.net.fetch);
+    const store = openStore(config, credentials, this.api.net.fetch);
     store.onWait = (seconds) => this.message("waiting", false, Math.ceil(seconds));
     return { root, config, store };
   }

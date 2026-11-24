@@ -38,6 +38,12 @@ export const providers = {
     saveGap: 3,
     parallel: 2,
   },
+  github: {
+    transport: "git",
+    endpoint: "https://api.github.com",
+    saveGap: 3,
+    parallel: 2,
+  },
 } as const;
 
 export function relativePath(value: string): boolean {
@@ -81,6 +87,11 @@ export function normalizeConfig(
     )
       throw new SyncError("invalidBucket");
     c.endpoint ||= `https://s3.${c.region}.amazonaws.com`;
+  } else if (spec.transport === "git") {
+    c.region = "";
+    c.pathStyle = false;
+    if (!/^[\w.-]+\/[\w.-]+$/.test(c.bucket) || c.bucket.includes(".."))
+      throw new SyncError("invalidRepo");
   } else {
     c.region = "";
     c.bucket = "";

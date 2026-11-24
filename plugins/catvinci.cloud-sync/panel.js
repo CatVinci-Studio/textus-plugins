@@ -143,11 +143,9 @@
     element("cancel-edit").hidden = !editing;
     element("c-service").textContent = api.t(config.provider);
     element("c-endpoint").textContent = config.endpoint;
-    element("c-endpoint-row").hidden =
-      config.provider === "nutstore" || config.provider === "github";
+    element("c-endpoint-row").hidden = config.provider === "nutstore" || config.provider === "github";
     element("c-bucket").textContent = config.bucket;
-    element("c-bucket-row").hidden =
-      config.provider !== "s3" && config.provider !== "github";
+    element("c-bucket-row").hidden = config.provider !== "s3" && config.provider !== "github";
     element("c-bucket-label").textContent = api.t(
       config.provider === "github" ? "repo" : "bucket"
     );

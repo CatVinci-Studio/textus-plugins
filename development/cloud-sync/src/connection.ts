@@ -1,6 +1,7 @@
 import { openEncryptedStore } from "./encrypted-store";
 import { openPlainStore } from "./plain-store";
-import { RemoteStore, testConnection } from "./transport";
+import { testConnection, type Fetch } from "./transport";
+import { openStore, type Store } from "./store";
 import {
   LOCK,
   SyncError,
@@ -20,10 +21,10 @@ export interface Draft {
 export async function testDraft(
   config: Config,
   credentials: ConnectionInput & { syncPassword?: string },
-  fetch: ConstructorParameters<typeof RemoteStore>[2],
+  fetch: Fetch,
   signal?: AbortSignal,
 ) {
-  const store = new RemoteStore(config, credentials, fetch);
+  const store = openStore(config, credentials, fetch);
   await testConnection(
     config.encrypt
       ? await openEncryptedStore(store, credentials.syncPassword ?? "", {
@@ -36,7 +37,7 @@ export async function testDraft(
 /** A stale remote lock removed, once the person confirms its start time;
  *  the message key to show, or null when they declined. */
 export async function recoverLock(
-  store: RemoteStore,
+  store: Store,
   {
     language,
     confirm,
