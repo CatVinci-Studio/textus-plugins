@@ -397,9 +397,8 @@ test("configuration errors preserve input and Chinese UI fits narrow and dark vi
     "zh",
   );
   await pickProvider(page, "nutstore", "zh");
-  await expect(panel.locator("#endpoint")).toHaveValue(
-    "https://dav.jianguoyun.com/dav",
-  );
+  // Nutstore's address is its own: not asked for.
+  await expect(panel.locator("#endpoint-field")).toBeHidden();
   await panel.locator("#account").fill("fixture-account");
   await panel.locator("#secret").fill("fixture-secret");
   await encryptOn(panel);
