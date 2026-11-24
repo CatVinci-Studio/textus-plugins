@@ -159,7 +159,7 @@ function folderKey(root, platform) {
 var defaults = {
   provider: "s3",
   endpoint: "",
-  region: "us-east-1",
+  region: "",
   bucket: "",
   prefix: "textus/my-workspace",
   pathStyle: true,
@@ -174,13 +174,53 @@ var defaults = {
   parallel: 8,
   maxFileMiB: 128
 };
+var S3_SIGN_IN = ["accountS3", "secretS3"];
 var providers = {
-  s3: { transport: "s3", endpoint: "", saveGap: 0, parallel: 8 },
-  kodo: { transport: "s3", endpoint: "", saveGap: 0, parallel: 8 },
-  webdav: { transport: "dav", endpoint: "", saveGap: 0, parallel: 4 },
+  s3: {
+    transport: "s3",
+    endpoint: "https://s3.{region}.amazonaws.com",
+    create: "conditional",
+    fields: ["endpoint", "bucket", "region", "token", "pathStyle"],
+    region: "us-east-1",
+    signIn: S3_SIGN_IN,
+    saveGap: 0,
+    parallel: 8
+  },
+  kodo: {
+    transport: "s3",
+    endpoint: "https://s3.{region}.qiniucs.com",
+    create: "upload",
+    fields: ["bucket", "region"],
+    regions: {
+      "cn-east-1": "up-z0.qiniup.com",
+      "cn-east-2": "up-cn-east-2.qiniup.com",
+      "cn-north-1": "up-z1.qiniup.com",
+      "cn-south-1": "up-z2.qiniup.com",
+      "us-north-1": "up-na0.qiniup.com",
+      "ap-southeast-1": "up-as0.qiniup.com",
+      "ap-southeast-2": "up-ap-southeast-2.qiniup.com",
+      "ap-southeast-3": "up-ap-southeast-3.qiniup.com"
+    },
+    signIn: S3_SIGN_IN,
+    saveGap: 0,
+    parallel: 8
+  },
+  webdav: {
+    transport: "dav",
+    endpoint: "",
+    create: "move",
+    fields: ["endpoint"],
+    signIn: ["accountDav", "secretDav"],
+    saveGap: 0,
+    parallel: 4
+  },
   nutstore: {
     transport: "dav",
     endpoint: "https://dav.jianguoyun.com/dav",
+    create: "move",
+    fields: [],
+    signIn: ["accountNutstore", "secretNutstore"],
+    help: "nutstoreHelp",
     saveGap: 3,
     parallel: 2
   }
@@ -196,20 +236,18 @@ function normalizeConfig(input, device = deviceOf()) {
     throw new SyncError("invalidConfig");
   c.prefix = String(c.prefix).trim().replace(/^\/+|\/+$/g, "");
   if (!relativePath(c.prefix)) throw new SyncError("invalidPrefix");
-  c.region = String(c.region).trim() || "us-east-1";
-  if (!/^[a-z0-9-]+$/.test(c.region)) throw new SyncError("invalidConfig");
-  c.bucket = String(c.bucket).trim();
   const spec = providers[c.provider];
-  c.endpoint = (spec.endpoint || String(c.endpoint).trim()).replace(/\/+$/, "");
-  if (spec.transport === "s3") {
-    if (!/^[a-z0-9][a-z0-9.-]{1,61}[a-z0-9]$/.test(c.bucket) || c.bucket.includes(".."))
-      throw new SyncError("invalidBucket");
-    c.endpoint || (c.endpoint = c.provider === "kodo" ? `https://s3.${c.region}.qiniucs.com` : `https://s3.${c.region}.amazonaws.com`);
-  } else {
-    c.region = "";
-    c.bucket = "";
-    c.pathStyle = false;
-  }
+  const shows = (field) => spec.fields.includes(field);
+  c.region = shows("region") ? String(c.region).trim() || (spec.region ?? "") : "";
+  if (spec.regions && !Object.hasOwn(spec.regions, c.region))
+    throw new SyncError("regionRequired");
+  if (shows("region") && !/^[a-z0-9-]+$/.test(c.region))
+    throw new SyncError("invalidConfig");
+  c.bucket = shows("bucket") ? String(c.bucket).trim() : "";
+  if (shows("bucket") && (!/^[a-z0-9][a-z0-9.-]{1,61}[a-z0-9]$/.test(c.bucket) || c.bucket.includes("..")))
+    throw new SyncError("invalidBucket");
+  c.endpoint = (shows("endpoint") && String(c.endpoint).trim() || spec.endpoint.replace("{region}", c.region)).replace(/\/+$/, "");
+  c.pathStyle = shows("pathStyle") ? c.pathStyle !== false : spec.transport === "s3";
   let url;
   try {
     url = new URL(c.endpoint);
@@ -227,7 +265,6 @@ function normalizeConfig(input, device = deviceOf()) {
   }))
     throw new SyncError("invalidEndpoint");
   c.endpoint = url.toString().replace(/\/+$/, "");
-  c.pathStyle = c.pathStyle !== false;
   c.automatic = c.automatic === true;
   c.exclude = String(c.exclude ?? "").slice(0, 2e4);
   c.gitignore = c.gitignore === true;
@@ -1806,19 +1843,6 @@ function guessServiceRegion(url, headers) {
 }
 
 // development/cloud-sync/src/kodo.ts
-var HOSTS = {
-  "cn-east-1": "up-z0.qiniup.com",
-  "cn-east-2": "up-cn-east-2.qiniup.com",
-  "cn-north-1": "up-z1.qiniup.com",
-  "cn-south-1": "up-z2.qiniup.com",
-  "us-north-1": "up-na0.qiniup.com",
-  "ap-southeast-1": "up-as0.qiniup.com",
-  "ap-southeast-2": "up-ap-southeast-2.qiniup.com",
-  "ap-southeast-3": "up-ap-southeast-3.qiniup.com"
-};
-function uploadHost(region) {
-  return HOSTS[region.toLowerCase()] ?? null;
-}
 var base64url = (bytes) => {
   let binary = "";
   for (const byte of bytes) binary += String.fromCharCode(byte);
@@ -1920,11 +1944,15 @@ var RemoteStore = class {
   now() {
     return Date.now() + this.skew;
   }
-  target(key) {
+  /** The object's full name: the remote folder, then `key`. */
+  name(key) {
     if (!relativePath(key)) throw new SyncError("invalidPath");
+    return `${this.config.prefix}/${key}`;
+  }
+  target(key) {
     const c = this.config;
     const url = new URL(c.endpoint);
-    const prefix = `${c.prefix}/${key}`;
+    const prefix = this.name(key);
     const s3 = providers[c.provider].transport === "s3";
     if (s3 && !c.pathStyle) url.hostname = `${c.bucket}.${url.hostname}`;
     url.pathname = url.pathname.replace(/\/$/, "") + "/" + encodePath(s3 && c.pathStyle ? `${c.bucket}/${prefix}` : prefix);
@@ -1933,17 +1961,20 @@ var RemoteStore = class {
   /** One request, sent again while the server is busy, and after no clear
    *  answer if `repeat` (not a MOVE, nor the lock's DELETE: done the first
    *  time, a second could take another device's lock). `unsure` hears of a
-   *  send that may have landed unanswered. */
+   *  send that may have landed unanswered. Unsigned, the body carries its
+   *  own permission. */
   async request(method, url, body, extra = {}, {
     repeat = REPEATABLE.has(method),
-    unsure
+    unsure,
+    signed = true
   } = {}) {
     for (let attempt = 0; ; attempt++) {
       const quiet = this.quietUntil - Date.now();
       if (quiet > 0) await this.sleep(quiet);
       let headers = { ...extra };
-      if (providers[this.config.provider].transport === "s3") {
-        const signed = await new AwsV4Signer({
+      const s3 = providers[this.config.provider].transport === "s3";
+      if (signed && s3) {
+        const sigv4 = await new AwsV4Signer({
           url,
           method,
           body: body?.slice().buffer,
@@ -1958,8 +1989,8 @@ var RemoteStore = class {
           region: this.config.region,
           cache: this.cache
         }).sign();
-        headers = Object.fromEntries(signed.headers.entries());
-      } else {
+        headers = Object.fromEntries(sigv4.headers.entries());
+      } else if (signed) {
         const bytes = new TextEncoder().encode(
           `${this.credentials.account}:${this.credentials.secret}`
         );
@@ -2065,24 +2096,30 @@ var RemoteStore = class {
     this.require(res);
   }
   async create(key, bytes) {
-    if (this.config.provider === "kodo") return this.kodoCreate(key, bytes);
-    if (providers[this.config.provider].transport === "s3") {
-      let resent = false;
-      const res = await this.request(
-        "PUT",
-        this.target(key),
-        bytes,
-        { "If-None-Match": "*" },
-        { unsure: () => resent = true }
-      );
-      if (res.status === 412) {
-        if (!resent) return false;
-        const there = await this.get(key);
-        return !!there && await hash(there) === await hash(bytes);
-      }
-      this.require(res);
-      return true;
-    }
+    const how = providers[this.config.provider].create;
+    if (how === "upload") return this.upload(key, bytes);
+    if (how === "move") return this.move(key, bytes);
+    let resent = false;
+    const res = await this.request(
+      "PUT",
+      this.target(key),
+      bytes,
+      { "If-None-Match": "*" },
+      { unsure: () => resent = true }
+    );
+    if (res.status === 412) return resent && this.holds(key, bytes);
+    this.require(res);
+    return true;
+  }
+  /** Whether `key` holds `bytes`: a refused create, sent again, was ours. */
+  async holds(key, bytes) {
+    const there = await this.get(key);
+    return !!there && await hash(there) === await hash(bytes);
+  }
+  /** Nutstore supports atomic MOVE with Overwrite:F, including its 409
+   *  DuplicateName response; a conditional PUT is not portable across DAV
+   *  servers. */
+  async move(key, bytes) {
     const temporary = `${key}.tmp-${crypto.randomUUID()}`;
     await this.put(temporary, bytes);
     try {
@@ -2101,71 +2138,32 @@ var RemoteStore = class {
       });
     }
   }
-  /** Kodo's conditional create: a native form upload with `insertOnly`.
-   *  614 means the key exists. A retry after no answer compares the bytes,
-   *  as the S3 create does, so our own landed upload counts as created. */
-  async kodoCreate(key, bytes) {
-    const host = uploadHost(this.config.region);
-    if (!host) throw new SyncError("invalidConfig");
-    const fullKey = this.config.prefix ? `${this.config.prefix}/${key}` : key;
-    const boundary = `----textus${crypto.randomUUID().replace(/-/g, "")}`;
+  /** Qiniu's S3 address writes over a file that is there; its upload host,
+   *  with an insert-only token, refuses (614). 400 is the wrong region,
+   *  631 a bucket that isn't there. */
+  async upload(key, bytes) {
+    const { provider, region, bucket } = this.config;
+    const name = this.name(key);
     const token = await uploadToken(
       this.credentials.account,
       this.credentials.secret,
-      this.config.bucket,
-      fullKey,
-      Math.floor(Date.now() / 1e3) + 3600
+      bucket,
+      name,
+      Math.floor(this.now() / 1e3) + 3600
     );
-    const body = multipart(boundary, token, fullKey, bytes);
-    const url = `https://${host}/`;
-    let unsure = false;
-    for (let attempt = 0; attempt < 3; attempt++) {
-      const quiet = this.quietUntil - Date.now();
-      if (quiet > 0) await this.sleep(quiet);
-      let response;
-      try {
-        response = await this.fetch(url, {
-          method: "POST",
-          headers: {
-            "Content-Type": `multipart/form-data; boundary=${boundary}`
-          },
-          body
-        });
-      } catch {
-        unsure = true;
-        if (attempt >= 2) throw new SyncError("networkError");
-        await this.sleep(500 * 2 ** attempt);
-        continue;
-      }
-      const date = Date.parse(response.headers["date"] ?? "");
-      if (Number.isFinite(date)) this.skew = date - Date.now();
-      if (response.status >= 200 && response.status < 300) return true;
-      if (response.status === 614) {
-        if (!unsure) return false;
-        for (let read2 = 0; read2 < 2; read2++) {
-          const there = await this.get(key);
-          if (there && await hash(there) === await hash(bytes)) return true;
-          await this.sleep(100);
-        }
-        return false;
-      }
-      if (response.status === 400 || response.status === 631)
-        throw new SyncError("invalidConfig");
-      if (response.status === 401 || response.status === 403)
-        this.require(response);
-      if ([429, 500, 502, 503, 504].includes(response.status) && attempt < 2) {
-        unsure = true;
-        const asked = Number(response.headers["retry-after"] ?? "0");
-        if (asked > 5) throw new SyncError("rateLimited");
-        const wait = Math.max(500 * 2 ** attempt, asked * 1e3);
-        if (response.status === 429)
-          this.quietUntil = Math.max(this.quietUntil, Date.now() + wait);
-        await this.sleep(wait);
-        continue;
-      }
-      this.require(response);
-    }
-    throw new SyncError("networkError");
+    const boundary = `textus${crypto.randomUUID().replace(/-/g, "")}`;
+    let resent = false;
+    const res = await this.request(
+      "POST",
+      `https://${providers[provider].regions?.[region]}/`,
+      multipart(boundary, token, name, bytes),
+      { "Content-Type": `multipart/form-data; boundary=${boundary}` },
+      { repeat: true, signed: false, unsure: () => resent = true }
+    );
+    if (res.status === 614) return resent && this.holds(key, bytes);
+    if ([400, 631].includes(res.status)) throw new SyncError("invalidConfig");
+    this.require(res);
+    return true;
   }
   async remove(key) {
     const res = await this.request(
@@ -2897,7 +2895,7 @@ var Settings = class {
     if (account !== previous.account && !incoming.secret)
       throw new SyncError("credentialsRequired");
     const syncPassword = String(incoming.syncPassword ?? "") || previous.syncPassword || "";
-    const sessionToken = String(incoming.sessionToken ?? "") || (incoming.secret ? "" : previous.sessionToken);
+    const sessionToken = providers[config.provider].fields.includes("token") ? String(incoming.sessionToken ?? "") || (incoming.secret ? "" : previous.sessionToken) : "";
     if (config.encrypt) {
       validatePassword(syncPassword);
       if ((incoming.syncPassword || incoming.confirmPassword) && incoming.syncPassword !== incoming.confirmPassword)

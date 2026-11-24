@@ -188,12 +188,7 @@
             <div class="tx-row">
               <div class="row-text">
                 <label for="provider-pick" data-t="service"></label>
-                <p
-                  id="nutstore-help"
-                  class="hint"
-                  data-t="nutstoreHelp"
-                  hidden
-                ></p>
+                <p id="provider-help" class="hint" hidden></p>
               </div>
               <button type="button" class="tx-select" id="provider-pick">
                 <span id="provider-name"></span
@@ -222,6 +217,13 @@
                 autocorrect="off"
               />
             </div>
+            <div class="tx-row" id="region-row">
+              <label for="region-pick" data-t="region"></label>
+              <button type="button" class="tx-select" id="region-pick">
+                <span id="region-name"></span
+                ><span class="tx-icon" data-icon="chevron"></span>
+              </button>
+            </div>
             <div class="tx-row">
               <label for="account" id="account-label"></label
               ><input
@@ -248,7 +250,7 @@
             </div>
             <details id="s3-more" class="tx-disclosure">
               <summary data-t="moreOptions"></summary>
-              <div class="tx-row">
+              <div class="tx-row" id="region-field">
                 <label for="region" data-t="region"></label
                 ><input
                   id="region"
@@ -257,7 +259,7 @@
                   autocorrect="off"
                 />
               </div>
-              <div class="tx-row">
+              <div class="tx-row" id="token-field">
                 <label for="token" data-t="token"></label
                 ><input
                   id="token"
@@ -265,7 +267,7 @@
                   autocomplete="new-password"
                 />
               </div>
-              <div class="tx-row">
+              <div class="tx-row" id="pathStyle-field">
                 <label for="pathStyle" data-t="pathStyle"></label
                 ><input
                   id="pathStyle"

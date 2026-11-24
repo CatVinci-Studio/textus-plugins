@@ -1,6 +1,6 @@
 # Sincronização na nuvem
 
-Mantenha uma pasta igual nos seus computadores pelo seu próprio armazenamento compatível com S3, WebDAV ou Nutstore, com as versões anteriores guardadas na nuvem e, se você quiser, criptografada antes de sair de cada aparelho.
+Mantenha uma pasta igual nos seus computadores pelo seu próprio armazenamento compatível com S3, Qiniu Kodo, WebDAV ou Nutstore, com as versões anteriores guardadas na nuvem e, se você quiser, criptografada antes de sair de cada aparelho.
 
 Com a criptografia de ponta a ponta ligada, o serviço de armazenamento não vê nem o conteúdo dos seus arquivos nem os nomes deles.
 A Sincronização na nuvem precisa do Textus 1.4.1 ou mais recente.
@@ -240,7 +240,10 @@ pasta remota nova para mudar de senha.
 
 ## Sincronização interrompida
 
-Um bloqueio remoto faz os aparelhos sincronizarem um de cada vez. O S3 usa `If-None-Match: *`; o WebDAV usa um
+Um bloqueio remoto faz os aparelhos sincronizarem um de cada vez. O S3 usa `If-None-Match: *`. O endereço S3 do Qiniu Kodo
+sobrescreveria um bloqueio existente, então o Kodo o cria pelo host de upload do Qiniu
+com um token `insertOnly`, que recusa um segundo (614); ler e apagar continuam
+indo ao endereço S3. O WebDAV usa um
 envio temporário seguido de `MOVE` com `Overwrite: F`, incluindo a resposta
 409 do Nutstore para um destino existente. O teste de conexão verifica a exclusão
 antes que uma sincronização possa tocar nos dados do espaço de trabalho. Não é preciso nenhuma API de listagem nem uma listagem
@@ -309,6 +312,7 @@ do Petrichor/Sylva; nenhum código Go nem formato de backup PostgreSQL foi copia
 
 ## Alterações
 
+- **0.9.0** - Sync through Qiniu Kodo: pick **Qiniu Kodo**, then your bucket's region from the list, and enter the bucket and an access key. As with the other services, two devices never sync into it at once. Thanks to @phonedu.
 - **0.8.1** - A file over 128 MiB no longer stops the whole sync: it stays where it is on every device and is listed under the status. A conflict copy opens from the page with a click. Ready for phones, not offered there yet: a sync when a folder opens and when you come back to Textus, none in the background; settings that survive an iPhone update; a smaller largest file and fewer transfers at once; deleted files kept in "Sync trash/" where there is no system Trash.
 - **0.8.0** - Safer when a sync is cut short: a lock this device left (Textus closed or stopped mid-sync) is taken back by its next sync without asking; another device's lock still needs **Recover stale lock**. A sync that would delete many files from the cloud stops and asks first, and a folder where suddenly nothing is found is taken as unreadable, not emptied. A file the system Trash refuses no longer stops the whole sync: it stays in place and is tried again. The first sync after a restart reads only the files changed meanwhile, not the whole folder. Its page is in every language Textus speaks. Its pickers keep Textus's own height.
 - **0.7.0** - Faster syncs with fewer requests: with nothing changed, a sync asks the service once instead of 8 to 16 times; a changed file's blocks are sent in one request each, without checking first or reading them back; on WebDAV folders are made only when one is missing. A busy service is waited for (up to a minute, shown in the status) instead of stopping the sync, and requests that got no answer are sent again. The progress counts files that are done. From Textus 1.4.4 the versions it keeps of a document show in Version History too.

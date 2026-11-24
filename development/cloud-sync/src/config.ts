@@ -11,7 +11,7 @@ import {
 export const defaults: Config = {
   provider: "s3",
   endpoint: "",
-  region: "us-east-1",
+  region: "",
   bucket: "",
   prefix: "textus/my-workspace",
   pathStyle: true,
@@ -26,20 +26,85 @@ export const defaults: Config = {
   parallel: 8,
   maxFileMiB: 128,
 };
-// saveGap: a new connection's wait, in minutes, between a save and its
-// sync; Nutstore caps requests per account, so it starts at 3, and with
-// few transfers at once (parallel).
-export const providers = {
-  s3: { transport: "s3", endpoint: "", saveGap: 0, parallel: 8 },
-  kodo: { transport: "s3", endpoint: "", saveGap: 0, parallel: 8 },
-  webdav: { transport: "dav", endpoint: "", saveGap: 0, parallel: 4 },
+
+/** The connection fields a service asks for; the rest are left out. */
+export type Field = "endpoint" | "bucket" | "region" | "token" | "pathStyle";
+
+export interface Provider {
+  transport: "s3" | "dav";
+  /** Its address, `{region}` filled in; one typed in wins where the
+   *  endpoint is a field. */
+  endpoint: string;
+  /** How a file is written only where none is: a conditional PUT, an
+   *  upload host's insert-only form, or a MOVE that won't overwrite. */
+  create: "conditional" | "upload" | "move";
+  fields: readonly Field[];
+  /** A region typed in starts as this. */
+  region?: string;
+  /** The regions to pick from, with each one's upload host. */
+  regions?: Readonly<Record<string, string>>;
+  /** The labels of its sign-in, and a line under the service, if any. */
+  signIn: readonly [string, string];
+  help?: string;
+  /** A new connection's wait, in minutes, between a save and its sync,
+   *  and its transfers at once. */
+  saveGap: number;
+  parallel: number;
+}
+
+const S3_SIGN_IN = ["accountS3", "secretS3"] as const;
+// Nutstore caps requests per account: it waits 3 minutes after a save,
+// with few transfers at once.
+export const providers: Record<Config["provider"], Provider> = {
+  s3: {
+    transport: "s3",
+    endpoint: "https://s3.{region}.amazonaws.com",
+    create: "conditional",
+    fields: ["endpoint", "bucket", "region", "token", "pathStyle"],
+    region: "us-east-1",
+    signIn: S3_SIGN_IN,
+    saveGap: 0,
+    parallel: 8,
+  },
+  kodo: {
+    transport: "s3",
+    endpoint: "https://s3.{region}.qiniucs.com",
+    create: "upload",
+    fields: ["bucket", "region"],
+    regions: {
+      "cn-east-1": "up-z0.qiniup.com",
+      "cn-east-2": "up-cn-east-2.qiniup.com",
+      "cn-north-1": "up-z1.qiniup.com",
+      "cn-south-1": "up-z2.qiniup.com",
+      "us-north-1": "up-na0.qiniup.com",
+      "ap-southeast-1": "up-as0.qiniup.com",
+      "ap-southeast-2": "up-ap-southeast-2.qiniup.com",
+      "ap-southeast-3": "up-ap-southeast-3.qiniup.com",
+    },
+    signIn: S3_SIGN_IN,
+    saveGap: 0,
+    parallel: 8,
+  },
+  webdav: {
+    transport: "dav",
+    endpoint: "",
+    create: "move",
+    fields: ["endpoint"],
+    signIn: ["accountDav", "secretDav"],
+    saveGap: 0,
+    parallel: 4,
+  },
   nutstore: {
     transport: "dav",
     endpoint: "https://dav.jianguoyun.com/dav",
+    create: "move",
+    fields: [],
+    signIn: ["accountNutstore", "secretNutstore"],
+    help: "nutstoreHelp",
     saveGap: 3,
     parallel: 2,
   },
-} as const;
+};
 
 export function relativePath(value: string): boolean {
   return (
@@ -70,26 +135,30 @@ export function normalizeConfig(
     .trim()
     .replace(/^\/+|\/+$/g, "");
   if (!relativePath(c.prefix)) throw new SyncError("invalidPrefix");
-  c.region = String(c.region).trim() || "us-east-1";
-  if (!/^[a-z0-9-]+$/.test(c.region)) throw new SyncError("invalidConfig");
-  c.bucket = String(c.bucket).trim();
   const spec = providers[c.provider];
-  c.endpoint = (spec.endpoint || String(c.endpoint).trim()).replace(/\/+$/, "");
-  if (spec.transport === "s3") {
-    if (
-      !/^[a-z0-9][a-z0-9.-]{1,61}[a-z0-9]$/.test(c.bucket) ||
-      c.bucket.includes("..")
-    )
-      throw new SyncError("invalidBucket");
-    c.endpoint ||=
-      c.provider === "kodo"
-        ? `https://s3.${c.region}.qiniucs.com`
-        : `https://s3.${c.region}.amazonaws.com`;
-  } else {
-    c.region = "";
-    c.bucket = "";
-    c.pathStyle = false;
-  }
+  const shows = (field: Field) => spec.fields.includes(field);
+  c.region = shows("region")
+    ? String(c.region).trim() || (spec.region ?? "")
+    : "";
+  if (spec.regions && !Object.hasOwn(spec.regions, c.region))
+    throw new SyncError("regionRequired");
+  if (shows("region") && !/^[a-z0-9-]+$/.test(c.region))
+    throw new SyncError("invalidConfig");
+  c.bucket = shows("bucket") ? String(c.bucket).trim() : "";
+  if (
+    shows("bucket") &&
+    (!/^[a-z0-9][a-z0-9.-]{1,61}[a-z0-9]$/.test(c.bucket) ||
+      c.bucket.includes(".."))
+  )
+    throw new SyncError("invalidBucket");
+  c.endpoint = (
+    (shows("endpoint") && String(c.endpoint).trim()) ||
+    spec.endpoint.replace("{region}", c.region)
+  ).replace(/\/+$/, "");
+  // Not a field: S3 addresses by path, WebDAV has no bucket.
+  c.pathStyle = shows("pathStyle")
+    ? c.pathStyle !== false
+    : spec.transport === "s3";
   let url: URL;
   try {
     url = new URL(c.endpoint);
@@ -115,7 +184,6 @@ export function normalizeConfig(
   )
     throw new SyncError("invalidEndpoint");
   c.endpoint = url.toString().replace(/\/+$/, "");
-  c.pathStyle = c.pathStyle !== false;
   c.automatic = c.automatic === true;
   c.exclude = String(c.exclude ?? "").slice(0, 20_000);
   c.gitignore = c.gitignore === true;

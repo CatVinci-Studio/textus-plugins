@@ -56,6 +56,7 @@ describe("connection and data boundaries", () => {
         provider,
         endpoint: "https://dav.example.com/dav",
         bucket: "notes",
+        region: provider === "kodo" ? "cn-east-1" : "",
         ...more,
       });
     for (const p of ["s3", "kodo", "webdav", "nutstore"] as const)
@@ -68,17 +69,6 @@ describe("connection and data boundaries", () => {
     expect(at("nutstore", { saveGap: 0 }).saveGap).toBe(0);
     expect(at("webdav", { saveGap: 10 }).saveGap).toBe(10);
     expect(() => at("s3", { saveGap: 61 })).toThrow("invalidSaveGap");
-  });
-
-  it("gives Kodo a Qiniu S3 endpoint and keeps its region", () => {
-    const config = normalizeConfig({
-      provider: "kodo",
-      endpoint: "",
-      region: "cn-south-1",
-      bucket: "bucket",
-    });
-    expect(config.endpoint).toBe("https://s3.cn-south-1.qiniucs.com");
-    expect(config.region).toBe("cn-south-1");
   });
 
   it("allows only documented project data and supported workspace documents", () => {

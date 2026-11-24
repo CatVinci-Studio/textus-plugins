@@ -1,6 +1,6 @@
 # Облачная синхронизация
 
-Держите папку одинаковой на всех ваших компьютерах через ваше собственное S3-совместимое хранилище, WebDAV или Nutstore: старые версии хранятся в облаке, а при желании всё шифруется ещё до того, как покинет устройство.
+Держите папку одинаковой на всех ваших компьютерах через ваше собственное S3-совместимое хранилище, Qiniu Kodo, WebDAV или Nutstore: старые версии хранятся в облаке, а при желании всё шифруется ещё до того, как покинет устройство.
 
 Со сквозным шифрованием сервис хранения не видит ни содержимого ваших файлов, ни их имён.
 Для облачной синхронизации нужен Textus 1.4.1 или новее.
@@ -108,7 +108,7 @@
 
 ## Прерванная синхронизация
 
-Удалённая блокировка выстраивает устройства по очереди. S3 использует `If-None-Match: *`; WebDAV — временную отправку, за которой следует `MOVE` с `Overwrite: F`, включая ответ Nutstore 409 для существующей цели. Проверка подключения убеждается, что исключение работает, прежде чем синхронизация сможет коснуться данных рабочей области. Ни API для списков, ни неограниченный просмотр папок не нужны.
+Удалённая блокировка выстраивает устройства по очереди. S3 использует `If-None-Match: *`. S3-адрес Qiniu Kodo перезаписал бы существующую блокировку, поэтому Kodo создаёт её через сервер загрузки Qiniu с токеном `insertOnly`, который отклоняет вторую (614); чтение и удаление по-прежнему идут на S3-адрес. WebDAV использует временную отправку, за которой следует `MOVE` с `Overwrite: F`, включая ответ Nutstore 409 для существующей цели. Проверка подключения убеждается, что исключение работает, прежде чем синхронизация сможет коснуться данных рабочей области. Ни API для списков, ни неограниченный просмотр папок не нужны.
 
 Зашифрованные блоки и неизменяемый снимок записываются до публикации `v2/head.bin`. Локальная точка отсчёта сдвигается только после успешной публикации. Повторные попытки заново используют готовые блоки, и после перезапуска тоже: блоки, сохранённые остановленной синхронизацией, запоминаются локально и не проверяются снова, если за это время ни одно другое устройство ничего не опубликовало. Отмена срабатывает после текущего сетевого запроса и по возможности снимает блокировку. Сетевой API Textus ограничивает запрос 60 секундами; отменять отдельный запрос он не позволяет.
 
@@ -132,6 +132,7 @@
 
 ## Изменения
 
+- **0.9.0** - Sync through Qiniu Kodo: pick **Qiniu Kodo**, then your bucket's region from the list, and enter the bucket and an access key. As with the other services, two devices never sync into it at once. Thanks to @phonedu.
 - **0.8.1** - A file over 128 MiB no longer stops the whole sync: it stays where it is on every device and is listed under the status. A conflict copy opens from the page with a click. Ready for phones, not offered there yet: a sync when a folder opens and when you come back to Textus, none in the background; settings that survive an iPhone update; a smaller largest file and fewer transfers at once; deleted files kept in "Sync trash/" where there is no system Trash.
 - **0.8.0** - Safer when a sync is cut short: a lock this device left (Textus closed or stopped mid-sync) is taken back by its next sync without asking; another device's lock still needs **Recover stale lock**. A sync that would delete many files from the cloud stops and asks first, and a folder where suddenly nothing is found is taken as unreadable, not emptied. A file the system Trash refuses no longer stops the whole sync: it stays in place and is tried again. The first sync after a restart reads only the files changed meanwhile, not the whole folder. Its page is in every language Textus speaks. Its pickers keep Textus's own height.
 - **0.7.0** - Faster syncs with fewer requests: with nothing changed, a sync asks the service once instead of 8 to 16 times; a changed file's blocks are sent in one request each, without checking first or reading them back; on WebDAV folders are made only when one is missing. A busy service is waited for (up to a minute, shown in the status) instead of stopping the sync, and requests that got no answer are sent again. The progress counts files that are done. From Textus 1.4.4 the versions it keeps of a document show in Version History too.

@@ -5,7 +5,7 @@ import {
   type Config,
   type Result,
 } from "./model";
-import { providers } from "./config";
+import { providers, type Field } from "./config";
 
 const api = acquireTextusApi();
 const element = <T extends HTMLElement>(id: string) =>
@@ -55,13 +55,8 @@ document
   .querySelector("section.sync-status")
   ?.setAttribute("aria-label", api.t("name"));
 
-// Each service names its sign-in its own way.
-const signIn: Record<string, [string, string]> = {
-  s3: ["accountS3", "secretS3"],
-  kodo: ["accountS3", "secretS3"],
-  webdav: ["accountDav", "secretDav"],
-  nutstore: ["accountNutstore", "secretNutstore"],
-};
+const providerOf = (id: string) =>
+  providers[id as Config["provider"]] ?? providers.s3;
 
 /** A pick from Textus's own menu into a hidden field, its name on a button. */
 function picker(
@@ -85,14 +80,26 @@ function picker(
 }
 picker(
   "provider",
-  ["s3", "kodo", "webdav", "nutstore"],
+  Object.keys(providers),
   (p) => api.t(p),
-  () => {
+  (p) => {
     input("endpoint").value = "";
+    input("region").value = providerOf(p).region ?? "";
     for (const id of secretFields) input(id).value = "";
     typed = true;
     formToggles();
   },
+);
+// Where the service has its own list, the region is picked from it.
+picker(
+  "region",
+  [],
+  String,
+  () => {
+    typed = true;
+    formToggles();
+  },
+  () => Object.keys(providerOf(input("provider").value).regions ?? {}),
 );
 const keepLabel = (days: string) =>
   days === "0" ? api.t("keepForever") : api.t("keepDays", days);
@@ -131,18 +138,23 @@ function formToggles() {
   element("password-field").hidden = !encrypt;
   element("confirm-field").hidden = !encrypt;
   element("provider-name").textContent = api.t(provider);
-  const s3 = provider === "s3" || provider === "kodo";
-  element("bucket-field").hidden = !s3;
-  element("s3-more").hidden = !s3;
-  element("endpoint-field").hidden = provider === "nutstore";
-  element("nutstore-help").hidden = provider !== "nutstore";
-  const [account, secret] = signIn[provider] ?? signIn.s3;
+  const spec = providerOf(provider);
+  const shows = (field: Field) => spec.fields.includes(field);
+  for (const field of ["endpoint", "bucket", "token", "pathStyle"] as const)
+    element(`${field}-field`).hidden = !shows(field);
+  element("region-row").hidden = !spec.regions;
+  element("region-field").hidden = !shows("region") || !!spec.regions;
+  element("region-name").textContent = input("region").value || api.t("choose");
+  element("s3-more").hidden = [
+    ...element("s3-more").querySelectorAll<HTMLElement>(".tx-row"),
+  ].every((row) => row.hidden);
+  element("provider-help").hidden = !spec.help;
+  element("provider-help").textContent = spec.help ? api.t(spec.help) : "";
+  const [account, secret] = spec.signIn;
   element("account-label").textContent = api.t(account);
   element("secret-label").textContent = api.t(secret);
-  input("endpoint").required = provider !== "s3" && provider !== "kodo";
-  if (provider === "nutstore")
-    input("endpoint").value = providers.nutstore.endpoint;
-  input("bucket").required = provider === "s3" || provider === "kodo";
+  input("endpoint").required = shows("endpoint") && !spec.endpoint;
+  input("bucket").required = shows("bucket");
   // A saved connection's keys stay unless new ones are typed.
   for (const id of ["account", "secret", "sync-password"]) {
     input(id).placeholder = editing ? api.t("keptIfEmpty") : "";
@@ -167,13 +179,13 @@ function show() {
   element("cancel-edit").hidden = !editing;
   element("c-service").textContent = api.t(config.provider);
   element("c-endpoint").textContent = config.endpoint;
-  element("c-endpoint-row").hidden = config.provider === "nutstore";
+  const spec = providerOf(config.provider);
+  // An address typed in or made from the region picked.
+  element("c-endpoint-row").hidden =
+    !spec.fields.includes("endpoint") && !spec.regions;
   element("c-bucket").textContent = config.bucket;
-  element("c-bucket-row").hidden =
-    config.provider !== "s3" && config.provider !== "kodo";
-  element("c-account-label").textContent = api.t(
-    (signIn[config.provider] ?? signIn.s3)[0],
-  );
+  element("c-bucket-row").hidden = !spec.fields.includes("bucket");
+  element("c-account-label").textContent = api.t(spec.signIn[0]);
   element("c-account").textContent = state.account ?? "";
   element("c-prefix").textContent = config.prefix;
   element("c-encrypt").textContent = api.t(

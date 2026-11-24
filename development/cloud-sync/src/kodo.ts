@@ -1,34 +1,17 @@
-// Qiniu Kodo creates a new object through the upload service: its S3
-// endpoint has no conditional PUT, but an upload token whose policy says
-// `insertOnly` refuses a second write. Reads, overwrites and deletes stay on
-// the S3 endpoint.
-const HOSTS: Record<string, string> = {
-  "cn-east-1": "up-z0.qiniup.com",
-  "cn-east-2": "up-cn-east-2.qiniup.com",
-  "cn-north-1": "up-z1.qiniup.com",
-  "cn-south-1": "up-z2.qiniup.com",
-  "us-north-1": "up-na0.qiniup.com",
-  "ap-southeast-1": "up-as0.qiniup.com",
-  "ap-southeast-2": "up-ap-southeast-2.qiniup.com",
-  "ap-southeast-3": "up-ap-southeast-3.qiniup.com",
-};
-
-/** The upload host for a Qiniu S3 region; null for an unknown one. */
-export function uploadHost(region: string): string | null {
-  return HOSTS[region.toLowerCase()] ?? null;
-}
-
+// Qiniu Kodo's upload tokens and form: how a file is created only where
+// none is (see RemoteStore's upload).
 const base64url = (bytes: Uint8Array): string => {
   let binary = "";
   for (const byte of bytes) binary += String.fromCharCode(byte);
   return btoa(binary).replace(/\+/g, "-").replace(/\//g, "_");
 };
 
-/** The encoded form of a put policy that allows one key and no overwrite. */
+/** A put policy, encoded as the token carries it. */
 export function encodePolicy(policy: string): string {
   return base64url(new TextEncoder().encode(policy));
 }
 
+/** One key, and no overwrite. */
 export function putPolicy(
   bucket: string,
   key: string,

@@ -84,12 +84,15 @@ class Remote {
       const crlf = String.fromCharCode(13, 10);
       const key = form.split(`name="key"${crlf}${crlf}`)[1]?.split(crlf)[0];
       const fileAt = form.indexOf('name="file"; filename="blob"');
-      const fileStart = fileAt < 0 ? -1 : form.indexOf(`${crlf}${crlf}`, fileAt);
-      const file = fileStart < 0 ? Buffer.alloc(0) : body.subarray(fileStart + 4);
+      const fileStart =
+        fileAt < 0 ? -1 : form.indexOf(`${crlf}${crlf}`, fileAt);
+      const file =
+        fileStart < 0 ? Buffer.alloc(0) : body.subarray(fileStart + 4);
       const end = file.indexOf(`${crlf}--`);
       const bytes = end < 0 ? file : file.subarray(0, end);
       if (!key) return response(400);
-      const stored = `/dav/test-bucket/${key}`;
+      // Kodo's S3 address, by path: /bucket/key.
+      const stored = `/test-bucket/${key}`;
       if (this.files.has(stored)) {
         return this.files.get(stored)!.equals(bytes)
           ? response(200)
@@ -245,15 +248,21 @@ async function configure(
 ) {
   const panel = page.frameLocator(".plugin-webview-frame");
   await pickProvider(page, provider);
-  if (provider !== "nutstore")
+  if (provider === "s3" || provider === "webdav")
     await panel.locator("#endpoint").fill("https://fixture.invalid/dav");
   if (provider === "s3" || provider === "kodo")
     await panel.locator("#bucket").fill("test-bucket");
   if (provider === "kodo") {
-    await panel
-      .locator("#s3-more")
-      .evaluate((element) => ((element as HTMLDetailsElement).open = true));
-    await panel.locator("#region").fill("cn-south-1");
+    // Its address comes from the region, picked from Textus's menu.
+    await expect(panel.locator("#endpoint")).toBeHidden();
+    await expect(panel.locator("#s3-more")).toBeHidden();
+    await panel.locator("#region-pick").click();
+    await page
+      .getByRole("menuitemradio", { name: "cn-south-1" })
+      .or(page.getByRole("menuitem", { name: "cn-south-1" }))
+      .first()
+      .click();
+    await expect(panel.locator("#region-name")).toHaveText("cn-south-1");
   }
   await panel.locator("#account").fill("fixture-account");
   await panel.locator("#secret").fill("fixture-secret");
