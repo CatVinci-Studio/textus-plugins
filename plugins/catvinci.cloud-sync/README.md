@@ -1,6 +1,6 @@
 # Cloud Sync
 
-Keep a folder the same on your computers through your own S3-compatible storage, WebDAV or Nutstore, with older versions kept in the cloud and, if you choose, encrypted before it leaves each device.
+Keep a folder the same on your computers through your own S3-compatible storage, WebDAV, Nutstore or a GitHub repository, with older versions kept in the cloud and, if you choose, encrypted before it leaves each device.
 
 With end-to-end encryption on, the storage service sees neither the contents of your files nor their names.
 Cloud Sync needs Textus 1.4.1 or later.
@@ -71,6 +71,28 @@ The sync password is also saved locally through `ctx.secrets` for automatic sync
 never returned to the settings page or sent to the storage service. Blank password
 fields retain it. Entering a different password here does not re-encrypt an existing
 repository: it must match the password used to initialize that remote folder.
+
+### GitHub
+
+Choose **GitHub** and enter a personal access token (classic, with the `repo`
+scope; fine-grained tokens need Contents and Metadata read and write for the
+repository) and the repository as `owner/repo`. The sync commits to the
+repository's default branch; the remote folder under **Remote folder** (for
+example `textus/my-workspace`) keeps the plugin's storage format inside the
+repository, so one repository can hold several workspaces under different
+folders. Everything else works as with the other services, including cloud
+history, conflict copies and end-to-end encryption.
+
+Each sync ends with one commit ("Textus sync") carrying everything it
+changed: content blocks and history records become Git blobs and trees
+through the Git database API, never a shell `git` command, so no local Git
+installation or credentials are needed and phones can sync too.
+Rate limits on api.github.com pause the sync like a busy server (up to a
+minute, shown in the status); asked to wait longer, the sync stops and says
+to try again later. The token is stored through `ctx.secrets`, like every
+other credential. A repository holding many blocks can grow large; Git
+garbage collection on GitHub may slowly reclaim blobs no snapshot refers to
+any more, so keep cloud history short for GitHub remotes.
 
 ## What is synced
 
@@ -309,6 +331,7 @@ and `THIRD_PARTY_NOTICES.md`. The storage design was informed by Petrichor/Sylva
 
 ## Changes
 
+- **0.9.0** - Sync to a GitHub repository: enter a personal access token and `owner/repo`, and the workspace keeps in step through commits to the repository's default branch (content blocks and history become Git blobs, one commit per sync). Rate limits from api.github.com pause the sync like a busy server. Works with end-to-end encryption; the repository stores the same objects as the other services, not a file mirror.
 - **0.8.1** - A file over 128 MiB no longer stops the whole sync: it stays where it is on every device and is listed under the status. A conflict copy opens from the page with a click. Ready for phones, not offered there yet: a sync when a folder opens and when you come back to Textus, none in the background; settings that survive an iPhone update; a smaller largest file and fewer transfers at once; deleted files kept in "Sync trash/" where there is no system Trash.
 - **0.8.0** - Safer when a sync is cut short: a lock this device left (Textus closed or stopped mid-sync) is taken back by its next sync without asking; another device's lock still needs **Recover stale lock**. A sync that would delete many files from the cloud stops and asks first, and a folder where suddenly nothing is found is taken as unreadable, not emptied. A file the system Trash refuses no longer stops the whole sync: it stays in place and is tried again. The first sync after a restart reads only the files changed meanwhile, not the whole folder. Its page is in every language Textus speaks. Its pickers keep Textus's own height.
 - **0.7.0** - Faster syncs with fewer requests: with nothing changed, a sync asks the service once instead of 8 to 16 times; a changed file's blocks are sent in one request each, without checking first or reading them back; on WebDAV folders are made only when one is missing. A busy service is waited for (up to a minute, shown in the status) instead of stopping the sync, and requests that got no answer are sent again. The progress counts files that are done. From Textus 1.4.4 the versions it keeps of a document show in Version History too.

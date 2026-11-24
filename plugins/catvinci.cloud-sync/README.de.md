@@ -1,6 +1,6 @@
 # Cloud-Sync
 
-Halten Sie einen Ordner auf Ihren Computern gleich, über Ihren eigenen S3-kompatiblen Speicher, WebDAV oder Nutstore, mit älteren Versionen in der Cloud und, wenn Sie möchten, verschlüsselt, bevor er ein Gerät verlässt.
+Halten Sie einen Ordner auf Ihren Computern gleich, über Ihren eigenen S3-kompatiblen Speicher, WebDAV, Nutstore oder ein GitHub-Repository, mit älteren Versionen in der Cloud und, wenn Sie möchten, verschlüsselt, bevor er ein Gerät verlässt.
 
 Mit eingeschalteter Ende-zu-Ende-Verschlüsselung sieht der Speicherdienst weder den Inhalt Ihrer Dateien noch ihre Namen.
 Cloud-Sync braucht Textus 1.4.1 oder neuer.
@@ -308,6 +308,7 @@ aus Petrichor/Sylva angeregt; weder Go-Quellcode noch das PostgreSQL-Backup-Form
 
 ## Änderungen
 
+- **0.9.0** - Sync to a GitHub repository: enter a personal access token and `owner/repo`, and the workspace keeps in step through commits to the repository's default branch (content blocks and history become Git blobs, one commit per sync). Rate limits from api.github.com pause the sync like a busy server. Works with end-to-end encryption; the repository stores the same objects as the other services, not a file mirror.
 - **0.8.1** - A file over 128 MiB no longer stops the whole sync: it stays where it is on every device and is listed under the status. A conflict copy opens from the page with a click. Ready for phones, not offered there yet: a sync when a folder opens and when you come back to Textus, none in the background; settings that survive an iPhone update; a smaller largest file and fewer transfers at once; deleted files kept in "Sync trash/" where there is no system Trash.
 - **0.8.0** - Safer when a sync is cut short: a lock this device left (Textus closed or stopped mid-sync) is taken back by its next sync without asking; another device's lock still needs **Recover stale lock**. A sync that would delete many files from the cloud stops and asks first, and a folder where suddenly nothing is found is taken as unreadable, not emptied. A file the system Trash refuses no longer stops the whole sync: it stays in place and is tried again. The first sync after a restart reads only the files changed meanwhile, not the whole folder. Its page is in every language Textus speaks. Its pickers keep Textus's own height.
 - **0.7.0** - Faster syncs with fewer requests: with nothing changed, a sync asks the service once instead of 8 to 16 times; a changed file's blocks are sent in one request each, without checking first or reading them back; on WebDAV folders are made only when one is missing. A busy service is waited for (up to a minute, shown in the status) instead of stopping the sync, and requests that got no answer are sent again. The progress counts files that are done. From Textus 1.4.4 the versions it keeps of a document show in Version History too.

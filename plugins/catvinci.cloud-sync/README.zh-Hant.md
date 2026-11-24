@@ -1,6 +1,6 @@
 # 雲端同步
 
-透過你自己的 S3 相容儲存、WebDAV 或堅果雲，讓一個資料夾在你的各台電腦上保持一致；雲端會保留舊版本，你也可以選擇在資料離開每台裝置前先加密。
+透過你自己的 S3 相容儲存、WebDAV、堅果雲或 GitHub 儲存庫，讓一個資料夾在你的各台電腦上保持一致；雲端會保留舊版本，你也可以選擇在資料離開每台裝置前先加密。
 
 開啟端對端加密後，儲存服務既看不到檔案的內容，也看不到檔名。
 雲端同步需要 Textus 1.4.1 以上版本。
@@ -132,6 +132,7 @@ S3 可以在 **更多選項** 裡設定自訂端點（留空代表 AWS）、區�
 
 ## 更新紀錄
 
+- **0.9.0** - Sync to a GitHub repository: enter a personal access token and `owner/repo`, and the workspace keeps in step through commits to the repository's default branch (content blocks and history become Git blobs, one commit per sync). Rate limits from api.github.com pause the sync like a busy server. Works with end-to-end encryption; the repository stores the same objects as the other services, not a file mirror.
 - **0.8.1** - A file over 128 MiB no longer stops the whole sync: it stays where it is on every device and is listed under the status. A conflict copy opens from the page with a click. Ready for phones, not offered there yet: a sync when a folder opens and when you come back to Textus, none in the background; settings that survive an iPhone update; a smaller largest file and fewer transfers at once; deleted files kept in "Sync trash/" where there is no system Trash.
 - **0.8.0** - Safer when a sync is cut short: a lock this device left (Textus closed or stopped mid-sync) is taken back by its next sync without asking; another device's lock still needs **Recover stale lock**. A sync that would delete many files from the cloud stops and asks first, and a folder where suddenly nothing is found is taken as unreadable, not emptied. A file the system Trash refuses no longer stops the whole sync: it stays in place and is tried again. The first sync after a restart reads only the files changed meanwhile, not the whole folder. Its page is in every language Textus speaks. Its pickers keep Textus's own height.
 - **0.7.0** - Faster syncs with fewer requests: with nothing changed, a sync asks the service once instead of 8 to 16 times; a changed file's blocks are sent in one request each, without checking first or reading them back; on WebDAV folders are made only when one is missing. A busy service is waited for (up to a minute, shown in the status) instead of stopping the sync, and requests that got no answer are sent again. The progress counts files that are done. From Textus 1.4.4 the versions it keeps of a document show in Version History too.

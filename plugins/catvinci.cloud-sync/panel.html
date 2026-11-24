@@ -143,7 +143,7 @@
             ><span class="value" id="c-endpoint"></span>
           </div>
           <div class="tx-row" id="c-bucket-row">
-            <span data-t="bucket"></span
+            <span id="c-bucket-label"></span
             ><span class="value" id="c-bucket"></span>
           </div>
           <div class="tx-row">
@@ -194,6 +194,12 @@
                   data-t="nutstoreHelp"
                   hidden
                 ></p>
+                <p
+                  id="github-help"
+                  class="hint"
+                  data-t="githubHelp"
+                  hidden
+                ></p>
               </div>
               <button type="button" class="tx-select" id="provider-pick">
                 <span id="provider-name"></span
@@ -214,7 +220,7 @@
               />
             </div>
             <div class="tx-row" id="bucket-field">
-              <label for="bucket" data-t="bucket"></label
+              <label for="bucket" id="bucket-label" data-t="bucket"></label
               ><input
                 id="bucket"
                 spellcheck="false"

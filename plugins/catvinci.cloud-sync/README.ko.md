@@ -1,6 +1,6 @@
 # 클라우드 동기화
 
-내 S3 호환 저장소, WebDAV 또는 Nutstore를 거쳐 여러 컴퓨터의 폴더를 똑같이 유지합니다. 이전 버전은 클라우드에 보관되고, 원하면 각 기기를 떠나기 전에 암호화합니다.
+내 S3 호환 저장소, WebDAV, Nutstore 또는 GitHub 저장소를 거쳐 여러 컴퓨터의 폴더를 똑같이 유지합니다. 이전 버전은 클라우드에 보관되고, 원하면 각 기기를 떠나기 전에 암호화합니다.
 
 종단 간 암호화를 켜면 저장소 서비스는 파일 내용도, 파일 이름도 볼 수 없습니다.
 클라우드 동기화에는 Textus 1.4.1 이상이 필요합니다.
@@ -307,6 +307,7 @@ Go 소스나 PostgreSQL 백업 형식은 복사하지 않았습니다.
 
 ## 변경 내역
 
+- **0.9.0** - Sync to a GitHub repository: enter a personal access token and `owner/repo`, and the workspace keeps in step through commits to the repository's default branch (content blocks and history become Git blobs, one commit per sync). Rate limits from api.github.com pause the sync like a busy server. Works with end-to-end encryption; the repository stores the same objects as the other services, not a file mirror.
 - **0.8.1** - A file over 128 MiB no longer stops the whole sync: it stays where it is on every device and is listed under the status. A conflict copy opens from the page with a click. Ready for phones, not offered there yet: a sync when a folder opens and when you come back to Textus, none in the background; settings that survive an iPhone update; a smaller largest file and fewer transfers at once; deleted files kept in "Sync trash/" where there is no system Trash.
 - **0.8.0** - Safer when a sync is cut short: a lock this device left (Textus closed or stopped mid-sync) is taken back by its next sync without asking; another device's lock still needs **Recover stale lock**. A sync that would delete many files from the cloud stops and asks first, and a folder where suddenly nothing is found is taken as unreadable, not emptied. A file the system Trash refuses no longer stops the whole sync: it stays in place and is tried again. The first sync after a restart reads only the files changed meanwhile, not the whole folder. Its page is in every language Textus speaks. Its pickers keep Textus's own height.
 - **0.7.0** - Faster syncs with fewer requests: with nothing changed, a sync asks the service once instead of 8 to 16 times; a changed file's blocks are sent in one request each, without checking first or reading them back; on WebDAV folders are made only when one is missing. A busy service is waited for (up to a minute, shown in the status) instead of stopping the sync, and requests that got no answer are sent again. The progress counts files that are done. From Textus 1.4.4 the versions it keeps of a document show in Version History too.
