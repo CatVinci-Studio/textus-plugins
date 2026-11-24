@@ -11,6 +11,7 @@ The plugins for [Textus](https://textus.md), the Markdown editor. None of them c
 | Calendar & Daily Notes | A calendar in the sidebar and a note for each day, kept in a folder of the open folder. |
 | Canvas | View Obsidian's canvases (.canvas) in a tab: notes, pictures, links and groups on a board you can move around and zoom. For viewing only; it doesn't edit them. |
 | Chart.js | Simple charts from a Chart.js configuration. |
+| Cisco IOS | Colours Cisco IOS configurations in code blocks: commands, interfaces, IP addresses and ! comments, in ```cisco or ```ios blocks. |
 | CJK Spacing | Puts a space between Chinese or Japanese text and Latin letters or numbers. |
 | Claude Code | Claude Code in Textus AI: it reads your folder, writes and edits your notes, and asks before it changes anything. |
 | Clipboard History | What you copied or cut in your documents, newest first, in the sidebar: click one to put it in again. |
@@ -35,6 +36,7 @@ The plugins for [Textus](https://textus.md), the Markdown editor. None of them c
 | Link Cards | A link as a card with its page's title, description and picture - or a Bilibili video playing in place. Kept in the document as text. |
 | Logseq Folders | Opens a Logseq graph the way Logseq writes it: links by page name, pictures in assets, journals in their folder and date format. |
 | Marp | Present a document as slides, the Marp way: a new slide at each ---, themes and layout by Marp directives. The deck follows your writing in a tab beside it, and saves as one HTML file to present from any browser. |
+| Material Icon Theme | File and folder icons from VS Code's Material Icon Theme in the sidebar, search and quick open: a colour icon for each kind of file - Markdown, PDF, pictures, Word, Excel, code - and for folders such as images, docs and src. Pick it in Settings › Appearance › File icons. |
 | MDX | Write MDX documents (Docusaurus, Nextra…) with their problems underlined by MDX's own compiler, a preview beside them that runs none of their code, and conversion to Markdown and back. |
 | Mind Map | Draws a Markdown outline - headings and lists - as a mind map. |
 | Notion Import | Brings in a Notion export (the .zip or its folder) as plain Markdown notes: pages within pages as folders, databases in Obsidian's Bases format, pictures and files beside their pages. Pair it with Wiki to see the pages tree and the databases. |

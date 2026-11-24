@@ -1,0 +1,74 @@
+{
+  "id": "catvinci.cisco-ios",
+  "name": "%name%",
+  "version": "0.1.0",
+  "publisher": "catvinci",
+  "author": "CatVinci Studio",
+  "description": "%description%",
+  "icon": "icon.svg",
+  "license": "MIT",
+  "repository": "https://github.com/CatVinci-Studio/textus-plugins",
+  "engines": {
+    "textus": ">=1.4.7"
+  },
+  "platforms": [
+    "desktop",
+    "ios"
+  ],
+  "category": "editing",
+  "permissions": [],
+  "contributes": {
+    "codeLanguages": [
+      {
+        "id": "cisco",
+        "aliases": [
+          "ios",
+          "cisco-ios"
+        ],
+        "path": "cisco.json"
+      }
+    ]
+  },
+  "l10n": {
+    "en": {
+      "name": "Cisco IOS",
+      "description": "Colours Cisco IOS configurations in code blocks: commands, interfaces, IP addresses and ! comments, in ```cisco or ```ios blocks."
+    },
+    "zh": {
+      "name": "Cisco IOS",
+      "description": "为代码块中的 Cisco IOS 配置着色：命令、接口、IP 地址和 ! 注释，写在 ```cisco 或 ```ios 代码块里。"
+    },
+    "zh-Hant": {
+      "name": "Cisco IOS",
+      "description": "為程式碼區塊中的 Cisco IOS 設定上色：指令、介面、IP 位址和 ! 註解，寫在 ```cisco 或 ```ios 區塊裡。"
+    },
+    "ja": {
+      "name": "Cisco IOS",
+      "description": "コードブロック内の Cisco IOS の設定を色分けします。コマンド、インターフェイス、IP アドレス、! コメントを、```cisco または ```ios ブロックで。"
+    },
+    "ko": {
+      "name": "Cisco IOS",
+      "description": "코드 블록 안의 Cisco IOS 설정에 색을 입힙니다. 명령, 인터페이스, IP 주소와 ! 주석을 ```cisco 또는 ```ios 블록에서."
+    },
+    "de": {
+      "name": "Cisco IOS",
+      "description": "Färbt Cisco-IOS-Konfigurationen in Codeblöcken: Befehle, Schnittstellen, IP-Adressen und !-Kommentare, in ```cisco- oder ```ios-Blöcken."
+    },
+    "fr": {
+      "name": "Cisco IOS",
+      "description": "Colore les configurations Cisco IOS dans les blocs de code : commandes, interfaces, adresses IP et commentaires !, dans les blocs ```cisco ou ```ios."
+    },
+    "es": {
+      "name": "Cisco IOS",
+      "description": "Colorea las configuraciones de Cisco IOS en los bloques de código: comandos, interfaces, direcciones IP y comentarios !, en bloques ```cisco o ```ios."
+    },
+    "pt": {
+      "name": "Cisco IOS",
+      "description": "Colore as configurações do Cisco IOS nos blocos de código: comandos, interfaces, endereços IP e comentários !, em blocos ```cisco ou ```ios."
+    },
+    "ru": {
+      "name": "Cisco IOS",
+      "description": "Раскрашивает конфигурации Cisco IOS в блоках кода: команды, интерфейсы, IP-адреса и комментарии !, в блоках ```cisco или ```ios."
+    }
+  }
+}

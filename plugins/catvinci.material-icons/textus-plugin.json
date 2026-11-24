@@ -1,0 +1,81 @@
+{
+  "id": "catvinci.material-icons",
+  "name": "%name%",
+  "version": "0.1.0",
+  "publisher": "catvinci",
+  "author": "CatVinci Studio",
+  "description": "%description%",
+  "icon": "icon.svg",
+  "license": "MIT",
+  "repository": "https://github.com/CatVinci-Studio/textus-plugins",
+  "engines": {
+    "textus": ">=1.4.7"
+  },
+  "platforms": [
+    "desktop",
+    "ios"
+  ],
+  "category": "files",
+  "permissions": [],
+  "contributes": {
+    "fileIconThemes": [
+      {
+        "id": "material",
+        "label": "%theme%",
+        "path": "material-icons.json"
+      }
+    ]
+  },
+  "l10n": {
+    "en": {
+      "name": "Material Icon Theme",
+      "description": "File and folder icons from VS Code's Material Icon Theme in the sidebar, search and quick open: a colour icon for each kind of file - Markdown, PDF, pictures, Word, Excel, code - and for folders such as images, docs and src. Pick it in Settings › Appearance › File icons.",
+      "theme": "Material"
+    },
+    "zh": {
+      "name": "Material 图标主题",
+      "description": "侧边栏、搜索和快速打开里的文件与文件夹图标，来自 VS Code 的 Material Icon Theme：每种文件一个彩色图标——Markdown、PDF、图片、Word、Excel、代码——images、docs、src 等文件夹也有自己的图标。在 设置 › 外观 › 文件图标 中选用。",
+      "theme": "Material"
+    },
+    "zh-Hant": {
+      "name": "Material 圖示主題",
+      "description": "側邊欄、搜尋和快速開啟裡的檔案與資料夾圖示，來自 VS Code 的 Material Icon Theme：每種檔案各有一個彩色圖示——Markdown、PDF、圖片、Word、Excel、程式碼——images、docs、src 等資料夾也有專屬圖示。在 設定 › 外觀 › 檔案圖示 中選用。",
+      "theme": "Material"
+    },
+    "ja": {
+      "name": "Material Icon Theme",
+      "description": "サイドバー・検索・クイックオープンのファイルとフォルダーのアイコンを、VS Code の Material Icon Theme のものにします。Markdown、PDF、画像、Word、Excel、コードなどファイルの種類ごとのカラーアイコンと、images・docs・src などのフォルダーのアイコン。設定 › 外観 › ファイルアイコン で選びます。",
+      "theme": "Material"
+    },
+    "ko": {
+      "name": "Material Icon Theme",
+      "description": "사이드바, 검색, 빠른 열기의 파일과 폴더 아이콘을 VS Code의 Material Icon Theme 아이콘으로 바꿉니다. Markdown, PDF, 그림, Word, Excel, 코드 등 파일 종류마다 색 아이콘이 있고, images, docs, src 같은 폴더에도 아이콘이 있습니다. 설정 › 모양 › 파일 아이콘에서 고르세요.",
+      "theme": "Material"
+    },
+    "es": {
+      "name": "Material Icon Theme",
+      "description": "Iconos de archivos y carpetas del Material Icon Theme de VS Code en la barra lateral, la búsqueda y la apertura rápida: un icono de color para cada tipo de archivo - Markdown, PDF, imágenes, Word, Excel, código - y para carpetas como images, docs y src. Elígelo en Ajustes › Apariencia › Iconos de archivo.",
+      "theme": "Material"
+    },
+    "fr": {
+      "name": "Material Icon Theme",
+      "description": "Les icônes de fichiers et de dossiers du Material Icon Theme de VS Code dans la barre latérale, la recherche et l'ouverture rapide : une icône en couleur pour chaque type de fichier - Markdown, PDF, images, Word, Excel, code - et pour les dossiers comme images, docs et src. À choisir dans Réglages › Apparence › Icônes de fichier.",
+      "theme": "Material"
+    },
+    "de": {
+      "name": "Material Icon Theme",
+      "description": "Datei- und Ordnersymbole aus dem Material Icon Theme von VS Code in der Seitenleiste, der Suche und beim Schnellöffnen: ein farbiges Symbol für jede Dateiart - Markdown, PDF, Bilder, Word, Excel, Code - und für Ordner wie images, docs und src. Auszuwählen unter Einstellungen › Darstellung › Dateisymbole.",
+      "theme": "Material"
+    },
+    "ru": {
+      "name": "Material Icon Theme",
+      "description": "Значки файлов и папок из Material Icon Theme для VS Code на боковой панели, в поиске и быстром открытии: цветной значок для каждого вида файлов - Markdown, PDF, картинки, Word, Excel, код - и для папок вроде images, docs и src. Выбирается в Настройки › Оформление › Значки файлов.",
+      "theme": "Material"
+    },
+    "pt": {
+      "name": "Material Icon Theme",
+      "description": "Ícones de arquivos e pastas do Material Icon Theme do VS Code na barra lateral, na busca e na abertura rápida: um ícone colorido para cada tipo de arquivo - Markdown, PDF, imagens, Word, Excel, código - e para pastas como images, docs e src. Escolha-o em Ajustes › Aparência › Ícones de arquivo.",
+      "theme": "Material"
+    }
+  }
+}
