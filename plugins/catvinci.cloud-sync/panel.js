@@ -70,13 +70,28 @@
       picked(chosen);
     };
   }
+  var perService = /* @__PURE__ */ new Map();
+  var serviceFields = [
+    "endpoint",
+    "region",
+    "bucket",
+    "prefix",
+    ...secretFields
+  ];
   picker(
     "provider",
     ["s3", "webdav", "nutstore", "github"],
     (p) => api.t(p),
-    () => {
-      input("endpoint").value = "";
-      for (const id of secretFields) input(id).value = "";
+    (chosen) => {
+      const was = input("provider").dataset.previous ?? "";
+      perService.set(
+        was,
+        new Map(serviceFields.map((id) => [id, input(id).value]))
+      );
+      const kept = perService.get(chosen);
+      for (const id of serviceFields) input(id).value = kept?.get(id) ?? "";
+      delete input("provider").dataset.previous;
+      input("provider").dataset.previous = chosen;
       typed = true;
       formToggles();
     }
@@ -168,6 +183,7 @@
     const prefix = !state?.configured && root && config.prefix === DEFAULT_PREFIX ? folderPrefix(root) : config.prefix;
     for (const id of ["provider", "endpoint", "region", "bucket"])
       input(id).value = String(config[id]);
+    input("provider").dataset.previous = config.provider;
     input("prefix").value = prefix;
     input("pathStyle").checked = config.pathStyle;
     input("encrypt").checked = config.encrypt;

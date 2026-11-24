@@ -83,13 +83,30 @@ function picker(
     picked(chosen);
   };
 }
+// What was typed for each service, kept while the person switches between
+// them in one sitting: comparing services means retyping nothing.
+const perService = new Map<string, Map<string, string>>();
+const serviceFields = [
+  "endpoint",
+  "region",
+  "bucket",
+  "prefix",
+  ...secretFields,
+] as const;
 picker(
   "provider",
   ["s3", "webdav", "nutstore", "github"],
   (p) => api.t(p),
-  () => {
-    input("endpoint").value = "";
-    for (const id of secretFields) input(id).value = "";
+  (chosen) => {
+    const was = input("provider").dataset.previous ?? "";
+    perService.set(
+      was,
+      new Map(serviceFields.map((id) => [id, input(id).value])),
+    );
+    const kept = perService.get(chosen);
+    for (const id of serviceFields) input(id).value = kept?.get(id) ?? "";
+    delete input("provider").dataset.previous;
+    input("provider").dataset.previous = chosen;
     typed = true;
     formToggles();
   },
@@ -202,6 +219,7 @@ function fillForm(config: Config, root: string | null) {
       : config.prefix;
   for (const id of ["provider", "endpoint", "region", "bucket"] as const)
     input(id).value = String(config[id]);
+  input("provider").dataset.previous = config.provider;
   input("prefix").value = prefix;
   input("pathStyle").checked = config.pathStyle;
   input("encrypt").checked = config.encrypt;
