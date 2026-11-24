@@ -28,6 +28,7 @@ Bob --> Alice : Hi!
 
 ## 更新日志
 
+- **0.2.8** - A simpler icon, drawn in the text colour.
 - **0.2.7** - Its page no longer says which devices it runs on: the store shows that. It no longer gives a figure for the memory drawing on your computer takes.
 - **0.2.6** - Its package lists the libraries it carries, with their licenses.
 - **0.2.5** - A chart drawn while its block was folded (a phone) fits once the block opens, instead of keeping its old size.

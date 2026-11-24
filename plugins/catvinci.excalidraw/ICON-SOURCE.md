@@ -2,9 +2,9 @@
 
 `icon.svg` is Excalidraw's own logo, shown to say which product this plugin works with. Excalidraw and its logo belong to their owners; this plugin is not made or endorsed by them.
 
-- Source: https://github.com/excalidraw/excalidraw/blob/master/public/favicon.svg
+- Source: the Excalidraw mark (`LogoIcon`) in https://github.com/excalidraw/excalidraw/blob/master/packages/excalidraw/components/ExcalidrawLogo.tsx, in Excalidraw's own logo colours from https://github.com/excalidraw/excalidraw/blob/master/packages/excalidraw/css/theme.scss (#6965db light, #a8a5ff dark).
 - License: MIT, as the Excalidraw repository (https://github.com/excalidraw/excalidraw/blob/master/LICENSE), Copyright (c) 2020 Excalidraw.
-- Use: No published logo guidelines. The app icon is drawn as published, white tile included (the file only lost its size attributes and whitespace), to say the plugin opens Excalidraw drawings; it doesn't suggest the plugin is made or endorsed by Excalidraw.
+- Use: No published logo guidelines. The mark's path is used as published, on a transparent background, coloured as Excalidraw colours it in light and dark mode, to say the plugin opens Excalidraw drawings.
 
 ```text
 Copyright (c) 2020 Excalidraw.

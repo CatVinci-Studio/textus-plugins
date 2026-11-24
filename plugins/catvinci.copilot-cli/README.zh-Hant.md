@@ -14,5 +14,6 @@ Autopilot 會自己一直做下去，用掉更多進階請求次數。Textus 固
 
 ## 更新紀錄
 
+- **0.1.2** - A simpler icon, drawn in the text colour.
 - **0.1.1** - Its page is in every language Textus speaks. Needs Textus 1.4.3 itself, not a test version of it.
 - **0.1.0** - First version: GitHub Copilot CLI in Textus AI.
