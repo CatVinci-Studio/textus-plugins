@@ -62,6 +62,24 @@
       parallel: 2
     }
   };
+  var defaults = {
+    provider: "s3",
+    endpoint: "",
+    region: providers.s3.region,
+    bucket: "",
+    prefix: "textus/my-workspace",
+    pathStyle: true,
+    automatic: false,
+    interval: 5,
+    saveGap: 0,
+    exclude: "",
+    gitignore: false,
+    obsidian: false,
+    encrypt: false,
+    keepDays: 90,
+    parallel: 8,
+    maxFileMiB: 128
+  };
 
   // development/cloud-sync/src/panel.ts
   var api = acquireTextusApi();

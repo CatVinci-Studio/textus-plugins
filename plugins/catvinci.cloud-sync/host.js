@@ -156,24 +156,6 @@ function folderKey(root, platform) {
 }
 
 // development/cloud-sync/src/config.ts
-var defaults = {
-  provider: "s3",
-  endpoint: "",
-  region: "",
-  bucket: "",
-  prefix: "textus/my-workspace",
-  pathStyle: true,
-  automatic: false,
-  interval: 5,
-  saveGap: 0,
-  exclude: "",
-  gitignore: false,
-  obsidian: false,
-  encrypt: false,
-  keepDays: 90,
-  parallel: 8,
-  maxFileMiB: 128
-};
 var S3_SIGN_IN = ["accountS3", "secretS3"];
 var providers = {
   s3: {
@@ -224,6 +206,24 @@ var providers = {
     saveGap: 3,
     parallel: 2
   }
+};
+var defaults = {
+  provider: "s3",
+  endpoint: "",
+  region: providers.s3.region,
+  bucket: "",
+  prefix: "textus/my-workspace",
+  pathStyle: true,
+  automatic: false,
+  interval: 5,
+  saveGap: 0,
+  exclude: "",
+  gitignore: false,
+  obsidian: false,
+  encrypt: false,
+  keepDays: 90,
+  parallel: 8,
+  maxFileMiB: 128
 };
 function relativePath(value) {
   return value.length > 0 && value.length <= 1024 && !/[\\\x00-\x1f\x7f:*?"<>|]/.test(value) && value.split("/").every(

@@ -8,25 +8,6 @@ import {
   type KeepDays,
 } from "./model";
 
-export const defaults: Config = {
-  provider: "s3",
-  endpoint: "",
-  region: "",
-  bucket: "",
-  prefix: "textus/my-workspace",
-  pathStyle: true,
-  automatic: false,
-  interval: 5,
-  saveGap: 0,
-  exclude: "",
-  gitignore: false,
-  obsidian: false,
-  encrypt: false,
-  keepDays: 90,
-  parallel: 8,
-  maxFileMiB: 128,
-};
-
 /** The connection fields a service asks for; the rest are left out. */
 export type Field = "endpoint" | "bucket" | "region" | "token" | "pathStyle";
 
@@ -104,6 +85,25 @@ export const providers: Record<Config["provider"], Provider> = {
     saveGap: 3,
     parallel: 2,
   },
+};
+
+export const defaults: Config = {
+  provider: "s3",
+  endpoint: "",
+  region: providers.s3.region!,
+  bucket: "",
+  prefix: "textus/my-workspace",
+  pathStyle: true,
+  automatic: false,
+  interval: 5,
+  saveGap: 0,
+  exclude: "",
+  gitignore: false,
+  obsidian: false,
+  encrypt: false,
+  keepDays: 90,
+  parallel: 8,
+  maxFileMiB: 128,
 };
 
 export function relativePath(value: string): boolean {
