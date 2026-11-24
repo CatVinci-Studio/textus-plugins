@@ -23,6 +23,26 @@ describe("the bundled Marp", () => {
   });
 });
 
+/** On WebKit (Safari, Textus on Apple systems) a slide is drawn at its own
+ *  size unless Marp's browser script scales it: the tab loads it first. */
+it("the slides tab loads Marp's browser script before its own", () => {
+  const html = readFileSync(
+    new URL("../plugins/catvinci.slides/slides.html", import.meta.url),
+    "utf8",
+  );
+  const at = html.indexOf("textus-resource:lib/marp-browser.js");
+  expect(at).toBeGreaterThan(-1);
+  expect(at).toBeLessThan(html.indexOf("textus-resource:page.js"));
+  const libs = JSON.parse(
+    readFileSync(new URL("../libs.json", import.meta.url), "utf8"),
+  );
+  const script = readFileSync(
+    new URL(`../node_modules/${libs["catvinci.slides/lib/marp-browser.js"]}`, import.meta.url),
+    "utf8",
+  );
+  expect(script).toContain("marpitSVGPolyfill");
+});
+
 /** Presenting with no keyboard (present.js): a phone pages by tap and swipe. */
 describe("presenting by touch", () => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

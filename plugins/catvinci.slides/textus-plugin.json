@@ -1,7 +1,7 @@
 {
   "id": "catvinci.slides",
   "name": "%name%",
-  "version": "0.3.12",
+  "version": "0.3.13",
   "publisher": "catvinci",
   "author": "CatVinci Studio",
   "description": "%description%",
@@ -77,7 +77,7 @@
       "next": "Next slide",
       "more": "More",
       "exit": "Exit",
-      "empty": "No slides yet",
+      "empty": "Click in a document to see its slides",
       "saveFirst": "Save the document first: the slides are saved beside it.",
       "exported": "Saved {0}",
       "tool.export_slides": "Saves the document in front as a Marp slide deck - slides apart at each --- line - in one HTML file beside it (name.slides.html) that presents itself in any browser. Returns its path and how many slides it has."
@@ -94,7 +94,7 @@
       "next": "下一页",
       "more": "更多",
       "exit": "退出放映",
-      "empty": "还没有幻灯片",
+      "empty": "点一下文档，这里就会显示它的幻灯片",
       "saveFirst": "请先保存文档：幻灯片会保存在它旁边。",
       "exported": "已保存 {0}",
       "tool.export_slides": "把当前文档按 Marp 幻灯片导出（每条 --- 分隔一页），在它旁边保存为一个 HTML 文件（name.slides.html），可在任何浏览器中放映。返回文件路径和页数。"
@@ -111,7 +111,7 @@
       "next": "下一頁",
       "more": "更多",
       "exit": "結束放映",
-      "empty": "還沒有投影片",
+      "empty": "點一下文件，這裡就會顯示它的投影片",
       "saveFirst": "請先儲存文件：投影片會存在它旁邊。",
       "exported": "已儲存 {0}",
       "tool.export_slides": "把目前文件依 Marp 投影片匯出（每條 --- 分隔一頁），在它旁邊儲存為一個 HTML 檔（name.slides.html），可在任何瀏覽器中放映。回傳檔案路徑和頁數。"
@@ -128,7 +128,7 @@
       "next": "次のスライド",
       "more": "その他",
       "exit": "発表を終了",
-      "empty": "スライドはまだありません",
+      "empty": "文書をクリックすると、そのスライドがここに出ます",
       "saveFirst": "先に文書を保存してください。スライドはその隣に保存されます。",
       "exported": "{0} を保存しました",
       "tool.export_slides": "前面の文書を Marp のスライド（--- の行ごとに一枚）として、隣に一つの HTML ファイル（name.slides.html）に保存します。どのブラウザでも発表できます。パスとスライドの枚数を返します。"
@@ -145,7 +145,7 @@
       "next": "다음 슬라이드",
       "more": "더 보기",
       "exit": "발표 종료",
-      "empty": "아직 슬라이드가 없습니다",
+      "empty": "문서를 클릭하면 여기에 슬라이드가 나타납니다",
       "saveFirst": "먼저 문서를 저장하세요. 슬라이드는 그 옆에 저장됩니다.",
       "exported": "{0} 저장함",
       "tool.export_slides": "앞에 열린 문서를 Marp 슬라이드(--- 줄마다 한 장)로, 옆에 HTML 파일 하나(name.slides.html)로 저장합니다. 어느 브라우저에서나 발표할 수 있습니다. 경로와 슬라이드 수를 돌려줍니다."
@@ -162,7 +162,7 @@
       "next": "Nächste Folie",
       "more": "Mehr",
       "exit": "Beenden",
-      "empty": "Noch keine Folien",
+      "empty": "Klicke in ein Dokument, um seine Folien zu sehen",
       "saveFirst": "Speichere das Dokument zuerst: Die Folien kommen daneben.",
       "exported": "{0} gespeichert",
       "tool.export_slides": "Speichert das vordere Dokument als Marp-Foliensatz - eine Folie je ---Zeile - in einer HTML-Datei daneben (name.slides.html), die sich in jedem Browser selbst vorführt. Gibt ihren Pfad und die Folienzahl zurück."
@@ -179,7 +179,7 @@
       "next": "Diapositive suivante",
       "more": "Plus",
       "exit": "Quitter",
-      "empty": "Pas encore de diapositives",
+      "empty": "Cliquez dans un document pour voir ses diapositives",
       "saveFirst": "Enregistrez d'abord le document : les diapositives sont enregistrées à côté.",
       "exported": "{0} enregistré",
       "tool.export_slides": "Enregistre le document au premier plan comme une présentation Marp - une diapositive par ligne --- - dans un fichier HTML à côté (name.slides.html) qui se présente dans n'importe quel navigateur. Renvoie son chemin et son nombre de diapositives."
@@ -196,7 +196,7 @@
       "next": "Diapositiva siguiente",
       "more": "Más",
       "exit": "Salir",
-      "empty": "Aún no hay diapositivas",
+      "empty": "Haz clic en un documento para ver sus diapositivas",
       "saveFirst": "Guarda primero el documento: las diapositivas se guardan a su lado.",
       "exported": "Guardado {0}",
       "tool.export_slides": "Guarda el documento al frente como una presentación de Marp - una diapositiva por cada línea --- - en un archivo HTML a su lado (name.slides.html) que se presenta en cualquier navegador. Devuelve su ruta y cuántas diapositivas tiene."
@@ -213,7 +213,7 @@
       "next": "Próximo slide",
       "more": "Mais",
       "exit": "Sair",
-      "empty": "Ainda não há slides",
+      "empty": "Clique num documento para ver os slides dele",
       "saveFirst": "Salve o documento primeiro: os slides ficam ao lado dele.",
       "exported": "{0} salvo",
       "tool.export_slides": "Salva o documento em primeiro plano como uma apresentação Marp - um slide por linha --- - num arquivo HTML ao lado (name.slides.html) que se apresenta em qualquer navegador. Retorna o caminho e quantos slides tem."
@@ -230,7 +230,7 @@
       "next": "Следующий слайд",
       "more": "Ещё",
       "exit": "Выйти",
-      "empty": "Слайдов пока нет",
+      "empty": "Щёлкните в документе, чтобы увидеть его слайды",
       "saveFirst": "Сначала сохраните документ: слайды сохраняются рядом с ним.",
       "exported": "Сохранено: {0}",
       "tool.export_slides": "Сохраняет документ на переднем плане как слайды Marp - слайд на каждую строку --- - в один HTML-файл рядом (name.slides.html), который показывается в любом браузере. Возвращает путь и число слайдов."
