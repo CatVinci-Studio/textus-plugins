@@ -7,19 +7,22 @@
 const t = (key, ...args) => textus.l10n.t(key, ...args);
 const views = new Set();
 
-let marp = null;
+const marps = {};
 /** The deck, needing nothing from the web: emoji as text, KaTeX's fonts
- *  from Textus (withMath), and no theme font from a font service. */
-function render(markdown) {
-  marp =
-    marp ||
+ *  from Textus (withMath), and no theme font from a font service. A saved
+ *  deck (`file`) carries Marp's own script, which the tab loads itself:
+ *  Safari and Textus on Apple systems need it to scale a slide to its frame. */
+function render(markdown, file) {
+  const key = file ? "file" : "tab";
+  marps[key] =
+    marps[key] ||
     new Marp({
       html: false,
-      script: false,
+      script: file ? { source: "inline" } : false,
       emoji: { shortcode: true, unicode: false },
       math: { lib: "katex", katexFontPath: false },
     });
-  const out = marp.render(markdown || "");
+  const out = marps[key].render(markdown || "");
   out.css = out.css.replace(
     /@import\s+(?:url\(\s*)?(["'])https?:[^"']*\1\s*\)?[^;]*;|@import\s+url\(\s*https?:[^)]*\)[^;]*;/g,
     "",
@@ -116,20 +119,32 @@ let turn = 0;
 /** Pages that opened and still wait for the deck, whichever update ends. */
 const waiting = new Set();
 
-/** Renders only while a slides tab is open: no deck work on other edits,
- *  and none when the text is as it was. `to` is a page that just opened. */
 /** The document last read, for when none is in front. */
 let last = null;
 
+const MARKDOWN = /\.(md|markdown)$/i;
+
+/** The text to show and its document: the one in front, else the last one
+ *  read, else one open in another tab, as saved. Textus has none in front
+ *  with the deck's own tab or a page such as the plugin's there, or a
+ *  document in Source Mode or Source and Preview. Null for none. */
+async function source() {
+  const text = await textus.editor.getText();
+  if (text !== null) return (last = { text, doc: await textus.editor.getPath() });
+  if (last) return last;
+  const tabs = await textus.layout.tabs().catch(() => []);
+  const tab = (tabs || []).find((t) => t.kind === "document" && t.path && MARKDOWN.test(t.path));
+  const saved = tab && (await textus.files.readText(tab.path).catch(() => null));
+  return typeof saved === "string" ? { text: saved, doc: tab.path } : null;
+}
+
+/** Renders only while a slides tab is open: no deck work on other edits,
+ *  and none when the text is as it was. `to` is a page that just opened. */
 async function update(to) {
   if (!views.size) return;
   if (to) waiting.add(to);
   const mine = ++turn;
-  let text = await textus.editor.getText();
-  let doc = text === null ? null : await textus.editor.getPath();
-  // No document in front (a phone shows the deck's tab alone): the last one.
-  if (text === null && last) ({ text, doc } = last);
-  else if (text !== null) last = { text, doc };
+  const { text, doc } = (await source()) || { text: null, doc: null };
   let changed = false;
   if (text !== null) {
     const from = doc + "\0" + text;
@@ -145,7 +160,12 @@ async function update(to) {
       if (changed) deck = next;
     }
   }
-  if (!deck) return;
+  // Nothing to show: the page says so instead of staying blank.
+  if (!deck) {
+    if (mine !== turn) return;
+    for (const view of waiting) void view.postMessage({ html: "", css: "" });
+    return void waiting.clear();
+  }
   for (const view of changed ? views : waiting) void view.postMessage(deck);
   waiting.clear();
 }
@@ -176,7 +196,7 @@ async function writeDeck() {
   const path = await textus.editor.getPath();
   const text = await textus.editor.getText();
   if (!path || text === null) return null;
-  const { html, css } = render(await withPictures(text, path));
+  const { html, css } = render(await withPictures(text, path), true);
   const target = path.replace(/\.(md|markdown)$/i, "") + ".slides.html";
   const name = path.split(/[\\/]/).pop();
   await textus.files.writeText(target, standalone(name, html, await withMath(html, css)));
@@ -228,7 +248,7 @@ exports.activate = function (ctx) {
             label: t("format"),
             extension: "html",
             export: async ({ markdown, path }) => {
-              const { html, css } = render(await withPictures(markdown, path));
+              const { html, css } = render(await withPictures(markdown, path), true);
               const name = path ? path.split(/[\\/]/).pop() : t("name");
               return standalone(name, html, await withMath(html, css));
             },

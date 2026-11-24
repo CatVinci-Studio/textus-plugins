@@ -24,13 +24,19 @@
     const all = slides();
     index = Math.max(0, Math.min(all.length - 1, n));
     all.forEach((s, i) => s.classList.toggle("on", i === index));
-    count.textContent = all.length ? index + 1 + " / " + all.length : t("empty");
+    count.textContent = all.length ? index + 1 + " / " + all.length : "";
     api.setState({ index: index });
   }
 
   api.onDidReceiveMessage(function (deck) {
     document.getElementById("deck").textContent = deck.css;
     stage.innerHTML = deck.html;
+    // No document to show: where to click, in place of the slide.
+    if (!deck.html) {
+      const hint = stage.appendChild(document.createElement("p"));
+      hint.className = "tx-empty";
+      hint.textContent = t("empty");
+    }
     show(index);
   });
   document.getElementById("prev").onclick = () => show(index - 1);
