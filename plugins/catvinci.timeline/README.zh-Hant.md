@@ -21,19 +21,20 @@
 
 ## 權限
 
-只需要 **Textus AI 工具** 權限，讓 Textus AI 在寫入區塊前先檢查一次。它不讀取任何檔案，全部在本機繪製，桌面版和 iOS 都能使用。
+只需要 **Textus AI 工具** 權限，讓 Textus AI 在寫入區塊前先檢查一次。它不讀取任何檔案，全部在本機繪製。
 
 ## 更新紀錄
 
-- **0.4.0** - 資料庫可以按時間軸顯示：在它的視圖裡選「時間軸圖」，帶日期的列按先後排開，點一列打開它。需要 Textus 1.4.6。
-- **0.3.3** - 日期不再從中間斷開；區塊摺疊時畫的圖展開後會重新配合寬度。
-- **0.3.2** - 長說明和日期在窄面板裡自動換行，時間軸改用文件字型，空區塊會提示怎麼寫
-- **0.3.1** - 介紹頁重寫：一句話說明它做什麼，再講它能做的事，並列出每個版本的更新。
-- **0.3.0** - 新增 Textus AI 工具 `check_timeline`
-- **0.2.0** - 使用主題顏色，切換主題時重新繪製
-- **0.1.3** - 在 Textus 1.3 上文字使用主題顏色
-- **0.1.2** - 快速編輯時不再出現舊圖蓋過新圖
-- **0.1.0-0.1.1** - 最初版本：把事件畫成時間軸，可設定高度，匯出時附上圖片
+- **0.4.1** - Its page no longer says which devices it runs on: the store shows that.
+- **0.4.0** - A database can be shown as a timeline: pick Timeline among its views, and its dated rows line up in order; a click opens a row. Needs Textus 1.4.6.
+- **0.3.3** - A date no longer breaks in the middle ("2024-0" over "3"); a chart drawn while its block was folded fits once it opens.
+- **0.3.2** - long notes and dates wrap to fit a narrow island, the timeline uses the document's font, and an empty block says what to write
+- **0.3.1** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
+- **0.3.0** - a tool for Textus AI, `check_timeline`
+- **0.2.0** - the theme's colors, drawn again when the theme changes
+- **0.1.3** - text in the theme's colors on Textus 1.3
+- **0.1.2** - keeps up with quick edits: an older drawing never replaces a newer one
+- **0.1.0-0.1.1** - first versions: events drawn as a timeline, a height setting, pictures in exports
 
 <!-- ai-tools -->
 ## Textus AI 工具

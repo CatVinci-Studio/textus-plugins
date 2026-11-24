@@ -8,10 +8,11 @@ Show numbers before your headings as you write (1, 1.1, 1.2) without changing th
 - Obsidian: `number headings: off` in a document's front matter (the setting Obsidian's Number Headings plugin uses) turns the numbers off for that document.
 - **Numbers in exports** (**Settings › Extensions › Plugins › Heading Numbers**, on by default): HTML and PDF exports show the same numbers.
 
-The plugin reads the open document's headings (permission to read the editor) and gives Textus AI the `number_headings` tool below (permission for AI tools). The tool returns the text with numbers written in, or taken out; it doesn't change any file. It works on the desktop and on iPhone and iPad.
+The plugin reads the open document's headings (permission to read the editor) and gives Textus AI the `number_headings` tool below (permission for AI tools). The tool returns the text with numbers written in, or taken out; it doesn't change any file.
 
 ## Changes
 
+- **0.2.5** - Its page no longer says which devices it runs on: the store shows that.
 - **0.2.4** - With two documents open side by side, both show their heading numbers, not only the one you are typing in.
 - **0.2.3** - Front matter and code blocks no longer get numbers by mistake, and exports number only top-level headings, like the editor.
 - **0.2.2** - Its page now says in one sentence what it does, what it can do, and what changed in each version.

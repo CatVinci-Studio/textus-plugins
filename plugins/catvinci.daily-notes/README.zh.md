@@ -19,27 +19,28 @@
 
 ## 权限
 
-插件需要读写当前文件夹里的文件，用来查找和新建笔记；还要读取当前打开的是哪篇文档，以便找到前一天和后一天。它也为 Textus AI 提供两个工具，见下文。支持桌面版和 iPhone，需要 Textus 1.3.10 或更新版本。
+插件需要读写当前文件夹里的文件，用来查找和新建笔记；还要读取当前打开的是哪篇文档，以便找到前一天和后一天。它也为 Textus AI 提供两个工具，见下文。需要 Textus 1.4.3 或更新版本。
 
 ## 更新日志
 
-- **0.7.8** - 栏太窄、连简写月份都放不下时（比如手机侧边栏），月份改为单独一行放在按钮上方，不再把年份截掉。日历改用 Textus 自带的日期格式，安装包更小。
-- **0.7.7** - 一周的第一天改为跟随 Textus 的语言，而不是设备地区，与周数一致。
-- **0.7.6** - 页面语言由 Textus 自动跟随。需要 Textus 1.4.3。
-- **0.7.5** - 日历的月份标题从左边开始，侧边栏窄时以省略号结尾，不再两头被截。
-- **0.7.4** - 在手机等较窄的面板里，日历改用月份的简称，不再把完整名称截断。
-- **0.7.3** - 不再接受 2 月 30 日这类不存在的日期；宽面板里日历保持合适宽度，文件夹设置改动后会立即重绘；每周和每月的设置只在开启对应笔记时显示。
-- **0.7.2** - 说明和空状态文字更简短。
-- **0.7.1** - 工具栏、列表和各个控件都改用 Textus 自己的，随界面一起缩放，适配每个主题；需要 Textus 1.3.12。
-- **0.7.0** - 日期和模板改由 Textus 自己填写，和模板插件的写法一致；需要 Textus 1.3.10。
-- **0.6.0** - 每周和每月笔记：有各自的设置，日历上可以点周数和月份名，也会按库里 Periodic Notes 的设置来。
-- **0.5.0** - 没有日记设置的库把笔记放在最上层；`{{date}}`、`{{yesterday}}`、`{{tomorrow}}` 按笔记的命名格式写，也认 `MMMM Do, YYYY`。
-- **0.4.0** - 按 Obsidian 库的日记设置来；开头内容可以写 Templates 文件夹里的模板名；支持 `{{date:格式}}` 和 `{{title}}`。
-- **0.3.0** - Textus AI 可以读取某天的笔记并往里添加内容。
-- **0.2.0** - 日历改用 Textus 自己的控件，界面语言切换时跟着变；需要 Textus 1.3.2。
-- **0.1.3** - 使用 Textus 1.3 的颜色和字体。
-- **0.1.2** - 一周从哪天开始跟随地区；某天的笔记不会被覆盖。
-- **0.1.0-0.1.1** - 最早的版本：快捷键打开今天的笔记、日历、前一天和后一天，模板里的 `{{weekday}}`、`{{yesterday}}`、`{{tomorrow}}` 和 `{{time}}`。
+- **0.7.9** - Its page no longer says which devices it runs on: the store shows that. It names the Textus it needs, 1.4.3.
+- **0.7.8** - Where the bar is too narrow for even the short month name (a phone's sidebar), the month goes on a row of its own above the buttons instead of losing its year. The calendar writes dates with Textus's own, so the package is smaller.
+- **0.7.7** - Weeks start as Textus's language has them, not the device's region, so they agree with the week numbers.
+- **0.7.6** - The page follows Textus's language by itself. Needs Textus 1.4.3.
+- **0.7.5** - The Calendar's month title starts at the left and ends in an ellipsis in a narrow sidebar, instead of being cut at both ends.
+- **0.7.4** - In a narrow panel, such as on a phone, the calendar shows the month's short name instead of cutting the long one off.
+- **0.7.3** - Impossible dates such as February 30 are refused, the calendar stays a comfortable width in wide panels and redraws when folder settings change, and weekly and monthly settings show only when those notes are on.
+- **0.7.2** - Shorter help and empty-state text.
+- **0.7.1** - Its bars, lists and controls are Textus's own, grow with the interface and follow every theme; needs Textus 1.3.12.
+- **0.7.0** - Dates and templates are filled in by Textus itself, the same way as in the Templates plugin; needs Textus 1.3.10.
+- **0.6.0** - Weekly and monthly notes, with their own settings, the calendar's week numbers and month name, and a vault's Periodic Notes settings.
+- **0.5.0** - A vault without daily notes settings keeps its notes at its top; `{{date}}`, `{{yesterday}}` and `{{tomorrow}}` follow the notes' name format, `MMMM Do, YYYY` included.
+- **0.4.0** - Follows an Obsidian vault's daily notes settings; the starting text can name a template in the Templates folder; `{{date:FORMAT}}` and `{{title}}`.
+- **0.3.0** - Textus AI can read a day's note and add to it.
+- **0.2.0** - The calendar uses Textus's own controls and follows the interface language when it changes; needs Textus 1.3.2.
+- **0.1.3** - Textus 1.3's colors and type.
+- **0.1.2** - Weeks start as your region has them; a day's note is never written over.
+- **0.1.0-0.1.1** - First versions: today's note with a shortcut, the calendar, the day before and after, `{{weekday}}`, `{{yesterday}}`, `{{tomorrow}}` and `{{time}}` in the template.
 
 <!-- ai-tools -->
 ## Textus AI 工具
@@ -47,5 +48,5 @@
 装上这个插件后，Textus AI 在对话中可以使用：
 
 - `read_daily_note`：读取某一天的日记（默认今天）：从日记文件夹中给出它的路径、是否存在以及全文。
-- `append_to_daily_note`：在某一天的日记（默认今天）末尾追加 Markdown 内容；如果还没有这篇日记，先按模板新建。 想先放在侧栏、以后再用的笔记用 add_note；带日期的待办用 add_task。
+- `append_to_daily_note`：在某一天的日记（默认今天）末尾追加 Markdown 内容；如果还没有这篇日记，先按模板新建。 想先放在侧边栏、以后再用的笔记用 add_note；带日期的待办用 add_task。
 <!-- /ai-tools -->

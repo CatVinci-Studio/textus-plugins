@@ -12,13 +12,14 @@
 
 На Mac сочетания Textus висят на ⌘, поэтому все клавиши Ctrl принадлежат Emacs. В Windows и Linux клавиши Ctrl принадлежат Textus и системе (копировать, вставить, вырезать, выделить всё, жирный, поиск), поэтому Emacs достаются только клавиши M-, C-SPC и C-g, пока вы не включите **Забрать клавиши Ctrl, которые использует приложение** в настройках плагина.
 
-Работает на компьютере и на iPhone. Плагин просит одно разрешение — клавиши редактора, чтобы забирать эти клавиши в редакторе.
+На планшете работает с подключённой клавиатурой. Плагин просит одно разрешение — клавиши редактора, чтобы забирать эти клавиши в редакторе.
 
 ## Изменения
 
-- **0.1.6** - C-x C-s и C-x C-g снова работают в Windows и Linux. Строка состояния показывает Emacs, только когда клавиши действительно у него.
-- **0.1.5** - Короче подсказки и тексты пустых состояний.
-- **0.1.4** - Его страница теперь одной фразой говорит, что он делает, что умеет и что менялось в каждой версии.
-- **0.1.3** - Указано, где работает: компьютер и iPhone.
-- **0.1.2** - C-x больше не залипает; C-d и C-y не трогают буфер обмена и область.
-- **0.1.0-0.1.1** - Первые версии: перемещения, метка и область, kill ring с C-y и M-y, M-u M-l M-c, отмена и клавиши C-x; страница в магазине и значок.
+- **0.1.7** - Its page says that on a tablet it needs a keyboard, instead of which devices it runs on. It hears keys by the API's current name, and the old one on an older Textus.
+- **0.1.6** - C-x C-s and C-x C-g work again on Windows and Linux. The status bar shows Emacs only while it really has the keys.
+- **0.1.5** - Shorter help and empty-state text.
+- **0.1.4** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
+- **0.1.3** - Says where it runs: desktop and iPhone.
+- **0.1.2** - C-x no longer sticks; C-d and C-y leave the clipboard and the region alone.
+- **0.1.0-0.1.1** - First versions: moves, the mark and region, a kill ring with C-y and M-y, M-u M-l M-c, undo and C-x keys; store page and icon.

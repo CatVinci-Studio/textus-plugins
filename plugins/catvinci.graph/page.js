@@ -1,7 +1,8 @@
 // The graph pages: the whole folder's (global.html) and the sidebar's,
 // around the document in front (local.html). The full graph has a small
-// settings panel - filters and colour groups. The host filters the graph
-// and sends it back; how it looks adapts by itself (graph-view.js).
+// settings panel - filters and colour groups - in Textus's popover. The
+// host filters the graph and sends it back; how it looks adapts by itself
+// (graph-view.js).
 (function () {
   "use strict";
   const api = acquireTextusApi();
@@ -50,7 +51,8 @@
 
   let settings = null;
   const open = new Set(["filters"]);
-  const panel = $("panel");
+  const gear = $("settings");
+  const panel = gear ? document.createElement("form") : null;
   let sending = 0;
 
   function el(tag, props, children) {
@@ -170,18 +172,28 @@
     );
   }
 
-  const gear = $("settings");
   if (gear) {
+    panel.id = "panel";
     gear.setAttribute("aria-label", t("set.title"));
+    let pop = null;
+    let touched = false;
+    gear.addEventListener("pointerdown", (e) => (touched = e.pointerType === "touch"));
     gear.onclick = () => {
-      panel.hidden = !panel.hidden;
-      gear.setAttribute("aria-expanded", String(!panel.hidden));
+      if (pop) return pop.close();
+      pop = window.textus.popover(panel, gear, { label: t("set.title"), align: "end" });
+      // By touch, the search field's keyboard waits for a tap on the field.
+      if (touched && panel.contains(document.activeElement)) document.activeElement.blur();
+      gear.setAttribute("aria-expanded", "true");
+      pop.closed.then(() => {
+        pop = null;
+        gear.setAttribute("aria-expanded", "false");
+      });
     };
     panel.addEventListener("submit", (e) => e.preventDefault());
   }
 
   let first = true;
-  api.onMessage((message) => {
+  api.onDidReceiveMessage((message) => {
     if (message.type === "color") {
       change(
         "groups",

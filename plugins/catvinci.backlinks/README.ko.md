@@ -2,7 +2,7 @@
 
 `[[`를 입력해 노트·제목·블록을 링크하고, `![[`로 넣어 보여 주며, 지금 문서를 링크하는 노트를 사이드바에서 확인합니다.
 
-`[[노트]]` 같은 링크는 Textus에 기본으로 들어 있어 플러그인 없이도 쓰고 열 수 있습니다. 이 플러그인은 링크 쓰기를 돕고, 링크가 가리키는 내용을 그 자리에 보여 주며, 지금 문서 주변의 링크를 목록으로 보여 줍니다. 데스크톱과 iOS에서 쓸 수 있습니다.
+`[[노트]]` 같은 링크는 Textus에 기본으로 들어 있어 플러그인 없이도 쓰고 열 수 있습니다. 이 플러그인은 링크 쓰기를 돕고, 링크가 가리키는 내용을 그 자리에 보여 주며, 지금 문서 주변의 링크를 목록으로 보여 줍니다.
 
 ## 쓰면서 링크하기
 
@@ -39,19 +39,20 @@
 
 ## 변경 내역
 
-- **0.4.7** - 더 이상 실행되지 않는 이전 Textus용으로 남겨 둔 코드를 지웠습니다.
-- **0.4.6** - 필터 칸과 빈 목록 안내가 Textus 언어를 바꾸면 따라 바뀝니다. Textus 1.4.3이 필요합니다.
-- **0.4.5** - 링크되지 않은 언급이 올바른 줄에서 열리고, 링크 형식은 Textus가 직접 저장합니다(Textus 1.4.3).
-- **0.4.4** - 링크 변환은 코드 블록 안의 링크를 건드리지 않고 그 뒤의 링크도 변환합니다. ‘링크되지 않은 언급’은 프런트 매터나 코드 안의 이름을 더 이상 표시하거나 링크하지 않습니다.
-- **0.4.3** - 아직 없는 노트로 가는 표준 링크가 나가는 링크에 나옵니다. 같은 노트 안의 제목 링크 때문에 노트 자신이 목록에 뜨지 않고, 구분선을 끌 때 패널을 다시 그리지 않습니다.
-- **0.4.2** - 설명과 빈 상태 문구를 짧게 줄였습니다. 사이드바 패널과 페이지를 Textus 1.3.13 레이아웃에 맞췄습니다.
-- **0.4.1** - 아직 링크가 없는 노트에서 [[를 입력하면 표준 링크를 씁니다. 입력 중인 [[를 노트에 이미 있는 위키 링크로 잘못 보고 있었습니다.
-- **0.4.0** - '새 링크 작성 방식'으로 폴더의 새 링크를 표준 링크와 위키 링크 중에서 고르고, '링크 변환'으로 지금 문서나 폴더 전체의 링크를 다른 방식으로 바꿉니다. [[는 폴더의 방식대로, 정한 게 없으면 표준 링크로 씁니다.
-- **0.3.1** - 소개 페이지를 새로 썼습니다. 무엇을 하는지 한 문장으로, 할 수 있는 일과 버전별 변경 내역을 담았습니다.
-- **0.3.0** - `[[`로 노트·제목·블록 자동 완성, `![[` 넣어 보기, 이름을 "백링크"에서 "양방향 링크"로 변경
-- **0.2.1** - 설명에 "양방향 링크"라고 적어 스토어 검색에 나오도록
-- **0.2.0** - Textus AI 도구 `list_backlinks` 추가
-- **0.1.0-0.1.1** - 첫 버전: 링크된 언급과 링크되지 않은 언급(**링크로 만들기**), 나가는 링크, 필터. 위키 링크가 있는 문서를 열면 추천
+- **0.4.8** - Its page no longer says which devices it runs on: the store shows that.
+- **0.4.7** - Code kept for Textus versions it no longer runs on is gone.
+- **0.4.6** - The filter field and empty message follow Textus's language when you switch it. Needs Textus 1.4.3.
+- **0.4.5** - Unlinked mentions open on the right line, and Link Style is set by Textus itself (Textus 1.4.3).
+- **0.4.4** - The Convert Links commands leave links inside a code block alone and convert the ones after it, and Unlinked mentions no longer lists or links names in front matter or code.
+- **0.4.3** - Standard links to notes that don't exist yet now show under Outgoing links, a note's links to its own headings no longer list the note itself, and dragging a divider no longer redraws the panel.
+- **0.4.2** - Shorter help and empty-state text. Its sidebar panel and page follow Textus 1.3.13's layout.
+- **0.4.1** - In a note with no links yet, [[ writes a standard link: the [[ being typed was taken for a wiki link the note already had.
+- **0.4.0** - New Links: Standard or [[Wiki]]… chooses how the folder writes new links, and Convert Links turns a note's or the whole folder's links from one way into the other; [[ writes the folder's way, a standard link where nothing says otherwise.
+- **0.3.1** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
+- **0.3.0** - `[[` completion for notes, headings and blocks; `![[` embeds; renamed from Backlinks to Two-way Links
+- **0.2.1** - the description says "two-way links", so a store search finds it
+- **0.2.0** - a tool for Textus AI, `list_backlinks`
+- **0.1.0-0.1.1** - first versions: linked and unlinked mentions with **Link**, outgoing links and a filter; suggested for documents with wiki links
 
 <!-- ai-tools -->
 ## Textus AI 도구

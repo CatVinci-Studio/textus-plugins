@@ -8,9 +8,10 @@ Plan work as cards in lists on a board, kept as a plain Markdown file.
 
 ## On the board
 
-- **Add a card** at the bottom of a list. Click a card's text to edit it, tick its box when it is done, and use its × button to remove it.
-- **Add list** makes a new list. Click a list's title to rename it; an empty list can be removed.
-- Drag cards within a list or to another one, and drag a list by its head to reorder the lists. The others make way as you drag.
+- **Add a card** at the bottom of a list. Click a card's text to edit it and tick its box when it is done. Its ⋯ button (or a right-click) moves it to another list or deletes it; Undo on the note that follows brings it back.
+- **Add list** makes a new list, ready to be named. Click a list's title to rename it; an empty list can be deleted from its ⋯ menu.
+- On a phone, each list fills the screen: swipe to the next one.
+- Drag cards within a list or to another one, and drag a list by its head to reorder the lists. The others make way as you drag. On a touch screen, hold a card a moment, then drag it; at the screen's edge on a phone the board turns to the next list. Held and let go without moving, a card opens its menu.
 - Write a [[link]] in a card and click it to open that note.
 - **Edit as Markdown** opens the file as text. The board follows changes made there or anywhere else.
 - What Obsidian's Kanban keeps in the file besides the lists, such as its settings and the mark on its done list, stays as written.
@@ -36,6 +37,8 @@ kanban-plugin: board
 
 ## Changes
 
+- **0.4.14** - On a phone or tablet, hold a card a moment to drag it within a list or to another; at the screen's edge on a phone the board turns to the next list, and the page no longer scrolls under the card. Held and let go without moving, a card opens its menu. Dragged near the board's edge, the board scrolls, and a card let go below a short list goes into that list.
+- **0.4.13** - A card's ⋯ menu (or a right-click) moves it to another list or deletes it, with Undo, instead of an × that deleted at once - always showing on a touch screen. A new list starts with its name being written. On a phone a list fills the screen and a swipe settles on the next; in a narrow tab, Edit as Markdown goes into the ⋯ menu.
 - **0.4.12** - Cards and lists make way at the pace of the rest of Textus.
 - **0.4.11** - A list dragged by its head lifts and slides along the board as Textus's own tabs do; Esc puts it back.
 - **0.4.10** - A card's checkbox sits on the middle of its first line at any text size.

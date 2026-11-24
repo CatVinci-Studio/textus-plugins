@@ -14,7 +14,6 @@ body {
   flex: none;
 }
 .stage {
-  position: relative;
   flex: 1;
   min-height: 0;
   display: flex;
@@ -53,24 +52,14 @@ canvas {
   padding: 0 var(--pane-row-inset, var(--space-2));
 }
 
-/* The settings panel over the graph's corner, its rows as Settings' are. */
+/* The settings panel, in Textus's popover under its button (its padding
+   around, the window's margin beyond); its rows as Settings' are. */
 #panel {
-  position: absolute;
-  top: var(--space-2);
-  right: var(--space-2);
-  width: min(17rem, calc(100% - 2 * var(--space-2)));
-  max-height: calc(100% - 2 * var(--space-2));
+  width: min(17rem, calc(100vw - 2 * var(--space-3) - 2 * var(--space-4)));
+  max-height: 70vh;
   overflow-y: auto;
-  padding: var(--space-1);
-  border: 1px solid var(--ui-border);
-  border-radius: var(--shape-m);
-  background: var(--ui-surface);
-  box-shadow: var(--shadow-popover);
   color: var(--ui-text);
   font-size: var(--text-body);
-}
-#panel[hidden] {
-  display: none;
 }
 #panel details + details {
   margin-top: var(--space-1);

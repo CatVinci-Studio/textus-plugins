@@ -23,10 +23,11 @@ Draws digital timing diagrams and register layouts from WaveJSON.
 
 ## Permissions
 
-It asks only for **Tools for Textus AI**, so Textus AI can check a block before it writes one. WaveDrom comes with the plugin: it reads no files and draws everything on your device, on the desktop and on iOS.
+It asks only for **Tools for Textus AI**, so Textus AI can check a block before it writes one. WaveDrom comes with the plugin: it reads no files and draws everything on your device.
 
 ## Changes
 
+- **0.3.6** - Its page no longer says which devices it runs on: the store shows that.
 - **0.3.5** - Its package lists the libraries it carries, with their licenses.
 - **0.3.4** - A very long diagram shrinks only as far as its labels stay readable, then scrolls sideways (a phone).
 - **0.3.3** - Readable in dark mode: the lines and text take the theme's colours on the page's own background; a diagram drawn while its block was folded fits once it opens. A long diagram shrinks to the column instead of being cut off.

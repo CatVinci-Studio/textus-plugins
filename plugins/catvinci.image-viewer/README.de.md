@@ -15,16 +15,17 @@
 
 ## Berechtigungen
 
-Keine. Es liest nur die Datei, die du öffnest, auf dem Desktop und unter iOS.
+Keine. Es liest nur die Datei, die du öffnest.
 
 ## Änderungen
 
-- **0.2.5** - Die Seite folgt der Sprache von Textus von selbst. Benötigt Textus 1.4.3.
-- **0.2.4** - Ein gedrehtes und gezoomtes Bild lässt sich jetzt bis an jeden Rand scrollen, und ein quer gedrehtes Bild passt ins Fenster. Zoom und Drehung bleiben erhalten, wenn das Feld verschoben wird, eine vierte Drehung dreht nicht mehr zurück, und die Leiste passt in ein schmales Feld.
-- **0.2.3** - Ein Trackpad-Pinch zoomt fließend, im Takt der Geste; mit Textus 1.3.13 zoomt ein Pinch auf dem Mac das Bild, nicht das Dokument dahinter. Die Leiste folgt der Reihenfolge von Textus: was sie zeigt, dann Suche und Zoom.
-- **0.2.2** - Leisten, Listen und Steuerelemente sind jetzt die von Textus, wachsen mit der Oberfläche und folgen jedem Theme; braucht Textus 1.3.12.
-- **0.2.1** - Seine Seite sagt jetzt in einem Satz, was es tut, was es kann und was sich in jeder Version geändert hat.
-- **0.2.0** - die Schaltflächen und Tab-Leiste von Textus; Beschriftungen folgen einem Wechsel der Oberflächensprache
-- **0.1.3** - die Farben der Themes von Textus 1.3
-- **0.1.2** - die Prozentzahl wechselt zwischen eingepasst und Originalgröße
-- **0.1.0-0.1.1** - erste Versionen: Zoom, Einpassen, Ziehen, Drehen, Tasten, der Quelltext eines SVG und ein Hinweis bei einer Datei, die sich nicht öffnen lässt
+- **0.2.6** - Its page no longer says which devices it runs on: the store shows that. After switching to another tab and back, a picture keeps where it was scrolled as well as its zoom.
+- **0.2.5** - The page follows Textus's language by itself. Needs Textus 1.4.3.
+- **0.2.4** - A turned and zoomed picture now scrolls to every edge, and a sideways picture fits the window. Zoom and turn are kept when the panel moves, a fourth turn no longer spins back, and the bar fits a narrow panel.
+- **0.2.3** - A trackpad pinch zooms smoothly, in step with the gesture; with Textus 1.3.13 a pinch on a Mac zooms the picture, not the document behind it. Its bar keeps Textus's one order: what it shows, then find and zoom.
+- **0.2.2** - Its bars, lists and controls are Textus's own, grow with the interface and follow every theme; needs Textus 1.3.12.
+- **0.2.1** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
+- **0.2.0** - Textus's own buttons and tab bar; labels follow the interface language when it changes
+- **0.1.3** - colors from Textus 1.3's themes
+- **0.1.2** - the percentage switches between fit and actual size
+- **0.1.0-0.1.1** - first versions: zoom, fit, drag, rotate, keys, an SVG's source, and a message for a file that can't be opened

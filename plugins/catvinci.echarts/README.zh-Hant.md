@@ -11,7 +11,7 @@
 - 設定畫不出來時，區塊裡會說明哪裡出了問題。
 - 匯出 HTML、PDF、Word 時，圖表會以圖片放進去。
 
-外掛只要求一項權限：為 Textus AI 提供下方列出的 `check_echarts` 工具，讓它把區塊寫進文件前先檢查一遍。電腦、iPhone 和 iPad 上都能使用。
+外掛只要求一項權限：為 Textus AI 提供下方列出的 `check_echarts` 工具，讓它把區塊寫進文件前先檢查一遍。
 
 ## 範例
 
@@ -25,14 +25,15 @@
 
 ## 更新紀錄
 
-- **0.3.4** - 安裝包內附上所帶第三方函式庫的清單和授權。
-- **0.3.3** - 區塊摺疊時（手機上）畫的圖，展開後會重新配合寬度，不再保持原本的大小。
-- **0.3.2** - 面板寬度改變時圖表會重新繪製；文字和預設高度跟隨 App 的縮放和字型。
-- **0.3.1** - 簡介裡去掉了地圖：程式碼區塊載入不了地圖資料。
-- **0.3.0** - Textus AI 寫 `echarts` 區塊前可以先檢查。
-- **0.2.0** - 系列顏色取自佈景主題的色調。需要 Textus 1.3.2。
-- **0.1.3** - 依 Textus 1.3 的新名稱讀取主題的內文文字顏色和註腳字級。
-- **0.1.0-0.1.2** - 最初的版本：在文件中繪製 `echarts` 區塊，支援 `height=`，匯出時以圖片呈現。
+- **0.3.5** - Its page no longer says which devices it runs on: the store shows that.
+- **0.3.4** - Its package lists the libraries it carries, with their licenses.
+- **0.3.3** - A chart drawn while its block was folded (a phone) fits once the block opens, instead of keeping its old size.
+- **0.3.2** - Charts redraw when the panel width changes, and their text and default height follow the app's zoom and font.
+- **0.3.1** - Its description no longer lists maps, which a block can't load.
+- **0.3.0** - Textus AI can check an `echarts` block before it writes one.
+- **0.2.0** - Series colors come from the theme's tones. Needs Textus 1.3.2.
+- **0.1.3** - Uses the theme's document text color and footnote size under their Textus 1.3 names.
+- **0.1.0-0.1.2** - First versions: `echarts` code blocks drawn in the document, `height=`, and exports as a picture.
 
 <!-- ai-tools -->
 ## Textus AI 工具

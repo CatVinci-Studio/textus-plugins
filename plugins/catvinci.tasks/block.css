@@ -59,6 +59,16 @@ body {
   overflow-wrap: anywhere;
   cursor: pointer;
 }
+.note-link {
+  color: var(--ui-accent);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+@supports (color: color-mix(in srgb, red, red)) {
+  .note-link {
+    text-decoration-color: color-mix(in srgb, currentColor 40%, transparent);
+  }
+}
 .task:not([data-open]) .text {
   color: var(--ui-muted);
   text-decoration: line-through;

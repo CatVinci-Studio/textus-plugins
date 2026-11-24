@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { loadPlugin } from "./plugin-host";
+import { loadPlugin, manifestOf, onPhone } from "./plugin-host";
 
 /** A fetch answering `body` as JSON, remembering what it was asked. */
 function answering(body: unknown, status = 200) {
@@ -105,5 +105,15 @@ describe("Keenable Search", () => {
     const answer = await plugin.tools.get("keenable_search")!({ query: "q" });
     expect(asked[0]).toBe("https://api.keenable.ai/v1/search/public");
     expect(answer).toBe("Keenable sent an unreadable answer.");
+  });
+
+  it("sets its key from a button on its page in Settings, with no command palette", () => {
+    const manifest = manifestOf("catvinci.keenable");
+    const key = manifest.contributes.settings.find(
+      (s: { type: string }) => s.type === "button",
+    );
+    expect(key.command).toBe("catvinci.keenable.setKey");
+    expect(manifest.l10n.en[key.title.slice(1, -1)]).toBe("Set API Key…");
+    expect(onPhone(manifest)).toContain("catvinci.keenable.setKey");
   });
 });

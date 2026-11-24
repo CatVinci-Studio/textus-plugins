@@ -74,3 +74,15 @@ it("drops a pending save that a manual sync already covered", () => {
   vi.advanceTimersByTime(60_000);
   expect(runs).toEqual([]);
 });
+it("holds its timers while paused, keeping a save made meanwhile for when it resumes", () => {
+  pacer.configure(pace);
+  pacer.pause(true);
+  pacer.saved();
+  vi.advanceTimersByTime(600_000);
+  expect(runs).toEqual([]);
+  // Saved long enough ago: at once.
+  const back = Date.now();
+  pacer.pause(false);
+  vi.advanceTimersByTime(0);
+  expect(runs).toEqual([back]);
+});

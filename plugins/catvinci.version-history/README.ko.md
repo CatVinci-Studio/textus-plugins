@@ -17,20 +17,21 @@
 
 ## 변경 내역
 
-- **0.5.0** - Textus 1.4.4부터 다른 플러그인이 보관한 문서 버전(클라우드 동기화 등)도 출처별로 나열되어, 다른 버전처럼 비교하고 복원할 수 있습니다.
-- **0.4.1** - '되돌리기'로 줄여 어느 언어에서도 좁은 사이드바에 버튼이 들어갑니다.
-- **0.4.0** - 최근 50개 대신 오래될수록 듬성듬성 보관합니다. 같은 내용은 한 번만 저장하고, 삭제한 문서의 버전은 한 달 뒤에 지웁니다. 아무 두 버전을 단어 단위로 비교, 변경 한 곳만 되돌리기, 버전 이름과 고정, Textus 밖의 변경 기록. 0.3의 버전은 자동으로 옮겨집니다. Textus 1.4.3이 필요합니다. 데스크톱의 Git 폴더에서는 문서의 커밋도 버전 아래에 보입니다.
-- **0.3.8** - 문서를 연 직후 첫 저장이 일어나도 저장 전 내용이 사라지지 않습니다.
-- **0.3.7** - 처음 저장하기 전의 문서 내용도 버전으로 남고, 문서 이름을 바꾸거나 옮겨도 버전이 함께 따라갑니다.
-- **0.3.6** - 입력 중 자동 저장은 문서의 모든 버전이 아니라 최신 버전만 기록하므로, 긴 문서도 훨씬 가볍게 저장됩니다.
-- **0.3.5** - 자동 저장이 버전을 갱신해도 펼친 버전이 닫히지 않고, 복원도 항상 그 버전을 찾습니다. 저장 공간이 가득 차면 다른 문서의 오래된 버전부터 비우고, 남기지 못하면 패널에서 알려 줍니다. 행을 키보드로 다룰 수 있고, 좁은 사이드바에서는 버튼이 줄바꿈됩니다.
-- **0.3.4** - 사이드바에서 패널이 자체 제목을 그리지 않아 다른 탭과 같아졌습니다. 설명과 빈 상태 문구를 짧게 줄였습니다. 사이드바 패널과 페이지를 Textus 1.3.13 레이아웃에 맞췄습니다.
-- **0.3.3** - 도구 막대, 목록, 컨트롤을 Textus 자체의 것으로 바꿨습니다. 인터페이스와 함께 커지고 모든 테마를 따릅니다. Textus 1.3.12가 필요합니다.
-- **0.3.2** - 소개 페이지를 새로 썼습니다. 무엇을 하는지 한 문장으로, 할 수 있는 일과 버전별 변경 내역을 담았습니다.
-- **0.3.1** - 다른 플러그인과 같이 쓰는 경로 코드만 바뀌었습니다. 쓰는 방법은 같습니다.
-- **0.3.0** - Textus AI가 문서의 버전을 나열하고 비교할 수 있습니다(`list_versions`, `diff_versions`).
-- **0.2.0** - Textus 자체 컨트롤을 씁니다. Textus 1.3.2가 필요합니다.
-- **0.1.0-0.1.3** - 첫 버전들: 저장마다 버전, 그 뒤 바뀐 내용 보기, 수락이나 거절할 수 있는 수정으로 되돌리기, 새 문서로 열기, 짧은 간격의 저장 묶기, 날짜별 묶음, 공간이 차면 오래된 버전부터 삭제.
+- **0.5.1** - Its page shows its list of changes in English in every language.
+- **0.5.0** - From Textus 1.4.4 the versions other plugins keep of a document - Cloud Sync's - are listed too, each under its source's name, to compare and restore like the rest.
+- **0.4.1** - Restore is one word, so its button fits a narrow sidebar in every language.
+- **0.4.0** - Versions thin out with age instead of the last 50 going; each text is stored once; a deleted document's versions go a month later. Compare any two versions, word by word; take back one change; name and pin versions; changes made outside Textus are kept. Versions from 0.3 move over by themselves. Needs Textus 1.4.3. In a Git folder on the desktop, the document's commits show under its versions.
+- **0.3.8** - The text from before the first save is no longer lost when that save comes right as the document opens.
+- **0.3.7** - The text a document had before its first save is kept as a version too, and a document's versions follow it when it is renamed or moved.
+- **0.3.6** - Autosave while you type writes only the newest version, not every version of the document, so long documents save with much less work.
+- **0.3.5** - An open version stays open while autosave updates it, and Restore always finds it. When storage is full, older versions of other documents make room, and the panel says when a save couldn't be kept. Rows work from the keyboard; buttons wrap in a narrow sidebar.
+- **0.3.4** - In the sidebar the panel draws no title of its own, as the sidebar's other tabs. Shorter help and empty-state text. Its sidebar panel and page follow Textus 1.3.13's layout.
+- **0.3.3** - Its bars, lists and controls are Textus's own, grow with the interface and follow every theme; needs Textus 1.3.12.
+- **0.3.2** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
+- **0.3.1** - Only the path code shared with other plugins changed; nothing changes in use.
+- **0.3.0** - Textus AI can list a document's versions and compare them (`list_versions`, `diff_versions`).
+- **0.2.0** - Textus's own controls. Needs Textus 1.3.2.
+- **0.1.0-0.1.3** - First versions: a version on each save, what changed since, restore as an edit to accept or reject, open as a new document, saves close together kept as one, versions grouped by day, the oldest dropped when storage is full.
 
 <!-- ai-tools -->
 ## Textus AI 도구

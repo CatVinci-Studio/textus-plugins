@@ -15,8 +15,6 @@
 - **⌃** klappt die Leiste weg; der kleine Griff holt sie zurück.
 - **↗** öffnet die Seite im Browser, **↻** lädt sie neu.
 
-Läuft auf dem Desktop.
-
 ## Berechtigungen
 
 - Netzwerk, jede Adresse: um die Webseiten zu laden, die Sie öffnen.
@@ -24,8 +22,9 @@ Läuft auf dem Desktop.
 
 ## Änderungen
 
-- **0.2.2** - Kürzere Hilfe- und Leertexte.
-- **0.2.1** - Seine Seite sagt jetzt in einem Satz, was es tut, was es kann und was sich in jeder Version geändert hat.
-- **0.2.0** - Mit Strg/⌘ angeklickte Weblinks öffnen sich nur dann in einem Tab, wenn Sie das in den Einstellungen einschalten; sonst im Browser.
-- **0.1.2** - Nur Desktop.
-- **0.1.0-0.1.1** - Erste Versionen: eine Adresse oder Suche im Tab, letzte Seiten, die Auswahl öffnen oder suchen, mit Strg/⌘ angeklickte Links, Wahl der Suchmaschine.
+- **0.2.3** - Its page no longer says which devices it runs on: the store shows that.
+- **0.2.2** - Shorter help and empty-state text.
+- **0.2.1** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
+- **0.2.0** - Ctrl/Cmd+clicked web links open in a tab only when you turn that on in the settings; otherwise they open in your browser.
+- **0.1.2** - Desktop only.
+- **0.1.0-0.1.1** - First versions: an address or a search in a tab, recent pages, the selection opened or searched, Ctrl/Cmd+clicked links, a choice of search engine.

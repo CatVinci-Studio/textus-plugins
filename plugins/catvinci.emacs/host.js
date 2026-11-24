@@ -330,7 +330,9 @@ exports.activate = async function () {
   textus.settings.onDidChange(function () {
     readSettings().then(capture);
   });
-  textus.editor.keys.onKey(handle);
+  // Older Textus has only onKey.
+  const keys = textus.editor.keys;
+  keys["onDidPressKey" in keys ? "onDidPressKey" : "onKey"](handle);
   textus.commands.register("catvinci.emacs.toggle", function () {
     on = !on;
     mark = false;

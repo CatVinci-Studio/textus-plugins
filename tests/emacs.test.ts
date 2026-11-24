@@ -4,7 +4,7 @@ import { loadPlugin } from "./plugin-host";
 type Capture = { mode: string; keys: string[] } | null;
 
 /** Emacs's host with a fake editor: what it captured, ran and showed. */
-async function emacs(held = true) {
+async function emacs(held = true, keyEvent = "onDidPressKey") {
   let key: ((k: string) => void) | null = null;
   const captures: Capture[] = [];
   const ops: Record<string, unknown>[] = [];
@@ -33,7 +33,7 @@ async function emacs(held = true) {
     },
     editor: {
       keys: {
-        onKey: (fn: typeof key) => ((key = fn), { dispose() {} }),
+        [keyEvent]: (fn: typeof key) => ((key = fn), { dispose() {} }),
         capture: async (c: Capture) => (captures.push(c), held),
         exec: async (op: Record<string, unknown>) => (ops.push(op), {}),
       },
@@ -61,6 +61,12 @@ it("takes C-s and C-g after C-x, so C-x C-s saves on Windows", async () => {
 it("shows no status while another plugin holds the keys", async () => {
   const e = await emacs(false);
   expect(e.shown).toEqual([]);
+});
+
+it("hears keys by the old name on an older Textus", async () => {
+  const e = await emacs(true, "onKey");
+  await e.press("ctrl+v");
+  expect(e.ops).toHaveLength(1);
 });
 
 it("pages with one move of 20 lines", async () => {

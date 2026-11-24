@@ -2,7 +2,15 @@ import { afterEach, describe as suite, expect, it, vi } from "vitest";
 import { parseManifest } from "./content";
 import { openEncryptedStore } from "./encrypted-store";
 import { parseHistory } from "./history";
-import { HEAD, HISTORY, MAX_TRASH, encode, type ObjectStore } from "./model";
+import { DeletionQuestion } from "./guard";
+import {
+  HEAD,
+  HISTORY,
+  LOCK,
+  MAX_TRASH,
+  encode,
+  type ObjectStore,
+} from "./model";
 import { MemoryLocal, MemoryStore, bytes, text } from "./test-fixtures";
 
 const manifest = async (store: ObjectStore) =>
@@ -156,6 +164,89 @@ suite("deletions and renames", () => {
     expect((await b.sync(remote)).uploaded).toBe(1);
     await a.sync(remote);
     expect(text(a.files.get("x.md"))).toBe("same");
+  });
+  it("leaves a file the Trash refuses in place, syncs the rest and tries it again next time", async () => {
+    const { remote, a, b } = await pair({ "gone.md": "old", "keep.md": "k" });
+    a.files.delete("gone.md");
+    a.files.set("keep.md", bytes("k2"));
+    await a.sync(remote);
+    b.noTrash = true;
+    const result = await b.sync(remote);
+    expect(result).toMatchObject({ downloaded: 1, notTrashed: ["gone.md"] });
+    expect(text(b.files.get("keep.md"))).toBe("k2");
+    expect(b.files.has("gone.md")).toBe(true);
+    expect(b.base.revision).toBeUndefined();
+    b.noTrash = false;
+    expect(await b.sync(remote)).toMatchObject({ removed: 1, notTrashed: [] });
+    expect(b.files.has("gone.md")).toBe(false);
+  });
+  it("stops before deleting many files from the cloud until as many are agreed to", async () => {
+    const names = Array.from({ length: 20 }, (_, i) => `n${i}.md`);
+    const { remote, a } = await pair(
+      Object.fromEntries(names.map((n) => [n, n])),
+    );
+    for (const n of names.slice(0, 12)) a.files.delete(n);
+    const before = await remote.get(HEAD);
+    await expect(a.sync(remote)).rejects.toMatchObject({
+      code: "manyDeletions",
+      args: [12],
+    });
+    expect(await remote.get(HEAD)).toEqual(before);
+    expect(await remote.has(LOCK)).toBe(false);
+    await expect(
+      a.sync(remote, undefined, { allowDeletions: 11 }),
+    ).rejects.toThrow("manyDeletions");
+    expect(
+      (await a.sync(remote, undefined, { allowDeletions: 12 })).removed,
+    ).toBe(12);
+    expect(Object.keys((await manifest(remote)).files)).toHaveLength(8);
+  });
+  it("counts neither a few deletions nor files renamed as many", async () => {
+    const names = Array.from({ length: 40 }, (_, i) => `n${i}.md`);
+    const { remote, a } = await pair(
+      Object.fromEntries(names.map((n) => [n, n])),
+    );
+    for (const n of names.slice(0, 10)) a.files.delete(n);
+    expect((await a.sync(remote)).removed).toBe(10);
+    // A folder renamed: every file's content is still here.
+    for (const n of names.slice(10)) {
+      a.files.set(`moved/${n}`, a.files.get(n)!);
+      a.files.delete(n);
+    }
+    expect((await a.sync(remote)).removed).toBe(30);
+  });
+  it("takes a folder where nothing is found, after many files were synced, for unreadable", async () => {
+    const names = Array.from({ length: 12 }, (_, i) => `n${i}.md`);
+    const { remote, a } = await pair(
+      Object.fromEntries(names.map((n) => [n, n])),
+    );
+    const before = await remote.get(HEAD);
+    a.files.clear();
+    await expect(
+      a.sync(remote, undefined, { allowDeletions: 12 }),
+    ).rejects.toMatchObject({
+      code: "folderEmpty",
+      args: [12],
+    });
+    expect(await remote.get(HEAD)).toEqual(before);
+  });
+  it("asks about many deletions each time by hand, an automatic sync once per count", async () => {
+    const question = new DeletionQuestion();
+    const confirm = vi.fn(async () => false);
+    expect(await question.ask(12, false, confirm)).toBe(false);
+    expect(await question.ask(12, false, confirm)).toBeNull();
+    expect(await question.ask(12, true, confirm)).toBe(false);
+    expect(await question.ask(13, false, confirm)).toBe(false);
+    expect(confirm).toHaveBeenCalledTimes(3);
+    confirm.mockResolvedValue(true);
+    expect(await question.ask(13, true, confirm)).toBe(true);
+    expect(await question.ask(13, false, confirm)).toBe(true);
+    // An automatic sync while the question is open asks nothing more.
+    let answer = (_: boolean) => {};
+    const open = question.ask(14, true, () => new Promise((r) => (answer = r)));
+    expect(await question.ask(14, false, confirm)).toBeNull();
+    answer(true);
+    expect(await open).toBe(true);
   });
   it("keeps the names of deleted files encrypted", async () => {
     const raw = new MemoryStore();

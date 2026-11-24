@@ -12,10 +12,11 @@ The keys work as soon as the plugin is installed. **Plugins › Turn Emacs Keys 
 
 On a Mac, Textus's shortcuts are on ⌘, so every Ctrl key is Emacs's. On Windows and Linux, Ctrl keys are Textus's and the system's (copy, paste, cut, select all, bold, find), so only the M- keys, C-SPC and C-g are Emacs's until you turn on **Take Ctrl keys the app uses** in the plugin's settings.
 
-It works on desktop and iPhone. It asks for one permission, editor keys, to take these keys in the editor.
+On a tablet it works with a keyboard attached. It asks for one permission, editor keys, to take these keys in the editor.
 
 ## Changes
 
+- **0.1.7** - Its page says that on a tablet it needs a keyboard, instead of which devices it runs on. It hears keys by the API's current name, and the old one on an older Textus.
 - **0.1.6** - C-x C-s and C-x C-g work again on Windows and Linux. The status bar shows Emacs only while it really has the keys.
 - **0.1.5** - Shorter help and empty-state text.
 - **0.1.4** - Its page now says in one sentence what it does, what it can do, and what changed in each version.

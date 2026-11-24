@@ -2,7 +2,7 @@
 
 在笔记旁边的标签页里打开 PDF，可以阅读、查找和复制文字。
 
-- 从侧栏打开 PDF，或者把它拖进窗口。指向 PDF 某一页的链接，会直接打开到那一页。
+- 从侧边栏打开 PDF，或者把它拖进窗口。指向 PDF 某一页的链接，会直接打开到那一页。
 - 滚动翻页，或者用箭头按钮到上一页、下一页。
 - 用按钮、**Ctrl+滚轮**（Mac 上是 **⌘+滚轮**）或双指缩放。页面会围绕指针立刻放大缩小，停下后再变清晰。
 - PDF 打开时适应窗口宽度，调整窗口大小时也跟着变。点百分比可以在适应宽度和原始大小之间切换。
@@ -15,15 +15,16 @@
 
 ## 更新日志
 
-- **0.2.8** - 安装包里附上所带第三方库的清单和许可。
-- **0.2.7** - 页面语言由 Textus 自动跟随。需要 Textus 1.4.3。
-- **0.2.6** - 缩放按钮和快捷键每次 1.25 倍，和其他看图插件一致。
-- **0.2.5** - 从头翻到尾的长 PDF 占用内存少得多：看不到的页面也会释放其中的图片。
-- **0.2.4** - 窄面板里工具栏会换行；查找不再混入上一个词的结果。
-- **0.2.3** - 工具栏按 Textus 统一的顺序排列：先是内容信息，再是查找和缩放。
-- **0.2.2** - 工具栏、列表和各个控件都改用 Textus 自己的，随界面一起缩放，适配每个主题；需要 Textus 1.3.12。
-- **0.2.1** - 介绍页重写：一句话说明它做什么，再讲它能做的事，并列出每个版本的更新。
-- **0.2.0** - 改用 Textus 自己的控件。需要 Textus 1.3.2。
-- **0.1.3** - 采用 Textus 1.3 的外观；切换界面语言时，按钮文字跟着变。
-- **0.1.2** - 扫描页显示图片，指向某一页的链接可用，看不到的页面释放内存，打不开的文件会说明；打开时适应窗口宽度；缩放时围绕指针放大，停下后变清晰。
-- **0.1.0-0.1.1** - 最初的版本：翻页、缩放、选中复制文字、查找、回到上次的位置，没有嵌入字体的中日韩文字也能显示。
+- **0.2.9** - Its page shows its list of changes in English in every language.
+- **0.2.8** - Its package lists the libraries it carries, with their licenses.
+- **0.2.7** - The page follows Textus's language by itself. Needs Textus 1.4.3.
+- **0.2.6** - Zoom buttons and keys step by 1.25×, as the other viewers do.
+- **0.2.5** - A long PDF scrolled end to end holds far less memory: pages out of sight let go of their pictures too.
+- **0.2.4** - Its bar wraps in a narrow panel, and find no longer mixes in results for an earlier word.
+- **0.2.3** - Its bar keeps Textus's one order: what it shows, then find and zoom.
+- **0.2.2** - Its bars, lists and controls are Textus's own, grow with the interface and follow every theme; needs Textus 1.3.12.
+- **0.2.1** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
+- **0.2.0** - Textus's own controls. Needs Textus 1.3.2.
+- **0.1.3** - Textus 1.3's look; the buttons follow the interface language when it changes.
+- **0.1.2** - Scanned pages show their images, links to a page work, pages out of sight free their memory, unreadable files say so; opens at the window's width; zoom stretches around the pointer and then turns sharp.
+- **0.1.0-0.1.1** - First versions: pages, zoom, text to select and copy, find, reopening where you left off, Chinese, Japanese and Korean text without embedded fonts.

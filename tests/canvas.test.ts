@@ -93,6 +93,10 @@ describe("the view", () => {
     expect(jc.wheelIntent({ ctrlKey: true })).toBe("zoom");
     expect(jc.wheelIntent({ metaKey: true })).toBe("zoom");
     expect(jc.wheelIntent({})).toBe("pan");
+    // A pinch's step as Textus sends it zooms by the pinch's own ratio.
+    for (const ratio of [1.05, 0.9, 1.3])
+      expect(jc.wheelZoom(-100 * Math.log(ratio))).toBeCloseTo(ratio);
+    expect(jc.wheelZoom(-1000)).toBeCloseTo(Math.exp(0.4));
   });
 });
 

@@ -3,7 +3,7 @@
 Keep a folder the same on your computers through your own S3-compatible storage, WebDAV or Nutstore, with older versions kept in the cloud and, if you choose, encrypted before it leaves each device.
 
 With end-to-end encryption on, the storage service sees neither the contents of your files nor their names.
-Cloud Sync needs Textus 1.4.1 or later on the desktop.
+Cloud Sync needs Textus 1.4.1 or later.
 
 ## Getting started
 
@@ -125,6 +125,15 @@ shared blocks are reused; ETags are not treated as content hashes.
   since they last synced, the edited file comes back everywhere.
 - A device syncing a folder for the first time never deletes anything; a file
   only one side has is copied to the other.
+- A sync that would delete many files from the cloud (more than ten, and more
+  than 30% of the files synced) stops before deleting any and asks; one started
+  automatically asks once, and **Sync now** asks again. Files renamed or moved
+  don't count. A folder where nothing is found, though many files were synced
+  from it, is taken as unreadable (access lost, files not downloaded), and
+  the sync stops with nothing deleted.
+- Where the system Trash refuses a file deleted elsewhere, it stays in place,
+  is listed in the panel, and the next sync tries again;
+  the rest of the sync goes on.
 - Files open in a tab are not removed or renamed; close them and sync again.
 - Update every device to 0.4 before relying on deletions: an older device puts
   a file deleted elsewhere back.
@@ -250,10 +259,19 @@ plugin storage. After an interrupted write, the next sync resumes that exact
 marker instead of uploading it as file content. If another application changes
 the file, its content is preserved. Keep the plugin's local data when retrying.
 
-After a crash, **Sync stuck? › Recover stale lock** removes the lock only after
-confirmation. Check that all other devices have stopped syncing first.
-Locks never expire automatically, so a slow device cannot lose its write
-ownership just because a timer expired. If the descriptor or current manifest is
+A lock this device left when Textus was closed or stopped mid-sync is taken
+back by its next sync, without asking. A running sync renews a note of its
+lock every 10 seconds; the next sync takes the lock back once the note is 30
+seconds old, waiting out the rest if it starts sooner, and leaves it alone if
+the note is renewed meanwhile (a sync still running in another window). Another device's lock is
+never taken: after a crash there, **Recovery › Recover stale lock** removes
+it only after confirmation. Check that all other devices have stopped syncing
+first. Locks never expire on the remote, so a slow device cannot lose its
+write ownership just because a timer expired.
+
+What a sync found in each file (size, time, hash) is kept locally between
+launches, so the first sync after a restart reads again only the files changed
+meanwhile. If the descriptor or current manifest is
 accidentally removed, a previously joined device stops. Restore a complete remote
 backup with the original descriptor. Encrypted snapshots are bound to their own
 object names and cannot be copied directly over `v2/head.bin`; restoring a single
@@ -291,6 +309,8 @@ and `THIRD_PARTY_NOTICES.md`. The storage design was informed by Petrichor/Sylva
 
 ## Changes
 
+- **0.8.1** - A file over 128 MiB no longer stops the whole sync: it stays where it is on every device and is listed under the status. A conflict copy opens from the page with a click. Ready for phones, not offered there yet: a sync when a folder opens and when you come back to Textus, none in the background; settings that survive an iPhone update; a smaller largest file and fewer transfers at once; deleted files kept in "Sync trash/" where there is no system Trash.
+- **0.8.0** - Safer when a sync is cut short: a lock this device left (Textus closed or stopped mid-sync) is taken back by its next sync without asking; another device's lock still needs **Recover stale lock**. A sync that would delete many files from the cloud stops and asks first, and a folder where suddenly nothing is found is taken as unreadable, not emptied. A file the system Trash refuses no longer stops the whole sync: it stays in place and is tried again. The first sync after a restart reads only the files changed meanwhile, not the whole folder. Its page is in every language Textus speaks. Its pickers keep Textus's own height.
 - **0.7.0** - Faster syncs with fewer requests: with nothing changed, a sync asks the service once instead of 8 to 16 times; a changed file's blocks are sent in one request each, without checking first or reading them back; on WebDAV folders are made only when one is missing. A busy service is waited for (up to a minute, shown in the status) instead of stopping the sync, and requests that got no answer are sent again. The progress counts files that are done. From Textus 1.4.4 the versions it keeps of a document show in Version History too.
 - **0.6.1** - A big first sync that stops halfway (cancelled, offline, or slowed by the service) goes on where it stopped next time, instead of checking every file it already sent; on Nutstore that saves most of the requests.
 - **0.6.0** - Sync settings rearranged: sync options sit at the top and apply as you pick them, with no Save button. **Sync interval**, **Sync delay**, and **Keep cloud history** are pickers. Files now go up and down several at a time: **Transfers at once** sets how many (S3 8, WebDAV 4, Nutstore 2 to start), and blocks the cloud already holds are no longer checked again. A connected service shows as a card with the account masked and **Test connection**, **Edit** and **Disconnect**; the encryption switch and password are part of the connection. **Test connection** works before saving, and names the missing permission (write, read or delete) when a check fails.

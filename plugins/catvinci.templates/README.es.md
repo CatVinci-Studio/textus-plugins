@@ -15,23 +15,24 @@ Las plantillas son archivos Markdown en la carpeta **Templates** de la carpeta a
 - También se rellenan las etiquetas comunes de Templater: `<% tp.date.now("YYYY-MM-DD") %>` (con un desfase en días, como `-1`, o `"P1W"`), `tp.date.today`, `tomorrow` y `yesterday`, `<% tp.file.title %>`, `tp.file.creation_date()` y `tp.file.folder()`; `<% tp.file.cursor() %>` deja el cursor ahí.
 - Los scripts y las demás etiquetas nunca se ejecutan: se quedan como están y un aviso los nombra.
 
-Funciona en escritorio y en iPhone y necesita Textus 1.3.10 o posterior. Pide leer y escribir archivos de la carpeta abierta, para las plantillas y los documentos nuevos; leer y editar el documento que tienes delante, para insertar una plantilla o guardarlo como tal; y da a Textus AI las dos herramientas de abajo.
+Necesita Textus 1.4.3 o posterior. Pide leer y escribir archivos de la carpeta abierta, para las plantillas y los documentos nuevos; leer y editar el documento que tienes delante, para insertar una plantilla o guardarlo como tal; y da a Textus AI las dos herramientas de abajo.
 
 ## Cambios
 
-- **0.5.5** - Ordena los nombres con el orden propio de Textus en lugar de una copia, así el paquete es más pequeño. Requiere Textus 1.4.3.
-- **0.5.4** - Si un nombre ya existe, el archivo recibe el siguiente libre al escribirse, sin choques (Textus 1.4.3).
-- **0.5.3** - La descripción de la tienda empieza ahora por lo que hace el plugin.
-- **0.5.2** - Ahora aparecen las plantillas de una carpeta de plantillas oculta o en minúsculas, y de sus subcarpetas. Tras insertar, el cursor queda justo después de la plantilla.
-- **0.5.1** - **Nuevo desde plantilla…** en el menú contextual de un archivo o carpeta crea el documento en esa carpeta.
-- **0.5.0** - Las plantillas las rellena el propio Textus, igual que las notas diarias; necesita Textus 1.3.10.
-- **0.4.1** - Las plantillas se listan en orden natural: 2 antes que 10.
-- **0.4.0** - Las etiquetas comunes `tp.date` y `tp.file` de Templater, y los formatos de fecha y hora de Plantillas en una bóveda de Obsidian; un aviso nombra las etiquetas que no se ejecutan.
-- **0.3.0** - Las plantillas son archivos Markdown en la carpeta Templates (en Obsidian, la carpeta de plantillas de la bóveda), movidas allí una vez desde donde las guardaban versiones anteriores; `{{date:FORMATO}}` y `{{time:FORMATO}}`.
-- **0.2.0** - Textus AI puede listar tus plantillas y crear un documento a partir de una.
-- **0.1.3** - Indica dónde funciona: escritorio y iPhone.
-- **0.1.2** - Nuevo desde plantilla no acepta un nombre que ya existe.
-- **0.1.0-0.1.1** - Primeras versiones: documentos nuevos, fragmentos insertados y plantillas guardadas, con `{{date}}`, `{{time}}` y `{{title}}`; página en la tienda e icono.
+- **0.5.6** - Its page no longer says which devices it runs on: the store shows that. It names the Textus it needs, 1.4.3.
+- **0.5.5** - Sorts names with Textus's own order instead of a copy of it, so the package is smaller. Needs Textus 1.4.3.
+- **0.5.4** - A taken name gets the next free one as the file is written, never a clash (Textus 1.4.3).
+- **0.5.3** - The store description now opens with what the plugin does.
+- **0.5.2** - Templates in a hidden or lowercase templates folder, and in its subfolders, now show up. After Insert, the caret lands right after the template.
+- **0.5.1** - **New from Template…** from a file's or folder's right-click menu makes the document in that folder.
+- **0.5.0** - Templates are filled in by Textus itself, the same way as daily notes; needs Textus 1.3.10.
+- **0.4.1** - Templates are listed in natural order: 2 before 10.
+- **0.4.0** - Templater's common `tp.date` and `tp.file` tags, and an Obsidian vault's Templates date and time formats; tags that aren't run are named in a notice.
+- **0.3.0** - Templates are Markdown files in the Templates folder (a vault's own templates folder in Obsidian), moved there once from where older versions kept them; `{{date:FORMAT}}` and `{{time:FORMAT}}`.
+- **0.2.0** - Textus AI can list your templates and make a document from one.
+- **0.1.3** - Says where it runs: desktop and iPhone.
+- **0.1.2** - New from Template refuses a name that is already taken.
+- **0.1.0-0.1.1** - First versions: new documents, inserted snippets and saved templates, with `{{date}}`, `{{time}}` and `{{title}}`; store page and icon.
 
 <!-- ai-tools -->
 ## Herramientas para Textus AI

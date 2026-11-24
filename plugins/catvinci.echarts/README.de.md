@@ -11,7 +11,7 @@ Schreiben Sie einen Codeblock mit der Sprache `echarts` und setzen Sie eine ECha
 - Lässt sich die Option nicht zeichnen, sagt der Block, was nicht stimmt.
 - Beim Export als HTML, PDF oder Word kommt das Diagramm als Bild mit.
 
-Das Plugin fragt nur nach einer Berechtigung: um Textus AI das unten aufgeführte Werkzeug `check_echarts` zu geben, das einen Block prüft, bevor Textus AI ihn in ein Dokument schreibt. Es läuft auf dem Desktop sowie auf iPhone und iPad.
+Das Plugin fragt nur nach einer Berechtigung: um Textus AI das unten aufgeführte Werkzeug `check_echarts` zu geben, das einen Block prüft, bevor Textus AI ihn in ein Dokument schreibt.
 
 ## Beispiel
 
@@ -25,14 +25,15 @@ Das Plugin fragt nur nach einer Berechtigung: um Textus AI das unten aufgeführt
 
 ## Änderungen
 
-- **0.3.4** - Das Paket listet die mitgelieferten Bibliotheken samt ihren Lizenzen auf.
-- **0.3.3** - Ein Diagramm, das bei zugeklapptem Block (auf dem Handy) gezeichnet wurde, passt sich beim Aufklappen an die Breite an.
-- **0.3.2** - Diagramme passen sich an, wenn sich die Breite des Bereichs ändert; Text und Standardhöhe folgen Zoom und Schrift der App.
-- **0.3.1** - Die Beschreibung nennt keine Karten mehr, die ein Block nicht laden kann.
-- **0.3.0** - Textus AI kann einen `echarts`-Block prüfen, bevor es ihn schreibt.
-- **0.2.0** - Die Farben der Serien kommen aus den Tönen des Themes. Benötigt Textus 1.3.2.
-- **0.1.3** - Liest Textfarbe und Fußnotengröße des Dokuments unter ihren Namen aus Textus 1.3.
-- **0.1.0-0.1.2** - Erste Versionen: `echarts`-Codeblöcke im Dokument gezeichnet, `height=` und Export als Bild.
+- **0.3.5** - Its page no longer says which devices it runs on: the store shows that.
+- **0.3.4** - Its package lists the libraries it carries, with their licenses.
+- **0.3.3** - A chart drawn while its block was folded (a phone) fits once the block opens, instead of keeping its old size.
+- **0.3.2** - Charts redraw when the panel width changes, and their text and default height follow the app's zoom and font.
+- **0.3.1** - Its description no longer lists maps, which a block can't load.
+- **0.3.0** - Textus AI can check an `echarts` block before it writes one.
+- **0.2.0** - Series colors come from the theme's tones. Needs Textus 1.3.2.
+- **0.1.3** - Uses the theme's document text color and footnote size under their Textus 1.3 names.
+- **0.1.0-0.1.2** - First versions: `echarts` code blocks drawn in the document, `height=`, and exports as a picture.
 
 <!-- ai-tools -->
 ## Werkzeuge für Textus AI

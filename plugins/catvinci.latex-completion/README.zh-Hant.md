@@ -7,12 +7,13 @@
 - 依序輸入指令裡的字母也能找到它：`\rarr` 就是 `\rightarrow`，`\lra` 就是 `\leftrightarrow`。
 - 按 **Enter** 或 **Tab** 寫入選取的指令，游標停在大括號裡；**Esc** 關閉清單。`\left(`、`\left[` 和 `\left\{` 會連同對應的 `\right` 一起寫入。
 
-支援桌面版與 iPhone，需要 Textus 1.3.0 以上版本。外掛只要求一項權限：讀取編輯器，用來看到你在公式裡輸入的內容。
+需要 Textus 1.3.0 以上版本。外掛只要求一項權限：讀取編輯器，用來看到你在公式裡輸入的內容。
 
 ## 更新紀錄
 
-- **0.1.5** - 商店簡介改為開頭一句就說明外掛做什麼。
-- **0.1.4** - 完整打出的命令排在第一位，按 Enter 就是它（\in 還是 \in）；不帶大括號的命令寫入後自動加一個空格；搭配 Textus 1.3.13，寫入後清單不再彈出。
-- **0.1.3** - 介紹頁重寫：一句話說明它做什麼，再講它能做的事，並列出每個版本的更新。
-- **0.1.2** - 標明可執行的平台：桌面版與 iPhone。
-- **0.1.0-0.1.1** - 最初的版本：200 多個指令並附上畫出來的樣子、依字母順序尋找、自動放好大括號與游標、成對的伸縮括號；商店頁面與圖示。
+- **0.1.6** - Its page no longer says which devices it runs on: the store shows that.
+- **0.1.5** - The store description now opens with what the plugin does.
+- **0.1.4** - A command typed out whole comes first, so Enter keeps it (\in stays \in); a command without braces is written with a space after it; with Textus 1.3.13 the list closes once a command is written.
+- **0.1.3** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
+- **0.1.2** - Says where it runs: desktop and iPhone.
+- **0.1.0-0.1.1** - First versions: over 200 commands with what each draws, letters in order, braces and caret in place, growing bracket pairs; store page and icon.

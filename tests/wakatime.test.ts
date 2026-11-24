@@ -1,4 +1,5 @@
 import { beforeAll, describe, expect, it } from "vitest";
+import { manifestOf, onPhone } from "./plugin-host";
 
 /** WakaTime's heartbeat rules (plugins/catvinci.wakatime/beat.js). */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -64,5 +65,20 @@ describe("WakaTime heartbeats", () => {
     expect(wb.branch("3f2a9c")).toBeNull();
     expect(wb.validKey("waka_12345678-1234-1234-1234-123456789abc")).toBe(true);
     expect(wb.validKey("nope")).toBe(false);
+  });
+});
+
+describe("WakaTime on a phone", () => {
+  it("reaches every command with no command palette: the key from its page in Settings too", () => {
+    const manifest = manifestOf("catvinci.wakatime");
+    const commands = manifest.contributes.commands.map(
+      (c: { command: string }) => c.command,
+    );
+    expect(onPhone(manifest)).toEqual(expect.arrayContaining(commands));
+    expect(
+      manifest.contributes.settings.find(
+        (s: { type: string }) => s.type === "button",
+      ).command,
+    ).toBe("catvinci.wakatime.setKey");
   });
 });

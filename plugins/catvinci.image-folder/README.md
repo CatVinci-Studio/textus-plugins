@@ -9,10 +9,11 @@ There is nothing to turn on or set; it works on its own once installed.
 - Pictures already in your documents stay where they are.
 - In an Obsidian vault that sets an attachment folder, and in a Logseq graph, pictures stay where that app puts them.
 
-It handles PNG, JPEG, GIF, WebP, AVIF, BMP, SVG, ICO, HEIC and TIFF pictures. It works on desktop and needs Textus 1.3.0 or later. It asks to read and write files, to move pictures and rename their folders, and to read and edit the document in front, to change the link to a moved picture.
+It handles PNG, JPEG, GIF, WebP, AVIF, BMP, SVG, ICO, HEIC and TIFF pictures. It needs Textus 1.4.0 or later. It asks to read and write files, to move pictures and rename their folders, and to read and edit the document in front, to change the link to a moved picture.
 
 ## Changes
 
+- **0.1.8** - Its page no longer says which devices it runs on: the store shows that. It names the Textus it needs, 1.4.0.
 - **0.1.7** - The store description now opens with what the plugin does.
 - **0.1.6** - Adding many pictures at once (a sync, a folder copied in) no longer reads the open document over and over.
 - **0.1.5** - In an Obsidian vault, pictures stay where the vault's attachment setting puts them again: the setting is read through Textus.

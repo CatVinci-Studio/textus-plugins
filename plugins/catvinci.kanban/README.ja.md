@@ -8,9 +8,10 @@
 
 ## ボードでの操作
 
-- リストの下の **カードを追加** でカードを足します。カードの文字をクリックすると編集、チェックボックスで完了、× ボタンで削除です。
-- **リストを追加** で新しいリストを作ります。リストのタイトルをクリックすると名前を変えられ、空のリストは削除できます。
-- カードはリスト内でもリスト間でもドラッグでき、リストは見出し部分をドラッグして並べ替えます。ドラッグ中はほかのカードやリストが場所を空けます。
+- リストの下の **カードを追加** でカードを足します。カードの文字をクリックすると編集、チェックボックスで完了です。カードの ⋯ ボタン（または右クリック）で別のリストへ移動したり削除したりでき、削除後の通知の「元に戻す」で戻せます。
+- **リストを追加** で新しいリストを作り、そのまま名前を入力します。リストのタイトルをクリックすると名前を変えられ、空のリストは ⋯ メニューから削除できます。
+- スマートフォンでは 1 つのリストが画面いっぱいに表示され、スワイプで次のリストに移ります。
+- カードはリスト内でもリスト間でもドラッグでき、リストは見出し部分をドラッグして並べ替えます。ドラッグ中はほかのカードやリストが場所を空けます。タッチ画面ではカードを少し押さえてからドラッグします。スマートフォンで画面の端まで持っていくと、ボードが次のリストへめくれます。押さえたまま動かさずに離すと、カードのメニューが開きます。
 - カードに [[リンク]] を書くと、クリックでそのノートを開きます。
 - **Markdown として編集** でファイルをテキストとして開きます。そこでの変更もほかの場所での変更も、ボードにすぐ反映されます。
 - Obsidian の Kanban がリスト以外にファイルへ書く内容（設定や完了リストの印など）は、そのまま残します。
@@ -36,23 +37,25 @@ kanban-plugin: board
 
 ## 更新履歴
 
-- **0.4.12** - カードやリストが場所を空ける動きが Textus のほかの部分と同じ速さになりました。
-- **0.4.11** - リストを見出しでドラッグすると、Textus のタブと同じように浮き上がってボード上を滑ります。Esc で元に戻ります。
-- **0.4.10** - カードのチェックボックスが、どの文字サイズでも最初の行の中央に揃います。
-- **0.4.9** - カードやリスト名の編集中に右クリック（貼り付けなど）しても編集が終わらなくなりました。iPhone・iPad で入力メソッドの Enter は変換の確定だけになり、保存しません。 ページの言語は Textus に自動で合わせます。Textus 1.4.3 が必要です。
-- **0.4.8** - Windows（CRLF）改行のボードはその改行を保ち、編集中に別の場所で変更されたボードは上書きせずにその変更を表示し、そのことを知らせます。ストアの説明が、最初の一文でプラグインの働きを伝えるようになりました。
-- **0.4.7** - カード内の空行でカードが分かれなくなり、Esc で空のカードが残らなくなりました。AI は普通のノートを書き換えず、ボードは狭いパネルにも収まります。
-- **0.4.6** - リストが画面からはみ出すと、ボードの端がフェードします。
-- **0.4.5** - ドラッグ中のカードやリストがポインタの真下にとどまり、Textus のほかのドラッグと同じく少し浮き上がります。ツールバー、リスト、各コントロールを Textus 自身のものにしました。画面の拡大に合わせて大きくなり、どのテーマにも合います。Textus 1.3.12 が必要です。
-- **0.4.4** - カードやリストをドラッグしても、途中の文字が選択されなくなりました。
-- **0.4.3** - 紹介ページを書き直しました。何をするかを一文で示し、できることと各バージョンの変更を載せています。
-- **0.4.2** - ドラッグ中のカードやリストがポインタについて動き、ほかが場所を空けるように。Textus 1.3.10 が必要です。
-- **0.4.1** - Obsidian の Kanban が完了リストに付ける印を残すように。
-- **0.4.0** - 名前をタスクボードに変更（旧 Kanban）。新しいボードは、Obsidian と同じく front matter に `kanban-plugin` を持つふつうの .md ファイルに。.kanban.md のボードも引き続き開けます。
-- **0.3.1** - Textus AI がボードと文書内のタスクを区別するように。
-- **0.3.0** - Textus AI がボードの一覧と読み取り、カードの追加と移動をできるように。
-- **0.2.0** - Textus 自身のコントロールとメニューに。
-- **0.1.0-0.1.3** - 最初のバージョン：Markdown のボード、リスト間でのカードのドラッグ、見出しでのリストの移動、ノートを開ける [[リンク]]、Markdown として編集、ほかの場所での変更の即時反映、Obsidian の設定の保持。
+- **0.4.14** - On a phone or tablet, hold a card a moment to drag it within a list or to another; at the screen's edge on a phone the board turns to the next list, and the page no longer scrolls under the card. Held and let go without moving, a card opens its menu. Dragged near the board's edge, the board scrolls, and a card let go below a short list goes into that list.
+- **0.4.13** - A card's ⋯ menu (or a right-click) moves it to another list or deletes it, with Undo, instead of an × that deleted at once - always showing on a touch screen. A new list starts with its name being written. On a phone a list fills the screen and a swipe settles on the next; in a narrow tab, Edit as Markdown goes into the ⋯ menu.
+- **0.4.12** - Cards and lists make way at the pace of the rest of Textus.
+- **0.4.11** - A list dragged by its head lifts and slides along the board as Textus's own tabs do; Esc puts it back.
+- **0.4.10** - A card's checkbox sits on the middle of its first line at any text size.
+- **0.4.9** - Right-clicking a card or list name while you edit it (to paste) no longer ends the edit, and an input method's Enter on iPhone and iPad picks its words instead of saving. The page follows Textus's language by itself. Needs Textus 1.4.3.
+- **0.4.8** - A board with Windows (CRLF) line endings keeps them, and a board changed while you edit (saved as Markdown in Textus, or by a plugin) shows that change instead of writing over it, and says so. The store description now opens with what the plugin does.
+- **0.4.7** - A blank line inside a card no longer splits it, and Escape no longer leaves an empty card. The AI leaves ordinary notes alone, and the board fits narrow panels.
+- **0.4.6** - The board fades at its edges where lists run past the window.
+- **0.4.5** - A dragged card or list stays right under the pointer and lifts like everything dragged in Textus. Its bars, lists and controls are Textus's own, grow with the interface and follow every theme; needs Textus 1.3.12.
+- **0.4.4** - Dragging a card or a list no longer selects text on the way.
+- **0.4.3** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
+- **0.4.2** - Cards and lists follow the pointer as you drag, the others making way. Needs Textus 1.3.10.
+- **0.4.1** - Keeps the mark Obsidian's Kanban puts on a done list.
+- **0.4.0** - Renamed Task Board (was Kanban). New boards are plain .md files with `kanban-plugin` in their front matter, as Obsidian writes them; .kanban.md boards still open.
+- **0.3.1** - Textus AI tells boards apart from tasks written in documents.
+- **0.3.0** - Textus AI can list and read boards, add cards and move them.
+- **0.2.0** - Textus's own controls and menus.
+- **0.1.0-0.1.3** - First versions: boards as Markdown, cards dragged between lists, lists moved by their head, [[links]] that open notes, Edit as Markdown, changes made elsewhere shown at once, Obsidian's settings kept.
 
 <!-- ai-tools -->
 ## Textus AI のツール

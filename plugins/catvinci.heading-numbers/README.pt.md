@@ -8,18 +8,19 @@ Mostra números antes dos seus títulos enquanto você escreve (1, 1.1, 1.2) sem
 - Obsidian: `number headings: off` nas propriedades de um documento (a configuração do plugin Number Headings do Obsidian) desliga os números nesse documento.
 - **Números nas exportações** (**Ajustes › Extensões › Plugins › Numeração de títulos**, ligado por padrão): as exportações em HTML e PDF mostram os mesmos números.
 
-O plugin lê os títulos do documento aberto (permissão para ler o editor) e dá ao Textus AI a ferramenta `number_headings` abaixo (permissão de ferramentas de IA). A ferramenta devolve o texto com os números escritos ou retirados; não muda nenhum arquivo. Funciona no computador, no iPhone e no iPad.
+O plugin lê os títulos do documento aberto (permissão para ler o editor) e dá ao Textus AI a ferramenta `number_headings` abaixo (permissão de ferramentas de IA). A ferramenta devolve o texto com os números escritos ou retirados; não muda nenhum arquivo.
 
 ## Alterações
 
-- **0.2.4** - Com dois documentos abertos lado a lado, ambos mostram a numeração dos títulos, não só aquele em que você está escrevendo.
-- **0.2.3** - As propriedades e os blocos de código não ganham mais números por engano, e as exportações numeram só os títulos de primeiro nível, como o editor.
-- **0.2.2** - Sua página agora diz numa frase o que ele faz, o que pode fazer e o que mudou em cada versão.
-- **0.2.1** - Sem números num documento numerado à mão, nem num com `number headings: off` nas propriedades.
-- **0.2.0** - O Textus AI pode escrever números nos títulos de um Markdown, ou retirá-los.
-- **0.1.3** - Diz onde funciona: computador, iPhone e iPad.
-- **0.1.2** - A numeração começa no nível de título mais alto do próprio documento em vez de uma configuração.
-- **0.1.0-0.1.1** - Primeiras versões: números antes dos títulos ao escrever e nas exportações em HTML e PDF.
+- **0.2.5** - Its page no longer says which devices it runs on: the store shows that.
+- **0.2.4** - With two documents open side by side, both show their heading numbers, not only the one you are typing in.
+- **0.2.3** - Front matter and code blocks no longer get numbers by mistake, and exports number only top-level headings, like the editor.
+- **0.2.2** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
+- **0.2.1** - No numbers on a document numbered by hand, or one whose front matter says `number headings: off`.
+- **0.2.0** - Textus AI can write heading numbers into Markdown, or take them out.
+- **0.1.3** - Says where it runs: the desktop, iPhone and iPad.
+- **0.1.2** - Numbering starts at the document's own top heading level instead of a setting.
+- **0.1.0-0.1.1** - First versions: numbers before headings while writing, and in HTML and PDF exports.
 
 <!-- ai-tools -->
 ## Ferramentas para o Textus AI

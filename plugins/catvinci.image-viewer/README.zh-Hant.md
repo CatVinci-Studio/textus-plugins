@@ -15,16 +15,17 @@
 
 ## 權限
 
-不需要任何權限。它只讀取你開啟的那個檔案，桌面版和 iOS 都能使用。
+不需要任何權限。它只讀取你開啟的那個檔案。
 
 ## 更新紀錄
 
-- **0.2.5** - 頁面語言由 Textus 自動跟隨。需要 Textus 1.4.3。
-- **0.2.4** - 旋轉並放大的圖片現在可以捲動到每個邊緣，橫向轉過的圖片也能完整放進視窗。移動面板後縮放和方向都會保留，第四次旋轉不再倒轉回去，工具列在窄面板裡也放得下。
-- **0.2.3** - 觸控板捏合縮放隨手勢平滑變化；搭配 Textus 1.3.13，在 Mac 上捏合縮放的是圖片，不再縮放後面的文件。 工具列依 Textus 統一的順序排列：先是內容資訊，再是尋找和縮放。
+- **0.2.6** - Its page no longer says which devices it runs on: the store shows that. After switching to another tab and back, a picture keeps where it was scrolled as well as its zoom.
+- **0.2.5** - The page follows Textus's language by itself. Needs Textus 1.4.3.
+- **0.2.4** - A turned and zoomed picture now scrolls to every edge, and a sideways picture fits the window. Zoom and turn are kept when the panel moves, a fourth turn no longer spins back, and the bar fits a narrow panel.
+- **0.2.3** - A trackpad pinch zooms smoothly, in step with the gesture; with Textus 1.3.13 a pinch on a Mac zooms the picture, not the document behind it. Its bar keeps Textus's one order: what it shows, then find and zoom.
 - **0.2.2** - Its bars, lists and controls are Textus's own, grow with the interface and follow every theme; needs Textus 1.3.12.
-- **0.2.1** - 介紹頁重寫：一句話說明它做什麼，再講它能做的事，並列出每個版本的更新。
-- **0.2.0** - 使用 Textus 自己的按鈕和分頁上方列；切換介面語言時文字會跟著改變
-- **0.1.3** - 使用 Textus 1.3 主題的顏色
-- **0.1.2** - 點百分比可在符合視窗和原始大小之間切換
-- **0.1.0-0.1.1** - 最初版本：縮放、符合視窗、拖曳、旋轉、快速鍵、SVG 原始碼，以及打不開檔案時的提示
+- **0.2.1** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
+- **0.2.0** - Textus's own buttons and tab bar; labels follow the interface language when it changes
+- **0.1.3** - colors from Textus 1.3's themes
+- **0.1.2** - the percentage switches between fit and actual size
+- **0.1.0-0.1.1** - first versions: zoom, fit, drag, rotate, keys, an SVG's source, and a message for a file that can't be opened

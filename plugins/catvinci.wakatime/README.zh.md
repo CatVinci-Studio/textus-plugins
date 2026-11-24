@@ -3,9 +3,9 @@
 把你在 Textus 里写作的时间发到你的 [WakaTime](https://wakatime.com) 账号，和写代码的时间一起显示在统计面板上。
 
 1. 在 [wakatime.com/settings/api-key](https://wakatime.com/settings/api-key) 复制你的 API 密钥。
-2. 在命令面板里运行 **WakaTime：设置 API 密钥…**，粘贴进去。密钥保存在 Textus 的密钥存储里。
+2. 在 Textus 设置里 WakaTime 的页面点 **设置 API 密钥…**，粘贴进去。密钥保存在 Textus 的密钥存储里。
 
-命令面板里还有 **WakaTime：今天的写作时间**，显示 WakaTime 统计的今天总时长；以及 **WakaTime：打开统计面板**。
+「插件」菜单和命令面板里有 **WakaTime：设置 API 密钥…**、**WakaTime：今天的写作时间**（显示 WakaTime 统计的今天总时长）和 **WakaTime：打开统计面板**。
 
 ## 哪些时间会算、发送什么
 
@@ -15,13 +15,14 @@
 - 离线时记录会先排队存着，联网后再分批发送。
 - 设置密钥之前不会发送任何内容，没保存过的文档也不会发送。想停止时，把密钥设为空即可。
 
-支持桌面版和 iPhone，需要 Textus 1.3.0 或更新版本。插件需要读取编辑器和打开的文件夹里的文件（文档、行数、`.wakatime-project` 和 `.git/HEAD`），并只连接 `api.wakatime.com`，不访问其他网络地址。
+需要 Textus 1.3.0 或更新版本。插件需要读取编辑器和打开的文件夹里的文件（文档、行数、`.wakatime-project` 和 `.git/HEAD`），并只连接 `api.wakatime.com`，不访问其他网络地址。
 
 ## 更新日志
 
-- **0.2.4** - 把密钥留空现在会真正关闭发送；查看今天写作时间时遇到异常回复，会显示常规的提示。
-- **0.2.3** - 介绍页重写：一句话说明它做什么，再讲它能做的事，并列出每个版本的更新。
-- **0.2.2** - 在各个系统上都用同样的方式找到 `.wakatime-project` 和 Git 分支。
-- **0.2.1** - 注明可运行的平台：桌面版和 iPhone。
-- **0.2.0** - 只算你在前台窗口里的工作；离线排队、分批发送；项目、分支和行数；今天的写作时间。
-- **0.1.0** - 第一个版本：Textus 里的写作时间显示在 WakaTime 统计面板上。
+- **0.2.5** - Set the API key with a button on its page in Settings, and find its commands in the Plugins menu: on a phone, with no command palette, too. Its page is in every language Textus speaks.
+- **0.2.4** - Leaving the key empty now really turns it off; a garbled reply to Today's Writing Time shows the usual message.
+- **0.2.3** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
+- **0.2.2** - Finds `.wakatime-project` and the Git branch the same way on every system.
+- **0.2.1** - Says where it runs: desktop and iPhone.
+- **0.2.0** - Only your own work in a window in front counts; an offline queue sent in batches; project, branch and lines; Today's Writing Time.
+- **0.1.0** - First version: writing time in Textus on your WakaTime dashboard.

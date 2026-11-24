@@ -1,6 +1,6 @@
 # 番茄钟
 
-浮在 Textus 窗口或桌面上的专注计时器：专注 25 分钟，再休息 5 分钟，每段结束时发一条通知。
+浮在 Textus 窗口或桌面上的专注计时器：专注一段时间，再休息一会儿，每段结束时发一条通知。
 
 - **插件 › 显示或隐藏番茄钟** 把计时器放出来。可以拖到你喜欢的位置，也可以拖出窗口放到桌面上。
 - 点一下计时器，或选 **插件 › 开始或暂停计时**，就能开始或暂停。外圈随时间推进慢慢填满，休息时换一种颜色。
@@ -10,11 +10,12 @@
 
 **设置**：**专注（分钟）** 和 **休息（分钟）**，默认 25 和 5，最多 180。
 
-支持桌面版，需要 Textus 1.3.12 或更新版本。插件只申请一项权限：通知，用来提醒每段结束。
+需要 Textus 1.3.12 或更新版本。插件只申请一项权限：通知，用来提醒每段结束。
 
 ## 更新日志
 
-- **0.1.3** - 连点几下不会再漏掉一下；改了专注或休息时长，还没开始的计时器马上显示新时长；时间文字随计时器大小缩放。
-- **0.1.2** - 点一下计时器又能开始和暂停了（0.1.0 和 0.1.1 里点了没反应）。
-- **0.1.1** - 适配每个主题，随界面一起缩放；需要 Textus 1.3.12。
-- **0.1.0** - 第一个版本：浮动的专注计时器，带休息、通知、右键菜单，可以自己设专注和休息的时长。
+- **0.1.4** - Its page is in every language Textus speaks. It no longer says 25 and 5 minutes: both lengths are yours to set.
+- **0.1.3** - Quick clicks no longer lose one; a new focus or break length shows on a timer not yet started; the clock grows and shrinks with the timer.
+- **0.1.2** - A click on the timer starts and pauses it again (it did nothing in 0.1.0 and 0.1.1).
+- **0.1.1** - Follows every theme and grows with the interface; needs Textus 1.3.12.
+- **0.1.0** - First version: a floating focus timer with breaks, notifications, a right-click menu, and its own focus and break lengths.

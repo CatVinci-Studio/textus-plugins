@@ -18,6 +18,13 @@
 
   const open = (task) => api.postMessage({ type: "open", path: task.path, line: task.line });
 
+  /** A task's words, its [[links]] opening the notes they name. */
+  function words(task) {
+    const node = el("span", { class: "text", onclick: () => open(task) });
+    window.wikiLinks.draw(node, task.description, (name) => api.postMessage({ type: "openNote", name: name, path: task.path }));
+    return node;
+  }
+
   function row(task) {
     const box = el("input", {
       type: "checkbox",
@@ -31,10 +38,10 @@
       "li",
       { class: "task", "data-status": task.status, "data-open": task.open },
       box,
-      el("span", { class: "text", onclick: () => open(task) }, task.description),
+      words(task),
       task.priority || task.recurring ? el("span", { class: "mark" }, (task.priority || "") + (task.recurring ? "🔁" : "")) : null,
       task.due ? el("span", { class: "tx-badge", "data-tone": task.tone }, task.due) : null,
-      el("span", { class: "file", title: task.rel, onclick: () => open(task) }, task.file),
+      task.file ? el("span", { class: "file", title: task.rel, onclick: () => open(task) }, task.file) : null,
     );
   }
 
@@ -58,7 +65,7 @@
     body.replaceChildren(...parts);
   }
 
-  api.onMessage((m) => {
+  api.onDidReceiveMessage((m) => {
     if (m && m.type === "result") draw(m.result);
   });
   api.postMessage({ type: "ready" });

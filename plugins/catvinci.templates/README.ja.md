@@ -15,23 +15,24 @@
 - Templater のよく使うタグも入ります：`<% tp.date.now("YYYY-MM-DD") %>`（`-1` のような日数や `"P1W"` でずらせます）、`tp.date.today`、`tomorrow`、`yesterday`、`<% tp.file.title %>`、`tp.file.creation_date()`、`tp.file.folder()`。`<% tp.file.cursor() %>` の位置にカーソルを置きます。
 - スクリプトやほかのタグは実行しません。書いたまま残し、通知でその名前を示します。
 
-デスクトップと iPhone で使え、Textus 1.3.10 以降が必要です。テンプレートと新しい文書のために開いているフォルダのファイルの読み書きを、挿入や保存のために表示中の文書の読み取りと編集を求めます。また、Textus AI に下の二つのツールを渡します。
+Textus 1.4.3 以降が必要です。テンプレートと新しい文書のために開いているフォルダのファイルの読み書きを、挿入や保存のために表示中の文書の読み取りと編集を求めます。また、Textus AI に下の二つのツールを渡します。
 
 ## 更新履歴
 
-- **0.5.5** - 名前の並べ替えに Textus 自身の順序を使い、写しを持たなくなったのでパッケージが小さくなりました。Textus 1.4.3 が必要です。
-- **0.5.4** - 名前が使われているときは、書き込みと同時に次の空いている名前になり、重なりません（Textus 1.4.3）。
-- **0.5.3** - ストアの説明が、最初の一文でプラグインの働きを伝えるようになりました。
-- **0.5.2** - 隠しフォルダや小文字のテンプレートフォルダ、そのサブフォルダにあるテンプレートも表示されるように。挿入後、カーソルがテンプレートの直後に来るように。
-- **0.5.1** - ファイルやフォルダの右クリックメニューから**テンプレートから新規作成…**すると、そのフォルダに作られるように。
-- **0.5.0** - テンプレートを Textus 自身が埋めるように。デイリーノートと同じ書き方です。Textus 1.3.10 が必要。
-- **0.4.1** - テンプレートを自然な順（2 が 10 より前）に並べるように。
-- **0.4.0** - Templater のよく使う `tp.date` と `tp.file` のタグ、Obsidian の保管庫のテンプレート設定の日付・時刻の書式。実行しないタグは通知で示すように。
-- **0.3.0** - テンプレートが Templates フォルダ（Obsidian では保管庫のテンプレートフォルダ）の Markdown ファイルに。以前の保存場所から一度だけ移します。`{{date:書式}}` と `{{time:書式}}`。
-- **0.2.0** - Textus AI がテンプレートを一覧し、テンプレートから文書を作れるように。
-- **0.1.3** - 動く場所（デスクトップと iPhone）を明記。
-- **0.1.2** - テンプレートから新規作成で、使われている名前を断るように。
-- **0.1.0-0.1.1** - 最初の版：新しい文書、断片の挿入、テンプレートとして保存。`{{date}}`・`{{time}}`・`{{title}}`。ストアページとアイコン。
+- **0.5.6** - Its page no longer says which devices it runs on: the store shows that. It names the Textus it needs, 1.4.3.
+- **0.5.5** - Sorts names with Textus's own order instead of a copy of it, so the package is smaller. Needs Textus 1.4.3.
+- **0.5.4** - A taken name gets the next free one as the file is written, never a clash (Textus 1.4.3).
+- **0.5.3** - The store description now opens with what the plugin does.
+- **0.5.2** - Templates in a hidden or lowercase templates folder, and in its subfolders, now show up. After Insert, the caret lands right after the template.
+- **0.5.1** - **New from Template…** from a file's or folder's right-click menu makes the document in that folder.
+- **0.5.0** - Templates are filled in by Textus itself, the same way as daily notes; needs Textus 1.3.10.
+- **0.4.1** - Templates are listed in natural order: 2 before 10.
+- **0.4.0** - Templater's common `tp.date` and `tp.file` tags, and an Obsidian vault's Templates date and time formats; tags that aren't run are named in a notice.
+- **0.3.0** - Templates are Markdown files in the Templates folder (a vault's own templates folder in Obsidian), moved there once from where older versions kept them; `{{date:FORMAT}}` and `{{time:FORMAT}}`.
+- **0.2.0** - Textus AI can list your templates and make a document from one.
+- **0.1.3** - Says where it runs: desktop and iPhone.
+- **0.1.2** - New from Template refuses a name that is already taken.
+- **0.1.0-0.1.1** - First versions: new documents, inserted snippets and saved templates, with `{{date}}`, `{{time}}` and `{{title}}`; store page and icon.
 
 <!-- ai-tools -->
 ## Textus AI のツール

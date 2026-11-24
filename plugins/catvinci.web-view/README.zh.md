@@ -15,8 +15,6 @@
 - **⌃** 把这一栏收起来，再点小把手就展开。
 - **↗** 用浏览器打开，**↻** 刷新。
 
-只支持桌面版。
-
 ## 权限
 
 - 网络（任意地址）：加载你打开的网页。
@@ -24,8 +22,9 @@
 
 ## 更新日志
 
-- **0.2.2** - 说明和空状态文字更简短。
-- **0.2.1** - 介绍页重写：一句话说明它做什么，再讲它能做的事，并列出每个版本的更新。
-- **0.2.0** - 按住 Ctrl/⌘ 点击的网页链接，只有在设置里打开后才在标签页中打开；否则用浏览器打开。
-- **0.1.2** - 只支持桌面版。
-- **0.1.0-0.1.1** - 最初的版本：在标签页里打开网址或搜索、最近的网页、打开或搜索选中内容、按住 Ctrl/⌘ 点击链接、可选搜索引擎。
+- **0.2.3** - Its page no longer says which devices it runs on: the store shows that.
+- **0.2.2** - Shorter help and empty-state text.
+- **0.2.1** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
+- **0.2.0** - Ctrl/Cmd+clicked web links open in a tab only when you turn that on in the settings; otherwise they open in your browser.
+- **0.1.2** - Desktop only.
+- **0.1.0-0.1.1** - First versions: an address or a search in a tab, recent pages, the selection opened or searched, Ctrl/Cmd+clicked links, a choice of search engine.

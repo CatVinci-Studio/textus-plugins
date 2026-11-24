@@ -21,15 +21,16 @@
 
 ## 변경 내역
 
-- **0.3.0** - Textus 1.4.4부터 한중일 문자와 라틴 문자·숫자 사이에 공백이 빠진 문단에 밑줄이 그어지고, 카드에서 공백을 넣을 수 있습니다. 플러그인 설정에서 끌 수 있습니다.
-- **0.2.4** - 더 긴 펜스(```` 안의 ```)로 감싼 코드 블록은 그대로 둡니다.
-- **0.2.3** - Textus AI 도구 설명을 바로잡음: 중국어와 일본어만 다루고 한국어는 다루지 않음.
-- **0.2.2** - Obsidian의 블록 ID, Dataview 필드, 하이라이트, Tasks 필드를 그대로 둠
-- **0.2.1** - #태그, 알림, %% 주석을 그대로 둠. 저장할 때는 본문 블록만 바꿈
-- **0.2.0** - Textus AI 도구 `fix_cjk_spacing` 추가
-- **0.1.3** - 데스크톱과 iOS에서 동작
-- **0.1.2** - 링크, 위키 링크, 각주, 태그, front matter를 그대로 둠
-- **0.1.0-0.1.1** - 첫 버전: 오른쪽 클릭과 플러그인 메뉴의 명령, 저장할 때 자동 조정
+- **0.3.1** - Its page shows its list of changes in English in every language.
+- **0.3.0** - From Textus 1.4.4, a paragraph missing a space between CJK and Latin text is underlined; its card adds the spaces. Turn it off in the plugin's settings.
+- **0.2.4** - A code block inside a longer fence (```` holding ```) is left alone.
+- **0.2.3** - Its Textus AI tool says what it does: Chinese and Japanese, not Korean.
+- **0.2.2** - leaves Obsidian's block ids, Dataview fields, highlights and Tasks fields as written
+- **0.2.1** - leaves #tags, reminders and %% comments alone; on save only prose blocks change
+- **0.2.0** - a tool for Textus AI, `fix_cjk_spacing`
+- **0.1.3** - runs on the desktop and on iOS
+- **0.1.2** - leaves links, wiki links, footnotes, tags and front matter alone
+- **0.1.0-0.1.1** - first versions: the command in the right-click and Plugins menus, and spacing on save
 
 <!-- ai-tools -->
 ## Textus AI 도구

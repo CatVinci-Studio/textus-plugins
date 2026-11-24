@@ -51,3 +51,26 @@ export function fewPerSecond(
     report(phase, current, total);
   };
 }
+
+/** What a sync did, only what happened: "uploaded 2, 1 conflict copy"
+ *  (the done message's argument); null when it changed nothing. */
+export function doneText(
+  result: Result,
+  t: (key: string, ...args: unknown[]) => string,
+): string | null {
+  const parts = (
+    [
+      ["doneUploaded", result.uploaded],
+      ["doneDownloaded", result.downloaded],
+      ["doneRemoved", result.removed],
+      ["doneMoved", result.moved],
+      ["doneConflicts", result.conflicts.length],
+      ["doneDeferred", result.deferred.length],
+      ["doneNotTrashed", result.notTrashed.length],
+      ["doneTooLarge", result.tooLarge?.length ?? 0],
+    ] as const
+  )
+    .filter(([, n]) => n > 0)
+    .map(([key, n]) => t(key, n));
+  return parts.length ? parts.join(t("listSeparator")) : null;
+}

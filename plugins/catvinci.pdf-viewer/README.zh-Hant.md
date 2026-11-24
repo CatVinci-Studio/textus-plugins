@@ -2,7 +2,7 @@
 
 在筆記旁的分頁裡開啟 PDF，可以閱讀、搜尋和拷貝文字。
 
-- 從側欄開啟 PDF，或把它拖進視窗。指向 PDF 某一頁的連結，會直接開到那一頁。
+- 從側邊欄開啟 PDF，或把它拖進視窗。指向 PDF 某一頁的連結，會直接開到那一頁。
 - 捲動翻頁，或用箭頭按鈕到上一頁、下一頁。
 - 用按鈕、**Ctrl+滾輪**（Mac 上是 **⌘+滾輪**）或雙指縮放。頁面會以指標為中心立刻放大縮小，停下後再變清晰。
 - PDF 開啟時符合視窗寬度，調整視窗大小時也會跟著變。點百分比可以在符合寬度和原始大小之間切換。
@@ -15,15 +15,16 @@
 
 ## 更新紀錄
 
-- **0.2.8** - 安裝包內附上所帶第三方函式庫的清單和授權。
-- **0.2.7** - 頁面語言由 Textus 自動跟隨。需要 Textus 1.4.3。
-- **0.2.6** - 縮放按鈕和快捷鍵每次 1.25 倍，和其他檢視器一致。
-- **0.2.5** - 從頭捲到尾的長 PDF 佔用記憶體少得多：看不到的頁面也會釋放其中的圖片。
-- **0.2.4** - 窄面板中工具列會換行；尋找不再混入上一個詞的結果。
-- **0.2.3** - 工具列依 Textus 統一的順序排列：先是內容資訊，再是尋找和縮放。
+- **0.2.9** - Its page shows its list of changes in English in every language.
+- **0.2.8** - Its package lists the libraries it carries, with their licenses.
+- **0.2.7** - The page follows Textus's language by itself. Needs Textus 1.4.3.
+- **0.2.6** - Zoom buttons and keys step by 1.25×, as the other viewers do.
+- **0.2.5** - A long PDF scrolled end to end holds far less memory: pages out of sight let go of their pictures too.
+- **0.2.4** - Its bar wraps in a narrow panel, and find no longer mixes in results for an earlier word.
+- **0.2.3** - Its bar keeps Textus's one order: what it shows, then find and zoom.
 - **0.2.2** - Its bars, lists and controls are Textus's own, grow with the interface and follow every theme; needs Textus 1.3.12.
-- **0.2.1** - 介紹頁重寫：一句話說明它做什麼，再講它能做的事，並列出每個版本的更新。
-- **0.2.0** - 改用 Textus 自己的控制項。需要 Textus 1.3.2。
-- **0.1.3** - 採用 Textus 1.3 的外觀；切換介面語言時，按鈕文字跟著變。
-- **0.1.2** - 掃描頁顯示圖片、指向某一頁的連結可用、看不到的頁面釋放記憶體、開不了的檔案會說明；開啟時符合視窗寬度；縮放時以指標為中心放大，停下後變清晰。
-- **0.1.0-0.1.1** - 最初的版本：翻頁、縮放、選取拷貝文字、搜尋、回到上次的位置，沒有內嵌字型的中日韓文字也能顯示。
+- **0.2.1** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
+- **0.2.0** - Textus's own controls. Needs Textus 1.3.2.
+- **0.1.3** - Textus 1.3's look; the buttons follow the interface language when it changes.
+- **0.1.2** - Scanned pages show their images, links to a page work, pages out of sight free their memory, unreadable files say so; opens at the window's width; zoom stretches around the pointer and then turns sharp.
+- **0.1.0-0.1.1** - First versions: pages, zoom, text to select and copy, find, reopening where you left off, Chinese, Japanese and Korean text without embedded fonts.

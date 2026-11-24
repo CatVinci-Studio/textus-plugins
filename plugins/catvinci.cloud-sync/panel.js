@@ -8,6 +8,7 @@
   var MAX_HISTORY_SIZE = 8 * 1024 * 1024;
   var KEEP_DAYS = [30, 90, 365, 0];
   var PARALLEL = [1, 2, 4, 8, 16, 32];
+  var MAX_FILE_MIB = [8, 16, 32, 64, 128];
 
   // development/cloud-sync/src/config.ts
   var providers = {
@@ -80,7 +81,8 @@
     ["interval", [5, 10, 15, 30, 60], minutes],
     ["saveGap", [0, 1, 3, 5, 10], delayLabel],
     ["keepDays", KEEP_DAYS, keepLabel],
-    ["parallel", PARALLEL, String]
+    ["parallel", PARALLEL, String],
+    ["maxFileMiB", MAX_FILE_MIB, (v) => api.t("sizeMb", v)]
   ];
   var optionLabel = (id, value) => OPTION_PICKS.find(([k]) => k === id)[2](value);
   for (const [id, values, label] of OPTION_PICKS)
@@ -127,6 +129,7 @@
     element("connected").hidden = form || !root;
     element("connection").hidden = !form || !root;
     for (const id of ["options", "rules"]) element(id).hidden = !configured;
+    element("maxFileMiB-field").hidden = !state.phone;
     element("cancel-edit").hidden = !editing;
     element("c-service").textContent = api.t(config.provider);
     element("c-endpoint").textContent = config.endpoint;
@@ -188,6 +191,7 @@
           saveGap: Number(input("saveGap").value),
           keepDays: Number(input("keepDays").value),
           parallel: Number(input("parallel").value),
+          maxFileMiB: Number(input("maxFileMiB").value),
           exclude: element("exclude").value,
           gitignore: input("gitignore").checked,
           obsidian: input("obsidian").checked
@@ -256,58 +260,83 @@
   element("test-saved").onclick = () => api.postMessage({ type: "test" });
   for (const id of ["sync", "unlock", "cancel", "openSettings", "disconnect"])
     element(id).onclick = () => api.postMessage({ type: id });
-  function showResult(result) {
+  function showResult(result, limit = 0) {
     const container = element("results");
     container.replaceChildren();
-    for (const key of ["conflicts", "deferred"]) {
+    for (const key of ["conflicts", "deferred", "notTrashed"]) {
       const entries = result?.[key];
       if (!entries?.length) continue;
       const title = document.createElement("h3");
       title.textContent = api.t(key);
-      const list = document.createElement("ul");
+      const list2 = document.createElement(key === "conflicts" ? "div" : "ul");
+      if (key === "conflicts") list2.className = "tx-list";
       for (const path of entries) {
-        const row = document.createElement("li");
+        const row = document.createElement(key === "conflicts" ? "button" : "li");
         row.textContent = path;
-        list.append(row);
+        if (row instanceof HTMLButtonElement) {
+          row.type = "button";
+          row.className = "tx-list-row";
+          row.onclick = () => api.postMessage({ type: "openConflict", path });
+        }
+        list2.append(row);
       }
-      container.append(title, list);
+      container.append(title, list2);
     }
+    const large = result?.tooLarge ?? [];
+    if (!large.length) return;
+    const fold = document.createElement("details");
+    fold.className = "tx-disclosure";
+    const line = document.createElement("summary");
+    line.textContent = api.t("tooLargeFiles", large.length, limit);
+    const list = document.createElement("ul");
+    for (const path of large) {
+      const row = document.createElement("li");
+      row.textContent = path;
+      list.append(row);
+    }
+    fold.append(line, list);
+    container.append(fold);
   }
-  api.onMessage((value) => {
-    const m = value;
-    if (m.type === "saved") {
-      editing = false;
-      typed = false;
-      api.postMessage({ type: "ready" });
-      return;
+  api["onDidReceiveMessage" in api ? "onDidReceiveMessage" : "onMessage"](
+    (value) => {
+      const m = value;
+      if (m.type === "saved") {
+        editing = false;
+        typed = false;
+        api.postMessage({ type: "ready" });
+        return;
+      }
+      if (m.type !== "state") return;
+      const first = !state || state.root !== m.root;
+      const was = state;
+      state = m;
+      if (first || !typed && !editing) fillForm(m.config, m.root);
+      if (first || was?.configured !== m.configured) editing = false;
+      if (document.activeElement?.closest(".options") == null || first)
+        fillOptions(m.config);
+      element("status").textContent = m.message || api.t("loading");
+      element("status").dataset.error = String(m.error);
+      element("cancel").hidden = !m.busy;
+      const progress = element("progress");
+      progress.hidden = !m.busy;
+      progress.classList.toggle("is-indeterminate", m.progress == null);
+      progress.style.setProperty("--value", String(m.progress ?? 0));
+      const summary = element("summary");
+      summary.hidden = !m.configured;
+      summary.textContent = [
+        api.t(m.config.provider),
+        m.config.prefix,
+        m.config.automatic ? api.t("summaryAuto", m.config.interval) : api.t("summaryManual")
+      ].join(" \xB7 ");
+      const last = element("last-run");
+      last.hidden = !m.lastRun;
+      last.textContent = m.lastRun ? `${api.t("lastRun")} \xB7 ${new Date(m.lastRun).toLocaleString(api.language)}` : "";
+      showResult(m.result, m.config.maxFileMiB);
+      const note = element("note");
+      note.hidden = !m.note;
+      note.textContent = m.note ?? "";
+      show();
     }
-    if (m.type !== "state") return;
-    const first = !state || state.root !== m.root;
-    const was = state;
-    state = m;
-    if (first || !typed && !editing) fillForm(m.config, m.root);
-    if (first || was?.configured !== m.configured) editing = false;
-    if (document.activeElement?.closest(".options") == null || first)
-      fillOptions(m.config);
-    element("status").textContent = m.message || api.t("loading");
-    element("status").dataset.error = String(m.error);
-    element("cancel").hidden = !m.busy;
-    const progress = element("progress");
-    progress.hidden = !m.busy;
-    progress.classList.toggle("is-indeterminate", m.progress == null);
-    progress.style.setProperty("--value", String(m.progress ?? 0));
-    const summary = element("summary");
-    summary.hidden = !m.configured;
-    summary.textContent = [
-      api.t(m.config.provider),
-      m.config.prefix,
-      m.config.automatic ? api.t("summaryAuto", m.config.interval) : api.t("summaryManual")
-    ].join(" \xB7 ");
-    const last = element("last-run");
-    last.hidden = !m.lastRun;
-    last.textContent = m.lastRun ? `${api.t("lastRun")} \xB7 ${new Date(m.lastRun).toLocaleString(api.language)}` : "";
-    showResult(m.result);
-    show();
-  });
+  );
   api.postMessage({ type: "ready" });
 })();

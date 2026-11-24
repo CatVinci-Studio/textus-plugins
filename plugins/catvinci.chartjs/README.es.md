@@ -11,7 +11,7 @@ Escribe un bloque de código con el lenguaje `chartjs` que contenga una configur
 - Si la configuración tiene un error, una línea bajo el bloque dice qué está mal.
 - Al exportar a HTML, PDF o Word, el gráfico va como imagen.
 
-Funciona en escritorio y en iPhone y necesita Textus 1.3.2 o posterior. Pide un solo permiso, herramientas de Textus AI, para que Textus AI pueda revisar un bloque `chartjs` antes de escribirlo en un documento.
+Necesita Textus 1.3.2 o posterior. Pide un solo permiso, herramientas de Textus AI, para que Textus AI pueda revisar un bloque `chartjs` antes de escribirlo en un documento.
 
 ## Ejemplo
 
@@ -27,15 +27,16 @@ Funciona en escritorio y en iPhone y necesita Textus 1.3.2 o posterior. Pide un 
 
 ## Cambios
 
-- **0.3.4** - El paquete incluye la lista de bibliotecas que lleva, con sus licencias.
-- **0.3.3** - Un gráfico dibujado con su bloque plegado (en el móvil) se ajusta al ancho al abrirlo.
-- **0.3.2** - Los gráficos se vuelven a dibujar cuando el panel se estrecha o se ensancha; las etiquetas siguen la fuente y el tamaño de texto del tema, y la línea de error vuelve a ser roja.
-- **0.3.1** - Su página dice ahora en una frase qué hace, qué puede hacer y qué cambió en cada versión.
-- **0.3.0** - Textus AI puede revisar un bloque `chartjs` antes de escribirlo (`check_chartjs`).
-- **0.2.0** - Las series toman los colores del tema; necesita Textus 1.3.2.
-- **0.1.3** - Usa los colores del documento con sus nuevos nombres en Textus.
-- **0.1.2** - Mientras escribes, el gráfico siempre muestra el texto más reciente.
-- **0.1.0-0.1.1** - Primeras versiones: bloques `chartjs` dibujados bajo su código, `height=`, imágenes al exportar; página en la tienda e icono.
+- **0.3.5** - Its page no longer says which devices it runs on: the store shows that.
+- **0.3.4** - Its package lists the libraries it carries, with their licenses.
+- **0.3.3** - A chart drawn while its block was folded (a phone) fits once the block opens, instead of keeping its old size.
+- **0.3.2** - Charts redraw to fit a narrower or wider panel, labels follow the theme's font and text size, and the error line is red again.
+- **0.3.1** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
+- **0.3.0** - Textus AI can check a `chartjs` block before writing it (`check_chartjs`).
+- **0.2.0** - Series take the theme's colors; needs Textus 1.3.2.
+- **0.1.3** - Uses Textus's renamed document colors.
+- **0.1.2** - While you type, the chart always shows the latest text.
+- **0.1.0-0.1.1** - First versions: `chartjs` blocks drawn under their source, `height=`, pictures in exports; store page and icon.
 
 <!-- ai-tools -->
 ## Herramientas para Textus AI

@@ -2,7 +2,7 @@
 
 输入 `[[` 链接笔记、标题或段落，用 `![[` 把它们嵌进来，并在侧边栏查看哪些笔记链接到当前文档。
 
-`[[笔记]]` 这样的双链是 Textus 自带的，不装插件也能写、能点开。这个插件帮你写链接，把链接指向的内容直接显示出来，并列出当前文档周围的链接。桌面版和 iOS 都能用。
+`[[笔记]]` 这样的双链是 Textus 自带的，不装插件也能写、能点开。这个插件帮你写链接，把链接指向的内容直接显示出来，并列出当前文档周围的链接。
 
 ## 边写边链接
 
@@ -39,19 +39,20 @@
 
 ## 更新日志
 
-- **0.4.7** - 删掉了为已经不支持的旧版 Textus 留的代码。
-- **0.4.6** - 切换 Textus 的语言后，筛选框和空列表提示会跟着变。需要 Textus 1.4.3。
-- **0.4.5** - 未链接提及跳到正确的行；链接样式由 Textus 自己保存（Textus 1.4.3）。
-- **0.4.4** - 转换链接不再改动代码块里的链接，代码块之后的链接也会转换；未链接提及不再列出或链接前置属性和代码里的名字。
-- **0.4.3** - 指向还没创建笔记的标准链接现在会出现在出链里；链到本篇标题的链接不再把这篇笔记自己列出来；拖动分隔线时面板不再重新绘制。
-- **0.4.2** - 说明和空状态文字更简短。 侧边栏面板和页面按 Textus 1.3.13 的布局调整。
-- **0.4.1** - 在还没有链接的笔记里，输入 [[ 写出标准链接：之前会把正在输入的 [[ 当成笔记已有的双链。
-- **0.4.0** - 新增「新链接写法」设置文件夹里新链接用标准链接还是双链，以及「把链接转成标准链接 / 双链」，可转换当前文档或整个文件夹；输入 [[ 时按文件夹的写法写入，没有设置时写标准链接。
-- **0.3.1** - 介绍页重写：一句话说明它做什么，再讲它能做的事，并列出每个版本的更新。
-- **0.3.0** - 输入 `[[` 补全笔记、标题和段落；`![[` 嵌入；名称从“反向链接”改为“双向链接”
-- **0.2.1** - 简介里写明“双向链接（双链）”，在商店里搜得到
-- **0.2.0** - 新增 Textus AI 工具 `list_backlinks`
-- **0.1.0-0.1.1** - 最初版本：已链接和未链接提及（可一键 **添加链接**）、出链和筛选；打开含维基链接的文档时会推荐这个插件
+- **0.4.8** - Its page no longer says which devices it runs on: the store shows that.
+- **0.4.7** - Code kept for Textus versions it no longer runs on is gone.
+- **0.4.6** - The filter field and empty message follow Textus's language when you switch it. Needs Textus 1.4.3.
+- **0.4.5** - Unlinked mentions open on the right line, and Link Style is set by Textus itself (Textus 1.4.3).
+- **0.4.4** - The Convert Links commands leave links inside a code block alone and convert the ones after it, and Unlinked mentions no longer lists or links names in front matter or code.
+- **0.4.3** - Standard links to notes that don't exist yet now show under Outgoing links, a note's links to its own headings no longer list the note itself, and dragging a divider no longer redraws the panel.
+- **0.4.2** - Shorter help and empty-state text. Its sidebar panel and page follow Textus 1.3.13's layout.
+- **0.4.1** - In a note with no links yet, [[ writes a standard link: the [[ being typed was taken for a wiki link the note already had.
+- **0.4.0** - New Links: Standard or [[Wiki]]… chooses how the folder writes new links, and Convert Links turns a note's or the whole folder's links from one way into the other; [[ writes the folder's way, a standard link where nothing says otherwise.
+- **0.3.1** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
+- **0.3.0** - `[[` completion for notes, headings and blocks; `![[` embeds; renamed from Backlinks to Two-way Links
+- **0.2.1** - the description says "two-way links", so a store search finds it
+- **0.2.0** - a tool for Textus AI, `list_backlinks`
+- **0.1.0-0.1.1** - first versions: linked and unlinked mentions with **Link**, outgoing links and a filter; suggested for documents with wiki links
 
 <!-- ai-tools -->
 ## Textus AI 工具

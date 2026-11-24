@@ -39,16 +39,17 @@
 
 ## Изменения
 
-- **0.5.1** - В пакет добавлен список входящих в него библиотек и их лицензий.
-- **0.5.0** - Каждая находка открывает карточку с правилом: исправить этот блок (Alt+Enter) или отложить кнопкой «Пропустить» (Textus 1.4.4).
-- **0.4.1** - Удаление пустых строк и смена вида списка не трогают блок кода внутри более длинного ограждения (```` с ``` внутри).
-- **0.4.0** - Выделенные строки можно переключить в маркированный, нумерованный список или список задач (нумерация с 1 на каждом уровне; отметка задачи сохраняется).
-- **0.3.2** - Короче подсказки и тексты пустых состояний.
-- **0.3.1** - Его страница теперь одной фразой говорит, что он делает, что умеет и что менялось в каждой версии.
-- **0.3.0** - Новое название — «Уборка» (было «Проверка Markdown»): сюда перешли шесть текстовых команд «Уборки текста»; настройки, чтобы выключить подчёркивание или отдельные правила; собственный синтаксис Obsidian остаётся как есть.
-- **0.2.1** - Теги, ссылки, напоминания и определения ссылок никогда не помечаются: тот же список, который не трогает «Пробелы CJK».
-- **0.2.0** - Textus AI может проверять Markdown (`lint_markdown`).
-- **0.1.0-0.1.2** - Первые версии: подчёркивания с объяснением правила и «Исправить Markdown»; страница в магазине и значок; работает на компьютере и iOS.
+- **0.5.2** - Its page shows its list of changes in English in every language.
+- **0.5.1** - Its package lists the libraries it carries, with their licenses.
+- **0.5.0** - Each finding opens a card that names the rule and fixes that block (Alt+Enter), or sets it aside with Ignore (Textus 1.4.4).
+- **0.4.1** - Remove Blank Lines and list switching leave a code block inside a longer fence (```` holding ```) alone.
+- **0.4.0** - Switch selected lines to a bullet, numbered or task list (numbered counts from 1 at each level; a task keeps its tick).
+- **0.3.2** - Shorter help and empty-state text.
+- **0.3.1** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
+- **0.3.0** - Renamed Tidy (was Markdown Lint): Text Tidy's six text commands moved in; settings to turn off underlines or single rules; Obsidian's own syntax left as written.
+- **0.2.1** - Tags, links, reminders and reference definitions are never flagged: the same list CJK Spacing leaves alone.
+- **0.2.0** - Textus AI can check Markdown (`lint_markdown`).
+- **0.1.0-0.1.2** - First versions: underlines that explain the rule, and Fix Markdown; store page and icon; runs on desktop and iOS.
 
 <!-- ai-tools -->
 ## Инструменты для Textus AI

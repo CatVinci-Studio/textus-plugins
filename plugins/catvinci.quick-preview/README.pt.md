@@ -7,14 +7,15 @@ Leia aonde um link leva sem abri-lo: deixe o ponteiro sobre um link para outro d
 - O cartão mostra até cerca de 1.500 caracteres, cortados no fim de um parágrafo. **Abrir** vai ao documento; **Fixar** mantém o cartão aberto enquanto você escreve.
 - Só documentos da pasta aberta são mostrados.
 
-O plugin pede para ler o editor (para saber em que link você aponta) e ler arquivos (para mostrar o documento ligado). Nunca muda um arquivo. Funciona no computador, no iPhone e no iPad.
+O plugin pede para ler o editor (para saber em que link você aponta) e ler arquivos (para mostrar o documento ligado). Nunca muda um arquivo. Num tablet, funciona com um mouse ou trackpad conectado.
 
 ## Alterações
 
-- **0.2.3** - A descrição da loja agora começa pelo que o plugin faz.
-- **0.2.2** - Um link para um título aninhado (`[[Nota#A#B]]`) mostra a seção desse título, a mesma que um clique abre. Requer Textus 1.4.0.
-- **0.2.1** - Sua página agora diz numa frase o que ele faz, o que pode fazer e o que mudou em cada versão.
-- **0.2.0** - Um link para um bloco (`#^id`) mostra esse bloco. Requer Textus 1.3.9.
-- **0.1.3** - Diz onde funciona: computador, iPhone e iPad.
-- **0.1.2** - O tamanho do cartão é fixo em vez de uma configuração.
-- **0.1.0-0.1.1** - Primeiras versões: um cartão para links para documentos, com o início do documento ou a seção que o link aponta, e Abrir e Fixar.
+- **0.2.4** - Its page says that on a tablet it needs a mouse or trackpad, instead of which devices it runs on.
+- **0.2.3** - The store description now opens with what the plugin does.
+- **0.2.2** - A link to a nested heading (`[[Note#A#B]]`) shows that heading's section, as a click opens it. Needs Textus 1.4.0.
+- **0.2.1** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
+- **0.2.0** - A link to a block (`#^id`) shows that block. Needs Textus 1.3.9.
+- **0.1.3** - Says where it runs: the desktop, iPhone and iPad.
+- **0.1.2** - The card's length is fixed instead of a setting.
+- **0.1.0-0.1.1** - First versions: a card for links to documents, with the document's opening or the section the link names, and Open and Pin.

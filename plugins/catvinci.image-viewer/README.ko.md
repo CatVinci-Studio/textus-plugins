@@ -15,16 +15,17 @@
 
 ## 권한
 
-어떤 권한도 요청하지 않습니다. 연 파일만 읽습니다. 데스크톱과 iOS에서 쓸 수 있습니다.
+어떤 권한도 요청하지 않습니다. 연 파일만 읽습니다.
 
 ## 변경 내역
 
-- **0.2.5** - 페이지 언어는 Textus를 자동으로 따릅니다. Textus 1.4.3이 필요합니다.
-- **0.2.4** - 회전하고 확대한 이미지도 가장자리까지 스크롤되고, 옆으로 돌린 이미지는 창에 맞게 들어갑니다. 패널을 옮겨도 확대와 회전이 유지되고, 네 번째 회전에서 거꾸로 돌지 않으며, 좁은 패널에서도 도구 막대가 들어맞습니다.
-- **0.2.3** - 트랙패드 핀치가 제스처에 맞춰 부드럽게 확대·축소합니다. Textus 1.3.13에서는 Mac에서 핀치하면 뒤의 문서가 아니라 이미지이(가) 확대·축소됩니다. 도구 막대는 Textus 공통 순서: 보이는 내용, 그다음 찾기와 확대/축소.
-- **0.2.2** - 도구 막대, 목록, 컨트롤을 Textus 자체의 것으로 바꿨습니다. 인터페이스와 함께 커지고 모든 테마를 따릅니다. Textus 1.3.12가 필요합니다.
-- **0.2.1** - 소개 페이지를 새로 썼습니다. 무엇을 하는지 한 문장으로, 할 수 있는 일과 버전별 변경 내역을 담았습니다.
-- **0.2.0** - Textus의 버튼과 탭 막대 사용, 인터페이스 언어를 바꾸면 라벨도 바뀜
-- **0.1.3** - Textus 1.3 테마의 색 사용
-- **0.1.2** - 퍼센트 표시로 창에 맞추기와 실제 크기 전환
-- **0.1.0-0.1.1** - 첫 버전: 확대·축소, 창에 맞추기, 끌기, 회전, 키, SVG 소스, 열 수 없는 파일 안내
+- **0.2.6** - Its page no longer says which devices it runs on: the store shows that. After switching to another tab and back, a picture keeps where it was scrolled as well as its zoom.
+- **0.2.5** - The page follows Textus's language by itself. Needs Textus 1.4.3.
+- **0.2.4** - A turned and zoomed picture now scrolls to every edge, and a sideways picture fits the window. Zoom and turn are kept when the panel moves, a fourth turn no longer spins back, and the bar fits a narrow panel.
+- **0.2.3** - A trackpad pinch zooms smoothly, in step with the gesture; with Textus 1.3.13 a pinch on a Mac zooms the picture, not the document behind it. Its bar keeps Textus's one order: what it shows, then find and zoom.
+- **0.2.2** - Its bars, lists and controls are Textus's own, grow with the interface and follow every theme; needs Textus 1.3.12.
+- **0.2.1** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
+- **0.2.0** - Textus's own buttons and tab bar; labels follow the interface language when it changes
+- **0.1.3** - colors from Textus 1.3's themes
+- **0.1.2** - the percentage switches between fit and actual size
+- **0.1.0-0.1.1** - first versions: zoom, fit, drag, rotate, keys, an SVG's source, and a message for a file that can't be opened

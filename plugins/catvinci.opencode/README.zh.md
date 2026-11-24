@@ -10,11 +10,12 @@ Textus 用 `npx` 运行 [OpenCode](https://opencode.ai) 的 `opencode acp`（它
 
 改文件、跑命令、上网读取前都会问你；计划模式下不改文件。子 agent 暂时关闭：OpenCode 不会把它们的询问传过来，这一轮会一直等下去。
 
-只在桌面版可用，需要 Textus 1.4.3 或更新版本。它只申请一项权限：在这台电脑上启动这个 agent。
+需要 Textus 1.4.3 或更新版本。它只申请一项权限：在这台电脑上启动这个 agent。
 
-## 更新
+## 更新日志
 
-- **0.1.3** - 上网读取前也会问你；计划模式不再改文件；子 agent 关闭（它们的询问传不过来，会卡住这一轮）。需要 Textus 1.4.3。
-- **0.1.2** - 每次修改和运行命令前都会先问你，与说明一致：OpenCode 默认不询问就执行。
-- **0.1.1** - 需要 Textus 1.4.2 或更新版本，以使用新的助手界面。
-- **0.1.0** - 第一个版本：在 Textus AI 里用 OpenCode。
+- **0.1.4** - Its page is in every language Textus speaks. Needs Textus 1.4.3 itself, not a test version of it.
+- **0.1.3** - Asks before web fetches too, plan mode no longer edits, and sub-agents are off (their questions never arrived, so a turn hung). Needs Textus 1.4.3.
+- **0.1.2** - Asks before each edit and command, as it says: OpenCode on its own allowed them unasked.
+- **0.1.1** - Needs Textus 1.4.2 or later, for its new agent views.
+- **0.1.0** - First version: OpenCode in Textus AI.

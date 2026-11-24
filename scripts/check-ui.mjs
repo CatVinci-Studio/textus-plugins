@@ -3,8 +3,10 @@
 // (docs/dev/plugins/ui.md in the app): no fixed pixels of 3 and up, no
 // literal colours, no fixed durations, in a page's stylesheets, its
 // <style>s and the styles its scripts set - the plugins', the shared files
-// copied into them, and the development plugins' sources. What must stay as
-// it is says so in ALLOWED, with why.
+// copied into them, and the development plugins' sources. Nor does a page
+// restyle a shared control (.tx-*): it places and sizes it in its layout,
+// but its colours, border, corners, type, padding and height are Textus's.
+// What must stay as it is says so in ALLOWED or RESTYLED, with why.
 import { readFileSync, readdirSync, statSync } from "node:fs";
 import { join, relative } from "node:path";
 
@@ -13,6 +15,35 @@ const ALLOWED = {
   "plugins/catvinci.desk-pet/host.js:144 breathe 3.6s": "the pet's own breathing, not the interface's motion",
   "plugins/catvinci.desk-pet/host.js:145 hop 0.5s": "the pet's own hop, not the interface's motion",
 };
+
+/** "path selector": why that rule may change a shared control's look. */
+const RESTYLED = {
+  "plugins/catvinci.cloud-sync/panel.css #s3-more > .tx-row":
+    "the group's divider, for rows folded inside it, which Textus draws only between a group's own rows",
+  "plugins/catvinci.database/view.css .tx-chip.raw": "a filter Textus can't read, shown as written",
+  "plugins/catvinci.pdf-viewer/view.css .textLayer span.tx-hit":
+    "PDF.js's text layer stays see-through over the page drawn under it",
+  "plugins/catvinci.quick-notes/panel.css .note-foot .tx-icon-button::after":
+    "a touch area around the button, not its look",
+  "plugins/catvinci.link-cards/card.css .link.tx-card:hover": "a card that opens its link shows it can be clicked",
+};
+/** A control's look, as opposed to where it sits and how wide it is. */
+const LOOK = /^(?:color|background|border|outline|box-shadow|font|line-height|padding|height|min-height|max-height)\b/;
+
+/** The rules in `css` whose selector's subject is a shared control and
+ *  that change how it looks: [selector, line]. */
+function restyled(css) {
+  const found = [];
+  const plain = css.replace(/\/\*[\s\S]*?\*\//g, (c) => c.replace(/[^\n]/g, " "));
+  for (const m of plain.matchAll(/([^{}]+)\{([^{}]*)\}/g)) {
+    const props = m[2].split(";").map((d) => d.split(":")[0].trim());
+    if (!props.some((p) => LOOK.test(p))) continue;
+    const line = plain.slice(0, m.index + m[1].search(/\S/)).split("\n").length;
+    for (const selector of m[1].split(",").map((s) => s.trim()))
+      if (/\.tx-[\w-]+[^\s>+~]*$/.test(selector)) found.push([selector, line]);
+  }
+  return found;
+}
 
 const PX = /(?<![\w.-])(\d*\.?\d+)px\b/g;
 /** Text at a size of its own, not the type scale's (--text-*). */
@@ -58,7 +89,15 @@ for (const dir of dirs) {
     if (/<style|<html/i.test(readFileSync(host, "utf8"))) files.push(host);
   } catch {}
   for (const file of files) {
-    const lines = styled(file, readFileSync(file, "utf8"));
+    const text = readFileSync(file, "utf8");
+    // A page's own stylesheet, or the <style>s of a page written out in a script.
+    const css = file.endsWith(".css")
+      ? text
+      : text.replace(/<style[^>]*>([\s\S]*?)<\/style>|[^\n]/g, (m, style) => style ?? (m === "\n" ? m : " "));
+    for (const [selector, line] of restyled(css))
+      if (!RESTYLED[`${relative(".", file)} ${selector}`])
+        problems.push(`${relative(".", file)}:${line}: ${selector} - a shared control keeps Textus's look`);
+    const lines = styled(file, text);
     lines.forEach((line, i) => {
       const at = `${relative(".", file)}:${i + 1}`;
       if (/^\s*(\/\/|\*|\/\*)/.test(line)) return;
@@ -75,7 +114,7 @@ for (const dir of dirs) {
 }
 if (problems.length) {
   console.error(problems.join("\n"));
-  console.error(`\n${problems.length} fixed sizes or colours in plugin pages`);
+  console.error(`\n${problems.length} fixed sizes, colours or restyled controls in plugin pages`);
   process.exit(1);
 }
-console.log("ui: plugin pages take their sizes and colours from Textus");
+console.log("ui: plugin pages take their sizes, colours and controls' look from Textus");

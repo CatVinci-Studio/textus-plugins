@@ -238,7 +238,7 @@
     all[to].focus();
   });
 
-  api.onMessage((message) => {
+  api.onDidReceiveMessage((message) => {
     if (message.type === "texts") {
       texts.set(textKey(message.id, message.against), { from: message.from, to: message.to });
       if (opened === message.id && against === message.against) render();

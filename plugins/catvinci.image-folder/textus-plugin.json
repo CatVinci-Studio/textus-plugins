@@ -1,7 +1,7 @@
 {
   "id": "catvinci.image-folder",
   "name": "%name%",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "publisher": "catvinci",
   "author": "CatVinci Studio",
   "description": "%description%",
@@ -14,6 +14,7 @@
   "platforms": [
     "desktop"
   ],
+  "category": "editing",
   "main": [
     "lib/folder-paths.js",
     "lib/free-name.js",

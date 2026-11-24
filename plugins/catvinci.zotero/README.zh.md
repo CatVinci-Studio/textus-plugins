@@ -4,7 +4,7 @@
 
 ## 准备
 
-同一台电脑上要开着 Zotero 7 或更新版本（Zotero 10 也可以），并在 Zotero 的 **设置 › 高级** 中打开“允许此计算机上的其他应用程序与 Zotero 通信”。插件只和你电脑上的 Zotero 通信，数据不会离开这台电脑。仅支持桌面版。
+同一台电脑上要开着 Zotero 7 或更新版本（Zotero 10 也可以），并在 Zotero 的 **设置 › 高级** 中打开“允许此计算机上的其他应用程序与 Zotero 通信”。插件只和你电脑上的 Zotero 通信，数据不会离开这台电脑。
 
 ## 插入引用
 
@@ -41,17 +41,18 @@
 
 ## 更新日志
 
-- **0.4.4** - 名字排序改用 Textus 自带的顺序，不再自带一份，安装包更小。需要 Textus 1.4.3。
-- **0.4.3** - 引用现在会替换选中的文字；Zotero 有回应时参考文献列表不再提示连不上，悬停预览也更稳定。
-- **0.4.2** - 说明和空状态文字更简短。
-- **0.4.1** - 代码按职责拆成了几个小文件，使用上没有变化。
-- **0.4.0** - 文献笔记模板改由 Textus 自带的模板引擎填写；需要 Textus 1.3.10
-- **0.3.0** - 从 Zotero 新建文献笔记，支持模板和 Obsidian 库的设置；引用可以写成 `[[@citekey]]`
-- **0.2.1** - 快捷键从 Ctrl+Alt+C 改为 Ctrl+Alt+R
-- **0.2.0** - 新增 Textus AI 工具 `search_library`
-- **0.1.3** - 只在桌面版上架
-- **0.1.2** - 支持 Zotero 10 的本地接口；再次插入参考文献列表时替换原列表；不再把代码里的内容当作引用
-- **0.1.0-0.1.1** - 最初版本：插入引用（最近引用的排在前面）、引用的悬停卡片、参考文献列表、四种引用写法
+- **0.4.5** - Its page no longer says which devices it runs on: the store shows that.
+- **0.4.4** - Sorts names with Textus's own order instead of a copy of it, so the package is smaller. Needs Textus 1.4.3.
+- **0.4.3** - A citation now replaces the selected words; the References list no longer says Zotero is unreachable when it answers, and hover previews show up more reliably.
+- **0.4.2** - Shorter help and empty-state text.
+- **0.4.1** - Its code is split into smaller files by what each part does; nothing changes in use.
+- **0.4.0** - literature note templates are filled by Textus's own template engine; needs Textus 1.3.10
+- **0.3.0** - literature notes from Zotero, with a template and an Obsidian vault's settings; citations as `[[@citekey]]`
+- **0.2.1** - the shortcut moves from Ctrl+Alt+C to Ctrl+Alt+R
+- **0.2.0** - a tool for Textus AI, `search_library`
+- **0.1.3** - listed for the desktop only
+- **0.1.2** - works with Zotero 10's local API; the references list is replaced when made again, and code is never read for citations
+- **0.1.0-0.1.1** - first versions: citing with recent works first, hover cards for citations, the references list, four citation styles
 
 <!-- ai-tools -->
 ## Textus AI 工具

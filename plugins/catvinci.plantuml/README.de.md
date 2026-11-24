@@ -12,10 +12,10 @@ Schreiben Sie einen Codeblock mit der Sprache `plantuml` und setzen Sie PlantUML
 
 **Einstellungen › Erweiterungen › Plugins › PlantUML › Gezeichnet von** legt fest, wo gezeichnet wird:
 
-- **Diesem Rechner** (Standard): Nichts verlässt ihn. Das Zeichnen auf Ihrem Rechner braucht etwa 100 MB mehr Arbeitsspeicher.
+- **Diesem Rechner** (Standard): Nichts verlässt ihn. Das Zeichnen auf Ihrem Rechner braucht mehr Arbeitsspeicher.
 - **PlantUML-Server**: Der Text jedes Diagramms geht an plantuml.com, das es zeichnet. Das braucht keinen zusätzlichen Speicher.
 
-Das Plugin fragt nur nach Netzwerkzugriff auf `www.plantuml.com` und nutzt ihn nur, wenn Sie den PlantUML-Server wählen. Es läuft auf dem Desktop sowie auf iPhone und iPad.
+Das Plugin fragt nur nach Netzwerkzugriff auf `www.plantuml.com` und nutzt ihn nur, wenn Sie den PlantUML-Server wählen.
 
 ## Beispiel
 
@@ -28,13 +28,14 @@ Bob --> Alice : Hi!
 
 ## Änderungen
 
-- **0.2.6** - Das Paket listet die mitgelieferten Bibliotheken samt ihren Lizenzen auf.
-- **0.2.5** - Ein Diagramm, das bei zugeklapptem Block (auf dem Handy) gezeichnet wurde, passt sich beim Aufklappen an die Breite an.
-- **0.2.4** - `!theme` funktioniert; keine leere Lücke in einer schmalen Spalte; im Servermodus erscheint der Fehler von PlantUML selbst, dunkle Themes bekommen ein dunkles Bild.
-- **0.2.3** - Kürzere Hilfe- und Leertexte.
-- **0.2.2** - Seine Seite sagt jetzt in einem Satz, was es tut, was es kann und was sich in jeder Version geändert hat.
-- **0.2.1** - Enthält die aktualisierte gemeinsame Diagrammseite; Diagramme werden wie bisher gezeichnet.
-- **0.2.0** - Enthält die gemeinsame Diagrammseite, die ihre Farben aus dem Theme nimmt. Benötigt Textus 1.3.2.
-- **0.1.3** - Liest Textfarbe und Fußnotengröße des Dokuments unter ihren Namen aus Textus 1.3.
-- **0.1.2** - Zeichnungen vom PlantUML-Server erscheinen wieder; nennt die etwa 100 MB zusätzlichen Arbeitsspeicher beim Zeichnen auf Ihrem Rechner.
-- **0.1.0-0.1.1** - Erste Versionen: `plantuml`-Codeblöcke auf Ihrem Rechner oder vom PlantUML-Server gezeichnet, `height=` und Export als Bild.
+- **0.2.7** - Its page no longer says which devices it runs on: the store shows that. It no longer gives a figure for the memory drawing on your computer takes.
+- **0.2.6** - Its package lists the libraries it carries, with their licenses.
+- **0.2.5** - A chart drawn while its block was folded (a phone) fits once the block opens, instead of keeping its old size.
+- **0.2.4** - `!theme` works; no empty gap in a narrow column; server mode shows PlantUML's own error and draws dark in dark themes.
+- **0.2.3** - Shorter help and empty-state text.
+- **0.2.2** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
+- **0.2.1** - Ships the updated shared chart page; diagrams are drawn as before.
+- **0.2.0** - Ships the shared chart page that takes its colors from the theme. Needs Textus 1.3.2.
+- **0.1.3** - Uses the theme's document text color and footnote size under their Textus 1.3 names.
+- **0.1.2** - Drawings from the PlantUML server show again; says that drawing on your computer takes about 100 MB more memory.
+- **0.1.0-0.1.1** - First versions: `plantuml` code blocks drawn on your computer or by the PlantUML server, `height=`, and exports as a picture.

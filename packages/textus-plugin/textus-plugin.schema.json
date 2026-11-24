@@ -51,7 +51,7 @@
       }
     },
     "platforms": {
-      "description": "Where it runs: desktop (macOS, Windows, Linux) and ios (iPhone, iPad). Left out, everywhere - unless it works in the background (background code, or requiring runInBackground), which only the desktop does. Textus elsewhere doesn't list or load it.",
+      "description": "Where it runs: desktop (macOS, Windows, Linux) and ios (iPhone, iPad). Left out, everywhere - unless it works in the background (background code, or requiring runInBackground), which only the desktop does. Background code can't name ios; a plugin that only requires runInBackground can, and runs there without it. Textus elsewhere doesn't list or load it.",
       "type": "array",
       "items": { "enum": ["desktop", "ios"] },
       "uniqueItems": true
@@ -104,7 +104,9 @@
               "background",
               "agents",
               "appearance",
-              "git.commit"
+              "git.commit",
+              "git.sync",
+              "ssh"
             ]
           },
           {
@@ -134,6 +136,23 @@
           }
         }
       }
+    },
+    "needsTextusAi": {
+      "description": "From 1.10 (Textus 1.4.7): it does nothing without Textus AI (it only gives Textus AI tools). Where there is none (iOS), the store doesn't list it.",
+      "type": "boolean"
+    },
+    "category": {
+      "description": "From 1.10 (Textus 1.4.7): where the store lists it. Left out, or one an older Textus doesn't know: under Other.",
+      "enum": [
+        "notes",
+        "editing",
+        "diagrams",
+        "files",
+        "import",
+        "sync",
+        "ai",
+        "companions"
+      ]
     },
     "contributes": {
       "type": "object",
@@ -358,6 +377,78 @@
                     "description": "JSX tags: <Tag …>, </Tag>, <>."
                   }
                 }
+              }
+            }
+          }
+        },
+        "folderDocuments": {
+          "type": "array",
+          "description": "From 1.4.6: folders with an extension opened as one document, like .textbundle.",
+          "items": {
+            "type": "object",
+            "required": ["extension", "documents"],
+            "properties": {
+              "extension": {
+                "type": "string",
+                "description": "The folder's extension: \"textbundle\"."
+              },
+              "documents": {
+                "type": "array",
+                "items": { "type": "string" },
+                "minItems": 1,
+                "description": "File names inside it; the first found is opened: \"text.md\"."
+              }
+            }
+          }
+        },
+        "codeLanguages": {
+          "type": "array",
+          "description": "From 1.4.7: code languages coloured from a grammar file of the plugin, in the editor, source mode and exports. Textus's own languages win over a plugin's.",
+          "items": {
+            "type": "object",
+            "required": ["id", "path"],
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9][A-Za-z0-9+#._-]{0,31}$",
+                "description": "The fence's language: \"cisco\". Read in any case."
+              },
+              "aliases": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "pattern": "^[A-Za-z0-9][A-Za-z0-9+#._-]{0,31}$"
+                },
+                "description": "Other names a fence may use: [\"ios\", \"cisco-ios\"]."
+              },
+              "path": {
+                "type": "string",
+                "pattern": "\\.json$",
+                "description": "The grammar, a JSON file in the plugin: { flags?, rules: [{ token, match, flags? }] }. See the plugin guide's Code languages."
+              }
+            }
+          }
+        },
+        "fileIconThemes": {
+          "type": "array",
+          "description": "From 1.4.7: icon themes for the files and folders listed, picked in Settings › Appearance › File icons.",
+          "items": {
+            "type": "object",
+            "required": ["id", "label", "path"],
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^[a-z0-9][a-z0-9-]{0,63}$",
+                "description": "The theme's id in the plugin: \"material\"."
+              },
+              "label": {
+                "type": "string",
+                "description": "Its name in Settings; may be a %key%."
+              },
+              "path": {
+                "type": "string",
+                "pattern": "\\.json$",
+                "description": "Its JSON in the plugin, VS Code's icon theme cut down: iconDefinitions (SVG paths relative to it), fileExtensions, fileNames, folderNames, folderNamesExpanded, file, folder, folderExpanded and light."
               }
             }
           }

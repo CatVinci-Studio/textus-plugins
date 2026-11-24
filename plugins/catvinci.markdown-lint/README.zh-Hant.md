@@ -39,16 +39,17 @@
 
 ## 更新紀錄
 
-- **0.5.1** - 安裝包內附上所帶第三方函式庫的清單和授權。
-- **0.5.0** - 每處問題彈出卡片，寫明規則，一鍵修正這一塊（Alt+Enter），也可以點「忽略」（Textus 1.4.4）。
-- **0.4.1** - 刪除空行和切換清單不再改動被更長圍欄包住的程式碼區塊（```` 裡含 ```）。
-- **0.4.0** - 選取的行可一鍵轉為項目符號、編號或待辦清單（編號清單每層從 1 開始，待辦保留勾選狀態）。
-- **0.3.2** - 說明和空狀態文字更簡短。
-- **0.3.1** - 介紹頁重寫：一句話說明它做什麼，再講它能做的事，並列出每個版本的更新。
-- **0.3.0** - 改名為整理（原名 Markdown 檢查）：併入「文字整理」的六個指令；可以關掉波浪線或個別關掉某條規則；Obsidian 自己的寫法維持原樣。
-- **0.2.1** - 標籤、連結、提醒和參考連結定義不再被標出，與「中英文間距」不改動的內容是同一份清單。
-- **0.2.0** - Textus AI 可以檢查 Markdown（`lint_markdown`）。
-- **0.1.0-0.1.2** - 最初的版本：波浪線提示違反哪條規則，以及「修正 Markdown」；商店頁面和圖示；支援桌面和 iOS。
+- **0.5.2** - Its page shows its list of changes in English in every language.
+- **0.5.1** - Its package lists the libraries it carries, with their licenses.
+- **0.5.0** - Each finding opens a card that names the rule and fixes that block (Alt+Enter), or sets it aside with Ignore (Textus 1.4.4).
+- **0.4.1** - Remove Blank Lines and list switching leave a code block inside a longer fence (```` holding ```) alone.
+- **0.4.0** - Switch selected lines to a bullet, numbered or task list (numbered counts from 1 at each level; a task keeps its tick).
+- **0.3.2** - Shorter help and empty-state text.
+- **0.3.1** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
+- **0.3.0** - Renamed Tidy (was Markdown Lint): Text Tidy's six text commands moved in; settings to turn off underlines or single rules; Obsidian's own syntax left as written.
+- **0.2.1** - Tags, links, reminders and reference definitions are never flagged: the same list CJK Spacing leaves alone.
+- **0.2.0** - Textus AI can check Markdown (`lint_markdown`).
+- **0.1.0-0.1.2** - First versions: underlines that explain the rule, and Fix Markdown; store page and icon; runs on desktop and iOS.
 
 <!-- ai-tools -->
 ## Textus AI 工具

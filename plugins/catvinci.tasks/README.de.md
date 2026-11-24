@@ -8,7 +8,7 @@ Sammelt alle Aufgaben Ihres Ordners in einer Liste, zum Abhaken an Ort und Stell
 - Geben Sie einer Aufgabe ein Datum (`📅 2026-11-01`, `due:2026-11-01` oder `[due:: 2026-11-01]`), und es erscheint als Abzeichen. Überfällige oder innerhalb einer Woche fällige Aufgaben stehen oben unter **Bald fällig**.
 - Das Feld oben filtert die Liste nach Wörtern, dem Namen des Dokuments oder seiner Überschrift.
 - Erledigte Aufgaben sind ausgeblendet, außer Sie schalten **Erledigte Aufgaben zeigen** unter **Einstellungen › Erweiterungen › Plugins › Aufgaben** ein.
-- Karten auf einem Kanban-Board (ein Dokument mit `kanban-plugin` in den Eigenschaften oder `name.kanban.md`) gehören zum Board und stehen nicht in der Seitenleiste.
+- Karten auf einem Kanban-Board (ein Dokument mit `kanban-plugin` in den Eigenschaften oder `name.kanban.md`) gehören zum Board und stehen weder in der Seitenleiste noch in Aufgabenabfragen.
 
 ## Aufgaben aus Obsidian
 
@@ -38,29 +38,30 @@ sort by due
 - **Sonstiges**: `priority is` (auch `above`, `below`, `not`), `is recurring` und `is not recurring`.
 - **Reihenfolge**: `sort by` und `group by` (status, due, scheduled, start, done, created, priority, path, folder, filename, heading oder description, auf Wunsch mit `reverse`) und `limit`. Ohne `sort by` gilt die Reihenfolge von Obsidian Tasks: Status, Fälligkeit, Priorität, Pfad.
 
-Zeilen zum Aussehen (`hide …`, `show …`) werden übergangen; jede andere Zeile, die nicht verstanden wird, steht unter der Anzahl. Der Block listet auch die Karten von Boards. Haken Sie dort eine Aufgabe ab, wird sie in ihrer Datei abgehakt; ein Klick springt zu ihr.
+Zeilen zum Aussehen (`hide …`, `show …`) werden übergangen; jede andere Zeile, die nicht verstanden wird, steht unter der Anzahl. Ein [[Link]] in einer Aufgabe öffnet seine Notiz. Haken Sie dort eine Aufgabe ab, wird sie in ihrer Datei abgehakt; ein Klick springt zu ihr.
 
 ## Berechtigungen
 
-Das Plugin liest die Dokumente des Ordners, um ihre Aufgaben zu finden, und schreibt nur in ein Dokument, um eine Aufgabe abzuhaken oder hinzuzufügen. Außerdem gibt es Textus AI die unten aufgeführten Werkzeuge. Es läuft auf dem Desktop sowie auf iPhone und iPad.
+Das Plugin liest die Dokumente des Ordners, um ihre Aufgaben zu finden, und schreibt nur in ein Dokument, um eine Aufgabe abzuhaken oder hinzuzufügen. Außerdem gibt es Textus AI die unten aufgeführten Werkzeuge.
 
 ## Änderungen
 
-- **0.4.7** - Suchfeld und Leerhinweis folgen der Sprache von Textus, wenn Sie sie wechseln. Benötigt Textus 1.4.3.
-- **0.4.6** - Der Aufgabenblock hält wie andere Blöcke Abstand zu seinem Rahmen.
-- **0.4.5** - Eine Aufgabe, die die KI unter einer Überschrift anlegt, landet nie mehr in einem Codeblock, und „Erledigte Aufgaben ans Ende der Liste“ wirkt auch in Notizen mit Windows-Zeilenenden (CRLF).
-- **0.4.4** - Eine Aufgabenabfrage im Dokument erscheint in der Schriftgröße der Oberfläche: Eine breitere Spalte zeigt mehr davon statt größerer Schrift (Textus 1.4.1).
-- **0.4.3** - Aufgaben mit einem HTML-Kommentar lassen sich jetzt abhaken, und ein verweigertes Abhaken sagt, warum. `group by status` sortiert richtig, Aufgabenblöcke passen in schmale Bereiche, Fälligkeitsdaten sehen aus wie in der Seitenleiste, und das Tippen bleibt leichter.
-- **0.4.2** - Kürzere Hilfe- und Leertexte.
-- **0.4.1** - Leisten, Listen und Steuerelemente sind jetzt die von Textus, wachsen mit der Oberfläche und folgen jedem Theme; braucht Textus 1.3.12. Neue Einstellung **Erledigte Aufgaben ans Ende der Liste**: eine abgehakte Aufgabe rückt hinter die offenen (fragt einmal nach Lesen und Bearbeiten des Dokuments).
-- **0.4.0** - Nutzt die in Textus 1.3.10 eingebauten Datumsfunktionen und benötigt deshalb Textus 1.3.10.
-- **0.3.1** - Enthält den aktualisierten gemeinsamen Datumscode; sonst keine Änderung.
-- **0.3.0** - Obsidian Tasks: `[/]` und `[-]`, die Aufgabenfelder, Erledigt-Daten, Wiederholungen und `tasks`-Abfrageblöcke; mit `kanban-plugin` markierte Boards bleiben aus der Liste.
-- **0.2.1** - Karten auf einem Kanban-Board (`name.kanban.md`) werden nicht mehr gelistet.
-- **0.2.0** - Textus AI kann Aufgaben auflisten, hinzufügen und abhaken.
-- **0.1.3** - Die Liste folgt der Sprache der Oberfläche, wenn diese wechselt.
-- **0.1.2** - Fälligkeiten in Ortszeit; Anzahlen in den Pluralformen jeder Sprache.
-- **0.1.0-0.1.1** - Erste Versionen: alle Aufgaben des Ordners in einer Liste in der Seitenleiste, dort abzuhaken oder anzuspringen, mit Filter, Fälligkeiten und Bald fällig.
+- **0.5.0** - A task query no longer lists a Kanban board's cards, as the sidebar and Textus AI already didn't. Grouped by document, its rows don't repeat the document's name, and a [[link]] in a task opens its note.
+- **0.4.7** - The filter field and empty message follow Textus's language when you switch it. Needs Textus 1.4.3.
+- **0.4.6** - The tasks block keeps a gap inside its frame, as other blocks do.
+- **0.4.5** - The AI's new task under a heading never lands inside a code block, and **Move finished tasks to the end of their list** works in Windows (CRLF) notes.
+- **0.4.4** - A task query in a document draws at the interface's text size, so a wider column shows more of it rather than larger text (Textus 1.4.1).
+- **0.4.3** - Ticking a task with an HTML comment in it now works, and a refused tick tells you why. `group by status` sorts in the right order, task blocks fit narrow panes, due dates look like the sidebar's, and typing stays lighter.
+- **0.4.2** - Shorter help and empty-state text.
+- **0.4.1** - Its bars, lists and controls are Textus's own, grow with the interface and follow every theme; needs Textus 1.3.12. A new setting, **Move finished tasks to the end of their list**: a task ticked in a document or in the list goes after the open ones (it asks once to read and edit the document in front).
+- **0.4.0** - Uses the dates built into Textus 1.3.10, which it now needs.
+- **0.3.1** - Ships the updated shared date code; nothing else changed.
+- **0.3.0** - Obsidian Tasks: `[/]` and `[-]`, the task fields, done dates, repeating tasks and `tasks` query blocks; boards marked with `kanban-plugin` are left out of the list.
+- **0.2.1** - Cards on a Kanban board (`name.kanban.md`) are no longer listed.
+- **0.2.0** - Textus AI can list, add and tick off tasks.
+- **0.1.3** - The list follows the interface language when it changes.
+- **0.1.2** - Due dates in local time; counts in each language's plural forms.
+- **0.1.0-0.1.1** - First versions: every task in the folder in a sidebar list, ticked off or opened from there, with a filter, due dates and Due soon.
 
 <!-- ai-tools -->
 ## Werkzeuge für Textus AI

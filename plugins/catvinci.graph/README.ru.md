@@ -5,7 +5,7 @@
 - **Ctrl+Alt+G** (**⌘⌥G** на Mac) или **Плагины › Открыть граф заметок** показывает всю папку во вкладке. **Вписать** помещает весь граф на экран.
 - Вкладка **Граф** в боковой панели показывает заметки вокруг открытого документа. Кнопка вверху панели «Граф» в боковой панели открывает всю папку.
 - Считаются и [[вики-ссылки]], и ссылки на другие документы; две заметки, ссылающиеся друг на друга, соединены одной линией. [[Ссылка]] на ещё не написанную заметку показана как отдельная заметка.
-- Щелчок по заметке открывает её. Перетаскивайте заметку, чтобы поставить её на место, фон — чтобы двигаться, а колесо или щипок меняют масштаб. Наведите указатель на заметку, чтобы подсветить её связи.
+- Щелчок по заметке открывает её. Перетаскивайте заметку, чтобы поставить её на место, фон — чтобы двигаться, а колесо или щипок меняют масштаб. Наведите указатель на заметку, чтобы подсветить её связи. На сенсорном экране первое касание заметки подсвечивает её связи, второе открывает её.
 - Граф подстраивается сам: при приближении появляются названия, стрелки показывают направление ссылок, когда их немного, а заметка с большим числом связей крупнее. Без цветовых групп каждая заметка получает цвет своей папки.
 - Когда документы в папке меняются, граф перерисовывается.
 
@@ -25,20 +25,21 @@
 
 ## Изменения
 
-- **0.5.9** - Esc во время перетаскивания заметки или вида возвращает их на место, а прерванное системой касание больше не оставляет перетаскивание зависшим.
-- **0.5.8** - Граф на боковой панели растягивается по панели, а не начинается маленьким комком с наложенными подписями. Сортирует имена в порядке самого Textus, а не своей копии, поэтому пакет стал меньше.
-- **0.5.7** - Страница сама следует языку Textus. Нужен Textus 1.4.3.
-- **0.5.6** - Счётчики и кнопки вверху вкладки графа остаются на виду: прокрутка или масштабирование жестом над графом больше не уводит их вверх под вкладку. Подписи больше не наслаиваются: имена сначала получают заметки с наибольшим числом ссылок, остальные появляются при приближении. Большая папка открывается уже разложенной, а не разворачивается на глазах, а изображения и другие вложения, на которые ссылается заметка, не попадают в граф, пока вы не включите «Вложения» в настройках. Переключение документа или сохранение больше не встряхивает весь граф заново.
-- **0.5.5** - Обычные Markdown-ссылки на ещё не написанные заметки ставятся туда, где их создаст Textus, и сливаются с [[ссылками]] на ту же заметку. Ctrl/Cmd-щелчок открывает заметку рядом с текущей. Подписи следуют размеру текста интерфейса, цвета папок — теме. У графа в боковой панели больше нет своих настроек.
-- **0.5.4** - Щипок на трекпаде масштабирует плавно, вслед за жестом; в Textus 1.3.13 на Mac щипок масштабирует граф, а не документ за ним. Короче подсказки и тексты пустых состояний. Панель в боковой панели и страница следуют макету Textus 1.3.13.
-- **0.5.3** - Панели, списки и элементы управления теперь из Textus, растут вместе с интерфейсом и следуют любой теме; нужен Textus 1.3.12.
-- **0.5.2** - Цветовые группы Obsidian берутся из ближайшего хранилища, даже если оно выше открытой папки. Нужен Textus 1.3.10.
-- **0.5.1** - В хранилище Obsidian заметки окрашивают и цветовые группы из `.obsidian/graph.json`.
-- **0.5.0** - [[Ссылки]] сопоставляются с заметками так же, как при щелчке по ним в Textus.
-- **0.4.0** - Textus AI видит заметки вокруг документа (`list_neighbours`).
-- **0.3.0** - Собственные элементы управления и меню Textus; цвета из темы.
-- **0.2.0-0.2.1** - Панель настроек с фильтрами, поиском и цветовыми группами; теги как узлы; стрелки для направления ссылок; глубина графа в боковой панели.
-- **0.1.0-0.1.1** - Первые версии: вся папка во вкладке и заметки вокруг открытого документа в боковой панели, цвета по папкам, плавная работа даже с тысячами заметок.
+- **0.5.10** - By touch, a first tap on a note lights it and its links and a second opens it; notes are easier to hit with a finger, and a second finger zooms instead of also moving the graph. Its settings open in Textus's own popover.
+- **0.5.9** - Esc while dragging a note or the view puts it back, and a touch the system cancels no longer leaves a drag stuck.
+- **0.5.8** - The graph in the sidebar spreads out to fit its panel, instead of starting as a small clump with labels on top of each other. Sorts names with Textus's own order instead of a copy of it, so the package is smaller.
+- **0.5.7** - The page follows Textus's language by itself. Needs Textus 1.4.3.
+- **0.5.6** - The counts and buttons at the top of the graph tab stay in view: scrolling or pinching over the graph no longer pushes them up under the tab. Labels no longer pile on top of each other: the most linked notes keep theirs and the rest show as you zoom in. A big folder opens already laid out instead of unfolding, and pictures and other attachments a note links to stay out of the graph unless you turn on Attachments in its settings. Switching documents or saving no longer shakes the whole graph loose to settle again.
+- **0.5.5** - Standard Markdown links to notes not written yet are placed as Textus places them, and merge with [[links]] to the same note. Fit spreads a small graph over the whole pane, so names no longer sit on each other. Ctrl/Cmd-click opens a note beside the one in front. Labels follow the interface text size, and folder colours follow the theme. The sidebar graph has no settings of its own any more.
+- **0.5.4** - A trackpad pinch zooms smoothly, in step with the gesture; with Textus 1.3.13 a pinch on a Mac zooms the graph, not the document behind it. Shorter help and empty-state text. Its sidebar panel and page follow Textus 1.3.13's layout.
+- **0.5.3** - Its bars, lists and controls are Textus's own, grow with the interface and follow every theme; needs Textus 1.3.12.
+- **0.5.2** - Obsidian's colour groups come from the nearest vault, even one above the open folder. Needs Textus 1.3.10.
+- **0.5.1** - In an Obsidian vault, the colour groups in `.obsidian/graph.json` colour the notes too.
+- **0.5.0** - [[Links]] are matched to notes the same way Textus matches them when you click one.
+- **0.4.0** - Textus AI can see the notes around a document (`list_neighbours`).
+- **0.3.0** - Textus's own controls and menus; colours from the theme.
+- **0.2.0-0.2.1** - A settings panel with filters, search and colour groups; tags as nodes; arrows for link direction; the sidebar graph's depth.
+- **0.1.0-0.1.1** - First versions: the whole folder in a tab and the notes around the open document in the sidebar, coloured by folder, smooth with thousands of notes.
 
 <!-- ai-tools -->
 ## Инструменты для Textus AI

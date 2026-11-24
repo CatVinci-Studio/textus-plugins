@@ -12,10 +12,10 @@
 
 **設定 › 擴充功能 › 外掛程式 › PlantUML › 算繪方式** 決定在哪裡畫圖：
 
-- **本機**（預設）：內容不會離開電腦。在本機畫圖約多佔 100 MB 記憶體。
+- **本機**（預設）：內容不會離開電腦。在本機畫圖會多佔一些記憶體。
 - **PlantUML 伺服器**：每張圖的文字會傳給 plantuml.com，由它來畫，不額外佔記憶體。
 
-外掛只要求連線到 `www.plantuml.com` 的網路權限，而且只在你選擇 PlantUML 伺服器時才使用。電腦、iPhone 和 iPad 上都能使用。
+外掛只要求連線到 `www.plantuml.com` 的網路權限，而且只在你選擇 PlantUML 伺服器時才使用。
 
 ## 範例
 
@@ -28,13 +28,14 @@ Bob --> Alice : Hi!
 
 ## 更新紀錄
 
-- **0.2.6** - 安裝包內附上所帶第三方函式庫的清單和授權。
-- **0.2.5** - 區塊摺疊時（手機上）畫的圖，展開後會重新配合寬度，不再保持原本的大小。
-- **0.2.4** - `!theme` 主題可用；窄欄裡不再留空白；伺服器模式會顯示 PlantUML 自己的錯誤，深色主題下用深色圖。
-- **0.2.3** - 說明和空狀態文字更簡短。
-- **0.2.2** - 介紹頁重寫：一句話說明它做什麼，再講它能做的事，並列出每個版本的更新。
-- **0.2.1** - 打包更新後的共用圖表頁面，繪圖結果不變。
-- **0.2.0** - 打包從佈景主題取色的共用圖表頁面。需要 Textus 1.3.2。
-- **0.1.3** - 依 Textus 1.3 的新名稱讀取主題的內文文字顏色和註腳字級。
-- **0.1.2** - PlantUML 伺服器畫的圖重新能顯示；說明在本機畫圖約多佔 100 MB 記憶體。
-- **0.1.0-0.1.1** - 最初的版本：在本機或由 PlantUML 伺服器繪製 `plantuml` 區塊，支援 `height=`，匯出時以圖片呈現。
+- **0.2.7** - Its page no longer says which devices it runs on: the store shows that. It no longer gives a figure for the memory drawing on your computer takes.
+- **0.2.6** - Its package lists the libraries it carries, with their licenses.
+- **0.2.5** - A chart drawn while its block was folded (a phone) fits once the block opens, instead of keeping its old size.
+- **0.2.4** - `!theme` works; no empty gap in a narrow column; server mode shows PlantUML's own error and draws dark in dark themes.
+- **0.2.3** - Shorter help and empty-state text.
+- **0.2.2** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
+- **0.2.1** - Ships the updated shared chart page; diagrams are drawn as before.
+- **0.2.0** - Ships the shared chart page that takes its colors from the theme. Needs Textus 1.3.2.
+- **0.1.3** - Uses the theme's document text color and footnote size under their Textus 1.3 names.
+- **0.1.2** - Drawings from the PlantUML server show again; says that drawing on your computer takes about 100 MB more memory.
+- **0.1.0-0.1.1** - First versions: `plantuml` code blocks drawn on your computer or by the PlantUML server, `height=`, and exports as a picture.

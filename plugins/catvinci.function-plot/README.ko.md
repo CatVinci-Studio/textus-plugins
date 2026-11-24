@@ -22,18 +22,19 @@ x^2 / 4 - 1
 
 ## 권한
 
-**Textus AI 도구** 권한만 요청합니다. Textus AI가 블록을 쓰기 전에 확인할 수 있도록 하기 위해서입니다. 파일은 읽지 않으며 모두 기기 안에서 그립니다. 데스크톱과 iOS에서 쓸 수 있습니다.
+**Textus AI 도구** 권한만 요청합니다. Textus AI가 블록을 쓰기 전에 확인할 수 있도록 하기 위해서입니다. 파일은 읽지 않으며 모두 기기 안에서 그립니다.
 
 ## 변경 내역
 
-- **0.3.3** - 블록이 접혀 있을 때(휴대폰) 그린 그림이 펼치면 너비에 맞게 다시 그려집니다.
-- **0.3.2** - tan(x) 같은 가파른 곡선도 모양을 유지하고 점근선에서 끊깁니다. 그릴 부분이 없는 함수는 알려 줍니다. π와 2xsin(x)도 읽습니다. Textus AI 검사는 펜스의 x 범위를 씁니다.
-- **0.3.1** - 소개 페이지를 새로 썼습니다. 무엇을 하는지 한 문장으로, 할 수 있는 일과 버전별 변경 내역을 담았습니다.
-- **0.3.0** - Textus AI 도구 `check_function_plot` 추가
-- **0.2.0** - 곡선과 축에 테마 색 사용, 테마를 바꾸면 다시 그림
-- **0.1.3** - Textus 1.3에서 글자에 테마 색 사용
-- **0.1.2** - -x^2를 -(x^2)로 계산, 범위 끝이 0일 때도 그대로 유지
-- **0.1.0-0.1.1** - 첫 버전: x의 함수를 그래프로 그림, 높이와 범위 지정, 내보낼 때 이미지 포함
+- **0.3.4** - Its page no longer says which devices it runs on: the store shows that.
+- **0.3.3** - A chart drawn while its block was folded (a phone) fits once the block opens, instead of keeping its old size.
+- **0.3.2** - Steep curves like tan(x) keep their shape and break at asymptotes; a function with nothing to draw says so; π and 2xsin(x) are read; Textus AI's check uses the fence's x range.
+- **0.3.1** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
+- **0.3.0** - a tool for Textus AI, `check_function_plot`
+- **0.2.0** - curves and axes in the theme's colors, drawn again when the theme changes
+- **0.1.3** - text in the theme's colors on Textus 1.3
+- **0.1.2** - -x^2 reads as -(x^2), and a range that ends at 0 is kept
+- **0.1.0-0.1.1** - first versions: functions of x drawn as a picture, height and range settings, pictures in exports
 
 <!-- ai-tools -->
 ## Textus AI 도구

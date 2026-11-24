@@ -348,7 +348,7 @@
     resizing = setTimeout(() => zoomTo(fitScale()), 150);
   });
 
-  api.onMessage(async (message) => {
+  api.onDidReceiveMessage(async (message) => {
     if (message.type === "data") {
       waiting.get(message.id)?.(message.bytes);
       waiting.delete(message.id);

@@ -1,7 +1,7 @@
 {
   "id": "catvinci.html-view",
   "name": "%name%",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "publisher": "catvinci",
   "author": "CatVinci Studio",
   "description": "%description%",
@@ -15,6 +15,7 @@
     "desktop",
     "ios"
   ],
+  "category": "files",
   "main": "host.js",
   "permissions": [],
   "contributes": {

@@ -1,7 +1,7 @@
 {
   "id": "catvinci.markdown-lint",
   "name": "%name%",
-  "version": "0.5.1",
+  "version": "0.5.2",
   "publisher": "catvinci",
   "author": "CatVinci Studio",
   "description": "%description%",
@@ -15,6 +15,7 @@
     "desktop",
     "ios"
   ],
+  "category": "editing",
   "main": [
     "lib/markdownlint.js",
     "lib/markdown-keep.js",

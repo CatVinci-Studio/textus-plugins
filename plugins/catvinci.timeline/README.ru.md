@@ -21,19 +21,20 @@
 
 ## Разрешения
 
-Плагин просит только **Инструменты для Textus AI**, чтобы Textus AI мог проверить блок, прежде чем его написать. Он не читает файлы и рисует всё на вашем устройстве — на компьютере и в iOS.
+Плагин просит только **Инструменты для Textus AI**, чтобы Textus AI мог проверить блок, прежде чем его написать. Он не читает файлы и рисует всё на вашем устройстве.
 
 ## Изменения
 
-- **0.4.0** - Базу данных можно показать хронологией: выберите «Хронология» среди её видов, строки с датой выстроятся по порядку; щелчок открывает строку. Нужен Textus 1.4.6.
-- **0.3.3** - Дата больше не разрывается посередине; нарисованное в свёрнутом блоке подстраивается при открытии.
-- **0.3.2** - длинные подписи и даты переносятся в узкой панели, используется шрифт документа, а пустой блок подсказывает, что писать
-- **0.3.1** - Его страница теперь одной фразой говорит, что он делает, что умеет и что менялось в каждой версии.
-- **0.3.0** - инструмент для Textus AI, `check_timeline`
-- **0.2.0** - цвета темы, перерисовка при смене темы
-- **0.1.3** - текст в цветах темы в Textus 1.3
-- **0.1.2** - успевает за быстрой правкой: старый рисунок больше не заменяет новый
-- **0.1.0-0.1.1** - первые версии: события в виде хронологии, настройка высоты, картинки при экспорте
+- **0.4.1** - Its page no longer says which devices it runs on: the store shows that.
+- **0.4.0** - A database can be shown as a timeline: pick Timeline among its views, and its dated rows line up in order; a click opens a row. Needs Textus 1.4.6.
+- **0.3.3** - A date no longer breaks in the middle ("2024-0" over "3"); a chart drawn while its block was folded fits once it opens.
+- **0.3.2** - long notes and dates wrap to fit a narrow island, the timeline uses the document's font, and an empty block says what to write
+- **0.3.1** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
+- **0.3.0** - a tool for Textus AI, `check_timeline`
+- **0.2.0** - the theme's colors, drawn again when the theme changes
+- **0.1.3** - text in the theme's colors on Textus 1.3
+- **0.1.2** - keeps up with quick edits: an older drawing never replaces a newer one
+- **0.1.0-0.1.1** - first versions: events drawn as a timeline, a height setting, pictures in exports
 
 <!-- ai-tools -->
 ## Инструменты для Textus AI

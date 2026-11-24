@@ -31,19 +31,18 @@ image: https://textus.md/og.png
 - **读取和编辑文档**：读取选中的链接，插入卡片。
 - **Textus AI 工具**：让 Textus AI 能为链接做卡片。
 
-桌面版和 iOS 都能用。
-
 ## 更新日志
 
-- **0.5.0** - 选中一个网址后右键，菜单里有「变成链接卡片」；选中别的文字时不再出现。需要 Textus 1.4.4。
-- **0.4.3** - 图片和网站图标重新显示；带撇号的标题不再被截断；**重新获取** 移到卡片的右键菜单里；YouTube 链接显示成带视频封面的卡片。
-- **0.4.2** - 工具栏、列表和各个控件都改用 Textus 自己的，随界面一起缩放，适配每个主题；需要 Textus 1.3.12。
-- **0.4.1** - 介绍页重写：一句话说明它做什么，再讲它能做的事，并列出每个版本的更新。
-- **0.4.0** - Obsidian 的 `cardlink`（Auto Card Link）和 `embed`（Link Embed）块也画成卡片
-- **0.3.1** - 说明里的示例链接改为 textus.md
-- **0.3.0** - 新增 Textus AI 工具 `fetch_link_card`
-- **0.2.0** - 使用 Textus 自己的按钮和颜色（Textus 1.3.2）
-- **0.1.0-0.1.1** - 最初版本：链接卡片存在 `card` 代码块里，视频播放器，**重新获取**
+- **0.5.1** - Its page is in every language Textus speaks. Needs Textus 1.4.4 itself, not a test version of it.
+- **0.5.0** - Right-click a selected web address for Turn into a Link Card; the item no longer shows for other selections. Needs Textus 1.4.4.
+- **0.4.3** - Pictures and site icons show again; titles with an apostrophe are kept whole; **Fetch again** moved into the card's right-click menu; YouTube links show as cards with the video's still.
+- **0.4.2** - Its bars, lists and controls are Textus's own, grow with the interface and follow every theme; needs Textus 1.3.12.
+- **0.4.1** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
+- **0.4.0** - Obsidian's `cardlink` (Auto Card Link) and `embed` (Link Embed) blocks are drawn as cards
+- **0.3.1** - the README's example links to textus.md
+- **0.3.0** - a tool for Textus AI, `fetch_link_card`
+- **0.2.0** - Textus's own buttons and colors (Textus 1.3.2)
+- **0.1.0-0.1.1** - first versions: link cards kept in a `card` block, video players, **Fetch again**
 
 <!-- ai-tools -->
 ## Textus AI 工具

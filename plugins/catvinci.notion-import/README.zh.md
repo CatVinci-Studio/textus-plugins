@@ -2,7 +2,7 @@
 
 把 Notion 的导出包转成当前文件夹里的普通 Markdown 文件，Obsidian 也能直接读。
 
-页面和子页面、图片和附件、页面之间的链接，以及使用 Obsidian Bases 格式的知识库，都会带过来。
+页面和子页面、图片和附件、页面之间的链接，以及使用 Obsidian Bases 格式的数据库，都会带过来。
 
 1. 在 Notion 里选 **设置 › 导出全部工作区内容**，格式选 **Markdown & CSV**，并包含子页面。把得到的 .zip（或解压后的文件夹）放进 Textus 打开的文件夹。
 2. 选 **插件 › 从 Notion 导入…**（或在侧边栏右键这个 .zip），选中导出包。一个 zip 里分成 Part-1.zip、Part-2.zip… 的大导出会合在一起导入。超过 256 MB 的 .zip 无法一次读入：先解压到打开的文件夹里，再选这个文件夹。
@@ -10,8 +10,8 @@
 
 ## 导入后的样子
 
-- **页面**：有子页面的页面（包括有子页面的知识库行）会变成一个文件夹，页面本身在里面，例如 `Plans/Plans.md`，子页面放在旁边；没有子页面的页面就是一个文件 `Plans.md`。Notion 文件名里的 id 会去掉；知识库行的页面会用完整标题（Notion 在文件名里会截短）。
-- **知识库**：每个知识库变成一个文件夹，里面有一个装着 `base` 代码块的页面，各个视图点一下就能切换：有状态列时先显示看板，还有表格；有日期时还有日历。每一行都是这个文件夹里的一篇笔记，属性写在笔记开头：日期写成 2026-01-04，还有勾选、数字、列表，关联写成链接。别的页面里引用这个知识库的地方，也会同样显示出来，并保留导出时的排序。Notion 里完全空白的 “Untitled” 行和页面不会导入。
+- **页面**：有子页面的页面（包括有子页面的数据库行）会变成一个文件夹，页面本身在里面，例如 `Plans/Plans.md`，子页面放在旁边；没有子页面的页面就是一个文件 `Plans.md`。Notion 文件名里的 id 会去掉；数据库行的页面会用完整标题（Notion 在文件名里会截短）。
+- **数据库**：每个数据库变成一个文件夹，里面有一个装着 `base` 代码块的页面，各个视图点一下就能切换：有状态列时先显示看板，还有表格；有日期时还有日历。每一行都是这个文件夹里的一篇笔记，属性写在笔记开头：日期写成 2026-01-04，还有勾选、数字、列表，关联写成链接。别的页面里引用这个数据库的地方，也会同样显示出来，并保留导出时的排序。Notion 里完全空白的 “Untitled” 行和页面不会导入。
 - **图片和附件** 放进显示它们的页面旁边的 `assets` 文件夹；粘贴进去的图片用页面的名字命名。
 - **链接**：页面之间、指向图片和附件的链接都会改成新的名字。指向没有导出的页面的链接会列在报告里。
 - **页面之间的链接**：导入开始时询问：标准链接（推荐）`[页面](页面.md)`，和 Notion 导出的一样，任何软件都能打开；或双链 `[[页面]]`，Obsidian 的写法。导入的文件夹会记住这个选择，之后在里面新建的页面也用同一种。
@@ -23,33 +23,34 @@
 
 ## 导入报告
 
-报告会统计导入了什么，列出找不到的链接、读写失败的文件和改动过的块，并推荐有帮助的插件：第一个是 **知识库**，用来看页面树和知识库；其次是双向链接、快速预览、任务、链接卡片、PDF 阅读器和模板，只在导入的内容用得上时才推荐。**插件 › Notion 导入后推荐的插件…** 可以挑一个安装，安装前 Textus 会先问你，不会自己装上任何插件。
+报告会统计导入了什么，列出找不到的链接、读写失败的文件和改动过的块，并推荐有帮助的插件：第一个是 **知识库**，用来看页面树和数据库；其次是双向链接、快速预览、任务、链接卡片、PDF 阅读器和模板，只在导入的内容用得上时才推荐。**插件 › Notion 导入后推荐的插件…** 可以挑一个安装，安装前 Textus 会先问你，不会自己装上任何插件。
 
 ## 权限
 
-所有操作都在你的设备上完成：插件只读写打开的文件夹里的文件，从不联网。支持桌面版和 iPhone，需要 Textus 1.3.10 或更新版本。
+所有操作都在你的设备上完成：插件只读写打开的文件夹里的文件，从不联网。需要 Textus 1.3.10 或更新版本。
 
 ## 更新日志
 
-- **0.7.11** - 安装包里附上所带第三方库的清单和许可。
-- **0.7.10** - 与数据库插件共用的代码同步更新（文件列不再为空）。
-- **0.7.9** - 生成的数据库能保留其他插件画的视图（Textus 1.4.6）。
-- **0.7.8** - 导入报告在写入时就取一个空闲的名字（Textus 1.4.3）。
-- **0.7.7** - 随附“知识库”插件更新后的知识库代码，导入方式不变。
-- **0.7.6** - 导入行数很多的数据库更快了。
-- **0.7.5** - 解压后的 HTML 导出也能带上页面图标，选择图标来源时也能看到这种导出了。
-- **0.7.4** - 和数据库共用的筛选代码更新：勾选多个值的筛选在两边含义一致。 说明和空状态文字更简短。
-- **0.7.3** - 导入完成后侧栏直接进入新建的文件夹（需要 Textus 1.3.12），并打开页面树。Notion 里的空白行和空白页面（没有标题、没写内容，只有 Notion 自动填的「未开始」状态）不再导进来。
-- **0.7.2** - 页面下一层的数据库（和 Notion 里一样）在该页面里只保留链接，不再同时嵌入表格，数据库在自己的页面里显示。代码按职责拆成了几个小文件。
-- **0.7.1** - 同步双向链接里判断笔记链接写法的修复。
-- **0.7.0** - 导入时询问页面之间用哪种链接：标准链接（推荐，和 Notion 导出的一样）或双链（带路径的只显示页面名）；导入的文件夹会记住这个选择，之后在里面新建的页面也用同一种
-- **0.6.1** - 导入报告和推荐插件里用知识库的新名字。
-- **0.6.0** - 日期改由 Textus 自己写；需要 Textus 1.3.10。
-- **0.5.0** - 页面的 emoji 图标，从同一批页面的 Notion HTML 导出里取。
-- **0.4.0** - 重新成为独立插件：有子页面的页面变成文件夹，数据库变成 Obsidian Bases，空白的 “Untitled” 页面不导入，导入后在知识库的页面树里打开。
-- **0.3.0** - 一度并入知识库；这个版本只提示去那里。
-- **0.2.2** - 每个数据库只用一个数据库块，有状态列时先显示看板。
-- **0.2.1** - 导入前询问文件夹名；粘贴的图片用所在页面的名字命名。
-- **0.2.0** - 支持 Notion 较新的导出：页面和行不再重复，行保留完整标题，附件放在用到它的页面旁边，别的页面里显示的数据库保留排序。
-- **0.1.1** - 报告里用新名字推荐双向链接。
-- **0.1.0** - 第一个版本：把 Notion 导出（.zip 或文件夹）导入成一个 Markdown 文件夹，去掉文件名里的 id，改写链接，数据库变成带属性的笔记，提示框变成 note，报告里推荐有帮助的插件。
+- **0.7.12** - Its page is in every language Textus speaks. In Chinese, a database is 数据库, and 知识库 is only the Wiki plugin's name. Every language calls the Wiki plugin by its current name.
+- **0.7.11** - Its package lists the libraries it carries, with their licenses.
+- **0.7.10** - The database code it shares with Database brought up to date (its file columns filled).
+- **0.7.9** - Databases it makes keep a view another plugin draws (Textus 1.4.6).
+- **0.7.8** - The import report gets a free name as it is written (Textus 1.4.3).
+- **0.7.7** - Bundles the Wiki plugin's newer base code; importing works as before.
+- **0.7.6** - Importing a database with many rows is quicker.
+- **0.7.5** - Page icons now come through from an unzipped HTML export too, and such an export shows up when you pick where the icons come from.
+- **0.7.4** - Shares the database's updated filter code: a filter ticking several values reads the same in both. Shorter help and empty-state text.
+- **0.7.3** - Once imported, the sidebar goes into the new folder (Textus 1.3.12) and shows its pages tree. Notion's blank rows and pages - no title, nothing written, only the "Not started" status Notion fills in - are left out.
+- **0.7.2** - A database that sits under a page (as in Notion) stays a link on that page, no longer also shown there as a table; its own page shows it. Its code is split into smaller files by what each part does.
+- **0.7.1** - Shares Two-way Links' fix for working out how a note links.
+- **0.7.0** - asks how the pages link: standard links (recommended), as Notion exports them, or [[wiki links]] - a path shown by the page's name; the imported folder keeps the choice for pages made in it later
+- **0.6.1** - Calls Workspace by its name in the import report and in the suggested plugins.
+- **0.6.0** - Dates written by Textus itself; needs Textus 1.3.10.
+- **0.5.0** - Page emoji icons, from Notion's HTML export of the same pages.
+- **0.4.0** - Its own plugin again: pages with sub-pages as folders, databases as Obsidian bases, empty "Untitled" pages left out, and the import opened in Workspace's pages tree.
+- **0.3.0** - Merged into Workspace for a while; this version only pointed there.
+- **0.2.2** - One database block per database, opening on the board when there is a status.
+- **0.2.1** - Asks what to name the import's folder; pasted pictures are named after their page.
+- **0.2.0** - Reads Notion's newer exports: no doubled pages or rows, rows keep their whole titles, attachments go beside the page that uses them, databases shown on other pages keep their sort.
+- **0.1.1** - The report suggests Two-way Links by its new name.
+- **0.1.0** - First version: a Notion export (.zip or folder) into a folder of Markdown, ids out of names, links rewritten, databases as notes with front matter, callouts as notes, a report with plugins that help.

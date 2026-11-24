@@ -12,13 +12,12 @@ Lets Textus AI find openly licensed pictures on [Openverse](https://openverse.or
 
 ## Permissions
 
-- **Network, api.openverse.org only**: to search Openverse. No account or key is needed; Openverse allows about 200 searches a day from one address.
+- **Network, api.openverse.org only**: to search Openverse. No account or key is needed; Openverse limits how many searches one address can make in a day.
 - **Tools for Textus AI**: so Textus AI can search for pictures.
-
-It runs on the desktop and on iOS.
 
 ## Changes
 
+- **0.1.3** - Its page is in every language Textus speaks. It no longer gives a number for Openverse's daily limit, which can change.
 - **0.1.2** - The store description now opens with what the plugin does.
 - **0.1.1** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
 - **0.1.0** - first version: openly licensed pictures from Openverse for Textus AI, each with its credit line

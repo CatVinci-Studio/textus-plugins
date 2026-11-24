@@ -21,15 +21,16 @@
 
 ## 更新日志
 
-- **0.3.0** - 从 Textus 1.4.4 起，中文和英文、数字之间少了空格的段落会画下划线，点开卡片一键加上空格。可在插件设置里关掉。
-- **0.2.4** - 被更长围栏包住的代码块（```` 里含 ```）不再被改动。
-- **0.2.3** - 给 Textus AI 的工具说明改准确：处理中文和日文，不处理韩文。
-- **0.2.2** - Obsidian 的块 id、Dataview 字段、高亮和 Tasks 字段保持原样
-- **0.2.1** - #标签、提醒和 %% 批注保持原样；保存时只改正文
-- **0.2.0** - 新增 Textus AI 工具 `fix_cjk_spacing`
-- **0.1.3** - 桌面版和 iOS 都能用
-- **0.1.2** - 链接、维基链接、脚注、标签和 front matter 保持原样
-- **0.1.0-0.1.1** - 最初版本：右键菜单和「插件」菜单里的命令，以及保存时自动加空格
+- **0.3.1** - Its page shows its list of changes in English in every language.
+- **0.3.0** - From Textus 1.4.4, a paragraph missing a space between CJK and Latin text is underlined; its card adds the spaces. Turn it off in the plugin's settings.
+- **0.2.4** - A code block inside a longer fence (```` holding ```) is left alone.
+- **0.2.3** - Its Textus AI tool says what it does: Chinese and Japanese, not Korean.
+- **0.2.2** - leaves Obsidian's block ids, Dataview fields, highlights and Tasks fields as written
+- **0.2.1** - leaves #tags, reminders and %% comments alone; on save only prose blocks change
+- **0.2.0** - a tool for Textus AI, `fix_cjk_spacing`
+- **0.1.3** - runs on the desktop and on iOS
+- **0.1.2** - leaves links, wiki links, footnotes, tags and front matter alone
+- **0.1.0-0.1.1** - first versions: the command in the right-click and Plugins menus, and spacing on save
 
 <!-- ai-tools -->
 ## Textus AI 工具

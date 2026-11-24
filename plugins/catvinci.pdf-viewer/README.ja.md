@@ -15,15 +15,16 @@
 
 ## 更新履歴
 
-- **0.2.8** - パッケージに、同梱しているライブラリとそのライセンスの一覧を添えました。
-- **0.2.7** - ページの言語は Textus に自動で合わせます。Textus 1.4.3 が必要です。
-- **0.2.6** - ズームのボタンとキーは 1.25 倍ずつ、ほかのビューアと同じです。
-- **0.2.5** - 長い PDF を最後までスクロールしても、メモリの使用がずっと少なくなりました。見えないページは画像も手放します。
-- **0.2.4** - 狭いパネルではバーが折り返します。検索に前の語の結果が混ざらなくなりました。
-- **0.2.3** - バーは Textus 共通の並び：表示中の情報、次に検索とズーム。
-- **0.2.2** - ツールバー、リスト、各コントロールを Textus 自身のものにしました。画面の拡大に合わせて大きくなり、どのテーマにも合います。Textus 1.3.12 が必要です。
-- **0.2.1** - 紹介ページを書き直しました。何をするかを一文で示し、できることと各バージョンの変更を載せています。
-- **0.2.0** - Textus 自身のコントロールに。Textus 1.3.2 が必要です。
-- **0.1.3** - Textus 1.3 の見た目に。表示言語を変えるとボタンの文字も変わるように。
-- **0.1.2** - スキャンしたページの画像表示、ページへのリンク、見えないページのメモリ解放、開けないファイルの説明。ウインドウ幅で開くように。ズームはポインタを中心に伸縮し、止まるとくっきり描き直すように。
-- **0.1.0-0.1.1** - 最初のバージョン：ページ送り、ズーム、テキストの選択とコピー、検索、前回の位置から再開、フォントが埋め込まれていない中国語・日本語・韓国語の表示。
+- **0.2.9** - Its page shows its list of changes in English in every language.
+- **0.2.8** - Its package lists the libraries it carries, with their licenses.
+- **0.2.7** - The page follows Textus's language by itself. Needs Textus 1.4.3.
+- **0.2.6** - Zoom buttons and keys step by 1.25×, as the other viewers do.
+- **0.2.5** - A long PDF scrolled end to end holds far less memory: pages out of sight let go of their pictures too.
+- **0.2.4** - Its bar wraps in a narrow panel, and find no longer mixes in results for an earlier word.
+- **0.2.3** - Its bar keeps Textus's one order: what it shows, then find and zoom.
+- **0.2.2** - Its bars, lists and controls are Textus's own, grow with the interface and follow every theme; needs Textus 1.3.12.
+- **0.2.1** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
+- **0.2.0** - Textus's own controls. Needs Textus 1.3.2.
+- **0.1.3** - Textus 1.3's look; the buttons follow the interface language when it changes.
+- **0.1.2** - Scanned pages show their images, links to a page work, pages out of sight free their memory, unreadable files say so; opens at the window's width; zoom stretches around the pointer and then turns sharp.
+- **0.1.0-0.1.1** - First versions: pages, zoom, text to select and copy, find, reopening where you left off, Chinese, Japanese and Korean text without embedded fonts.

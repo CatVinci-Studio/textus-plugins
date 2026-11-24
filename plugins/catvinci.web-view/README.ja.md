@@ -15,8 +15,6 @@
 - **⌃** でバーをたたみ、小さなつまみで戻します。
 - **↗** でブラウザで開き、**↻** で再読み込み。
 
-デスクトップ版で動きます。
-
 ## 権限
 
 - ネットワーク（すべてのアドレス）：開いたウェブページを読み込むため。
@@ -24,8 +22,9 @@
 
 ## 更新履歴
 
-- **0.2.2** - 説明と空の状態の文言を短くしました。
-- **0.2.1** - 紹介ページを書き直しました。何をするかを一文で示し、できることと各バージョンの変更を載せています。
-- **0.2.0** - Ctrl/⌘ クリックしたウェブリンクは、設定でオンにしたときだけタブで開くように。オフならブラウザで開きます。
-- **0.1.2** - デスクトップ版のみに。
-- **0.1.0-0.1.1** - 最初のバージョン：アドレスや検索をタブで開く、最近のページ、選択範囲を開く・検索する、Ctrl/⌘ クリックのリンク、検索エンジンの選択。
+- **0.2.3** - Its page no longer says which devices it runs on: the store shows that.
+- **0.2.2** - Shorter help and empty-state text.
+- **0.2.1** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
+- **0.2.0** - Ctrl/Cmd+clicked web links open in a tab only when you turn that on in the settings; otherwise they open in your browser.
+- **0.1.2** - Desktop only.
+- **0.1.0-0.1.1** - First versions: an address or a search in a tab, recent pages, the selection opened or searched, Ctrl/Cmd+clicked links, a choice of search engine.

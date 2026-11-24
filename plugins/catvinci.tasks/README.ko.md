@@ -8,7 +8,7 @@
 - 할 일에 날짜(`📅 2026-11-01`, `due:2026-11-01`, `[due:: 2026-11-01]`)를 쓰면 배지로 보입니다. 기한이 지났거나 일주일 안에 다가온 할 일은 맨 위 **곧 마감**에 먼저 나옵니다.
 - 위쪽 입력란으로 낱말, 문서 이름, 제목으로 목록을 거릅니다.
 - 끝난 할 일은 기본적으로 숨겨집니다. **설정 › 확장 › 플러그인 › 할 일**에서 **끝난 할 일도 보기**를 켜면 보입니다.
-- 칸반 보드(머리말에 `kanban-plugin`이 있는 문서나 `이름.kanban.md`)의 카드는 보드의 것이라 사이드바 목록에 넣지 않습니다.
+- 칸반 보드(머리말에 `kanban-plugin`이 있는 문서나 `이름.kanban.md`)의 카드는 보드의 것이라 사이드바 목록에도 할 일 쿼리에도 넣지 않습니다.
 
 ## Obsidian에서 쓴 할 일
 
@@ -38,29 +38,30 @@ sort by due
 - **기타**: `priority is`(`above`, `below`, `not`도 가능), `is recurring`, `is not recurring`.
 - **순서**: `sort by`와 `group by`(status, due, scheduled, start, done, created, priority, path, folder, filename, heading, description. `reverse`를 붙일 수 있음), `limit`. `sort by`가 없으면 Obsidian Tasks처럼 상태, 마감일, 우선순위, 경로 순입니다.
 
-보이는 방식에 관한 줄(`hide …`, `show …`)은 건너뛰고, 그 밖에 읽지 못한 줄은 개수 아래에 적어 줍니다. 쿼리 블록에는 보드의 카드도 나옵니다. 블록에서 체크하면 파일의 할 일이 체크되고, 클릭하면 그 자리로 갑니다.
+보이는 방식에 관한 줄(`hide …`, `show …`)은 건너뛰고, 그 밖에 읽지 못한 줄은 개수 아래에 적어 줍니다. 할 일 속 [[링크]]를 클릭하면 그 노트가 열립니다. 블록에서 체크하면 파일의 할 일이 체크되고, 클릭하면 그 자리로 갑니다.
 
 ## 권한
 
-이 플러그인은 할 일을 찾으려고 폴더의 문서를 읽고, 할 일을 체크하거나 추가할 때만 문서에 씁니다. 아래 도구를 Textus AI에도 줍니다. 데스크톱과 iPhone, iPad에서 쓸 수 있습니다.
+이 플러그인은 할 일을 찾으려고 폴더의 문서를 읽고, 할 일을 체크하거나 추가할 때만 문서에 씁니다. 아래 도구를 Textus AI에도 줍니다.
 
 ## 변경 내역
 
-- **0.4.7** - 필터 칸과 빈 목록 안내가 Textus 언어를 바꾸면 따라 바뀝니다. Textus 1.4.3이 필요합니다.
-- **0.4.6** - 작업 블록도 다른 블록처럼 테두리 안쪽에 여백을 둡니다.
-- **0.4.5** - AI가 제목 아래에 추가하는 작업이 코드 블록 안에 들어가지 않으며, ‘완료한 할 일을 목록 끝으로’가 Windows(CRLF) 줄바꿈 노트에서도 작동합니다.
-- **0.4.4** - 문서 속 작업 쿼리가 인터페이스 글자 크기로 그려져, 열이 넓어지면 글자가 커지는 대신 더 많은 내용을 보여 줍니다(Textus 1.4.1).
-- **0.4.3** - HTML 주석이 있는 할 일도 체크할 수 있고, 체크가 안 될 때는 이유를 알려 줍니다. `group by status` 순서를 바로잡고, 할 일 블록이 좁은 패널에서 줄바꿈되며, 마감일 모양이 사이드바와 같아지고, 입력이 더 가벼워졌습니다.
-- **0.4.2** - 설명과 빈 상태 문구를 짧게 줄였습니다.
-- **0.4.1** - 도구 막대, 목록, 컨트롤을 Textus 자체의 것으로 바꿨습니다. 인터페이스와 함께 커지고 모든 테마를 따릅니다. Textus 1.3.12가 필요합니다. 새 설정 「완료한 할 일을 목록 끝으로」: 체크한 할 일이 남은 할 일 뒤로 이동합니다(처음 한 번 문서 읽기·편집 권한을 요청합니다).
-- **0.4.0** - Textus 1.3.10에 들어 있는 날짜 기능을 씁니다. 그래서 Textus 1.3.10이 필요합니다.
-- **0.3.1** - 업데이트된 공용 날짜 코드를 함께 담음. 다른 변경은 없습니다.
-- **0.3.0** - Obsidian Tasks 지원: `[/]`와 `[-]`, 할 일 필드, 완료일, 반복 할 일, `tasks` 쿼리 블록. `kanban-plugin`이 붙은 보드는 목록에서 뺍니다.
-- **0.2.1** - 칸반 보드(`이름.kanban.md`)의 카드를 더는 목록에 넣지 않습니다.
-- **0.2.0** - Textus AI가 할 일을 나열하고, 추가하고, 체크할 수 있습니다.
-- **0.1.3** - 인터페이스 언어가 바뀌면 목록도 따라 바뀝니다.
-- **0.1.2** - 마감일을 현지 시간으로 다루고, 개수를 각 언어의 복수형으로 보여 줍니다.
-- **0.1.0-0.1.1** - 첫 버전들: 폴더의 모든 할 일을 사이드바 목록에 보여 주고 거기서 체크하거나 이동, 필터, 마감일, '곧 마감'.
+- **0.5.0** - A task query no longer lists a Kanban board's cards, as the sidebar and Textus AI already didn't. Grouped by document, its rows don't repeat the document's name, and a [[link]] in a task opens its note.
+- **0.4.7** - The filter field and empty message follow Textus's language when you switch it. Needs Textus 1.4.3.
+- **0.4.6** - The tasks block keeps a gap inside its frame, as other blocks do.
+- **0.4.5** - The AI's new task under a heading never lands inside a code block, and **Move finished tasks to the end of their list** works in Windows (CRLF) notes.
+- **0.4.4** - A task query in a document draws at the interface's text size, so a wider column shows more of it rather than larger text (Textus 1.4.1).
+- **0.4.3** - Ticking a task with an HTML comment in it now works, and a refused tick tells you why. `group by status` sorts in the right order, task blocks fit narrow panes, due dates look like the sidebar's, and typing stays lighter.
+- **0.4.2** - Shorter help and empty-state text.
+- **0.4.1** - Its bars, lists and controls are Textus's own, grow with the interface and follow every theme; needs Textus 1.3.12. A new setting, **Move finished tasks to the end of their list**: a task ticked in a document or in the list goes after the open ones (it asks once to read and edit the document in front).
+- **0.4.0** - Uses the dates built into Textus 1.3.10, which it now needs.
+- **0.3.1** - Ships the updated shared date code; nothing else changed.
+- **0.3.0** - Obsidian Tasks: `[/]` and `[-]`, the task fields, done dates, repeating tasks and `tasks` query blocks; boards marked with `kanban-plugin` are left out of the list.
+- **0.2.1** - Cards on a Kanban board (`name.kanban.md`) are no longer listed.
+- **0.2.0** - Textus AI can list, add and tick off tasks.
+- **0.1.3** - The list follows the interface language when it changes.
+- **0.1.2** - Due dates in local time; counts in each language's plural forms.
+- **0.1.0-0.1.1** - First versions: every task in the folder in a sidebar list, ticked off or opened from there, with a filter, due dates and Due soon.
 
 <!-- ai-tools -->
 ## Textus AI 도구

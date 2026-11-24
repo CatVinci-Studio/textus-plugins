@@ -11,7 +11,7 @@
 - Если настройки нарисовать нельзя, блок сообщает, в чём ошибка.
 - При экспорте в HTML, PDF или Word диаграмма попадает туда картинкой.
 
-Плагин просит одно разрешение — чтобы дать Textus AI инструмент `check_echarts` (см. ниже): он проверяет блок, прежде чем Textus AI запишет его в документ. Работает на компьютере, iPhone и iPad.
+Плагин просит одно разрешение — чтобы дать Textus AI инструмент `check_echarts` (см. ниже): он проверяет блок, прежде чем Textus AI запишет его в документ.
 
 ## Пример
 
@@ -25,14 +25,15 @@
 
 ## Изменения
 
-- **0.3.4** - В пакет добавлен список входящих в него библиотек и их лицензий.
-- **0.3.3** - График, нарисованный при свёрнутом блоке (на телефоне), подстраивается под ширину, когда блок открыт.
-- **0.3.2** - Графики перерисовываются при изменении ширины панели, а текст и высота по умолчанию следуют масштабу и шрифту приложения.
-- **0.3.1** - Из описания убраны карты: блок не может загрузить их данные.
-- **0.3.0** - Textus AI может проверить блок `echarts`, прежде чем его написать.
-- **0.2.0** - Цвета серий берутся из оттенков темы. Нужен Textus 1.3.2.
-- **0.1.3** - Цвет текста документа и размер сносок из темы читаются под их новыми именами в Textus 1.3.
-- **0.1.0-0.1.2** - Первые версии: блоки `echarts` рисуются в документе, `height=`, при экспорте — картинка.
+- **0.3.5** - Its page no longer says which devices it runs on: the store shows that.
+- **0.3.4** - Its package lists the libraries it carries, with their licenses.
+- **0.3.3** - A chart drawn while its block was folded (a phone) fits once the block opens, instead of keeping its old size.
+- **0.3.2** - Charts redraw when the panel width changes, and their text and default height follow the app's zoom and font.
+- **0.3.1** - Its description no longer lists maps, which a block can't load.
+- **0.3.0** - Textus AI can check an `echarts` block before it writes one.
+- **0.2.0** - Series colors come from the theme's tones. Needs Textus 1.3.2.
+- **0.1.3** - Uses the theme's document text color and footnote size under their Textus 1.3 names.
+- **0.1.0-0.1.2** - First versions: `echarts` code blocks drawn in the document, `height=`, and exports as a picture.
 
 <!-- ai-tools -->
 ## Инструменты для Textus AI

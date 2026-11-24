@@ -12,13 +12,14 @@ Las teclas funcionan en cuanto instalas el complemento. **Complementos › Activ
 
 En Mac, los atajos de Textus van con ⌘, así que todas las teclas Ctrl son de Emacs. En Windows y Linux, las teclas Ctrl son de Textus y del sistema (copiar, pegar, cortar, seleccionar todo, negrita, buscar), así que solo las teclas M-, C-SPC y C-g son de Emacs hasta que actives **Usar también las teclas Ctrl de la app** en los ajustes del complemento.
 
-Funciona en escritorio y en iPhone. Pide un solo permiso, teclas del editor, para tomar estas teclas en el editor.
+En una tableta funciona con un teclado conectado. Pide un solo permiso, teclas del editor, para tomar estas teclas en el editor.
 
 ## Cambios
 
-- **0.1.6** - C-x C-s y C-x C-g vuelven a funcionar en Windows y Linux. La barra de estado muestra Emacs solo cuando de verdad tiene las teclas.
-- **0.1.5** - Textos de ayuda y de estado vacío más breves.
-- **0.1.4** - Su página dice ahora en una frase qué hace, qué puede hacer y qué cambió en cada versión.
-- **0.1.3** - Indica dónde funciona: escritorio y iPhone.
-- **0.1.2** - C-x ya no se queda enganchado; C-d y C-y no tocan el portapapeles ni la región.
-- **0.1.0-0.1.1** - Primeras versiones: movimientos, marca y región, kill ring con C-y y M-y, M-u M-l M-c, deshacer y teclas C-x; página en la tienda e icono.
+- **0.1.7** - Its page says that on a tablet it needs a keyboard, instead of which devices it runs on. It hears keys by the API's current name, and the old one on an older Textus.
+- **0.1.6** - C-x C-s and C-x C-g work again on Windows and Linux. The status bar shows Emacs only while it really has the keys.
+- **0.1.5** - Shorter help and empty-state text.
+- **0.1.4** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
+- **0.1.3** - Says where it runs: desktop and iPhone.
+- **0.1.2** - C-x no longer sticks; C-d and C-y leave the clipboard and the region alone.
+- **0.1.0-0.1.1** - First versions: moves, the mark and region, a kill ring with C-y and M-y, M-u M-l M-c, undo and C-x keys; store page and icon.

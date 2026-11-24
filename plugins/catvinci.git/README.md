@@ -1,6 +1,6 @@
 # Git
 
-For a folder kept in Git, on the desktop:
+For a folder kept in Git:
 
 - Files changed since the last commit are marked in the sidebar: **M** changed, **A** added, **U** new and not in Git yet, **R** renamed, **!** in conflict.
 - In a changed document, each paragraph, heading or list with lines the last commit hadn't (as saved) has a mark in the right margin; clicking it commits (Textus 1.4.4).
@@ -14,6 +14,7 @@ Nothing switches branches. Needs Git installed (on a Mac, the Command Line Tools
 
 ## Changes
 
+- **0.3.1** - Its page is in every language Textus speaks. Needs Textus 1.4.6 itself, not a test version of it. Its description no longer ends in "Desktop.", and its tools for Textus AI are described in every language.
 - **0.3.0** - Push and Pull, and what waits to be pushed or pulled beside the branch (Textus 1.4.6).
 - **0.2.0** - Blocks changed since the last commit are marked in the margin (Textus 1.4.4).
 - **0.1.1** - The first-commit confirmation's button reads "Commit".

@@ -12,13 +12,14 @@ Les touches marchent dès l'installation. **Extensions › Activer ou désactive
 
 Sur Mac, les raccourcis de Textus sont sur ⌘, donc toutes les touches Ctrl sont à Emacs. Sous Windows et Linux, les touches Ctrl sont à Textus et au système (copier, coller, couper, tout sélectionner, gras, rechercher) : seules les touches M-, C-SPC et C-g sont à Emacs tant que vous n'activez pas **Prendre aussi les touches Ctrl de l’app** dans les réglages de l'extension.
 
-Fonctionne sur ordinateur et sur iPhone. Demande une seule permission, les touches de l'éditeur, pour prendre ces touches dans l'éditeur.
+Sur une tablette, fonctionne avec un clavier connecté. Demande une seule permission, les touches de l'éditeur, pour prendre ces touches dans l'éditeur.
 
 ## Changements
 
-- **0.1.6** - C-x C-s et C-x C-g fonctionnent de nouveau sous Windows et Linux. La barre d'état n'affiche Emacs que lorsqu'il a vraiment les touches.
-- **0.1.5** - Textes d'aide et d'état vide plus courts.
-- **0.1.4** - Sa page dit maintenant en une phrase ce qu'il fait, ce qu'il permet et ce qui a changé à chaque version.
-- **0.1.3** - Indique où elle fonctionne : ordinateur et iPhone.
-- **0.1.2** - C-x ne reste plus bloqué ; C-d et C-y ne touchent plus au presse-papiers ni à la région.
-- **0.1.0-0.1.1** - Premières versions : déplacements, marque et région, kill ring avec C-y et M-y, M-u M-l M-c, annulation et touches C-x ; page dans la boutique et icône.
+- **0.1.7** - Its page says that on a tablet it needs a keyboard, instead of which devices it runs on. It hears keys by the API's current name, and the old one on an older Textus.
+- **0.1.6** - C-x C-s and C-x C-g work again on Windows and Linux. The status bar shows Emacs only while it really has the keys.
+- **0.1.5** - Shorter help and empty-state text.
+- **0.1.4** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
+- **0.1.3** - Says where it runs: desktop and iPhone.
+- **0.1.2** - C-x no longer sticks; C-d and C-y leave the clipboard and the region alone.
+- **0.1.0-0.1.1** - First versions: moves, the mark and region, a kill ring with C-y and M-y, M-u M-l M-c, undo and C-x keys; store page and icon.

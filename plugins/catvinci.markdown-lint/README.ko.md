@@ -39,16 +39,17 @@ Obsidian의 Linter처럼 쓰며, 모든 변경은 한 번에 되돌릴 수 있�
 
 ## 변경 내역
 
-- **0.5.1** - 패키지에 포함된 라이브러리 목록과 라이선스를 함께 담았습니다.
-- **0.5.0** - 찾은 곳마다 카드가 열려 규칙을 알려 주고 그 블록을 고치거나(Alt+Enter) 무시로 넘길 수 있습니다(Textus 1.4.4).
-- **0.4.1** - 빈 줄 제거와 목록 전환은 더 긴 펜스(```` 안의 ```)로 감싼 코드 블록을 그대로 둡니다.
-- **0.4.0** - 선택한 줄을 글머리 기호·번호·할 일 목록으로 전환(번호는 단계마다 1부터, 할 일의 체크는 유지).
-- **0.3.2** - 설명과 빈 상태 문구를 짧게 줄였습니다.
-- **0.3.1** - 소개 페이지를 새로 썼습니다. 무엇을 하는지 한 문장으로, 할 수 있는 일과 버전별 변경 내역을 담았습니다.
-- **0.3.0** - 이름을 정리로 바꿨습니다(이전 Markdown 검사). ‘텍스트 정리’의 텍스트 명령 여섯 개를 합쳤고, 물결선이나 개별 규칙을 끄는 설정이 생겼으며, Obsidian 고유 문법은 그대로 둡니다.
-- **0.2.1** - 태그, 링크, 알림, 참조 정의에는 표시하지 않습니다. ‘CJK·영문 간격’이 건드리지 않는 것과 같은 목록입니다.
-- **0.2.0** - Textus AI가 Markdown을 검사할 수 있습니다(`lint_markdown`).
-- **0.1.0-0.1.2** - 첫 버전들: 규칙을 설명하는 물결선과 Markdown 고치기, 스토어 페이지와 아이콘, 데스크톱과 iOS 지원.
+- **0.5.2** - Its page shows its list of changes in English in every language.
+- **0.5.1** - Its package lists the libraries it carries, with their licenses.
+- **0.5.0** - Each finding opens a card that names the rule and fixes that block (Alt+Enter), or sets it aside with Ignore (Textus 1.4.4).
+- **0.4.1** - Remove Blank Lines and list switching leave a code block inside a longer fence (```` holding ```) alone.
+- **0.4.0** - Switch selected lines to a bullet, numbered or task list (numbered counts from 1 at each level; a task keeps its tick).
+- **0.3.2** - Shorter help and empty-state text.
+- **0.3.1** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
+- **0.3.0** - Renamed Tidy (was Markdown Lint): Text Tidy's six text commands moved in; settings to turn off underlines or single rules; Obsidian's own syntax left as written.
+- **0.2.1** - Tags, links, reminders and reference definitions are never flagged: the same list CJK Spacing leaves alone.
+- **0.2.0** - Textus AI can check Markdown (`lint_markdown`).
+- **0.1.0-0.1.2** - First versions: underlines that explain the rule, and Fix Markdown; store page and icon; runs on desktop and iOS.
 
 <!-- ai-tools -->
 ## Textus AI 도구

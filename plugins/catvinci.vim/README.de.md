@@ -18,18 +18,19 @@ Einstellungen unter **Einstellungen › Erweiterungen › Plugins › Vim**:
 
 Obsidian: In einem Obsidian-Vault wird auch dessen `.obsidian.vimrc` (die des Plugins Vimrc Support) gelesen, nach Ihren eigenen Zeilen, und neu gelesen, wenn sie sich ändert. Öffnen Sie den Vault selbst, keinen Ordner darin.
 
-Das Plugin fragt nach der Berechtigung, Tasten im Editor anzunehmen (um Vims Tasten auszuführen), und Dateien zu lesen (nur um `.obsidian.vimrc` zu lesen). Es läuft auf dem Desktop.
+Das Plugin fragt nach der Berechtigung, Tasten im Editor anzunehmen (um Vims Tasten auszuführen), und Dateien zu lesen (nur um `.obsidian.vimrc` zu lesen).
 
 ## Änderungen
 
-- **0.2.9** - Braucht Textus 1.3.0-beta.8 oder neuer, die erste Version mit allem, was es nutzt.
-- **0.2.8** - Nur noch auf dem Desktop: Die Bildschirmtastatur eines Telefons tippt die Buchstaben in den Text, statt sie als Vim-Tasten auszuführen.
-- **0.2.7** - Der Modus in der Statusleiste öffnet ein Menü, das Vim ausschaltet; `.obsidian.vimrc` wird neu gelesen, wenn Sie zu Textus zurückkehren; **:** verlässt den visuellen Modus immer.
-- **0.2.6** - Kürzere Hilfe- und Leertexte.
-- **0.2.5** - Sein Code ist nach Aufgaben in kleinere Dateien aufgeteilt; in der Nutzung ändert sich nichts.
-- **0.2.4** - Seine Seite sagt jetzt in einem Satz, was es tut, was es kann und was sich in jeder Version geändert hat.
-- **0.2.3** - Liest die `.obsidian.vimrc` eines Obsidian-Vaults; dieselben Tasten noch einmal zu belegen ersetzt die frühere Belegung.
-- **0.2.2** - **zz**, **zt** und **zb** holen die Zeile mit dem Cursor in die Mitte, nach oben oder nach unten im Fenster.
-- **0.2.1** - Nennt, wo es läuft: Desktop, iPhone und iPad.
-- **0.2.0** - **:** öffnet die Befehlspalette mit Vims Befehlen zuerst; Flash zeigt seine Labels nach einem Buchstaben; der Normal-Modus tippt auf dem Mac lateinisch.
-- **0.1.0-0.1.1** - Erste Versionen: Modi, Bewegungen, Operatoren, Zähler, Punkt-Wiederholung, Flash mit **ds**, **cs** und **ys**, die Befehlszeile (**:w**, **:q**, **:wq**, **:12**), Tastenbelegungen wie in einer vimrc und die Tasten für Groß- und Kleinschreibung.
+- **0.2.10** - Its page no longer says which devices it runs on: the store shows that. It hears keys by the API's current name, and the old one on an older Textus.
+- **0.2.9** - Needs Textus 1.3.0-beta.8 or later, the first with everything it uses.
+- **0.2.8** - Desktop only: a phone's on-screen keyboard types its letters into the text instead of running them as Vim keys.
+- **0.2.7** - The status bar's mode opens a menu that turns Vim off; `.obsidian.vimrc` is read again when you come back to Textus; leaving visual mode with **:** always works.
+- **0.2.6** - Shorter help and empty-state text.
+- **0.2.5** - Its code is split into smaller files by what each part does; nothing changes in use.
+- **0.2.4** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
+- **0.2.3** - Reads an Obsidian vault's `.obsidian.vimrc`; mapping the same keys again replaces the earlier mapping.
+- **0.2.2** - **zz**, **zt** and **zb** bring the caret's line to the middle, top or bottom of the window.
+- **0.2.1** - Says where it runs: the desktop, iPhone and iPad.
+- **0.2.0** - **:** opens the command palette with Vim's commands first; flash shows its labels after one letter; normal mode types Roman on a Mac.
+- **0.1.0-0.1.1** - First versions: modes, motions, operators, counts, dot repeat, flash with **ds**, **cs** and **ys**, the command line (**:w**, **:q**, **:wq**, **:12**), vimrc key mappings and the case keys.

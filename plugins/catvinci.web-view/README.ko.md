@@ -15,8 +15,6 @@
 - **⌃**로 막대를 접고, 작은 손잡이로 다시 폅니다.
 - **↗**는 브라우저에서 열기, **↻**는 새로 고침입니다.
 
-데스크톱에서 동작합니다.
-
 ## 권한
 
 - 네트워크(모든 주소): 여는 웹 페이지를 불러오기 위해.
@@ -24,8 +22,9 @@
 
 ## 변경 내역
 
-- **0.2.2** - 설명과 빈 상태 문구를 짧게 줄였습니다.
-- **0.2.1** - 소개 페이지를 새로 썼습니다. 무엇을 하는지 한 문장으로, 할 수 있는 일과 버전별 변경 내역을 담았습니다.
-- **0.2.0** - Ctrl/⌘ 클릭한 웹 링크는 설정에서 켰을 때만 탭에서 열리고, 아니면 브라우저에서 열립니다.
-- **0.1.2** - 데스크톱 전용이 되었습니다.
-- **0.1.0-0.1.1** - 첫 버전들: 주소나 검색을 탭에서 열기, 최근 페이지, 선택한 내용 열기·검색, Ctrl/⌘ 클릭 링크, 검색 엔진 선택.
+- **0.2.3** - Its page no longer says which devices it runs on: the store shows that.
+- **0.2.2** - Shorter help and empty-state text.
+- **0.2.1** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
+- **0.2.0** - Ctrl/Cmd+clicked web links open in a tab only when you turn that on in the settings; otherwise they open in your browser.
+- **0.1.2** - Desktop only.
+- **0.1.0-0.1.1** - First versions: an address or a search in a tab, recent pages, the selection opened or searched, Ctrl/Cmd+clicked links, a choice of search engine.

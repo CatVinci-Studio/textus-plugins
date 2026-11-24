@@ -23,20 +23,21 @@ WaveJSON으로 디지털 타이밍 다이어그램과 레지스터 필드 그림
 
 ## 권한
 
-**Textus AI 도구** 권한만 요청합니다. Textus AI가 블록을 쓰기 전에 확인할 수 있도록 하기 위해서입니다. WaveDrom은 플러그인에 들어 있어 파일을 읽지 않고 모두 기기 안에서 그립니다. 데스크톱과 iOS에서 쓸 수 있습니다.
+**Textus AI 도구** 권한만 요청합니다. Textus AI가 블록을 쓰기 전에 확인할 수 있도록 하기 위해서입니다. WaveDrom은 플러그인에 들어 있어 파일을 읽지 않고 모두 기기 안에서 그립니다.
 
 ## 변경 내역
 
-- **0.3.5** - 패키지에 포함된 라이브러리 목록과 라이선스를 함께 담았습니다.
-- **0.3.4** - 아주 긴 그림은 라벨을 읽을 수 있는 크기까지만 줄고, 그 이상은 옆으로 스크롤됩니다(휴대폰).
-- **0.3.3** - 다크 모드에서도 읽힙니다. 선과 글자가 테마 색을 따르고, 접힌 동안 그린 그림은 펼치면 너비에 맞습니다. 긴 그림은 잘리지 않고 열 너비에 맞게 줄어듭니다.
-- **0.3.2** - 도표가 테마의 글꼴과 선 색을 쓰고 문서 확대/축소에 맞춰 크기가 바뀝니다. `height=`는 이제 도표 자체의 크기를 바꿉니다.
-- **0.3.1** - 소개 페이지를 새로 썼습니다. 무엇을 하는지 한 문장으로, 할 수 있는 일과 버전별 변경 내역을 담았습니다.
-- **0.3.0** - Textus AI 도구 `check_wavedrom` 추가
-- **0.2.0** - 테마를 바꾸면 다시 그림(Textus 1.3.2의 차트 페이지)
-- **0.1.3** - Textus 1.3에서 글자에 테마 색 사용
-- **0.1.2** - 내보낼 때 내보내는 곳의 색으로 그림
-- **0.1.0-0.1.1** - 첫 버전: WaveDrom으로 WaveJSON 그리기, 어두운 스킨, 높이 지정, 내보낼 때 이미지 포함
+- **0.3.6** - Its page no longer says which devices it runs on: the store shows that.
+- **0.3.5** - Its package lists the libraries it carries, with their licenses.
+- **0.3.4** - A very long diagram shrinks only as far as its labels stay readable, then scrolls sideways (a phone).
+- **0.3.3** - Readable in dark mode: the lines and text take the theme's colours on the page's own background; a diagram drawn while its block was folded fits once it opens. A long diagram shrinks to the column instead of being cut off.
+- **0.3.2** - Diagrams take the theme's font and line colour, grow with the document's zoom, and `height=` now resizes the diagram itself.
+- **0.3.1** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
+- **0.3.0** - a tool for Textus AI, `check_wavedrom`
+- **0.2.0** - drawn again when the theme changes, with the chart page of Textus 1.3.2
+- **0.1.3** - text in the theme's colors on Textus 1.3
+- **0.1.2** - exports carry the diagram in the export's colors
+- **0.1.0-0.1.1** - first versions: WaveJSON drawn with WaveDrom, dark skin, a height setting, pictures in exports
 
 <!-- ai-tools -->
 ## Textus AI 도구

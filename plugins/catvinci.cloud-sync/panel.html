@@ -18,6 +18,7 @@
             ></p>
             <p id="summary" class="muted small" hidden></p>
             <p id="last-run" class="muted small" hidden></p>
+            <p id="note" class="muted small" hidden></p>
           </div>
           <div class="actions">
             <button
@@ -120,6 +121,14 @@
             </button>
           </div>
           <input id="parallel" type="hidden" />
+          <div class="tx-row" id="maxFileMiB-field" hidden>
+            <label for="maxFileMiB-pick" data-t="largestFile"></label>
+            <button type="button" class="tx-select" id="maxFileMiB-pick">
+              <span id="maxFileMiB-name"></span
+              ><span class="tx-icon" data-icon="chevron"></span>
+            </button>
+          </div>
+          <input id="maxFileMiB" type="hidden" />
         </div>
       </form>
       <section id="connected" hidden>
@@ -197,17 +206,31 @@
               ><input
                 id="endpoint"
                 type="url"
+                inputmode="url"
                 placeholder="https://"
                 spellcheck="false"
+                autocapitalize="off"
+                autocorrect="off"
               />
             </div>
             <div class="tx-row" id="bucket-field">
               <label for="bucket" data-t="bucket"></label
-              ><input id="bucket" spellcheck="false" />
+              ><input
+                id="bucket"
+                spellcheck="false"
+                autocapitalize="off"
+                autocorrect="off"
+              />
             </div>
             <div class="tx-row">
               <label for="account" id="account-label"></label
-              ><input id="account" autocomplete="off" spellcheck="false" />
+              ><input
+                id="account"
+                autocomplete="off"
+                spellcheck="false"
+                autocapitalize="off"
+                autocorrect="off"
+              />
             </div>
             <div class="tx-row">
               <label for="secret" id="secret-label"></label
@@ -215,13 +238,24 @@
             </div>
             <div class="tx-row">
               <label for="prefix" data-t="prefix"></label
-              ><input id="prefix" required spellcheck="false" />
+              ><input
+                id="prefix"
+                required
+                spellcheck="false"
+                autocapitalize="off"
+                autocorrect="off"
+              />
             </div>
             <details id="s3-more" class="tx-disclosure">
               <summary data-t="moreOptions"></summary>
               <div class="tx-row">
                 <label for="region" data-t="region"></label
-                ><input id="region" spellcheck="false" />
+                ><input
+                  id="region"
+                  spellcheck="false"
+                  autocapitalize="off"
+                  autocorrect="off"
+                />
               </div>
               <div class="tx-row">
                 <label for="token" data-t="token"></label
@@ -314,7 +348,7 @@
       <form id="rules" class="options" autocomplete="off" hidden>
         <h2 class="tx-group-title" data-t="rulesTitle"></h2>
         <div class="tx-group">
-          <div class="tx-row stack">
+          <div class="tx-row">
             <div class="row-text">
               <label for="exclude" data-t="exclude"></label>
               <p id="exclude-hint" class="hint" data-t="excludeHint"></p>
@@ -354,16 +388,14 @@
         </div>
       </form>
       <h2 class="tx-group-title recovery" data-t="advanced"></h2>
-      <div class="tx-group">
-        <div class="tx-row start">
-          <button
-            type="button"
-            class="tx-button"
-            id="unlock"
-            data-t="unlock"
-            disabled
-          ></button>
-        </div>
+      <div class="page-actions">
+        <button
+          type="button"
+          class="tx-button"
+          id="unlock"
+          data-t="unlock"
+          disabled
+        ></button>
       </div>
     </main>
     <script src="textus-resource:panel.js"></script>

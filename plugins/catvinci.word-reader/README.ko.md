@@ -9,19 +9,20 @@ Word 문서(.docx)를 Word에서와 같은 모양 그대로 탭에서 읽습니�
 - **Markdown으로 편집**은 파일을 Textus에 넘겨, 쓸 수 있는 Markdown 문서로 바꿉니다.
 - 읽을 수 없는 파일이면 탭에 그렇게 알려 줍니다.
 
-이 플러그인은 권한을 요청하지 않습니다. 열어 둔 파일만 읽습니다. 데스크톱과 iPhone, iPad에서 쓸 수 있습니다.
+이 플러그인은 권한을 요청하지 않습니다. 열어 둔 파일만 읽습니다.
 
 ## 변경 내역
 
-- **0.2.8** - 패키지에 포함된 라이브러리 목록과 라이선스를 함께 담았습니다.
-- **0.2.7** - 페이지 언어는 Textus를 자동으로 따릅니다. Textus 1.4.3이 필요합니다.
-- **0.2.6** - 확대·축소 버튼과 키가 다른 뷰어처럼 1.25배씩 바뀝니다.
-- **0.2.5** - 찾기 막대의 닫기 버튼에 이름이 붙어 화면 낭독기가 읽고 도움말도 표시됩니다.
-- **0.2.4** - 탭 너비에 맞춰 열립니다. 핀치나 Ctrl+휠(Mac은 ⌘)로 페이지를 확대/축소합니다. 탭보다 넓은 페이지도 양쪽 끝까지 스크롤되고, 좁은 탭에서는 도구 막대가 줄바꿈되며, 언어를 바꿔도 배율이 유지됩니다.
-- **0.2.3** - 도구 막대는 Textus 공통 순서: 보이는 내용, 그다음 찾기와 확대/축소.
-- **0.2.2** - 도구 막대, 목록, 컨트롤을 Textus 자체의 것으로 바꿨습니다. 인터페이스와 함께 커지고 모든 테마를 따릅니다. Textus 1.3.12가 필요합니다.
-- **0.2.1** - 소개 페이지를 새로 썼습니다. 무엇을 하는지 한 문장으로, 할 수 있는 일과 버전별 변경 내역을 담았습니다.
-- **0.2.0** - Textus 자체의 컨트롤과 테마 색조로 그립니다. 인터페이스 언어가 바뀌면 탭도 따라 바뀝니다. Textus 1.3.2가 필요합니다.
-- **0.1.3** - Textus 1.3의 디자인 변수를 씁니다.
-- **0.1.2** - 읽을 수 없는 파일은 그렇게 알리고, 찾기에서 문서의 스타일 부분은 건너뜁니다.
-- **0.1.0-0.1.1** - 첫 버전들: .docx를 Word 레이아웃 그대로 탭에 표시, 현재 쪽, 찾기, 확대·축소, 'Markdown으로 편집'.
+- **0.2.9** - Its page no longer says which devices it runs on: the store shows that. After switching to another tab and back, a document is where you were reading. Find opens in the toolbar, as in PDF Viewer, and the search button closes it again; in a narrow tab Edit as Markdown goes into the ⋯ menu instead of dropping to a second row.
+- **0.2.8** - Its package lists the libraries it carries, with their licenses.
+- **0.2.7** - The page follows Textus's language by itself. Needs Textus 1.4.3.
+- **0.2.6** - Zoom buttons and keys step by 1.25×, as the other viewers do.
+- **0.2.5** - The find bar's close button is named for screen readers and shows a tooltip.
+- **0.2.4** - Opens fitted to the tab's width; a pinch or Ctrl+wheel (⌘ on a Mac) zooms the pages; a page wider than the tab scrolls to both edges; the bars wrap in a narrow tab and the zoom is kept when the language changes.
+- **0.2.3** - Its bar keeps Textus's one order: what it shows, then find and zoom.
+- **0.2.2** - Its bars, lists and controls are Textus's own, grow with the interface and follow every theme; needs Textus 1.3.12.
+- **0.2.1** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
+- **0.2.0** - Drawn with Textus's own controls and theme tones; the tab follows the interface language when it changes. Needs Textus 1.3.2.
+- **0.1.3** - Uses Textus 1.3's design variables.
+- **0.1.2** - A file that can't be read says so; find skips the document's styles.
+- **0.1.0-0.1.1** - First versions: .docx files in a tab as Word lays them out, the page you are on, find, zoom and Edit as Markdown.

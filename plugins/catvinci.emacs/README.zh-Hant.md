@@ -12,13 +12,14 @@
 
 在 Mac 上，Textus 的快捷鍵使用 ⌘，所以所有 Ctrl 鍵都歸 Emacs。在 Windows 和 Linux 上，Ctrl 鍵屬於 Textus 和系統（複製、貼上、剪下、全選、粗體、尋找），所以只有 M- 鍵、C-SPC 和 C-g 歸 Emacs；在外掛設定中開啟 **接管 Textus 用到的 Ctrl 鍵** 後，Ctrl 鍵也歸 Emacs。
 
-支援桌面版與 iPhone。外掛只要求一項權限：編輯器按鍵，用來在編輯器裡接管這些鍵。
+在平板上需要接上鍵盤才能使用。外掛只要求一項權限：編輯器按鍵，用來在編輯器裡接管這些鍵。
 
 ## 更新紀錄
 
-- **0.1.6** - 在 Windows 和 Linux 上，C-x C-s 與 C-x C-g 又能正常使用了。狀態列只在真正接管按鍵時才顯示 Emacs。
-- **0.1.5** - 說明和空狀態文字更簡短。
-- **0.1.4** - 介紹頁重寫：一句話說明它做什麼，再講它能做的事，並列出每個版本的更新。
-- **0.1.3** - 標明可執行的平台：桌面版與 iPhone。
-- **0.1.2** - C-x 不再卡住；C-d 和 C-y 不再更動剪貼簿與選取範圍。
-- **0.1.0-0.1.1** - 最初的版本：移動、標記與選取範圍、含 C-y 和 M-y 的 kill ring、M-u M-l M-c、復原與 C-x 組合鍵；商店頁面與圖示。
+- **0.1.7** - Its page says that on a tablet it needs a keyboard, instead of which devices it runs on. It hears keys by the API's current name, and the old one on an older Textus.
+- **0.1.6** - C-x C-s and C-x C-g work again on Windows and Linux. The status bar shows Emacs only while it really has the keys.
+- **0.1.5** - Shorter help and empty-state text.
+- **0.1.4** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
+- **0.1.3** - Says where it runs: desktop and iPhone.
+- **0.1.2** - C-x no longer sticks; C-d and C-y leave the clipboard and the region alone.
+- **0.1.0-0.1.1** - First versions: moves, the mark and region, a kill ring with C-y and M-y, M-u M-l M-c, undo and C-x keys; store page and icon.

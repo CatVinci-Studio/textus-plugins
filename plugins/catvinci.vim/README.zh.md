@@ -18,18 +18,19 @@
 
 Obsidian：在 Obsidian 库里，还会读取库里的 `.obsidian.vimrc`（Vimrc Support 插件用的文件），排在你自己的设置之后；文件改了会重新读取。请直接打开整个库，而不是库里的文件夹。
 
-插件申请在编辑器里接管按键的权限（用来执行 Vim 按键）和读取文件的权限（只用来读 `.obsidian.vimrc`）。只在电脑上能用。
+插件申请在编辑器里接管按键的权限（用来执行 Vim 按键）和读取文件的权限（只用来读 `.obsidian.vimrc`）。
 
 ## 更新日志
 
-- **0.2.9** - 需要 Textus 1.3.0-beta.8 或更新版本，那是它用到的功能都有的第一个版本。
-- **0.2.8** - 只在电脑上提供：手机的屏幕键盘会把字母直接打进正文，没法当 Vim 按键用。
-- **0.2.7** - 状态栏的模式会打开菜单，可在里面关闭 Vim；回到 Textus 时会重新读取 `.obsidian.vimrc`；在可视模式用 **:** 一定能退出。
-- **0.2.6** - 说明和空状态文字更简短。
-- **0.2.5** - 代码按职责拆成了几个小文件，使用上没有变化。
-- **0.2.4** - 介绍页重写：一句话说明它做什么，再讲它能做的事，并列出每个版本的更新。
-- **0.2.3** - 读取 Obsidian 库里的 `.obsidian.vimrc`；同样的按键再映射一次会替换之前的映射。
-- **0.2.2** - **zz**、**zt**、**zb** 把光标所在行移到窗口中间、顶部或底部。
-- **0.2.1** - 标明运行平台：电脑、iPhone 和 iPad。
-- **0.2.0** - **:** 打开命令面板，Vim 的命令排在最前；flash 按一个字母就显示标签；Mac 上普通模式用英文输入。
-- **0.1.0-0.1.1** - 最初的版本：各种模式、移动、操作符、计数、. 重复，flash 以及 **ds**、**cs**、**ys**，命令行（**:w**、**:q**、**:wq**、**:12**），vimrc 式按键映射和大小写按键。
+- **0.2.10** - Its page no longer says which devices it runs on: the store shows that. It hears keys by the API's current name, and the old one on an older Textus.
+- **0.2.9** - Needs Textus 1.3.0-beta.8 or later, the first with everything it uses.
+- **0.2.8** - Desktop only: a phone's on-screen keyboard types its letters into the text instead of running them as Vim keys.
+- **0.2.7** - The status bar's mode opens a menu that turns Vim off; `.obsidian.vimrc` is read again when you come back to Textus; leaving visual mode with **:** always works.
+- **0.2.6** - Shorter help and empty-state text.
+- **0.2.5** - Its code is split into smaller files by what each part does; nothing changes in use.
+- **0.2.4** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
+- **0.2.3** - Reads an Obsidian vault's `.obsidian.vimrc`; mapping the same keys again replaces the earlier mapping.
+- **0.2.2** - **zz**, **zt** and **zb** bring the caret's line to the middle, top or bottom of the window.
+- **0.2.1** - Says where it runs: the desktop, iPhone and iPad.
+- **0.2.0** - **:** opens the command palette with Vim's commands first; flash shows its labels after one letter; normal mode types Roman on a Mac.
+- **0.1.0-0.1.1** - First versions: modes, motions, operators, counts, dot repeat, flash with **ds**, **cs** and **ys**, the command line (**:w**, **:q**, **:wq**, **:12**), vimrc key mappings and the case keys.

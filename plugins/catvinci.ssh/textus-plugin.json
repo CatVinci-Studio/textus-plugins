@@ -1,7 +1,7 @@
 {
   "id": "catvinci.ssh",
   "name": "%name%",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "publisher": "catvinci",
   "author": "CatVinci Studio",
   "description": "%description%",
@@ -9,11 +9,12 @@
   "license": "MIT",
   "repository": "https://github.com/CatVinci-Studio/textus-plugins",
   "engines": {
-    "textus": ">=1.4.6-rc.1"
+    "textus": ">=1.4.6"
   },
   "platforms": [
     "desktop"
   ],
+  "category": "sync",
   "main": [
     "remote-path.js",
     "host.js"
@@ -42,7 +43,7 @@
   "l10n": {
     "en": {
       "name": "SSH Folders",
-      "description": "Open a folder on a server through your own ssh and write there like in a folder on this computer: its documents in tabs, its files in the sidebar. Desktop.",
+      "description": "Open a folder on a server through your own ssh and write there like in a folder on this computer: its documents in tabs, its files in the sidebar.",
       "open": "Open Remote Folder…",
       "pickHost": "Pick a server from your ssh config",
       "otherHost": "Another server…",
@@ -53,7 +54,7 @@
     },
     "zh": {
       "name": "SSH 文件夹",
-      "description": "通过你自己的 ssh 打开服务器上的文件夹，像本机文件夹一样写作：文档在标签页里，文件在侧栏里。仅桌面版。",
+      "description": "通过你自己的 ssh 打开服务器上的文件夹，像本机文件夹一样写作：文档在标签页里，文件在侧边栏里。",
       "open": "打开远程文件夹…",
       "pickHost": "从你的 ssh 配置中选择服务器",
       "otherHost": "其他服务器…",
@@ -64,7 +65,7 @@
     },
     "zh-Hant": {
       "name": "SSH 資料夾",
-      "description": "透過你自己的 ssh 開啟伺服器上的資料夾，像本機資料夾一樣寫作：文件在分頁裡，檔案在側欄裡。僅桌面版。",
+      "description": "透過你自己的 ssh 開啟伺服器上的資料夾，像本機資料夾一樣寫作：文件在分頁裡，檔案在側邊欄裡。",
       "open": "開啟遠端資料夾…",
       "pickHost": "從你的 ssh 設定中選擇伺服器",
       "otherHost": "其他伺服器…",
@@ -75,7 +76,7 @@
     },
     "ja": {
       "name": "SSH フォルダー",
-      "description": "自分の ssh でサーバー上のフォルダーを開き、このコンピューターのフォルダーと同じように書けます：文書はタブに、ファイルはサイドバーに。デスクトップ版のみ。",
+      "description": "自分の ssh でサーバー上のフォルダーを開き、このコンピューターのフォルダーと同じように書けます：文書はタブに、ファイルはサイドバーに。",
       "open": "リモートフォルダーを開く…",
       "pickHost": "ssh の設定からサーバーを選択",
       "otherHost": "ほかのサーバー…",
@@ -86,7 +87,7 @@
     },
     "ko": {
       "name": "SSH 폴더",
-      "description": "내 ssh로 서버의 폴더를 열어 이 컴퓨터의 폴더처럼 씁니다: 문서는 탭에, 파일은 사이드바에. 데스크톱 전용.",
+      "description": "내 ssh로 서버의 폴더를 열어 이 컴퓨터의 폴더처럼 씁니다: 문서는 탭에, 파일은 사이드바에.",
       "open": "원격 폴더 열기…",
       "pickHost": "ssh 설정에서 서버 선택",
       "otherHost": "다른 서버…",
@@ -97,7 +98,7 @@
     },
     "de": {
       "name": "SSH-Ordner",
-      "description": "Öffnet einen Ordner auf einem Server über dein eigenes ssh, und du schreibst dort wie in einem Ordner auf diesem Computer: Dokumente in Tabs, Dateien in der Seitenleiste. Nur Desktop.",
+      "description": "Öffnet einen Ordner auf einem Server über dein eigenes ssh, und du schreibst dort wie in einem Ordner auf diesem Computer: Dokumente in Tabs, Dateien in der Seitenleiste.",
       "open": "Entfernten Ordner öffnen…",
       "pickHost": "Server aus deiner ssh-Konfiguration wählen",
       "otherHost": "Anderer Server…",
@@ -108,7 +109,7 @@
     },
     "fr": {
       "name": "Dossiers SSH",
-      "description": "Ouvre un dossier sur un serveur avec votre propre ssh et écrivez-y comme dans un dossier de cet ordinateur : documents en onglets, fichiers dans la barre latérale. Bureau uniquement.",
+      "description": "Ouvre un dossier sur un serveur avec votre propre ssh et écrivez-y comme dans un dossier de cet ordinateur : documents en onglets, fichiers dans la barre latérale.",
       "open": "Ouvrir un dossier distant…",
       "pickHost": "Choisir un serveur de votre configuration ssh",
       "otherHost": "Un autre serveur…",
@@ -119,7 +120,7 @@
     },
     "es": {
       "name": "Carpetas SSH",
-      "description": "Abre una carpeta de un servidor con tu propio ssh y escribe allí como en una carpeta de este ordenador: documentos en pestañas, archivos en la barra lateral. Solo escritorio.",
+      "description": "Abre una carpeta de un servidor con tu propio ssh y escribe allí como en una carpeta de este ordenador: documentos en pestañas, archivos en la barra lateral.",
       "open": "Abrir carpeta remota…",
       "pickHost": "Elige un servidor de tu configuración de ssh",
       "otherHost": "Otro servidor…",
@@ -130,7 +131,7 @@
     },
     "pt": {
       "name": "Pastas SSH",
-      "description": "Abre uma pasta num servidor com o seu próprio ssh e escreva lá como numa pasta deste computador: documentos em abas, ficheiros na barra lateral. Só desktop.",
+      "description": "Abre uma pasta num servidor com o seu próprio ssh e escreva lá como numa pasta deste computador: documentos em abas, ficheiros na barra lateral.",
       "open": "Abrir pasta remota…",
       "pickHost": "Escolha um servidor da sua configuração ssh",
       "otherHost": "Outro servidor…",
@@ -141,7 +142,7 @@
     },
     "ru": {
       "name": "Папки SSH",
-      "description": "Открывает папку на сервере через ваш собственный ssh, и вы пишете там как в папке на этом компьютере: документы во вкладках, файлы на боковой панели. Только для компьютера.",
+      "description": "Открывает папку на сервере через ваш собственный ssh, и вы пишете там как в папке на этом компьютере: документы во вкладках, файлы на боковой панели.",
       "open": "Открыть удалённую папку…",
       "pickHost": "Выберите сервер из конфигурации ssh",
       "otherHost": "Другой сервер…",

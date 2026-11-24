@@ -10,8 +10,9 @@ Textus 用 `npx` 运行 [Qwen Code](https://github.com/QwenLM/qwen-code) 的 `qw
 
 它从「先询问」开始。对命令选「总是允许」后，Qwen Code 会永久记住（按项目或按你）。
 
-只在电脑上可用，需要 Textus 1.4.3 或更新版本。它只要一个权限：在这台电脑上启动这个助手。
+需要 Textus 1.4.3 或更新版本。它只要一个权限：在这台电脑上启动这个助手。
 
-## 更新
+## 更新日志
 
-- **0.1.0** - 第一个版本：在 Textus AI 里用 Qwen Code。
+- **0.1.1** - Its page is in every language Textus speaks. Needs Textus 1.4.3 itself, not a test version of it.
+- **0.1.0** - First version: Qwen Code in Textus AI.

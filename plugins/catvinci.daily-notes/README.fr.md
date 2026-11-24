@@ -19,27 +19,28 @@ Dans un coffre Obsidian, ce sont ses propres réglages de notes du jour qui déc
 
 ## Permissions
 
-L'extension lit et écrit des fichiers du dossier ouvert pour trouver et créer les notes, et lit quel document est affiché pour connaître la veille et le lendemain. Elle donne aussi à Textus AI les deux outils ci-dessous. Elle fonctionne sur ordinateur et sur iPhone et demande Textus 1.3.10 ou plus récent.
+L'extension lit et écrit des fichiers du dossier ouvert pour trouver et créer les notes, et lit quel document est affiché pour connaître la veille et le lendemain. Elle donne aussi à Textus AI les deux outils ci-dessous. Elle demande Textus 1.4.3 ou plus récent.
 
 ## Changements
 
-- **0.7.8** - Si la barre est trop étroite même pour le nom court du mois (la barre latérale d’un téléphone), le mois passe sur sa propre ligne au-dessus des boutons au lieu de perdre l’année. Le calendrier écrit les dates avec celles de Textus : le paquet est plus léger.
-- **0.7.7** - La semaine commence selon la langue de Textus et non la région de l’appareil, comme les numéros de semaine.
-- **0.7.6** - La page suit la langue de Textus d’elle-même. Nécessite Textus 1.4.3.
-- **0.7.5** - Le titre du mois du calendrier commence à gauche et se termine par des points de suspension dans une barre latérale étroite.
-- **0.7.4** - Dans un panneau étroit, comme sur un téléphone, le calendrier affiche le nom court du mois au lieu de couper le nom long.
-- **0.7.3** - Les dates impossibles comme le 30 février sont refusées, le calendrier garde une largeur confortable dans les panneaux larges et se redessine quand les réglages de dossiers changent, et les réglages hebdomadaires et mensuels n'apparaissent que si ces notes sont activées.
-- **0.7.2** - Textes d'aide et d'état vide plus courts.
-- **0.7.1** - Ses barres, listes et contrôles sont désormais ceux de Textus, grandissent avec l’interface et suivent chaque thème ; nécessite Textus 1.3.12.
-- **0.7.0** - Les dates et les modèles sont remplis par Textus lui-même, comme dans l'extension Modèles ; demande Textus 1.3.10.
-- **0.6.0** - Notes hebdomadaires et mensuelles, avec leurs réglages, les numéros de semaine et le nom du mois dans le calendrier, et les réglages Periodic Notes d'un coffre.
-- **0.5.0** - Un coffre sans réglages de notes du jour les garde à sa racine ; `{{date}}`, `{{yesterday}}` et `{{tomorrow}}` suivent le format de nom, `MMMM Do, YYYY` compris.
-- **0.4.0** - Suit les réglages de notes du jour d'un coffre Obsidian ; le texte de départ peut nommer un modèle du dossier Templates ; `{{date:FORMAT}}` et `{{title}}`.
-- **0.3.0** - Textus AI peut lire la note d'un jour et y ajouter du texte.
-- **0.2.0** - Le calendrier utilise les commandes de Textus et suit la langue de l'interface quand elle change ; demande Textus 1.3.2.
-- **0.1.3** - Couleurs et typographie de Textus 1.3.
-- **0.1.2** - La semaine commence comme dans votre région ; la note d'un jour n'est jamais écrasée.
-- **0.1.0-0.1.1** - Premières versions : la note du jour par un raccourci, le calendrier, la veille et le lendemain, `{{weekday}}`, `{{yesterday}}`, `{{tomorrow}}` et `{{time}}` dans le modèle.
+- **0.7.9** - Its page no longer says which devices it runs on: the store shows that. It names the Textus it needs, 1.4.3.
+- **0.7.8** - Where the bar is too narrow for even the short month name (a phone's sidebar), the month goes on a row of its own above the buttons instead of losing its year. The calendar writes dates with Textus's own, so the package is smaller.
+- **0.7.7** - Weeks start as Textus's language has them, not the device's region, so they agree with the week numbers.
+- **0.7.6** - The page follows Textus's language by itself. Needs Textus 1.4.3.
+- **0.7.5** - The Calendar's month title starts at the left and ends in an ellipsis in a narrow sidebar, instead of being cut at both ends.
+- **0.7.4** - In a narrow panel, such as on a phone, the calendar shows the month's short name instead of cutting the long one off.
+- **0.7.3** - Impossible dates such as February 30 are refused, the calendar stays a comfortable width in wide panels and redraws when folder settings change, and weekly and monthly settings show only when those notes are on.
+- **0.7.2** - Shorter help and empty-state text.
+- **0.7.1** - Its bars, lists and controls are Textus's own, grow with the interface and follow every theme; needs Textus 1.3.12.
+- **0.7.0** - Dates and templates are filled in by Textus itself, the same way as in the Templates plugin; needs Textus 1.3.10.
+- **0.6.0** - Weekly and monthly notes, with their own settings, the calendar's week numbers and month name, and a vault's Periodic Notes settings.
+- **0.5.0** - A vault without daily notes settings keeps its notes at its top; `{{date}}`, `{{yesterday}}` and `{{tomorrow}}` follow the notes' name format, `MMMM Do, YYYY` included.
+- **0.4.0** - Follows an Obsidian vault's daily notes settings; the starting text can name a template in the Templates folder; `{{date:FORMAT}}` and `{{title}}`.
+- **0.3.0** - Textus AI can read a day's note and add to it.
+- **0.2.0** - The calendar uses Textus's own controls and follows the interface language when it changes; needs Textus 1.3.2.
+- **0.1.3** - Textus 1.3's colors and type.
+- **0.1.2** - Weeks start as your region has them; a day's note is never written over.
+- **0.1.0-0.1.1** - First versions: today's note with a shortcut, the calendar, the day before and after, `{{weekday}}`, `{{yesterday}}`, `{{tomorrow}}` and `{{time}}` in the template.
 
 <!-- ai-tools -->
 ## Outils pour Textus AI

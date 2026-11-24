@@ -1,7 +1,7 @@
 {
   "id": "catvinci.canvas",
   "name": "%name%",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "publisher": "catvinci",
   "author": "CatVinci Studio",
   "description": "%description%",
@@ -9,12 +9,13 @@
   "license": "MIT",
   "repository": "https://github.com/CatVinci-Studio/textus-plugins",
   "engines": {
-    "textus": ">=1.4.3"
+    "textus": ">=1.4.7"
   },
   "platforms": [
     "desktop",
     "ios"
   ],
+  "category": "files",
   "main": [
     "lib/folder-paths.js",
     "canvas-model.js",
@@ -37,7 +38,7 @@
   "l10n": {
     "en": {
       "name": "Canvas",
-      "description": "Open Obsidian's canvases (.canvas) in a tab: notes, pictures, links and groups on a board to drag and zoom.",
+      "description": "View Obsidian's canvases (.canvas) in a tab: notes, pictures, links and groups on a board you can move around and zoom. For viewing only; it doesn't edit them.",
       "zoomIn": "Zoom in",
       "zoomOut": "Zoom out",
       "fit": "Fit to view",
@@ -48,7 +49,7 @@
     },
     "zh": {
       "name": "白板",
-      "description": "在标签页里打开 Obsidian 的白板（.canvas）：笔记、图片、链接和分组排在画布上，可以拖动和缩放。",
+      "description": "在标签页里查看 Obsidian 的白板（.canvas）：笔记、图片、链接和分组排在画布上，可以拖动和缩放。只能查看，不能编辑。",
       "zoomIn": "放大",
       "zoomOut": "缩小",
       "fit": "适应窗口",
@@ -59,7 +60,7 @@
     },
     "zh-Hant": {
       "name": "白板",
-      "description": "在分頁中開啟 Obsidian 的白板（.canvas）：筆記、圖片、連結和群組排在畫布上，可以拖曳和縮放。",
+      "description": "在分頁中檢視 Obsidian 的白板（.canvas）：筆記、圖片、連結和群組排在畫布上，可以拖曳和縮放。只能檢視，不能編輯。",
       "zoomIn": "放大",
       "zoomOut": "縮小",
       "fit": "符合視窗",
@@ -70,7 +71,7 @@
     },
     "ja": {
       "name": "キャンバス",
-      "description": "Obsidian のキャンバス（.canvas）をタブで開きます。ノート・画像・リンク・グループを並べたボードをドラッグやズームで見られます。",
+      "description": "Obsidian のキャンバス（.canvas）をタブで表示します。ノート・画像・リンク・グループを並べたボードをドラッグやズームで見られます。閲覧専用で、編集はできません。",
       "zoomIn": "拡大",
       "zoomOut": "縮小",
       "fit": "全体を表示",
@@ -81,7 +82,7 @@
     },
     "ko": {
       "name": "캔버스",
-      "description": "Obsidian 캔버스(.canvas)를 탭에서 엽니다. 노트·그림·링크·그룹이 놓인 보드를 끌고 확대해 볼 수 있습니다.",
+      "description": "Obsidian 캔버스(.canvas)를 탭에서 봅니다. 노트·그림·링크·그룹이 놓인 보드를 끌고 확대해 볼 수 있습니다. 보기 전용이며 편집은 할 수 없습니다.",
       "zoomIn": "확대",
       "zoomOut": "축소",
       "fit": "전체 보기",
@@ -92,7 +93,7 @@
     },
     "es": {
       "name": "Lienzo",
-      "description": "Abre los lienzos de Obsidian (.canvas) en una pestaña: notas, imágenes, enlaces y grupos en un tablero que puedes arrastrar y ampliar.",
+      "description": "Mira los lienzos de Obsidian (.canvas) en una pestaña: notas, imágenes, enlaces y grupos en un tablero que puedes mover y ampliar. Solo para ver; no los edita.",
       "zoomIn": "Acercar",
       "zoomOut": "Alejar",
       "fit": "Ajustar a la vista",
@@ -103,7 +104,7 @@
     },
     "fr": {
       "name": "Canevas",
-      "description": "Ouvrez les canevas d’Obsidian (.canvas) dans un onglet : notes, images, liens et groupes sur un tableau à faire glisser et zoomer.",
+      "description": "Affichez les canevas d’Obsidian (.canvas) dans un onglet : notes, images, liens et groupes sur un tableau à parcourir et zoomer. En lecture seule : il ne les modifie pas.",
       "zoomIn": "Zoom avant",
       "zoomOut": "Zoom arrière",
       "fit": "Tout afficher",
@@ -114,7 +115,7 @@
     },
     "de": {
       "name": "Canvas",
-      "description": "Öffne Obsidians Canvas-Dateien (.canvas) in einem Tab: Notizen, Bilder, Links und Gruppen auf einer Fläche zum Verschieben und Zoomen.",
+      "description": "Zeige Obsidians Canvas-Dateien (.canvas) in einem Tab: Notizen, Bilder, Links und Gruppen auf einer Fläche zum Verschieben und Zoomen. Nur zum Ansehen, nicht zum Bearbeiten.",
       "zoomIn": "Vergrößern",
       "zoomOut": "Verkleinern",
       "fit": "Alles zeigen",
@@ -125,7 +126,7 @@
     },
     "ru": {
       "name": "Холст",
-      "description": "Открывайте холсты Obsidian (.canvas) во вкладке: заметки, картинки, ссылки и группы на доске, которую можно двигать и масштабировать.",
+      "description": "Просматривайте холсты Obsidian (.canvas) во вкладке: заметки, картинки, ссылки и группы на доске, которую можно двигать и масштабировать. Только просмотр, без правки.",
       "zoomIn": "Увеличить",
       "zoomOut": "Уменьшить",
       "fit": "Показать всё",
@@ -136,7 +137,7 @@
     },
     "pt": {
       "name": "Canvas",
-      "description": "Abra os canvas do Obsidian (.canvas) numa aba: notas, imagens, links e grupos num quadro para arrastar e ampliar.",
+      "description": "Veja os canvas do Obsidian (.canvas) numa aba: notas, imagens, links e grupos num quadro para mover e ampliar. Só para ver; não os edita.",
       "zoomIn": "Ampliar",
       "zoomOut": "Reduzir",
       "fit": "Ajustar à janela",

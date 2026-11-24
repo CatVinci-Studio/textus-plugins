@@ -11,7 +11,7 @@
 - 配置画不出来时，代码块里会说明哪里出了问题。
 - 导出 HTML、PDF、Word 时，图表会作为图片放进去。
 
-插件只申请一项权限：为 Textus AI 提供下面列出的 `check_echarts` 工具，让它在把代码块写进文档前先检查一遍。电脑、iPhone 和 iPad 上都能用。
+插件只申请一项权限：为 Textus AI 提供下面列出的 `check_echarts` 工具，让它在把代码块写进文档前先检查一遍。
 
 ## 示例
 
@@ -25,14 +25,15 @@
 
 ## 更新日志
 
-- **0.3.4** - 安装包里附上所带第三方库的清单和许可。
-- **0.3.3** - 块折叠时（手机上）画的图，展开后会重新适配宽度，不再保持原来的大小。
-- **0.3.2** - 面板宽度变化时图表会重新绘制；文字和默认高度跟随应用的缩放和字体。
-- **0.3.1** - 简介里去掉了地图：代码块加载不了地图数据。
-- **0.3.0** - Textus AI 写 `echarts` 代码块前可以先检查。
-- **0.2.0** - 系列颜色取自主题色调。需要 Textus 1.3.2。
-- **0.1.3** - 按 Textus 1.3 的新名称读取主题的正文文字颜色和脚注字号。
-- **0.1.0-0.1.2** - 最初的版本：在文档里绘制 `echarts` 代码块，支持 `height=`，导出时作为图片。
+- **0.3.5** - Its page no longer says which devices it runs on: the store shows that.
+- **0.3.4** - Its package lists the libraries it carries, with their licenses.
+- **0.3.3** - A chart drawn while its block was folded (a phone) fits once the block opens, instead of keeping its old size.
+- **0.3.2** - Charts redraw when the panel width changes, and their text and default height follow the app's zoom and font.
+- **0.3.1** - Its description no longer lists maps, which a block can't load.
+- **0.3.0** - Textus AI can check an `echarts` block before it writes one.
+- **0.2.0** - Series colors come from the theme's tones. Needs Textus 1.3.2.
+- **0.1.3** - Uses the theme's document text color and footnote size under their Textus 1.3 names.
+- **0.1.0-0.1.2** - First versions: `echarts` code blocks drawn in the document, `height=`, and exports as a picture.
 
 <!-- ai-tools -->
 ## Textus AI 工具

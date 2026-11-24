@@ -4,7 +4,7 @@
 
 ## 準備
 
-同じコンピュータで Zotero 7 以降（Zotero 10 も可）を起動し、Zotero の **設定 › 詳細** で「このコンピュータ上の他のアプリケーションが Zotero と通信することを許可する」をオンにしておきます。プラグインが通信するのはこのコンピュータの Zotero だけで、データが外に出ることはありません。デスクトップ版で動作します。
+同じコンピュータで Zotero 7 以降（Zotero 10 も可）を起動し、Zotero の **設定 › 詳細** で「このコンピュータ上の他のアプリケーションが Zotero と通信することを許可する」をオンにしておきます。プラグインが通信するのはこのコンピュータの Zotero だけで、データが外に出ることはありません。
 
 ## 引用する
 
@@ -41,17 +41,18 @@
 
 ## 更新履歴
 
-- **0.4.4** - 名前の並べ替えに Textus 自身の順序を使い、写しを持たなくなったのでパッケージが小さくなりました。Textus 1.4.3 が必要です。
-- **0.4.3** - 引用が選択した語句と置き換わるようになりました。Zotero が応答しているのに参考文献リストが「接続できない」と表示する問題を直し、ホバー時のプレビューもより確実に出ます。
-- **0.4.2** - 説明と空の状態の文言を短くしました。
-- **0.4.1** - コードを役割ごとに小さなファイルへ分けました。使い方は変わりません。
-- **0.4.0** - 文献ノートのテンプレートを Textus 内蔵のテンプレートエンジンで埋めるように。Textus 1.3.10 が必要
-- **0.3.0** - Zotero から文献ノートを作成（テンプレートと Obsidian 保管庫の設定に対応）、`[[@citekey]]` 形式の引用
-- **0.2.1** - ショートカットを Ctrl+Alt+C から Ctrl+Alt+R に変更
-- **0.2.0** - Textus AI のツール `search_library` を追加
-- **0.1.3** - デスクトップ版のみで提供
-- **0.1.2** - Zotero 10 のローカル API に対応、参考文献リストは作り直すと置き換え、コード内を引用として読まないように
-- **0.1.0-0.1.1** - 最初のバージョン：引用の挿入（最近の文献が先頭）、引用のホバーカード、参考文献リスト、4 つの引用形式
+- **0.4.5** - Its page no longer says which devices it runs on: the store shows that.
+- **0.4.4** - Sorts names with Textus's own order instead of a copy of it, so the package is smaller. Needs Textus 1.4.3.
+- **0.4.3** - A citation now replaces the selected words; the References list no longer says Zotero is unreachable when it answers, and hover previews show up more reliably.
+- **0.4.2** - Shorter help and empty-state text.
+- **0.4.1** - Its code is split into smaller files by what each part does; nothing changes in use.
+- **0.4.0** - literature note templates are filled by Textus's own template engine; needs Textus 1.3.10
+- **0.3.0** - literature notes from Zotero, with a template and an Obsidian vault's settings; citations as `[[@citekey]]`
+- **0.2.1** - the shortcut moves from Ctrl+Alt+C to Ctrl+Alt+R
+- **0.2.0** - a tool for Textus AI, `search_library`
+- **0.1.3** - listed for the desktop only
+- **0.1.2** - works with Zotero 10's local API; the references list is replaced when made again, and code is never read for citations
+- **0.1.0-0.1.1** - first versions: citing with recent works first, hover cards for citations, the references list, four citation styles
 
 <!-- ai-tools -->
 ## Textus AI のツール

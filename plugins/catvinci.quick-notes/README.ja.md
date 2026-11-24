@@ -3,7 +3,7 @@
 文書から離れずにさっとメモを取れます。メモはフォルダの受信箱ファイルか、今日のデイリーノートに入ります。
 
 - **Ctrl+Alt+N**（Mac では **⌘⌥N**）または **プラグイン › 新しいクイックノート…** でメモを入力し、保存します。
-- トレイやメニューバーのアイコンにも **新しいクイックノート…** があります。プラグインが Textus にバックグラウンドでの実行を求めるので、ウインドウをすべて閉じていても使えます。
+- デスクトップでは、トレイやメニューバーのアイコンにも **新しいクイックノート…** があります。プラグインが Textus にバックグラウンドでの実行を求めるので、ウインドウをすべて閉じていても使えます。
 - サイドバーの **クイックノート** タブに、新しい順でメモが並びます。**新規** でそこに書き足したり、一覧の中で直接書き換えたりできます。
 - 各メモの操作メニュー（その他ボタンか右クリック）には **挿入**（文書のカーソル位置へ）、**開く**、**削除** があります。文書に保存されたメモは、その文書のその行で開きます。
 - うっかり削除したら、下の **元に戻す** で数秒のうちに戻せます。新しく作って空のままのメモは自然に消えます。
@@ -18,7 +18,7 @@
 
 ファイルを書き換えると、サイドバーも追従します。以前のバージョンのメモは一度だけ、古い順にそこへ移されます。フォルダを開いていないときは、メモは Textus の中に保存されます。
 
-デスクトップ版のみで動きます。
+スマートフォンでは、**新しいクイックノート…** はタイトル行のメニューの **プラグイン** にあり、各メモの操作はその他ボタンにあります。トレイがないので、バックグラウンドでの実行は求めません。
 
 ## 権限
 
@@ -28,17 +28,18 @@
 
 ## 更新履歴
 
-- **0.5.5** - ボタンの名前とツールチップを Textus が出すようになり、ほかのページと同じになりました。
-- **0.5.4** - ページの言語は Textus に自動で合わせます。Textus 1.4.3 が必要です。
-- **0.5.3** - 検索中に新規作成すると検索を消し、新しいメモが表示されます。メモの文字を右クリックすると取り消し・切り取り・コピー・貼り付けも使えます。一致しない検索ではその旨を表示します。
-- **0.5.2** - サイドバーではパネル独自の見出しを表示しなくなり、ほかのタブとそろいました。 説明と空の状態の文言を短くしました。 サイドバーのパネルとページを Textus 1.3.13 のレイアウトに合わせました。 メモがないときは用途を説明し「新規」を表示。メモ欄は文字に合わせて伸びます。
-- **0.5.1** - ツールバー、リスト、各コントロールを Textus 自身のものにしました。画面の拡大に合わせて大きくなり、どのテーマにも合います。Textus 1.3.12 が必要です。
-- **0.5.0** - 日付とデイリーノートのテンプレートを Textus 自身が埋めるように。「カレンダーとデイリーノート」「テンプレート」と同じやり方です。Textus 1.3.10 が必要です。
-- **0.4.0** - メモをフォルダの文書（`Inbox.md` か今日のデイリーノート）に保存するように。以前のメモは一度だけ移します。
-- **0.3.1** - Textus AI がクイックノートを日記や ToDo と区別するように。
-- **0.3.0** - Textus AI がクイックノートを追加できるように（`add_note`）。
-- **0.2.0** - Textus 自身のコントロールに。各メモに操作メニュー。
-- **0.1.0-0.1.4** - 最初のバージョン：ショートカットとトレイ、サイドバーの一覧、挿入、開く、元に戻せる削除、メモが多いときの検索、独立した行の日付。デスクトップのみ。
+- **0.6.0** - On iPhone, iPad and Android too: **New Quick Note…** under Plugins and the sidebar tab, with New and each note's more button easy to tap. Only the desktop asks to keep Textus running in the background. Needs Textus 1.4.7. Its page no longer says which devices it runs on: the store shows that.
+- **0.5.5** - Its buttons' names and tooltips come from Textus, as on its other pages.
+- **0.5.4** - The page follows Textus's language by itself. Needs Textus 1.4.3.
+- **0.5.3** - New while searching clears the search, so the new note shows; right-clicking a note's text also offers undo, cut, copy and paste; a search with no match says so.
+- **0.5.2** - In the sidebar the panel draws no title of its own, as the sidebar's other tabs. Shorter help and empty-state text. Its sidebar panel and page follow Textus 1.3.13's layout. An empty list says what Quick Notes is for and offers New; a note's box grows with its text.
+- **0.5.1** - Its bars, lists and controls are Textus's own, grow with the interface and follow every theme; needs Textus 1.3.12.
+- **0.5.0** - Dates and the daily note's template are filled by Textus itself, the same way as in Calendar & Daily Notes and Templates. Needs Textus 1.3.10.
+- **0.4.0** - Notes are kept in a document of the folder: `Inbox.md` or today's daily note. Notes from older versions move in once.
+- **0.3.1** - Textus AI tells quick notes apart from the daily journal and to-dos.
+- **0.3.0** - Textus AI can add a quick note (`add_note`).
+- **0.2.0** - Textus's own controls, and an actions menu for each note.
+- **0.1.0-0.1.4** - First versions: the shortcut and the tray, the sidebar list, insert, open, delete with Undo, search once there are many, dates on a line of their own; desktop only.
 
 <!-- ai-tools -->
 ## Textus AI のツール

@@ -1,7 +1,7 @@
 {
   "id": "catvinci.zotero",
   "name": "Zotero",
-  "version": "0.4.4",
+  "version": "0.4.5",
   "publisher": "catvinci",
   "author": "CatVinci Studio",
   "description": "%description%",
@@ -12,6 +12,7 @@
     "textus": ">=1.4.3"
   },
   "platforms": ["desktop"],
+  "category": "sync",
   "main": ["lib/folder-paths.js", "lib/conventions.js", "notes.js", "host.js"],
   "activationEvents": [
     "onHover"

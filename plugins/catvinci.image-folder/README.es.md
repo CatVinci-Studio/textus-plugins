@@ -9,15 +9,16 @@ No hay nada que activar ni ajustar; funciona solo en cuanto lo instalas.
 - Las imágenes que ya están en tus documentos se quedan donde están.
 - En una bóveda de Obsidian con carpeta de adjuntos configurada, y en un grafo de Logseq, las imágenes se quedan donde las pone esa app.
 
-Trabaja con imágenes PNG, JPEG, GIF, WebP, AVIF, BMP, SVG, ICO, HEIC y TIFF. Funciona en escritorio y necesita Textus 1.3.0 o posterior. Pide leer y escribir archivos, para mover las imágenes y renombrar sus carpetas, y leer y editar el documento que tienes delante, para cambiar el enlace a una imagen movida.
+Trabaja con imágenes PNG, JPEG, GIF, WebP, AVIF, BMP, SVG, ICO, HEIC y TIFF. Necesita Textus 1.4.0 o posterior. Pide leer y escribir archivos, para mover las imágenes y renombrar sus carpetas, y leer y editar el documento que tienes delante, para cambiar el enlace a una imagen movida.
 
 ## Cambios
 
-- **0.1.7** - La descripción de la tienda empieza ahora por lo que hace el plugin.
-- **0.1.6** - Añadir muchas imágenes a la vez (una sincronización, una carpeta copiada) ya no lee una y otra vez el documento abierto.
-- **0.1.5** - En una bóveda de Obsidian, las imágenes vuelven a quedar donde las pone el ajuste de adjuntos de la bóveda: el ajuste se lee a través de Textus.
-- **0.1.4** - Deja las imágenes donde las pone la carpeta de imágenes de Typora de un documento y ya no mueve una carpeta si aún puede haber enlaces a ella sin revisar.
-- **0.1.3** - Su página dice ahora en una frase qué hace, qué puede hacer y qué cambió en cada versión.
-- **0.1.2** - Deja las imágenes donde las pone la carpeta de adjuntos de una bóveda de Obsidian o un grafo de Logseq.
-- **0.1.1** - Un nombre más corto: Imágenes junto al documento.
-- **0.1.0** - Primera versión: las imágenes pegadas y soltadas van a `Note.assets/`, y la carpeta sigue al documento renombrado.
+- **0.1.8** - Its page no longer says which devices it runs on: the store shows that. It names the Textus it needs, 1.4.0.
+- **0.1.7** - The store description now opens with what the plugin does.
+- **0.1.6** - Adding many pictures at once (a sync, a folder copied in) no longer reads the open document over and over.
+- **0.1.5** - In an Obsidian vault, pictures stay where the vault's attachment setting puts them again: the setting is read through Textus.
+- **0.1.4** - Leaves pictures where a document's Typora image folder setting puts them, and no longer moves a folder while some links to it may still be unchecked.
+- **0.1.3** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
+- **0.1.2** - Leaves pictures where an Obsidian vault's attachment folder setting or a Logseq graph puts them.
+- **0.1.1** - A shorter name: Images Follow Document.
+- **0.1.0** - First version: pasted and dropped pictures move into `Note.assets/`, and the folder follows a renamed document.

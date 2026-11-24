@@ -11,7 +11,7 @@
 - 配置写错时，代码块下方会有一行说明错在哪里。
 - 导出 HTML、PDF、Word 时，图表会作为图片放进去。
 
-支持桌面版和 iPhone，需要 Textus 1.3.2 或更新版本。插件只申请一项权限：Textus AI 工具，让 Textus AI 在把 `chartjs` 代码块写进文档前先检查它。
+需要 Textus 1.3.2 或更新版本。插件只申请一项权限：Textus AI 工具，让 Textus AI 在把 `chartjs` 代码块写进文档前先检查它。
 
 ## 示例
 
@@ -27,15 +27,16 @@
 
 ## 更新日志
 
-- **0.3.4** - 安装包里附上所带第三方库的清单和许可。
-- **0.3.3** - 块折叠时（手机上）画的图，展开后会重新适配宽度，不再保持原来的大小。
-- **0.3.2** - 面板变窄或变宽时图表会重新绘制以适应宽度；标签跟随主题字体和文字大小；出错提示重新显示为红色。
-- **0.3.1** - 介绍页重写：一句话说明它做什么，再讲它能做的事，并列出每个版本的更新。
-- **0.3.0** - Textus AI 可以在写入 `chartjs` 代码块之前先检查它（`check_chartjs`）。
-- **0.2.0** - 数据系列使用主题的颜色；需要 Textus 1.3.2。
-- **0.1.3** - 改用 Textus 新命名的文档颜色。
-- **0.1.2** - 输入时图表总是显示最新的内容。
-- **0.1.0-0.1.1** - 最早的版本：`chartjs` 代码块画在源码下方，支持 `height=`，导出时作为图片；商店页面和图标。
+- **0.3.5** - Its page no longer says which devices it runs on: the store shows that.
+- **0.3.4** - Its package lists the libraries it carries, with their licenses.
+- **0.3.3** - A chart drawn while its block was folded (a phone) fits once the block opens, instead of keeping its old size.
+- **0.3.2** - Charts redraw to fit a narrower or wider panel, labels follow the theme's font and text size, and the error line is red again.
+- **0.3.1** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
+- **0.3.0** - Textus AI can check a `chartjs` block before writing it (`check_chartjs`).
+- **0.2.0** - Series take the theme's colors; needs Textus 1.3.2.
+- **0.1.3** - Uses Textus's renamed document colors.
+- **0.1.2** - While you type, the chart always shows the latest text.
+- **0.1.0-0.1.1** - First versions: `chartjs` blocks drawn under their source, `height=`, pictures in exports; store page and icon.
 
 <!-- ai-tools -->
 ## Textus AI 工具

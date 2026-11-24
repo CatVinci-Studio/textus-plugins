@@ -8,10 +8,11 @@
 // line still says what was listed, the way Obsidian Tasks writes it
 // (obsidian-tasks.js): a done date, and a recurring task's next one.
 
-/* global obsidianTasks, tasksQuery, folderPaths, markdownKeep */
+/* global obsidianTasks, tasksQuery, folderPaths, markdownKeep, wikiLinks */
 /** How far ahead "Due soon" looks. */
 const SOON_DAYS = 7;
-// A Kanban board's cards are tasks in Markdown but live on the board.
+// A Kanban board's cards are tasks in Markdown but live on the board: no
+// list, block or tool here counts them.
 const isBoard = (doc) =>
   /\.kanban\.md$/i.test(doc.path) || !!(doc.frontmatter && "kanban-plugin" in doc.frontmatter);
 
@@ -66,12 +67,12 @@ async function symbolsOf(doc) {
   return byLine;
 }
 
-/** Every task in the folder, read as Obsidian Tasks reads it, with its
- *  document; a board's cards only when `boards`. */
-async function collect(boards) {
+/** Every task in the folder but a board's cards, read as Obsidian Tasks
+ *  reads it, with its document. */
+async function collect() {
   const found = [];
   for (const doc of await textus.metadata.all()) {
-    if (!boards && isBoard(doc)) continue;
+    if (isBoard(doc)) continue;
     const byLine = await symbolsOf(doc);
     for (const meta of doc.tasks) {
       const symbol = byLine[meta.line] || (meta.done ? "x" : " ");
@@ -125,7 +126,7 @@ async function items() {
   const soon = [];
   const rest = [];
   let open = 0;
-  for (const task of await collect(false)) {
+  for (const task of await collect()) {
     if (task.open) open++;
     else if (!showDone) continue;
     if (task.open && task.due && task.due <= soonUntil) soon.push(itemOf(task, "soon"));
@@ -202,7 +203,9 @@ async function queryResult(source) {
   if (!(await textus.files.root())) return { message: t("nofolder") };
   const today = day(0);
   const query = tasksQuery.parse(source, today);
-  const result = tasksQuery.run(query, await collect(true));
+  const result = tasksQuery.run(query, await collect());
+  // Grouped by document, a row needn't name its document again.
+  const byFile = query.groups.some((g) => g.key === "path" || g.key === "filename");
   const shown = result.groups.reduce((n, g) => n + g.tasks.length, 0);
   return {
     count: count("query.count", result.total) + (shown < result.total ? " · " + t("query.shown", shown) : ""),
@@ -213,7 +216,7 @@ async function queryResult(source) {
       tasks: g.tasks.map((task) => ({
         path: task.path,
         rel: task.rel,
-        file: task.rel.split("/").pop().replace(/\.md$/i, ""),
+        file: byFile ? "" : task.rel.split("/").pop().replace(/\.md$/i, ""),
         line: task.line,
         text: task.text,
         description: task.description,
@@ -246,6 +249,7 @@ function renderQuery(ctx) {
       if (!m) return;
       if (m.type === "ready") await send();
       if (m.type === "open") textus.layout.open({ path: m.path, line: m.line });
+      if (m.type === "openNote") await wikiLinks.open(m.name, m.path, t("noNote", m.name));
       if (m.type === "check") {
         await tick({ path: m.path, line: m.line, text: m.text }, m.done);
         await send();
@@ -271,7 +275,7 @@ async function listTasks(input) {
   const tag = input.tag ? String(input.tag).replace(/^#/, "").toLowerCase() : null;
   const query = String(input.query || "").toLowerCase();
   const found = [];
-  for (const task of await collect(false)) {
+  for (const task of await collect()) {
     if (status !== "all" && task.open === (status === "done")) continue;
     if (path && task.rel !== path) continue;
     if (tag && !task.tags.some((name) => name.replace(/^#/, "").toLowerCase() === tag)) continue;

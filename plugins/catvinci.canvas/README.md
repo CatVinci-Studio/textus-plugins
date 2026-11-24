@@ -11,10 +11,11 @@ Open a `.canvas` file from the sidebar and it fills a tab, fitted to the window.
 
 Excalidraw drawings open with the **Excalidraw** plugin, where you can also edit them.
 
-The plugin asks only to read files (to show the notes and pictures on a canvas). It never changes them. It works on the desktop and on iPhone and iPad.
+The plugin asks only to read files (to show the notes and pictures on a canvas). It never changes them.
 
 ## Changes
 
+- **0.1.7** - A pinch zooms the canvas through Textus, as PDFs and pictures do, instead of through the canvas's own two-finger code; a second finger no longer moves it. Its page is in every language Textus speaks. Its description says it is for viewing; editing stays in Obsidian. Needs Textus 1.4.7.
 - **0.1.6** - Excalidraw drawings now open with the new Excalidraw plugin, which edits them; Canvas no longer shows their exported picture.
 - **0.1.5** - The page follows Textus's language by itself. Needs Textus 1.4.3.
 - **0.1.4** - An empty or unreadable canvas now shows one clear message across the page. Card labels stay readable in every theme, and dragging no longer stops when the pointer leaves the canvas.

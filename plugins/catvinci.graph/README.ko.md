@@ -5,7 +5,7 @@
 - **Ctrl+Alt+G**(Mac에서는 **⌘⌥G**) 또는 **플러그인 › 그래프 보기 열기**로 폴더 전체를 탭에 보여 줍니다. **화면에 맞추기**를 누르면 전체가 한눈에 들어옵니다.
 - 사이드바의 **그래프** 탭은 지금 연 문서 주변의 노트를 보여 줍니다. 사이드바 그래프 패널 위쪽의 버튼으로 폴더 전체를 엽니다.
 - [[위키 링크]]와 다른 문서로 가는 링크 모두 셉니다. 서로 링크하는 두 노트는 선 하나로 잇습니다. 아직 없는 노트로 가는 [[링크]]도 노트 하나로 나타납니다.
-- 노트를 누르면 열립니다. 노트를 끌어 자리를 잡고, 빈 곳을 끌어 이동하고, 스크롤이나 핀치로 확대·축소합니다. 노트에 포인터를 올리면 그 링크가 강조됩니다.
+- 노트를 누르면 열립니다. 노트를 끌어 자리를 잡고, 빈 곳을 끌어 이동하고, 스크롤이나 핀치로 확대·축소합니다. 노트에 포인터를 올리면 그 링크가 강조됩니다.터치로는 노트를 한 번 누르면 링크가 강조되고, 한 번 더 누르면 열립니다.
 - 그래프는 스스로 맞춰집니다. 확대하면 이름이 보이고, 링크가 적을 때는 화살표로 방향을 보여 주며, 링크가 많은 노트일수록 크게 그립니다. 색 그룹이 없으면 노트마다 폴더의 색을 씁니다.
 - 폴더의 문서가 바뀌면 그래프를 다시 그립니다.
 
@@ -25,20 +25,21 @@ Obsidian 보관소에서는 Obsidian의 `graph.json`에 저장된 색 그룹도 
 
 ## 변경 내역
 
-- **0.5.9** - 노트나 화면을 끄는 중 Esc를 누르면 원래대로 돌아갑니다. 시스템이 끊은 터치로 끌기가 멈춘 채 남지 않습니다.
-- **0.5.8** - 사이드바의 그래프가 패널에 맞게 펼쳐지며, 처음에 작게 뭉쳐 라벨이 겹치지 않습니다. 이름 정렬에 Textus 자체 순서를 써서, 복사본을 따로 갖지 않아 패키지가 작아졌습니다.
-- **0.5.7** - 페이지 언어는 Textus를 자동으로 따릅니다. Textus 1.4.3이 필요합니다.
-- **0.5.6** - 그래프 탭 위쪽의 개수와 버튼이 항상 보입니다. 그래프 위에서 스크롤하거나 확대·축소해도 위로 밀려 가려지지 않습니다. 라벨이 서로 겹치지 않습니다. 링크가 많은 노트의 이름이 먼저 보이고, 나머지는 확대하면 나타납니다. 큰 폴더도 이미 배치된 상태로 열리며, 노트가 링크한 이미지 같은 첨부 파일은 설정에서 '첨부 파일'을 켤 때만 그래프에 나옵니다. 문서를 바꾸거나 저장할 때 그래프 전체가 흔들리며 다시 배치되지 않습니다.
-- **0.5.5** - 아직 없는 노트로 가는 표준 Markdown 링크를 Textus와 같은 위치에 두고, 같은 노트로 가는 [[링크]]와 합칩니다. Ctrl/Cmd 클릭으로 앞에 있는 문서 옆에 엽니다. 라벨은 인터페이스 글자 크기를, 폴더 색은 테마를 따릅니다. 사이드바 그래프의 자체 설정은 없어졌습니다.
-- **0.5.4** - 트랙패드 핀치가 제스처에 맞춰 부드럽게 확대·축소합니다. Textus 1.3.13에서는 Mac에서 핀치하면 뒤의 문서가 아니라 그래프가 확대·축소됩니다. 설명과 빈 상태 문구를 짧게 줄였습니다. 사이드바 패널과 페이지를 Textus 1.3.13 레이아웃에 맞췄습니다.
-- **0.5.3** - 도구 막대, 목록, 컨트롤을 Textus 자체의 것으로 바꿨습니다. 인터페이스와 함께 커지고 모든 테마를 따릅니다. Textus 1.3.12가 필요합니다.
-- **0.5.2** - Obsidian 색 그룹을 가장 가까운 보관소에서 읽습니다. 열린 폴더보다 위에 있어도 됩니다. Textus 1.3.10이 필요합니다.
-- **0.5.1** - Obsidian 보관소에서는 `.obsidian/graph.json`의 색 그룹으로도 노트에 색을 입힙니다.
-- **0.5.0** - [[링크]]가 어느 노트를 가리키는지 Textus에서 링크를 누를 때와 같은 방식으로 정합니다.
-- **0.4.0** - Textus AI가 문서 주변의 노트를 볼 수 있습니다(`list_neighbours`).
-- **0.3.0** - Textus 자체 컨트롤과 메뉴를 쓰고, 색은 테마를 따릅니다.
-- **0.2.0-0.2.1** - 설정 패널(필터, 검색, 색 그룹), 노드로서의 태그, 링크 방향 화살표, 사이드바 그래프의 깊이.
-- **0.1.0-0.1.1** - 첫 버전들: 폴더 전체를 보여 주는 탭과 지금 연 문서 주변을 보여 주는 사이드바, 폴더별 색, 노트가 수천 개여도 부드럽게 움직임.
+- **0.5.10** - By touch, a first tap on a note lights it and its links and a second opens it; notes are easier to hit with a finger, and a second finger zooms instead of also moving the graph. Its settings open in Textus's own popover.
+- **0.5.9** - Esc while dragging a note or the view puts it back, and a touch the system cancels no longer leaves a drag stuck.
+- **0.5.8** - The graph in the sidebar spreads out to fit its panel, instead of starting as a small clump with labels on top of each other. Sorts names with Textus's own order instead of a copy of it, so the package is smaller.
+- **0.5.7** - The page follows Textus's language by itself. Needs Textus 1.4.3.
+- **0.5.6** - The counts and buttons at the top of the graph tab stay in view: scrolling or pinching over the graph no longer pushes them up under the tab. Labels no longer pile on top of each other: the most linked notes keep theirs and the rest show as you zoom in. A big folder opens already laid out instead of unfolding, and pictures and other attachments a note links to stay out of the graph unless you turn on Attachments in its settings. Switching documents or saving no longer shakes the whole graph loose to settle again.
+- **0.5.5** - Standard Markdown links to notes not written yet are placed as Textus places them, and merge with [[links]] to the same note. Fit spreads a small graph over the whole pane, so names no longer sit on each other. Ctrl/Cmd-click opens a note beside the one in front. Labels follow the interface text size, and folder colours follow the theme. The sidebar graph has no settings of its own any more.
+- **0.5.4** - A trackpad pinch zooms smoothly, in step with the gesture; with Textus 1.3.13 a pinch on a Mac zooms the graph, not the document behind it. Shorter help and empty-state text. Its sidebar panel and page follow Textus 1.3.13's layout.
+- **0.5.3** - Its bars, lists and controls are Textus's own, grow with the interface and follow every theme; needs Textus 1.3.12.
+- **0.5.2** - Obsidian's colour groups come from the nearest vault, even one above the open folder. Needs Textus 1.3.10.
+- **0.5.1** - In an Obsidian vault, the colour groups in `.obsidian/graph.json` colour the notes too.
+- **0.5.0** - [[Links]] are matched to notes the same way Textus matches them when you click one.
+- **0.4.0** - Textus AI can see the notes around a document (`list_neighbours`).
+- **0.3.0** - Textus's own controls and menus; colours from the theme.
+- **0.2.0-0.2.1** - A settings panel with filters, search and colour groups; tags as nodes; arrows for link direction; the sidebar graph's depth.
+- **0.1.0-0.1.1** - First versions: the whole folder in a tab and the notes around the open document in the sidebar, coloured by folder, smooth with thousands of notes.
 
 <!-- ai-tools -->
 ## Textus AI 도구

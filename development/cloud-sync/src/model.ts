@@ -38,6 +38,9 @@ export interface Config {
   keepDays: KeepDays;
   /** Transfers run at once (PARALLEL). */
   parallel: number;
+  /** The largest file synced, in MiB (MAX_FILE_MIB); larger ones stay
+   *  where they are, on either side. */
+  maxFileMiB: number;
   /** keepDays was chosen here and isn't the folder's yet: the next sync
    *  makes it so; until then the folder's setting is taken. */
   keepPending?: boolean;
@@ -136,6 +139,8 @@ export interface LocalFiles {
   /** Whether this device syncs `path`: a path it leaves out is neither
    *  sent, fetched nor deleted, wherever it is. */
   wants(path: string): boolean;
+  /** Leaves out, as `wants` then says, the cloud's files too large here. */
+  limitRemote?(remote: Record<string, Entry>): void;
   read(path: string): Promise<Uint8Array | null>;
   /** False leaves the destination untouched (open, changed, or binary). */
   apply(
@@ -143,8 +148,12 @@ export interface LocalFiles {
     bytes: Uint8Array,
     expected: string | null,
   ): Promise<boolean | "deferred">;
-  /** To the system Trash, only while it still has the `expected` hash. */
-  remove(path: string, expected: string): Promise<boolean | "deferred">;
+  /** To the system Trash, only while it still has the `expected` hash;
+   *  "refused" where the Trash took it not (none on the device). */
+  remove(
+    path: string,
+    expected: string,
+  ): Promise<boolean | "deferred" | "refused">;
   /** False when `from` changed or `to` exists. */
   move(from: string, to: string, expected: string): Promise<boolean>;
   check(): Promise<void>;
@@ -156,6 +165,12 @@ export interface Result {
   moved: number;
   conflicts: string[];
   deferred: string[];
+  /** Deleted elsewhere, but the Trash here refused them: tried again next
+   *  time. Absent from results saved before 0.8. */
+  notTrashed: string[];
+  /** Over this device's largest file, here or in the cloud: left as they
+   *  are. Absent from results saved before 0.8.1. */
+  tooLarge?: string[];
   unchanged: number;
 }
 export class SyncError extends Error {
@@ -183,6 +198,8 @@ export function checkAbort(signal?: AbortSignal) {
 
 /** The choices of transfers at once: more is faster with many small files. */
 export const PARALLEL = [1, 2, 4, 8, 16, 32] as const;
+/** The choices of the largest file synced, in MiB, up to MAX_FILE_SIZE. */
+export const MAX_FILE_MIB = [8, 16, 32, 64, 128] as const;
 
 /** What the plugin's pages show, sent to each. */
 export interface ViewState {
@@ -197,4 +214,8 @@ export interface ViewState {
   lastRun?: string;
   /** The saved account, its start only (masked). */
   account?: string;
+  /** On a phone: its own choices show (the largest file). */
+  phone?: boolean;
+  /** Something to know about the folder, shown under the status. */
+  note?: string;
 }

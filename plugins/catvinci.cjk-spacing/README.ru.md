@@ -21,15 +21,16 @@
 
 ## Изменения
 
-- **0.3.0** - С Textus 1.4.4 абзац, где не хватает пробела между текстом CJK и латиницей, подчёркивается; карточка добавляет пробелы. Отключается в настройках плагина.
-- **0.2.4** - Блок кода внутри более длинного ограждения (```` с ``` внутри) остаётся без изменений.
-- **0.2.3** - Инструмент для Textus AI описан точно: китайский и японский, не корейский.
-- **0.2.2** - не трогает идентификаторы блоков, поля Dataview, выделения и поля Tasks из Obsidian
-- **0.2.1** - не трогает #теги, напоминания и комментарии %%; при сохранении меняются только текстовые блоки
-- **0.2.0** - инструмент для Textus AI, `fix_cjk_spacing`
-- **0.1.3** - работает на компьютере и в iOS
-- **0.1.2** - не трогает ссылки, вики-ссылки, сноски, теги и front matter
-- **0.1.0-0.1.1** - первые версии: команда в контекстном меню и меню «Плагины», пробелы при сохранении
+- **0.3.1** - Its page shows its list of changes in English in every language.
+- **0.3.0** - From Textus 1.4.4, a paragraph missing a space between CJK and Latin text is underlined; its card adds the spaces. Turn it off in the plugin's settings.
+- **0.2.4** - A code block inside a longer fence (```` holding ```) is left alone.
+- **0.2.3** - Its Textus AI tool says what it does: Chinese and Japanese, not Korean.
+- **0.2.2** - leaves Obsidian's block ids, Dataview fields, highlights and Tasks fields as written
+- **0.2.1** - leaves #tags, reminders and %% comments alone; on save only prose blocks change
+- **0.2.0** - a tool for Textus AI, `fix_cjk_spacing`
+- **0.1.3** - runs on the desktop and on iOS
+- **0.1.2** - leaves links, wiki links, footnotes, tags and front matter alone
+- **0.1.0-0.1.1** - first versions: the command in the right-click and Plugins menus, and spacing on save
 
 <!-- ai-tools -->
 ## Инструменты для Textus AI

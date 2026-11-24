@@ -18,13 +18,12 @@
 - **读写文件**：检查 Textus AI 指定的 .mdx 文件，把转换后的副本存到文档旁边。
 - **Textus AI 工具**：让 Textus AI 检查它写的 MDX。
 
-桌面和 iOS 上都能用。
-
 ## 更新日志
 
-- **0.1.2** - 安装包里附上所带第三方库的清单和许可。
-- **0.1.1** - 在手机上，预览单独显示时也会画出打开它的那篇文档，不再是空白页。
-- **0.1.0** - 第一版：用 MDX 编译器标出问题、预览 MDX、另存为 Markdown 和 MDX，以及给 Textus AI 的 check_mdx。
+- **0.1.3** - Its page is in every language Textus speaks.
+- **0.1.2** - Its package lists the libraries it carries, with their licenses.
+- **0.1.1** - Preview MDX on a phone, where the preview shows alone, draws the document it was opened from instead of an empty page.
+- **0.1.0** - First version: problems underlined by MDX's compiler, Preview MDX, Save as Markdown and Save as MDX, and check_mdx for Textus AI.
 
 <!-- ai-tools -->
 ## Textus AI 工具

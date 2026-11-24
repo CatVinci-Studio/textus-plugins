@@ -8,7 +8,7 @@ Escreva um bloco de código com a linguagem `abc`. A música aparece desenhada l
 - As notas usam a cor do texto do tema e são desenhadas de novo ao alternar entre claro e escuro.
 - Ao exportar para HTML, PDF ou Word, a música vai como imagem.
 
-Funciona no computador e no iPhone e precisa do Textus 1.3.2 ou mais recente. Pede uma única permissão, ferramentas do Textus AI, para que o Textus AI possa verificar um bloco `abc` antes de o escrever num documento.
+Precisa do Textus 1.3.2 ou mais recente. Pede uma única permissão, ferramentas do Textus AI, para que o Textus AI possa verificar um bloco `abc` antes de o escrever num documento.
 
 ## Exemplo
 
@@ -23,15 +23,16 @@ C D E F | G A B c |
 
 ## Alterações
 
-- **0.3.4** - O pacote lista as bibliotecas que inclui, com as suas licenças.
-- **0.3.3** - Um gráfico desenhado com o bloco recolhido (no telemóvel) ajusta-se à largura ao abrir.
-- **0.3.2** - Os compassos quebram de linha conforme a coluna em vez de encolher a partitura inteira; clicar numa nota não a deixa mais vermelha; `check_abc` aceita nomes de modo completos, qualquer duração de nota, linhas `+:`, `` ` `` e `$`; `height=` foi removido.
-- **0.3.1** - Sua página agora diz numa frase o que ele faz, o que pode fazer e o que mudou em cada versão.
-- **0.3.0** - O Textus AI pode verificar um bloco `abc` antes de o escrever (`check_abc`).
-- **0.2.0** - As notas seguem a cor do texto do tema; precisa do Textus 1.3.2.
-- **0.1.3** - Usa as cores do documento com os novos nomes do Textus.
-- **0.1.2** - As imagens exportadas mantêm a largura e a altura da música.
-- **0.1.0-0.1.1** - Primeiras versões: blocos `abc` desenhados sob o código, `height=`, imagens ao exportar; página na loja e ícone.
+- **0.3.5** - Its page no longer says which devices it runs on: the store shows that.
+- **0.3.4** - Its package lists the libraries it carries, with their licenses.
+- **0.3.3** - A chart drawn while its block was folded (a phone) fits once the block opens, instead of keeping its old size.
+- **0.3.2** - Bars wrap to the column instead of the whole score shrinking; clicking a note no longer turns it red; `check_abc` accepts full mode names, any note length, `+:` lines, `` ` `` and `$`; `height=` is gone.
+- **0.3.1** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
+- **0.3.0** - Textus AI can check an `abc` block before writing it (`check_abc`).
+- **0.2.0** - The notes follow the theme's text color; needs Textus 1.3.2.
+- **0.1.3** - Uses Textus's renamed document colors.
+- **0.1.2** - Exported pictures keep the music's width and height.
+- **0.1.0-0.1.1** - First versions: `abc` blocks drawn under their source, `height=`, pictures in exports; store page and icon.
 
 <!-- ai-tools -->
 ## Ferramentas para o Textus AI

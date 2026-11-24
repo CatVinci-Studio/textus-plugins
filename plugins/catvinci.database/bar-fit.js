@@ -1,29 +1,40 @@
 // A database page's bar, kept on one line as the block narrows: it gives
 // way a step at a time (view.css's data-fit), and its sorts and filters ride
 // in it while there is room. view.js starts it; loaded before view.js.
+
+// Whether the bar holds on one line. Items on a line are centred on it, so
+// one there starts above the first item's foot; one that wrapped starts at
+// or below it. Zero-height items (the spacer) say nothing: centred, a
+// spacer's top is the line's middle, which rounding put on either side of
+// a half-height test - and a zoomed block in WebKit then folded the tabs
+// and dropped the sorts to a line of their own, with room to spare.
+window.databaseBarFits = function ($, bar) {
+  "use strict";
+  const tabs = [...$("views").children];
+  const shown = [...bar.children].filter((n) => n.offsetParent !== null && n.offsetHeight > 0);
+  const row = (n) => n.offsetTop;
+  if (!tabs.length || !shown.length) return true;
+  const foot = row(shown[0]) + shown[0].offsetHeight;
+  return !(
+    tabs.some((n) => row(n) !== row(tabs[0])) ||
+    $("views").scrollWidth > $("views").clientWidth + 1 ||
+    // A tab squeezed until its name is cut ("Calenda") doesn't fit either.
+    tabs.some((n) => {
+      const label = n.querySelector(".tx-segment-label");
+      return label && label.scrollWidth > label.clientWidth + 1;
+    }) ||
+    (bar.contains($("rules")) && $("rules").scrollWidth > $("rules").clientWidth + 1) ||
+    shown.some((n) => row(n) >= foot) ||
+    bar.scrollWidth > bar.clientWidth + 1
+  );
+};
+
 window.databaseBarFit = function ($) {
   "use strict";
   // The bar gives way a step at a time until it fits on one line: the page
   // count goes, then New's word, then the tabs fold into one button.
   const STEPS = ["", "tight", "tighter", "compact"];
-  const barFits = (bar) => {
-    const tabs = [...$("views").children];
-    const shown = [...bar.children].filter((n) => n.offsetParent !== null);
-    const row = (n) => n.offsetTop;
-    if (!tabs.length || !shown.length) return true;
-    return !(
-      tabs.some((n) => row(n) !== row(tabs[0])) ||
-      $("views").scrollWidth > $("views").clientWidth + 1 ||
-      // A tab squeezed until its name is cut ("Calenda") doesn't fit either.
-      tabs.some((n) => {
-        const label = n.querySelector(".tx-segment-label");
-        return label && label.scrollWidth > label.clientWidth + 1;
-      }) ||
-      (bar.contains($("rules")) && $("rules").scrollWidth > $("rules").clientWidth + 1) ||
-      shown.some((n) => row(n) > row(shown[0]) + shown[0].offsetHeight / 2) ||
-      bar.scrollWidth > bar.clientWidth + 1
-    );
-  };
+  const barFits = (bar) => window.databaseBarFits($, bar);
   const fit = () => {
     const bar = $("bar");
     const rules = $("rules");
@@ -44,7 +55,17 @@ window.databaseBarFit = function ($) {
   // the page's width, the tabs drawn, the fonts arriving. Only the width:
   // the bar's own change of height must not ask again, or a scroll bar
   // coming and going with it would swap the two ways forever.
-  const refit = () => requestAnimationFrame(fit);
+  // Once a frame however many observers ask: every step measured is a
+  // layout of the whole page, the table's rows and all.
+  let asked = false;
+  const refit = () => {
+    if (asked) return;
+    asked = true;
+    requestAnimationFrame(() => {
+      asked = false;
+      fit();
+    });
+  };
   let width = -1;
   new ResizeObserver(() => {
     const now = document.body.clientWidth;

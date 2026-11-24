@@ -178,7 +178,7 @@
   }
 
   /** The handle at a column head's right edge: dragged, the column's width,
-   *  kept in the base (columnSize); a double click goes back to fitting. */
+   *  kept in the base (columnSize); a double click, back to where it started. */
   function resizer(key) {
     const handle = el("span", { class: "col-resize", "aria-label": s("columnWidth") });
     handle.addEventListener("click", (e) => e.stopPropagation());
@@ -480,13 +480,6 @@
   });
   databaseBarFit($);
 
-  // Whether the page goes on past its right edge, for the fade there.
-  const edge = () => {
-    const root = document.documentElement;
-    root.classList.toggle("more-right", root.scrollWidth - root.clientWidth - window.scrollX > 1);
-  };
-  window.addEventListener("scroll", edge, { passive: true });
-  window.addEventListener("resize", edge);
-  new MutationObserver(edge).observe($("body"), { childList: true, subtree: true });
+  databaseEdges($);
   post({ type: "ready", index: state.index });
 })();

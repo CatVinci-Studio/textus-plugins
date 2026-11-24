@@ -14,4 +14,5 @@
 
 ## 更新日志
 
-- **0.1.0** - 第一个版本：.textbundle 文件夹作为一篇文档打开。需要 Textus 1.4.6。
+- **0.1.1** - Its page is in every language Textus speaks. Needs Textus 1.4.6 itself, not a test version of it.
+- **0.1.0** - First version: a .textbundle folder opens as one document. Needs Textus 1.4.6.

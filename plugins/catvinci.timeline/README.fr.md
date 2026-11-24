@@ -21,19 +21,20 @@ Dessine des événements en chronologie, un par ligne : quand | quoi | détails.
 
 ## Autorisations
 
-Il ne demande que **Outils pour Textus AI**, pour que Textus AI puisse vérifier un bloc avant de l’écrire. Il ne lit aucun fichier et dessine tout sur votre appareil, sur ordinateur comme sur iOS.
+Il ne demande que **Outils pour Textus AI**, pour que Textus AI puisse vérifier un bloc avant de l’écrire. Il ne lit aucun fichier et dessine tout sur votre appareil.
 
 ## Changements
 
-- **0.4.0** - Une base de données peut s’afficher en chronologie : choisissez Chronologie parmi ses vues, les lignes datées s’alignent dans l’ordre ; un clic ouvre une ligne. Requiert Textus 1.4.6.
-- **0.3.3** - Une date ne se coupe plus en son milieu ; un dessin fait bloc replié s'adapte à l'ouverture.
-- **0.3.2** - les notes et dates longues passent à la ligne dans un panneau étroit, la police du document est utilisée, et un bloc vide dit quoi écrire
-- **0.3.1** - Sa page dit maintenant en une phrase ce qu'il fait, ce qu'il permet et ce qui a changé à chaque version.
-- **0.3.0** - un outil pour Textus AI, `check_timeline`
-- **0.2.0** - les couleurs du thème, redessinée quand le thème change
-- **0.1.3** - le texte aux couleurs du thème sous Textus 1.3
-- **0.1.2** - suit les modifications rapides : un ancien dessin ne remplace plus un plus récent
-- **0.1.0-0.1.1** - premières versions : événements dessinés en chronologie, hauteur réglable, images à l’export
+- **0.4.1** - Its page no longer says which devices it runs on: the store shows that.
+- **0.4.0** - A database can be shown as a timeline: pick Timeline among its views, and its dated rows line up in order; a click opens a row. Needs Textus 1.4.6.
+- **0.3.3** - A date no longer breaks in the middle ("2024-0" over "3"); a chart drawn while its block was folded fits once it opens.
+- **0.3.2** - long notes and dates wrap to fit a narrow island, the timeline uses the document's font, and an empty block says what to write
+- **0.3.1** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
+- **0.3.0** - a tool for Textus AI, `check_timeline`
+- **0.2.0** - the theme's colors, drawn again when the theme changes
+- **0.1.3** - text in the theme's colors on Textus 1.3
+- **0.1.2** - keeps up with quick edits: an older drawing never replaces a newer one
+- **0.1.0-0.1.1** - first versions: events drawn as a timeline, a height setting, pictures in exports
 
 <!-- ai-tools -->
 ## Outils pour Textus AI

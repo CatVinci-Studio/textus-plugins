@@ -1,7 +1,7 @@
 {
   "id": "catvinci.latex-completion",
   "name": "%name%",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "publisher": "catvinci",
   "author": "CatVinci Studio",
   "description": "%description%",
@@ -15,6 +15,7 @@
     "desktop",
     "ios"
   ],
+  "category": "editing",
   "main": [
     "commands.js",
     "host.js"

@@ -9,19 +9,20 @@
 - **以 Markdown 編輯** 把檔案交給 Textus，轉成可以編輯的 Markdown 文件。
 - 檔案讀不出來時，分頁裡會說明。
 
-外掛不要求任何權限，只讀取你用它開啟的檔案。電腦、iPhone 和 iPad 上都能使用。
+外掛不要求任何權限，只讀取你用它開啟的檔案。
 
 ## 更新紀錄
 
-- **0.2.8** - 安裝包內附上所帶第三方函式庫的清單和授權。
-- **0.2.7** - 頁面語言由 Textus 自動跟隨。需要 Textus 1.4.3。
-- **0.2.6** - 縮放按鈕和快捷鍵每次 1.25 倍，和其他檢視器一致。
-- **0.2.5** - 尋找列的關閉按鈕有了名稱，螢幕閱讀器能讀出，懸停也有提示。
-- **0.2.4** - 開啟時依分頁寬度顯示；雙指縮放或 Ctrl+滾輪（Mac 上 ⌘）縮放頁面；比分頁寬的頁面可以左右捲動到兩側；窄分頁裡工具列會換行，切換語言後縮放比例保留。
-- **0.2.3** - 工具列依 Textus 統一的順序排列：先是內容資訊，再是尋找和縮放。
+- **0.2.9** - Its page no longer says which devices it runs on: the store shows that. After switching to another tab and back, a document is where you were reading. Find opens in the toolbar, as in PDF Viewer, and the search button closes it again; in a narrow tab Edit as Markdown goes into the ⋯ menu instead of dropping to a second row.
+- **0.2.8** - Its package lists the libraries it carries, with their licenses.
+- **0.2.7** - The page follows Textus's language by itself. Needs Textus 1.4.3.
+- **0.2.6** - Zoom buttons and keys step by 1.25×, as the other viewers do.
+- **0.2.5** - The find bar's close button is named for screen readers and shows a tooltip.
+- **0.2.4** - Opens fitted to the tab's width; a pinch or Ctrl+wheel (⌘ on a Mac) zooms the pages; a page wider than the tab scrolls to both edges; the bars wrap in a narrow tab and the zoom is kept when the language changes.
+- **0.2.3** - Its bar keeps Textus's one order: what it shows, then find and zoom.
 - **0.2.2** - Its bars, lists and controls are Textus's own, grow with the interface and follow every theme; needs Textus 1.3.12.
-- **0.2.1** - 介紹頁重寫：一句話說明它做什麼，再講它能做的事，並列出每個版本的更新。
-- **0.2.0** - 使用 Textus 自己的控制項和佈景主題色調；介面語言改變時分頁跟著切換。需要 Textus 1.3.2。
-- **0.1.3** - 使用 Textus 1.3 的設計變數。
-- **0.1.2** - 檔案讀不出來時會說明；尋找時略過文件的樣式內容。
-- **0.1.0-0.1.1** - 最初的版本：在分頁中依 Word 的版面顯示 .docx，顯示目前頁碼，支援尋找、縮放和「以 Markdown 編輯」。
+- **0.2.1** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
+- **0.2.0** - Drawn with Textus's own controls and theme tones; the tab follows the interface language when it changes. Needs Textus 1.3.2.
+- **0.1.3** - Uses Textus 1.3's design variables.
+- **0.1.2** - A file that can't be read says so; find skips the document's styles.
+- **0.1.0-0.1.1** - First versions: .docx files in a tab as Word lays them out, the page you are on, find, zoom and Edit as Markdown.

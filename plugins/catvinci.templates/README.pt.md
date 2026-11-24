@@ -15,23 +15,24 @@ Os modelos são ficheiros Markdown na pasta **Templates** da pasta aberta (num c
 - As etiquetas comuns do Templater também são preenchidas: `<% tp.date.now("YYYY-MM-DD") %>` (com um desvio em dias, como `-1`, ou `"P1W"`), `tp.date.today`, `tomorrow` e `yesterday`, `<% tp.file.title %>`, `tp.file.creation_date()` e `tp.file.folder()`; `<% tp.file.cursor() %>` põe o cursor aí.
 - Scripts e outras etiquetas nunca são executados: ficam como estão, e um aviso indica-os.
 
-Funciona no computador e no iPhone e precisa do Textus 1.3.10 ou mais recente. Pede para ler e escrever ficheiros da pasta aberta, para os modelos e os documentos novos; para ler e editar o documento aberto, para inserir um modelo ou guardá-lo como modelo; e dá ao Textus AI as duas ferramentas abaixo.
+Precisa do Textus 1.4.3 ou mais recente. Pede para ler e escrever ficheiros da pasta aberta, para os modelos e os documentos novos; para ler e editar o documento aberto, para inserir um modelo ou guardá-lo como modelo; e dá ao Textus AI as duas ferramentas abaixo.
 
 ## Alterações
 
-- **0.5.5** - Ordena os nomes com a ordem do próprio Textus em vez de uma cópia, então o pacote ficou menor. Requer o Textus 1.4.3.
-- **0.5.4** - Um nome já usado recebe o próximo livre no momento da escrita, sem conflitos (Textus 1.4.3).
-- **0.5.3** - A descrição da loja agora começa pelo que o plugin faz.
-- **0.5.2** - Agora aparecem os modelos de uma pasta de modelos oculta ou em minúsculas, e de suas subpastas. Depois de inserir, o cursor fica logo após o modelo.
-- **0.5.1** - **Novo a partir de modelo…** no menu de contexto de um arquivo ou pasta cria o documento nessa pasta.
-- **0.5.0** - Os modelos são preenchidos pelo próprio Textus, tal como as notas diárias; precisa do Textus 1.3.10.
-- **0.4.1** - Os modelos aparecem por ordem natural: 2 antes de 10.
-- **0.4.0** - As etiquetas comuns `tp.date` e `tp.file` do Templater e os formatos de data e hora dos Modelos de um cofre do Obsidian; um aviso indica as etiquetas não executadas.
-- **0.3.0** - Os modelos passam a ser ficheiros Markdown na pasta Templates (no Obsidian, a pasta de modelos do cofre), movidos para lá uma vez a partir de onde as versões antigas os guardavam; `{{date:FORMATO}}` e `{{time:FORMATO}}`.
-- **0.2.0** - O Textus AI pode listar os seus modelos e criar um documento a partir de um.
-- **0.1.3** - Indica onde funciona: computador e iPhone.
-- **0.1.2** - Novo a partir de modelo recusa um nome que já existe.
-- **0.1.0-0.1.1** - Primeiras versões: documentos novos, trechos inseridos e modelos guardados, com `{{date}}`, `{{time}}` e `{{title}}`; página na loja e ícone.
+- **0.5.6** - Its page no longer says which devices it runs on: the store shows that. It names the Textus it needs, 1.4.3.
+- **0.5.5** - Sorts names with Textus's own order instead of a copy of it, so the package is smaller. Needs Textus 1.4.3.
+- **0.5.4** - A taken name gets the next free one as the file is written, never a clash (Textus 1.4.3).
+- **0.5.3** - The store description now opens with what the plugin does.
+- **0.5.2** - Templates in a hidden or lowercase templates folder, and in its subfolders, now show up. After Insert, the caret lands right after the template.
+- **0.5.1** - **New from Template…** from a file's or folder's right-click menu makes the document in that folder.
+- **0.5.0** - Templates are filled in by Textus itself, the same way as daily notes; needs Textus 1.3.10.
+- **0.4.1** - Templates are listed in natural order: 2 before 10.
+- **0.4.0** - Templater's common `tp.date` and `tp.file` tags, and an Obsidian vault's Templates date and time formats; tags that aren't run are named in a notice.
+- **0.3.0** - Templates are Markdown files in the Templates folder (a vault's own templates folder in Obsidian), moved there once from where older versions kept them; `{{date:FORMAT}}` and `{{time:FORMAT}}`.
+- **0.2.0** - Textus AI can list your templates and make a document from one.
+- **0.1.3** - Says where it runs: desktop and iPhone.
+- **0.1.2** - New from Template refuses a name that is already taken.
+- **0.1.0-0.1.1** - First versions: new documents, inserted snippets and saved templates, with `{{date}}`, `{{time}}` and `{{title}}`; store page and icon.
 
 <!-- ai-tools -->
 ## Ferramentas para o Textus AI

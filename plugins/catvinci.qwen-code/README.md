@@ -10,8 +10,9 @@ Textus starts [Qwen Code](https://github.com/QwenLM/qwen-code) with `qwen --acp`
 
 It starts in ask first. Its "Always allow" choices for commands are saved by Qwen Code for good, in the project or for you.
 
-It works on the desktop and needs Textus 1.4.3 or later. It asks for one permission: to start this agent on this computer.
+It needs Textus 1.4.3 or later. It asks for one permission: to start this agent on this computer.
 
 ## Changes
 
+- **0.1.1** - Its page is in every language Textus speaks. Needs Textus 1.4.3 itself, not a test version of it.
 - **0.1.0** - First version: Qwen Code in Textus AI.

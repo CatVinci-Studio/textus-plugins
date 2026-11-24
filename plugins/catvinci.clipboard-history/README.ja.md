@@ -17,8 +17,9 @@
 
 ## 更新履歴
 
-- **0.1.4** - 絞り込み欄と空のときの表示が、Textus の言語を切り替えると追従します。Textus 1.4.3 が必要です。
-- **0.1.3** - 各項目の下にコピーした時刻を表示し、項目の間に区切り線を入れました。
-- **0.1.2** - パネルの消去ボタンが戻りました。ワンクリックで履歴を空にします。 説明と空の状態の文言を短くしました。
-- **0.1.1** - 紹介ページを書き直しました。何をするかを一文で示し、できることと各バージョンの変更を載せています。
-- **0.1.0** - 最初のバージョン：直近 30 件のコピーをサイドバーに表示し、クリックで挿入、右クリックで再コピーや削除。Textus 1.3.10 が必要です。
+- **0.1.5** - Its page shows its list of changes in English in every language.
+- **0.1.4** - The filter field and empty message follow Textus's language when you switch it. Needs Textus 1.4.3.
+- **0.1.3** - Each clip shows when it was copied, with a line between clips.
+- **0.1.2** - The panel's Clear button is back: one click empties the history. Shorter help and empty-state text.
+- **0.1.1** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
+- **0.1.0** - First version: the last 30 copies in the sidebar, put in with a click, copied again or removed with a right-click. Needs Textus 1.3.10.

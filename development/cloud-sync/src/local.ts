@@ -1,7 +1,10 @@
 import { OBSIDIAN_SETTINGS, inScope, isText } from "./config";
 import { scopeOf, type Scope } from "./scope";
 import { describe, hash } from "./content";
+import { deviceOf, folderKey } from "./device";
+import { beside } from "./planner";
 import { Reservations } from "./reservations";
+import { ScanCache, type Seen } from "./scan-cache";
 import {
   MAX_FILES,
   MAX_FILE_SIZE,
@@ -12,19 +15,23 @@ import {
 } from "./model";
 
 /** What a file was found to hold, by folder and path, with the size and
- *  time it had: a later sync reads again only what changed since. */
-const described = new Map<
-  string,
-  Map<string, { size: number; modifiedMs: number; at: number; entry: Entry }>
->();
+ *  time it had: a later sync reads again only what changed since. Kept on
+ *  disk too (ScanCache) for the first sync after a launch. */
+const described = new Map<string, Map<string, Seen>>();
 /** A file changed this close to when it was read may change again within
  *  the same tick of its clock: read again (as Git's racy check does). */
 const SETTLED_MS = 2000;
+/** How Textus says a device has no Trash (Android). */
+const NO_TRASH = /\[noTrash\]$/;
 
 export class Workspace implements LocalFiles {
   private reservations: Reservations;
+  private cache: ScanCache;
   /** Paths this run trashed or renamed, so their file events start no new sync. */
   readonly touched = new Set<string>();
+  /** Files over `limit` here or in the cloud: left as they are on both. */
+  readonly large = new Set<string>();
+  private ownTrash?: string;
   constructor(
     private api: Textus.Api,
     readonly root: string,
@@ -35,11 +42,27 @@ export class Workspace implements LocalFiles {
       gitignore: false,
       obsidian: false,
     }),
+    private limit = MAX_FILE_SIZE,
   ) {
-    this.reservations = new Reservations(storage, root);
+    const platform = api.env?.platform;
+    const folder = folderKey(root, platform);
+    this.reservations = new Reservations(storage, folder);
+    this.cache = new ScanCache(storage, folder);
+    this.ownTrash = deviceOf(platform).ownTrash;
+  }
+  private inOwnTrash(path: string) {
+    const trash = this.ownTrash;
+    return !!trash && (path === trash || path.startsWith(`${trash}/`));
   }
   wants(path: string) {
-    return this.scope.wants(path);
+    return (
+      this.scope.wants(path) && !this.large.has(path) && !this.inOwnTrash(path)
+    );
+  }
+  limitRemote(remote: Record<string, Entry>) {
+    for (const [path, entry] of Object.entries(remote))
+      if (entry.size > this.limit && this.scope.wants(path))
+        this.large.add(path);
   }
   async check() {
     checkAbort(this.signal);
@@ -112,12 +135,17 @@ export class Workspace implements LocalFiles {
   async scan(): Promise<Record<string, Entry>> {
     const files: Record<string, Entry> = Object.create(null);
     let visits = 0;
-    const known = described.get(this.root) ?? new Map();
-    const seen = new Map();
+    const known = described.get(this.root) ?? (await this.cache.load());
+    const seen = new Map<string, Seen>();
+    let read = false;
     const add = async (
       rel: string,
       stat: { size: number; modifiedMs: number | null } | null,
     ) => {
+      if (stat && stat.size > this.limit) {
+        this.large.add(rel);
+        return;
+      }
       const was = known.get(rel);
       const at = stat?.modifiedMs;
       if (
@@ -134,6 +162,7 @@ export class Workspace implements LocalFiles {
         return;
       }
       const bytes = await this.read(rel);
+      read = true;
       if (!bytes) return;
       files[rel] = await describe(bytes);
       if (stat && at != null)
@@ -157,7 +186,7 @@ export class Workspace implements LocalFiles {
             /^\.textus\/(library|memory|skills)(\/|$)/.test(rel)
           )
             await walk(rel);
-        } else if (this.scope.wants(rel)) {
+        } else if (this.wants(rel)) {
           if (++visits > MAX_FILES) throw new SyncError("tooManyFiles");
           await add(rel, entry);
         }
@@ -183,6 +212,7 @@ export class Workspace implements LocalFiles {
         await walk(`.textus/${name}`);
     }
     described.set(this.root, seen);
+    if (read || seen.size !== known.size) await this.cache.save(seen);
     return files;
   }
   private async holds(relative: string, expected: string) {
@@ -196,8 +226,32 @@ export class Workspace implements LocalFiles {
     if (!(await this.holds(relative, expected))) return false;
     await this.check();
     this.touched.add(path);
-    await this.api.files.trash(path);
+    try {
+      await this.api.files.trash(path);
+    } catch (error) {
+      // No Trash here: kept in a folder of its own, else left in place.
+      if (!(NO_TRASH.test(String(error)) && (await this.keepAside(relative)))) {
+        this.touched.delete(path);
+        return "refused" as const;
+      }
+    }
     return true;
+  }
+  /** Into the device's own trash folder, beside a file already there. */
+  private async keepAside(relative: string) {
+    if (!this.ownTrash) return false;
+    const base = `${this.ownTrash}/${relative}`;
+    for (const target of [base, beside(base, crypto.randomUUID())]) {
+      const path = `${this.root.replace(/[/\\]$/, "")}/${target}`;
+      if (await this.api.files.stat(path)) continue;
+      try {
+        await this.api.files.rename(this.path(relative), path);
+        return true;
+      } catch {
+        /* Taken meanwhile, or refused: the next name, or left in place. */
+      }
+    }
+    return false;
   }
   async move(from: string, to: string, expected: string) {
     await this.check();

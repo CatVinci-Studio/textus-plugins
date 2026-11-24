@@ -15,8 +15,6 @@ Abre páginas web en una pestaña junto a tus notas, para leerlas sin salir de T
 - **⌃** pliega la barra; el pequeño tirador la trae de vuelta.
 - **↗** abre la página en tu navegador, **↻** la recarga.
 
-Funciona en escritorio.
-
 ## Permisos
 
 - Red, cualquier dirección: para cargar las páginas web que abres.
@@ -24,8 +22,9 @@ Funciona en escritorio.
 
 ## Cambios
 
-- **0.2.2** - Textos de ayuda y de estado vacío más breves.
-- **0.2.1** - Su página dice ahora en una frase qué hace, qué puede hacer y qué cambió en cada versión.
-- **0.2.0** - Los enlaces web con Ctrl/⌘+clic se abren en una pestaña solo si lo activas en los ajustes; si no, en tu navegador.
-- **0.1.2** - Solo escritorio.
-- **0.1.0-0.1.1** - Primeras versiones: una dirección o una búsqueda en una pestaña, páginas recientes, abrir o buscar la selección, enlaces con Ctrl/⌘+clic, elección de buscador.
+- **0.2.3** - Its page no longer says which devices it runs on: the store shows that.
+- **0.2.2** - Shorter help and empty-state text.
+- **0.2.1** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
+- **0.2.0** - Ctrl/Cmd+clicked web links open in a tab only when you turn that on in the settings; otherwise they open in your browser.
+- **0.1.2** - Desktop only.
+- **0.1.0-0.1.1** - First versions: an address or a search in a tab, recent pages, the selection opened or searched, Ctrl/Cmd+clicked links, a choice of search engine.

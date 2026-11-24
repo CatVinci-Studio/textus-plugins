@@ -2,11 +2,11 @@
 
 通过你自己的 S3 兼容存储、WebDAV 或坚果云，让一个文件夹在几台电脑上保持一致；云端保留历史版本，也可以选择在文件离开设备前先加密。
 
-打开端到端加密后，服务商既看不到文件内容，也看不到文件名。需要桌面版 Textus 1.4.1 或更新版本。
+打开端到端加密后，服务商既看不到文件内容，也看不到文件名。需要 Textus 1.4.1 或更新版本。
 
 ## 开始使用
 
-1. 在 Textus 里打开要同步的文件夹，再从 **插件 › 云同步**（或侧栏云同步标签里的 **连接设置…**）打开面板。
+1. 在 Textus 里打开要同步的文件夹，再从 **插件 › 云同步**（或侧边栏云同步标签里的 **连接设置…**）打开面板。
 2. 选择存储服务，填写服务器地址和账号。坚果云只需填邮箱和
    「账户信息 › 安全选项」里生成的应用密码。
 3. 要加密的话，打开 **端到端加密**，设置一个至少 12 个字符的 **同步密码**，
@@ -63,6 +63,11 @@ core-plugins、types 这几个 `.json`）；`workspace.json` 这类每台设备�
   同步密码）仍能读到已删除的文件。要彻底清除内容，请为清理后的工作区换一个新的远端目录。
 - 编辑优先于删除：一边删了、另一边改过的文件会在所有设备上恢复为修改后的版本。
 - 首次同步的文件夹不会删除任何文件，只有一边有的文件会复制到另一边。
+- 一次同步要从云端删除很多文件（超过 10 个且超过文件夹的三成）时，会在删除前停下来问；
+  自动同步只问一次，点「立即同步」会再问。重命名或移动的文件不算。之前同步过很多文件、
+  这次却一个都没找到的文件夹，会被当作读不到（权限没了、文件没下载到本机），同步停下，什么都不删。
+- 系统废纸篓收不下别处删除的文件时，它先留在原处，列在面板里，下次同步再试，
+  这次同步的其余部分照常完成。
 - 在标签页中打开的文件不会被删除或重命名，关闭后重新同步。
 - 依赖删除同步前请把所有设备更新到 0.4：旧版会把别处删除的文件传回来。
 - 单文件上限 128 MiB，不同步空目录；远端目录保存的是插件格式，不是文件镜像。
@@ -119,8 +124,12 @@ core-plugins、types 这几个 `.json`）；`workspace.json` 这类每台设备�
 
 ## 中断恢复
 
-崩溃或断网可能留下远端锁。先确认所有设备均已停止同步，再使用
+同步到一半时 Textus 被关掉或停下，这台设备留下的锁会在它下一次同步时自动收回，不用确认
+（同步进行中每 10 秒更新一次本机对这把锁的记录；记录 30 秒没更新才收回，下一次同步开始得早就等到那时，
+等的时候记录又更新了就不动它——那是另一个窗口里还在跑的同步）。
+别的设备留下的锁不会自动收回：先确认所有设备均已停止同步，再使用
 **同步卡住了？ › 清除遗留锁**。正常取消会等待当前请求结束后释放锁。
+每个文件扫描到的大小、时间和哈希存在本机，重启后第一次同步只重读这期间改过的文件。
 同步中途停下（取消、断网或被服务限速）时，已上传的分块记在本机，下次接着传、不再逐个检查；期间别的设备同步过则重新检查。
 新附件下载中断时，下次同步会识别并续写本插件的占位标记，不会将标记上传。
 重试前请保留插件本机数据；若文件已被其他应用修改，则保留修改后的内容。
@@ -144,20 +153,22 @@ core-plugins、types 这几个 `.json`）；`workspace.json` 这类每台设备�
 
 ## 更新日志
 
-- **0.7.0** - 同步更快、请求更少：两边都没变化时只问一次服务（原来 8 到 16 次）；改过的文件每个分块只传一次，不先检查也不读回；WebDAV 只在缺文件夹时才建。服务器忙时会等一会儿（最多一分钟，状态栏会显示），不再直接停下；没收到回应的请求会重发。进度按已经完成的文件计。从 Textus 1.4.4 起，它保存的文档旧版本也会显示在「版本历史」插件里。
-- **0.6.1** - 第一次同步大文件夹时如果中途停下（取消、断网或被服务限速），下次从停下的地方接着传，不再逐个检查已经传过的文件；坚果云上能省下大部分请求。
-- **0.6.0** - 同步设置重新排列：同步选项放在最上面，选了就生效，不再需要保存按钮。**同步间隔**、**同步延迟**、**保留云端历史** 都改为选择器。文件改为几个同时上传下载：**同时传输** 设同时几个（S3 默认 8，WebDAV 4，坚果云 2），云端已有的分块不再重复检查。已连接的服务显示为一张卡片，账号部分隐藏，带 **测试连接**、**编辑**、**断开**；加密开关和密码并入连接设置。**测试连接** 保存前就能用，检查失败时会指出缺少哪种权限（写入、读取或删除）。
-- **0.5.3** - 所有服务一套规则：自动同步间隔可设 1 到 1440 分钟；新增 **保存后等待**，设保存后多久再同步（坚果云默认 3 分钟，S3 和 WebDAV 默认 0；WebDAV 不再固定等 30 秒）。
-- **0.5.2** - 不再自己限制请求次数：文件多的文件夹第一次同步坚果云时，不会再停在「已达到服务请求限制」。
-- **0.5.1** - 同步在写完历史记录、还没写入新状态时被中断，不会再在历史里留下从未同步过的版本。回收站和旧版本按存储服务器的时间过期，某台设备时钟不准也不会再删掉其他设备还要保留的内容。
-- **0.5.0** - 旧版本留在云端：在文件上右键 › **云端历史版本…** 查看并恢复，**插件 › 云端历史版本…** 找回删除的文件。**保留云端历史** 可选 30、90、365 天或永久，过期版本自动清理。端到端加密改为开关，新连接默认关闭，之前设置的连接保持加密。同时包含 0.4.7 的改动。需要 Textus 1.4.1。
-- **0.4.7** - 每次同步只重新读取大小或修改时间变了的文件，写作时同步大文件夹轻快得多。可以用自己的规则（写法同 `.gitignore`）排除更多文件，也可以让文件夹的 `.gitignore` 生效，还能同步 Obsidian 的共享设置。在另一台设备上改过的图片等附件，现在会直接替换这里的旧文件，不再两份并存。需要 Textus 1.4.1。
-- **0.4.6** - 所有语言的页面都已完整翻译，不再只有几行。面板较窄时，同步状态和连接提示保持可读宽度，按钮换到下一行。
-- **0.4.5** - 侧栏只保留同步状态和“立即同步”；侧栏里的“连接设置…”打开插件自己的页面，在那里设置连接。侧栏里的同步页不再单独显示标题，和侧栏其他标签一致。需要 Textus 1.3.13。 说明和空状态文字更简短。 侧边栏面板和页面按 Textus 1.3.13 的布局调整。
-- **0.4.4** - 侧栏新增“云同步”标签页：一眼看到同步状态——是否已连接、上次同步时间、出错原因、同步到哪个服务和远端目录——下面就是完整的连接设置；设置里显示的是同一页。服务改成下拉菜单选择；很长的名称、路径或错误信息在页面内换行，不再超出边界。
-- **0.4.3** - 工具栏、列表和各个控件都改用 Textus 自己的，随界面一起缩放，适配每个主题；需要 Textus 1.3.12。
-- **0.4.2** - 介绍页重写：一句话说明它做什么，再讲它能做的事，并列出每个版本的更新。
-- **0.4.1** - Obsidian 的数据库（`.base`）和白板（`.canvas`）也会同步。
-- **0.4.0** - 删除和重命名会同步到其他设备（在那边删除的文件进系统废纸篓）；自动同步在保存几秒后进行；状态栏显示同步状态；同步频率按 WebDAV 和坚果云的请求限制控制。
-- **0.3.1** - 坚果云：远端目录已存在时不再中断同步。
-- **0.3.0** - 第一个官方版本：通过 S3、WebDAV 或坚果云端到端加密同步，双方都改过的文件保留冲突副本。
+- **0.8.1** - A file over 128 MiB no longer stops the whole sync: it stays where it is on every device and is listed under the status. A conflict copy opens from the page with a click. Ready for phones, not offered there yet: a sync when a folder opens and when you come back to Textus, none in the background; settings that survive an iPhone update; a smaller largest file and fewer transfers at once; deleted files kept in "Sync trash/" where there is no system Trash.
+- **0.8.0** - Safer when a sync is cut short: a lock this device left (Textus closed or stopped mid-sync) is taken back by its next sync without asking; another device's lock still needs **Recover stale lock**. A sync that would delete many files from the cloud stops and asks first, and a folder where suddenly nothing is found is taken as unreadable, not emptied. A file the system Trash refuses no longer stops the whole sync: it stays in place and is tried again. The first sync after a restart reads only the files changed meanwhile, not the whole folder. Its page is in every language Textus speaks. Its pickers keep Textus's own height.
+- **0.7.0** - Faster syncs with fewer requests: with nothing changed, a sync asks the service once instead of 8 to 16 times; a changed file's blocks are sent in one request each, without checking first or reading them back; on WebDAV folders are made only when one is missing. A busy service is waited for (up to a minute, shown in the status) instead of stopping the sync, and requests that got no answer are sent again. The progress counts files that are done. From Textus 1.4.4 the versions it keeps of a document show in Version History too.
+- **0.6.1** - A big first sync that stops halfway (cancelled, offline, or slowed by the service) goes on where it stopped next time, instead of checking every file it already sent; on Nutstore that saves most of the requests.
+- **0.6.0** - Sync settings rearranged: sync options sit at the top and apply as you pick them, with no Save button. **Sync interval**, **Sync delay**, and **Keep cloud history** are pickers. Files now go up and down several at a time: **Transfers at once** sets how many (S3 8, WebDAV 4, Nutstore 2 to start), and blocks the cloud already holds are no longer checked again. A connected service shows as a card with the account masked and **Test connection**, **Edit** and **Disconnect**; the encryption switch and password are part of the connection. **Test connection** works before saving, and names the missing permission (write, read or delete) when a check fails.
+- **0.5.3** - One set of rules for every service: the automatic interval can be 1 to 1,440 minutes, and **After a save, wait** sets how long a sync waits after saving (Nutstore starts at 3 minutes, S3 and WebDAV at 0; WebDAV no longer waits 30 s).
+- **0.5.2** - The plugin no longer caps its own requests: a first Nutstore sync of a folder with many files no longer stops at "The service request limit was reached".
+- **0.5.1** - A sync interrupted after it wrote the history but before the new state no longer leaves versions in the history that were never synced. Trash and old versions age by the storage server's clock, so a device whose clock is wrong no longer drops what the others keep.
+- **0.5.0** - Older versions stay in the cloud: right-click a file › **Cloud History…** to read and restore one, and **Plugins › Cloud History…** brings back deleted files. **Keep cloud history** sets 30, 90 or 365 days, or always, and old versions are cleaned up by themselves. End-to-end encryption is now a switch, off for new connections; connections set up before keep it. Also brings 0.4.7's changes. Needs Textus 1.4.1.
+- **0.4.7** - A sync reads again only the files whose size or time changed since the last one, so syncing a big folder while you write takes far less work. Your own rules can leave out more files (written as in a `.gitignore`), the folder's `.gitignore` can count too, and Obsidian's shared settings can sync. A picture or other attachment changed on another device now replaces the one here instead of being kept twice. Needs Textus 1.4.1.
+- **0.4.6** - Every language now has the whole page translated, not just a few lines. In a narrow panel the status and the connection hint keep a readable width and the buttons move to their own line.
+- **0.4.5** - The sidebar keeps to the sync status and **Sync now**; **Connection settings…** there opens the plugin's own page, where the connection is set up. The sidebar page draws no title of its own, as the sidebar's other tabs. Needs Textus 1.3.13. Shorter help and empty-state text. Its sidebar panel and page follow Textus 1.3.13's layout.
+- **0.4.4** - A Cloud Sync tab in the sidebar shows at a glance how sync stands - connected or not, the last sync, any error, which service and remote folder - with the whole connection form below; Settings shows the same page. The service is picked from a dropdown, and a long name, path or error wraps inside the page.
+- **0.4.3** - Its bars, lists and controls are Textus's own, grow with the interface and follow every theme; needs Textus 1.3.12.
+- **0.4.2** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
+- **0.4.1** - Obsidian bases (`.base`) and canvases (`.canvas`) sync too.
+- **0.4.0** - Deletions and renames reach your other devices (deleted files go to the system Trash there); automatic sync runs a few seconds after you save; the status bar shows how sync stands; syncs are paced to stay within WebDAV and Nutstore request limits.
+- **0.3.1** - Nutstore: a remote folder that already exists no longer stops the sync.
+- **0.3.0** - First official version: end-to-end encrypted sync through S3, WebDAV or Nutstore, with conflict copies when both sides changed a file.

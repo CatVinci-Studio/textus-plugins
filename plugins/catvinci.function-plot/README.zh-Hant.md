@@ -22,18 +22,19 @@ x^2 / 4 - 1
 
 ## 權限
 
-只需要 **Textus AI 工具** 權限，讓 Textus AI 在寫入區塊前先檢查一次。它不讀取任何檔案，全部在本機繪製，桌面版和 iOS 都能使用。
+只需要 **Textus AI 工具** 權限，讓 Textus AI 在寫入區塊前先檢查一次。它不讀取任何檔案，全部在本機繪製。
 
 ## 更新紀錄
 
-- **0.3.3** - 區塊摺疊時（手機上）畫的圖，展開後會重新配合寬度，不再保持原本的大小。
-- **0.3.2** - tan(x) 這類陡峭曲線保持形狀，在漸近線處斷開；沒有可畫部分的函數會給出提示；可以寫 π 和 2xsin(x)；Textus AI 的檢查會依圍欄上的 x 範圍進行。
-- **0.3.1** - 介紹頁重寫：一句話說明它做什麼，再講它能做的事，並列出每個版本的更新。
-- **0.3.0** - 新增 Textus AI 工具 `check_function_plot`
-- **0.2.0** - 曲線和座標軸使用主題顏色，切換主題時重新繪製
-- **0.1.3** - 在 Textus 1.3 上文字使用主題顏色
-- **0.1.2** - -x^2 依 -(x^2) 計算；範圍端點為 0 時不再被忽略
-- **0.1.0-0.1.1** - 最初版本：把 x 的函數畫成圖，可設定高度和範圍，匯出時附上圖片
+- **0.3.4** - Its page no longer says which devices it runs on: the store shows that.
+- **0.3.3** - A chart drawn while its block was folded (a phone) fits once the block opens, instead of keeping its old size.
+- **0.3.2** - Steep curves like tan(x) keep their shape and break at asymptotes; a function with nothing to draw says so; π and 2xsin(x) are read; Textus AI's check uses the fence's x range.
+- **0.3.1** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
+- **0.3.0** - a tool for Textus AI, `check_function_plot`
+- **0.2.0** - curves and axes in the theme's colors, drawn again when the theme changes
+- **0.1.3** - text in the theme's colors on Textus 1.3
+- **0.1.2** - -x^2 reads as -(x^2), and a range that ends at 0 is kept
+- **0.1.0-0.1.1** - first versions: functions of x drawn as a picture, height and range settings, pictures in exports
 
 <!-- ai-tools -->
 ## Textus AI 工具

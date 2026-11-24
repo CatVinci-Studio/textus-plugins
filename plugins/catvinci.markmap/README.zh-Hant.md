@@ -9,7 +9,7 @@
 - 分支顏色跟著佈景主題，切換主題時會重新繪製。
 - 匯出 HTML、PDF、Word 時，心智圖會以圖片放進去，捲到看不見的心智圖也一樣。
 
-外掛以 [markmap](https://markmap.js.org) 繪製。它只要求一項權限：為 Textus AI 提供下方列出的 `check_markmap` 工具，讓它把區塊寫進文件前先檢查一遍。電腦、iPhone 和 iPad 上都能使用。
+外掛以 [markmap](https://markmap.js.org) 繪製。它只要求一項權限：為 Textus AI 提供下方列出的 `check_markmap` 工具，讓它把區塊寫進文件前先檢查一遍。
 
 ## 範例
 
@@ -25,17 +25,18 @@
 
 ## 更新紀錄
 
-- **0.3.7** - 安裝包內附上所帶第三方函式庫的清單和授權。
-- **0.3.6** - 筆記還沒排好版時畫出的導圖不再報錯。
-- **0.3.5** - 區塊摺疊時（手機上）畫的圖，展開後會重新配合寬度，不再保持原本的大小。
-- **0.3.4** - 長時間編輯心智圖，Textus 佔用的記憶體不再越來越多。
-- **0.3.3** - 在心智圖上捲動，現在捲動的是筆記；要縮放請用雙指或按住 Ctrl 捲動。心智圖會跟著佈景主題的字型和顏色（深色模式也一樣），開啟時完整顯示。
-- **0.3.2** - 介紹頁重寫：一句話說明它做什麼，再講它能做的事，並列出每個版本的更新。
-- **0.3.1** - 捲到看不見的心智圖，匯出時也是圖片，而不是原始碼。
-- **0.3.0** - Textus AI 寫 `markmap` 區塊前可以先檢查。
-- **0.2.0** - 分支顏色取自佈景主題的色調。需要 Textus 1.3.2。
-- **0.1.3** - 依 Textus 1.3 的新名稱讀取主題的內文文字顏色和註腳字級。
-- **0.1.0-0.1.2** - 最初的版本：在文件中繪製 `markmap` 區塊，支援 `height=`，匯出時依匯出的配色以圖片呈現。
+- **0.3.8** - The mind map fills its block: a small one grows (up to twice its size) to the block's width and the height you give it, and it follows the note's zoom instead of being cut off on the right. Its page no longer says which devices it runs on: the store shows that.
+- **0.3.7** - Its package lists the libraries it carries, with their licenses.
+- **0.3.6** - A mind map drawn before its note was laid out no longer shows an error.
+- **0.3.5** - A chart drawn while its block was folded (a phone) fits once the block opens, instead of keeping its old size.
+- **0.3.4** - Editing a mind map for a long time no longer makes Textus use more and more memory.
+- **0.3.3** - Scrolling over a mind map now scrolls the note; pinch or Ctrl-scroll to zoom. The map uses your theme's font and colors, in dark mode too, and opens fully fitted.
+- **0.3.2** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
+- **0.3.1** - A mind map scrolled out of sight exports as its picture instead of its source.
+- **0.3.0** - Textus AI can check a `markmap` block before it writes one.
+- **0.2.0** - Branch colors come from the theme's tones. Needs Textus 1.3.2.
+- **0.1.3** - Uses the theme's document text color and footnote size under their Textus 1.3 names.
+- **0.1.0-0.1.2** - First versions: `markmap` code blocks drawn in the document, `height=`, and exports as a picture in the export's colors.
 
 <!-- ai-tools -->
 ## Textus AI 工具

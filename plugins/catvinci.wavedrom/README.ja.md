@@ -23,20 +23,21 @@ WaveJSON からデジタルタイミング図とレジスタのフィールド�
 
 ## 権限
 
-求めるのは **Textus AI のツール** だけで、Textus AI がブロックを書く前に確認できるようにするためです。WaveDrom はプラグインに含まれています。ファイルは読まず、すべて端末の中で描きます。デスクトップと iOS で使えます。
+求めるのは **Textus AI のツール** だけで、Textus AI がブロックを書く前に確認できるようにするためです。WaveDrom はプラグインに含まれています。ファイルは読まず、すべて端末の中で描きます。
 
 ## 更新履歴
 
-- **0.3.5** - パッケージに、同梱しているライブラリとそのライセンスの一覧を添えました。
-- **0.3.4** - とても長い図はラベルが読める大きさまでしか縮まず、それ以上は横にスクロールします（スマートフォン）。
-- **0.3.3** - ダークモードでも読めます。線と文字はテーマの色になり、折りたたみ中に描いた図は開くと幅に合います。長い図は切れずに列の幅まで縮みます。
-- **0.3.2** - 図がテーマのフォントと線の色を使い、文書のズームに合わせて大きさが変わるようになりました。`height=` は図そのものの大きさを変えます。
-- **0.3.1** - 紹介ページを書き直しました。何をするかを一文で示し、できることと各バージョンの変更を載せています。
-- **0.3.0** - Textus AI のツール `check_wavedrom` を追加
-- **0.2.0** - テーマを変えると描き直すように（Textus 1.3.2 のチャートページ）
-- **0.1.3** - Textus 1.3 で文字にテーマの色を使うように
-- **0.1.2** - 書き出し時に書き出し先の配色で描くように
-- **0.1.0-0.1.1** - 最初のバージョン：WaveDrom で WaveJSON を描画、ダークスキン、高さの指定、書き出し時の画像
+- **0.3.6** - Its page no longer says which devices it runs on: the store shows that.
+- **0.3.5** - Its package lists the libraries it carries, with their licenses.
+- **0.3.4** - A very long diagram shrinks only as far as its labels stay readable, then scrolls sideways (a phone).
+- **0.3.3** - Readable in dark mode: the lines and text take the theme's colours on the page's own background; a diagram drawn while its block was folded fits once it opens. A long diagram shrinks to the column instead of being cut off.
+- **0.3.2** - Diagrams take the theme's font and line colour, grow with the document's zoom, and `height=` now resizes the diagram itself.
+- **0.3.1** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
+- **0.3.0** - a tool for Textus AI, `check_wavedrom`
+- **0.2.0** - drawn again when the theme changes, with the chart page of Textus 1.3.2
+- **0.1.3** - text in the theme's colors on Textus 1.3
+- **0.1.2** - exports carry the diagram in the export's colors
+- **0.1.0-0.1.1** - first versions: WaveJSON drawn with WaveDrom, dark skin, a height setting, pictures in exports
 
 <!-- ai-tools -->
 ## Textus AI のツール

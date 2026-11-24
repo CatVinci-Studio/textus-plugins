@@ -19,27 +19,28 @@
 
 ## 權限
 
-外掛需要讀寫開啟的資料夾裡的檔案，用來尋找和建立筆記；也需要讀取目前開啟的是哪份文件，才能找到前一天和後一天。它還為 Textus AI 提供兩項工具，請見下方。支援桌面版與 iPhone，需要 Textus 1.3.10 以上版本。
+外掛需要讀寫開啟的資料夾裡的檔案，用來尋找和建立筆記；也需要讀取目前開啟的是哪份文件，才能找到前一天和後一天。它還為 Textus AI 提供兩項工具，請見下方。需要 Textus 1.4.3 以上版本。
 
 ## 更新紀錄
 
-- **0.7.8** - 欄太窄、連縮寫月份都放不下時（例如手機側邊欄），月份改為單獨一行放在按鈕上方，不再把年份截掉。日曆改用 Textus 內建的日期格式，安裝包更小。
-- **0.7.7** - 每週的第一天改依 Textus 的語言，而非裝置地區，與週數一致。
-- **0.7.6** - 頁面語言由 Textus 自動跟隨。需要 Textus 1.4.3。
-- **0.7.5** - 日曆的月份標題從左邊開始，側邊欄窄時以省略號結尾，不再兩頭被截。
-- **0.7.4** - 在手機等較窄的面板裡，日曆改用月份的簡稱，不再把完整名稱截斷。
-- **0.7.3** - 不再接受 2 月 30 日這類不存在的日期；寬面板裡日曆維持合適寬度，資料夾設定變更後會立即重繪；每週和每月的設定只在開啟對應筆記時顯示。
-- **0.7.2** - 說明和空狀態文字更簡短。
+- **0.7.9** - Its page no longer says which devices it runs on: the store shows that. It names the Textus it needs, 1.4.3.
+- **0.7.8** - Where the bar is too narrow for even the short month name (a phone's sidebar), the month goes on a row of its own above the buttons instead of losing its year. The calendar writes dates with Textus's own, so the package is smaller.
+- **0.7.7** - Weeks start as Textus's language has them, not the device's region, so they agree with the week numbers.
+- **0.7.6** - The page follows Textus's language by itself. Needs Textus 1.4.3.
+- **0.7.5** - The Calendar's month title starts at the left and ends in an ellipsis in a narrow sidebar, instead of being cut at both ends.
+- **0.7.4** - In a narrow panel, such as on a phone, the calendar shows the month's short name instead of cutting the long one off.
+- **0.7.3** - Impossible dates such as February 30 are refused, the calendar stays a comfortable width in wide panels and redraws when folder settings change, and weekly and monthly settings show only when those notes are on.
+- **0.7.2** - Shorter help and empty-state text.
 - **0.7.1** - Its bars, lists and controls are Textus's own, grow with the interface and follow every theme; needs Textus 1.3.12.
-- **0.7.0** - 日期和範本改由 Textus 本身填入，與範本外掛的寫法一致；需要 Textus 1.3.10。
-- **0.6.0** - 每週和每月筆記：各有設定，日曆上可點選週數和月份名稱，也會依儲存庫中 Periodic Notes 的設定。
-- **0.5.0** - 沒有每日筆記設定的儲存庫把筆記放在最上層；`{{date}}`、`{{yesterday}}`、`{{tomorrow}}` 依筆記的命名格式寫出，也看得懂 `MMMM Do, YYYY`。
-- **0.4.0** - 依 Obsidian 儲存庫的每日筆記設定；開頭內容可以寫 Templates 資料夾裡的範本名稱；支援 `{{date:格式}}` 和 `{{title}}`。
-- **0.3.0** - Textus AI 可以讀取某天的筆記並加入內容。
-- **0.2.0** - 日曆改用 Textus 自己的控制項，介面語言切換時會跟著變；需要 Textus 1.3.2。
-- **0.1.3** - 採用 Textus 1.3 的顏色與字體。
-- **0.1.2** - 每週從哪天開始依地區而定；某天的筆記不會被覆寫。
-- **0.1.0-0.1.1** - 最初的版本：用快捷鍵開啟今天的筆記、日曆、前一天與後一天，範本中的 `{{weekday}}`、`{{yesterday}}`、`{{tomorrow}}` 和 `{{time}}`。
+- **0.7.0** - Dates and templates are filled in by Textus itself, the same way as in the Templates plugin; needs Textus 1.3.10.
+- **0.6.0** - Weekly and monthly notes, with their own settings, the calendar's week numbers and month name, and a vault's Periodic Notes settings.
+- **0.5.0** - A vault without daily notes settings keeps its notes at its top; `{{date}}`, `{{yesterday}}` and `{{tomorrow}}` follow the notes' name format, `MMMM Do, YYYY` included.
+- **0.4.0** - Follows an Obsidian vault's daily notes settings; the starting text can name a template in the Templates folder; `{{date:FORMAT}}` and `{{title}}`.
+- **0.3.0** - Textus AI can read a day's note and add to it.
+- **0.2.0** - The calendar uses Textus's own controls and follows the interface language when it changes; needs Textus 1.3.2.
+- **0.1.3** - Textus 1.3's colors and type.
+- **0.1.2** - Weeks start as your region has them; a day's note is never written over.
+- **0.1.0-0.1.1** - First versions: today's note with a shortcut, the calendar, the day before and after, `{{weekday}}`, `{{yesterday}}`, `{{tomorrow}}` and `{{time}}` in the template.
 
 <!-- ai-tools -->
 ## Textus AI 工具
@@ -47,5 +48,5 @@
 裝上這個外掛後，Textus AI 在對話中可以使用：
 
 - `read_daily_note`：讀取某一天的日記（預設今天）：從日記資料夾中給出它的路徑、是否存在以及全文。
-- `append_to_daily_note`：在某一天的日記（預設今天）末尾附加 Markdown 內容；如果還沒有這篇日記，先依範本新建。 想先放在側欄、之後再用的筆記用 add_note；帶日期的待辦用 add_task。
+- `append_to_daily_note`：在某一天的日記（預設今天）末尾附加 Markdown 內容；如果還沒有這篇日記，先依範本新建。 想先放在側邊欄、之後再用的筆記用 add_note；帶日期的待辦用 add_task。
 <!-- /ai-tools -->

@@ -22,18 +22,19 @@ x^2 / 4 - 1
 
 ## Autorisations
 
-Il ne demande que **Outils pour Textus AI**, pour que Textus AI puisse vérifier un bloc avant de l’écrire. Il ne lit aucun fichier et dessine tout sur votre appareil, sur ordinateur comme sur iOS.
+Il ne demande que **Outils pour Textus AI**, pour que Textus AI puisse vérifier un bloc avant de l’écrire. Il ne lit aucun fichier et dessine tout sur votre appareil.
 
 ## Changements
 
-- **0.3.3** - Un graphique dessiné quand son bloc était replié (sur téléphone) s'adapte à la largeur quand on l'ouvre.
-- **0.3.2** - Les courbes raides comme tan(x) gardent leur forme et s'interrompent aux asymptotes ; une fonction sans rien à tracer le dit ; π et 2xsin(x) sont lus ; la vérification de Textus AI suit la plage de x de la clôture.
-- **0.3.1** - Sa page dit maintenant en une phrase ce qu'il fait, ce qu'il permet et ce qui a changé à chaque version.
-- **0.3.0** - un outil pour Textus AI, `check_function_plot`
-- **0.2.0** - courbes et axes aux couleurs du thème, redessinés quand le thème change
-- **0.1.3** - le texte aux couleurs du thème sous Textus 1.3
-- **0.1.2** - -x^2 se lit -(x^2), et un intervalle qui se termine à 0 est respecté
-- **0.1.0-0.1.1** - premières versions : fonctions de x dessinées en image, hauteur et intervalle réglables, images à l’export
+- **0.3.4** - Its page no longer says which devices it runs on: the store shows that.
+- **0.3.3** - A chart drawn while its block was folded (a phone) fits once the block opens, instead of keeping its old size.
+- **0.3.2** - Steep curves like tan(x) keep their shape and break at asymptotes; a function with nothing to draw says so; π and 2xsin(x) are read; Textus AI's check uses the fence's x range.
+- **0.3.1** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
+- **0.3.0** - a tool for Textus AI, `check_function_plot`
+- **0.2.0** - curves and axes in the theme's colors, drawn again when the theme changes
+- **0.1.3** - text in the theme's colors on Textus 1.3
+- **0.1.2** - -x^2 reads as -(x^2), and a range that ends at 0 is kept
+- **0.1.0-0.1.1** - first versions: functions of x drawn as a picture, height and range settings, pictures in exports
 
 <!-- ai-tools -->
 ## Outils pour Textus AI

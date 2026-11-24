@@ -23,20 +23,21 @@
 
 ## Разрешения
 
-Плагин просит только **Инструменты для Textus AI**, чтобы Textus AI мог проверить блок, прежде чем его написать. WaveDrom входит в плагин: он не читает файлы и рисует всё на вашем устройстве — на компьютере и в iOS.
+Плагин просит только **Инструменты для Textus AI**, чтобы Textus AI мог проверить блок, прежде чем его написать. WaveDrom входит в плагин: он не читает файлы и рисует всё на вашем устройстве.
 
 ## Изменения
 
-- **0.3.5** - В пакет добавлен список входящих в него библиотек и их лицензий.
-- **0.3.4** - Очень длинная диаграмма уменьшается лишь до читаемого размера подписей, дальше прокручивается вбок (телефон).
-- **0.3.3** - Читается в тёмной теме: линии и текст в цветах темы; нарисованное в свёрнутом блоке подстраивается при открытии. Длинная диаграмма уменьшается по ширине колонки, а не обрезается.
-- **0.3.2** - Диаграммы берут шрифт и цвет линий из темы, растут вместе с масштабом документа, а `height=` теперь меняет размер самой диаграммы.
-- **0.3.1** - Его страница теперь одной фразой говорит, что он делает, что умеет и что менялось в каждой версии.
-- **0.3.0** - инструмент для Textus AI, `check_wavedrom`
-- **0.2.0** - перерисовка при смене темы, со страницей диаграмм из Textus 1.3.2
-- **0.1.3** - текст в цветах темы в Textus 1.3
-- **0.1.2** - при экспорте диаграмма рисуется в цветах экспорта
-- **0.1.0-0.1.1** - первые версии: WaveJSON рисуется через WaveDrom, тёмное оформление, настройка высоты, картинки при экспорте
+- **0.3.6** - Its page no longer says which devices it runs on: the store shows that.
+- **0.3.5** - Its package lists the libraries it carries, with their licenses.
+- **0.3.4** - A very long diagram shrinks only as far as its labels stay readable, then scrolls sideways (a phone).
+- **0.3.3** - Readable in dark mode: the lines and text take the theme's colours on the page's own background; a diagram drawn while its block was folded fits once it opens. A long diagram shrinks to the column instead of being cut off.
+- **0.3.2** - Diagrams take the theme's font and line colour, grow with the document's zoom, and `height=` now resizes the diagram itself.
+- **0.3.1** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
+- **0.3.0** - a tool for Textus AI, `check_wavedrom`
+- **0.2.0** - drawn again when the theme changes, with the chart page of Textus 1.3.2
+- **0.1.3** - text in the theme's colors on Textus 1.3
+- **0.1.2** - exports carry the diagram in the export's colors
+- **0.1.0-0.1.1** - first versions: WaveJSON drawn with WaveDrom, dark skin, a height setting, pictures in exports
 
 <!-- ai-tools -->
 ## Инструменты для Textus AI

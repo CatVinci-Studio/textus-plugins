@@ -4,7 +4,7 @@ Cite da sua biblioteca do Zotero enquanto escreve.
 
 ## Antes de começar
 
-O Zotero 7 ou mais recente (o Zotero 10 também) precisa estar aberto no mesmo computador, com **Configurações › Avançado › Permitir que outros aplicativos deste computador se comuniquem com o Zotero** ligado. O plugin só conversa com o Zotero do seu computador; nada sai dele. Funciona no computador.
+O Zotero 7 ou mais recente (o Zotero 10 também) precisa estar aberto no mesmo computador, com **Configurações › Avançado › Permitir que outros aplicativos deste computador se comuniquem com o Zotero** ligado. O plugin só conversa com o Zotero do seu computador; nada sai dele.
 
 ## Citar
 
@@ -41,17 +41,18 @@ A chave de citação vem do campo Citation Key do item (ou de uma linha `Citatio
 
 ## Alterações
 
-- **0.4.4** - Ordena os nomes com a ordem do próprio Textus em vez de uma cópia, então o pacote ficou menor. Requer o Textus 1.4.3.
-- **0.4.3** - Agora a citação substitui as palavras selecionadas; a lista de referências não diz mais que o Zotero está fora do ar quando ele responde, e a prévia ao passar o mouse aparece com mais confiabilidade.
-- **0.4.2** - Textos de ajuda e de estado vazio mais curtos.
-- **0.4.1** - Seu código foi dividido em arquivos menores conforme o que cada parte faz; nada muda no uso.
-- **0.4.0** - os modelos de notas de leitura são preenchidos pelo mecanismo de modelos do Textus; requer Textus 1.3.10
-- **0.3.0** - notas de leitura do Zotero, com modelo e os ajustes de um cofre do Obsidian; citações como `[[@citekey]]`
-- **0.2.1** - o atalho muda de Ctrl+Alt+C para Ctrl+Alt+R
-- **0.2.0** - uma ferramenta para o Textus AI, `search_library`
-- **0.1.3** - oferecido só para computador
-- **0.1.2** - funciona com a API local do Zotero 10; a lista de referências é substituída ao refazê-la, e código não é mais lido como citação
-- **0.1.0-0.1.1** - primeiras versões: citar com as obras recentes primeiro, cartões ao passar sobre uma citação, lista de referências, quatro formas de citar
+- **0.4.5** - Its page no longer says which devices it runs on: the store shows that.
+- **0.4.4** - Sorts names with Textus's own order instead of a copy of it, so the package is smaller. Needs Textus 1.4.3.
+- **0.4.3** - A citation now replaces the selected words; the References list no longer says Zotero is unreachable when it answers, and hover previews show up more reliably.
+- **0.4.2** - Shorter help and empty-state text.
+- **0.4.1** - Its code is split into smaller files by what each part does; nothing changes in use.
+- **0.4.0** - literature note templates are filled by Textus's own template engine; needs Textus 1.3.10
+- **0.3.0** - literature notes from Zotero, with a template and an Obsidian vault's settings; citations as `[[@citekey]]`
+- **0.2.1** - the shortcut moves from Ctrl+Alt+C to Ctrl+Alt+R
+- **0.2.0** - a tool for Textus AI, `search_library`
+- **0.1.3** - listed for the desktop only
+- **0.1.2** - works with Zotero 10's local API; the references list is replaced when made again, and code is never read for citations
+- **0.1.0-0.1.1** - first versions: citing with recent works first, hover cards for citations, the references list, four citation styles
 
 <!-- ai-tools -->
 ## Ferramentas para o Textus AI

@@ -117,6 +117,11 @@
    *  too - it zooms; otherwise it moves the canvas. */
   const wheelIntent = (event) => (event.ctrlKey || event.metaKey ? "zoom" : "pan");
 
+  /** How much a zooming wheel of `pixels` zooms: a pinch's step, which
+   *  Textus sends as 100 × ln(its ratio), by that ratio exactly; a mouse
+   *  wheel's big notch no more than 1.5×. */
+  const wheelZoom = (pixels) => Math.exp(-Math.max(-40, Math.min(40, pixels)) * 0.01);
+
   /** The middle of a node's side. */
   function anchor(n, side) {
     if (side === "top") return { x: n.x + n.width / 2, y: n.y };
@@ -311,6 +316,7 @@
     zoomAt: zoomAt,
     clampScale: clampScale,
     wheelIntent: wheelIntent,
+    wheelZoom: wheelZoom,
     anchor: anchor,
     facing: facing,
     edgePath: edgePath,

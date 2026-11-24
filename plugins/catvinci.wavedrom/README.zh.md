@@ -23,20 +23,21 @@
 
 ## 权限
 
-只需要 **Textus AI 工具** 权限，让 Textus AI 在写入代码块前先检查一遍。WaveDrom 随插件一起安装：它不读取任何文件，全部在本机绘制，桌面版和 iOS 都能用。
+只需要 **Textus AI 工具** 权限，让 Textus AI 在写入代码块前先检查一遍。WaveDrom 随插件一起安装：它不读取任何文件，全部在本机绘制。
 
 ## 更新日志
 
-- **0.3.5** - 安装包里附上所带第三方库的清单和许可。
-- **0.3.4** - 很长的图只缩小到标签还看得清，再长就左右滑动查看（手机上）。
-- **0.3.3** - 暗色模式下看得清：线条和文字用主题颜色，背景用页面本身的颜色；块折叠时画的图展开后会重新适配宽度。很长的图会缩小到栏宽，不再被截断。
-- **0.3.2** - 图改用主题的字体和线条颜色，随文档缩放变大变小；`height=` 现在会直接改变图本身的大小。
-- **0.3.1** - 介绍页重写：一句话说明它做什么，再讲它能做的事，并列出每个版本的更新。
-- **0.3.0** - 新增 Textus AI 工具 `check_wavedrom`
-- **0.2.0** - 切换主题时重新绘制，使用 Textus 1.3.2 的图表页面
-- **0.1.3** - 在 Textus 1.3 上文字使用主题颜色
-- **0.1.2** - 导出时按导出的配色画图
-- **0.1.0-0.1.1** - 最初版本：用 WaveDrom 画 WaveJSON，深色外观，可设置高度，导出时带上图片
+- **0.3.6** - Its page no longer says which devices it runs on: the store shows that.
+- **0.3.5** - Its package lists the libraries it carries, with their licenses.
+- **0.3.4** - A very long diagram shrinks only as far as its labels stay readable, then scrolls sideways (a phone).
+- **0.3.3** - Readable in dark mode: the lines and text take the theme's colours on the page's own background; a diagram drawn while its block was folded fits once it opens. A long diagram shrinks to the column instead of being cut off.
+- **0.3.2** - Diagrams take the theme's font and line colour, grow with the document's zoom, and `height=` now resizes the diagram itself.
+- **0.3.1** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
+- **0.3.0** - a tool for Textus AI, `check_wavedrom`
+- **0.2.0** - drawn again when the theme changes, with the chart page of Textus 1.3.2
+- **0.1.3** - text in the theme's colors on Textus 1.3
+- **0.1.2** - exports carry the diagram in the export's colors
+- **0.1.0-0.1.1** - first versions: WaveJSON drawn with WaveDrom, dark skin, a height setting, pictures in exports
 
 <!-- ai-tools -->
 ## Textus AI 工具

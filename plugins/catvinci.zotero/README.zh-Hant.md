@@ -4,7 +4,7 @@
 
 ## 準備
 
-同一台電腦上要開著 Zotero 7 或更新版本（Zotero 10 也可以），並在 Zotero 的 **設定 › 進階** 中開啟「允許此電腦上的其他應用程式與 Zotero 通訊」。外掛只和你電腦上的 Zotero 通訊，資料不會離開這台電腦。僅支援桌面版。
+同一台電腦上要開著 Zotero 7 或更新版本（Zotero 10 也可以），並在 Zotero 的 **設定 › 進階** 中開啟「允許此電腦上的其他應用程式與 Zotero 通訊」。外掛只和你電腦上的 Zotero 通訊，資料不會離開這台電腦。
 
 ## 插入引用
 
@@ -41,17 +41,18 @@
 
 ## 更新紀錄
 
-- **0.4.4** - 名稱排序改用 Textus 內建的順序，不再自帶一份，安裝包更小。需要 Textus 1.4.3。
-- **0.4.3** - 引用現在會取代選取的文字；Zotero 有回應時參考文獻列表不再顯示連不上，滑鼠停留時的預覽也更穩定。
-- **0.4.2** - 說明和空狀態文字更簡短。
-- **0.4.1** - 程式碼按職責拆成了幾個小檔案，使用上沒有變化。
-- **0.4.0** - 文獻筆記範本改由 Textus 內建的範本引擎填寫；需要 Textus 1.3.10
-- **0.3.0** - 從 Zotero 建立文獻筆記，支援範本和 Obsidian 儲存庫的設定；引用可以寫成 `[[@citekey]]`
-- **0.2.1** - 快速鍵從 Ctrl+Alt+C 改為 Ctrl+Alt+R
-- **0.2.0** - 新增 Textus AI 工具 `search_library`
-- **0.1.3** - 只在桌面版上架
-- **0.1.2** - 支援 Zotero 10 的本機介面；再次插入參考文獻列表時會取代原列表；不再把程式碼裡的內容當作引用
-- **0.1.0-0.1.1** - 最初版本：插入引用（最近引用的排在前面）、引用的懸停卡片、參考文獻列表、四種引用寫法
+- **0.4.5** - Its page no longer says which devices it runs on: the store shows that.
+- **0.4.4** - Sorts names with Textus's own order instead of a copy of it, so the package is smaller. Needs Textus 1.4.3.
+- **0.4.3** - A citation now replaces the selected words; the References list no longer says Zotero is unreachable when it answers, and hover previews show up more reliably.
+- **0.4.2** - Shorter help and empty-state text.
+- **0.4.1** - Its code is split into smaller files by what each part does; nothing changes in use.
+- **0.4.0** - literature note templates are filled by Textus's own template engine; needs Textus 1.3.10
+- **0.3.0** - literature notes from Zotero, with a template and an Obsidian vault's settings; citations as `[[@citekey]]`
+- **0.2.1** - the shortcut moves from Ctrl+Alt+C to Ctrl+Alt+R
+- **0.2.0** - a tool for Textus AI, `search_library`
+- **0.1.3** - listed for the desktop only
+- **0.1.2** - works with Zotero 10's local API; the references list is replaced when made again, and code is never read for citations
+- **0.1.0-0.1.1** - first versions: citing with recent works first, hover cards for citations, the references list, four citation styles
 
 <!-- ai-tools -->
 ## Textus AI 工具

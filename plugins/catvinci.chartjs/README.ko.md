@@ -11,7 +11,7 @@
 - 설정이 틀리면 블록 아래에 무엇이 틀렸는지 한 줄로 알려 줍니다.
 - HTML, PDF, Word로 내보내면 차트가 그림으로 들어갑니다.
 
-데스크톱과 iPhone에서 쓸 수 있고 Textus 1.3.2 이상이 필요합니다. 요청하는 권한은 Textus AI 도구 하나뿐이며, Textus AI가 `chartjs` 블록을 문서에 쓰기 전에 검사하는 데 씁니다.
+Textus 1.3.2 이상이 필요합니다. 요청하는 권한은 Textus AI 도구 하나뿐이며, Textus AI가 `chartjs` 블록을 문서에 쓰기 전에 검사하는 데 씁니다.
 
 ## 예시
 
@@ -27,15 +27,16 @@
 
 ## 변경 내역
 
-- **0.3.4** - 패키지에 포함된 라이브러리 목록과 라이선스를 함께 담았습니다.
-- **0.3.3** - 블록이 접혀 있을 때(휴대폰) 그린 그림이 펼치면 너비에 맞게 다시 그려집니다.
-- **0.3.2** - 패널 너비가 바뀌면 차트를 다시 그려 맞춥니다. 레이블은 테마 글꼴과 글자 크기를 따르고, 오류 줄은 다시 빨간색으로 표시됩니다.
-- **0.3.1** - 소개 페이지를 새로 썼습니다. 무엇을 하는지 한 문장으로, 할 수 있는 일과 버전별 변경 내역을 담았습니다.
-- **0.3.0** - Textus AI가 `chartjs` 블록을 쓰기 전에 검사할 수 있습니다(`check_chartjs`).
-- **0.2.0** - 계열이 테마의 색을 씁니다. Textus 1.3.2 필요.
-- **0.1.3** - Textus에서 이름이 바뀐 문서 색을 씁니다.
-- **0.1.2** - 입력하는 동안 차트가 항상 최신 내용을 보여 줍니다.
-- **0.1.0-0.1.1** - 첫 버전: 소스 아래에 그려지는 `chartjs` 블록, `height=`, 내보내기 시 그림. 스토어 페이지와 아이콘.
+- **0.3.5** - Its page no longer says which devices it runs on: the store shows that.
+- **0.3.4** - Its package lists the libraries it carries, with their licenses.
+- **0.3.3** - A chart drawn while its block was folded (a phone) fits once the block opens, instead of keeping its old size.
+- **0.3.2** - Charts redraw to fit a narrower or wider panel, labels follow the theme's font and text size, and the error line is red again.
+- **0.3.1** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
+- **0.3.0** - Textus AI can check a `chartjs` block before writing it (`check_chartjs`).
+- **0.2.0** - Series take the theme's colors; needs Textus 1.3.2.
+- **0.1.3** - Uses Textus's renamed document colors.
+- **0.1.2** - While you type, the chart always shows the latest text.
+- **0.1.0-0.1.1** - First versions: `chartjs` blocks drawn under their source, `height=`, pictures in exports; store page and icon.
 
 <!-- ai-tools -->
 ## Textus AI 도구

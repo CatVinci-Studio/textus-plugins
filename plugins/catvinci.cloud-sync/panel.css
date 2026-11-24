@@ -37,9 +37,6 @@ form + section,
 form + form {
   margin-top: var(--space-6);
 }
-.tx-group-title {
-  margin-top: 0;
-}
 /* A row's name, and a line under it when it needs one. */
 .row-text {
   display: flex;
@@ -48,41 +45,41 @@ form + form {
 }
 /* A long line under the name wraps beside the control, as the app's rows do,
    instead of pushing the control onto a line of its own. */
-.tx-row:not(.stack) > .row-text > .hint {
+.row-text > .hint {
   contain: inline-size;
   min-width: 18ch;
 }
-.tx-row > label,
 .row-text > label {
   color: var(--ui-text);
-  overflow-wrap: anywhere;
 }
 .tx-row > input:not([type="checkbox"]),
 .tx-row > .tx-select {
   flex: 0 1 50%;
+}
+.tx-row > input:not([type="checkbox"]) {
   min-height: var(--control-height);
 }
 .tx-row > input.number {
   flex: 0 0 6em;
   text-align: right;
 }
-.tx-row.start {
-  justify-content: flex-start;
-}
-/* A field too wide for the row's end (the rules left out): under its name. */
-.tx-row.stack {
-  flex-direction: column;
-  align-items: stretch;
-}
-.tx-row.stack > textarea {
+/* A field too wide for the row's end (the rules left out): under its name,
+   the row wrapping as it does. */
+#exclude {
+  flex: 1 1 100%;
   box-sizing: border-box;
-  width: 100%;
   resize: vertical;
   font-family: var(--font-mono);
 }
+/* A button on its own, at the start: under a title, not in a row. */
+.page-actions {
+  display: flex;
+  margin-bottom: var(--space-4);
+}
 #provider-pick,
 #keepDays-pick,
-#parallel-pick {
+#parallel-pick,
+#maxFileMiB-pick {
   justify-content: space-between;
 }
 #provider-name {
@@ -188,12 +185,17 @@ input[readonly] {
   font-size: var(--text-footnote);
   overflow-wrap: anywhere;
 }
+#results .tx-list {
+  margin-bottom: var(--space-2);
+}
+#results summary {
+  font-size: var(--text-footnote);
+  color: var(--ui-muted);
+}
+/* A phone: one field a line, under its name. */
 @media (max-width: 30em) {
   main {
     padding: var(--space-4) var(--space-3);
-  }
-  .tx-row {
-    flex-wrap: wrap;
   }
   .tx-row > input:not([type="checkbox"]),
   .tx-row > .tx-select {
@@ -243,7 +245,8 @@ body[data-place="sidebar"] .status-text {
 body[data-place="sidebar"] .actions {
   justify-content: center;
 }
-body[data-place="sidebar"]:not([data-ready="true"]) #sync {
+/* Nothing to sync before there is a connection: no Sync now, anywhere. */
+body:not([data-ready="true"]) #sync {
   display: none;
 }
 body[data-place="sidebar"] .sidebar-only {

@@ -6,6 +6,7 @@
 //   node scripts/check-bumps.mjs [base-ref]
 import { execFileSync } from "node:child_process";
 import { readFileSync, readdirSync } from "node:fs";
+import { sameButCatalogOnly } from "./catalog-only.mjs";
 
 const base = process.argv[2] || "origin/main";
 const git = (...args) =>
@@ -44,11 +45,27 @@ const moved = (from) => {
   const at = `node_modules/${packageOf(from)}`;
   return lockBefore[at]?.version !== lockNow[at]?.version;
 };
+const manifestAt = (ref, id) => {
+  try {
+    return git("show", `${ref}:plugins/${id}/textus-plugin.json`);
+  } catch {
+    return null;
+  }
+};
 const late = [];
 for (const id of readdirSync("plugins")) {
+  const manifest = `plugins/${id}/textus-plugin.json`;
+  // A manifest changed only in keys the catalog alone reads isn't a new package.
+  const catalogOnly = () => {
+    const before = manifestAt(base, id);
+    return before !== null && sameButCatalogOnly(before, readFileSync(manifest, "utf8"));
+  };
   const own = [...changed].some(
     // The README is packed with the plugin; its pictures aren't.
-    (f) => f.startsWith(`plugins/${id}/`) && !/\/screenshots\//.test(f),
+    (f) =>
+      f.startsWith(`plugins/${id}/`) &&
+      !/\/screenshots\//.test(f) &&
+      !(f === manifest && catalogOnly()),
   );
   const bundled = Object.entries(libs).some(
     ([target, from]) =>

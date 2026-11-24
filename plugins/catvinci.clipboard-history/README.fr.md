@@ -17,8 +17,9 @@ Seul ce que vous copiez dans vos documents est gardé, jamais ce que vous copiez
 
 ## Changements
 
-- **0.1.4** - Le champ de filtre et le message vide suivent la langue de Textus quand vous la changez. Nécessite Textus 1.4.3.
-- **0.1.3** - Chaque élément indique quand il a été copié, avec un trait entre les éléments.
-- **0.1.2** - Le bouton Effacer revient : un clic vide l’historique. Textes d'aide et d'état vide plus courts.
-- **0.1.1** - Sa page dit maintenant en une phrase ce qu'il fait, ce qu'il permet et ce qui a changé à chaque version.
-- **0.1.0** - Première version : les 30 dernières copies dans la barre latérale, insérées d’un clic, copiées de nouveau ou retirées d’un clic droit. Nécessite Textus 1.3.10.
+- **0.1.5** - Its page shows its list of changes in English in every language.
+- **0.1.4** - The filter field and empty message follow Textus's language when you switch it. Needs Textus 1.4.3.
+- **0.1.3** - Each clip shows when it was copied, with a line between clips.
+- **0.1.2** - The panel's Clear button is back: one click empties the history. Shorter help and empty-state text.
+- **0.1.1** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
+- **0.1.0** - First version: the last 30 copies in the sidebar, put in with a click, copied again or removed with a right-click. Needs Textus 1.3.10.

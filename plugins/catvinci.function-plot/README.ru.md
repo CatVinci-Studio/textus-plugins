@@ -22,18 +22,19 @@ x^2 / 4 - 1
 
 ## Разрешения
 
-Плагин просит только **Инструменты для Textus AI**, чтобы Textus AI мог проверить блок, прежде чем его написать. Он не читает файлы и рисует всё на вашем устройстве — на компьютере и в iOS.
+Плагин просит только **Инструменты для Textus AI**, чтобы Textus AI мог проверить блок, прежде чем его написать. Он не читает файлы и рисует всё на вашем устройстве.
 
 ## Изменения
 
-- **0.3.3** - График, нарисованный при свёрнутом блоке (на телефоне), подстраивается под ширину, когда блок открыт.
-- **0.3.2** - Крутые кривые вроде tan(x) сохраняют форму и разрываются на асимптотах; функция, которую нечего рисовать, сообщает об этом; понимает π и 2xsin(x); проверка Textus AI учитывает диапазон x из ограждения.
-- **0.3.1** - Его страница теперь одной фразой говорит, что он делает, что умеет и что менялось в каждой версии.
-- **0.3.0** - инструмент для Textus AI, `check_function_plot`
-- **0.2.0** - кривые и оси в цветах темы, перерисовка при смене темы
-- **0.1.3** - текст в цветах темы в Textus 1.3
-- **0.1.2** - -x^2 читается как -(x^2), диапазон с концом в 0 сохраняется
-- **0.1.0-0.1.1** - первые версии: функции от x рисуются картинкой, высота и диапазон настраиваются, картинки при экспорте
+- **0.3.4** - Its page no longer says which devices it runs on: the store shows that.
+- **0.3.3** - A chart drawn while its block was folded (a phone) fits once the block opens, instead of keeping its old size.
+- **0.3.2** - Steep curves like tan(x) keep their shape and break at asymptotes; a function with nothing to draw says so; π and 2xsin(x) are read; Textus AI's check uses the fence's x range.
+- **0.3.1** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
+- **0.3.0** - a tool for Textus AI, `check_function_plot`
+- **0.2.0** - curves and axes in the theme's colors, drawn again when the theme changes
+- **0.1.3** - text in the theme's colors on Textus 1.3
+- **0.1.2** - -x^2 reads as -(x^2), and a range that ends at 0 is kept
+- **0.1.0-0.1.1** - first versions: functions of x drawn as a picture, height and range settings, pictures in exports
 
 <!-- ai-tools -->
 ## Инструменты для Textus AI

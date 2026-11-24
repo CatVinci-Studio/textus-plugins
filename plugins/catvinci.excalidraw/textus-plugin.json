@@ -1,7 +1,7 @@
 {
   "id": "catvinci.excalidraw",
   "name": "%name%",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "publisher": "catvinci",
   "author": "CatVinci Studio",
   "description": "%description%",
@@ -15,6 +15,7 @@
     "desktop",
     "ios"
   ],
+  "category": "files",
   "main": [
     "lib/lz-string.js",
     "lib/folder-paths.js",

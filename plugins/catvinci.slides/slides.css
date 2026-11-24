@@ -15,15 +15,30 @@ body {
 }
 #bar {
   flex: none;
+  /* One row: short of room, Save HTML goes into the ⋯ menu. */
+  flex-wrap: nowrap;
   min-height: var(--bar-height);
   padding: 0 var(--space-3);
   border-bottom: 1px solid var(--ui-border);
   background: var(--ui-bg);
 }
+#bar > * {
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+#more,
+#bar[data-fit="compact"] #export {
+  display: none;
+}
+#bar[data-fit="compact"] #more {
+  display: inline-flex;
+}
 #stage {
   flex: 1;
   min-height: 0;
   padding: var(--space-4);
+  /* A sideways swipe is the page's, to move between slides. */
+  touch-action: pan-y pinch-zoom;
 }
 #stage div.marpit {
   display: grid;
@@ -54,4 +69,15 @@ body {
 .presenting #stage div.marpit > svg {
   border-radius: 0;
   box-shadow: none;
+}
+/* A way out without a keyboard, shown for a while after a touch or a move. */
+#exit {
+  position: fixed;
+  top: var(--space-3);
+  right: var(--space-3);
+  display: none;
+}
+:fullscreen.controls #exit,
+.presenting.controls #exit {
+  display: inline-flex;
 }

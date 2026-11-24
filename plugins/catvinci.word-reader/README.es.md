@@ -9,19 +9,20 @@ Lee documentos de Word (.docx) en una pestaña, con el mismo diseño que en Word
 - **Editar como Markdown** pasa el archivo a Textus, que lo convierte en un documento Markdown en el que puedes escribir.
 - Si un archivo no se puede leer, la pestaña lo dice.
 
-El plugin no pide permisos: solo lee el archivo que abres con él. Funciona en el escritorio y en iPhone y iPad.
+El plugin no pide permisos: solo lee el archivo que abres con él.
 
 ## Cambios
 
-- **0.2.8** - El paquete incluye la lista de bibliotecas que lleva, con sus licencias.
-- **0.2.7** - La página sigue el idioma de Textus por sí sola. Requiere Textus 1.4.3.
-- **0.2.6** - Los botones y teclas de zoom avanzan de 1,25× en 1,25×, como en los demás visores.
-- **0.2.5** - El botón de cerrar de la barra de búsqueda tiene nombre para lectores de pantalla y muestra una descripción.
-- **0.2.4** - Se abre ajustado al ancho de la pestaña; pellizcar o Ctrl+rueda (⌘ en Mac) amplía las páginas; una página más ancha que la pestaña se desplaza hasta ambos bordes; las barras se ajustan en una pestaña estrecha y el zoom se conserva al cambiar de idioma.
-- **0.2.3** - Su barra sigue el orden de Textus: lo que muestra, luego buscar y zoom.
-- **0.2.2** - Sus barras, listas y controles son ahora los de Textus, crecen con la interfaz y siguen cada tema; necesita Textus 1.3.12.
-- **0.2.1** - Su página dice ahora en una frase qué hace, qué puede hacer y qué cambió en cada versión.
-- **0.2.0** - Usa los controles propios de Textus y los tonos del tema; la pestaña sigue el idioma de la interfaz cuando cambia. Requiere Textus 1.3.2.
-- **0.1.3** - Usa las variables de diseño de Textus 1.3.
-- **0.1.2** - Un archivo que no se puede leer lo dice; la búsqueda se salta los estilos del documento.
-- **0.1.0-0.1.1** - Primeras versiones: archivos .docx en una pestaña con el diseño de Word, la página actual, búsqueda, zoom y Editar como Markdown.
+- **0.2.9** - Its page no longer says which devices it runs on: the store shows that. After switching to another tab and back, a document is where you were reading. Find opens in the toolbar, as in PDF Viewer, and the search button closes it again; in a narrow tab Edit as Markdown goes into the ⋯ menu instead of dropping to a second row.
+- **0.2.8** - Its package lists the libraries it carries, with their licenses.
+- **0.2.7** - The page follows Textus's language by itself. Needs Textus 1.4.3.
+- **0.2.6** - Zoom buttons and keys step by 1.25×, as the other viewers do.
+- **0.2.5** - The find bar's close button is named for screen readers and shows a tooltip.
+- **0.2.4** - Opens fitted to the tab's width; a pinch or Ctrl+wheel (⌘ on a Mac) zooms the pages; a page wider than the tab scrolls to both edges; the bars wrap in a narrow tab and the zoom is kept when the language changes.
+- **0.2.3** - Its bar keeps Textus's one order: what it shows, then find and zoom.
+- **0.2.2** - Its bars, lists and controls are Textus's own, grow with the interface and follow every theme; needs Textus 1.3.12.
+- **0.2.1** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
+- **0.2.0** - Drawn with Textus's own controls and theme tones; the tab follows the interface language when it changes. Needs Textus 1.3.2.
+- **0.1.3** - Uses Textus 1.3's design variables.
+- **0.1.2** - A file that can't be read says so; find skips the document's styles.
+- **0.1.0-0.1.1** - First versions: .docx files in a tab as Word lays them out, the page you are on, find, zoom and Edit as Markdown.

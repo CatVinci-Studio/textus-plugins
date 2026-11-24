@@ -15,8 +15,6 @@ Ouvre des pages web dans un onglet à côté de vos notes, pour les lire sans qu
 - **⌃** replie la barre ; la petite poignée la ramène.
 - **↗** ouvre la page dans votre navigateur, **↻** la recharge.
 
-Fonctionne sur ordinateur.
-
 ## Autorisations
 
 - Réseau, toute adresse : pour charger les pages web que vous ouvrez.
@@ -24,8 +22,9 @@ Fonctionne sur ordinateur.
 
 ## Changements
 
-- **0.2.2** - Textes d'aide et d'état vide plus courts.
-- **0.2.1** - Sa page dit maintenant en une phrase ce qu'il fait, ce qu'il permet et ce qui a changé à chaque version.
-- **0.2.0** - Les liens web cliqués avec Ctrl/⌘ s’ouvrent dans un onglet seulement si vous l’activez dans les réglages ; sinon, dans votre navigateur.
-- **0.1.2** - Ordinateur seulement.
-- **0.1.0-0.1.1** - Premières versions : une adresse ou une recherche dans un onglet, pages récentes, sélection ouverte ou recherchée, liens cliqués avec Ctrl/⌘, choix du moteur de recherche.
+- **0.2.3** - Its page no longer says which devices it runs on: the store shows that.
+- **0.2.2** - Shorter help and empty-state text.
+- **0.2.1** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
+- **0.2.0** - Ctrl/Cmd+clicked web links open in a tab only when you turn that on in the settings; otherwise they open in your browser.
+- **0.1.2** - Desktop only.
+- **0.1.0-0.1.1** - First versions: an address or a search in a tab, recent pages, the selection opened or searched, Ctrl/Cmd+clicked links, a choice of search engine.

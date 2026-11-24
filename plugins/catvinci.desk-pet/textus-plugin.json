@@ -1,7 +1,7 @@
 {
   "id": "catvinci.desk-pet",
   "name": "%name%",
-  "version": "0.1.9",
+  "version": "0.1.10",
   "publisher": "catvinci",
   "author": "CatVinci Studio",
   "description": "%description%",
@@ -15,6 +15,7 @@
     "desktop",
     "ios"
   ],
+  "category": "companions",
   "main": [
     "host.js"
   ],
@@ -135,7 +136,7 @@
   "l10n": {
     "en": {
       "name": "Desk Pet",
-      "description": "A chibi companion that floats on your desktop or in the window while you write: Moyu, or the LLM-chan of the model Textus AI is using. She writes when you type, dozes when you stop, cheers when you save and leans in when Textus AI is at work.",
+      "description": "A chibi companion that floats on your desktop or in the window while you write. She writes when you type, dozes when you stop and cheers when you save. She is Moyu, or the LLM-chan of the model Textus AI is using, who leans in when Textus AI is at work.",
       "toggle": "Show or Hide the Desk Pet",
       "pet": "Desk Pet",
       "character": "Who keeps you company",
@@ -159,7 +160,7 @@
     },
     "zh": {
       "name": "桌宠",
-      "description": "写作时陪着你的 Q 版小伙伴，浮在桌面上或窗口里：墨羽，或者 Textus AI 正在用的模型对应的大模型娘。你打字她写字，停下她打盹，保存时开心，Textus AI 干活时她凑过来看。",
+      "description": "写作时陪着你的 Q 版小伙伴，浮在桌面上或窗口里。你打字她写字，停下她打盹，保存时她开心。她是墨羽，或者 Textus AI 正在用的模型对应的大模型娘，Textus AI 干活时她会凑过来看。",
       "toggle": "显示或隐藏桌宠",
       "pet": "桌宠",
       "character": "陪你的是",
@@ -183,7 +184,7 @@
     },
     "zh-Hant": {
       "name": "桌寵",
-      "description": "寫作時陪著你的 Q 版小夥伴，浮在桌面上或視窗裡：墨羽，或 Textus AI 正在用的模型對應的大模型娘。你打字她寫字，停下她打盹，儲存時開心，Textus AI 工作時她湊過來看。",
+      "description": "寫作時陪著你的 Q 版小夥伴，浮在桌面上或視窗裡。你打字她寫字，停下她打盹，儲存時她開心。她是墨羽，或 Textus AI 正在用的模型對應的大模型娘，Textus AI 工作時她會湊過來看。",
       "toggle": "顯示或隱藏桌寵",
       "pet": "桌寵",
       "character": "陪你的是",
@@ -207,7 +208,7 @@
     },
     "ja": {
       "name": "デスクペット",
-      "description": "書いているあいだ、デスクトップやウインドウに浮かぶちびキャラの相棒：墨羽、または Textus AI が使っているモデルの LLM ちゃん。入力すると書き、手を止めるとうたた寝し、保存すると喜び、Textus AI が働くとのぞき込みます。",
+      "description": "書いているあいだ、デスクトップやウインドウに浮かぶちびキャラの相棒。入力すると書き、手を止めるとうたた寝し、保存すると喜びます。墨羽、または Textus AI が使っているモデルの LLM ちゃんで、Textus AI が働くとのぞき込みます。",
       "toggle": "デスクペットを表示/非表示",
       "pet": "デスクペット",
       "character": "そばにいるのは",
@@ -231,7 +232,7 @@
     },
     "ko": {
       "name": "데스크 펫",
-      "description": "글을 쓰는 동안 바탕화면이나 창에 떠 있는 치비 친구: Moyu(墨羽), 또는 Textus AI가 쓰는 모델의 LLM 짱. 타이핑하면 글을 쓰고, 멈추면 졸고, 저장하면 기뻐하고, Textus AI가 일하면 다가와 봅니다.",
+      "description": "글을 쓰는 동안 바탕화면이나 창에 떠 있는 치비 친구. 타이핑하면 글을 쓰고, 멈추면 졸고, 저장하면 기뻐합니다. Moyu(墨羽), 또는 Textus AI가 쓰는 모델의 LLM 짱이며, Textus AI가 일하면 다가와 봅니다.",
       "toggle": "데스크 펫 보이기/숨기기",
       "pet": "데스크 펫",
       "character": "곁에 있는 친구",
@@ -255,7 +256,7 @@
     },
     "de": {
       "name": "Schreibtisch-Pet",
-      "description": "Ein Chibi-Begleiter, der beim Schreiben auf dem Schreibtisch oder im Fenster schwebt: Moyu oder das LLM-chan des Modells, das Textus AI gerade nutzt. Sie schreibt, wenn du tippst, döst, wenn du aufhörst, freut sich beim Speichern und schaut zu, wenn Textus AI arbeitet.",
+      "description": "Ein Chibi-Begleiter, der beim Schreiben auf dem Schreibtisch oder im Fenster schwebt. Sie schreibt, wenn du tippst, döst, wenn du aufhörst, und freut sich beim Speichern. Sie ist Moyu oder das LLM-chan des Modells, das Textus AI gerade nutzt, und schaut zu, wenn Textus AI arbeitet.",
       "toggle": "Schreibtisch-Pet ein- oder ausblenden",
       "pet": "Schreibtisch-Pet",
       "character": "Wer dir Gesellschaft leistet",
@@ -279,7 +280,7 @@
     },
     "fr": {
       "name": "Compagnon de bureau",
-      "description": "Un compagnon chibi qui flotte sur le bureau ou dans la fenêtre pendant que vous écrivez : Moyu, ou la LLM-chan du modèle qu'utilise Textus AI. Elle écrit quand vous tapez, somnole quand vous vous arrêtez, se réjouit quand vous enregistrez et se penche quand Textus AI travaille.",
+      "description": "Un compagnon chibi qui flotte sur le bureau ou dans la fenêtre pendant que vous écrivez. Elle écrit quand vous tapez, somnole quand vous vous arrêtez et se réjouit quand vous enregistrez. C’est Moyu, ou la LLM-chan du modèle qu’utilise Textus AI, qui se penche quand Textus AI travaille.",
       "toggle": "Afficher ou masquer le compagnon",
       "pet": "Compagnon de bureau",
       "character": "Qui vous tient compagnie",
@@ -303,7 +304,7 @@
     },
     "es": {
       "name": "Mascota de escritorio",
-      "description": "Una compañera chibi que flota en el escritorio o en la ventana mientras escribes: Moyu, o la LLM-chan del modelo que usa Textus AI. Escribe cuando tecleas, dormita cuando paras, se alegra cuando guardas y se asoma cuando Textus AI trabaja.",
+      "description": "Una compañera chibi que flota en el escritorio o en la ventana mientras escribes. Escribe cuando tecleas, dormita cuando paras y se alegra cuando guardas. Es Moyu, o la LLM-chan del modelo que usa Textus AI, que se asoma cuando Textus AI trabaja.",
       "toggle": "Mostrar u ocultar la mascota",
       "pet": "Mascota de escritorio",
       "character": "Quién te acompaña",
@@ -327,7 +328,7 @@
     },
     "pt": {
       "name": "Mascote de mesa",
-      "description": "Uma companheira chibi que flutua na área de trabalho ou na janela enquanto você escreve: Moyu, ou a LLM-chan do modelo que o Textus AI está usando. Ela escreve quando você digita, cochila quando você para, comemora quando você salva e se aproxima quando o Textus AI trabalha.",
+      "description": "Uma companheira chibi que flutua na área de trabalho ou na janela enquanto você escreve. Ela escreve quando você digita, cochila quando você para e comemora quando você salva. É a Moyu, ou a LLM-chan do modelo que o Textus AI está usando, que se aproxima quando o Textus AI trabalha.",
       "toggle": "Mostrar ou ocultar a mascote",
       "pet": "Mascote de mesa",
       "character": "Quem faz companhia",
@@ -351,7 +352,7 @@
     },
     "ru": {
       "name": "Настольный питомец",
-      "description": "Чиби-спутница, которая парит на рабочем столе или в окне, пока вы пишете: Мою или LLM-тян модели, которой пользуется Textus AI. Пишет, когда вы печатаете, дремлет, когда останавливаетесь, радуется сохранению и заглядывает, когда работает Textus AI.",
+      "description": "Чиби-спутница, которая парит на рабочем столе или в окне, пока вы пишете. Пишет, когда вы печатаете, дремлет, когда останавливаетесь, и радуется сохранению. Это Мою или LLM-тян модели, которой пользуется Textus AI; она заглядывает, когда Textus AI работает.",
       "toggle": "Показать или скрыть питомца",
       "pet": "Настольный питомец",
       "character": "Кто составит компанию",

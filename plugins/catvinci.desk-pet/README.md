@@ -7,7 +7,7 @@ Turn her on or off with **Plugins › Show or Hide the Desk Pet**, or from the c
 - **Who:** Moyu, Textus's own cat girl. While Textus AI works and its panel is open, the LLM-chan of the model it uses visits: Claude-chan, GPT-chan, Gemini-chan, DeepSeek-chan, Kimi-chan, Qwen-chan, Doubao-chan, GLM-chan, MiniMax-chan, Grok-chan or ERNIE-chan. The guest stays about a minute and a half after Textus AI is done, and goes home when the AI panel closes. To keep one character, pick her in the plugin's settings or with **Switch Character…** on her right-click menu.
 - **Where:** first inside Textus's window. Drag her anywhere; right-click her to switch characters, put her on your desktop (above every window), fold her to a dot or close her. On the desktop her menu also opens Textus or Textus AI. She opens where you left her and, on either side, turns to face the middle.
 - **What she does:** writes while you type, daydreams and then dozes when you stop, is pleased when you save, leans in when Textus AI is at work, sleeps while Textus is in the background. Click her and she answers; click a few times to pet her; carry her off and she's startled. She says hello once a day, welcomes you back after a long break, cheers you on after a long stretch of writing and then asks you to rest, reminds you to sleep late at night, and tells you when Textus AI has edits for you to review.
-- **What she says:** each character speaks in her own voice, with a few lines to pick from for each moment, in all 10 of Textus's languages (`lines/`).
+- **What she says:** each character speaks in her own voice, with a few lines to pick from for each moment, in every language Textus speaks (`lines/`).
 
 ## Settings
 
@@ -23,6 +23,7 @@ Moyu is CatVinci Studio's own character. The LLM-chan are the community's person
 
 ## Changes
 
+- **0.1.10** - Its page is in every language Textus speaks. Its description begins with what she does, and no longer counts the characters or languages.
 - **0.1.9** - Code kept for Textus versions it no longer runs on is gone.
 - **0.1.8** - What she says sits above her, two lines at most, and never covers her face.
 - **0.1.7** - A visiting LLM-chan keeps her pose and greeting when a new page opens, and stays still while Textus is in the background. Her hop is gentler, and the bubble's tail points at her middle.
@@ -32,4 +33,4 @@ Moyu is CatVinci Studio's own character. The LLM-chan are the community's person
 - **0.1.3** - The model's LLM-chan visits only while the Textus AI panel is open, and goes home when it closes.
 - **0.1.2** - Every character redrawn; she sits at either side and turns to face the middle.
 - **0.1.1** - Moyu speaks for herself when Textus AI works ("I'm here to help"), and cheers on fluent writing.
-- **0.1.0** - First version: Moyu and eleven LLM-chan in a floating view, in the window or on the desktop, with lines in 10 languages.
+- **0.1.0** - First version: Moyu and the LLM-chan in a floating view, in the window or on the desktop, with lines in every language Textus speaks.

@@ -15,16 +15,17 @@
 
 ## 権限
 
-権限は求めません。開いたファイルだけを読みます。デスクトップと iOS で使えます。
+権限は求めません。開いたファイルだけを読みます。
 
 ## 更新履歴
 
-- **0.2.5** - ページの言語は Textus に自動で合わせます。Textus 1.4.3 が必要です。
-- **0.2.4** - 回転して拡大した画像も端までスクロールでき、横向きの画像はウインドウに収まります。パネルを動かしても拡大率と向きはそのまま、4 回目の回転で逆回りしなくなり、狭いパネルでもバーが収まります。
-- **0.2.3** - トラックパッドのピンチでジェスチャーに合わせてなめらかに拡大縮小します。Textus 1.3.13 では Mac のピンチで後ろの文書ではなく画像が拡大縮小されます。 バーは Textus 共通の並び：表示中の情報、次に検索とズーム。
-- **0.2.2** - ツールバー、リスト、各コントロールを Textus 自身のものにしました。画面の拡大に合わせて大きくなり、どのテーマにも合います。Textus 1.3.12 が必要です。
-- **0.2.1** - 紹介ページを書き直しました。何をするかを一文で示し、できることと各バージョンの変更を載せています。
-- **0.2.0** - Textus のボタンとタブのバーを使うように。表示言語を変えるとラベルも切り替わるように
-- **0.1.3** - Textus 1.3 のテーマの色を使うように
-- **0.1.2** - パーセント表示でウインドウに合わせる表示と実際のサイズを切り替えるように
-- **0.1.0-0.1.1** - 最初のバージョン：拡大縮小、ウインドウに合わせる表示、ドラッグ、回転、キー操作、SVG のソース、開けないファイルの表示
+- **0.2.6** - Its page no longer says which devices it runs on: the store shows that. After switching to another tab and back, a picture keeps where it was scrolled as well as its zoom.
+- **0.2.5** - The page follows Textus's language by itself. Needs Textus 1.4.3.
+- **0.2.4** - A turned and zoomed picture now scrolls to every edge, and a sideways picture fits the window. Zoom and turn are kept when the panel moves, a fourth turn no longer spins back, and the bar fits a narrow panel.
+- **0.2.3** - A trackpad pinch zooms smoothly, in step with the gesture; with Textus 1.3.13 a pinch on a Mac zooms the picture, not the document behind it. Its bar keeps Textus's one order: what it shows, then find and zoom.
+- **0.2.2** - Its bars, lists and controls are Textus's own, grow with the interface and follow every theme; needs Textus 1.3.12.
+- **0.2.1** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
+- **0.2.0** - Textus's own buttons and tab bar; labels follow the interface language when it changes
+- **0.1.3** - colors from Textus 1.3's themes
+- **0.1.2** - the percentage switches between fit and actual size
+- **0.1.0-0.1.1** - first versions: zoom, fit, drag, rotate, keys, an SVG's source, and a message for a file that can't be opened

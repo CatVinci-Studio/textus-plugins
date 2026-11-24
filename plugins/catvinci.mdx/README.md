@@ -25,10 +25,9 @@ Find these in the Plugins menu, or right-click in an `.mdx` document.
 - **Read and write files**: to check an .mdx file Textus AI names, and to save the converted copy beside the document.
 - **Tools for Textus AI**: so Textus AI can check MDX it writes.
 
-It runs on the desktop and on iOS.
-
 ## Changes
 
+- **0.1.3** - Its page is in every language Textus speaks.
 - **0.1.2** - Its package lists the libraries it carries, with their licenses.
 - **0.1.1** - Preview MDX on a phone, where the preview shows alone, draws the document it was opened from instead of an empty page.
 - **0.1.0** - First version: problems underlined by MDX's compiler, Preview MDX, Save as Markdown and Save as MDX, and check_mdx for Textus AI.

@@ -5,7 +5,7 @@
 ## 做幻灯片
 
 - 每个 `---` 开始新的一页。
-- **插件 › 以幻灯片放映** 在文档旁边的标签页里显示幻灯片，随写作实时更新。← →（或 ↑ ↓、Page Up、Page Down）和空格键翻页；**全屏**（或按 F）开始放映。
+- **插件 › 以幻灯片放映** 在文档旁边的标签页里显示幻灯片，随写作实时更新。← →（或 ↑ ↓、Page Up、Page Down）和空格键翻页；**全屏**（或按 F）开始放映。放映时，点画面左边三分之一回到上一页，点其他地方到下一页，左右滑动也能翻页；碰一下画面或移动鼠标会出现 **退出放映**，也可以按 Esc。
 - 用 Marp 的指令选择主题和版式，例如写在文档开头：
 
 ```markdown
@@ -29,24 +29,23 @@ paginate: true
 - **读写文件**：找到要显示的图片，并在文档旁边保存 HTML 幻灯片。
 - **Textus AI 工具**：让 Textus AI 能帮你保存幻灯片。
 
-桌面版和 iOS 都能用。
-
 ## 更新日志
 
-- **0.3.11** - 安装包里附上所带第三方库的清单和许可。
-- **0.3.10** - 删掉了为已经不支持的旧版 Textus 留的代码。从 Textus 1.4.4 起，也可以在「文件 › 导出」里选「幻灯片（HTML）」。
-- **0.3.9** - 页面语言由 Textus 自动跟随。需要 Textus 1.4.3。
-- **0.3.8** - 手机上「以幻灯片放映」也能画出幻灯片（那里它的标签单独在前面）。
-- **0.3.7** - 从 Textus 1.4.2 起，公式在标签页和导出的 HTML 里都用 KaTeX 自带字体；更早的版本仍用系统字体。
-- **0.3.6** - 幻灯片不再需要联网：表情符号直接显示为文字，不再从 CDN 加载图片；公式使用系统字体；Gaia 主题不再加载网络字体。标签页和另存的 HTML 文件都是如此。
-- **0.3.5** - 图片多的幻灯片写起来更轻快：只有文字变了才重新生成，不再显示的图片会释放。
-- **0.3.4** - 标签页里的全屏可以用了（窗口不能全屏时就在标签页里放映）；只有打开幻灯片标签页时才渲染；快捷键不再拦截 Cmd/Ctrl/Alt 组合键。
-- **0.3.3** - 工具栏、列表和各个控件都改用 Textus 自己的，随界面一起缩放，适配每个主题；需要 Textus 1.3.12。
-- **0.3.2** - 介绍页重写：一句话说明它做什么，再讲它能做的事，并列出每个版本的更新。
-- **0.3.1** - 幻灯片里显示图片，包括带宽度的 Obsidian `![[图片]]` 嵌入
-- **0.3.0** - 新增 Textus AI 工具 `export_slides`
-- **0.2.0** - 各种语言下都叫 Marp；使用 Textus 自己的按钮和颜色；切换界面语言时文字跟着变
-- **0.1.0-0.1.1** - 最初版本：文档旁实时更新的幻灯片、全屏放映、可自行放映的 HTML 文件
+- **0.3.12** - Presenting on a phone or tablet: tap or swipe to move between slides, and Exit to stop - no keyboard needed. A click moves on in full screen too, as in a saved deck. In a narrow tab, Save HTML goes into the ⋯ menu instead of pushing Full Screen onto a second row. Its page is in every language Textus speaks.
+- **0.3.11** - Its package lists the libraries it carries, with their licenses.
+- **0.3.10** - Code kept for Textus versions it no longer runs on is gone. From Textus 1.4.4 the deck is also in File › Export, as Slides (HTML).
+- **0.3.9** - The page follows Textus's language by itself. Needs Textus 1.4.3.
+- **0.3.8** - Present as Slides draws the deck on a phone, where its tab comes to the front alone.
+- **0.3.7** - Formulas use KaTeX's own fonts from Textus 1.4.2 on, in the tab and in a saved HTML file; earlier versions keep the system's fonts.
+- **0.3.6** - A deck needs nothing from the web: emoji show as text instead of pictures from a CDN, formulas use the system's fonts, and the Gaia theme no longer loads a web font, in the tab and in a saved HTML file.
+- **0.3.5** - Writing a deck with many pictures is lighter: the slides are made again only when the text changed, and pictures it no longer shows are let go.
+- **0.3.4** - Full Screen works in the tab (presenting in place where the window can't go full screen); the deck renders only while its tab is open; shortcuts leave Cmd/Ctrl/Alt keys alone.
+- **0.3.3** - Its bars, lists and controls are Textus's own, grow with the interface and follow every theme; needs Textus 1.3.12.
+- **0.3.2** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
+- **0.3.1** - pictures in the deck, including Obsidian's `![[picture]]` embeds with a width
+- **0.3.0** - a tool for Textus AI, `export_slides`
+- **0.2.0** - named Marp in every language; Textus's own buttons and colors; labels follow the interface language
+- **0.1.0-0.1.1** - first versions: a live deck beside the document, full screen, and a self-presenting HTML file
 
 <!-- ai-tools -->
 ## Textus AI 工具

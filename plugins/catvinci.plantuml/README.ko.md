@@ -12,10 +12,10 @@
 
 **설정 › 확장 › 플러그인 › PlantUML › 그리는 곳**에서 그릴 곳을 고릅니다:
 
-- **이 컴퓨터**(기본값): 내용이 밖으로 나가지 않습니다. 이 컴퓨터에서 그리면 메모리를 약 100MB 더 씁니다.
+- **이 컴퓨터**(기본값): 내용이 밖으로 나가지 않습니다. 이 컴퓨터에서 그리면 메모리를 더 씁니다.
 - **PlantUML 서버**: 각 다이어그램의 텍스트를 plantuml.com에 보내 그곳에서 그립니다. 메모리를 더 쓰지 않습니다.
 
-이 플러그인은 `www.plantuml.com`에 대한 네트워크 권한만 요청하며, PlantUML 서버를 골랐을 때만 씁니다. 데스크톱과 iPhone, iPad에서 쓸 수 있습니다.
+이 플러그인은 `www.plantuml.com`에 대한 네트워크 권한만 요청하며, PlantUML 서버를 골랐을 때만 씁니다.
 
 ## 예시
 
@@ -28,13 +28,14 @@ Bob --> Alice : Hi!
 
 ## 변경 내역
 
-- **0.2.6** - 패키지에 포함된 라이브러리 목록과 라이선스를 함께 담았습니다.
-- **0.2.5** - 블록이 접혀 있을 때(휴대폰) 그린 그림이 펼치면 너비에 맞게 다시 그려집니다.
-- **0.2.4** - `!theme`가 작동합니다. 좁은 열에서 빈 공간이 남지 않습니다. 서버 모드에서 PlantUML 자체 오류를 보여 주고, 어두운 테마에서는 어두운 그림을 씁니다.
-- **0.2.3** - 설명과 빈 상태 문구를 짧게 줄였습니다.
-- **0.2.2** - 소개 페이지를 새로 썼습니다. 무엇을 하는지 한 문장으로, 할 수 있는 일과 버전별 변경 내역을 담았습니다.
-- **0.2.1** - 업데이트된 공용 차트 페이지를 함께 담음. 그리는 방식은 그대로입니다.
-- **0.2.0** - 테마에서 색을 가져오는 공용 차트 페이지를 함께 담음. Textus 1.3.2가 필요합니다.
-- **0.1.3** - 테마의 본문 글자색과 각주 크기를 Textus 1.3의 새 이름으로 읽습니다.
-- **0.1.2** - PlantUML 서버가 그린 그림이 다시 보입니다. 이 컴퓨터에서 그리면 메모리를 약 100MB 더 쓴다고 안내합니다.
-- **0.1.0-0.1.1** - 첫 버전들: `plantuml` 코드 블록을 이 컴퓨터나 PlantUML 서버에서 그리기, `height=`, 내보낼 때 그림으로.
+- **0.2.7** - Its page no longer says which devices it runs on: the store shows that. It no longer gives a figure for the memory drawing on your computer takes.
+- **0.2.6** - Its package lists the libraries it carries, with their licenses.
+- **0.2.5** - A chart drawn while its block was folded (a phone) fits once the block opens, instead of keeping its old size.
+- **0.2.4** - `!theme` works; no empty gap in a narrow column; server mode shows PlantUML's own error and draws dark in dark themes.
+- **0.2.3** - Shorter help and empty-state text.
+- **0.2.2** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
+- **0.2.1** - Ships the updated shared chart page; diagrams are drawn as before.
+- **0.2.0** - Ships the shared chart page that takes its colors from the theme. Needs Textus 1.3.2.
+- **0.1.3** - Uses the theme's document text color and footnote size under their Textus 1.3 names.
+- **0.1.2** - Drawings from the PlantUML server show again; says that drawing on your computer takes about 100 MB more memory.
+- **0.1.0-0.1.1** - First versions: `plantuml` code blocks drawn on your computer or by the PlantUML server, `height=`, and exports as a picture.

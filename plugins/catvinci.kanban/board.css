@@ -9,12 +9,23 @@ body {
   flex-direction: column;
   background: var(--doc-bg, var(--ui-bg));
 }
+/* One row: short of room, Edit as Markdown goes into the ⋯ menu. */
 #bar {
-  flex-wrap: wrap;
-  row-gap: var(--space-1);
+  flex-wrap: nowrap;
   min-height: var(--bar-height);
   padding: 0 var(--space-3);
   border-bottom: 1px solid var(--ui-border);
+}
+#bar > :not(#state) {
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+#bar > #more,
+#bar[data-fit="compact"] #markdown {
+  display: none;
+}
+#bar[data-fit="compact"] #more {
+  display: inline-flex;
 }
 #state {
   min-width: 0;
@@ -44,6 +55,28 @@ body {
   }
   .list {
     width: min(var(--board-lane-width), 100vw - 2 * var(--space-3));
+  }
+}
+/* By touch, where two lists don't fit (a phone, an iPad split), one list
+   fills the width and a swipe settles on the next. */
+@media (max-width: 40em) and (hover: none) {
+  #board {
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: var(--space-4);
+  }
+  .list {
+    flex: none;
+    width: calc(100vw - 2 * var(--space-4));
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+  }
+}
+@media (max-width: 20em) and (hover: none) {
+  #board {
+    scroll-padding-inline: var(--space-3);
+  }
+  .list {
+    width: calc(100vw - 2 * var(--space-3));
   }
 }
 .list-head {
@@ -109,18 +142,19 @@ textarea.inline-field {
 .add-card {
   align-self: flex-start;
 }
-/* Shown on hover or focus, always where there is no hover; still focusable. */
-.remove {
+/* A card's or list's menu: shown on hover or focus, always where there is
+   no hover; still focusable. */
+.more {
   opacity: 0;
 }
-.list-head:hover .remove,
-.card:hover .remove,
-.list-head:focus-within .remove,
-.card:focus-within .remove {
+.list-head:hover .more,
+.card:hover .more,
+.list-head:focus-within .more,
+.card:focus-within .more {
   opacity: 1;
 }
 @media (hover: none) {
-  .remove {
+  .more {
     opacity: 1;
   }
 }

@@ -19,27 +19,28 @@ In einem Obsidian-Vault gelten stattdessen seine eigenen Einstellungen für Tage
 
 ## Berechtigungen
 
-Das Plugin liest und schreibt Dateien im geöffneten Ordner, um die Notizen zu finden und anzulegen, und liest, welches Dokument gerade offen ist, um den Tag davor und danach zu kennen. Außerdem gibt es Textus AI die beiden Werkzeuge unten. Es läuft auf dem Desktop und auf dem iPhone und braucht Textus 1.3.10 oder neuer.
+Das Plugin liest und schreibt Dateien im geöffneten Ordner, um die Notizen zu finden und anzulegen, und liest, welches Dokument gerade offen ist, um den Tag davor und danach zu kennen. Außerdem gibt es Textus AI die beiden Werkzeuge unten. Es braucht Textus 1.4.3 oder neuer.
 
 ## Änderungen
 
-- **0.7.8** - Ist die Leiste selbst für den kurzen Monatsnamen zu schmal (Seitenleiste am Handy), steht der Monat in einer eigenen Zeile über den Knöpfen, statt das Jahr zu verlieren. Der Kalender schreibt Daten mit Textus’ eigenen Formaten; das Paket ist kleiner.
-- **0.7.7** - Die Woche beginnt nach der Sprache von Textus statt nach der Region des Geräts, passend zu den Wochennummern.
-- **0.7.6** - Die Seite folgt der Sprache von Textus von selbst. Benötigt Textus 1.4.3.
-- **0.7.5** - Der Monatstitel im Kalender beginnt links und endet in einer schmalen Seitenleiste mit Auslassungspunkten, statt an beiden Enden abgeschnitten zu werden.
-- **0.7.4** - In einer schmalen Leiste, etwa auf dem Handy, zeigt der Kalender den kurzen Monatsnamen, statt den langen abzuschneiden.
-- **0.7.3** - Unmögliche Daten wie der 30. Februar werden abgelehnt, der Kalender bleibt in breiten Bereichen angenehm schmal und zeichnet sich neu, wenn sich Ordnereinstellungen ändern, und Wochen- und Monatseinstellungen erscheinen nur, wenn diese Notizen an sind.
-- **0.7.2** - Kürzere Hilfe- und Leertexte.
-- **0.7.1** - Leisten, Listen und Steuerelemente sind jetzt die von Textus, wachsen mit der Oberfläche und folgen jedem Theme; braucht Textus 1.3.12.
-- **0.7.0** - Daten und Vorlagen füllt Textus selbst aus, genauso wie im Vorlagen-Plugin; braucht Textus 1.3.10.
-- **0.6.0** - Wochen- und Monatsnotizen mit eigenen Einstellungen, Wochennummern und Monatsname im Kalender und den Periodic-Notes-Einstellungen eines Vaults.
-- **0.5.0** - Ein Vault ohne Einstellungen für Tagesnotizen legt sie ganz oben ab; `{{date}}`, `{{yesterday}}` und `{{tomorrow}}` folgen dem Namensformat, auch `MMMM Do, YYYY`.
-- **0.4.0** - Folgt den Tagesnotiz-Einstellungen eines Obsidian-Vaults; der Anfangstext kann eine Vorlage im Ordner Templates nennen; `{{date:FORMAT}}` und `{{title}}`.
-- **0.3.0** - Textus AI kann die Notiz eines Tages lesen und ergänzen.
-- **0.2.0** - Der Kalender nutzt die Bedienelemente von Textus und folgt der Sprache der Oberfläche, wenn sie wechselt; braucht Textus 1.3.2.
-- **0.1.3** - Farben und Schrift von Textus 1.3.
-- **0.1.2** - Die Woche beginnt wie in Ihrer Region; die Notiz eines Tages wird nie überschrieben.
-- **0.1.0-0.1.1** - Erste Versionen: heutige Notiz per Tastenkürzel, der Kalender, Tag davor und danach, `{{weekday}}`, `{{yesterday}}`, `{{tomorrow}}` und `{{time}}` in der Vorlage.
+- **0.7.9** - Its page no longer says which devices it runs on: the store shows that. It names the Textus it needs, 1.4.3.
+- **0.7.8** - Where the bar is too narrow for even the short month name (a phone's sidebar), the month goes on a row of its own above the buttons instead of losing its year. The calendar writes dates with Textus's own, so the package is smaller.
+- **0.7.7** - Weeks start as Textus's language has them, not the device's region, so they agree with the week numbers.
+- **0.7.6** - The page follows Textus's language by itself. Needs Textus 1.4.3.
+- **0.7.5** - The Calendar's month title starts at the left and ends in an ellipsis in a narrow sidebar, instead of being cut at both ends.
+- **0.7.4** - In a narrow panel, such as on a phone, the calendar shows the month's short name instead of cutting the long one off.
+- **0.7.3** - Impossible dates such as February 30 are refused, the calendar stays a comfortable width in wide panels and redraws when folder settings change, and weekly and monthly settings show only when those notes are on.
+- **0.7.2** - Shorter help and empty-state text.
+- **0.7.1** - Its bars, lists and controls are Textus's own, grow with the interface and follow every theme; needs Textus 1.3.12.
+- **0.7.0** - Dates and templates are filled in by Textus itself, the same way as in the Templates plugin; needs Textus 1.3.10.
+- **0.6.0** - Weekly and monthly notes, with their own settings, the calendar's week numbers and month name, and a vault's Periodic Notes settings.
+- **0.5.0** - A vault without daily notes settings keeps its notes at its top; `{{date}}`, `{{yesterday}}` and `{{tomorrow}}` follow the notes' name format, `MMMM Do, YYYY` included.
+- **0.4.0** - Follows an Obsidian vault's daily notes settings; the starting text can name a template in the Templates folder; `{{date:FORMAT}}` and `{{title}}`.
+- **0.3.0** - Textus AI can read a day's note and add to it.
+- **0.2.0** - The calendar uses Textus's own controls and follows the interface language when it changes; needs Textus 1.3.2.
+- **0.1.3** - Textus 1.3's colors and type.
+- **0.1.2** - Weeks start as your region has them; a day's note is never written over.
+- **0.1.0-0.1.1** - First versions: today's note with a shortcut, the calendar, the day before and after, `{{weekday}}`, `{{yesterday}}`, `{{tomorrow}}` and `{{time}}` in the template.
 
 <!-- ai-tools -->
 ## Werkzeuge für Textus AI

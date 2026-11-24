@@ -7,10 +7,11 @@ Read where a link goes without opening it: rest the pointer on a link to another
 - The card shows up to about 1,500 characters, cut at the end of a paragraph. **Open** goes to the document; **Pin** keeps the card open while you write.
 - Only documents in the open folder are previewed.
 
-The plugin asks to read the editor (to see which link you point at) and to read files (to show the linked document). It never changes a file. It works on the desktop and on iPhone and iPad.
+The plugin asks to read the editor (to see which link you point at) and to read files (to show the linked document). It never changes a file. On a tablet it works with a mouse or trackpad attached.
 
 ## Changes
 
+- **0.2.4** - Its page says that on a tablet it needs a mouse or trackpad, instead of which devices it runs on.
 - **0.2.3** - The store description now opens with what the plugin does.
 - **0.2.2** - A link to a nested heading (`[[Note#A#B]]`) shows that heading's section, as a click opens it. Needs Textus 1.4.0.
 - **0.2.1** - Its page now says in one sentence what it does, what it can do, and what changed in each version.

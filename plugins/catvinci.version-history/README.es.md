@@ -17,20 +17,21 @@ Guarda cada guardado de un documento como una versión, para ver qué cambió y 
 
 ## Cambios
 
-- **0.5.0** - Desde Textus 1.4.4 también se listan las versiones que otros plugins guardan de un documento (las de Cloud Sync), cada una bajo el nombre de su origen, para compararlas y restaurarlas como las demás.
-- **0.4.1** - Restaurar es una sola palabra, así su botón cabe en una barra lateral estrecha en todos los idiomas.
-- **0.4.0** - Las versiones se espacian con la edad en lugar de quedarse solo las últimas 50; cada texto se guarda una vez; las versiones de un documento borrado se van al mes. Compara dos versiones cualesquiera palabra por palabra, recupera un solo cambio, pon nombre y fija versiones, y se guardan los cambios hechos fuera de Textus. Las versiones de 0.3 pasan solas. Requiere Textus 1.4.3. En una carpeta Git en el escritorio, los commits del documento aparecen bajo sus versiones.
-- **0.3.8** - El texto de antes del primer guardado ya no se pierde cuando ese guardado llega justo al abrir el documento.
-- **0.3.7** - El texto que tenía un documento antes de guardarlo por primera vez también se conserva como versión, y las versiones siguen al documento al cambiarle el nombre o moverlo.
-- **0.3.6** - El guardado automático mientras escribes solo escribe la versión más reciente, no todas las versiones del documento, así que los documentos largos se guardan con mucho menos trabajo.
-- **0.3.5** - Una versión abierta sigue abierta cuando el autoguardado la actualiza, y Restaurar siempre la encuentra. Con el almacenamiento lleno, las versiones antiguas de otros documentos dejan sitio, y el panel avisa si un guardado no se pudo conservar. Las filas se usan con el teclado; los botones pasan a otra línea en una barra lateral estrecha.
-- **0.3.4** - En la barra lateral el panel ya no muestra un título propio, como las demás pestañas. Textos de ayuda y de estado vacío más breves. Su panel lateral y su página siguen el diseño de Textus 1.3.13.
-- **0.3.3** - Sus barras, listas y controles son ahora los de Textus, crecen con la interfaz y siguen cada tema; necesita Textus 1.3.12.
-- **0.3.2** - Su página dice ahora en una frase qué hace, qué puede hacer y qué cambió en cada versión.
-- **0.3.1** - Solo cambió el código de rutas compartido con otros plugins; nada cambia al usarlo.
-- **0.3.0** - Textus AI puede listar las versiones de un documento y compararlas (`list_versions`, `diff_versions`).
-- **0.2.0** - Controles propios de Textus. Requiere Textus 1.3.2.
-- **0.1.0-0.1.3** - Primeras versiones: una versión en cada guardado, qué cambió desde entonces, restaurar como edición que se acepta o rechaza, abrir como documento nuevo, guardados seguidos como uno, versiones agrupadas por día, las más antiguas fuera cuando se llena el almacenamiento.
+- **0.5.1** - Its page shows its list of changes in English in every language.
+- **0.5.0** - From Textus 1.4.4 the versions other plugins keep of a document - Cloud Sync's - are listed too, each under its source's name, to compare and restore like the rest.
+- **0.4.1** - Restore is one word, so its button fits a narrow sidebar in every language.
+- **0.4.0** - Versions thin out with age instead of the last 50 going; each text is stored once; a deleted document's versions go a month later. Compare any two versions, word by word; take back one change; name and pin versions; changes made outside Textus are kept. Versions from 0.3 move over by themselves. Needs Textus 1.4.3. In a Git folder on the desktop, the document's commits show under its versions.
+- **0.3.8** - The text from before the first save is no longer lost when that save comes right as the document opens.
+- **0.3.7** - The text a document had before its first save is kept as a version too, and a document's versions follow it when it is renamed or moved.
+- **0.3.6** - Autosave while you type writes only the newest version, not every version of the document, so long documents save with much less work.
+- **0.3.5** - An open version stays open while autosave updates it, and Restore always finds it. When storage is full, older versions of other documents make room, and the panel says when a save couldn't be kept. Rows work from the keyboard; buttons wrap in a narrow sidebar.
+- **0.3.4** - In the sidebar the panel draws no title of its own, as the sidebar's other tabs. Shorter help and empty-state text. Its sidebar panel and page follow Textus 1.3.13's layout.
+- **0.3.3** - Its bars, lists and controls are Textus's own, grow with the interface and follow every theme; needs Textus 1.3.12.
+- **0.3.2** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
+- **0.3.1** - Only the path code shared with other plugins changed; nothing changes in use.
+- **0.3.0** - Textus AI can list a document's versions and compare them (`list_versions`, `diff_versions`).
+- **0.2.0** - Textus's own controls. Needs Textus 1.3.2.
+- **0.1.0-0.1.3** - First versions: a version on each save, what changed since, restore as an edit to accept or reject, open as a new document, saves close together kept as one, versions grouped by day, the oldest dropped when storage is full.
 
 <!-- ai-tools -->
 ## Herramientas para Textus AI

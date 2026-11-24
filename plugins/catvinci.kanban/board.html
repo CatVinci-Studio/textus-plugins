@@ -4,16 +4,19 @@
     <link rel="stylesheet" href="textus-resource:board.css" />
   </head>
   <body>
-    <div class="tx-bar" id="bar">
+    <div class="tx-bar" id="bar" data-fit-steps="compact">
       <span id="state"></span>
       <span class="tx-spacer"></span>
       <button class="tx-button small" id="markdown"></button>
+      <button class="tx-icon-button" id="more"><span class="tx-icon" data-icon="more"></span></button>
       <button class="tx-button small primary" id="add-list"></button>
     </div>
     <main id="board" class="tx-scroll-fade"></main>
     <script src="textus-resource:lib/drag.js"></script>
     <script src="textus-resource:lib/inline-field.js"></script>
+    <script src="textus-resource:lib/wiki-links.js"></script>
     <script src="textus-resource:kanban-markdown.js"></script>
+    <script src="textus-resource:board-edit.js"></script>
     <script src="textus-resource:board.js"></script>
   </body>
 </html>

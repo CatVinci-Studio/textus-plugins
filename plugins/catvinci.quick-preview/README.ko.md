@@ -7,14 +7,15 @@
 - 카드에는 약 1,500자까지 나오며, 문단 끝에서 끊습니다. **열기**는 그 문서로 가고, **고정**하면 글을 쓰는 동안 카드가 열린 채 남습니다.
 - 지금 열린 폴더 안의 문서만 미리 봅니다.
 
-이 플러그인은 편집기 읽기 권한(어느 링크를 가리키는지 알기 위해)과 파일 읽기 권한(링크된 문서를 보여 주기 위해)을 요청합니다. 파일은 바꾸지 않습니다. 데스크톱과 iPhone, iPad에서 쓸 수 있습니다.
+이 플러그인은 편집기 읽기 권한(어느 링크를 가리키는지 알기 위해)과 파일 읽기 권한(링크된 문서를 보여 주기 위해)을 요청합니다. 파일은 바꾸지 않습니다. 태블릿에서는 마우스나 트랙패드를 연결하면 쓸 수 있습니다.
 
 ## 변경 내역
 
-- **0.2.3** - 스토어 설명이 첫 문장에서 플러그인이 하는 일을 알려 줍니다.
-- **0.2.2** - 중첩된 제목으로 가는 링크(`[[노트#A#B]]`)는 클릭해서 여는 곳과 같은 제목의 부분을 보여 줍니다. Textus 1.4.0이 필요합니다.
-- **0.2.1** - 소개 페이지를 새로 썼습니다. 무엇을 하는지 한 문장으로, 할 수 있는 일과 버전별 변경 내역을 담았습니다.
-- **0.2.0** - 블록으로 가는 링크(`#^id`)는 그 블록을 보여 줍니다. Textus 1.3.9가 필요합니다.
-- **0.1.3** - 실행되는 곳을 밝힘: 데스크톱, iPhone, iPad.
-- **0.1.2** - 카드 길이를 설정 대신 고정했습니다.
-- **0.1.0-0.1.1** - 첫 버전들: 문서로 가는 링크에 카드 표시, 문서 첫머리나 링크가 가리키는 절, 열기와 고정.
+- **0.2.4** - Its page says that on a tablet it needs a mouse or trackpad, instead of which devices it runs on.
+- **0.2.3** - The store description now opens with what the plugin does.
+- **0.2.2** - A link to a nested heading (`[[Note#A#B]]`) shows that heading's section, as a click opens it. Needs Textus 1.4.0.
+- **0.2.1** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
+- **0.2.0** - A link to a block (`#^id`) shows that block. Needs Textus 1.3.9.
+- **0.1.3** - Says where it runs: the desktop, iPhone and iPad.
+- **0.1.2** - The card's length is fixed instead of a setting.
+- **0.1.0-0.1.1** - First versions: a card for links to documents, with the document's opening or the section the link names, and Open and Pin.

@@ -8,7 +8,7 @@ List every task in your folder in one place, tick them off there, and query them
 - Give a task a date (`📅 2026-11-01`, `due:2026-11-01` or `[due:: 2026-11-01]`) and it shows as a badge. Tasks past due or due within a week are listed first, under **Due soon**.
 - The field at the top filters the list by words, the document's name or its heading.
 - Finished tasks are hidden unless you turn on **Show finished tasks** in **Settings › Extensions › Plugins › Tasks**.
-- Cards on a Kanban board (a document with `kanban-plugin` in its front matter, or `name.kanban.md`) belong to the board and are left out of the sidebar list.
+- Cards on a Kanban board (a document with `kanban-plugin` in its front matter, or `name.kanban.md`) belong to the board and are left out of the sidebar list and of task queries.
 
 ## Tasks written by Obsidian
 
@@ -38,14 +38,15 @@ sort by due
 - **Other**: `priority is` (also `above`, `below`, `not`), `is recurring` and `is not recurring`.
 - **Order**: `sort by` and `group by` (status, due, scheduled, start, done, created, priority, path, folder, filename, heading or description, with `reverse` if you like) and `limit`. Without `sort by`, tasks come in Obsidian Tasks' order: status, due date, priority, path.
 
-Lines about the look (`hide …`, `show …`) are passed over; any other line it can't read is named under the count. The block lists a board's cards too. Tick a task there to tick it in its file; click it to go to it.
+Lines about the look (`hide …`, `show …`) are passed over; any other line it can't read is named under the count. A [[link]] in a task opens its note. Tick a task there to tick it in its file; click it to go to it.
 
 ## Permissions
 
-The plugin reads the folder's documents to find their tasks, and writes to a document only to tick a task or add one. It also gives Textus AI the tools below. It works on the desktop and on iPhone and iPad.
+The plugin reads the folder's documents to find their tasks, and writes to a document only to tick a task or add one. It also gives Textus AI the tools below.
 
 ## Changes
 
+- **0.5.0** - A task query no longer lists a Kanban board's cards, as the sidebar and Textus AI already didn't. Grouped by document, its rows don't repeat the document's name, and a [[link]] in a task opens its note.
 - **0.4.7** - The filter field and empty message follow Textus's language when you switch it. Needs Textus 1.4.3.
 - **0.4.6** - The tasks block keeps a gap inside its frame, as other blocks do.
 - **0.4.5** - The AI's new task under a heading never lands inside a code block, and **Move finished tasks to the end of their list** works in Windows (CRLF) notes.

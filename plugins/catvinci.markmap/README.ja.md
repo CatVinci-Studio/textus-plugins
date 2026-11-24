@@ -9,7 +9,7 @@
 - 枝の色はテーマに合わせ、テーマを切り替えると描き直します。
 - HTML・PDF・Word に書き出すと、マップは画像として入ります。スクロールして見えなくなっているマップも同じです。
 
-描画には [markmap](https://markmap.js.org) を使います。求める権限は一つだけで、下に挙げた `check_markmap` ツールを Textus AI に渡し、文書にブロックを書く前に確認できるようにするためです。デスクトップと iPhone・iPad で使えます。
+描画には [markmap](https://markmap.js.org) を使います。求める権限は一つだけで、下に挙げた `check_markmap` ツールを Textus AI に渡し、文書にブロックを書く前に確認できるようにするためです。
 
 ## 例
 
@@ -25,17 +25,18 @@
 
 ## 更新履歴
 
-- **0.3.7** - パッケージに、同梱しているライブラリとそのライセンスの一覧を添えました。
-- **0.3.6** - ノートのレイアウト前に描かれたマインドマップでエラーが出なくなりました。
-- **0.3.5** - ブロックが折りたたまれていた間（スマートフォン）に描いた図は、開くと幅に合わせて描き直されます。
-- **0.3.4** - マインドマップを長時間編集しても、Textus のメモリ使用量が増え続けなくなりました。
-- **0.3.3** - マインドマップの上でスクロールするとノートがスクロールするようになりました。拡大縮小はピンチか Ctrl + スクロールです。マップはテーマのフォントと色に合わせ（ダークモードでも）、開いたときに全体が収まります。
-- **0.3.2** - 紹介ページを書き直しました。何をするかを一文で示し、できることと各バージョンの変更を載せています。
-- **0.3.1** - スクロールして見えないマインドマップも、ソースではなく画像として書き出します。
-- **0.3.0** - Textus AI が `markmap` ブロックを書く前に確認できるようになりました。
-- **0.2.0** - 枝の色をテーマの色調から取ります。Textus 1.3.2 が必要です。
-- **0.1.3** - テーマの本文の文字色と脚注のサイズを Textus 1.3 の新しい名前で読みます。
-- **0.1.0-0.1.2** - 最初のバージョン：文書の中で `markmap` コードブロックを描画、`height=`、書き出しでは書き出し先の配色の画像に。
+- **0.3.8** - The mind map fills its block: a small one grows (up to twice its size) to the block's width and the height you give it, and it follows the note's zoom instead of being cut off on the right. Its page no longer says which devices it runs on: the store shows that.
+- **0.3.7** - Its package lists the libraries it carries, with their licenses.
+- **0.3.6** - A mind map drawn before its note was laid out no longer shows an error.
+- **0.3.5** - A chart drawn while its block was folded (a phone) fits once the block opens, instead of keeping its old size.
+- **0.3.4** - Editing a mind map for a long time no longer makes Textus use more and more memory.
+- **0.3.3** - Scrolling over a mind map now scrolls the note; pinch or Ctrl-scroll to zoom. The map uses your theme's font and colors, in dark mode too, and opens fully fitted.
+- **0.3.2** - Its page now says in one sentence what it does, what it can do, and what changed in each version.
+- **0.3.1** - A mind map scrolled out of sight exports as its picture instead of its source.
+- **0.3.0** - Textus AI can check a `markmap` block before it writes one.
+- **0.2.0** - Branch colors come from the theme's tones. Needs Textus 1.3.2.
+- **0.1.3** - Uses the theme's document text color and footnote size under their Textus 1.3 names.
+- **0.1.0-0.1.2** - First versions: `markmap` code blocks drawn in the document, `height=`, and exports as a picture in the export's colors.
 
 <!-- ai-tools -->
 ## Textus AI のツール

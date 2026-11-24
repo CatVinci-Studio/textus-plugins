@@ -1,7 +1,7 @@
 {
   "id": "catvinci.timeline",
   "name": "%name%",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "publisher": "catvinci",
   "author": "CatVinci Studio",
   "description": "%description%",
@@ -12,6 +12,7 @@
     "textus": ">=1.3.2"
   },
   "platforms": ["desktop", "ios"],
+  "category": "diagrams",
   "main": ["lib/chart-host.js", "check.js", "database-view.js", "host.js"],
   "activationEvents": ["onStartupFinished"],
   "permissions": ["ai.tools"],

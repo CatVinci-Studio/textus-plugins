@@ -22,7 +22,29 @@
   // spinning back - the view only, the file stays as it is.
   let turns = saved.turns || 0;
   let source = !!saved.source;
-  const keep = () => api.setState({ zoom, fit, turns, source });
+  // Where it was scrolled to, as a share of the stage, kept as it goes out of sight.
+  let at = saved.at || null;
+  const keep = () => api.setState({ zoom, fit, turns, source, at });
+  // Kept as it scrolls too: the page may be out of sight, with nothing laid
+  // out to measure, by the time it is told.
+  const remember = () => {
+    if (!stage.scrollHeight) return;
+    at = {
+      x: stage.scrollLeft / stage.scrollWidth,
+      y: stage.scrollTop / stage.scrollHeight,
+    };
+    keep();
+  };
+  let resting;
+  stage.addEventListener(
+    "scroll",
+    () => {
+      clearTimeout(resting);
+      resting = setTimeout(remember, 200);
+    },
+    { passive: true },
+  );
+  api.onDidChangeVisibility((visible) => visible || remember());
 
   $("source").textContent = t("source");
 
@@ -132,7 +154,7 @@
     $("info").textContent = t("failed");
   };
 
-  api.onMessage((message) => {
+  api.onDidReceiveMessage((message) => {
     if (message.type === "failed") return failed();
     if (message.type !== "file") return;
     const svg = /\.svg$/i.test(message.name);
@@ -151,6 +173,10 @@
         " · " +
         size(message.bytes.length);
       show();
+      if (at) {
+        stage.scrollLeft = at.x * stage.scrollWidth;
+        stage.scrollTop = at.y * stage.scrollHeight;
+      }
       // Turned already when restored: no spin on the way in.
       requestAnimationFrame(() => image.classList.add("settled"));
     };

@@ -7,10 +7,11 @@ Suggests LaTeX commands while you type a formula.
 - Letters in order find a command too: `\rarr` is `\rightarrow`, `\lra` is `\leftrightarrow`.
 - **Enter** or **Tab** writes the one picked, with the caret inside its braces; **Esc** closes the list. `\left(`, `\left[` and `\left\{` come with their `\right` partner.
 
-It works on desktop and iPhone and needs Textus 1.3.0 or later. It asks for one permission, to read the editor, so it can see what you type in the formula.
+It needs Textus 1.3.0 or later. It asks for one permission, to read the editor, so it can see what you type in the formula.
 
 ## Changes
 
+- **0.1.6** - Its page no longer says which devices it runs on: the store shows that.
 - **0.1.5** - The store description now opens with what the plugin does.
 - **0.1.4** - A command typed out whole comes first, so Enter keeps it (\in stays \in); a command without braces is written with a space after it; with Textus 1.3.13 the list closes once a command is written.
 - **0.1.3** - Its page now says in one sentence what it does, what it can do, and what changed in each version.

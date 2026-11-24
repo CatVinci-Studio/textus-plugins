@@ -5,7 +5,7 @@ Draws your notes and the links between them as a graph, for the whole folder or 
 - **Ctrl+Alt+G** (**⌘⌥G** on a Mac), or **Plugins › Open the Graph View**, shows the whole folder in a tab. **Fit** brings all of it into view.
 - The **Graph** tab in the sidebar shows the notes around the document in front. The button at the top of the sidebar's Graph panel opens the whole folder.
 - [[Wiki links]] and links to other documents both count; two notes that link to each other share one line. A [[link]] to a note not written yet shows as a note of its own.
-- Click a note to open it. Drag a note to place it, drag the background to move around, and scroll or pinch to zoom. Rest the pointer on a note to light up its links.
+- Click a note to open it. Drag a note to place it, drag the background to move around, and scroll or pinch to zoom. Rest the pointer on a note to light up its links. By touch, tap a note once to light up its links and again to open it.
 - The graph adapts by itself: names appear as you zoom in, arrows show which way links go when there are few enough to read, and a note with more links is larger. Without colour groups, each note takes its folder's colour.
 - When documents in the folder change, the graph is drawn again.
 
@@ -25,6 +25,7 @@ In an Obsidian vault, the colour groups saved in Obsidian's `graph.json` colour 
 
 ## Changes
 
+- **0.5.10** - By touch, a first tap on a note lights it and its links and a second opens it; notes are easier to hit with a finger, and a second finger zooms instead of also moving the graph. Its settings open in Textus's own popover.
 - **0.5.9** - Esc while dragging a note or the view puts it back, and a touch the system cancels no longer leaves a drag stuck.
 - **0.5.8** - The graph in the sidebar spreads out to fit its panel, instead of starting as a small clump with labels on top of each other. Sorts names with Textus's own order instead of a copy of it, so the package is smaller.
 - **0.5.7** - The page follows Textus's language by itself. Needs Textus 1.4.3.

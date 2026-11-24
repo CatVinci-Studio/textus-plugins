@@ -5,16 +5,22 @@
   const $ = (id) => document.getElementById(id);
   const pages = $("pages");
   $("edit").textContent = t("edit");
-  $("edit").onclick = () => api.postMessage({ type: "edit" });
+  const edit = () => api.postMessage({ type: "edit" });
+  $("edit").onclick = edit;
+  // A narrow bar keeps Edit as Markdown in this menu (data-fit-steps).
+  $("more").onclick = async () => {
+    if ((await api.menu([{ label: t("edit"), value: "edit" }], $("more"))) === "edit") edit();
+  };
   for (const [id, key] of [
     ["zoom-out", "zoomOut"],
     ["zoom-in", "zoomIn"],
     ["find-open", "find"],
-    ["find-close", "closeFind"],
+    ["more", "more"],
   ])
     for (const attr of ["aria-label", "title"])
       $(id).setAttribute(attr, t(key));
   $("find-input").placeholder = t("find");
+  $("find-input").setAttribute("aria-label", t("find"));
 
   // Zoom: the pages scaled as a whole, from 50% to 200%. They open fitted
   // to the tab's width (never above 100%) until the reader zooms.
@@ -22,6 +28,29 @@
   let zoom = saved.zoom || 1;
   let fit = !saved.zoom;
   let natural = 0;
+  // Where it was read to, as a share of the pages, kept as it goes out of sight.
+  let at = saved.at || null;
+  const keep = () => api.setState({ zoom: fit ? 0 : zoom, at });
+  // Kept as it scrolls too: the page may be out of sight, with nothing laid
+  // out to measure, by the time it is told.
+  const remember = () => {
+    if (!pages.scrollHeight) return;
+    at = {
+      x: pages.scrollLeft / pages.scrollWidth,
+      y: pages.scrollTop / pages.scrollHeight,
+    };
+    keep();
+  };
+  let resting;
+  pages.addEventListener(
+    "scroll",
+    () => {
+      clearTimeout(resting);
+      resting = setTimeout(remember, 200);
+    },
+    { passive: true },
+  );
+  api.onDidChangeVisibility((visible) => visible || remember());
   function setZoom(next, x, y) {
     const before = zoom;
     zoom = Math.min(2, Math.max(0.5, Math.round(next * 100) / 100));
@@ -36,7 +65,7 @@
         (pages.scrollLeft + x - box.left) * ratio - (x - box.left);
       pages.scrollTop = (pages.scrollTop + y - box.top) * ratio - (y - box.top);
     }
-    api.setState({ zoom: fit ? 0 : zoom });
+    keep();
   }
   function zoomBy(next, x, y) {
     fit = false;
@@ -135,13 +164,20 @@
     hits[current].scrollIntoView({ block: "center" });
     $("find-count").textContent = t("findCount", current + 1, hits.length);
   }
+  // Put back in its place, so the bar is fitted again (data-fit-steps).
+  function showFind(shown) {
+    $("find-box").hidden = !shown;
+    $("bar").insertBefore($("find-box"), $("find-open"));
+  }
   function openFind() {
-    $("find-bar").hidden = false;
+    showFind(true);
     $("find-input").focus();
     $("find-input").select();
   }
   function closeFind() {
-    $("find-bar").hidden = true;
+    showFind(false);
+    $("find-input").value = "";
+    clearTimeout(typing);
     clearHits();
     $("find-count").textContent = "";
   }
@@ -154,8 +190,8 @@
     if (event.key === "Enter") step(event.shiftKey ? -1 : 1);
     if (event.key === "Escape") closeFind();
   });
-  $("find-open").onclick = openFind;
-  $("find-close").onclick = closeFind;
+  $("find-open").onclick = () =>
+    $("find-box").hidden ? openFind() : closeFind();
   document.addEventListener("keydown", (event) => {
     const mod = event.metaKey || event.ctrlKey;
     if (mod && event.key.toLowerCase() === "f") {
@@ -173,7 +209,7 @@
     }
   });
 
-  api.onMessage(async (message) => {
+  api.onDidReceiveMessage(async (message) => {
     if (message.type === "failed") {
       $("status").textContent = t("failed", message.message);
       return;
@@ -201,6 +237,10 @@
         Math.max(0, ...pageList().map((page) => page.offsetWidth)) + 2 * pad;
       setZoom(zoom);
       fitWidth();
+      if (at) {
+        pages.scrollLeft = at.x * pages.scrollWidth;
+        pages.scrollTop = at.y * pages.scrollHeight;
+      }
       showPage();
     } catch (err) {
       $("status").textContent = t("failed", (err && err.message) || err);
