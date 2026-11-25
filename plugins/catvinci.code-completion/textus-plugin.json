@@ -1,0 +1,69 @@
+{
+  "id": "catvinci.code-completion",
+  "name": "%name%",
+  "version": "0.1.0",
+  "publisher": "catvinci",
+  "author": "CatVinci Studio",
+  "description": "%description%",
+  "icon": "icon.svg",
+  "license": "MIT",
+  "category": "editing",
+  "repository": "https://github.com/CatVinci-Studio/textus-plugins",
+  "engines": {
+    "textus": ">=1.4.8-rc.2"
+  },
+  "platforms": ["desktop", "ios"],
+  "main": ["words.js", "complete.js", "host.js"],
+  "permissions": ["editor.read"],
+  "contributes": {
+    "completions": [
+      {
+        "id": "catvinci.code-completion.words",
+        "where": "code",
+        "pattern": "[A-Za-z_][\\w$]+"
+      }
+    ]
+  },
+  "l10n": {
+    "en": {
+      "name": "Code Completion",
+      "description": "Keyword completion in code blocks: start a word and pick from the language's keywords and built-in names, or the words already in the block. Python, JavaScript, TypeScript, Java, C/C++, C#, Go, Rust, SQL, Shell and ten more."
+    },
+    "zh": {
+      "name": "代码补全",
+      "description": "代码块里的关键字补全：打出一个词的开头，就能从这门语言的关键字、内置名称，或代码块里已有的词中挑选。支持 Python、JavaScript、TypeScript、Java、C/C++、C#、Go、Rust、SQL、Shell 等 20 种语言。"
+    },
+    "zh-Hant": {
+      "name": "程式碼補全",
+      "description": "程式碼區塊裡的關鍵字補全：打出一個詞的開頭，就能從這門語言的關鍵字、內建名稱，或區塊裡已有的詞中挑選。支援 Python、JavaScript、TypeScript、Java、C/C++、C#、Go、Rust、SQL、Shell 等 20 種語言。"
+    },
+    "ja": {
+      "name": "コード補完",
+      "description": "コードブロックでのキーワード補完：単語を打ち始めると、その言語のキーワードや組み込みの名前、ブロック内にすでにある単語から選べます。Python、JavaScript、TypeScript、Java、C/C++、C#、Go、Rust、SQL、Shell など 20 言語に対応。"
+    },
+    "ko": {
+      "name": "코드 자동 완성",
+      "description": "코드 블록의 키워드 자동 완성: 단어를 입력하기 시작하면 그 언어의 키워드와 내장 이름, 블록에 이미 있는 단어 중에서 고를 수 있습니다. Python, JavaScript, TypeScript, Java, C/C++, C#, Go, Rust, SQL, Shell 등 20개 언어를 지원합니다."
+    },
+    "es": {
+      "name": "Autocompletado de código",
+      "description": "Autocompletado de palabras clave en bloques de código: empieza una palabra y elige entre las palabras clave y nombres integrados del lenguaje, o las palabras que ya hay en el bloque. Python, JavaScript, TypeScript, Java, C/C++, C#, Go, Rust, SQL, Shell y diez más."
+    },
+    "fr": {
+      "name": "Complétion de code",
+      "description": "Complétion des mots-clés dans les blocs de code : commencez un mot et choisissez parmi les mots-clés et noms intégrés du langage, ou les mots déjà présents dans le bloc. Python, JavaScript, TypeScript, Java, C/C++, C#, Go, Rust, SQL, Shell et dix autres."
+    },
+    "de": {
+      "name": "Code-Vervollständigung",
+      "description": "Schlüsselwörter in Codeblöcken vervollständigen: Beginne ein Wort und wähle aus den Schlüsselwörtern und eingebauten Namen der Sprache oder den Wörtern, die schon im Block stehen. Python, JavaScript, TypeScript, Java, C/C++, C#, Go, Rust, SQL, Shell und zehn weitere."
+    },
+    "ru": {
+      "name": "Дополнение кода",
+      "description": "Дополнение ключевых слов в блоках кода: начните слово и выберите из ключевых слов и встроенных имён языка или слов, которые уже есть в блоке. Python, JavaScript, TypeScript, Java, C/C++, C#, Go, Rust, SQL, Shell и ещё десять."
+    },
+    "pt": {
+      "name": "Autocompletar código",
+      "description": "Autocompletar palavras-chave em blocos de código: comece uma palavra e escolha entre as palavras-chave e nomes embutidos da linguagem, ou as palavras que já estão no bloco. Python, JavaScript, TypeScript, Java, C/C++, C#, Go, Rust, SQL, Shell e mais dez."
+    }
+  }
+}
