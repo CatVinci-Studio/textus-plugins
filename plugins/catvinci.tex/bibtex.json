@@ -1,0 +1,14 @@
+{
+  "flags": "i",
+  "rules": [
+    { "token": "comment", "match": "^\\s*%.*" },
+    { "token": "keyword", "match": "@[a-z]+" },
+    { "token": "attribute", "match": "[a-z][\\w-]*(?=\\s*=)" },
+    { "token": "string", "match": "\"(?:\\\\.|[^\"\\\\])*\"" },
+    { "token": "string", "match": "\\{.*\\}(?=,?\\s*$)" },
+    { "token": "number", "match": "\\b\\d+\\b" },
+    { "token": "type", "match": "[^\\s,={}()\"#%]+(?=\\s*,)" },
+    { "token": "operator", "match": "[=#]" },
+    { "token": "punctuation", "match": "[{},()]" }
+  ]
+}
