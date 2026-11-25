@@ -1,0 +1,78 @@
+{
+  "id": "catvinci.tex",
+  "name": "%name%",
+  "version": "0.1.0",
+  "publisher": "catvinci",
+  "author": "CatVinci Studio",
+  "description": "%description%",
+  "icon": "icon.svg",
+  "license": "MIT",
+  "repository": "https://github.com/CatVinci-Studio/textus-plugins",
+  "engines": {
+    "textus": ">=1.4.8-rc.3"
+  },
+  "platforms": ["desktop", "ios"],
+  "category": "files",
+  "permissions": [],
+  "contributes": {
+    "textFiles": [
+      {
+        "extensions": ["tex", "ltx", "sty", "cls"],
+        "language": "latex"
+      },
+      {
+        "extensions": ["bib"],
+        "language": "bibtex"
+      }
+    ],
+    "codeLanguages": [
+      {
+        "id": "bibtex",
+        "aliases": ["bib"],
+        "path": "bibtex.json"
+      }
+    ]
+  },
+  "l10n": {
+    "en": {
+      "name": "TeX",
+      "description": "Open LaTeX and BibTeX files (.tex, .bib, .sty, .cls) as plain text to edit, with their commands, comments and fields coloured, for quick changes to a paper. It doesn't compile them."
+    },
+    "zh": {
+      "name": "TeX",
+      "description": "把 LaTeX 和 BibTeX 文件（.tex、.bib、.sty、.cls）当纯文本打开来改，命令、注释和字段都上色，方便顺手改改论文。不负责编译。"
+    },
+    "zh-Hant": {
+      "name": "TeX",
+      "description": "把 LaTeX 和 BibTeX 檔案（.tex、.bib、.sty、.cls）當純文字開啟來修改，指令、註解和欄位都會上色，方便順手改改論文。不負責編譯。"
+    },
+    "ja": {
+      "name": "TeX",
+      "description": "LaTeX と BibTeX のファイル（.tex、.bib、.sty、.cls）をプレーンテキストとして開いて編集でき、コマンド・コメント・フィールドを色分けします。論文のちょっとした修正に。コンパイルはしません。"
+    },
+    "ko": {
+      "name": "TeX",
+      "description": "LaTeX와 BibTeX 파일(.tex, .bib, .sty, .cls)을 일반 텍스트로 열어 고칠 수 있고, 명령·주석·필드에 색을 입힙니다. 논문을 간단히 고칠 때 쓰세요. 컴파일은 하지 않습니다."
+    },
+    "de": {
+      "name": "TeX",
+      "description": "Öffnet LaTeX- und BibTeX-Dateien (.tex, .bib, .sty, .cls) als reinen Text zum Bearbeiten, mit farbigen Befehlen, Kommentaren und Feldern – für schnelle Änderungen an einer Arbeit. Kompiliert wird nicht."
+    },
+    "fr": {
+      "name": "TeX",
+      "description": "Ouvre les fichiers LaTeX et BibTeX (.tex, .bib, .sty, .cls) en texte brut pour les modifier, commandes, commentaires et champs colorés, pour retoucher vite un article. Ne les compile pas."
+    },
+    "es": {
+      "name": "TeX",
+      "description": "Abre archivos LaTeX y BibTeX (.tex, .bib, .sty, .cls) como texto sin formato para editarlos, con comandos, comentarios y campos en color, para cambios rápidos en un artículo. No los compila."
+    },
+    "pt": {
+      "name": "TeX",
+      "description": "Abre ficheiros LaTeX e BibTeX (.tex, .bib, .sty, .cls) como texto simples para editar, com comandos, comentários e campos coloridos, para alterações rápidas num artigo. Não os compila."
+    },
+    "ru": {
+      "name": "TeX",
+      "description": "Открывает файлы LaTeX и BibTeX (.tex, .bib, .sty, .cls) как обычный текст для правки, с раскрашенными командами, комментариями и полями — для быстрых правок статьи. Не компилирует их."
+    }
+  }
+}

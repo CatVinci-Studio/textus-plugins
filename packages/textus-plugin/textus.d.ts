@@ -1,5 +1,5 @@
 /**
- * The Textus plugin API, 1.10: the `textus` object a plugin's code is given
+ * The Textus plugin API, 1.11: the `textus` object a plugin's code is given
  * (src/plugins/host/host-runtime.ts), the context its `activate` receives, and
  * `acquireTextusApi()` in its webviews (webview-runtime.ts). The one source
  * of truth: docs/dev/plugins/guide.md explains it, the reference pages are
@@ -183,7 +183,7 @@ declare global {
       /** Textus's UI language ("en", "zh", "zh-Hant", ...). */
       readonly language: string;
       readonly appVersion: string;
-      /** This API's version: "1.10" from Textus 1.4.7 ("1.9": 1.4.6, "1.8": 1.4.4, "1.7": 1.4.3, "1.6": 1.4.2, "1.5": 1.3.13-rc.1,
+      /** This API's version: "1.11" from Textus 1.4.8 ("1.10": 1.4.7, "1.9": 1.4.6, "1.8": 1.4.4, "1.7": 1.4.3, "1.6": 1.4.2, "1.5": 1.3.13-rc.1,
        *  "1.4": 1.3.10, "1.3": 1.3.10-rc.1, "1.2": 1.3.9, "1.1": 1.3.0-beta.8). Prefer engines.textus; compare
        *  it as numbers, not as text ("1.10" > "1.9"). */
       readonly apiVersion: string;
@@ -932,6 +932,9 @@ declare global {
       /** The part `pattern` matched, which an item replaces. */
       match: string;
       inMath: boolean;
+      /** From 1.11: in a code block (a completion with `where: "code"`),
+       *  its language as written after the fence; "" for none. */
+      language?: string;
       /** From 1.3.9: the pattern's last capture group (the query); the
        *  match without one. */
       query: string;
@@ -1226,7 +1229,8 @@ declare global {
         to: string,
         options?: { updateLinks?: boolean },
       ): Promise<void>;
-      /** To the system's Trash, never deleted for good. */
+      /** To the system's Trash, never deleted for good: Recently Deleted on
+       *  iOS. Android has none: it fails with a message ending "[noTrash]". */
       trash(path: string): Promise<void>;
       createFolder(path: string): Promise<void>;
       frontmatter: Frontmatter;
@@ -1910,7 +1914,8 @@ declare global {
     interface App {
       /** "active": a Textus window has the focus; "inactive": windows are
        *  open, none focused; "background": no window (background code, or
-       *  every window closed in background mode). */
+       *  every window closed in background mode). On iOS and Android only
+       *  "active" (on screen) and "background" (the user left the app). */
       readonly state: "active" | "inactive" | "background";
       onDidChangeState: Event<"active" | "inactive" | "background">;
       /** The user typed (heard once typing pauses) or saved by hand -
@@ -2168,7 +2173,10 @@ declare global {
       readonly dates: Dates;
       /** From 1.7: a list dragged into a new order, the app's way: the
        *  item lifts, the others make room; `onDrop(from, to)` once let go
-       *  somewhere new. `handle`: only from inside it. Esc puts it back. */
+       *  somewhere new. `handle`: only from inside it. Esc puts it back.
+       *  A finger lifts it once held still a moment; a press in a text
+       *  field is the field's. Near the edge of its scroller the drag
+       *  scrolls it. */
       drag: {
         reorder(
           container: Element,
