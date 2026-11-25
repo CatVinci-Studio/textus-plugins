@@ -262,7 +262,9 @@ async function configure(
       .or(page.getByRole("menuitem", { name: "cn-south-1" }))
       .first()
       .click();
-    await expect(panel.locator("#region-name")).toHaveText("cn-south-1");
+    await expect(panel.locator("#region-name")).toHaveText(
+      "South China – Guangdong (cn-south-1)",
+    );
   }
   await panel.locator("#account").fill("fixture-account");
   await panel.locator("#secret").fill("fixture-secret");

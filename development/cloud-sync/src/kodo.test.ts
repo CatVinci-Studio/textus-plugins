@@ -1,3 +1,4 @@
+import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import {
   encodePolicy,
@@ -6,7 +7,7 @@ import {
   signEncodedPolicy,
   uploadToken,
 } from "./kodo";
-import { normalizeConfig, providers } from "./config";
+import { normalizeConfig, providers, regionLabel } from "./config";
 import { RemoteStore, type Fetch } from "./transport";
 import { SyncError } from "./model";
 import { bytes } from "./test-fixtures";
@@ -215,5 +216,38 @@ describe("creating on Kodo", () => {
       atob(token.split(":")[2].replace(/-/g, "+").replace(/_/g, "/")),
     );
     expect(policy.deadline).toBeGreaterThan(ahead / 1000 + 3000);
+  });
+});
+
+describe("Qiniu Kodo region names", () => {
+  const { l10n } = JSON.parse(
+    readFileSync(
+      new URL(
+        "../../../plugins/catvinci.cloud-sync/textus-plugin.json",
+        import.meta.url,
+      ),
+      "utf8",
+    ),
+  ) as { l10n: Record<string, Record<string, string>> };
+  const codes = Object.keys(providers.kodo.regions!);
+
+  it.each(Object.keys(l10n))("names every region in %s", (lang) => {
+    for (const code of codes) expect(l10n[lang][code]).toMatch(/\S/);
+  });
+  it("reads as Qiniu's name, then the code", () => {
+    const t = (key: string) => l10n.zh[key];
+    expect(codes.map((c) => regionLabel(c, t))).toEqual([
+      "华东-浙江 (cn-east-1)",
+      "华东-浙江2 (cn-east-2)",
+      "华北-河北 (cn-north-1)",
+      "华南-广东 (cn-south-1)",
+      "北美-洛杉矶 (us-north-1)",
+      "亚太-新加坡 (ap-southeast-1)",
+      "亚太-河内 (ap-southeast-2)",
+      "亚太-胡志明 (ap-southeast-3)",
+    ]);
+    expect(regionLabel("cn-south-1", (key) => l10n.en[key])).toBe(
+      "South China – Guangdong (cn-south-1)",
+    );
   });
 });

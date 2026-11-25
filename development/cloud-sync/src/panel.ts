@@ -5,7 +5,7 @@ import {
   type Config,
   type Result,
 } from "./model";
-import { providers, type Field } from "./config";
+import { providers, regionLabel, type Field } from "./config";
 
 const api = acquireTextusApi();
 const element = <T extends HTMLElement>(id: string) =>
@@ -91,10 +91,11 @@ picker(
   },
 );
 // Where the service has its own list, the region is picked from it.
+const regionName = (code: string) => regionLabel(code, (key) => api.t(key));
 picker(
   "region",
   [],
-  String,
+  regionName,
   () => {
     typed = true;
     formToggles();
@@ -144,7 +145,10 @@ function formToggles() {
     element(`${field}-field`).hidden = !shows(field);
   element("region-row").hidden = !spec.regions;
   element("region-field").hidden = !shows("region") || !!spec.regions;
-  element("region-name").textContent = input("region").value || api.t("choose");
+  const region = input("region").value;
+  element("region-name").textContent = region
+    ? regionName(region)
+    : api.t("choose");
   element("s3-more").hidden = [
     ...element("s3-more").querySelectorAll<HTMLElement>(".tx-row"),
   ].every((row) => row.hidden);

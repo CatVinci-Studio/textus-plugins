@@ -22,7 +22,8 @@ export interface Provider {
   fields: readonly Field[];
   /** A region typed in starts as this. */
   region?: string;
-  /** The regions to pick from, with each one's upload host. */
+  /** The regions to pick from, with each one's upload host; each is
+   *  named in l10n under its code. */
   regions?: Readonly<Record<string, string>>;
   /** The labels of its sign-in, and a line under the service, if any. */
   signIn: readonly [string, string];
@@ -86,6 +87,10 @@ export const providers: Record<Config["provider"], Provider> = {
     parallel: 2,
   },
 };
+
+/** A region as the picker reads it: its name, then its code. */
+export const regionLabel = (code: string, t: (key: string) => string) =>
+  `${t(code)} (${code})`;
 
 export const defaults: Config = {
   provider: "s3",

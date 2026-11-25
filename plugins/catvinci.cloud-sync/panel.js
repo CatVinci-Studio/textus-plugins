@@ -62,6 +62,7 @@
       parallel: 2
     }
   };
+  var regionLabel = (code, t) => `${t(code)} (${code})`;
   var defaults = {
     provider: "s3",
     endpoint: "",
@@ -130,10 +131,11 @@
       formToggles();
     }
   );
+  var regionName = (code) => regionLabel(code, (key) => api.t(key));
   picker(
     "region",
     [],
-    String,
+    regionName,
     () => {
       typed = true;
       formToggles();
@@ -174,7 +176,8 @@
       element(`${field}-field`).hidden = !shows(field);
     element("region-row").hidden = !spec.regions;
     element("region-field").hidden = !shows("region") || !!spec.regions;
-    element("region-name").textContent = input("region").value || api.t("choose");
+    const region = input("region").value;
+    element("region-name").textContent = region ? regionName(region) : api.t("choose");
     element("s3-more").hidden = [
       ...element("s3-more").querySelectorAll(".tx-row")
     ].every((row) => row.hidden);
