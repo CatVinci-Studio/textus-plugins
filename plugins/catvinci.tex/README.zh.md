@@ -18,4 +18,4 @@
 
 ## 更新日志
 
-- **0.1.0** - First version: LaTeX and BibTeX files edited as coloured plain text. Needs Textus 1.4.8.
+- **0.1.0** - First version: LaTeX and BibTeX files edited as coloured plain text. Needs Textus 1.4.8-rc.3.
