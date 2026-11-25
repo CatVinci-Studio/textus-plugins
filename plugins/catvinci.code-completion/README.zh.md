@@ -11,4 +11,4 @@
 
 ## 更新日志
 
-- **0.1.0** - 第一个版本：20 种语言的关键字，以及光标附近的词。
+- **0.1.0** - First version: keywords of 20 languages and the words near the caret.

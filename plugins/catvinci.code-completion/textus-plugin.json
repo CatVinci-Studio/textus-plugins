@@ -7,6 +7,7 @@
   "description": "%description%",
   "icon": "icon.svg",
   "license": "MIT",
+  "category": "editing",
   "repository": "https://github.com/CatVinci-Studio/textus-plugins",
   "engines": {
     "textus": ">=1.4.8-rc.2"
