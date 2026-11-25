@@ -1,6 +1,6 @@
 # 云同步
 
-通过你自己的 S3 兼容存储、WebDAV 或坚果云，让一个文件夹在几台电脑上保持一致；云端保留历史版本，也可以选择在文件离开设备前先加密。
+通过你自己的 S3 兼容存储、七牛云 Kodo、WebDAV 或坚果云，让一个文件夹在几台电脑上保持一致；云端保留历史版本，也可以选择在文件离开设备前先加密。
 
 打开端到端加密后，服务商既看不到文件内容，也看不到文件名。需要 Textus 1.4.1 或更新版本。
 
@@ -124,6 +124,8 @@ core-plugins、types 这几个 `.json`）；`workspace.json` 这类每台设备�
 
 ## 中断恢复
 
+云端的锁让各台设备依次同步。七牛云 Kodo 的 S3 地址会覆盖已有的锁，所以 Kodo 的锁通过七牛的上传域名、用带 `insertOnly` 的上传凭证新建，已有同名文件时会被拒绝（614）；读取和删除锁仍走 S3 地址。
+
 同步到一半时 Textus 被关掉或停下，这台设备留下的锁会在它下一次同步时自动收回，不用确认
 （同步进行中每 10 秒更新一次本机对这把锁的记录；记录 30 秒没更新才收回，下一次同步开始得早就等到那时，
 等的时候记录又更新了就不动它——那是另一个窗口里还在跑的同步）。
@@ -153,6 +155,7 @@ core-plugins、types 这几个 `.json`）；`workspace.json` 这类每台设备�
 
 ## 更新日志
 
+- **0.9.0** - Sync through Qiniu Kodo: pick **Qiniu Kodo**, then your bucket's region from the list, and enter the bucket and an access key. As with the other services, two devices never sync into it at once. Thanks to @phonedu.
 - **0.8.1** - A file over 128 MiB no longer stops the whole sync: it stays where it is on every device and is listed under the status. A conflict copy opens from the page with a click. Ready for phones, not offered there yet: a sync when a folder opens and when you come back to Textus, none in the background; settings that survive an iPhone update; a smaller largest file and fewer transfers at once; deleted files kept in "Sync trash/" where there is no system Trash.
 - **0.8.0** - Safer when a sync is cut short: a lock this device left (Textus closed or stopped mid-sync) is taken back by its next sync without asking; another device's lock still needs **Recover stale lock**. A sync that would delete many files from the cloud stops and asks first, and a folder where suddenly nothing is found is taken as unreadable, not emptied. A file the system Trash refuses no longer stops the whole sync: it stays in place and is tried again. The first sync after a restart reads only the files changed meanwhile, not the whole folder. Its page is in every language Textus speaks. Its pickers keep Textus's own height.
 - **0.7.0** - Faster syncs with fewer requests: with nothing changed, a sync asks the service once instead of 8 to 16 times; a changed file's blocks are sent in one request each, without checking first or reading them back; on WebDAV folders are made only when one is missing. A busy service is waited for (up to a minute, shown in the status) instead of stopping the sync, and requests that got no answer are sent again. The progress counts files that are done. From Textus 1.4.4 the versions it keeps of a document show in Version History too.

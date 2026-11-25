@@ -15,7 +15,7 @@ The plugins for [Textus](https://textus.md), the Markdown editor. None of them c
 | CJK Spacing | Puts a space between Chinese or Japanese text and Latin letters or numbers. |
 | Claude Code | Claude Code in Textus AI: it reads your folder, writes and edits your notes, and asks before it changes anything. |
 | Clipboard History | What you copied or cut in your documents, newest first, in the sidebar: click one to put it in again. |
-| Cloud Sync | Syncs your folder through S3, WebDAV or Nutstore, with older versions kept in the cloud and optional end-to-end encryption. Keeps both versions on conflict. |
+| Cloud Sync | Syncs your folder through S3, Qiniu Kodo, WebDAV or Nutstore, with older versions kept in the cloud and optional end-to-end encryption. Keeps both versions on conflict. |
 | Codex | Codex in Textus AI: it reads your folder, writes and edits your notes, and asks before it changes anything. |
 | DeepSeek Harness | DeepSeek Harness in Textus AI: DeepSeek's own agent reads your folder, writes and edits your notes, and asks before it changes anything. |
 | Desk Pet | A chibi companion that floats on your desktop or in the window while you write. She writes when you type, dozes when you stop and cheers when you save. She is Moyu, or the LLM-chan of the model Textus AI is using, who leans in when Textus AI is at work. |

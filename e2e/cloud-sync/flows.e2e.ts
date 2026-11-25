@@ -78,6 +78,29 @@ class Remote {
       body: data.toString("base64"),
     });
     if (this.failure) return response(this.failure);
+    const url = new URL(req.url);
+    if (method === "POST" && url.hostname.startsWith("up-")) {
+      const form = body.toString("utf8");
+      const crlf = String.fromCharCode(13, 10);
+      const key = form.split(`name="key"${crlf}${crlf}`)[1]?.split(crlf)[0];
+      const fileAt = form.indexOf('name="file"; filename="blob"');
+      const fileStart =
+        fileAt < 0 ? -1 : form.indexOf(`${crlf}${crlf}`, fileAt);
+      const file =
+        fileStart < 0 ? Buffer.alloc(0) : body.subarray(fileStart + 4);
+      const end = file.indexOf(`${crlf}--`);
+      const bytes = end < 0 ? file : file.subarray(0, end);
+      if (!key) return response(400);
+      // Kodo's S3 address, by path: /bucket/key.
+      const stored = `/test-bucket/${key}`;
+      if (this.files.has(stored)) {
+        return this.files.get(stored)!.equals(bytes)
+          ? response(200)
+          : response(614);
+      }
+      this.files.set(stored, bytes);
+      return response(200);
+    }
     // Every folder already exists, as MKCOL's 405 says.
     if (method === "MKCOL") return response(405);
     if (method === "PROPFIND") return response(207);
@@ -191,7 +214,7 @@ async function open(
 /** The service picked from the page's menu, drawn by Textus over it. */
 async function pickProvider(
   page: Page,
-  provider: "s3" | "webdav" | "nutstore",
+  provider: "s3" | "kodo" | "webdav" | "nutstore",
   language = "en",
 ) {
   const strings = (manifest as { l10n: Record<string, Record<string, string>> })
@@ -219,15 +242,30 @@ async function encryptOn(panel: FrameLocator) {
 }
 async function configure(
   page: Page,
-  provider: "s3" | "webdav" | "nutstore",
+  provider: "s3" | "kodo" | "webdav" | "nutstore",
   password = syncPassword,
   enter = false,
 ) {
   const panel = page.frameLocator(".plugin-webview-frame");
   await pickProvider(page, provider);
-  if (provider !== "nutstore")
+  if (provider === "s3" || provider === "webdav")
     await panel.locator("#endpoint").fill("https://fixture.invalid/dav");
-  if (provider === "s3") await panel.locator("#bucket").fill("test-bucket");
+  if (provider === "s3" || provider === "kodo")
+    await panel.locator("#bucket").fill("test-bucket");
+  if (provider === "kodo") {
+    // Its address comes from the region, picked from Textus's menu.
+    await expect(panel.locator("#endpoint")).toBeHidden();
+    await expect(panel.locator("#s3-more")).toBeHidden();
+    await panel.locator("#region-pick").click();
+    await page
+      .getByRole("menuitemradio", { name: "cn-south-1" })
+      .or(page.getByRole("menuitem", { name: "cn-south-1" }))
+      .first()
+      .click();
+    await expect(panel.locator("#region-name")).toHaveText(
+      "South China – Guangdong (cn-south-1)",
+    );
+  }
   await panel.locator("#account").fill("fixture-account");
   await panel.locator("#secret").fill("fixture-secret");
   await encryptOn(panel);
@@ -267,7 +305,7 @@ async function device(
   return { context, page };
 }
 
-for (const provider of ["s3", "webdav", "nutstore"] as const) {
+for (const provider of ["s3", "kodo", "webdav", "nutstore"] as const) {
   test(`${provider}: the packaged plugin saves secrets, connects, and syncs through Textus's sandbox`, async ({
     page,
   }) => {
@@ -361,9 +399,8 @@ test("configuration errors preserve input and Chinese UI fits narrow and dark vi
     "zh",
   );
   await pickProvider(page, "nutstore", "zh");
-  await expect(panel.locator("#endpoint")).toHaveValue(
-    "https://dav.jianguoyun.com/dav",
-  );
+  // Nutstore's address is its own: not asked for.
+  await expect(panel.locator("#endpoint-field")).toBeHidden();
   await panel.locator("#account").fill("fixture-account");
   await panel.locator("#secret").fill("fixture-secret");
   await encryptOn(panel);

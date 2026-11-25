@@ -1,6 +1,6 @@
 # Cloud Sync
 
-Keep a folder the same on your computers through your own S3-compatible storage, WebDAV or Nutstore, with older versions kept in the cloud and, if you choose, encrypted before it leaves each device.
+Keep a folder the same on your computers through your own S3-compatible storage, Qiniu Kodo, WebDAV or Nutstore, with older versions kept in the cloud and, if you choose, encrypted before it leaves each device.
 
 With end-to-end encryption on, the storage service sees neither the contents of your files nor their names.
 Cloud Sync needs Textus 1.4.1 or later.
@@ -10,7 +10,8 @@ Cloud Sync needs Textus 1.4.1 or later.
 1. Open the folder to sync in Textus, then choose **Plugins › Cloud Sync**
    (or **Connection settings…** in its sidebar tab).
 2. Pick the storage service and enter its server address and sign-in. Nutstore
-   needs only your email and an app password from Account › Security.
+   needs only your email and an app password from Account › Security; Qiniu
+   Kodo, the bucket's region, its name and an access key.
 3. To encrypt, turn on **End-to-end encryption** and set a **sync password**
    of at least 12 characters; keep it in your password manager: it can't be
    reset. Decide this once per remote folder: switching later needs a new,
@@ -60,6 +61,8 @@ telemetry, analytics, remote code or self-updates.
 
 S3 takes a custom endpoint (empty means AWS), region, bucket, path-style or
 virtual-host addressing and an optional session token under **More options**.
+Qiniu Kodo takes the bucket's region from Qiniu's list instead of an address,
+and an access key without a session token.
 The remote folder holds the plugin's storage format, not a plain file mirror;
 use a different one for each workspace.
 
@@ -240,7 +243,10 @@ new remote folder to change passwords.
 
 ## Interrupted sync
 
-A remote lock serializes devices. S3 uses `If-None-Match: *`; WebDAV uses a
+A remote lock serializes devices. S3 uses `If-None-Match: *`. Qiniu Kodo's S3
+address would write over a lock that is there, so Kodo creates it through
+Qiniu's upload host with an `insertOnly` upload token, which refuses a second
+one (614); reading and removing it still go to the S3 address. WebDAV uses a
 temporary upload followed by `MOVE` with `Overwrite: F`, including Nutstore's
 409 response for an existing target. The connection test verifies exclusion
 before a sync can touch workspace data. No listing API or unbounded directory
@@ -309,6 +315,7 @@ and `THIRD_PARTY_NOTICES.md`. The storage design was informed by Petrichor/Sylva
 
 ## Changes
 
+- **0.9.0** - Sync through Qiniu Kodo: pick **Qiniu Kodo**, then your bucket's region from the list, and enter the bucket and an access key. As with the other services, two devices never sync into it at once. Thanks to @phonedu.
 - **0.8.1** - A file over 128 MiB no longer stops the whole sync: it stays where it is on every device and is listed under the status. A conflict copy opens from the page with a click. Ready for phones, not offered there yet: a sync when a folder opens and when you come back to Textus, none in the background; settings that survive an iPhone update; a smaller largest file and fewer transfers at once; deleted files kept in "Sync trash/" where there is no system Trash.
 - **0.8.0** - Safer when a sync is cut short: a lock this device left (Textus closed or stopped mid-sync) is taken back by its next sync without asking; another device's lock still needs **Recover stale lock**. A sync that would delete many files from the cloud stops and asks first, and a folder where suddenly nothing is found is taken as unreadable, not emptied. A file the system Trash refuses no longer stops the whole sync: it stays in place and is tried again. The first sync after a restart reads only the files changed meanwhile, not the whole folder. Its page is in every language Textus speaks. Its pickers keep Textus's own height.
 - **0.7.0** - Faster syncs with fewer requests: with nothing changed, a sync asks the service once instead of 8 to 16 times; a changed file's blocks are sent in one request each, without checking first or reading them back; on WebDAV folders are made only when one is missing. A busy service is waited for (up to a minute, shown in the status) instead of stopping the sync, and requests that got no answer are sent again. The progress counts files that are done. From Textus 1.4.4 the versions it keeps of a document show in Version History too.

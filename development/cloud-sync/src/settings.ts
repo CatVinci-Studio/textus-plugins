@@ -1,4 +1,4 @@
-import { defaults, identity, normalizeConfig } from "./config";
+import { defaults, identity, normalizeConfig, providers } from "./config";
 import { deviceOf, folderKey } from "./device";
 import { hash } from "./content";
 import { validatePassword } from "./encryption";
@@ -122,9 +122,10 @@ export class Settings {
     // Kept while encryption is off, for when it is turned back on.
     const syncPassword =
       String(incoming.syncPassword ?? "") || previous.syncPassword || "";
-    const sessionToken =
-      String(incoming.sessionToken ?? "") ||
-      (incoming.secret ? "" : previous.sessionToken);
+    const sessionToken = providers[config.provider].fields.includes("token")
+      ? String(incoming.sessionToken ?? "") ||
+        (incoming.secret ? "" : previous.sessionToken)
+      : "";
     if (config.encrypt) {
       validatePassword(syncPassword);
       if (

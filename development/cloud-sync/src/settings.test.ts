@@ -223,7 +223,20 @@ it("tests typed credentials without saving them, keeping a saved key left empty"
   expect(JSON.stringify([...f.secrets])).toBe(before);
   await expect(
     f.settings.resolve("/notes", config, { account: "bob", secret: "" }),
-  ).rejects.toMatchObject({ code: "credentialsRequired" });
+  ).rejects.toMatchObject({ code: "credentialsRequired" }); // A session token only where the service asks for one.
+  const typed = { account: "a", secret: "s", sessionToken: "t" };
+  const s3 = normalizeConfig({ provider: "s3", bucket: "notes" });
+  const kodo = normalizeConfig({
+    provider: "kodo",
+    region: "cn-east-1",
+    bucket: "notes",
+  });
+  expect((await f.settings.resolve("/notes", s3, typed)).sessionToken).toBe(
+    "t",
+  );
+  expect((await f.settings.resolve("/notes", kodo, typed)).sessionToken).toBe(
+    "",
+  );
 });
 it("disconnects by removing this folder's keys and settings only", async () => {
   const f = fixture();

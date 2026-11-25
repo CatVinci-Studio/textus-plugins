@@ -11,15 +11,75 @@
   var MAX_FILE_MIB = [8, 16, 32, 64, 128];
 
   // development/cloud-sync/src/config.ts
+  var S3_SIGN_IN = ["accountS3", "secretS3"];
   var providers = {
-    s3: { transport: "s3", endpoint: "", saveGap: 0, parallel: 8 },
-    webdav: { transport: "dav", endpoint: "", saveGap: 0, parallel: 4 },
+    s3: {
+      transport: "s3",
+      endpoint: "https://s3.{region}.amazonaws.com",
+      create: "conditional",
+      fields: ["endpoint", "bucket", "region", "token", "pathStyle"],
+      region: "us-east-1",
+      signIn: S3_SIGN_IN,
+      saveGap: 0,
+      parallel: 8
+    },
+    kodo: {
+      transport: "s3",
+      endpoint: "https://s3.{region}.qiniucs.com",
+      create: "upload",
+      fields: ["bucket", "region"],
+      regions: {
+        "cn-east-1": "up-z0.qiniup.com",
+        "cn-east-2": "up-cn-east-2.qiniup.com",
+        "cn-north-1": "up-z1.qiniup.com",
+        "cn-south-1": "up-z2.qiniup.com",
+        "us-north-1": "up-na0.qiniup.com",
+        "ap-southeast-1": "up-as0.qiniup.com",
+        "ap-southeast-2": "up-ap-southeast-2.qiniup.com",
+        "ap-southeast-3": "up-ap-southeast-3.qiniup.com"
+      },
+      signIn: S3_SIGN_IN,
+      saveGap: 0,
+      parallel: 8
+    },
+    webdav: {
+      transport: "dav",
+      endpoint: "",
+      create: "move",
+      fields: ["endpoint"],
+      signIn: ["accountDav", "secretDav"],
+      saveGap: 0,
+      parallel: 4
+    },
     nutstore: {
       transport: "dav",
       endpoint: "https://dav.jianguoyun.com/dav",
+      create: "move",
+      fields: [],
+      signIn: ["accountNutstore", "secretNutstore"],
+      help: "nutstoreHelp",
       saveGap: 3,
       parallel: 2
     }
+  };
+  var regionLabel = (code, t) => `${t(code)} (${code})`;
+  var defaults = {
+    provider: "s3",
+    endpoint: "",
+    region: providers.s3.region,
+    bucket: "",
+    prefix: "textus/my-workspace",
+    pathStyle: true,
+    automatic: false,
+    interval: 5,
+    saveGap: 0,
+    exclude: "",
+    gitignore: false,
+    obsidian: false,
+    encrypt: false,
+    keepDays: 90,
+    parallel: 8,
+    maxFileMiB: 128
   };
 
   // development/cloud-sync/src/panel.ts
@@ -45,11 +105,7 @@
   for (const item of document.querySelectorAll("[data-t]"))
     item.textContent = api.t(item.dataset.t);
   document.querySelector("section.sync-status")?.setAttribute("aria-label", api.t("name"));
-  var signIn = {
-    s3: ["accountS3", "secretS3"],
-    webdav: ["accountDav", "secretDav"],
-    nutstore: ["accountNutstore", "secretNutstore"]
-  };
+  var providerOf = (id) => providers[id] ?? providers.s3;
   function picker(id, values, label, picked, choices = () => values) {
     const button = element(`${id}-pick`);
     button.onclick = async () => {
@@ -65,14 +121,26 @@
   }
   picker(
     "provider",
-    ["s3", "webdav", "nutstore"],
+    Object.keys(providers),
     (p) => api.t(p),
-    () => {
+    (p) => {
       input("endpoint").value = "";
+      input("region").value = providerOf(p).region ?? "";
       for (const id of secretFields) input(id).value = "";
       typed = true;
       formToggles();
     }
+  );
+  var regionName = (code) => regionLabel(code, (key) => api.t(key));
+  picker(
+    "region",
+    [],
+    regionName,
+    () => {
+      typed = true;
+      formToggles();
+    },
+    () => Object.keys(providerOf(input("provider").value).regions ?? {})
   );
   var keepLabel = (days) => days === "0" ? api.t("keepForever") : api.t("keepDays", days);
   var minutes = (m) => api.t("minutes", m);
@@ -102,17 +170,24 @@
     element("password-field").hidden = !encrypt;
     element("confirm-field").hidden = !encrypt;
     element("provider-name").textContent = api.t(provider);
-    element("bucket-field").hidden = provider !== "s3";
-    element("s3-more").hidden = provider !== "s3";
-    element("endpoint-field").hidden = provider === "nutstore";
-    element("nutstore-help").hidden = provider !== "nutstore";
-    const [account, secret] = signIn[provider] ?? signIn.s3;
+    const spec = providerOf(provider);
+    const shows = (field) => spec.fields.includes(field);
+    for (const field of ["endpoint", "bucket", "token", "pathStyle"])
+      element(`${field}-field`).hidden = !shows(field);
+    element("region-row").hidden = !spec.regions;
+    element("region-field").hidden = !shows("region") || !!spec.regions;
+    const region = input("region").value;
+    element("region-name").textContent = region ? regionName(region) : api.t("choose");
+    element("s3-more").hidden = [
+      ...element("s3-more").querySelectorAll(".tx-row")
+    ].every((row) => row.hidden);
+    element("provider-help").hidden = !spec.help;
+    element("provider-help").textContent = spec.help ? api.t(spec.help) : "";
+    const [account, secret] = spec.signIn;
     element("account-label").textContent = api.t(account);
     element("secret-label").textContent = api.t(secret);
-    input("endpoint").required = provider !== "s3";
-    if (provider === "nutstore")
-      input("endpoint").value = providers.nutstore.endpoint;
-    input("bucket").required = provider === "s3";
+    input("endpoint").required = shows("endpoint") && !spec.endpoint;
+    input("bucket").required = shows("bucket");
     for (const id of ["account", "secret", "sync-password"]) {
       input(id).placeholder = editing ? api.t("keptIfEmpty") : "";
       input(id).required = !editing && id !== "sync-password";
@@ -133,12 +208,11 @@
     element("cancel-edit").hidden = !editing;
     element("c-service").textContent = api.t(config.provider);
     element("c-endpoint").textContent = config.endpoint;
-    element("c-endpoint-row").hidden = config.provider === "nutstore";
+    const spec = providerOf(config.provider);
+    element("c-endpoint-row").hidden = !spec.fields.includes("endpoint") && !spec.regions;
     element("c-bucket").textContent = config.bucket;
-    element("c-bucket-row").hidden = config.provider !== "s3";
-    element("c-account-label").textContent = api.t(
-      (signIn[config.provider] ?? signIn.s3)[0]
-    );
+    element("c-bucket-row").hidden = !spec.fields.includes("bucket");
+    element("c-account-label").textContent = api.t(spec.signIn[0]);
     element("c-account").textContent = state.account ?? "";
     element("c-prefix").textContent = config.prefix;
     element("c-encrypt").textContent = api.t(

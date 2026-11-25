@@ -1,5 +1,6 @@
 import { AwsV4Signer } from "aws4fetch";
 import { hash } from "./content";
+import { multipart, uploadToken } from "./kodo";
 import { providers, relativePath } from "./config";
 import {
   LOCK,
@@ -56,11 +57,15 @@ export class RemoteStore implements ObjectStore {
   now(): number {
     return Date.now() + this.skew;
   }
-  private target(key: string): string {
+  /** The object's full name: the remote folder, then `key`. */
+  private name(key: string): string {
     if (!relativePath(key)) throw new SyncError("invalidPath");
+    return `${this.config.prefix}/${key}`;
+  }
+  private target(key: string): string {
     const c = this.config;
     const url = new URL(c.endpoint);
-    const prefix = `${c.prefix}/${key}`;
+    const prefix = this.name(key);
     const s3 = providers[c.provider].transport === "s3";
     if (s3 && !c.pathStyle) url.hostname = `${c.bucket}.${url.hostname}`;
     url.pathname =
@@ -72,7 +77,8 @@ export class RemoteStore implements ObjectStore {
   /** One request, sent again while the server is busy, and after no clear
    *  answer if `repeat` (not a MOVE, nor the lock's DELETE: done the first
    *  time, a second could take another device's lock). `unsure` hears of a
-   *  send that may have landed unanswered. */
+   *  send that may have landed unanswered. Unsigned, the body carries its
+   *  own permission. */
   private async request(
     method: string,
     url: string,
@@ -81,14 +87,16 @@ export class RemoteStore implements ObjectStore {
     {
       repeat = REPEATABLE.has(method),
       unsure,
-    }: { repeat?: boolean; unsure?: () => void } = {},
+      signed = true,
+    }: { repeat?: boolean; unsure?: () => void; signed?: boolean } = {},
   ): Promise<Response> {
     for (let attempt = 0; ; attempt++) {
       const quiet = this.quietUntil - Date.now();
       if (quiet > 0) await this.sleep(quiet);
       let headers: Record<string, string> = { ...extra };
-      if (providers[this.config.provider].transport === "s3") {
-        const signed = await new AwsV4Signer({
+      const s3 = providers[this.config.provider].transport === "s3";
+      if (signed && s3) {
+        const sigv4 = await new AwsV4Signer({
           url,
           method,
           body: body?.slice().buffer,
@@ -103,8 +111,8 @@ export class RemoteStore implements ObjectStore {
           region: this.config.region,
           cache: this.cache,
         }).sign();
-        headers = Object.fromEntries(signed.headers.entries());
-      } else {
+        headers = Object.fromEntries(sigv4.headers.entries());
+      } else if (signed) {
         const bytes = new TextEncoder().encode(
           `${this.credentials.account}:${this.credentials.secret}`,
         );
@@ -218,26 +226,31 @@ export class RemoteStore implements ObjectStore {
     this.require(res);
   }
   async create(key: string, bytes: Uint8Array): Promise<boolean> {
-    if (providers[this.config.provider].transport === "s3") {
-      // Sent again after no answer, a refusal may be to our own first try.
-      let resent = false;
-      const res = await this.request(
-        "PUT",
-        this.target(key),
-        bytes,
-        { "If-None-Match": "*" },
-        { unsure: () => (resent = true) },
-      );
-      if (res.status === 412) {
-        if (!resent) return false;
-        const there = await this.get(key);
-        return !!there && (await hash(there)) === (await hash(bytes));
-      }
-      this.require(res);
-      return true;
-    }
-    // Nutstore supports atomic MOVE with Overwrite:F, including its 409
-    // DuplicateName response; a conditional PUT is not portable across DAV servers.
+    const how = providers[this.config.provider].create;
+    if (how === "upload") return this.upload(key, bytes);
+    if (how === "move") return this.move(key, bytes);
+    // Sent again after no answer, a refusal may be to our own first try.
+    let resent = false;
+    const res = await this.request(
+      "PUT",
+      this.target(key),
+      bytes,
+      { "If-None-Match": "*" },
+      { unsure: () => (resent = true) },
+    );
+    if (res.status === 412) return resent && this.holds(key, bytes);
+    this.require(res);
+    return true;
+  }
+  /** Whether `key` holds `bytes`: a refused create, sent again, was ours. */
+  private async holds(key: string, bytes: Uint8Array): Promise<boolean> {
+    const there = await this.get(key);
+    return !!there && (await hash(there)) === (await hash(bytes));
+  }
+  /** Nutstore supports atomic MOVE with Overwrite:F, including its 409
+   *  DuplicateName response; a conditional PUT is not portable across DAV
+   *  servers. */
+  private async move(key: string, bytes: Uint8Array): Promise<boolean> {
     const temporary = `${key}.tmp-${crypto.randomUUID()}`;
     await this.put(temporary, bytes);
     try {
@@ -254,6 +267,33 @@ export class RemoteStore implements ObjectStore {
     } finally {
       await this.remove(temporary).catch(() => {});
     }
+  }
+  /** Qiniu's S3 address writes over a file that is there; its upload host,
+   *  with an insert-only token, refuses (614). 400 is the wrong region,
+   *  631 a bucket that isn't there. */
+  private async upload(key: string, bytes: Uint8Array): Promise<boolean> {
+    const { provider, region, bucket } = this.config;
+    const name = this.name(key);
+    const token = await uploadToken(
+      this.credentials.account,
+      this.credentials.secret,
+      bucket,
+      name,
+      Math.floor(this.now() / 1000) + 3600,
+    );
+    const boundary = `textus${crypto.randomUUID().replace(/-/g, "")}`;
+    let resent = false;
+    const res = await this.request(
+      "POST",
+      `https://${providers[provider].regions?.[region]}/`,
+      multipart(boundary, token, name, bytes),
+      { "Content-Type": `multipart/form-data; boundary=${boundary}` },
+      { repeat: true, signed: false, unsure: () => (resent = true) },
+    );
+    if (res.status === 614) return resent && this.holds(key, bytes);
+    if ([400, 631].includes(res.status)) throw new SyncError("invalidConfig");
+    this.require(res);
+    return true;
   }
   async remove(key: string): Promise<void> {
     const res = await this.request(

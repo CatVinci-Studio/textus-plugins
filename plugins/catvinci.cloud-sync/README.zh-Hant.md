@@ -1,6 +1,6 @@
 # 雲端同步
 
-透過你自己的 S3 相容儲存、WebDAV 或堅果雲，讓一個資料夾在你的各台電腦上保持一致；雲端會保留舊版本，你也可以選擇在資料離開每台裝置前先加密。
+透過你自己的 S3 相容儲存、七牛雲 Kodo、WebDAV 或堅果雲，讓一個資料夾在你的各台電腦上保持一致；雲端會保留舊版本，你也可以選擇在資料離開每台裝置前先加密。
 
 開啟端對端加密後，儲存服務既看不到檔案的內容，也看不到檔名。
 雲端同步需要 Textus 1.4.1 以上版本。
@@ -108,7 +108,7 @@ S3 可以在 **更多選項** 裡設定自訂端點（留空代表 AWS）、區�
 
 ## 中斷的同步
 
-遠端鎖定讓各台裝置依序同步。S3 使用 `If-None-Match: *`；WebDAV 先上傳暫存檔，再以 `Overwrite: F` 執行 `MOVE`，堅果雲對已存在目標回傳的 409 也照此處理。同步碰到工作區資料之前，連線測試會先確認互斥機制可用。不需要任何列出檔案的 API，也不需要沒有上限的目錄列表。
+遠端鎖定讓各台裝置依序同步。S3 使用 `If-None-Match: *`；七牛雲 Kodo 的 S3 位址會覆寫已有的鎖定，所以 Kodo 透過七牛的上傳網域、以帶 `insertOnly` 的上傳憑證建立鎖定，已有同名檔案時會被拒絕（614），讀取和刪除仍走 S3 位址；WebDAV 先上傳暫存檔，再以 `Overwrite: F` 執行 `MOVE`，堅果雲對已存在目標回傳的 409 也照此處理。同步碰到工作區資料之前，連線測試會先確認互斥機制可用。不需要任何列出檔案的 API，也不需要沒有上限的目錄列表。
 
 加密區塊和一份不可變更的快照，會在發布 `v2/head.bin` 之前寫好。本機的基準只在發布成功後才前進。重試時會重複使用已完成的區塊，重新啟動後也一樣：中斷的同步已存好的區塊會記在本機，不再檢查，只要期間沒有其他裝置發布過。取消會在目前的網路請求結束後停下，並盡可能釋放鎖定。Textus 的網路 API 把一個請求限制在 60 秒內；它不提供單一請求的取消。
 
@@ -132,6 +132,7 @@ S3 可以在 **更多選項** 裡設定自訂端點（留空代表 AWS）、區�
 
 ## 更新紀錄
 
+- **0.9.0** - Sync through Qiniu Kodo: pick **Qiniu Kodo**, then your bucket's region from the list, and enter the bucket and an access key. As with the other services, two devices never sync into it at once. Thanks to @phonedu.
 - **0.8.1** - A file over 128 MiB no longer stops the whole sync: it stays where it is on every device and is listed under the status. A conflict copy opens from the page with a click. Ready for phones, not offered there yet: a sync when a folder opens and when you come back to Textus, none in the background; settings that survive an iPhone update; a smaller largest file and fewer transfers at once; deleted files kept in "Sync trash/" where there is no system Trash.
 - **0.8.0** - Safer when a sync is cut short: a lock this device left (Textus closed or stopped mid-sync) is taken back by its next sync without asking; another device's lock still needs **Recover stale lock**. A sync that would delete many files from the cloud stops and asks first, and a folder where suddenly nothing is found is taken as unreadable, not emptied. A file the system Trash refuses no longer stops the whole sync: it stays in place and is tried again. The first sync after a restart reads only the files changed meanwhile, not the whole folder. Its page is in every language Textus speaks. Its pickers keep Textus's own height.
 - **0.7.0** - Faster syncs with fewer requests: with nothing changed, a sync asks the service once instead of 8 to 16 times; a changed file's blocks are sent in one request each, without checking first or reading them back; on WebDAV folders are made only when one is missing. A busy service is waited for (up to a minute, shown in the status) instead of stopping the sync, and requests that got no answer are sent again. The progress counts files that are done. From Textus 1.4.4 the versions it keeps of a document show in Version History too.

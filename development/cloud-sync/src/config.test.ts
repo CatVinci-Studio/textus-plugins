@@ -49,19 +49,21 @@ describe("connection and data boundaries", () => {
   );
   it("lets every service sync every minute, and waits after saves only as set", () => {
     const at = (
-      provider: "s3" | "webdav" | "nutstore",
+      provider: "s3" | "kodo" | "webdav" | "nutstore",
       more: { interval?: number; saveGap?: number } = {},
     ) =>
       normalizeConfig({
         provider,
         endpoint: "https://dav.example.com/dav",
         bucket: "notes",
+        region: provider === "kodo" ? "cn-east-1" : "",
         ...more,
       });
-    for (const p of ["s3", "webdav", "nutstore"] as const)
+    for (const p of ["s3", "kodo", "webdav", "nutstore"] as const)
       expect(at(p, { interval: 1 }).interval).toBe(1);
     // A connection that never set it waits as its service suggests.
     expect(at("s3").saveGap).toBe(0);
+    expect(at("kodo").saveGap).toBe(0);
     expect(at("webdav").saveGap).toBe(0);
     expect(at("nutstore").saveGap).toBe(3);
     expect(at("nutstore", { saveGap: 0 }).saveGap).toBe(0);

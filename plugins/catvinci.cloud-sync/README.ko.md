@@ -1,6 +1,6 @@
 # 클라우드 동기화
 
-내 S3 호환 저장소, WebDAV 또는 Nutstore를 거쳐 여러 컴퓨터의 폴더를 똑같이 유지합니다. 이전 버전은 클라우드에 보관되고, 원하면 각 기기를 떠나기 전에 암호화합니다.
+내 S3 호환 저장소, Qiniu Kodo, WebDAV 또는 Nutstore를 거쳐 여러 컴퓨터의 폴더를 똑같이 유지합니다. 이전 버전은 클라우드에 보관되고, 원하면 각 기기를 떠나기 전에 암호화합니다.
 
 종단 간 암호화를 켜면 저장소 서비스는 파일 내용도, 파일 이름도 볼 수 없습니다.
 클라우드 동기화에는 Textus 1.4.1 이상이 필요합니다.
@@ -240,7 +240,9 @@ PBKDF2, HKDF, HMAC, AES-GCM API와 대조해 확인합니다.
 
 ## 중단된 동기화
 
-원격 잠금으로 기기들이 차례로 동기화합니다. S3는 `If-None-Match: *`를 쓰고,
+원격 잠금으로 기기들이 차례로 동기화합니다. S3는 `If-None-Match: *`를 씁니다. Qiniu Kodo의 S3 주소는 있는 잠금을 덮어쓰므로, Kodo는
+Qiniu 업로드 호스트에 `insertOnly` 업로드 토큰으로 잠금을 만들고 두 번째는 거절됩니다(614).
+읽기와 삭제는 그대로 S3 주소로 갑니다.
 WebDAV는 임시 업로드 뒤 `Overwrite: F`로 `MOVE`를 씁니다. 대상이 이미 있을 때
 Nutstore가 돌려주는 409 응답도 처리합니다. 연결 테스트는 동기화가 작업 공간
 데이터를 건드리기 전에 배타 잠금이 되는지 확인합니다. 목록 API나 끝없는 폴더
@@ -307,6 +309,7 @@ Go 소스나 PostgreSQL 백업 형식은 복사하지 않았습니다.
 
 ## 변경 내역
 
+- **0.9.0** - Sync through Qiniu Kodo: pick **Qiniu Kodo**, then your bucket's region from the list, and enter the bucket and an access key. As with the other services, two devices never sync into it at once. Thanks to @phonedu.
 - **0.8.1** - A file over 128 MiB no longer stops the whole sync: it stays where it is on every device and is listed under the status. A conflict copy opens from the page with a click. Ready for phones, not offered there yet: a sync when a folder opens and when you come back to Textus, none in the background; settings that survive an iPhone update; a smaller largest file and fewer transfers at once; deleted files kept in "Sync trash/" where there is no system Trash.
 - **0.8.0** - Safer when a sync is cut short: a lock this device left (Textus closed or stopped mid-sync) is taken back by its next sync without asking; another device's lock still needs **Recover stale lock**. A sync that would delete many files from the cloud stops and asks first, and a folder where suddenly nothing is found is taken as unreadable, not emptied. A file the system Trash refuses no longer stops the whole sync: it stays in place and is tried again. The first sync after a restart reads only the files changed meanwhile, not the whole folder. Its page is in every language Textus speaks. Its pickers keep Textus's own height.
 - **0.7.0** - Faster syncs with fewer requests: with nothing changed, a sync asks the service once instead of 8 to 16 times; a changed file's blocks are sent in one request each, without checking first or reading them back; on WebDAV folders are made only when one is missing. A busy service is waited for (up to a minute, shown in the status) instead of stopping the sync, and requests that got no answer are sent again. The progress counts files that are done. From Textus 1.4.4 the versions it keeps of a document show in Version History too.
