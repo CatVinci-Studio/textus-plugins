@@ -148,7 +148,7 @@ async function connected(
   const confirm = vi.fn(async (_text: string) => false);
   (globalThis as unknown as { textus: unknown }).textus = {
     l10n: { t: (key: string, ...args: unknown[]) => [key, ...args].join(" ") },
-    env: { language: "en", platform },
+    env: { language: "en", platform, apiVersion: "1.12" },
     app: { state: "active", onDidChangeState: on("state") },
     net: { fetch },
     files: {

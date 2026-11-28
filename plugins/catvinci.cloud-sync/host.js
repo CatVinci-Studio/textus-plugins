@@ -154,6 +154,20 @@ function folderKey(root, platform) {
   const container = deviceOf(platform).container;
   return container ? root.replace(container[0], container[1]) : root;
 }
+var PHONE_API = [1, 10];
+function older(version, than) {
+  const parts = (version ?? "0").split(".").map(Number);
+  for (let i = 0; i < than.length; i++) {
+    const n = parts[i] || 0;
+    if (n !== than[i]) return n < than[i];
+  }
+  return false;
+}
+function blockedHere(device, root, apiVersion) {
+  if (device.phone && older(apiVersion, PHONE_API)) return "needsNewerTextus";
+  if (device.unsupported?.[0].test(root)) return device.unsupported[1];
+  return null;
+}
 
 // development/cloud-sync/src/config.ts
 var defaults = {
@@ -3039,6 +3053,7 @@ var Controller = class {
     __publicField(this, "t", (key, ...args) => this.api.l10n.t(key, ...args));
     __publicField(this, "stopped");
     __publicField(this, "saved", () => this.state.configured ? this.state.config : null);
+    __publicField(this, "blocked", (root) => blockedHere(this.settings.device, root, this.api.env.apiVersion));
     __publicField(this, "page", (name) => this.ctx.plugin.readText(name));
     this.settings = new Settings(ctx, api.env.platform);
   }
@@ -3114,9 +3129,10 @@ var Controller = class {
       account: configured ? account : void 0,
       phone: this.settings.device.phone
     };
-    const { unsupported, synced } = this.settings.device;
-    if (root && unsupported?.[0].test(root)) {
-      this.state.message = this.t(unsupported[1]);
+    const { synced } = this.settings.device;
+    const blocked = root && this.blocked(root);
+    if (blocked) {
+      this.state.message = this.t(blocked);
       this.state.error = true;
     } else if (root && synced?.test(root))
       this.state.note = this.t("icloudFolder");
@@ -3141,8 +3157,8 @@ var Controller = class {
     const root = await this.api.files.root();
     if (!root) throw new SyncError("noFolder");
     if (root !== this.state.root) throw new SyncError("rootChanged");
-    const unsupported = this.settings.device.unsupported;
-    if (unsupported?.[0].test(root)) throw new SyncError(unsupported[1]);
+    const blocked = this.blocked(root);
+    if (blocked) throw new SyncError(blocked);
     const config = await this.settings.load(root);
     const credentials = await this.settings.credentials(root, config);
     const store = new RemoteStore(config, credentials, this.api.net.fetch);

@@ -52,3 +52,28 @@ export function folderKey(root: string, platform?: string) {
   const container = deviceOf(platform).container;
   return container ? root.replace(container[0], container[1]) : root;
 }
+
+/** The plugin API a phone's Textus answers from 1.4.7 (1.10): its app
+ *  state (lifecycle.ts) and its Trash are real there. */
+const PHONE_API = [1, 10];
+
+function older(version: string | undefined, than: number[]) {
+  const parts = (version ?? "0").split(".").map(Number);
+  for (let i = 0; i < than.length; i++) {
+    const n = parts[i] || 0;
+    if (n !== than[i]) return n < than[i];
+  }
+  return false;
+}
+
+/** Why the folder `root` can't sync on this device, as the page's words'
+ *  key; null where it can. */
+export function blockedHere(
+  device: Device,
+  root: string,
+  apiVersion: string | undefined,
+): string | null {
+  if (device.phone && older(apiVersion, PHONE_API)) return "needsNewerTextus";
+  if (device.unsupported?.[0].test(root)) return device.unsupported[1];
+  return null;
+}
