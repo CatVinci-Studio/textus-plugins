@@ -1,6 +1,6 @@
 # Cloud Sync
 
-Keep a folder the same on your computers through your own S3-compatible storage, WebDAV or Nutstore, with older versions kept in the cloud and, if you choose, encrypted before it leaves each device.
+Keep a folder the same on your computers and phones through your own S3-compatible storage, WebDAV or Nutstore, with older versions kept in the cloud and, if you choose, encrypted before it leaves each device.
 
 With end-to-end encryption on, the storage service sees neither the contents of your files nor their names.
 Cloud Sync needs Textus 1.4.1 or later.
@@ -30,6 +30,16 @@ open the panel.
 
 When both devices changed the same file, both versions stay: yours in place,
 the other device's in `Sync conflicts/`.
+
+## On a phone
+
+On an iPhone, iPad or Android phone (Textus 1.4.7 or later), Cloud Sync syncs when the folder opens, when you come back to Textus, a few seconds after you save, and when you choose **Sync now**; never in the background. A sync cut short as you leave Textus goes on by itself when you are back.
+
+- **Setting up**: on a device where the folder already syncs, choose **Copy Setup Code** under the connection, send the code to the phone, and paste it into **Setup code**: the service, address and remote folder fill in. Type the account, keys and sync password on the phone; the code never carries them.
+- **Large files**: on a phone, files over 32 MiB stay out (**Largest file to sync**, up to 128 MiB) and are listed under the status.
+- **Files deleted elsewhere**: on Android they go to `Sync trash/` in the folder, which isn't synced; empty it yourself.
+- **iCloud Drive**: a folder there is already synced by iCloud. Cloud Sync says so and still works, but sync a folder one way, not both.
+- **Android**: allow Textus to access all files, then open the folder; a folder opened without that can't be synced.
 
 ## Cloud history
 
@@ -309,6 +319,7 @@ and `THIRD_PARTY_NOTICES.md`. The storage design was informed by Petrichor/Sylva
 
 ## Changes
 
+- **0.10.0** - On iPhone, iPad and Android phones (Textus 1.4.7 or later): it syncs when the folder opens, when you come back to Textus and after you save, never in the background. **Copy Setup Code** carries a connection to another device without its account, keys or password. Disconnecting forgets the folder's sync record too, so connecting again starts with a first sync, which deletes nothing.
 - **0.8.1** - A file over 128 MiB no longer stops the whole sync: it stays where it is on every device and is listed under the status. A conflict copy opens from the page with a click. Ready for phones, not offered there yet: a sync when a folder opens and when you come back to Textus, none in the background; settings that survive an iPhone update; a smaller largest file and fewer transfers at once; deleted files kept in "Sync trash/" where there is no system Trash.
 - **0.8.0** - Safer when a sync is cut short: a lock this device left (Textus closed or stopped mid-sync) is taken back by its next sync without asking; another device's lock still needs **Recover stale lock**. A sync that would delete many files from the cloud stops and asks first, and a folder where suddenly nothing is found is taken as unreadable, not emptied. A file the system Trash refuses no longer stops the whole sync: it stays in place and is tried again. The first sync after a restart reads only the files changed meanwhile, not the whole folder. Its page is in every language Textus speaks. Its pickers keep Textus's own height.
 - **0.7.0** - Faster syncs with fewer requests: with nothing changed, a sync asks the service once instead of 8 to 16 times; a changed file's blocks are sent in one request each, without checking first or reading them back; on WebDAV folders are made only when one is missing. A busy service is waited for (up to a minute, shown in the status) instead of stopping the sync, and requests that got no answer are sent again. The progress counts files that are done. From Textus 1.4.4 the versions it keeps of a document show in Version History too.

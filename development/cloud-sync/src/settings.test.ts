@@ -250,6 +250,24 @@ it("disconnects by removing this folder's keys and settings only", async () => {
     "https://dav.example",
   );
 });
+it("disconnects by forgetting the folder's sync record, so connecting again is a first sync", async () => {
+  const f = fixture();
+  const keys = { ...encryption, account: "alice", secret: "a-secret" };
+  await f.settings.save("/notes", config, keys);
+  await f.settings.save("/other", config, { ...keys, account: "bob" });
+  const record = async (root: string) => {
+    const key = await f.settings.baseKey(root, config);
+    return [key, `last:${key}`, `vault:${key}`, `pending:${key}`];
+  };
+  const notes = await record("/notes");
+  const other = await record("/other");
+  for (const key of [...notes, ...other]) f.global.set(key, { kept: true });
+  await f.settings.forget("/notes");
+  for (const key of notes) expect(f.global.get(key), key).toBeNull();
+  for (const key of other)
+    expect(f.global.get(key), key).toEqual({ kept: true });
+});
+
 it("shows an account's start only", () => {
   expect(masked("alice@example.com")).toBe("alic••••");
   expect(masked("short")).toBe("••••");

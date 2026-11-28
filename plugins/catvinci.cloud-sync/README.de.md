@@ -31,6 +31,16 @@ vor 2 Min.**, **Wird synchronisiert…**, **Sync-Konflikt** oder **Sync-Fehler**
 Haben beide Geräte dieselbe Datei geändert, bleiben beide Versionen: Ihre an ihrem Platz,
 die des anderen Geräts in `Sync conflicts/`.
 
+## Auf einem Telefon
+
+Auf einem iPhone, iPad oder Android-Telefon (Textus 1.4.7 oder neuer) synchronisiert Cloud Sync, wenn der Ordner geöffnet wird, wenn du zu Textus zurückkehrst, wenige Sekunden nach dem Sichern und wenn du **Jetzt synchronisieren** wählst; nie im Hintergrund. Eine Synchronisation, die beim Verlassen von Textus unterbrochen wurde, läuft von selbst weiter, wenn du zurück bist.
+
+- **Einrichten**: Wähle auf einem Gerät, auf dem der Ordner schon synchronisiert, unter der Verbindung **Einrichtungscode kopieren**, schicke den Code ans Telefon und füge ihn bei **Einrichtungscode** ein: Dienst, Adresse und Remote-Ordner werden ausgefüllt. Konto, Schlüssel und Synchronisationspasswort gibst du auf dem Telefon ein; der Code enthält sie nie.
+- **Große Dateien**: Auf einem Telefon bleiben Dateien über 32 MiB außen vor (**Größte synchronisierte Datei**, bis 128 MiB) und werden unter dem Status aufgelistet.
+- **Anderswo gelöschte Dateien**: Unter Android landen sie in `Sync trash/` im Ordner, der nicht synchronisiert wird; leere ihn selbst.
+- **iCloud Drive**: Einen Ordner dort synchronisiert schon iCloud. Cloud Sync weist darauf hin und funktioniert trotzdem, aber synchronisiere jeden Ordner nur auf eine Weise.
+- **Android**: Erlaube Textus den Zugriff auf alle Dateien und öffne dann den Ordner; ein ohne diese Erlaubnis geöffneter Ordner lässt sich nicht synchronisieren.
+
 ## Cloud-Verlauf
 
 Jedes Mal, wenn eine Synchronisierung eine Datei ersetzt oder löscht, bleibt ihr früherer Inhalt im
@@ -150,11 +160,11 @@ Von den Tests über HTTP für ein kleines Dokument gemessen, nach der ersten Syn
 der Sitzung (die erste prüft außerdem die exklusiven Schreibvorgänge des Servers: 4 Anfragen
 mehr bei S3):
 
-| Synchronisierung                         | S3  | WebDAV / Nutstore |
-| ---------------------------------------- | --- | ----------------- |
-| Nichts geändert                          | 3   | 3                 |
+| Synchronisierung                                | S3  | WebDAV / Nutstore |
+| ----------------------------------------------- | --- | ----------------- |
+| Nichts geändert                                 | 3   | 3                 |
 | Ein bearbeitetes Dokument (ein Block von 2 MiB) | 18  | 20                |
-| Eine gelöschte Datei                     | 20  | 22                |
+| Eine gelöschte Datei                            | 20  | 22                |
 
 Hat sich auf keiner Seite etwas geändert, liest eine Synchronisierung nur die aktuelle Revision des Ordners
 und nimmt keine Sperre. Jeder weitere geänderte Block kostet 1 Anfrage: Ein Block
@@ -308,6 +318,7 @@ aus Petrichor/Sylva angeregt; weder Go-Quellcode noch das PostgreSQL-Backup-Form
 
 ## Änderungen
 
+- **0.10.0** - On iPhone, iPad and Android phones (Textus 1.4.7 or later): it syncs when the folder opens, when you come back to Textus and after you save, never in the background. **Copy Setup Code** carries a connection to another device without its account, keys or password. Disconnecting forgets the folder's sync record too, so connecting again starts with a first sync, which deletes nothing.
 - **0.8.1** - A file over 128 MiB no longer stops the whole sync: it stays where it is on every device and is listed under the status. A conflict copy opens from the page with a click. Ready for phones, not offered there yet: a sync when a folder opens and when you come back to Textus, none in the background; settings that survive an iPhone update; a smaller largest file and fewer transfers at once; deleted files kept in "Sync trash/" where there is no system Trash.
 - **0.8.0** - Safer when a sync is cut short: a lock this device left (Textus closed or stopped mid-sync) is taken back by its next sync without asking; another device's lock still needs **Recover stale lock**. A sync that would delete many files from the cloud stops and asks first, and a folder where suddenly nothing is found is taken as unreadable, not emptied. A file the system Trash refuses no longer stops the whole sync: it stays in place and is tried again. The first sync after a restart reads only the files changed meanwhile, not the whole folder. Its page is in every language Textus speaks. Its pickers keep Textus's own height.
 - **0.7.0** - Faster syncs with fewer requests: with nothing changed, a sync asks the service once instead of 8 to 16 times; a changed file's blocks are sent in one request each, without checking first or reading them back; on WebDAV folders are made only when one is missing. A busy service is waited for (up to a minute, shown in the status) instead of stopping the sync, and requests that got no answer are sent again. The progress counts files that are done. From Textus 1.4.4 the versions it keeps of a document show in Version History too.

@@ -24,6 +24,16 @@
 两台设备改了同一个文件时，两份都会留下：你本机的保留原位，另一台的放进
 `Sync conflicts/`。
 
+## 在手机上
+
+在 iPhone、iPad 或安卓手机上（Textus 1.4.7 或更高版本），云同步在打开文件夹时、回到 Textus 时、保存几秒后以及点**立即同步**时同步；不在后台同步。离开 Textus 时被打断的同步，回来后会自己接着做完。
+
+- **设置**：在已经同步这个文件夹的设备上，点连接下面的**复制配置码**，把配置码发到手机上，粘贴进**配置码**：服务、地址和远程文件夹会自动填好。账号、密钥和同步口令要在手机上自己填，配置码里从不带这些。
+- **大文件**：手机上超过 32 MiB 的文件不同步（**同步的最大文件**，最多 128 MiB），会列在状态下面。
+- **在别处删掉的文件**：安卓上会移进文件夹里的 `Sync trash/`，它不参与同步，需要你自己清空。
+- **iCloud 云盘**：那里的文件夹已经由 iCloud 同步。云同步会提示一句，照样能用，但一个文件夹只用一种方式同步。
+- **安卓**：先允许 Textus 访问所有文件，再打开文件夹；没有这个权限时打开的文件夹无法同步。
+
 ## 云端历史
 
 每次同步替换或删除文件时，之前的内容会留在远端目录。在文件上右键选 **云端历史版本…**，
@@ -153,6 +163,7 @@ core-plugins、types 这几个 `.json`）；`workspace.json` 这类每台设备�
 
 ## 更新日志
 
+- **0.10.0** - On iPhone, iPad and Android phones (Textus 1.4.7 or later): it syncs when the folder opens, when you come back to Textus and after you save, never in the background. **Copy Setup Code** carries a connection to another device without its account, keys or password. Disconnecting forgets the folder's sync record too, so connecting again starts with a first sync, which deletes nothing.
 - **0.8.1** - A file over 128 MiB no longer stops the whole sync: it stays where it is on every device and is listed under the status. A conflict copy opens from the page with a click. Ready for phones, not offered there yet: a sync when a folder opens and when you come back to Textus, none in the background; settings that survive an iPhone update; a smaller largest file and fewer transfers at once; deleted files kept in "Sync trash/" where there is no system Trash.
 - **0.8.0** - Safer when a sync is cut short: a lock this device left (Textus closed or stopped mid-sync) is taken back by its next sync without asking; another device's lock still needs **Recover stale lock**. A sync that would delete many files from the cloud stops and asks first, and a folder where suddenly nothing is found is taken as unreadable, not emptied. A file the system Trash refuses no longer stops the whole sync: it stays in place and is tried again. The first sync after a restart reads only the files changed meanwhile, not the whole folder. Its page is in every language Textus speaks. Its pickers keep Textus's own height.
 - **0.7.0** - Faster syncs with fewer requests: with nothing changed, a sync asks the service once instead of 8 to 16 times; a changed file's blocks are sent in one request each, without checking first or reading them back; on WebDAV folders are made only when one is missing. A busy service is waited for (up to a minute, shown in the status) instead of stopping the sync, and requests that got no answer are sent again. The progress counts files that are done. From Textus 1.4.4 the versions it keeps of a document show in Version History too.

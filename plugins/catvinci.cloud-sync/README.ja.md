@@ -18,6 +18,16 @@
 
 両方の端末で同じファイルを変えたときは、どちらの版も残ります。自分の版はその場所に、もう一方の端末の版は `Sync conflicts/` に入ります。
 
+## スマートフォンで
+
+iPhone、iPad、Android スマートフォン（Textus 1.4.7 以降）では、フォルダを開いたとき、Textus に戻ったとき、保存して数秒後、**今すぐ同期**を選んだときに同期します。バックグラウンドでは同期しません。Textus を離れて途中で止まった同期は、戻ると自動で続きます。
+
+- **設定**：すでにこのフォルダを同期しているデバイスで、接続の下の**設定コードをコピー**を選び、コードをスマートフォンに送って**設定コード**に貼り付けると、サービス、アドレス、リモートフォルダが入力されます。アカウント、キー、同期パスワードはスマートフォンで入力します。コードには含まれません。
+- **大きなファイル**：スマートフォンでは 32 MiB を超えるファイルは同期せず（**同期するファイルの上限サイズ**、最大 128 MiB）、状態の下に一覧で表示します。
+- **ほかで削除されたファイル**：Android ではフォルダ内の `Sync trash/` に移ります。ここは同期されないので、自分で空にしてください。
+- **iCloud Drive**：そこにあるフォルダはすでに iCloud が同期しています。クラウド同期はそのことを表示したうえで動きますが、1 つのフォルダは 1 つの方法で同期してください。
+- **Android**：Textus にすべてのファイルへのアクセスを許可してからフォルダを開いてください。許可なしで開いたフォルダは同期できません。
+
 ## クラウドの履歴
 
 同期でファイルが置き換えられたり削除されたりするたびに、以前の内容はリモートフォルダに残ります。ファイルを右クリックして **クラウドの履歴…** を選ぶと、その版の一覧（いつ、どの端末から、どの大きさか）が表示され、版を読んで **この版を復元** できます。復元した版が現在のファイルになって同期され、置き換えられた版は履歴に残ります。そのファイルにまだ同期していない編集があるときや、ファイルが開いているときは、版を隣に書き出します（`Note (3f2a9c1b).md`）。**プラグイン › クラウドの履歴…** はフォルダから削除したファイルを一覧にし、開くと元に戻せます。
@@ -67,11 +77,11 @@ S3 では、カスタムエンドポイント（空なら AWS）、リージョ�
 
 小さな文書について、セッションの最初の同期の後に、テストで HTTP 越しに測った数です（最初の同期ではサーバーの排他書き込みも確かめるので、S3 では 4 リクエスト多くなります）：
 
-| 同期                                  | S3  | WebDAV / Nutstore |
-| ------------------------------------- | --- | ----------------- |
-| 変更なし                              | 3   | 3                 |
+| 同期                                     | S3  | WebDAV / Nutstore |
+| ---------------------------------------- | --- | ----------------- |
+| 変更なし                                 | 3   | 3                 |
 | 文書を 1 つ編集（2 MiB のブロック 1 つ） | 18  | 20                |
-| ファイルを 1 つ削除                    | 20  | 22                |
+| ファイルを 1 つ削除                      | 20  | 22                |
 
 どちらの側にも変更がなければ、同期はフォルダの現在のリビジョンを読むだけで、ロックも取りません。変わったブロックが 1 つ増えるごとに 1 リクエスト増えます。ブロックは、すでにあるかを先に尋ねたり読み返したりせずに一度だけ送ります（ブロックは内容で名前が付き、ダウンロードのたびにすべて検証されます）。WebDAV では、まだないフォルダにブロックを入れると 2 リクエスト増えます（拒否されたアップロードと、フォルダの作成）。ロックを取るにはアップロードと `MOVE` が 1 回ずつかかります。保存の後の同期は、保存が落ち着くまで（5 秒）待ち、さらに **同期の遅延**（なし〜10 分）だけ待ちます。Nutstore はアカウントごとのリクエスト数に上限があるので、新しい Nutstore の接続では 3 分、S3 と WebDAV では 0 です。サーバーが混んでいるという応答（429、503）があると、すべてのリクエストを一時停止します。待つよう求められたときは、状態に「サーバーの応答を待っています」と秒数を最大 60 秒まで表示します。それより長く求められると、その同期は止まって後でもう一度試すよう伝えます。送った分は次の同期のために残ります。
 
@@ -132,6 +142,7 @@ Textus を閉じたときや同期の途中で止まったときにこの端末�
 
 ## 更新履歴
 
+- **0.10.0** - On iPhone, iPad and Android phones (Textus 1.4.7 or later): it syncs when the folder opens, when you come back to Textus and after you save, never in the background. **Copy Setup Code** carries a connection to another device without its account, keys or password. Disconnecting forgets the folder's sync record too, so connecting again starts with a first sync, which deletes nothing.
 - **0.8.1** - A file over 128 MiB no longer stops the whole sync: it stays where it is on every device and is listed under the status. A conflict copy opens from the page with a click. Ready for phones, not offered there yet: a sync when a folder opens and when you come back to Textus, none in the background; settings that survive an iPhone update; a smaller largest file and fewer transfers at once; deleted files kept in "Sync trash/" where there is no system Trash.
 - **0.8.0** - Safer when a sync is cut short: a lock this device left (Textus closed or stopped mid-sync) is taken back by its next sync without asking; another device's lock still needs **Recover stale lock**. A sync that would delete many files from the cloud stops and asks first, and a folder where suddenly nothing is found is taken as unreadable, not emptied. A file the system Trash refuses no longer stops the whole sync: it stays in place and is tried again. The first sync after a restart reads only the files changed meanwhile, not the whole folder. Its page is in every language Textus speaks. Its pickers keep Textus's own height.
 - **0.7.0** - Faster syncs with fewer requests: with nothing changed, a sync asks the service once instead of 8 to 16 times; a changed file's blocks are sent in one request each, without checking first or reading them back; on WebDAV folders are made only when one is missing. A busy service is waited for (up to a minute, shown in the status) instead of stopping the sync, and requests that got no answer are sent again. The progress counts files that are done. From Textus 1.4.4 the versions it keeps of a document show in Version History too.

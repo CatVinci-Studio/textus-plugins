@@ -1,5 +1,5 @@
 import { expect, it } from "vitest";
-import { deviceOf, folderKey } from "./device";
+import { blockedHere, deviceOf, folderKey } from "./device";
 import { Workspace } from "./local";
 import { bytes, memoryFolder, memoryStorage } from "./test-fixtures";
 
@@ -54,4 +54,17 @@ it("knows an iCloud Drive folder on iOS and a folder Android can't sync", () => 
     true,
   );
   expect(content.test("/storage/emulated/0/Notes")).toBe(false);
+});
+
+it("syncs on a phone only with a Textus whose app state and Trash are real there", () => {
+  const ios = deviceOf("ios");
+  expect(blockedHere(ios, simulator(A), "1.9")).toBe("needsNewerTextus");
+  expect(blockedHere(ios, simulator(A), "1.10")).toBeNull();
+  expect(blockedHere(ios, simulator(A), "1.12")).toBeNull();
+  // A computer's Textus syncs whatever its API, as before.
+  expect(blockedHere(deviceOf("macos"), "/notes", "1.4")).toBeNull();
+  const android = deviceOf("android");
+  expect(blockedHere(android, "content://x/tree/y", "1.12")).toBe(
+    "contentFolder",
+  );
 });
