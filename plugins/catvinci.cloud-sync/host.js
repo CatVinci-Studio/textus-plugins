@@ -1584,7 +1584,7 @@ async function unlockEncryption(raw, password, pin) {
   return { cipher, metadata, fingerprint };
 }
 
-// ../../../node_modules/aws4fetch/dist/aws4fetch.esm.mjs
+// node_modules/aws4fetch/dist/aws4fetch.esm.mjs
 /**
  * @license MIT <https://opensource.org/licenses/MIT>
  * @copyright Michael Hart 2024
