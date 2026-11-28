@@ -31,6 +31,16 @@
 두 기기가 같은 파일을 바꾸었다면 두 버전을 모두 남깁니다. 내 버전은
 제자리에, 다른 기기의 버전은 `Sync conflicts/`에 있습니다.
 
+## 휴대폰에서
+
+iPhone, iPad, Android 휴대폰(Textus 1.4.7 이상)에서는 폴더를 열 때, Textus로 돌아올 때, 저장하고 몇 초 뒤, **지금 동기화**를 고를 때 동기화합니다. 백그라운드에서는 동기화하지 않습니다. Textus를 떠나면서 중간에 멈춘 동기화는 돌아오면 저절로 이어집니다.
+
+- **설정**: 이미 이 폴더를 동기화하는 기기에서 연결 아래의 **설정 코드 복사**를 고르고, 코드를 휴대폰으로 보내 **설정 코드**에 붙여 넣으면 서비스, 주소, 원격 폴더가 채워집니다. 계정, 키, 동기화 암호는 휴대폰에서 직접 입력하세요. 코드에는 들어 있지 않습니다.
+- **큰 파일**: 휴대폰에서는 32 MiB가 넘는 파일을 동기화하지 않고(**동기화할 최대 파일 크기**, 최대 128 MiB) 상태 아래에 목록으로 보여 줍니다.
+- **다른 곳에서 삭제한 파일**: Android에서는 폴더 안의 `Sync trash/`로 옮겨집니다. 이 폴더는 동기화되지 않으니 직접 비우세요.
+- **iCloud Drive**: 그 안의 폴더는 이미 iCloud가 동기화합니다. 클라우드 동기화는 그렇다고 알려 주고 그대로 동작하지만, 한 폴더는 한 가지 방법으로만 동기화하세요.
+- **Android**: Textus에 모든 파일 접근을 허용한 뒤 폴더를 여세요. 허용 없이 연 폴더는 동기화할 수 없습니다.
+
 ## 클라우드 기록
 
 동기화로 파일이 바뀌거나 삭제될 때마다 이전 내용이 원격 폴더에 남습니다.
@@ -150,11 +160,11 @@ SHA-256 해시와 마지막으로 성공한 동기화를 보고 어느 쪽이 �
 뺐습니다(첫 동기화는 서버의 독점 쓰기도 확인하므로 S3에서 요청이 4개
 더 듭니다):
 
-| 동기화                              | S3  | WebDAV / Nutstore |
-| ----------------------------------- | --- | ----------------- |
-| 바뀐 것 없음                        | 3   | 3                 |
-| 편집한 문서 하나(2 MiB 블록 하나)   | 18  | 20                |
-| 삭제한 파일 하나                    | 20  | 22                |
+| 동기화                            | S3  | WebDAV / Nutstore |
+| --------------------------------- | --- | ----------------- |
+| 바뀐 것 없음                      | 3   | 3                 |
+| 편집한 문서 하나(2 MiB 블록 하나) | 18  | 20                |
+| 삭제한 파일 하나                  | 20  | 22                |
 
 양쪽 모두 바뀐 것이 없으면 동기화는 폴더의 현재 리비전만 읽고 잠금을 걸지
 않습니다. 바뀐 블록이 하나 늘 때마다 요청이 1개 늘어납니다. 블록은 있는지
@@ -307,6 +317,7 @@ Go 소스나 PostgreSQL 백업 형식은 복사하지 않았습니다.
 
 ## 변경 내역
 
+- **0.10.0** - On iPhone, iPad and Android phones (Textus 1.4.7 or later): it syncs when the folder opens, when you come back to Textus and after you save, never in the background. **Copy Setup Code** carries a connection to another device without its account, keys or password. Disconnecting forgets the folder's sync record too, so connecting again starts with a first sync, which deletes nothing.
 - **0.8.1** - A file over 128 MiB no longer stops the whole sync: it stays where it is on every device and is listed under the status. A conflict copy opens from the page with a click. Ready for phones, not offered there yet: a sync when a folder opens and when you come back to Textus, none in the background; settings that survive an iPhone update; a smaller largest file and fewer transfers at once; deleted files kept in "Sync trash/" where there is no system Trash.
 - **0.8.0** - Safer when a sync is cut short: a lock this device left (Textus closed or stopped mid-sync) is taken back by its next sync without asking; another device's lock still needs **Recover stale lock**. A sync that would delete many files from the cloud stops and asks first, and a folder where suddenly nothing is found is taken as unreadable, not emptied. A file the system Trash refuses no longer stops the whole sync: it stays in place and is tried again. The first sync after a restart reads only the files changed meanwhile, not the whole folder. Its page is in every language Textus speaks. Its pickers keep Textus's own height.
 - **0.7.0** - Faster syncs with fewer requests: with nothing changed, a sync asks the service once instead of 8 to 16 times; a changed file's blocks are sent in one request each, without checking first or reading them back; on WebDAV folders are made only when one is missing. A busy service is waited for (up to a minute, shown in the status) instead of stopping the sync, and requests that got no answer are sent again. The progress counts files that are done. From Textus 1.4.4 the versions it keeps of a document show in Version History too.

@@ -18,6 +18,16 @@
 
 兩台裝置都改了同一個檔案時，兩個版本都會保留：你的留在原處，另一台裝置的放在 `Sync conflicts/` 裡。
 
+## 在手機上
+
+在 iPhone、iPad 或 Android 手機上（Textus 1.4.7 或更新的版本），雲端同步會在打開資料夾時、回到 Textus 時、儲存幾秒後以及點**立即同步**時同步；不在背景同步。離開 Textus 時被打斷的同步，回來後會自己接著做完。
+
+- **設定**：在已經同步這個資料夾的裝置上，點連線下方的**複製設定碼**，把設定碼傳到手機上，貼進**設定碼**：服務、位址和遠端資料夾會自動填好。帳號、金鑰和同步密語要在手機上自己填，設定碼裡從不帶這些。
+- **大檔案**：手機上超過 32 MiB 的檔案不同步（**同步的最大檔案**，最多 128 MiB），會列在狀態下方。
+- **在別處刪除的檔案**：Android 上會移進資料夾裡的 `Sync trash/`，它不參與同步，需要你自己清空。
+- **iCloud 雲碟**：那裡的資料夾已經由 iCloud 同步。雲端同步會提示一句，照樣能用，但一個資料夾只用一種方式同步。
+- **Android**：先允許 Textus 存取所有檔案，再打開資料夾；沒有這個權限時打開的資料夾無法同步。
+
 ## 雲端歷史
 
 每次同步取代或刪除一個檔案時，它之前的內容會留在遠端資料夾裡。在檔案上按右鍵選 **雲端歷史版本…**，就能看到它的各個版本（什麼時候、來自哪台裝置、多大），閱讀其中一個，並 **復原這個版本**：它會成為目前的檔案並同步出去，被取代的版本則留在歷史裡。如果那個檔案還有尚未同步的修改，或正開著，版本會改為寫在它旁邊（`Note (3f2a9c1b).md`）。**外掛程式 › 雲端歷史版本…** 會列出從資料夾中刪除的檔案；開啟其中一個就能找回來。
@@ -67,11 +77,11 @@ S3 可以在 **更多選項** 裡設定自訂端點（留空代表 AWS）、區�
 
 由測試透過 HTTP 測得，對象是一份小文件，在這次工作階段的第一次同步之後（第一次同步還會檢查伺服器的互斥寫入：S3 上多 4 個請求）：
 
-| 同步                                  | S3  | WebDAV / 堅果雲 |
-| ------------------------------------- | --- | ----------------- |
-| 沒有變更                       | 3   | 3                 |
-| 修改了一份文件（一個 2 MiB 區塊） | 18  | 20                |
-| 刪除了一個檔案                      | 20  | 22                |
+| 同步                              | S3  | WebDAV / 堅果雲 |
+| --------------------------------- | --- | --------------- |
+| 沒有變更                          | 3   | 3               |
+| 修改了一份文件（一個 2 MiB 區塊） | 18  | 20              |
+| 刪除了一個檔案                    | 20  | 22              |
 
 兩邊都沒有變更時，同步只讀取資料夾目前的版本號，不取得鎖定。每多一個變更的區塊，就多 1 個請求：區塊只傳送一次，不會先問它在不在，也不會再讀回來（區塊以內容命名；每次下載都會逐一檢查）。在 WebDAV 上，放進尚不存在的資料夾的區塊要多花 2 個請求：被拒絕的上傳，以及建立資料夾；取得鎖定要花一次上傳和一次 `MOVE`。儲存後的同步會等儲存穩定下來（5 秒），再等 **同步延遲**（不延遲到 10 分鐘）：新的堅果雲連線預設 3 分鐘，因為堅果雲限制每個帳號的請求次數；S3 和 WebDAV 則是 0。伺服器忙碌的回應（429、503）會暫停所有請求；伺服器要求等待時，狀態會顯示「正在等伺服器」和秒數，最多 60 秒。要求等更久時，那次同步會停下來，請你稍後再試；已經送出的內容會留給下一次使用。
 
@@ -132,6 +142,7 @@ S3 可以在 **更多選項** 裡設定自訂端點（留空代表 AWS）、區�
 
 ## 更新紀錄
 
+- **0.10.0** - On iPhone, iPad and Android phones (Textus 1.4.7 or later): it syncs when the folder opens, when you come back to Textus and after you save, never in the background. **Copy Setup Code** carries a connection to another device without its account, keys or password. Disconnecting forgets the folder's sync record too, so connecting again starts with a first sync, which deletes nothing.
 - **0.8.1** - A file over 128 MiB no longer stops the whole sync: it stays where it is on every device and is listed under the status. A conflict copy opens from the page with a click. Ready for phones, not offered there yet: a sync when a folder opens and when you come back to Textus, none in the background; settings that survive an iPhone update; a smaller largest file and fewer transfers at once; deleted files kept in "Sync trash/" where there is no system Trash.
 - **0.8.0** - Safer when a sync is cut short: a lock this device left (Textus closed or stopped mid-sync) is taken back by its next sync without asking; another device's lock still needs **Recover stale lock**. A sync that would delete many files from the cloud stops and asks first, and a folder where suddenly nothing is found is taken as unreadable, not emptied. A file the system Trash refuses no longer stops the whole sync: it stays in place and is tried again. The first sync after a restart reads only the files changed meanwhile, not the whole folder. Its page is in every language Textus speaks. Its pickers keep Textus's own height.
 - **0.7.0** - Faster syncs with fewer requests: with nothing changed, a sync asks the service once instead of 8 to 16 times; a changed file's blocks are sent in one request each, without checking first or reading them back; on WebDAV folders are made only when one is missing. A busy service is waited for (up to a minute, shown in the status) instead of stopping the sync, and requests that got no answer are sent again. The progress counts files that are done. From Textus 1.4.4 the versions it keeps of a document show in Version History too.

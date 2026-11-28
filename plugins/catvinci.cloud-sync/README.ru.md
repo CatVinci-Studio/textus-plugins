@@ -18,6 +18,16 @@
 
 Если оба устройства изменили один и тот же файл, сохраняются обе версии: ваша — на месте, версия другого устройства — в `Sync conflicts/`.
 
+## На телефоне
+
+На iPhone, iPad или телефоне Android (Textus 1.4.7 или новее) Cloud Sync синхронизирует при открытии папки, при возвращении в Textus, через несколько секунд после сохранения и когда вы выбираете **Синхронизировать**; никогда в фоне. Синхронизация, прерванная при выходе из Textus, продолжится сама, когда вы вернётесь.
+
+- **Настройка**: на устройстве, где папка уже синхронизируется, выберите **Скопировать код настройки** под подключением, отправьте код на телефон и вставьте его в **Код настройки**: сервис, адрес и удалённая папка заполнятся. Учётную запись, ключи и пароль синхронизации введите на телефоне; в коде их никогда нет.
+- **Большие файлы**: на телефоне файлы больше 32 МиБ не синхронизируются (**Наибольший синхронизируемый файл**, до 128 МиБ) и перечислены под состоянием.
+- **Файлы, удалённые на другом устройстве**: на Android они попадают в `Sync trash/` в папке, которая не синхронизируется; очищайте её сами.
+- **iCloud Drive**: папку там уже синхронизирует iCloud. Cloud Sync сообщит об этом и всё равно будет работать, но синхронизируйте каждую папку только одним способом.
+- **Android**: разрешите Textus доступ ко всем файлам, затем откройте папку; папку, открытую без этого разрешения, синхронизировать нельзя.
+
 ## История в облаке
 
 Каждый раз, когда синхронизация заменяет или удаляет файл, его прежнее содержимое остаётся в удалённой папке. Щёлкните по файлу правой кнопкой и выберите **История в облаке…**, чтобы увидеть его версии (когда, с какого устройства, какого размера), прочитать любую и нажать **Восстановить эту версию**: она становится текущим файлом и синхронизируется, а версия, которую она заменила, остаётся в истории. Если у файла есть ещё не синхронизированные правки или он открыт, версия записывается рядом с ним (`Note (3f2a9c1b).md`). **Плагины › История в облаке…** показывает файлы, удалённые из папки; откройте любой, чтобы вернуть его.
@@ -67,11 +77,11 @@
 
 Измерено тестами по HTTP для небольшого документа после первой синхронизации в сеансе (первая ещё проверяет монопольную запись на сервере: на S3 это на 4 запроса больше):
 
-| Синхронизация                          | S3  | WebDAV / Nutstore |
-| -------------------------------------- | --- | ----------------- |
-| Ничего не изменилось                   | 3   | 3                 |
+| Синхронизация                              | S3  | WebDAV / Nutstore |
+| ------------------------------------------ | --- | ----------------- |
+| Ничего не изменилось                       | 3   | 3                 |
 | Один изменённый документ (один блок 2 МиБ) | 18  | 20                |
-| Один удалённый файл                    | 20  | 22                |
+| Один удалённый файл                        | 20  | 22                |
 
 Если ни на одной стороне ничего не изменилось, синхронизация только читает текущую ревизию папки и не берёт блокировку. Каждый следующий изменённый блок добавляет 1 запрос: блок отправляется один раз, без предварительного вопроса, есть ли он уже, и без чтения обратно (блоки названы по содержимому; каждая загрузка проверяет каждый блок). На WebDAV блок, который попадает в ещё не существующую папку, стоит ещё 2 запроса: отклонённую отправку и создание папки; взятие блокировки стоит одну отправку и `MOVE`. Синхронизация после сохранения ждёт, пока сохранение завершится (5 с), а затем **Задержку синхронизации** (от нуля до 10 минут): 3 для нового подключения Nutstore, потому что Nutstore ограничивает число запросов на аккаунт, и 0 для S3 и WebDAV. Ответ занятого сервера (429, 503) приостанавливает все запросы; если сервер просит подождать, статус показывает «Ожидание сервера» с числом секунд, до 60 с. Если он просит дольше, эта синхронизация останавливается и предлагает попробовать позже; отправленное сохраняется для следующей.
 
@@ -132,6 +142,7 @@
 
 ## Изменения
 
+- **0.10.0** - On iPhone, iPad and Android phones (Textus 1.4.7 or later): it syncs when the folder opens, when you come back to Textus and after you save, never in the background. **Copy Setup Code** carries a connection to another device without its account, keys or password. Disconnecting forgets the folder's sync record too, so connecting again starts with a first sync, which deletes nothing.
 - **0.8.1** - A file over 128 MiB no longer stops the whole sync: it stays where it is on every device and is listed under the status. A conflict copy opens from the page with a click. Ready for phones, not offered there yet: a sync when a folder opens and when you come back to Textus, none in the background; settings that survive an iPhone update; a smaller largest file and fewer transfers at once; deleted files kept in "Sync trash/" where there is no system Trash.
 - **0.8.0** - Safer when a sync is cut short: a lock this device left (Textus closed or stopped mid-sync) is taken back by its next sync without asking; another device's lock still needs **Recover stale lock**. A sync that would delete many files from the cloud stops and asks first, and a folder where suddenly nothing is found is taken as unreadable, not emptied. A file the system Trash refuses no longer stops the whole sync: it stays in place and is tried again. The first sync after a restart reads only the files changed meanwhile, not the whole folder. Its page is in every language Textus speaks. Its pickers keep Textus's own height.
 - **0.7.0** - Faster syncs with fewer requests: with nothing changed, a sync asks the service once instead of 8 to 16 times; a changed file's blocks are sent in one request each, without checking first or reading them back; on WebDAV folders are made only when one is missing. A busy service is waited for (up to a minute, shown in the status) instead of stopping the sync, and requests that got no answer are sent again. The progress counts files that are done. From Textus 1.4.4 the versions it keeps of a document show in Version History too.
