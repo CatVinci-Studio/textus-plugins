@@ -153,8 +153,21 @@ export class Settings {
   }
   /** The folder's connection removed from this device: its keys and its
    *  settings. Nothing in the folder or the cloud changes. */
+  /** Disconnect: this folder's keys, settings and sync record (its
+   *  baseline, last result, encryption pin and half-sent blocks), so
+   *  connecting again is a first sync, which deletes nothing. A lock a
+   *  killed run left keeps its note: the next run takes that lock back. */
   async forget(root: string) {
     const config = await this.load(root);
+    const base = await this.baseKey(root, config).catch(() => null);
+    if (base)
+      for (const key of [
+        base,
+        `last:${base}`,
+        `vault:${base}`,
+        `pending:${base}`,
+      ])
+        await this.ctx.storage.global.set(key, null);
     await this.ctx.secrets.delete(await this.secretKey(root, config));
     await this.ctx.storage.global.set(`config:${await this.scope(root)}`, null);
     await this.ctx.storage.global.set(await scanKey(this.folder(root)), null);
