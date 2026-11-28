@@ -278,3 +278,15 @@ pre.preview {
   max-height: 60vh;
   overflow-y: auto;
 }
+
+/* The setup code Copy puts on the clipboard: a field the app copies from,
+   never seen. */
+.code-out {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}

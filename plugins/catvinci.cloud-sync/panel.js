@@ -22,6 +22,57 @@
     }
   };
 
+  // development/cloud-sync/src/setup-code.ts
+  var PREFIX = "textus-sync:1:";
+  var PROVIDERS = ["s3", "webdav", "nutstore"];
+  function toBase64Url(text) {
+    const bytes = new TextEncoder().encode(text);
+    let binary = "";
+    for (const b of bytes) binary += String.fromCharCode(b);
+    return btoa(binary).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+  }
+  function fromBase64Url(text) {
+    const binary = atob(text.replace(/-/g, "+").replace(/_/g, "/"));
+    return new TextDecoder().decode(
+      Uint8Array.from(binary, (c) => c.charCodeAt(0))
+    );
+  }
+  function setupCode(config) {
+    const carried = {
+      provider: config.provider,
+      endpoint: config.endpoint,
+      region: config.region,
+      bucket: config.bucket,
+      prefix: config.prefix,
+      pathStyle: config.pathStyle,
+      encrypt: config.encrypt
+    };
+    return PREFIX + toBase64Url(JSON.stringify(carried));
+  }
+  function readSetupCode(text) {
+    const code = text.trim();
+    if (!code.startsWith(PREFIX)) return null;
+    let parsed;
+    try {
+      parsed = JSON.parse(fromBase64Url(code.slice(PREFIX.length)));
+    } catch {
+      return null;
+    }
+    if (!parsed || typeof parsed !== "object") return null;
+    const p = parsed;
+    const field = (key) => typeof p[key] === "string" ? p[key] : "";
+    if (!PROVIDERS.includes(p.provider)) return null;
+    return {
+      provider: p.provider,
+      endpoint: field("endpoint"),
+      region: field("region"),
+      bucket: field("bucket"),
+      prefix: field("prefix"),
+      pathStyle: p.pathStyle === true,
+      encrypt: p.encrypt === true
+    };
+  }
+
   // development/cloud-sync/src/panel.ts
   var api = acquireTextusApi();
   var element = (id) => document.getElementById(id);
@@ -159,6 +210,9 @@
     input("pathStyle").checked = config.pathStyle;
     input("encrypt").checked = config.encrypt;
     for (const id of secretFields) input(id).value = "";
+    input("setup-code").value = "";
+    element("setup-code-help").textContent = api.t("setupCodeHelp");
+    element("setup-code-help").classList.remove("danger-text");
     typed = false;
     formToggles();
   }
@@ -258,6 +312,40 @@
     show();
   };
   element("test-saved").onclick = () => api.postMessage({ type: "test" });
+  element("copy-code").onclick = async () => {
+    if (!state) return;
+    const out = input("setup-code-out");
+    out.value = setupCode(state.config);
+    out.select();
+    await api.editText(out, "copy");
+    element("copy-code").textContent = api.t("setupCodeCopied");
+    setTimeout(() => {
+      element("copy-code").textContent = api.t("copySetupCode");
+    }, 2e3);
+  };
+  input("setup-code").addEventListener("input", () => {
+    const text = input("setup-code").value;
+    const carried = readSetupCode(text);
+    const help = element("setup-code-help");
+    help.textContent = api.t(
+      carried ? "setupCodeRead" : text.trim() ? "setupCodeInvalid" : "setupCodeHelp"
+    );
+    help.classList.toggle("danger-text", !carried && !!text.trim());
+    if (!carried) return;
+    for (const id of [
+      "provider",
+      "endpoint",
+      "region",
+      "bucket",
+      "prefix"
+    ])
+      input(id).value = carried[id];
+    input("pathStyle").checked = carried.pathStyle;
+    input("encrypt").checked = carried.encrypt;
+    typed = true;
+    formToggles();
+    input("account").focus();
+  });
   for (const id of ["sync", "unlock", "cancel", "openSettings", "disconnect"])
     element(id).onclick = () => api.postMessage({ type: id });
   function showResult(result, limit = 0) {

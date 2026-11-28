@@ -170,6 +170,19 @@
           <button
             type="button"
             class="tx-button"
+            id="copy-code"
+            data-t="copySetupCode"
+          ></button>
+          <input
+            id="setup-code-out"
+            class="code-out"
+            readonly
+            tabindex="-1"
+            aria-hidden="true"
+          />
+          <button
+            type="button"
+            class="tx-button"
             id="test-saved"
             data-t="test"
           ></button>
@@ -185,6 +198,19 @@
         <fieldset id="fields" disabled>
           <h2 class="tx-group-title" data-t="connectionTitle"></h2>
           <div class="tx-group">
+            <div class="tx-row" id="setup-code-field">
+              <div class="row-text">
+                <label for="setup-code" data-t="setupCode"></label>
+                <p id="setup-code-help" class="hint" data-t="setupCodeHelp"></p>
+              </div>
+              <input
+                id="setup-code"
+                type="text"
+                spellcheck="false"
+                autocapitalize="off"
+                autocorrect="off"
+              />
+            </div>
             <div class="tx-row">
               <div class="row-text">
                 <label for="provider-pick" data-t="service"></label>

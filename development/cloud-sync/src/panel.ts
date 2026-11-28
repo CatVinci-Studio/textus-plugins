@@ -6,6 +6,7 @@ import {
   type Result,
 } from "./model";
 import { providers } from "./config";
+import { readSetupCode, setupCode } from "./setup-code";
 
 const api = acquireTextusApi();
 const element = <T extends HTMLElement>(id: string) =>
@@ -197,6 +198,9 @@ function fillForm(config: Config, root: string | null) {
   input("pathStyle").checked = config.pathStyle;
   input("encrypt").checked = config.encrypt;
   for (const id of secretFields) input(id).value = "";
+  input("setup-code").value = "";
+  element("setup-code-help").textContent = api.t("setupCodeHelp");
+  element("setup-code-help").classList.remove("danger-text");
   typed = false;
   formToggles();
 }
@@ -304,6 +308,46 @@ element("cancel-edit").onclick = () => {
   show();
 };
 element("test-saved").onclick = () => api.postMessage({ type: "test" });
+// The connection as a code for another device: no account, key or password.
+element("copy-code").onclick = async () => {
+  if (!state) return;
+  const out = input("setup-code-out");
+  out.value = setupCode(state.config);
+  out.select();
+  await api.editText(out, "copy");
+  element("copy-code").textContent = api.t("setupCodeCopied");
+  setTimeout(() => {
+    element("copy-code").textContent = api.t("copySetupCode");
+  }, 2000);
+};
+// A code pasted from another device fills where the folder syncs.
+input("setup-code").addEventListener("input", () => {
+  const text = input("setup-code").value;
+  const carried = readSetupCode(text);
+  const help = element("setup-code-help");
+  help.textContent = api.t(
+    carried
+      ? "setupCodeRead"
+      : text.trim()
+        ? "setupCodeInvalid"
+        : "setupCodeHelp",
+  );
+  help.classList.toggle("danger-text", !carried && !!text.trim());
+  if (!carried) return;
+  for (const id of [
+    "provider",
+    "endpoint",
+    "region",
+    "bucket",
+    "prefix",
+  ] as const)
+    input(id).value = carried[id];
+  input("pathStyle").checked = carried.pathStyle;
+  input("encrypt").checked = carried.encrypt;
+  typed = true;
+  formToggles();
+  input("account").focus();
+});
 for (const id of ["sync", "unlock", "cancel", "openSettings", "disconnect"])
   element(id).onclick = () => api.postMessage({ type: id });
 
